@@ -1,6 +1,8 @@
 from django.shortcuts import render_to_response
-from django.http import Http404
+from django.http import Http404, HttpResponse
+from dg.dashboard.models import *
 import datetime
+import cjson
 
 def hello(request):
 	return HttpResponse("Hello world")
@@ -26,3 +28,26 @@ def hours_ahead(reqest,offset):
 	#html = "<html><body>In %s hour(s), it will be %s.<body></html>" % (offset, dt)
 	#return HttpResponse(html)
 	return render_to_response('hours_ahead.html',locals())
+
+
+
+def feed_animators(request, village_id):
+        village = Village.objects.get(pk=int(village_id))
+	animators = Animator.objects.filter(assigned_villages=village)
+	print 'Hello'
+		#str = "test" + "\t" + "Model" + "\n" + "test1" + "\t" + "Model1";	
+		#print str
+		#temp = cjson.encode(str)
+		#return HttpResponse(temp, mimetype="text/plain")
+        return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
+
+
+
+
+def feeds_subcat(request, village_id):
+	print 'Hello'
+        village = Village.objects.get(pk=int(village_id))
+	animators = Animator.objects.filter(assigned_villages=village)
+	from django.core import serializers
+	json_subcat = serializers.serialize("json", animators)
+	return HttpResponse(json_subcat, mimetype="application/javascript")

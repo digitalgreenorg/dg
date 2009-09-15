@@ -378,11 +378,11 @@ class PersonMeetingAttendance(models.Model):
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
     expressed_interest_practice = models.ForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True)
-    expressed_interest = models.TextField(db_column='EXPRESSED_INTEREST', blank=True) 
+    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True) 
     expressed_adoption_practice = models.ForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
-    expressed_adoption = models.TextField(db_column='EXPRESSED_ADOPTION', blank=True)
+    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True)
     expressed_question_practice = models.ForeignKey(Practices,related_name='expressed_question_practice',null=True,blank=True) 
-    expressed_question = models.TextField(db_column='EXPRESSED_QUESTION', blank=True) 
+    expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True) 
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
 

@@ -3,6 +3,8 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 
+from django.conf import settings
+
 class ForeignKeySearchInput(forms.HiddenInput):
     """
     A Widget for displaying ForeignKeys in an autocomplete search input 
@@ -10,13 +12,13 @@ class ForeignKeySearchInput(forms.HiddenInput):
     """
     class Media:
         css = {
-            'all': ('jquery.autocomplete.css',)
+            'all': ('/media/css/jquery.autocomplete.css',)
         }
         js = (
-            'lib/jquery.js',
-            'lib/jquery.bgiframe.min.js',
-            'lib/jquery.ajaxQueue.js',
-            'jquery.autocomplete.js'
+            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.js',
+            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.bgiframe.min.js',
+            settings.ADMIN_MEDIA_PREFIX + 'js/lib/jquery.ajaxQueue.js',
+            settings.ADMIN_MEDIA_PREFIX + 'js/jquery.autocomplete.js'
         )
 
     def label_for_value(self, value):
@@ -27,6 +29,10 @@ class ForeignKeySearchInput(forms.HiddenInput):
     def __init__(self, rel, search_fields, attrs=None):
         self.rel = rel
         self.search_fields = search_fields
+	if attrs is None:
+		print 'hi'
+	else: 
+		print 'hello234'
         super(ForeignKeySearchInput, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
