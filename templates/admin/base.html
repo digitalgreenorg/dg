@@ -26,7 +26,9 @@
         <div id="user-tools">
             {% trans 'Welcome,' %}
             <strong>{% firstof user.first_name user.username %}</strong>.
+
             {% block userlinks %}
+<!--
                 {% url django-admindocs-docroot as docsroot %}
                 {% if docsroot %}
                     <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
@@ -38,6 +40,7 @@
                     <a href="{{ root_path }}password_change/">
                 {% endif %}
                 {% trans 'Change password' %}</a> /
+-->
                 {% url admin:logout as logout_url %}
                 {% if logout_url %}
                     <a href="{{ logout_url }}">
@@ -46,6 +49,7 @@
                 {% endif %}
                 {% trans 'Log out' %}</a>
             {% endblock %}
+
         </div>
         {% endif %}
         {% block nav-global %}{% endblock %}

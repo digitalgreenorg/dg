@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+#from django.contrib.contenttypes import generic
+
 
 # Variables
 GENDER_CHOICES = (
@@ -126,6 +129,8 @@ class Partners(models.Model):
     equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
     class Meta:
         db_table = u'PARTNERS'
+	verbose_name = "Partner"
+
 
     def __unicode__(self):
         return self.partner_name
@@ -216,6 +221,7 @@ class PersonGroups(models.Model):
     village = models.ForeignKey(Village) 
     class Meta:
         db_table = u'PERSON_GROUPS'
+	verbose_name = "Person group"
 
     def __unicode__(self):
         return self.group_name
@@ -347,6 +353,7 @@ class Practices(models.Model):
     summary = models.TextField(db_column='SUMMARY', blank=True) 
     class Meta:
         db_table = u'PRACTICES'
+	verbose_name = "Practice"
 
     def __unicode__(self):
         return self.practice_name

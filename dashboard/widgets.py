@@ -29,10 +29,6 @@ class ForeignKeySearchInput(forms.HiddenInput):
     def __init__(self, rel, search_fields, attrs=None):
         self.rel = rel
         self.search_fields = search_fields
-	if attrs is None:
-		print 'hi'
-	else: 
-		print 'hello234'
         super(ForeignKeySearchInput, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
@@ -73,6 +69,7 @@ class ForeignKeySearchInput(forms.HiddenInput):
                 if (data) {
                     $('#id_%(name)s').val(data[1]);
                     $('#del_%(name)s').show();
+		    filter();
                 }
             });
             $('#del_%(name)s').click(function(ele, event) {
