@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Add Person group | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<script type="text/javascript" src="/media/js/a"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+<!--script type="text/javascript" src="/media/js/persongroups_filter.js"></script>
+<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script-->
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="dashboard-persongroups change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/dashboard/persongroups/">Person groups</a> › 
+     Add Person group
+</div>
+
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Add Person group</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="persongroups_form">
+<div>
+
+
+{% if form.errors or formset.errors %}
+    <p class="errornote">
+    Please correct the errors below.
+    </p>
+    <ul class="errorlist"></ul>
+{% endif %}
+
+
+  <fieldset class="module aligned ">
+  
+  
+ {% if form.group_name.errors %}
+      <div class="form-row errors group_name  ">
+      {{ form.group_name.errors }} 
+ {% else %}
+	<div class="form-row group_name">
+ {% endif %}
+
+      <div>
+          
+              <label for="id_group_name" class="required">Group name:</label>
+		{{ form.group_name }}
+		<!--input id="id_group_name" class="vTextField" name="group_name" maxlength="100" type="text"-->
+          
+          
+      </div>
+      
+      </div>
+  
+
+ {% if form.days.errors %} 
+	<div class="form-row errors days">
+	{{ form.days.errors }}
+ {% else %}
+        <div class="form-row days  ">
+ {% endif %}
+      
+      
+      <div>
+          
+              <label for="id_days">Days:</label>
+		{{form.days}}
+<!--select name="days" id="id_days">
+<option value="" selected="selected">---------</option>
+<option value="Monday">Monday</option>
+<option value="Tuesday">Tuesday</option>
+<option value="Wednesday">Wednesday</option>
+<option value="Thursday">Thursday</option>
+<option value="Friday">Friday</option>
+<option value="Saturday">Saturday</option>
+<option value="Sunday">Sunday</option>
+</select-->
+          
+          
+      </div>
+      
+      </div>
+  
+
+ {% if form.timings.errors %}
+      <div class="form-row errors timings  ">
+      {{ form.timings.errors }}
+ {% else %}    
+	<div class="form-row timings">
+ {% endif %}
+      <div>
+          
+              <label for="id_timings">Timings:</label>
+		<input id="id_timings" class="vTimeField" name="timings" size="8" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleClockQuicklink(0,%20new%20Date().getHourMinuteSecond());">Now</a>&nbsp;|&nbsp;<a id="clocklink0" href="javascript:DateTimeShortcuts.openClock(0);"><img alt="Clock" src="add_person_groups_files/icon_clock.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+ {% if form.village.errors %}
+      <div class="form-row errors village  ">
+      {{ form.village.errors }} 
+ {% else %}
+	<div class="form-row village">
+ {% endif %}
+      <div>
+          
+              <label for="id_village" class="required">Village:</label>
+		{{ form.village }}
+<!--select name="village" id="id_village">
+<option value="" selected="selected">---------</option>
+<option value="13">Village3</option>
+<option value="12">Village2</option>
+<option value="11">Village1</option>
+</select--><a href="/dashboard/village/add/" class="add-another" id="add_id_village" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+    
+<div class="inline-group">
+  <div class="tabular inline-related last-related">
+<input name="person_set-TOTAL_FORMS" value="30" id="id_person_set-TOTAL_FORMS" type="hidden"><input name="person_set-INITIAL_FORMS" value="0" id="id_person_set-INITIAL_FORMS" type="hidden">
+<fieldset class="module">
+   <h2>Persons</h2>
+   
+   <table>
+     <thead><tr>
+     
+       
+         <th colspan="2">Person name</th>
+        
+     
+       
+         <th>Father name</th>
+        
+     
+       
+         <th>Age</th>
+        
+     
+       
+         <th>Gender</th>
+        
+     
+       
+         <th>Phone no</th>
+        
+     
+       
+         <th>Address</th>
+        
+     
+       
+         <th>Land holdings</th>
+        
+     </tr></thead>
+	<tbody>
+{{ formset.management_form }}
+    {% for form in formset.forms %}
+
+        
+	<tr class="{% cycle 'row1' 'row2' %} ">
+
+        <td class="original">
+	  
+	  {{ form.id }}         
+          <input name="form-{{ forloop.counter0 }}-group" id="id_form-{{ forloop.counter0 }}-group" type="hidden">
+          
+        </td>
+
+        
+          
+            
+              <td class="person_name">
+		{% if form.person_name.errors %}
+			{{form.person_name.errors}}
+		{% endif %}
+              {{ form.person_name }}
+              <!--input name="person_set-0-person_name" value="sddsdad" class="vTextField" maxlength="100" id="id_person_set-0-person_name" type="text"-->
+              </td>
+            
+          
+            
+              <td class="father_name">
+		{% if form.father_name.errors %}
+			{{form.father_name.errors}}
+		{% endif %}
+
+          	{{ form.father_name }}    
+              <!--input id="id_person_set-0-father_name" class="vTextField" name="person_set-0-father_name" maxlength="100" type="text"-->
+              </td>
+            
+          
+            
+              <td class="age">
+		{% if form.age.errors %}
+			{{form.age.errors}}
+		{% endif %}
+
+              	{{form.age}}
+              <!--input id="id_person_set-0-age" class="vIntegerField" name="person_set-0-age" type="text"-->
+              </td>
+            
+          
+            
+              <td class="gender">
+		{% if form.gender.errors %}
+			{{form.gender.errors}}
+		{% endif %}
+
+              <!--ul class="errorlist"><li>This field is required.</li></ul-->
+              <!--select name="person_set-0-gender" id="id_person_set-0-gender">
+<option value="" selected="selected">---------</option>
+<option value="M">Male</option>
+<option value="F">Female</option>
+</select-->
+		{{form.gender}}
+              </td>
+            
+          
+            
+              <td class="phone_no">
+		{% if form.phone_no.errors %}
+			{{form.phone_no.errors}}
+		{% endif %}
+
+              {{form.phone_no}}
+              <!--input id="id_person_set-0-phone_no" class="vTextField" name="person_set-0-phone_no" maxlength="100" type="text"-->
+              </td>
+            
+          
+            
+              <td class="address">
+		{% if form.address.errors %}
+			{{form.address.errors}}
+		{% endif %}
+
+              {{form.address}}
+              <!--input id="id_person_set-0-address" class="vTextField" name="person_set-0-address" maxlength="500" type="text"-->
+              </td>
+            
+          
+            
+              <td class="land_holdings">
+		{% if form.land_holdings.errors %}
+			{{form.land_holdings.errors}}
+		{% endif %}
+
+              {{form.land_holdings}}
+              <!--input id="id_person_set-0-land_holdings" class="vIntegerField" name="person_set-0-land_holdings" type="text"-->
+              </td>
+            
+          
+            
+              <td class="village">
+		<!--{% if form.village.errors %}
+			{{form.village.errors}}
+		{% endif %}
+		{{ form.village }}-->
+	        <input name="form-{{ forloop.counter0 }}-village" id="id_form-{{ forloop.counter0 }}-village" type="hidden">
+
+              </td>
+
+        </tr>
+
+    {% endfor %}
+
+   </tbody></table>
+
+</fieldset>
+  </div>
+
+  
+  
+  
+
+</div>
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_group_name").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+

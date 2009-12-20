@@ -1,0 +1,703 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Add video | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+<link rel="stylesheet" type="text/css" media="all" href="/media/css/jquery.autocomplete.css">
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<script type="text/javascript" src="/media/js/a"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/media/js/video_filter.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.bgiframe.min.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.ajaxQueue.js"></script>
+<script type="text/javascript" src="/media/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/media/js/SelectBox.js"></script>
+<script type="text/javascript" src="/media/js/SelectFilter2.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="dashboard-video change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/dashboard/videos/">Videos</a> › 
+     Add video
+</div>
+
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Add video</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="video_form">
+<div>
+
+
+{% if form.errors %}
+    <p class="errornote">
+    Please correct the errors below.
+    </p>
+    <ul class="errorlist"></ul>
+{% endif %}
+
+
+
+
+  <fieldset class="module aligned ">
+  
+  
+{% if form.title.errors %}  
+      <div class="form-row errors title  ">
+      {{ form.title.errors }}
+{% else %}
+      <div class="form-row title">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_title" class="required">Title:</label>
+              {{ form.title }} 
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.video_type.errors %}
+      <div class="form-row errors video_type  ">
+      {{ form.video_type.errors }}
+{% else %}
+      <div class="form-row video_type">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_video_type" class="required">Video type:</label>
+         	{{ form.video_type }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.video_production_start_date.errors %}
+      <div class="form-row errors video_production_start_date  ">
+      {{ form.video_production_start_date.errors }}
+{% else %}
+      <div class="form-row video_production_start_date ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_video_production_start_date" class="required">Video production start date:</label><input id="id_video_production_start_date" class="vDateField" name="video_production_start_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(0,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink0" href="javascript:DateTimeShortcuts.openCalendar(0);"><img alt="Calendar" src="add_video_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.video_production_end_date.errors %}
+      <div class="form-row errors video_production_end_date  ">
+      {{ form.video_production_end_date.errors }}
+{% else %}      
+      <div class="form-row video_production_end_date">	
+{% endif %}
+
+      <div>
+          
+              <label for="id_video_production_end_date" class="required">Video production end date:</label><input id="id_video_production_end_date" class="vDateField" name="video_production_end_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(1,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink1" href="javascript:DateTimeShortcuts.openCalendar(1);"><img alt="Calendar" src="add_video_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+
+
+{% if form.language.errors %}  
+      <div class="form-row errors language  ">
+      {{ form.language.errors }}
+{% else %}
+      <div class="form-row language">
+{% endif %}
+
+      
+      
+      <div>
+          
+              <label for="id_language" class="required">Language:</label>
+		{{ form.language}}<a href="/dashboard/language/add/" class="add-another" id="add_id_language" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.storybase.errors %}
+      <div class="form-row errors storybase  ">
+	{{ form.storybase.errors }}
+{% else %}
+	<div class = "form-row storybase">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_storybase" class="required">Storybase:</label>
+		{{ form.storybase }}
+         
+          
+      </div>
+      
+      </div>
+  
+{% if form.summary.errors %}
+      <div class="form-row errors summary  ">
+      {{ form.summary.errors }}
+{% else %}      
+      <div class="form-row summary">
+{% endif %}
+
+      <div>
+          
+              <label for="id_summary">Summary:</label>
+         	{{ form.summary }} 
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+  <fieldset class="module aligned ">
+  <h2>Upload Files</h2>
+  
+  
+{% if form.storyboard_filename.errors %}
+      <div class="form-row errors storyboard_filename  ">
+      {{ form.storyboard_filename.errors }}
+{% else %}      
+	<div class="form-row storyboard_filename">
+{% endif %}
+      <div>
+          
+              <label for="id_storyboard_filename">Storyboard filename:</label>
+          	{{ form.storyboard_filename }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.raw_filename.errors %}
+      <div class="form-row errors  raw_filename  ">
+	{{ form.raw_filename.errors }}
+{% else %}
+	<div class="form-row raw_filename">
+{% endif %}
+
+      
+      
+      <div>
+          
+              <label for="id_raw_filename">Raw filename:</label>
+         	{{ form.raw_filename }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.movie_maker_project_filename.errors %}
+      <div class="form-row errors movie_maker_project_filename  ">
+	{{ form.movie_maker_project_filename }}
+{% else %}
+	<div class="form-row movie_maker_project_filename ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_movie_maker_project_filename">Movie maker project filename:</label>
+		{{ form.movie_maker_project_filename }}
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.final_edited_filename.errors %}
+      <div class="form-row errors final_edited_filename  ">
+      {{ form.final_edited_filename.errors }}
+{% else %}
+	<div class="form-row final_edited_filename">
+{% endif %}
+
+      
+      
+      <div>
+          
+              <label for="id_final_edited_filename">Final edited filename:</label>
+		{{ form.final_edited_filename }}
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+  <fieldset class="module aligned ">
+  
+  
+{% if form.village.errors %}  
+      <div class="form-row errors village  ">
+	{{ form.village.errors }}
+{% else %}
+	<div class="form-row village">
+{% endif %}
+
+
+      
+      
+      <div>
+          
+              <label for="id_village" class="required">Village:</label><input name="village" id="id_village" type="hidden">
+            <style type="text/css" media="screen">
+                #lookup_village {
+                    padding-right:16px;
+                    background: url(
+                        /media/img/admin/selector-search.gif
+                    ) no-repeat right;
+                }
+                #del_village {
+                    display: none;
+                }
+            </style>
+<input class="ac_input" autocomplete="off" id="lookup_village" type="text">
+<a href="#" id="del_village">
+<img src="/media/img/admin/icon_deletelink.gif">
+</a>
+<script type="text/javascript">
+            if ($('#lookup_village').val()) {
+                $('#del_village').show()
+            }
+            $('#lookup_village').autocomplete('../search/', {
+                extraParams: {
+                    search_fields: 'village_name',
+                    app_label: 'dashboard',
+                    model_name: 'village',
+                },
+            }).result(function(event, data, formatted) {
+                if (data) {
+                    $('#id_village').val(data[1]);
+                    $('#del_village').show();
+		    filter();
+                }
+            });
+            $('#del_village').click(function(ele, event) {
+                $('#id_village').val('');
+                $('#del_village').hide();
+                $('#lookup_village').val('');
+            });
+            </script>
+        <a href="/dashboard/village/add/" class="add-another" id="add_id_village" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.facilitator.errors %}
+      <div class="form-row errors  facilitator  ">
+	{{ form.facilitator.errors }}
+{% else %}
+	<div class="form-row facilitator">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_facilitator" class="required">Facilitator:</label><select disabled="true" name="facilitator" id="id_facilitator">
+<option value="" selected="selected">---------</option>
+</select>
+          
+          
+      </div>
+      
+      </div>
+
+{% if form.cameraoperator.errors %}  
+      <div class="form-row errors cameraoperator  ">
+	{{ form.cameraoperator.errors }}
+{% else %}
+	<div class="form-row cameraoperator">
+{% endif %}      
+      
+      <div>
+          
+              <label for="id_cameraoperator" class="required">Cameraoperator:</label><select disabled="true" name="cameraoperator" id="id_cameraoperator">
+<option value="" selected="selected">---------</option>
+</select>
+          
+          
+      </div>
+      
+      </div>
+
+{% if form.related_agricultural_practices.errors %}  
+      <div class="form-row errors related_agricultural_practices  ">
+	{{form.related_agricultural_practices.errors }}
+{% else %}
+     <div class="form-row related_agricultural_practices "> 
+{% endif %}
+      
+      <div>
+          
+              <label for="id_related_agricultural_practices" class="required">Related agricultural practices:</label>
+		{{ form.related_agricultural_practices }}
+<script type="text/javascript">addEvent(window, "load", function(e) {SelectFilter.init("id_related_agricultural_practices", "related agricultural practices", 0, "/media/"); });</script>
+<a href="/dashboard/practices/add/" class="add-another" id="add_id_related_agricultural_practices" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      <!--div class="selector"><div class="selector-available"><h2>Available related agricultural practices</h2><p class="selector-filter"><img src="add_video_files/selector-search.gif"> <input id="id_related_agricultural_practices_input" type="text"></p><select class="filtered" multiple="multiple" name="related_agricultural_practices_old" id="id_related_agricultural_practices_from">
+
+
+
+<option value="1">Vermicompost</option><option value="2">Harvesting</option><option value="3">Sowing</option></select><a class="selector-chooseall" href='javascript:%20(function(){%20SelectBox.move_all("id_related_agricultural_practices_from",%20"id_related_agricultural_practices_to");%20})()'>Choose all</a></div><ul class="selector-chooser"><li><a class="selector-add" href='javascript:%20(function(){%20SelectBox.move("id_related_agricultural_practices_from","id_related_agricultural_practices_to");})()'>Add</a></li><li><a class="selector-remove" href='javascript:%20(function(){%20SelectBox.move("id_related_agricultural_practices_to","id_related_agricultural_practices_from");})()'>Remove</a></li></ul><div class="selector-chosen"><h2>Chosen related agricultural practices</h2><p class="selector-filter">Select your choice(s) and click <img alt="Add" src="add_video_files/selector-add.gif"></p><select class="filtered" name="related_agricultural_practices" size="0" multiple="multiple" id="id_related_agricultural_practices_to"></select><a class="selector-clearall" href='javascript:%20(function()%20{%20SelectBox.move_all("id_related_agricultural_practices_to",%20"id_related_agricultural_practices_from");})()'>Clear all</a></div></div></div-->
+     </div> 
+      </div>
+ 
+{% if form.farmers_shown.errors %} 
+      <div class="form-row errors farmers_shown  ">
+      {{ form.farmers_shown.errors}}
+{% else %}      
+      <div class="form-row farmers_shown">
+{% endif %}
+
+      <div>
+          
+              <label for="id_farmers_shown" class="required">Farmers shown:</label>
+		{{ form.farmers_shown }}
+
+<script type="text/javascript">addEvent(window, "load", function(e) {SelectFilter.init("id_farmers_shown", "farmers shown", 0, "/media/"); });</script>
+<a href="/dashboard/person/add/" class="add-another" id="add_id_farmers_shown" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      <!--div class="selector"><div class="selector-available"><h2>Available farmers shown</h2><p class="selector-filter"><img src="add_video_files/selector-search.gif"> <input id="id_farmers_shown_input" type="text"></p><select class="filtered" multiple="multiple" name="farmers_shown_old" id="id_farmers_shown_from">
+
+<option value="99">per6</option><option value="98">per5</option><option value="97">per4</option><option value="96">per3</option><option value="95">per2</option><option value="94">per1</option><option value="93">person7</option><option value="92">person6</option><option value="91">person5</option><option value="90">person4</option><option value="89">person3</option><option value="87">person1</option><option value="88">person2</option></select><a class="selector-chooseall" href='javascript:%20(function(){%20SelectBox.move_all("id_farmers_shown_from",%20"id_farmers_shown_to");%20})()'>Choose all</a></div><ul class="selector-chooser"><li><a class="selector-add" href='javascript:%20(function(){%20SelectBox.move("id_farmers_shown_from","id_farmers_shown_to");})()'>Add</a></li><li><a class="selector-remove" href='javascript:%20(function(){%20SelectBox.move("id_farmers_shown_to","id_farmers_shown_from");})()'>Remove</a></li></ul><div class="selector-chosen"><h2>Chosen farmers shown</h2><p class="selector-filter">Select your choice(s) and click <img alt="Add" src="add_video_files/selector-add.gif"></p><select class="filtered" name="farmers_shown" size="0" multiple="multiple" id="id_farmers_shown_to"></select><a class="selector-clearall" href='javascript:%20(function()%20{%20SelectBox.move_all("id_farmers_shown_to",%20"id_farmers_shown_from");})()'>Clear all</a></div></div></div-->
+      
+      </div>
+
+      </div>
+
+
+{% if form.actors.errors %}  
+      <div class="form-row errors actors  ">
+	{{ form.actors.errors }}
+{% else %}
+	<div class="form-row actors ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_actors" class="required">Actors:</label>
+		{{ form.actors}}
+          
+          
+      </div>
+     
+      </div>
+  
+</fieldset>
+
+
+  <fieldset class="module aligned ">
+  <h2>Video Quality</h2>
+  
+{% if form.picture_quality.errors  %}  
+      <div class="form-row errors picture_quality  ">
+	{{ form.picture_quality.errors }}
+{% else %}
+	<div class="form-row picture_quality">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_picture_quality">Picture quality:</label>
+         	{{ form.picture_quality }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.audio_quality.errors %}
+      <div class="form-row errors audio_quality  ">
+	{{ form.audio_quality.errors }}
+{% else %}
+      <div class="form-row audio_quality">
+{% endif %}      
+      <div>
+          
+              <label for="id_audio_quality">Audio quality:</label>
+          	{{ form.audio_quality }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.editing_quality.errors %}
+      <div class="form-row errors editing_quality  ">
+	{{ form.editing_quality.errors }}
+{% else %}
+      <div class="form-row editing_quality">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_editing_quality">Editing quality:</label>
+              {{ form.editing_quality }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.edit_start_date.errors %}
+      <div class="form-row errors edit_start_date  ">
+      {{ form.edit_start_date.errors }}
+{% else %}
+      <div class="form-row edit_start_date ">
+{% endif %}      
+
+      <div>
+          
+              <label for="id_edit_start_date">Edit start date:</label><input id="id_edit_start_date" class="vDateField" name="edit_start_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(2,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink2" href="javascript:DateTimeShortcuts.openCalendar(2);"><img alt="Calendar" src="add_video_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.edit_finish_date.errors %}
+      <div class="form-row errors edit_finish_date  ">
+      {{ form.edit_finish_date.errors }}
+{% else %}
+      <div class="form-row edit_finish_date ">
+{% endif %}      
+      <div>
+          
+              <label for="id_edit_finish_date">Edit finish date:</label><input id="id_edit_finish_date" class="vDateField" name="edit_finish_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(3,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink3" href="javascript:DateTimeShortcuts.openCalendar(3);"><img alt="Calendar" src="add_video_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.thematic_quality.errors %}
+      <div class="form-row errors thematic_quality  ">
+      {{ form.thematic_quality.errors }}
+{% else %}
+      <div class="form-row thematic_quality">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_thematic_quality">Thematic quality:</label>
+          	{{ form.thematic_quality }}
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+  <fieldset class="module aligned ">
+  <h2>Review</h2>
+  
+{% if form.reviewer.errors %}
+      <div class="form-row errors reviewer  ">
+	{{ form.reviewer.errors }}
+{% else %}
+      <div class="form-row reviewer">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_reviewer">Reviewer:</label>
+         	{{ form.reviewer }} 
+          
+      </div>
+      
+      </div>
+
+{% if form.approval_date.errors %}  
+      <div class="form-row errors  approval_date  ">
+	{{ form.approval_date.errors }}
+{% else %}
+	<div class="form-row approval_date">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_approval_date">Approval date:</label><input id="id_approval_date" class="vDateField" name="approval_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(4,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink4" href="javascript:DateTimeShortcuts.openCalendar(4);"><img alt="Calendar" src="add_video_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+ 
+{% if form.supplementary_video_produced.errors %} 
+      <div class="form-row errors supplementary_video_produced  ">
+	{{ form.supplementary_video_produced }}
+{% else %}
+	<div class="form-row supplementary_video_produced ">
+{% endif %}      
+      
+      <div>
+          
+              <label for="id_supplementary_video_produced">Supplementary video produced:</label>
+		{{ form.supplementary_video_produced }}<a href="/dashboard/video/add/" class="add-another" id="add_id_supplementary_video_produced" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.video_suitable_for.errors %}
+      <div class="form-row errors video_suitable_for  ">
+      {{ form.video_suitable_for.errors  }}
+{% else %}      
+      <div class="form-row video_suitable_for ">
+{% endif %}
+
+      <div>
+          
+              <label for="id_video_suitable_for" class="required">Video suitable for:</label>
+         	{{ form.video_suitable_for }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.remarks.errors %}
+      <div class="form-row errors remarks  ">
+      {{ form.remarks.errors }}
+{% else %}
+      <div class="form-row remarks">
+{% endif %}      
+
+      <div>
+          
+              <label for="id_remarks">Remarks:</label>
+         	{{ form.remarks }} 
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+
+
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_title").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+

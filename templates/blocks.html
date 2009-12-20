@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Select block to change | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
+  
+  <script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+  
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="change-list">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+    <div class="breadcrumbs">
+      <a href="/admin/">
+        Home
+      </a>
+       › 
+       <a href="/admin/dashboard/">
+         Dashboard
+      </a>
+      › 
+      Blocks
+    </div>
+  
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="flex">
+        
+        <h1>Select block to change</h1>
+        
+  <div id="content-main">
+    
+      
+        <ul class="object-tools">
+          <li>
+            <a href="/dashboard/block/add/" class="addlink">
+              Add block
+            </a>
+          </li>
+        </ul>
+      
+    
+    
+    <div class="module" id="changelist">
+      
+
+
+
+      
+
+
+      
+        
+      
+      
+      <!--form action="" method="post">
+      
+
+      
+          
+<div class="actions">
+    <label>Action: <select name="action">
+<option value="" selected="selected">---------</option>
+<option value="delete_selected">Delete selected blocks</option>
+</select></label>
+    <button type="submit" class="button" title="Run the selected action" name="index" value="0">Go</button>
+</div-->
+
+          
+<table cellspacing="0">
+<thead>
+<tr>
+<!--th>
+
+<input style="display: inline;" id="action-toggle" type="checkbox">
+</th-->
+<h2>
+
+Block
+</h2>
+</tr>
+</thead>
+<tbody>
+
+{% for block in blocks %}
+
+	<tr class="{% cycle 'row1' 'row2' %}"><!--td><input class="action-select" value="19" name="_selected_action" type="checkbox"></td--><th><a href="/admin/dashboard/block/{{block.id}}/">{{block.block_name}}</a></th></tr>
+
+{% endfor %}
+
+</tbody>
+</table>
+
+
+          
+      
+      
+
+<p class="paginator">
+
+{{ blocks|length}} blocks
+
+
+</p>
+
+      <!--/form-->
+    </div>
+  </div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body></html>

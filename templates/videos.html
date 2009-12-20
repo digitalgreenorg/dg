@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Select video to change | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
+  
+  <script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/media/js/video_filter.js"></script>
+  
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="change-list">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+    <div class="breadcrumbs">
+      <a href="/admin/">
+        Home
+      </a>
+       › 
+       <a href="/admin/dashboard/">
+         Dashboard
+      </a>
+      › 
+      Videos
+    </div>
+  
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="flex">
+        
+        <h1>Select video to change</h1>
+        
+  <div id="content-main">
+    
+      
+        <ul class="object-tools">
+          <li>
+            <a href="/dashboard/video/add/" class="addlink">
+              Add video
+            </a>
+          </li>
+        </ul>
+      
+    
+    
+    <div class="module" id="changelist">
+      
+
+      <!--form action="" method="post">
+      
+
+      
+          
+<div class="actions">
+    <label>Action: <select name="action">
+<option value="" selected="selected">---------</option>
+<option value="delete_selected">Delete selected videos</option>
+</select></label>
+    <button type="submit" class="button" title="Run the selected action" name="index" value="0">Go</button>
+</div-->
+
+          
+<table cellspacing="0">
+<thead>
+<tr>
+<th>
+Title
+</th>
+<th>
+Village
+</th>
+<th>
+Video production start date
+</th>
+<th>
+Video production end date
+</th>
+</tr>
+</thead>
+<tbody>
+
+{% for video in videos %}
+<tr class="{% cycle 'row1' 'row2'%}"><!--td><input class="action-select" value="12" name="_selected_action" type="checkbox"></td--><th><a href="/admin/dashboard/video/{{ video.id }}/">{{ video.title }}</a></th><td>{{ video.village}}</td><td class="nowrap">{{ video.video_production_start_date }}</td><td class="nowrap">{{ video.video_production_end_date }} </td></tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+          
+      
+      
+
+<p class="paginator">
+
+{{ videos|length }} video
+
+
+</p>
+
+      <!--/form-->
+    </div>
+  </div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body></html>

@@ -1,0 +1,465 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Add animator | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<script type="text/javascript" src="/media/js/a"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="dashboard-animator change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/dashboard/animators/">Animators</a> › 
+     Add animator
+</div>
+
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Add animator</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="animator_form">
+<div>
+{% if form.errors %}
+    <p class="errornote">
+    Please correct the errors below.
+    </p>
+    <ul class="errorlist"></ul>
+{% endif %}
+
+
+
+
+  <fieldset class="module aligned ">
+  
+  
+{% if form.name.errors %}  
+      <div class="form-row errors name  ">
+      {{ form.name.errors }}
+{% else %}
+	<div class="form-row name">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_name" class="required">Name:</label>
+		{{ form.name }}
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.age.errors %}
+      <div class="form-row errors age  ">
+	{{ form.age.errors }}
+{% else %}      
+	<div class="form-row age">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_age">Age:</label>
+		{{ form.age }}
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.gender.errors %}
+	<div class="form-row errors  gender">
+	{{ form.gender.errors }}
+{% else %}
+        <div class="form-row gender  ">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_gender" class="required">Gender:</label>
+   		{{ form.gender }}       
+          
+      </div>
+      
+      </div>
+ 
+{% if form.csp_flag.errors %}
+	<div class="form-row errors csp_flag">
+	{{ form.csp_flag.errors }}
+{% else %}
+        <div class="form-row csp_flag  ">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_csp_flag">Csp flag:</label>
+              {{ form.csp_flag}} 
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.camera_operator_flag.errors %}
+      <div class="form-row errors  camera_operator_flag  ">
+	{{ form.camera_operator_flag.errors  }}
+{% else %}
+	<div class="form-row camera_operator_flag ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_camera_operator_flag">Camera operator flag:</label>
+         	{{ form.camera_operator_flag }} 
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.facilitator_flag.errors  %}
+      <div class="form-row errors facilitator_flag  ">
+	{{ form.facilitator_flag.errors }}
+{% else %}      
+      <div class="form-row facilitator_flag ">
+{% endif %}
+      <div>
+          
+              <label for="id_facilitator_flag">Facilitator flag:</label>
+		{{ form.facilitator_flag }}
+</select>
+          
+          
+      </div>
+      
+      </div>
+ 
+{% if form.phone_no.errors %} 
+      <div class="form-row errors phone_no  ">
+	{{ form.phone_no.errors }}
+{% else %}      
+      <div class="form-row phone_no">
+{% endif %}
+      <div>
+          
+              <label for="id_phone_no">Phone no:</label>
+              {{ form.phone_no}} 
+          
+      </div>
+      
+      </div>
+  
+
+
+{% if form.address.errors %}
+ 	<div class="form-row errors address">
+	{{ form.address.errors }}
+{% else %}
+        <div class="form-row address  ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_address">Address:</label>
+         	{{ form.address}} 
+          
+      </div>
+      
+      </div>
+
+{% if form.partner.errors %}  
+      <div class="form-row errors partner  ">
+      {{ form.partner.errors }}
+{% else %}      
+      <div class="form-row partner ">
+{% endif %}
+         <div> 
+              <label for="id_partner" class="required">Partner:</label>
+		{{ form.partner}}
+		<a href="/dashboard/partner/add/" class="add-another" id="add_id_partner" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+ 
+{% if form.home_village.errors %} 
+      <div class="form-row errors  home_village  ">
+      {{ form.home_village.errors }}
+{% else %}      
+      <div class="form-row home_village">
+{% endif %}
+         <div> 
+              <label for="id_home_village" class="required">Home village:</label>
+		{{ form.home_village}}
+		<a href="/admin/dashboard/village/add/" class="add-another" id="add_id_home_village" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+    
+<div class="inline-group">
+  <h2>Animator Assigned Villages</h2>
+
+<input name="animatorassignedvillage_set-TOTAL_FORMS" value="3" id="id_animatorassignedvillage_set-TOTAL_FORMS" type="hidden"><input name="animatorassignedvillage_set-INITIAL_FORMS" value="0" id="id_animatorassignedvillage_set-INITIAL_FORMS" type="hidden">
+
+{{ formset.management_form }}
+{% for form in formset.forms %}
+
+
+<div class="inline-related">
+  <h3><b>Animator Assigned Village:</b>&nbsp; #{{ forloop.counter }}
+    
+  </h3>
+  
+  
+
+  
+    <fieldset class="module aligned ">
+  
+  
+	{% if form.village.errors %} 
+	      <div class="form-row errors  village  ">
+      		{{ form.village.errors }}
+	{% else %}
+	      <div class="form-row village">
+        {% endif %}
+
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-{{ forloop.counter0 }}-village" class="required">Village:</label>
+		{{ form.village }}
+		<a href="/admin/dashboard/village/add/" class="add-another" id="add_id_animatorassignedvillage_set-{{ forloop.counter0 }}-village" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+	{% if form.start_date.errors %}
+		<div class="form-row errors start_date  ">
+		{{ form.start_date.errors }}
+        {% else %}
+      		<div class="form-row start_date">
+	{% endif %}
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-{{ forloop.counter0 }}-start_date">Start date:</label>
+		<input id="id_animatorassignedvillage_set-{{ forloop.counter0 }}-start_date" class="vDateField" name="animatorassignedvillage_set-{{ forloop.counter0}}-start_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(0,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink0" href="javascript:DateTimeShortcuts.openCalendar(0);"><img alt="Calendar" src="add_animator_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+  {{ form.id }}
+  {{ form.animator }}
+  <!--input name="animatorassignedvillage_set-0-id" id="id_animatorassignedvillage_set-0-id" type="hidden">
+  <input name="animatorassignedvillage_set-0-animator" id="id_animatorassignedvillage_set-0-animator" type="hidden"-->
+</div>
+
+{% endfor %}
+<!--div class="inline-related">
+  <h3><b>Animator Assigned Village:</b>&nbsp; #2
+    
+  </h3>
+  
+  
+
+  
+    <fieldset class="module aligned ">
+  
+  
+  
+      <div class="form-row village  ">
+      
+      
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-1-village" class="required">Village:</label><select name="animatorassignedvillage_set-1-village" id="id_animatorassignedvillage_set-1-village">
+<option value="" selected="selected">---------</option>
+<option value="19">village1</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/village/add/" class="add-another" id="add_id_animatorassignedvillage_set-1-village" onclick="return showAddAnotherPopup(this);"> <img src="add_animator_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+      <div class="form-row start_date  ">
+      
+      
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-1-start_date">Start date:</label><input id="id_animatorassignedvillage_set-1-start_date" class="vDateField" name="animatorassignedvillage_set-1-start_date" size="10" type="text"><span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(1,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink1" href="javascript:DateTimeShortcuts.openCalendar(1);"><img alt="Calendar" src="add_animator_files/icon_calendar.gif"></a></span>
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+  
+  <input name="animatorassignedvillage_set-1-id" id="id_animatorassignedvillage_set-1-id" type="hidden">
+  <input name="animatorassignedvillage_set-1-animator" id="id_animatorassignedvillage_set-1-animator" type="hidden">
+</div>
+
+<div class="inline-related last-related">
+  <h3><b>Animator Assigned Village:</b>&nbsp; #3
+    
+  </h3>
+  
+  
+
+  
+    <fieldset class="module aligned ">
+  
+  
+  
+      <div class="form-row village  ">
+      
+      
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-2-village" class="required">Village:</label><select name="animatorassignedvillage_set-2-village" id="id_animatorassignedvillage_set-2-village">
+<option value="" selected="selected">---------</option>
+<option value="19">village1</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/village/add/" class="add-another" id="add_id_animatorassignedvillage_set-2-village" onclick="return showAddAnotherPopup(this);"> <img src="add_animator_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+      <div class="form-row start_date  ">
+      
+      
+      <div>
+          
+              <label for="id_animatorassignedvillage_set-2-start_date">Start date:</label><input id="id_animatorassignedvillage_set-2-start_date" class="vDateField" name="animatorassignedvillage_set-2-start_date" size="10" type="text"><span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(2,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink2" href="javascript:DateTimeShortcuts.openCalendar(2);"><img alt="Calendar" src="add_animator_files/icon_calendar.gif"></a></span>
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+  
+  <input name="animatorassignedvillage_set-2-id" id="id_animatorassignedvillage_set-2-id" type="hidden">
+  <input name="animatorassignedvillage_set-2-animator" id="id_animatorassignedvillage_set-2-animator" type="hidden">
+</div-->
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_name").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+

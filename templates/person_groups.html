@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Select Person group to change | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+
+  
+  <link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
+  
+  <script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+  
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="change-list">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+            
+                
+                
+                    <a href="http://174.129.13.106/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="http://174.129.13.106/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="http://174.129.13.106/admin/logout/">
+                
+                Log out</a>
+            
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+    <div class="breadcrumbs">
+      <a href="http://174.129.13.106/admin/">
+        Home
+      </a>
+       › 
+       <a href="http://174.129.13.106/admin/dashboard/">
+         Dashboard
+      </a>
+      › 
+      Person groups
+    </div>
+  
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="flex">
+        
+        <h1>Select Person group to change</h1>
+        
+  <div id="content-main">
+    
+      
+        <ul class="object-tools">
+          <li>
+            <a href="http://174.129.13.106/admin/dashboard/persongroups/add/" class="addlink">
+              Add Person group
+            </a>
+          </li>
+        </ul>
+      
+    
+    
+    <div class="module" id="changelist">
+      
+
+
+
+      
+
+
+      
+        
+      
+      
+      <!--form action="" method="post">
+      
+
+      
+          
+<div class="actions">
+    <label>Action: <select name="action">
+<option value="" selected="selected">---------</option>
+<option value="delete_selected">Delete selected Person groups</option>
+</select></label>
+    <button type="submit" class="button" title="Run the selected action" name="index" value="0">Go</button>
+</div-->
+
+          
+<table cellspacing="0">
+<thead>
+<tr>
+<!--th>
+
+<input style="display: inline;" id="action-toggle" type="checkbox">
+</th--><h2>
+<a href="http://174.129.13.106/admin/dashboard/persongroups/?ot=asc&amp;o=1">
+Group name
+</a></h2><h2>
+<a href="http://174.129.13.106/admin/dashboard/persongroups/?ot=asc&amp;o=2">
+Village
+</a></h2>
+</tr>
+</thead>
+<tbody>
+
+{% for persongroup in persongroups %}
+
+<tr class="{% cycle 'rpw1' 'row2'%}"><td><input class="action-select" value="25" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/25/">G3</a></th><td>Village3</td></tr>
+
+<tr class="row2"><td><input class="action-select" value="24" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/24/">G2</a></th><td>Village3</td></tr>
+
+<tr class="row1"><td><input class="action-select" value="23" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/23/">G1</a></th><td>Village3</td></tr>
+
+<tr class="row2"><td><input class="action-select" value="22" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/22/">Grp3</a></th><td>Village2</td></tr>
+
+<tr class="row1"><td><input class="action-select" value="21" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/21/">Grp2</a></th><td>Village2</td></tr>
+
+<tr class="row2"><td><input class="action-select" value="20" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/20/">Grp1</a></th><td>Village2</td></tr>
+
+<tr class="row1"><td><input class="action-select" value="17" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/17/">Group3</a></th><td>Village1</td></tr>
+
+<tr class="row2"><td><input class="action-select" value="16" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/16/">Group2</a></th><td>Village1</td></tr>
+
+<tr class="row1"><td><input class="action-select" value="15" name="_selected_action" type="checkbox"></td><th><a href="http://174.129.13.106/admin/dashboard/persongroups/15/">Group1</a></th><td>Village1</td></tr>
+
+</tbody>
+</table>
+
+
+          
+      
+      
+
+<p class="paginator">
+
+9 Person groups
+
+
+</p>
+
+      </form>
+    </div>
+  </div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body></html>

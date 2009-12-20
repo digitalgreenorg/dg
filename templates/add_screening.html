@@ -1,0 +1,630 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Add screening | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+<link rel="stylesheet" type="text/css" media="all" href="/media/css/jquery.autocomplete.css">
+<link href="/media/css/dynamic_inlines_with_sort.css" type="text/css" media="all" rel="stylesheet">
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<script type="text/javascript" src="/media/js/a"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/media/js/filter1.js"></script>
+<script type="text/javascript" src="/media/js/ui/ui.core.js"></script>
+<script type="text/javascript" src="/media/js/ui/ui.sortable.js"></script>
+<script type="text/javascript" src="/media/js/dynamic_inlines_with_sort.js"></script>
+<script type="text/javascript" src="/media/js/filter_person.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.bgiframe.min.js"></script>
+<script type="text/javascript" src="/media/js/lib/jquery.ajaxQueue.js"></script>
+<script type="text/javascript" src="/media/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/media/js/SelectBox.js"></script>
+<script type="text/javascript" src="/media/js/SelectFilter2.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="dashboard-screening change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/dashboard/screenings/">Screenings</a> › 
+     Add screening
+</div>
+
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Add screening</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="screening_form">
+<div>
+
+{% if form.errors %}
+    <p class="errornote">
+    Please correct the errors below.
+    </p>
+    <ul class="errorlist"></ul>
+{% endif %}
+
+
+
+
+  <fieldset class="module aligned ">
+  
+  
+{% if form.date.errors %}  
+      <div class="form-row errors date  ">
+      {{ form.date.errors }}
+{% else %}      
+      <div class= "form-row date">
+{% endif %}
+	<div>
+          
+              <label for="id_date" class="required">Date:</label><input id="id_date" class="vDateField" name="date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(0,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink0" href="javascript:DateTimeShortcuts.openCalendar(0);"><img alt="Calendar" src="add_screening_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.start_time.errors %}
+      <div class="form-row errors  start_time  ">
+      {{ form.start_time.errors }}
+{% else %}      
+       <div class="form-row start_time">
+{% endif %}
+	<div>
+          
+              <label for="id_start_time" class="required">Start time:</label><input id="id_start_time" class="vTimeField" name="start_time" size="8" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleClockQuicklink(0,%20new%20Date().getHourMinuteSecond());">Now</a>&nbsp;|&nbsp;<a id="clocklink0" href="javascript:DateTimeShortcuts.openClock(0);"><img alt="Clock" src="add_screening_files/icon_clock.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.end_time.errors %}
+      <div class="form-row errors end_time  ">
+      {{ form.end_time.errors }}
+{% else %}      
+      <div class="form-row end_time">
+{% endif %}      
+      <div>
+          
+              <label for="id_end_time" class="required">End time:</label><input id="id_end_time" class="vTimeField" name="end_time" size="8" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleClockQuicklink(1,%20new%20Date().getHourMinuteSecond());">Now</a>&nbsp;|&nbsp;<a id="clocklink1" href="javascript:DateTimeShortcuts.openClock(1);"><img alt="Clock" src="add_screening_files/icon_clock.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.location.errors %}
+      <div class="form-row errors location  ">
+      {{ form.location.errors }}
+{% else %}      
+      <div class="form-row location">
+{% endif %}
+      <div>
+          
+              <label for="id_location">Location:</label>
+         	{{ form.location }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.village.errors %}
+      <div class="form-row errors village  ">
+      {{ form.village.errors }}
+{% else %}      
+      <div class="form-row village ">
+{% endif %}          
+      <div>
+              <label for="id_village" class="required">Village:</label><input name="village" id="id_village" type="hidden">
+            <style type="text/css" media="screen">
+                #lookup_village {
+                    padding-right:16px;
+                    background: url(
+                        /media/img/admin/selector-search.gif
+                    ) no-repeat right;
+                }
+                #del_village {
+                    display: none;
+                }
+            </style>
+<input class="ac_input" autocomplete="off" id="lookup_village" type="text">
+<a href="#" id="del_village">
+<img src="/media/img/admin/icon_deletelink.gif">
+</a>
+<script type="text/javascript">
+            if ($('#lookup_village').val()) {
+                $('#del_village').show()
+            }
+            $('#lookup_village').autocomplete('../search/', {
+                extraParams: {
+                    search_fields: 'village_name',
+                    app_label: 'dashboard',
+                    model_name: 'village',
+                },
+            }).result(function(event, data, formatted) {
+                if (data) {
+                    $('#id_village').val(data[1]);
+                    $('#del_village').show();
+		    filter();
+                }
+            });
+            $('#del_village').click(function(ele, event) {
+                $('#id_village').val('');
+                $('#del_village').hide();
+                $('#lookup_village').val('');
+            });
+            </script>
+        <a href="/dashboard/village/add/" class="add-another" id="add_id_village" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.animator.errors %}
+      <div class="form-row errors animator  ">
+      {{ form.animator.errors }}
+{% else %}
+      <div class="form-row animator ">
+{% endif %}
+      <div>
+          
+              <label for="id_animator" class="required">Animator:</label><select disabled="true" name="animator" id="id_animator">
+<option value="" selected="selected">---------</option>
+</select>
+          
+          
+      </div>
+      
+      </div>
+
+{% if form.videoes_screened.errors  %}  
+      <div class="form-row errors videoes_screened  ">
+      {{ form.videoes_screened.errors }}
+{% else %}      
+      <div class="form-row videoes_screened">
+{% endif %}
+      <div>
+          
+              <label for="id_videoes_screened" class="required">Videos screened:</label>
+		{{ form.videoes_screened }}
+<script type="text/javascript">addEvent(window, "load", function(e) {SelectFilter.init("id_videoes_screened", "videoes screened", 0, "/media/"); });</script>
+<a href="/dashboard/video/add/" class="add-another" id="add_id_videoes_screened" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      <!--div class="selector"><div class="selector-available"><h2>Available videoes screened</h2><p class="selector-filter"><img src="add_screening_files/selector-search.gif"> <input id="id_videoes_screened_input" type="text"></p><select class="filtered" multiple="multiple" name="videoes_screened_old" id="id_videoes_screened_from">
+
+<option value="12">video1</option></select><a class="selector-chooseall" href='javascript:%20(function(){%20SelectBox.move_all("id_videoes_screened_from",%20"id_videoes_screened_to");%20})()'>Choose all</a></div><ul class="selector-chooser"><li><a class="selector-add" href='javascript:%20(function(){%20SelectBox.move("id_videoes_screened_from","id_videoes_screened_to");})()'>Add</a></li><li><a class="selector-remove" href='javascript:%20(function(){%20SelectBox.move("id_videoes_screened_to","id_videoes_screened_from");})()'>Remove</a></li></ul><div class="selector-chosen"><h2>Chosen videoes screened</h2><p class="selector-filter">Select your choice(s) and click <img alt="Add" src="add_screening_files/selector-add.gif"></p><select class="filtered" name="videoes_screened" size="0" multiple="multiple" id="id_videoes_screened_to"></select><a class="selector-clearall" href='javascript:%20(function()%20{%20SelectBox.move_all("id_videoes_screened_to",%20"id_videoes_screened_from");})()'>Clear all</a></div></div></div-->
+      
+      </div>
+	</div>
+  
+{% if form.target_person_attendance.errors %}
+      <div class="form-row errors target_person_attendance  ">
+	{{ form.target_person_attendance.errors }}
+{% else %}      
+      <div class="form-row target_person_attendance ">
+{% endif %}
+      <div>
+          
+              <label for="id_target_person_attendance">Target person attendance:</label>
+         	{{ form.target_person_attendance}} 
+          
+      </div>
+      
+      </div>
+
+{% if form.target_audience_interest.errors %}  
+      <div class="form-row errors target_audience_interest  ">
+	{{ form.target_audience_interest.errors }}
+{% else %}      
+      <div class="form-row target_audience_interest">
+{% endif %}
+      <div>
+          
+              <label for="id_target_audience_interest">Target audience interest:</label>
+         	{{ form.target_audience_interest }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.target_adoptions.errors %}
+      <div class="form-row errors target_adoptions  ">
+      {{ form.target_adoptions.errors }}
+{% else %}      
+	<div class="form-row target_adoptions">
+{% endif %}
+      <div>
+          
+              <label for="id_target_adoptions">Target adoptions:</label>
+         	{{ form.target_adoptions }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.fieldofficer.errors %}
+      <div class="form-row errors  fieldofficer  ">
+      {{ form.fieldofficer.errors }}
+{% else %}
+	<div class="form-row fieldofficer ">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_fieldofficer">Fieldofficer:</label>
+		{{ form.fieldofficer }}
+<a href="/dashboard/fieldofficer/add/" class="add-another" id="add_id_fieldofficer" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.farmer_groups_targeted.errors  %}
+      <div class="form-row errors  farmer_groups_targeted  ">
+      {{ form.farmer_groups_targeted.errors }}
+{% else %}      
+      <div class="form-row farmer_groups_targeted">
+{% endif %}
+
+      <div>
+          
+              <label for="id_farmer_groups_targeted" class="required">Farmer groups targeted:</label>
+		<select id="id_farmer_groups_targeted" name="farmer_groups_targeted" onchange="filter_person();" multiple="multiple"></select>
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+    
+<div class="inline-group">
+  <div class="tabular inline-related last-related">
+<input name="personmeetingattendance_set-TOTAL_FORMS" value="2" id="id_personmeetingattendance_set-TOTAL_FORMS" type="hidden"><input name="personmeetingattendance_set-INITIAL_FORMS" value="0" id="id_personmeetingattendance_set-INITIAL_FORMS" type="hidden">
+<fieldset class="module">
+   <h2>Person meeting attendances</h2>
+   
+   <table>
+     <thead><tr>
+     
+       
+         <th colspan="2">Person</th>
+        
+     
+       
+         <th>Expressed interest practice</th>
+        
+     
+       
+         <th>Expressed interest</th>
+        
+     
+       
+         <th>Expressed adoption practice</th>
+        
+     
+       
+         <th>Expressed adoption</th>
+        
+     
+       
+         <th>Expressed question practice</th>
+        
+     
+       
+         <th>Expressed question</th>
+        
+     
+     <th>Present?</th>
+     </tr></thead>
+
+     
+        
+        <tbody>
+{{ formset.management_form }}
+{% for form in formset.forms %}
+
+<!--tr style="display: none;" class="row2  add_template">
+
+        <td class="original">
+          
+          <input name="personmeetingattendance_set-1-id" id="id_personmeetingattendance_set-1-id" type="hidden">
+          <input name="personmeetingattendance_set-1-screening" id="id_personmeetingattendance_set-1-screening" type="hidden">
+          
+        </td>
+
+        
+          
+            
+              <td class="person">
+              
+              <select name="personmeetingattendance_set-1-person" id="id_personmeetingattendance_set-1-person">
+<option value="" selected="selected">---------</option>
+<option value="99">per6</option>
+<option value="98">per5</option>
+<option value="97">per4</option>
+<option value="96">per3</option>
+<option value="95">per2</option>
+<option value="94">per1</option>
+<option value="93">person7</option>
+<option value="92">person6</option>
+<option value="91">person5</option>
+<option value="90">person4</option>
+<option value="89">person3</option>
+<option value="87">person1</option>
+<option value="88">person2</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/person/add/" class="add-another" id="add_id_personmeetingattendance_set-1-person" onclick="return showAddAnotherPopup(this);"> <img src="add_screening_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_interest_practice">
+              
+              <select name="personmeetingattendance_set-1-expressed_interest_practice" id="id_personmeetingattendance_set-1-expressed_interest_practice">
+<option value="" selected="selected">---------</option>
+<option value="1">Vermicompost</option>
+<option value="2">Harvesting</option>
+<option value="3">Sowing</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/practices/add/" class="add-another" id="add_id_personmeetingattendance_set-1-expressed_interest_practice" onclick="return showAddAnotherPopup(this);"> <img src="add_screening_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_interest">
+              
+              <input id="id_personmeetingattendance_set-1-expressed_interest" class="vTextField" name="personmeetingattendance_set-1-expressed_interest" maxlength="500" type="text">
+              </td>
+            
+          
+            
+              <td class="expressed_adoption_practice">
+              
+              <select name="personmeetingattendance_set-1-expressed_adoption_practice" id="id_personmeetingattendance_set-1-expressed_adoption_practice">
+<option value="" selected="selected">---------</option>
+<option value="1">Vermicompost</option>
+<option value="2">Harvesting</option>
+<option value="3">Sowing</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/practices/add/" class="add-another" id="add_id_personmeetingattendance_set-1-expressed_adoption_practice" onclick="return showAddAnotherPopup(this);"> <img src="add_screening_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_adoption">
+              
+              <input id="id_personmeetingattendance_set-1-expressed_adoption" class="vTextField" name="personmeetingattendance_set-1-expressed_adoption" maxlength="500" type="text">
+              </td>
+            
+          
+            
+              <td class="expressed_question_practice">
+              
+              <select name="personmeetingattendance_set-1-expressed_question_practice" id="id_personmeetingattendance_set-1-expressed_question_practice">
+<option value="" selected="selected">---------</option>
+<option value="1">Vermicompost</option>
+<option value="2">Harvesting</option>
+<option value="3">Sowing</option>
+</select><a href="http://174.129.13.106:8000/admin/dashboard/practices/add/" class="add-another" id="add_id_personmeetingattendance_set-1-expressed_question_practice" onclick="return showAddAnotherPopup(this);"> <img src="add_screening_files/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_question">
+              
+              <input id="id_personmeetingattendance_set-1-expressed_question" class="vTextField" name="personmeetingattendance_set-1-expressed_question" maxlength="500" type="text">
+              </td>
+            
+          
+        
+
+        
+          <td class="delete"></td>
+        
+
+        </tr-->
+
+        <tr class="{% cycle 'row1' 'row2'%}">
+
+        <td class="original">
+          {{ form.id }} 
+	  {{ form.screening }}
+          <!--input name="personmeetingattendance_set-0-id" id="id_personmeetingattendance_set-0-id" type="hidden">
+          <input name="personmeetingattendance_set-0-screening" id="id_personmeetingattendance_set-0-screening" type="hidden"-->
+          
+        </td>
+
+        
+          
+            
+              <td class="person">
+	      {% if form.person.errors %}
+	              {{ form.person.errors }}
+	      {% endif %}
+		{{ form.person }}
+	<a href="/dashboard/person/add/" class="add-another" id="add_id_personmeetingattendance_set-{{ forloop.counter0}}-person" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_interest_practice">
+		{% if form.expressed_interest_practice.errors  %}              
+			{{ form.expressed_interest_practice.errors }}
+		{% endif %}
+		{{ form.expressed_interest_practice }}
+<a href="/dashboard/practice/add/" class="add-another" id="add_id_personmeetingattendance_set-{{ forloop.counter0 }}-expressed_interest_practice" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_interest">
+              {% if form.expressed_interest.errors %}
+			{{ form.expressed_interest.errors }}
+	      {% endif %}
+		{{ form.expressed_interest }}
+              </td>
+            
+          
+            
+              <td class="expressed_adoption_practice">
+             	{% if form.expressed_adoption_practice.errors %} 
+			{{ form.expressed_adoption_practice.errors }}
+		{% endif %}
+		{{ form.expressed_adoption_practice}}
+		<a href="/dashboard/practice/add/" class="add-another" id="add_id_personmeetingattendance_set-{{ forloop.counter0}}-expressed_adoption_practice" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_adoption">
+              	{% if form.expressed_adoption.errors %}
+			{{ form.expressed_adoption.errors}}
+		{% endif %}
+		{{ form.expressed_adoption }}
+              </td>
+            
+          
+            
+              <td class="expressed_question_practice">
+  		{% if form.expressed_question_practice.errors %}            
+			{{ form.expressed_question_practice }}
+		{% endif %}
+		{{ form.expressed_question_practice }}
+		<a href="/dashboard/practice/add/" class="add-another" id="add_id_personmeetingattendance_set-{{ forloop.counter0 }}-expressed_question_practice" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+          
+            
+              <td class="expressed_question">
+              	{% if form.expressed_question.errors %}
+			{{ form.expressed_question.errors }}
+		{% endif %}
+		{{ form.expressed_question }}
+              </td>
+            
+          
+        
+
+        
+          <td class="delete"></td>
+        
+
+        </tr>
+
+     
+        
+        
+
+     
+{% endfor %}
+   </tbody></table>
+
+</fieldset><!--a style="cursor: pointer;" class="add"><h2>Add New Row <img src="/media/img/admin/icon_addlink.gif" height="10" width="10"></h2></a-->
+  </div>
+
+  
+  
+  
+
+</div>
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_date").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+

@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Add village | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/media/css/base.css">
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+
+<script type="text/javascript" src="/media/js/a"></script>
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+<script type="text/javascript" src="/media/js/calendar.js"></script>
+<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head><body class="dashboard-village change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Digital Green administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>digitalgreen</strong>.
+
+            
+                
+                
+                    <a href="/admin/doc/">Documentation</a> /
+                
+                
+                
+                    <a href="/admin/password_change/">
+                
+                Change password</a> /
+                
+                
+                    <a href="/admin/logout/">
+                
+                Log out</a>
+            
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/dashboard/villages/">Villages</a> › 
+     Add village
+</div>
+
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Add village</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="village_form">
+<div>
+
+{% if form.errors %}
+    <p class="errornote">
+    Please correct the errors below.
+    </p>
+    <ul class="errorlist"></ul>
+{% endif %}
+
+
+  <fieldset class="module aligned ">
+  
+  
+{% if form.village_name.errors %}  
+      <div class = "form-row errors village_name">
+      {{ form.village_name.errors }}
+{% else %}
+      <div class="form-row village_name  ">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_village_name" class="required">Village name:</label>
+         	{{ form.village_name }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.block.errors %}
+      <div class="form-row errors block">
+      {{ form.block.errors }}
+{% else %}
+      <div class="form-row block  ">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_block" class="required">Block:</label>
+		{{ form.block }}<a href="/dashboard/block/add/" class="add-another" id="add_id_block" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+          
+          
+      </div>
+      
+      </div>
+  
+{% if form.no_of_households.errors %}
+      <div class="form-row errors no_of_households ">
+      {{ form.no_of_households.errors }}
+{% else %}
+      <div class="form-row no_of_households  ">
+{% endif %}      
+      
+      <div>
+          
+              <label for="id_no_of_households">No of households:</label>
+         	{{ form.no_of_households }} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.population.errors %}
+      <div class="form-row errors population  ">
+      {{ form.population.errors }}
+{% else %}
+      <div class="form-row population">
+{% endif %}
+      
+      
+      <div>
+          
+              <label for="id_population">Population:</label>
+              {{ form.population }} 
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.road_connectivity.errors %}
+      <div class="form-row errors road_connectivity  ">
+      {{ form.road_connectivity.errors }}
+{% else %}
+      <div class="form-row road_connectivity">
+{% endif %}
+      
+      <div>
+          
+              <label for="id_road_connectivity">Road connectivity:</label>
+         	{{ form.road_connectivity}} 
+          
+      </div>
+      
+      </div>
+  
+{% if form.control.errors %}
+      <div class="form-row errors control  ">
+      {{ form.control.errors }}
+{% else %}      
+      <div class="form-row control">
+{% endif %}
+
+      <div>
+          
+              <label for="id_control">Control:</label>
+         	{{ form.control }} 
+          
+      </div>
+      
+      </div>
+  
+
+{% if form.start_date.errors %}
+      <div class="form-row errors start_date  ">
+      {{ form.start_date.errors }}
+{% else %}      
+      <div class="form-row start_date">
+{% endif %}          
+      <div>
+              <label for="id_start_date">Start date:</label><input id="id_start_date" class="vDateField" name="start_date" size="10" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleCalendarQuickLink(0,%200);">Today</a>&nbsp;|&nbsp;<a id="calendarlink0" href="javascript:DateTimeShortcuts.openCalendar(0);"><img alt="Calendar" src="add_village_files/icon_calendar.gif"></a></span-->
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+    
+<div class="inline-group">
+  <div class="tabular inline-related ">
+<input name="persongroups_set-TOTAL_FORMS" value="5" id="id_persongroups_set-TOTAL_FORMS" type="hidden"><input name="persongroups_set-INITIAL_FORMS" value="0" id="id_persongroups_set-INITIAL_FORMS" type="hidden">
+<fieldset class="module">
+   <h2>Person groups</h2>
+   
+   <table>
+     <thead><tr>
+     
+       
+         <th colspan="2">Group name</th>
+        
+     
+       
+         <th>Days</th>
+        
+     
+       
+         <th>Timings</th>
+        
+     </tr></thead>
+
+     
+        
+        <tbody>
+
+{{ formset_person_group.management_form }}
+{% for form in formset_person_group.forms %}
+
+<tr class="{% cycle 'row1' 'row2'%}">
+
+        <td class="original">
+          {{ form.id }}
+          {{ form.village }}
+          <!--input name="persongroups_set-0-id" id="id_persongroups_set-0-id" type="hidden">
+          <input name="persongroups_set-0-village" id="id_persongroups_set-0-village" type="hidden"-->
+          
+        </td>
+
+        
+          
+            
+              <td class="group_name">
+                {% if form.group_name.errors %} 
+			{{ form.group_name.errors }}
+ 		{% endif %}
+		{{ form.group_name }}
+              </td>
+            
+          
+            
+              <td class="days">
+		{% if form.days.errors %}
+			{{ form.days.errors }}
+   		{% endif %}
+                {{ form.days }} 
+              </td>
+            
+          
+            
+              <td class="timings">
+              
+              <input id="id_persongroups_set-{{ forloop.counter0 }}-timings" class="vTimeField" name="persongroups_set-{{ forloop.counter0 }}-timings" size="8" type="text"><!--span>&nbsp;<a href="javascript:DateTimeShortcuts.handleClockQuicklink(0,%20new%20Date().getHourMinuteSecond());">Now</a>&nbsp;|&nbsp;<a id="clocklink0" href="javascript:DateTimeShortcuts.openClock(0);"><img alt="Clock" src="add_village_files/icon_clock.gif"></a></span-->
+              </td>
+        </tr>
+{% endfor %}
+   </tbody></table>
+
+</fieldset>
+  </div>
+
+  
+  
+  
+
+</div>
+
+
+    
+<div class="inline-group">
+  <div class="tabular inline-related last-related">
+<input name="home_village-TOTAL_FORMS" value="5" id="id_home_village-TOTAL_FORMS" type="hidden"><input name="home_village-INITIAL_FORMS" value="0" id="id_home_village-INITIAL_FORMS" type="hidden">
+<fieldset class="module">
+   <h2>Animators</h2>
+   
+   <table>
+     <thead><tr>
+     
+       
+         <th colspan="2">Name</th>
+        
+     
+       
+         <th>Age</th>
+        
+     
+       
+         <th>Gender</th>
+        
+     
+       
+         <th>Csp flag</th>
+        
+     
+       
+         <th>Camera operator flag</th>
+        
+     
+       
+         <th>Facilitator flag</th>
+        
+     
+       
+         <th>Phone no</th>
+        
+     
+       
+         <th>Address</th>
+        
+     
+       
+         <th>Partner</th>
+        
+     </tr></thead>
+
+     
+        
+        <tbody>
+{{ formset_animator.management_form }}
+    {% for form in formset_animator.forms %}
+
+<tr class="{% cycle 'row1' 'row2'%}">
+
+        <td class="original">
+          {{ form.id}}
+	  {{ form.home_village }}
+          <!--input name="home_village-0-id" id="id_home_village-0-id" type="hidden">
+          <input name="home_village-0-home_village" id="id_home_village-0-home_village" type="hidden"-->
+          
+        </td>
+
+        
+          
+            
+              <td class="name">
+             	{% if form.name.errors %} 
+			{{ form.name.errors }}
+		{% endif %}
+		{{ form.name }}
+              </td>
+            
+          
+            
+              <td class="age">
+                {% if form.age.errors %}
+			{{ form.age.errors }}
+		{% endif %}
+		{{ form.age }}
+              </td>
+            
+          
+            
+              <td class="gender">
+                {% if form.gender.errors %}  
+			{{ form.gender.errors }}
+		{% endif %}
+		{{ form.gender }}
+              </td>
+            
+          
+            
+              <td class="csp_flag">
+              	{% if form.csp_flag.errors %}
+			{{ form.csp_flag.errors }}
+		{% endif %}
+		{{ form.csp_flag }}
+	      </td>
+            
+          
+            
+              <td class="camera_operator_flag">
+                {% if form.camera_operator_flag.errors  %} 
+			{{ form.camera_operator_flag.errors }}
+		{% endif %}
+		{{ form.camera_operator_flag }}
+              </td>
+            
+          
+            
+              <td class="facilitator_flag">
+                {% if form.facilitator_flag.errors %} 
+			{{ form.facilitator_flag.errors }}
+		{% endif %}
+		{{ form.facilitator_flag }}
+              </td>
+            
+          
+            
+              <td class="phone_no">
+  		{% if form.phone_no.errors %}            
+			{{ form.phone_no.errors }}
+		{% endif %}
+		{{ form.phone_no }}
+              </td>
+            
+          
+            
+              <td class="address">
+                {% if form.address.errors %}
+			{{ form.address.errors }}
+		{% endif %}
+		{{ form.address }}
+              </td>
+            
+          
+            
+              <td class="partner">
+                {% if form.partner.errors %}
+			{{ form.partner.errors }}
+		{% endif %}
+		{{ form.partner }}<a href="/dashboard/partner/add/" class="add-another" id="add_id_home_village-{{ forloop.counter0 }}-partner" onclick="return showAddAnotherPopup(this);"> <img src="/media/img/admin/icon_addlink.gif" alt="Add Another" height="10" width="10"></a>
+              </td>
+            
+
+        </tr>
+{% endfor %}
+   </tbody></table>
+
+</fieldset>
+  </div>
+
+  
+  
+  
+
+</div>
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_village_name").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+

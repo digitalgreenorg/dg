@@ -1,0 +1,100 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Add language | Django site admin {% endblock%}
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/media/css/forms.css">
+{% endblock %}
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+{% block extrahead%}
+
+<!--script type="text/javascript" src="/media/js/a"></script-->
+<script type="text/javascript" src="/media/js/core.js"></script>
+<script type="text/javascript" src="/media/js/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
+<script type="text/javascript" src="/media/js/actions.js"></script>
+{% endblock%}
+
+{% block bodyclass %}dashboard-language change-form   {% endblock%}
+
+<!--div class="breadcrumbs">
+     <a href="/admin/">Home</a> ›
+     <a href="/admin/dashboard/">Dashboard</a> › 
+     <a href="/admin/dashboard/language/">Languages</a> › 
+     Add language
+</div-->
+
+    
+
+        
+
+    <!-- Content -->
+
+
+{% block content%}
+    <div id="content" class="colM">
+        
+        <h1>Add language</h1>
+        <div id="content-main">
+
+
+
+<form enctype="multipart/form-data" action="" method="post" id="language_form">
+<div>
+
+
+
+
+
+  <fieldset class="module aligned ">
+  
+  
+  
+      <div class="form-row language_name  ">
+      
+      
+      <div>
+          
+              <label for="id_language_name" class="required">Language name:</label><input id="id_language_name" class="vTextField" name="language_name" maxlength="100" type="text">
+          
+          
+      </div>
+      
+      </div>
+  
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+<div class="submit-row">
+<input value="Save" class="default" name="_save" type="submit">
+
+
+<input value="Save and add another" name="_addanother" type="submit">
+<input value="Save and continue editing" name="_continue" type="submit">
+</div>
+
+
+
+   <script type="text/javascript">document.getElementById("id_language_name").focus();</script>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear">
+    </div>
+
+{% endblock %}

@@ -1,0 +1,2 @@
+{% for animator in animators %}{{ animator.id }}	{{ animator.name }}
+{% endfor %}
