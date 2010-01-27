@@ -133,7 +133,8 @@ public class Dashboard implements EntryPoint {
 			}
 		}
 
-		// Add a handler to send the name to the server
+		//Add a handler to send the name to the server
+		//test
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
