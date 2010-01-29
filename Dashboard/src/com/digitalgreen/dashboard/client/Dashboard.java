@@ -43,7 +43,7 @@ public class Dashboard implements EntryPoint {
 	    f.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    f.setMethod(FormPanel.METHOD_POST);
 
-	    HTMLPanel h = new HTMLPanel("<div>" +
+	    final HTMLPanel h = new HTMLPanel("<div>" +
 	    					"<fieldset class='module aligned '>" +
 	    					"<div class='form-row region_name  '>" +
 	    					"<div>" +
@@ -76,6 +76,9 @@ public class Dashboard implements EntryPoint {
 	    f.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 	    	public void onSubmitComplete(SubmitCompleteEvent event) {
 	    		Window.alert("hi");
+	    		//Element e = RootPanel.get("id_region_name").getElement();
+	    		TextBox t = TextBox.wrap(h.getElementById("id_region_name"));
+	    		Window.alert("here it is" + t.getText());
 	    	}
 	    });
 	    
