@@ -22,28 +22,32 @@ public class Dashboard implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	
-	Element e_form = RootPanel.get("region_form").getElement();
-	FormPanel f = FormPanel.wrap(e_form);
+	
 	
 	public void onModuleLoad() {
 		
+		Element e_form = RootPanel.get("region_form").getElement();
+		final FormPanel f = FormPanel.wrap(e_form);
+		
 		f.setAction("http://174.129.13.106:8000/feeds/animators/49/");
-
-	    // Because we're going to add a FileUpload widget, we'll need to set the
-	    // form to use the POST method, and multipart MIME encoding.
 	    f.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    f.setMethod(FormPanel.METHOD_POST);
 		
 	    Element e = RootPanel.get("save_button").getElement();
 	    Button b = Button.wrap(e);
 	    
-	    	    
+	    f.addSubmitHandler(new SubmitHandler() {
+	    	public void onSubmit(SubmitEvent event) {
+	    		Window.alert("form submit 2");
+	    }});
+	    	    	    
 	    b.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-			        Window.alert("Hi");
+		    	   Window.alert("form submit 1");
 			        f.submit();
 			      }});
 	    
-	    	    
+	    
+	    
 	}
 }
