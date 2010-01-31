@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 	(r'^feeds/groups/(\d+)/$', feeds_groups),
 	(r'^feeds/persons/(\d+)/$', feeds_persons),
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
+	(r'^feeds/test/(\d+)/$', test),
 
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
