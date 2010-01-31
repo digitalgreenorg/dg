@@ -39,7 +39,7 @@ public class Dashboard implements EntryPoint {
 		//Element e_form = RootPanel.get("region_form").getElement();
 		//final FormPanel f = FormPanel.wrap(e_form);
 	    final FormPanel f = new FormPanel();
-		f.setAction("http://174.129.13.106:8000/feeds/animators/49/");
+		f.setAction("http://174.129.13.106:8000/feeds/test/49/");
 	    f.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    f.setMethod(FormPanel.METHOD_POST);
 
@@ -79,6 +79,7 @@ public class Dashboard implements EntryPoint {
 	    		//Element e = RootPanel.get("id_region_name").getElement();
 	    		TextBox t = TextBox.wrap(h.getElementById("id_region_name"));
 	    		Window.alert("here it is" + t.getText());
+	    		Window.alert("Date : " + TextBox.wrap(h.getElementById("id_start_date")).getText());
 	    	}
 	    });
 	    
