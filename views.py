@@ -23,7 +23,6 @@ def search(request):
         Searches in the fields of the given related model and returns the
         result as a simple string to be used by the jQuery Autocomplete plugin
         """
-	print 'search'
         query = request.GET.get('q', None)
         app_label = request.GET.get('app_label', None)
         model_name = request.GET.get('model_name', None)
@@ -83,11 +82,18 @@ def hours_ahead(reqest,offset):
 
 
 
+def test(request, village_id):
+	print request.POST
+        village = Village.objects.get(pk=int(village_id))
+        animators = Animator.objects.filter(assigned_villages=village)
+        return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
+	
+
+
 def feed_animators(request, village_id):
         village = Village.objects.get(pk=int(village_id))
 	animators = Animator.objects.filter(assigned_villages=village)
 		#str = "test" + "\t" + "Model" + "\n" + "test1" + "\t" + "Model1";	
-		#print str
 		#temp = cjson.encode(str)
 		#return HttpResponse(temp, mimetype="text/plain")
         return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
@@ -155,13 +161,6 @@ def language(request,language):
 
 
 def add_region(request):
-	print '***********************'
-	print request.session.items()
-	print '***********************'
-	print request.session.keys()
-	print request.COOKIES
-	print '**********************'
-	print request.user
 	if request.method == 'POST':
 		form = RegionForm(request.POST)
 		if form.is_valid():	
@@ -269,17 +268,14 @@ def add_person_group(request):
         if request.method == 'POST':
                 form = PersonGroupsForm(request.POST)
                 formset = PersonFormSet(request.POST, request.FILES)
-                print request.POST
                 if form.is_valid():
         	        saved_persongroup = form.save()
                 	persongroup = PersonGroups.objects.get(pk=saved_persongroup.id)
                 	formset = PersonFormSet(request.POST, request.FILES, instance=persongroup)
 			if formset.is_valid():
 				personformset = formset.save(commit=False)
-				print personformset
 	                        return HttpResponseRedirect('/admin/dashboard/persongroups/')
 			else:
-				print 'failure'
                          	return render_to_response('add_person_group.html', {'form':form, 'formset':formset})
 
                 else:
@@ -297,14 +293,12 @@ def add_person_group_1(request):
 	if request.method == 'POST':
 		form = PersonGroupsForm(request.POST)
                 formset = PersonFormSet(request.POST, request.FILES)
-		print request.POST
 		if form.is_valid():
 			for k,v in request.POST.items():
 			        if k[:5] == 'form-':
 	        	        	s = k.split('-')
 					if s[1] != u'TOTAL_FORMS' and s[1] != u'INITIAL_FORMS' and s[2] == 'village':
 						request.POST[k] = request.POST['village']
-						print request.POST['village']
 		               			'''i = s[1]
 			       		        if i not in a and s[1] != u'TOTAL_FORMS' and s[1] != u'INITIAL_FORMS':
 							print s[1]
@@ -334,7 +328,6 @@ def add_person_group_1(request):
 	        		        	s = k.split('-')
 						if s[1] != u'TOTAL_FORMS' and s[1] != u'INITIAL_FORMS' and s[2] == 'group':
 							request.POST[k] = save_tuple.id
-							print save_tuple.id
 
 				formset = PersonFormSet(request.POST, request.FILES)	
 				if formset.is_valid():
