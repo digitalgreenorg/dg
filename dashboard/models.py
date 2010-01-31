@@ -58,7 +58,7 @@ SUITABLE_FOR = (
 
 
 class Region(models.Model):
-    region_name = models.CharField(max_length=100, db_column='REGION_NAME')
+    region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
         db_table = u'REGION'
@@ -110,7 +110,7 @@ class DevelopmentManager(models.Model):
             )
 
 class State(models.Model):
-    state_name = models.CharField(max_length=100, db_column='STATE_NAME')
+    state_name = models.CharField(max_length=100, db_column='STATE_NAME', unique='True')
     region = models.ForeignKey(Region)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True) 
     class Meta:
@@ -153,7 +153,7 @@ class FieldOfficer(models.Model):
         return self.name
 
 class District(models.Model):
-    district_name = models.CharField(max_length=100, db_column='DISTRICT_NAME') 
+    district_name = models.CharField(max_length=100, db_column='DISTRICT_NAME', unique='True') 
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     state = models.ForeignKey(State) 
     fieldofficer = models.ForeignKey(FieldOfficer) 
@@ -166,7 +166,7 @@ class District(models.Model):
         return self.district_name
 
 class Block(models.Model):
-    block_name = models.CharField(max_length=100, db_column='BLOCK_NAME')
+    block_name = models.CharField(max_length=100, db_column='BLOCK_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     district = models.ForeignKey(District)
     class Meta:
@@ -176,7 +176,7 @@ class Block(models.Model):
         return self.block_name
 
 class Village(models.Model):
-    village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME')
+    village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME', unique='True')
     block = models.ForeignKey(Block) 
     no_of_households = models.IntegerField(null=True, db_column='NO_OF_HOUSEHOLDS', blank=True)
     population = models.IntegerField(null=True, db_column='POPULATION', blank=True)
