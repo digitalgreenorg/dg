@@ -51,7 +51,7 @@ public class Dashboard implements EntryPoint {
 	    					"</div>" +
 	    					"</div>" +
 	    					"<div class='form-row start_date'>" +
-	    					"<div><label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' /></div>" +
+	    					"<div><label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
 	    					"</div>" +
 	    					"</fieldset>" +
 	    					"</div>");
