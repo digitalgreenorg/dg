@@ -34,7 +34,7 @@ public class DashboardGwt implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	//private Database db;
+	private Database db;
 	
 	public void onModuleLoad() {
 		
@@ -85,11 +85,14 @@ public class DashboardGwt implements EntryPoint {
 	    		
 	    		// TO Save the data into local database
 	    		
-	    		/*try {
+	    		TextBox region = TextBox.wrap(h.getElementById("id_region_name"));
+	    		TextBox date =  TextBox.wrap(h.getElementById("id_start_date"));
+	    		
+	    		
+	    		try {
 	    		      db = Factory.getInstance().createDatabase();
 	    		      db.open("digitalgreen");
-	    		      // The 'int' type will store up to 8 byte ints depending on the magnitude of the 
-	    		      // value added.
+	    		      
 	    		      db.execute("CREATE TABLE REGION ( REGION_ID INTEGER PRIMARY KEY AUTOINCREMENT, REGION_NAME VARCHAR(50) NOT NULL, START_DATE DATE );");
 	    		    } catch (GearsException e) {
 	    		      Window.alert(e.toString());
@@ -97,12 +100,11 @@ public class DashboardGwt implements EntryPoint {
 	    		    
 	    		    // Add an entry to the database
 	    		    try {
-	    		      db.execute("INSERT INTO REGION (REGION_NAME, START_DATE) VALUES (?, ?)", new String[] {
-	    		          Long.toString(System.currentTimeMillis())});
+	    		      db.execute("INSERT INTO REGION (REGION_NAME, START_DATE) VALUES (?, ?)", region.getText(), date.getText());
 	    		    }
 	    		    catch (DatabaseException e) {
 	    		      Window.alert(e.toString());
-	    		    } */
+	    		    } 
 	    		    
 	    	}
 	    });
@@ -111,9 +113,9 @@ public class DashboardGwt implements EntryPoint {
 	    	public void onSubmitComplete(SubmitCompleteEvent event) {
 	    		Window.alert("hi");
 	    		//Element e = RootPanel.get("id_region_name").getElement();
-	    		TextBox t = TextBox.wrap(h.getElementById("id_region_name"));
-	    		Window.alert("here it is" + t.getText());
-	    		Window.alert("Date : " + TextBox.wrap(h.getElementById("id_start_date")).getText());
+	    		//TextBox t = TextBox.wrap(h.getElementById("id_region_name"));
+	    		//Window.alert("here it is" + t.getText());
+	    		//Window.alert("Date : " + TextBox.wrap(h.getElementById("id_start_date")).getText());
 	    	}
 	    });
 	    
