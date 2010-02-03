@@ -205,7 +205,7 @@ class VideoAdmin(admin.ModelAdmin):
 		('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks']}),
     ]
     filter_horizontal = ('related_agricultural_practices','farmers_shown',)
-    list_display = ('title', 'village', 'video_production_start_date', 'video_production_end_date')
+    list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
     #raw_id_fields = ('village',)
     #form = VideoForm
     related_search_fields = {
@@ -365,7 +365,7 @@ class PersonForm(forms.ModelForm):
 
     #group = DynamicChoiceField(widget=forms.Select(attrs={'disabled': 'true'}))
 
-    group = forms.ModelChoiceField(PersonGroups.objects, widget=forms.Select(attrs={'disabled': 'true'}))
+    #group = forms.ModelChoiceField(PersonGroups.objects, widget=forms.Select(attrs={'disabled': 'true'}))
     
     class Meta:
 	    model = Person

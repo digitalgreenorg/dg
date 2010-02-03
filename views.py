@@ -84,6 +84,8 @@ def hours_ahead(reqest,offset):
 
 def test(request, village_id):
 	print request.POST
+	dlfkds
+	print 'error'
         village = Village.objects.get(pk=int(village_id))
         animators = Animator.objects.filter(assigned_villages=village)
         return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
