@@ -83,12 +83,14 @@ def hours_ahead(reqest,offset):
 
 
 def test(request, village_id):
-	print request.POST
-	dlfkds
-	print 'error'
+	#print request.POST
         village = Village.objects.get(pk=int(village_id))
         animators = Animator.objects.filter(assigned_villages=village)
-        return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
+        #return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
+        from django.core import serializers
+        json_subcat = serializers.serialize("json", animators)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
 	
 
 
