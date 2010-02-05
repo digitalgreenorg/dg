@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-#from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import generic
 
 
 # Variables
@@ -68,18 +68,26 @@ class Region(models.Model):
 
 
 class EquipmentHolder(models.Model):
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey("content_type", "object_id")
     class Meta:
         db_table = u'EQUIPMENT_HOLDER'
 
+    def __unicode__(self):
+        return u'%s' % self.content_object
 
 class Reviewer(models.Model):
-    reviewer_name = models.CharField(max_length=100, db_column='REVIEWER_NAME') 
-    reviewer_comments = models.TextField(db_column='REVIEWER_COMMENTS', blank=True) 
+    #reviewer_name = models.CharField(max_length=100, db_column='REVIEWER_NAME') 
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey("content_type", "object_id")
+    #reviewer_comments = models.TextField(db_column='REVIEWER_COMMENTS', blank=True) 
     class Meta:
         db_table = u'REVIEWER'
 
     def __unicode__(self):
-        return self.reviewer_namem
+     	return u'%s' % self.content_object
 
 
 class DevelopmentManager(models.Model):
@@ -92,14 +100,17 @@ class DevelopmentManager(models.Model):
     speciality = models.TextField(db_column='SPECIALITY', blank=True) 
     region =  models.ForeignKey(Region) 
     start_day = models.DateField(null=True, db_column='START_DAY', blank=True)
-    reviewer = models.ForeignKey(Reviewer,null=True,blank=True) 
-    equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True) 
+    reviewer = generic.GenericRelation(Reviewer)
+    #reviewer = models.ForeignKey(Reviewer,null=True,blank=True) 
+    #equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True) 
+    equipmentholder =  generic.GenericRelation(EquipmentHolder)
     salary = models.FloatField(null=True, db_column='SALARY', blank=True) 
     class Meta:
         db_table = u'DEVELOPMENT_MANAGER'
 
     def __unicode__(self):
         return self.name
+
 
         class Media:
             js = (
@@ -125,8 +136,11 @@ class Partners(models.Model):
     date_of_association = models.DateField(null=True, db_column='DATE_OF_ASSOCIATION', blank=True) 
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
-    reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
-    equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
+    #reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
+    reviewer = generic.GenericRelation(Reviewer)
+    #equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
+    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+
     class Meta:
         db_table = u'PARTNERS'
 	verbose_name = "Partner"
@@ -144,8 +158,11 @@ class FieldOfficer(models.Model):
     salary = models.FloatField(null=True, db_column='SALARY', blank=True)
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True) 
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
-    reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
-    equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
+    reviewer = generic.GenericRelation(Reviewer)
+    #reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
+    #equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
+    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+
     class Meta:
         db_table = u'FIELD_OFFICER'
 
@@ -263,7 +280,8 @@ class Animator(models.Model):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
     partner = models.ForeignKey(Partners)
     home_village = models.ForeignKey(Village,related_name='home_village')
-    equipmentholder = models.ForeignKey(EquipmentHolder, null=True, blank=True) 
+    #equipmentholder = models.ForeignKey(EquipmentHolder, null=True, blank=True) 
+    equipmentholder =  generic.GenericRelation(EquipmentHolder)
     assigned_villages = models.ManyToManyField(Village,through='AnimatorAssignedVillage',null=True, blank=True)
     class Meta:
         db_table = u'ANIMATOR'
@@ -275,11 +293,11 @@ class Animator(models.Model):
 class Training(models.Model):
     training_purpose = models.TextField(db_column='TRAINING_PURPOSE', blank=True)
     training_outcome = models.TextField(db_column='TRAINING_OUTCOME', blank=True)
-    training_start_date = models.DateField(null=True, db_column='TRAINING_START_DATE', blank=True)
-    training_end_date = models.DateField(null=True, db_column='TRAINING_END_DATE', blank=True) 
+    training_start_date = models.DateField(db_column='TRAINING_START_DATE')
+    training_end_date = models.DateField(db_column='TRAINING_END_DATE') 
     village = models.ForeignKey(Village)
-    dm = models.ForeignKey(DevelopmentManager) 
-    fieldofficer = models.ForeignKey(FieldOfficer)
+    development_manager_present = models.ForeignKey(DevelopmentManager,blank=True, null=True, db_column='dm_id') 
+    field_officer_present = models.ForeignKey(FieldOfficer, db_column='fieldofficer_id')
     animators_trained = models.ManyToManyField(Animator)
     class Meta:
         db_table = u'TRAINING'
@@ -404,7 +422,7 @@ class PersonAdoptPractice(models.Model):
     class Meta:
         db_table = u'PERSON_ADOPT_PRACTICE'
 
-class EquipmentId(models.Model):
+class Equipment(models.Model):
     equipment_type = models.CharField(max_length=300, db_column='EQUIPMENT_TYPE') 
     model_no = models.CharField(max_length=300, db_column='MODEL_NO', blank=True) 
     serial_no = models.CharField(max_length=300, db_column='SERIAL_NO', blank=True) 
@@ -414,6 +432,7 @@ class EquipmentId(models.Model):
     equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True)
     class Meta:
         db_table = u'EQUIPMENT_ID'
+     
 
 class Random(models.Model):
 	random_no = models.CharField(max_length=300)
