@@ -83,7 +83,7 @@ public class DashboardGwt implements EntryPoint {
 	    		      db = Factory.getInstance().createDatabase();
 	    		      db.open("digitalgreen");
 	    		      
-	    		      db.execute("CREATE TABLE REGION ( REGION_ID INTEGER PRIMARY KEY AUTOINCREMENT, REGION_NAME VARCHAR(50) NOT NULL, START_DATE DATE );");
+	    		      db.execute("CREATE TABLE IF NOT EXISTS REGION ( REGION_ID INTEGER PRIMARY KEY AUTOINCREMENT, REGION_NAME VARCHAR(50) NOT NULL, START_DATE DATE );");
 	    		    } catch (GearsException e) {
 	    		      Window.alert(e.toString());
 	    		    }

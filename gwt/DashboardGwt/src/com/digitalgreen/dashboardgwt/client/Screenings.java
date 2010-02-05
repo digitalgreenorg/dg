@@ -142,14 +142,6 @@ public class Screenings {
 			"<td class='expressed_interest_practice'>" +
 			"<select name='personmeetingattendance_set-0-expressed_interest_practice' id='id_personmeetingattendance_set-0-expressed_interest_practice'>" +
 			"<option value='' selected='selected'>---------</option>" +
-			"<option value='1'>Vermicompost</option>" +
-			"<option value='2'>Harvesting</option>" +
-			"<option value='3'>Sowing</option>" +
-			"<option value='6'>Intercultural</option>" +
-			"<option value='10'>Duck care and treatment</option>" +
-			"<option value='8'>Nursery</option>" +
-			"<option value='9'>Transplantation</option>" +
-			"<option value='11'>Insecticidal treatment</option>" +
 			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-0-expressed_interest_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 			"</td>" +
 			"<td class='expressed_interest'>" +
@@ -158,14 +150,6 @@ public class Screenings {
 			"<td class='expressed_adoption_practice'>" +
 			"<select name='personmeetingattendance_set-0-expressed_adoption_practice' id='id_personmeetingattendance_set-0-expressed_adoption_practice'>" +
 			"<option value='' selected='selected'>---------</option>" +
-			"<option value='1'>Vermicompost</option>" +
-			"<option value='2'>Harvesting</option>" +
-			"<option value='3'>Sowing</option>" +
-			"<option value='6'>Intercultural</option>" +
-			"<option value='10'>Duck care and treatment</option>" +
-			"<option value='8'>Nursery</option>" +
-			"<option value='9'>Transplantation</option>" +
-			"<option value='11'>Insecticidal treatment</option>" +
 			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-0-expressed_adoption_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 			"</td>" +
 			"<td class='expressed_adoption'>" +
@@ -174,33 +158,53 @@ public class Screenings {
 			"<td class='expressed_question_practice'>" +
 			"<select name='personmeetingattendance_set-0-expressed_question_practice' id='id_personmeetingattendance_set-0-expressed_question_practice'>" +
 			"<option value='' selected='selected'>---------</option>" +
-			"<option value='1'>Vermicompost</option>" +
-			"<option value='2'>Harvesting</option>" +
-			"<option value='3'>Sowing</option>" +
-			"<option value='6'>Intercultural</option>" +
-			"<option value='10'>Duck care and treatment</option>" +
-			"<option value='8'>Nursery</option>" +
-			"<option value='9'>Transplantation</option>" +
-			"<option value='11'>Insecticidal treatment</option>" +
 			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-0-expressed_question_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 			"</td>" +
 			"<td class='expressed_question'>" +
 			"<input id='id_personmeetingattendance_set-0-expressed_question' type='text' class='vTextField' name='personmeetingattendance_set-0-expressed_question' maxlength='500' />" +
 			"</td>" +
 			"<td class='delete'>" +
-			"<a class='delete' style='cursor: pointer;'><img height='10' width='10' style='margin-top: 0.5em;' alt='Delete row' src='/media/img/admin/icon_deletelink.gif'/></a>" +
+			"</td>" +
+			"</tr>" +
+			"<tr class='row2 '>" +
+			"<td class='original'>" +
+			"<input type='hidden' name='personmeetingattendance_set-1-id' id='id_personmeetingattendance_set-1-id' />" +
+			"<input type='hidden' name='personmeetingattendance_set-1-screening' id='id_personmeetingattendance_set-1-screening' />" +
+			"</td>" +
+			"<td class='person'>" +
+			"<select name='personmeetingattendance_set-1-person' id='id_personmeetingattendance_set-1-person'>" +
+			"<option value='' selected='selected'>---------</option>" +
+			"</select><a href='/admin/dashboard/person/add/' class='add-another' id='add_id_personmeetingattendance_set-1-person' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+			"</td>" +
+			"<td class='expressed_interest_practice'>" +
+			"<select name='personmeetingattendance_set-1-expressed_interest_practice' id='id_personmeetingattendance_set-1-expressed_interest_practice'>" +
+			"<option value='' selected='selected'>---------</option>" +
+			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-1-expressed_interest_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+			"</td>" +
+			"<td class='expressed_interest'>" +
+			"<input id='id_personmeetingattendance_set-0-expressed_interest' type='text' class='vTextField' name='personmeetingattendance_set-0-expressed_interest' maxlength='500' />" +
+			"</td>" +
+			"<td class='expressed_adoption_practice'>" +
+			"<select name='personmeetingattendance_set-0-expressed_adoption_practice' id='id_personmeetingattendance_set-0-expressed_adoption_practice'>" +
+			"<option value='' selected='selected'>---------</option>" +
+			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-0-expressed_adoption_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+			"</td>" +
+			"<td class='expressed_adoption'>" +
+			"<input id='id_personmeetingattendance_set-0-expressed_adoption' type='text' class='vTextField' name='personmeetingattendance_set-0-expressed_adoption' maxlength='500' />" +
+			"</td>" +
+			"<td class='expressed_question_practice'>" +
+			"<select name='personmeetingattendance_set-0-expressed_question_practice' id='id_personmeetingattendance_set-0-expressed_question_practice'>" +
+			"<option value='' selected='selected'>---------</option>" +
+			"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personmeetingattendance_set-0-expressed_question_practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+			"</td>" +
+			"<td class='expressed_question'>" +
+			"<input id='id_personmeetingattendance_set-0-expressed_question' type='text' class='vTextField' name='personmeetingattendance_set-0-expressed_question' maxlength='500' />" +
+			"</td>" +
+			"<td class='delete'>" +
 			"</td>" +
 			"</tr>" +
 			"</tbody>" +
 			"</table>" +
 			"</fieldset>" +
-			"<a class='add' style='cursdor: pointer;'>" +
-			"<h2>Add New Row<img height='10' width='10' src='/media/img/admin/icon_addlink.gif'/></h2>" +
-			"</a>" +
-			"</div>" +
-			"</div>" +
-			"<script type='text/javascript'>document.getElementById('id_date').focus();</script>" +
-			"<script type='text/javascript'>" +
-			"</script>" +
-			"</div>";	
+			"</div><script type='text/javascript' src='/media/js/dynamic_inlines_with_sort.js'></script>";	
 }
