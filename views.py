@@ -7,7 +7,7 @@ from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
 import datetime
-import cjson
+#import cjson
 
 
 # autocomplete widget

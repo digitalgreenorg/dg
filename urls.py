@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from dg.views import *
 from django.contrib.auth.views import login, logout
+from dg.output.views import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -59,6 +60,11 @@ urlpatterns = patterns('',
 	(r'^dashboard/screenings/$', screening),
 	(r'^dashboard/login/$', login),
 	(r'^dashboard/logout/$', logout),
+    (r'^output/test/$',test_output),
+    (r'^output/state_overview/$',state_overview),
+    (r'^output/state/(\d+)/$',district_overview),
+    (r'^output/district/(\d+)/$',block_overview),
+    (r'^output/block/(\d+)/$',village_overview),
 	#('^$',homepage),
 	#('^time/$',current_datetime),
 	#(r'^time/plus/(\d{1,2})/$',hours_ahead),
