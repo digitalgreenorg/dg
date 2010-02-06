@@ -1,0 +1,34 @@
+/* CSS Document */
+#mainbody		{ background-color:#FFFFCC}
+
+
+
+#tableheader		{ margin-top:2px; margin-left:15%;}
+#tableheaderleft	{ background:url("../Images/columnbgheader.png"); background-repeat:no-repeat; margin-left:0px; margin-top:0px; width:100px; height:45px; text-align:center; padding-top:25px; color:#FFFFFF; font-family:Calibri; font-size:15px; font-weight:bolder; float:left}
+#tableheaderright	{ background:url("../Images/columnbgheader.png"); background-repeat:no-repeat; margin-left:101px; margin-top:0px; width:100px; height:45px; text-align:center; padding-top:25px; color:#FFFFFF; font-family:Calibri; font-size:15px; font-weight:bolder; float:none }
+
+#default			{ margin-top:0px; margin-left:15%; width: 950px; background-color:#fcfd83 }
+#defaultheader		{ margin-top:0px; margin-left:0%; width: 950px; height:40px; background:url("../Images/boundarybg.png"); background-repeat:no-repeat;}
+#searchbody			{ margin-top:-25px; margin-left:0%; background-color:#FF9933; width:300px; height:30px;}
+
+
+#tablebody			{ margin-left:3%; margin-top:0px;}
+#table1				{ margin-left:0%; margin-top:10px;}
+#table1td1			{ width:151px; height:30px; text-align:center}
+#table1td2			{ background:url("../Images/tdbg1.png"); background-repeat:repeat-x; width:302px; height:30px; border-right-color:#FFFFFF; border-right-width:1px; border-right-style:solid; border-top-color:#FFFFFF; border-top-width:1px; border-top-style:solid; color:#dfdfdf; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center }
+#table1td3			{ background:url("../Images/tdbg1.png"); background-repeat:repeat-x; width:452px; height:30px; border-right-color:#FFFFFF; border-right-width:1px; border-right-style:solid; border-top-color:#FFFFFF; border-top-width:1px; border-top-style:solid; color:#dfdfdf; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center }
+
+#table2 			{ margin-left:0%; border-width:thin; border-style:solid; border-color:#FFFFFF;}
+#table2td			{ width:150px; height:30px; background-color:#616161; border-right-color:#FFFFFF; border-right-width:1px; border-right-style:solid; color:#dfdfdf; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center}
+#table2td1			{ width:150px; height:30px; background-color:#d5fe7c; border-right-color:#FFFFFF; border-right-width:1px; border-right-style:solid; color:#dfdfdf; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center}
+
+#table2td1 a		{ text-decoration:none; color:#000000; font-family:Calibri; font-size:14px; }
+#table2td1 a:hover	{ text-decoration:none; color:#405c04; font-family:Calibri; font-size:14px; }
+
+
+#gridfooter			{ margin-left:3%; margin-top:20px  ;border-width:1px; border-style:solid; border-color:#FFFFFF; width:905px;}
+
+#timelinedesc		{ margin-left:478px; background:url("../Images/timelinebg.png"); background-repeat:no-repeat; width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+#timelinedescfooter	{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; text-align:center; margin-top:5px}
+#datepicker1		{ background-color:#e8e8e7; border-style:solid; border-width:1px; border-color:#666666; margin-top:10px; margin-left:5px;}
+#datepicker2 		{ background-color:#e8e8e7; border-style:solid; border-width:1px; border-color:#666666; margin-top:10px;}

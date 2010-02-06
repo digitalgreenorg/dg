@@ -29,14 +29,12 @@ def state_overview(request):
     """
     
     vid_screening_sql = """
-    SELECT s.id, STATE_NAME as name, COUNT(sc_vid.screening_id) as tot_screen
+    SELECT s.id, STATE_NAME as name, COUNT(sc.id) as tot_screen
     FROM state s
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-        LEFT OUTER JOIN screening_videoes_screened sc_vid on (vid.id = sc_vid.video_id)
-        LEFT OUTER JOIN screening sc on (sc_vid.screening_id = sc.id
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id
     """
     
     adoption_sql = """
@@ -122,14 +120,12 @@ def district_overview(request,id):
     """
     
     tot_screen_sql = """
-    SELECT d.id, DISTRICT_NAME as name, COUNT(sc_vid.screening_id) as tot_screen
+    SELECT d.id, DISTRICT_NAME as name, COUNT(sc.id) as tot_screen
     FROM state s
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-        LEFT OUTER JOIN screening_videoes_screened sc_vid on (vid.id = sc_vid.video_id)
-        LEFT OUTER JOIN screening sc on (sc_vid.screening_id = sc.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
     WHERE s.id = %s
     GROUP BY DISTRICT_NAME
     ORDER BY DISTRICT_NAME
@@ -185,14 +181,12 @@ def block_overview(request,id):
     """
     
     tot_screen_sql = """
-    SELECT b.id, BLOCK_NAME as name, COUNT(sc_vid.screening_id) as tot_screen
+    SELECT b.id, BLOCK_NAME as name, COUNT(sc.id) as tot_screen
     FROM state s
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-        LEFT OUTER JOIN screening_videoes_screened sc_vid on (vid.id = sc_vid.video_id)
-        LEFT OUTER JOIN screening sc on (sc_vid.screening_id = sc.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
     WHERE d.id = %s
     GROUP BY BLOCK_NAME
     ORDER BY BLOCK_NAME
@@ -249,14 +243,12 @@ def village_overview(request,id):
     """
     
     tot_screen_sql = """
-    SELECT vil.id, VILLAGE_NAME as name, COUNT(sc_vid.screening_id) as tot_screen
+    SELECT vil.id, VILLAGE_NAME as name, COUNT(sc.id) as tot_screen
     FROM state s
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-        LEFT OUTER JOIN screening_videoes_screened sc_vid on (vid.id = sc_vid.video_id)
-        LEFT OUTER JOIN screening sc on (sc_vid.screening_id = sc.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
     WHERE b.id = %s
     GROUP BY VILLAGE_NAME
     ORDER BY VILLAGE_NAME
