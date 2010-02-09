@@ -5,12 +5,12 @@ from calendar import week
 import datetime
 from dg.output.run_query import *
 
-def test_output(request):
+def test_output(request, url):
     date = datetime.date.today()
     weekdelta = datetime.timedelta(weeks = -1)
     
     test_val = Village.objects.filter(start_date__range=(date+weekdelta, date)).count()
-    return render_to_response('test.html',{'test_var':test_val})
+    return render_to_response('test.html',{'test_val':url})
 
 def state_overview(request):
     if 'from_date' in request.GET and request.GET['from_date'] \
@@ -92,6 +92,14 @@ def district_overview(request,id):
         id = int(id)
     except ValueError:
         raise Http404()
+    
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+    else:
+        date_range = 0
+    
+    
 
     tot_vid_sql = """
     SELECT d.id, DISTRICT_NAME as name, COUNT(vid.id) as tot_vid
@@ -99,12 +107,8 @@ def district_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-    
-    WHERE s.id = %s
-    GROUP BY DISTRICT_NAME
-    ORDER BY DISTRICT_NAME
-    """
+        LEFT OUTER JOIN video vid on (vid.village_id = vil.id
+        """
     
     tot_adopt_sql = """
     SELECT d.id, DISTRICT_NAME as name, COUNT(p_ad.id) as tot_adopt
@@ -113,11 +117,8 @@ def district_overview(request,id):
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
         LEFT OUTER JOIN person p on (p.village_id = vil.id)
-        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id)
-    WHERE s.id = %s
-    GROUP BY DISTRICT_NAME
-    ORDER BY DISTRICT_NAME
-    """
+        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id
+        """
     
     tot_screen_sql = """
     SELECT d.id, DISTRICT_NAME as name, COUNT(sc.id) as tot_screen
@@ -125,7 +126,28 @@ def district_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id        
+        """
+    
+    if date_range == 1: 
+        tot_vid_sql += " AND VIDEO_PRODUCTION_END_DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_screen_sql += " AND sc.DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_adopt_sql += " AND p_ad.DATE_OF_ADOPTION between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+    
+    tot_vid_sql += """)
+    WHERE s.id = %s
+    GROUP BY DISTRICT_NAME
+    ORDER BY DISTRICT_NAME
+    """
+    tot_screen_sql += """)
+    WHERE s.id = %s
+    GROUP BY DISTRICT_NAME
+    ORDER BY DISTRICT_NAME
+    """
+    tot_adopt_sql += """)
     WHERE s.id = %s
     GROUP BY DISTRICT_NAME
     ORDER BY DISTRICT_NAME
@@ -153,6 +175,12 @@ def block_overview(request,id):
         id = int(id)
     except ValueError:
         raise Http404()
+    
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+    else:
+        date_range = 0
 
     tot_vid_sql = """
     SELECT b.id, BLOCK_NAME as name, COUNT(vid.id) as tot_vid
@@ -160,11 +188,8 @@ def block_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-    
-    WHERE d.id = %s
-    GROUP BY BLOCK_NAME
-    ORDER BY BLOCK_NAME
+        LEFT OUTER JOIN video vid on (vid.village_id = vil.id
+       
     """
     
     tot_adopt_sql = """
@@ -174,10 +199,8 @@ def block_overview(request,id):
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
         LEFT OUTER JOIN person p on (p.village_id = vil.id)
-        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id)
-    WHERE d.id = %s
-    GROUP BY BLOCK_NAME
-    ORDER BY BLOCK_NAME
+        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id
+       
     """
     
     tot_screen_sql = """
@@ -186,7 +209,29 @@ def block_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id
+       
+    """
+    
+    if date_range == 1: 
+        tot_vid_sql += " AND VIDEO_PRODUCTION_END_DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_screen_sql += " AND sc.DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_adopt_sql += " AND p_ad.DATE_OF_ADOPTION between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+    
+    tot_vid_sql += """)
+    WHERE d.id = %s
+    GROUP BY BLOCK_NAME
+    ORDER BY BLOCK_NAME
+    """
+    tot_screen_sql += """)
+    WHERE d.id = %s
+    GROUP BY BLOCK_NAME
+    ORDER BY BLOCK_NAME
+    """
+    tot_adopt_sql += """)
     WHERE d.id = %s
     GROUP BY BLOCK_NAME
     ORDER BY BLOCK_NAME
@@ -215,6 +260,12 @@ def village_overview(request,id):
         id = int(id)
     except ValueError:
         raise Http404()
+    
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+    else:
+        date_range = 0
 
     tot_vid_sql = """
     SELECT vil.id, VILLAGE_NAME as name, COUNT(vid.id) as tot_vid
@@ -222,12 +273,8 @@ def village_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN video vid on (vid.village_id = vil.id)
-    
-    WHERE b.id = %s
-    GROUP BY VILLAGE_NAME
-    ORDER BY VILLAGE_NAME
-    """
+        LEFT OUTER JOIN video vid on (vid.village_id = vil.id
+        """
     
     tot_adopt_sql = """
     SELECT vil.id, VILLAGE_NAME as name, COUNT(p_ad.id) as tot_adopt
@@ -236,11 +283,8 @@ def village_overview(request,id):
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
         LEFT OUTER JOIN person p on (p.village_id = vil.id)
-        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id)
-    WHERE b.id = %s
-    GROUP BY VILLAGE_NAME
-    ORDER BY VILLAGE_NAME
-    """
+        LEFT OUTER JOIN person_adopt_practice p_ad  on (p_ad.person_id = p.id
+        """
     
     tot_screen_sql = """
     SELECT vil.id, VILLAGE_NAME as name, COUNT(sc.id) as tot_screen
@@ -248,11 +292,33 @@ def village_overview(request,id):
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
         LEFT OUTER JOIN village vil on (vil.block_id = b.id)
-        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id)
+        LEFT OUTER JOIN screening sc on (sc.village_id = vil.id
+        """
+    
+    if date_range == 1: 
+        tot_vid_sql += " AND VIDEO_PRODUCTION_END_DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_screen_sql += " AND sc.DATE between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+        tot_adopt_sql += " AND p_ad.DATE_OF_ADOPTION between str_to_date( '%s','%%%%d/%%%%m/%%%%Y') \
+        and str_to_date( '%s','%%%%d/%%%%m/%%%%Y') " % (request.GET['from_date'], request.GET['to_date']) 
+    
+    tot_vid_sql += """)
     WHERE b.id = %s
     GROUP BY VILLAGE_NAME
     ORDER BY VILLAGE_NAME
     """
+    tot_screen_sql += """)
+    WHERE b.id = %s
+    GROUP BY VILLAGE_NAME
+    ORDER BY VILLAGE_NAME
+    """
+    tot_adopt_sql += """)
+    WHERE b.id = %s
+    GROUP BY VILLAGE_NAME
+    ORDER BY VILLAGE_NAME
+    """
+
     
     vid_prod = run_query(tot_vid_sql,id);
     vid_screening = run_query(tot_screen_sql,id);
