@@ -10,7 +10,7 @@ def test_output(request, url):
     weekdelta = datetime.timedelta(weeks = -1)
     
     test_val = Village.objects.filter(start_date__range=(date+weekdelta, date)).count()
-    return render_to_response('test.html',{'test_val':url})
+    return render_to_response('amline.html')
 
 def state_overview(request):
     if 'from_date' in request.GET and request.GET['from_date'] \
@@ -337,6 +337,38 @@ def village_overview(request,id):
     
     return render_to_response('viewtable.html',{'item_list':return_val,'geography':'village'})
     
+
+def overview_flash_output(request):
+    vid_prod_sql = """
+    SELECT VIDEO_PRODUCTION_END_DATE as date, count(*)
+    FROM video
+    GROUP BY VIDEO_PRODUCTION_END_DATE
+    """
+    
+    vid_prod_rs = run_query_dict(vid_prod_sql,'date')
+    
+    start_date = min(vid_prod_rs.keys())
+    today = datetime.date.today()
+    
+    diff = (today - start_date).days
+    
+    str_list = []
+    sum = 0
+    for i in range(1,diff+1):
+        iter_date = start_date + datetime.timedelta(days=i)
+                
+        if iter_date in vid_prod_rs:
+            sum += vid_prod_rs[iter_date][0]
+        
+        str_list.append(iter_date.__str__() +';'+ sum.__str__())
+        
+    return HttpResponse('\n'.join(str_list))
+            
+        
+        
+
+    
+
     
     
     
