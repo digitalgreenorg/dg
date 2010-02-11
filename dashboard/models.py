@@ -320,7 +320,7 @@ class AnimatorSalaryPerMonth(models.Model):
         db_table = u'ANIMATOR_SALARY_PER_MONTH'
 
 class Language(models.Model):
-    language_name = models.CharField(max_length=100)
+    language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
 	db_table = u'LANGUAGE'
 
@@ -391,7 +391,7 @@ class Screening(models.Model):
     animator = models.ForeignKey(Animator)
     farmer_groups_targeted = models.ManyToManyField(PersonGroups,null=True,blank=True)
     videoes_screened = models.ManyToManyField(Video)
-    farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance')
+    farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
         db_table = u'SCREENING'
     def __unicode__(self):

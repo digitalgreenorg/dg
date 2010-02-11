@@ -43,9 +43,11 @@ class ScreeningForm(forms.ModelForm):
     #village  = AjaxForeignKeyField(Village, (('village_name',{}),),default_index=0, select_related= None, widget=FilteredSelect(attrs={'onchange':'temp();'}))
     #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter();'}))
     #animator = DynamicChoiceField(widget=forms.Select(attrs={'disabled': 'true'}))
-    farmer_groups_targeted = DynamicMultipleChoiceField(widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
+    farmer_groups_targeted = forms.ModelMultipleChoiceField(PersonGroups.objects, widget=forms.SelectMultiple(attrs={'onchange': 'filter_person();'}))
+    #farmer_groups_targeted = DynamicMultipleChoiceField(widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
     #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroups.objects.none())
-    animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
+    #animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
+    animator = forms.ModelChoiceField(Animator.objects)
     
     #farmers_groups_targeted = forms.ModelChoiceField(PersonGroups.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
 
@@ -508,6 +510,8 @@ class TrainingAdmin(admin.ModelAdmin):
 
 class EquipmentAdmin(admin.ModelAdmin):
         list_display = ('equipment_type', 'model_no', 'serial_no')
+
+
 
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
