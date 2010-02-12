@@ -17,22 +17,28 @@
 	<link rel="stylesheet" type="text/css" href="/media/css/forms.css" />
 	<link rel="stylesheet" type="text/css" href="/media/css/changelists.css">
 	<link href="/media/css/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css"  media="all"  href="/media/css/dynamic_inlines_with_sort.css"  />
-	
-    <!--link type="text/css" rel="stylesheet" href="DashboardGwt.css"-->
+	<link rel="stylesheet" type="text/css" href="/media/css/changelists.css" />
+	<link type="text/css" rel="stylesheet" href="DashboardGwt.css" />
 
     <!--                                           -->
     <!-- Any title is fine                         -->
     <!--                                           -->
-    <title>Add region</title>
+    <title>Digital Green Dashboard</title>
 	
+	<!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <script type="text/javascript" language="javascript" src="dashboardgwt/dashboardgwt.nocache.js"></script>
+    <link href="/media/css/dynamic_inlines_with_sort.css" type="text/css" media="all" rel="stylesheet" />
+	<link href="/media/css/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" />
 	<script type="text/javascript" src="/media/js/a"></script>
 	<script type="text/javascript" src="/media/js/core.js"></script>
 	<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
 	<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
 	<script type="text/javascript" src="/media/js/actions.js"></script>
 	<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
-	<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
 	<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript" src="/media/js/filter1.js"></script>
 	<script type="text/javascript" src="/media/js/ui/ui.core.js"></script>
@@ -46,15 +52,13 @@
 	<script type="text/javascript" src="/media/js/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="/media/js/SelectBox.js"></script>
 	<script type="text/javascript" src="/media/js/SelectFilter2.js"></script>
-    
+
     <!--                                           -->
     <!-- This script loads your compiled module.   -->
     <!-- If you add any GWT meta tags, they must   -->
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="dashboardgwt/dashboardgwt.nocache.js"></script>
-
-	
   </head>
 
   <!--                                           -->
@@ -65,7 +69,7 @@
   <body class="dashboard-region change-form">
 
     <!-- OPTIONAL: include this if you want history support -->
-    <!--iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe-->
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     
     <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
     <!--noscript>
@@ -75,70 +79,7 @@
       </div>
     </noscript-->
 
-<!-- Container -->
-<div id="container">
-
-    
-    <!-- Header -->
-
-    <div id="header">
-        <div id="branding">
-        
-<h1 id="site-name">Digital Green administration</h1>
-
-        </div>
-        
-        <div id="user-tools">
-            Welcome,
-            <strong>digitalgreen</strong>.
-
-            
-<!--
-                
-                
-                    <a href="/admin/doc/">Documentation</a> /
-                
-                
-                
-                    <a href="/admin/password_change/">
-                
-                Change password</a> /
--->
-
-                
-                
-                    <a href="/admin/logout/">
-                
-                Log out</a>
-            
-
-        </div>
-        
-        
-    </div>
-    <!-- END Header -->
-    
-<div class="breadcrumbs">
-     <a href="../../../">Home</a> &rsaquo;
-
-     <a href="../../">Dashboard</a> &rsaquo; 
-     <a href="../">Regions</a> &rsaquo; 
-     Add region
-</div>
-
-    <!-- Content -->
-    <div id="content">
-    		<div id ="content-main">
-    		</div>
-    </div>
-    
-	<div id="submit-button" class="submit-row"></div>
-
-    <!-- END Content -->
-
-    <div id="footer"></div>
-</div>
-<!-- END Container -->
+<div id="gwt-top-parent"></div>
 
 </body>
 </html>

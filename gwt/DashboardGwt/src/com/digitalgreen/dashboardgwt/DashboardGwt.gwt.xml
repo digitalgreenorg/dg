@@ -9,9 +9,9 @@
   <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
-
   <!-- Other module inherits                                      -->
-
+  <inherits name="com.google.gwt.http.HTTP" />
+  <stylesheet src='DashboardGwt.css' />
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.digitalgreen.dashboardgwt.client.DashboardGwt'/>
 

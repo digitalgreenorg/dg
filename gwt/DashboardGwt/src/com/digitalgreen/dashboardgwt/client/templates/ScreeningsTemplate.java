@@ -1,7 +1,155 @@
-package com.digitalgreen.dashboardgwt.client;
+package com.digitalgreen.dashboardgwt.client.templates;
 
-public class Screenings {
-	final static String SCREENING_CONTENT_HTML = "<div>" +
+import java.util.HashMap;
+
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Regions;
+import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.RootPanel;
+
+public class ScreeningsTemplate extends BaseTemplate {
+	private FormPanel postForm = null;
+	private HTMLPanel displayHtml = null;
+	
+	public ScreeningsTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	public FormPanel getPostForm() {
+		return this.postForm;
+	}
+	
+	private void fillUserDefined() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			HTMLPanel listFormHtml = new HTMLPanel(screeningsListFormHtml);
+			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
+			Hyperlink addLink = new Hyperlink();
+			addLink.setHTML("<a class='addlink' href='#add-screenings-link'> Add screening </a>");
+			// Take them to the add page for screenings
+			addLink.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					RequestContext requestContext = new RequestContext();
+					HashMap args = new HashMap();
+					args.put("action", "add");
+					requestContext.setArgs(args);
+					Screenings screening = new Screenings(requestContext);
+					screening.response();
+				}
+			});
+			RootPanel.get("add-link").add(addLink);
+		}
+	}
+	
+	@Override
+	public void fill() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		String requestMethod = this.getRequestContext().getMethodTypeCtx();
+		if(requestMethod == RequestContext.METHOD_GET) {
+			if(queryArg == "add") {
+				this.postForm = new FormPanel();
+				this.postForm.setAction(this.getRequestContext().getFormAction());
+				this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+				this.postForm.setMethod(FormPanel.METHOD_POST);
+				this.displayHtml = new HTMLPanel(screeningsAddHtml);
+				this.postForm.add(this.displayHtml);
+				super.setContentPanel(this.postForm);
+				super.setContentClassName("colM");
+				this.fillSubmitControls();
+			}else {
+				this.displayHtml = new HTMLPanel(screeningsListHtml);
+				super.setContentPanel(this.displayHtml);
+				super.setContentClassName("flex");
+			}
+		}
+		super.fill();
+		fillUserDefined();
+	}
+	
+	@Override
+	public void fillSubmitControls() {
+		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
+			Button b = new Button("Save");
+		    b.setStyleName("button default");
+		    b.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
+														   getPostForm()));
+					region.response();
+				}
+		    });
+			super.setSubmitControlsPanel(b);
+			super.fillSubmitControls();
+		}
+	}
+	
+	// Fill ids:  data-rows
+	final static String screeningsListFormHtml = "<div class='actions'>" +
+						"<label>Action: <select name='action'>" +
+							"<option value='' selected='selected'>---------</option>" +
+							"<option value='delete_selected'>Delete selected screenings</option>" +
+							"</select>" +
+						"</label>" +
+						"<button type='submit' class='button' title='Run the selected action' name='index' value='0'>Go</button>" +
+					"</div>" +
+					"<table cellspacing='0'>" +
+						"<thead>" +
+							"<tr>" +
+								"<th>" +
+									"<input type='checkbox' id='action-toggle' />" +
+								"</th>" +
+								"<th>" +
+									"<a href='?ot=asc&amp;o=1'>" +
+										"Date" +
+									"</a>" +
+								"</th>" +
+								"<th>" +
+									"<a href='?ot=asc&amp;o=2'>" +
+										"Village" +
+									"</a>" +
+								"</th>" +
+								"<th>" +
+									"<a href='?ot=asc&amp;o=3'>" +
+										"Location" +
+									"</a>" +
+								"</th>" +
+							"</tr>" +
+						"</thead>" +
+						"<tbody>" +
+							"<div id='data-rows'" +       // Insert data rows here
+							"</div>" +
+						"</tbody>" +
+					"</table>";
+
+	// Fill ids:  listing-form-body, add-link
+	final static String screeningsListHtml = "<h1>Select screening to change</h1>" +
+			"<div id='content-main'>" +
+				"<ul class='object-tools'>" +
+					"<li id='add-link'>" +                // Insert add link here
+					"</li>" +
+				"</ul>" +
+				"<div class='module' id='changelist'>" +
+					"<form action='' method='post'>" +
+						"<div id='listing-form-body'>" +  // Insert form data here
+						"</div>" +
+					"</form>" +
+				"</div>" +
+			"</div>";
+	
+	
+	final static String screeningsAddHtml = "<h1>Add Screening</h1>" +
+			"<div id='content-main'>" +
+			"<div>" +
 			"<fieldset class='module aligned '>" +
 			"<div class='form-row date  '>" +
 			"<div>" +
@@ -27,11 +175,11 @@ public class Screenings {
 			"<div>" +
 			"<label for='id_village' class='required'>Village:</label><input type='hidden' name='village' id='id_village' />" +
 			"<style type='text/css' media='screen'>" +
-			"#lookup_village {" +
-			"padding-right:16px;" +
-			"background: url(" +
-			"/media/img/admin/selector-search.gif" +
-			") no-repeat right;" +
+				"#lookup_village {" +
+				"padding-right:16px;" +
+				"background: url(" +
+				"/media/img/admin/selector-search.gif" +
+				") no-repeat right;" +
 			"}" +
 			"#del_village {" +
 			"display: none;" +
@@ -206,5 +354,12 @@ public class Screenings {
 			"</tbody>" +
 			"</table>" +
 			"</fieldset>" +
-			"</div><script type='text/javascript' src='/media/js/dynamic_inlines_with_sort.js'></script>";	
+			"</div>" +
+			"</div>" +
+			"<script type='text/javascript'>document.getElementById('id_date').focus();</script>" +
+			"<script type='text/javascript'>" +
+			"</script>" +
+			"</div>" +
+			"</div><script type='text/javascript' src='/media/js/dynamic_inlines_with_sort.js'></script>" +
+			"</div>";
 }
