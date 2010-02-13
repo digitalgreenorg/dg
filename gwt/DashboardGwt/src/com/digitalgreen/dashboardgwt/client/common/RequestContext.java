@@ -1,8 +1,10 @@
 package com.digitalgreen.dashboardgwt.client.common;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 import java.util.HashMap;
 
+// Emulating a marshalled HTTP request object
 public class RequestContext {
 	static public String METHOD_GET = "GET";
 	static public String METHOD_POST = "POST";
@@ -24,7 +26,7 @@ public class RequestContext {
 		this.data = postForm;
 		this.args = new HashMap();
 	}
-
+	
 	public String getMethodTypeCtx() {
 		return this.methodTypeCtx;
 	}

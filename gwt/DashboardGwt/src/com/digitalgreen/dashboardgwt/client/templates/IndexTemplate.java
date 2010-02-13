@@ -16,5 +16,6 @@ public class IndexTemplate extends BaseTemplate {
 		super.fill();
 	}
 	
-	final protected String indexContentHtml = "<h1>Index</h1>";
+	final static private String indexContentHtml = "<h1>Index</h1>" +
+						"<p>Brief description and help items here</p>";
 }

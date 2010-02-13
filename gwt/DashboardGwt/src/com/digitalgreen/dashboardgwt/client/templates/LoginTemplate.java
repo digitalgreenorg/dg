@@ -4,9 +4,11 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class LoginTemplate extends BaseTemplate {
 	private FormPanel postForm = null;
@@ -15,39 +17,45 @@ public class LoginTemplate extends BaseTemplate {
 	public LoginTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
-
 	public FormPanel getPostForm() {
 		return this.postForm;
 	}
 
 	@Override
-	public void fill() {
+	public void fill() {	
 		this.postForm = new FormPanel();
-		this.postForm.setAction(this.getRequestContext().getFormAction());
+		this.postForm.setAction(RequestContext.getServerUrl() + "admin/");
 	    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.postForm.setMethod(FormPanel.METHOD_POST);
-	    this.formHtml = new HTMLPanel(loginFormHtml);
-	    this.postForm.add(this.formHtml);
+	    HTMLPanel formHtml = new HTMLPanel(loginHtml);
+	    this.postForm.add(formHtml);
 		super.setContentPanel(this.postForm);
 	    super.fill();
-		this.fillSubmitControls();
+	    this.fillSubmitControls();
 	}
 
 	@Override
 	public void fillSubmitControls() {
 		// Add submit controls html here
-		Button b = new Button("Save");
-	    b.setStyleName("button default");
+		Button b = new Button("Login");
+	    b.setStyleName("submit-row");
 	    b.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Login l = new Login(new RequestContext(RequestContext.METHOD_POST, 
-													   getPostForm()));
-				l.response();
+				Login login = new Login(new RequestContext(RequestContext.METHOD_POST, 
+													   	   getPostForm()));
+				login.response();
 			}
 	    });
-		super.setSubmitControlsPanel(b);
-		super.fillSubmitControls();
+	    RootPanel.get("submit-button").add(b);
 	}
 	
-	final static String loginFormHtml = "";
+	final static private String loginHtml = "<h1>Login</h1>" +
+						"<div id='content-main'></div>" +
+						"<div class='login-form-row'>" +
+    					"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />" +
+						"</div>" +
+    					"<div class='login-form-row'>" +
+    						"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />" +
+    					"</div>" +
+    					"<div id='submit-button'></div>";
 }

@@ -27,7 +27,6 @@ public class BaseTemplate {
 		initUI();
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void addHyperLinkHandler(Hyperlink link, final BaseServlet gotoServlet) {
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

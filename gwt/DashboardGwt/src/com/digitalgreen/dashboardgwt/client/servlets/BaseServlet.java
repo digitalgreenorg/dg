@@ -7,20 +7,18 @@ import com.google.gwt.user.client.Cookies;
 
 public class BaseServlet implements ServletInterface {
 	
-	protected RequestContext requestContext;
-	protected String cookieValueCtx = null;
+	protected RequestContext requestContext = null;	
 	private boolean isLoggedInCtx = false;
 	
+	// Slightly breaks abstraction since the RequestContext should be 
+	// created in the template as a GET request, similar to how 
+	// POSTs work.
 	public BaseServlet() {
 		this.requestContext = new RequestContext();
 	}
 	
 	public BaseServlet(RequestContext requestContext) {
 		this.requestContext = requestContext;
-	}
-	
-	protected String getCookieValueCtx() {
-		return this.cookieValueCtx;
 	}
 	
 	protected String getMethodTypeCtx() {
@@ -43,11 +41,14 @@ public class BaseServlet implements ServletInterface {
 		template.fill();
 	}
 	
-	//Override this
+	// Override this
 	public void response() {
-		this.cookieValueCtx = Cookies.getCookie("sessionid");
-		if(this.cookieValueCtx == null) {
+		String loggedInCtx = Cookies.getCookie("sessionid");
+		// Must have a cookie
+		if(loggedInCtx == null || loggedInCtx == "") {
 			this.setIsLoggedIn(false);
+		} else {
+			this.setIsLoggedIn(true);
 		}
 	}
 }

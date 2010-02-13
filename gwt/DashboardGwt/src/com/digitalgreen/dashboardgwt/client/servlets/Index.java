@@ -8,13 +8,11 @@ public class Index extends BaseServlet {
 	@Override
 	public void response () {
 		super.response();
-		this.fillTemplate(new IndexTemplate(this.requestContext));
-		/*
+
 		if (!this.isLoggedIn()) {
 			super.redirectTo(new Login());
 		} else {
 			this.fillTemplate(new IndexTemplate(this.requestContext));
 		}
-		*/
 	}
 }

@@ -38,10 +38,13 @@ public class ScreeningsTemplate extends BaseTemplate {
 			// Take them to the add page for screenings
 			addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					// Assume a GET request so call the empty constructer
 					RequestContext requestContext = new RequestContext();
 					HashMap args = new HashMap();
+					// Prepare the servlet to render the add page
 					args.put("action", "add");
 					requestContext.setArgs(args);
+					// Now give the servlet control
 					Screenings screening = new Screenings(requestContext);
 					screening.response();
 				}
@@ -58,7 +61,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		if(requestMethod == RequestContext.METHOD_GET) {
 			if(queryArg == "add") {
 				this.postForm = new FormPanel();
-				this.postForm.setAction(this.getRequestContext().getFormAction());
+				this.postForm.setAction(RequestContext.getServerUrl() + "add_screening");
 				this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 				this.postForm.setMethod(FormPanel.METHOD_POST);
 				this.displayHtml = new HTMLPanel(screeningsAddHtml);
@@ -94,7 +97,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	}
 	
 	// Fill ids:  data-rows
-	final static String screeningsListFormHtml = "<div class='actions'>" +
+	final static private String screeningsListFormHtml = "<div class='actions'>" +
 						"<label>Action: <select name='action'>" +
 							"<option value='' selected='selected'>---------</option>" +
 							"<option value='delete_selected'>Delete selected screenings</option>" +
@@ -132,7 +135,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 					"</table>";
 
 	// Fill ids:  listing-form-body, add-link
-	final static String screeningsListHtml = "<h1>Select screening to change</h1>" +
+	final static private String screeningsListHtml = "<h1>Select screening to change</h1>" +
 			"<div id='content-main'>" +
 				"<ul class='object-tools'>" +
 					"<li id='add-link'>" +                // Insert add link here
@@ -147,7 +150,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 			"</div>";
 	
 	
-	final static String screeningsAddHtml = "<h1>Add Screening</h1>" +
+	final static private String screeningsAddHtml = "<h1>Add Screening</h1>" +
 			"<div id='content-main'>" +
 			"<div>" +
 			"<fieldset class='module aligned '>" +

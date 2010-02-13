@@ -9,6 +9,15 @@
   font-family: Calibri;
 }
 
+.login-form-row {
+    overflow: hidden;
+    padding: 8px 12px;
+    font-size: 11px;
+    border-bottom: 1px solid #eee;
+	width: 175px;
+}
+
+
 #division {
   width:  100%;
   margin-top: 10px;
@@ -18,3 +27,4 @@
   width:  85%;
   float: left;
 }
+

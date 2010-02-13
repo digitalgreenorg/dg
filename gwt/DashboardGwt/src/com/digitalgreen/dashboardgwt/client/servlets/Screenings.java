@@ -16,13 +16,10 @@ public class Screenings extends BaseServlet {
 	public void response() {
 		super.response();
 		
-		this.fillTemplate(new ScreeningsTemplate(this.requestContext));
-		/*
 		if (!this.isLoggedIn()) {
 			super.redirectTo(new Login());
 		} else {
 			this.fillTemplate(new ScreeningsTemplate(this.requestContext));
 		}
-		*/
 	}
 }
