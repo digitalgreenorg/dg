@@ -37,8 +37,10 @@ public class BaseTemplate {
 
 	private void initUI() {
 		this.baseContentHtmlPanel = new HTMLPanel(BaseContentHtml);
-		RootPanel.get("gwt-top-parent").clear();
-		RootPanel.get("gwt-top-parent").add(this.baseContentHtmlPanel);
+		RootPanel.get().clear();
+		RootPanel.get().insert(this.baseContentHtmlPanel, 0);
+		
+		/*
 		Hyperlink l1 = new Hyperlink("Animator assigned villages", true, "l1");
 		addHyperLinkHandler(l1, new BaseServlet());
 	    Hyperlink l2 = new Hyperlink("Animators", true, "l2");
@@ -97,11 +99,16 @@ public class BaseTemplate {
 	    panel.add(l18);
 	    RootPanel.get("panel-listings").add(panel);
 	    RootPanel.get("panel-listings").setStyleName("panelListing");
+		*/
 	}
 	
 	public RequestContext getRequestContext() {
 		return this.requestContext;
 	}
+	
+	public void setBodyStyle(String styleName) {
+		RootPanel.get().setStyleName(styleName);
+	}	
 	public void setContentPanel(Widget w) {
 		this.contentPanel = w;
 	}
@@ -111,20 +118,19 @@ public class BaseTemplate {
 	}
 	
 	public void setContentClassName(String className) {
-		RootPanel.get("content-body").setStyleName(className);
+		RootPanel.get("content").setStyleName(className);
 	}
 	
 	// Override this
 	public void fill() {
-		RootPanel.get("content-body").insert(this.contentPanel, 0);	
+		RootPanel.get("container").add(this.contentPanel);
 	}
 	
 	// Override this
 	public void fillSubmitControls() {
-		RootPanel.get("submit-button").add(this.submitControlsPanel);
-		RootPanel.get("submit-button").setStyleName("submit-row");
+		RootPanel.get("container").add(this.submitControlsPanel);
 	}
-	
+
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
 		"<!-- Header -->" +
@@ -139,13 +145,8 @@ public class BaseTemplate {
 			"</div>" +
 		"</div>" +
 		"<!-- END Header -->" +
-		"<div id='division'>" +
-			"<div id='panel-listings'></div>" +      // Insert panel-listings and style here
-			"<!-- Content -->" +
-			"<div id='content-body' class='colM'>" +      // Insert client's content in this div
-			"</div>"+
-			"<br />" +
-			"<div id='submit-button'></div>" +
+		"<!-- Content -->" +                 // Content gets added by subclasses
+		"<!-- Submit Button -->" +           // For now gets added by subclasses
 		"</div>" +
 		"<!-- END Content -->" +
 		"<div id='footer'></div>" +

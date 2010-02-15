@@ -17,6 +17,7 @@ public class LoginTemplate extends BaseTemplate {
 	public LoginTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
+	
 	public FormPanel getPostForm() {
 		return this.postForm;
 	}
@@ -46,16 +47,18 @@ public class LoginTemplate extends BaseTemplate {
 				login.response();
 			}
 	    });
-	    RootPanel.get("submit-button").add(b);
+	    super.setSubmitControlsPanel(b);
+	    RootPanel.get("content").add(b);
 	}
-	
-	final static private String loginHtml = "<h1>Login</h1>" +
+
+	final static private String loginHtml = "<div id='content' class='colM'>" +
+						"<h1>Login</h1>" +
 						"<div id='content-main'></div>" +
-						"<div class='login-form-row'>" +
-    					"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />" +
+						"<div class='form-row'>" +
+    						"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />" +
 						"</div>" +
-    					"<div class='login-form-row'>" +
+    					"<div class='form-row'>" +
     						"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />" +
     					"</div>" +
-    					"<div id='submit-button'></div>";
+    					"</div>";
 }

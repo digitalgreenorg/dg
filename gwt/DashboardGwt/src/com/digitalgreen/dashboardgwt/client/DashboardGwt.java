@@ -1,13 +1,14 @@
 package com.digitalgreen.dashboardgwt.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals
@@ -30,7 +31,19 @@ public class DashboardGwt implements EntryPoint {
 		};
 		this.timer.schedule(this.timeDelay);
 		*/
+		installNavigationListener();
 	}
+
+	public static int doWork() {
+		//Window.alert("IN DO WORK?");
+		//Index index = new Index();
+		//index.response();
+		return 1;
+	}
+	public static native void installNavigationListener() /*-{
+		$wnd.globalFunction = $entry(@com.digitalgreen.dashboardgwt.client.DashboardGwt::doWork()());
+		//alert("COMING HERE AT LEAST");
+	}-*/;
 
 	private void checkServerConnection() {
 		String url = RequestContext.getServerUrl();
