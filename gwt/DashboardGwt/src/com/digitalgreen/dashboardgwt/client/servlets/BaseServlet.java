@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
+import com.digitalgreen.dashboardgwt.client.templates.Template;
 import com.google.gwt.user.client.Cookies;
 
 public class BaseServlet implements ServletInterface {
@@ -37,7 +38,7 @@ public class BaseServlet implements ServletInterface {
 		servlet.response();
 	}
 
-	public void fillTemplate(BaseTemplate template) {
+	public void fillTemplate(Template template) {
 		template.fill();
 	}
 	

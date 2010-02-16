@@ -31,19 +31,7 @@ public class DashboardGwt implements EntryPoint {
 		};
 		this.timer.schedule(this.timeDelay);
 		*/
-		installNavigationListener();
 	}
-
-	public static int doWork() {
-		//Window.alert("IN DO WORK?");
-		//Index index = new Index();
-		//index.response();
-		return 1;
-	}
-	public static native void installNavigationListener() /*-{
-		$wnd.globalFunction = $entry(@com.digitalgreen.dashboardgwt.client.DashboardGwt::doWork()());
-		//alert("COMING HERE AT LEAST");
-	}-*/;
 
 	private void checkServerConnection() {
 		String url = RequestContext.getServerUrl();

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class LoginTemplate extends BaseTemplate {
+public class LoginTemplate extends Template {
 	private FormPanel postForm = null;
 	private HTMLPanel formHtml = null;
 	
@@ -23,42 +23,49 @@ public class LoginTemplate extends BaseTemplate {
 	}
 
 	@Override
-	public void fill() {	
+	public void fill() {
+		super.setBodyStyle("login");
 		this.postForm = new FormPanel();
 		this.postForm.setAction(RequestContext.getServerUrl() + "admin/");
 	    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.postForm.setMethod(FormPanel.METHOD_POST);
 	    HTMLPanel formHtml = new HTMLPanel(loginHtml);
 	    this.postForm.add(formHtml);
-		super.setContentPanel(this.postForm);
-	    super.fill();
-	    this.fillSubmitControls();
+		RootPanel.get().add(this.getPostForm());
+		this.fillSubmitControls();
 	}
-
-	@Override
+	
 	public void fillSubmitControls() {
-		// Add submit controls html here
-		Button b = new Button("Login");
-	    b.setStyleName("submit-row");
+		Button b = Button.wrap(RootPanel.get("submit-button").getElement());
 	    b.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Login login = new Login(new RequestContext(RequestContext.METHOD_POST, 
 													   	   getPostForm()));
 				login.response();
 			}
-	    });
-	    super.setSubmitControlsPanel(b);
-	    RootPanel.get("content").add(b);
+	    });	
 	}
 
-	final static private String loginHtml = "<div id='content' class='colM'>" +
-						"<h1>Login</h1>" +
-						"<div id='content-main'></div>" +
-						"<div class='form-row'>" +
-    						"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />" +
+	final static private String loginHtml = "<div id='container'>" +
+					"<!-- Header -->" +
+					"<div id='header'>" +
+						"<div id='branding'>" +
+							"<h1 id='site-name'>Digital Green administration</h1>" +
 						"</div>" +
-    					"<div class='form-row'>" +
-    						"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />" +
+					"</div>" +
+					"<div id='content' class='colM'>" +
+						"<div id='content-main'>" +
+							"<div class='form-row'>" +
+								"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />" +
+							"</div>" +
+							"<div class='form-row'>" +
+    							"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />" +
+    						"</div>" +
+    						"<div class='submit-row'>" +
+    							"<label> </label>" +
+    							"<input id='submit-button' type='submit' value='Log in'/>" +
+    						"</div>" +
     					"</div>" +
-    					"</div>";
+    				"</div>" +
+    			"</div>";
 }
