@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class LoginTemplate extends Template {
 	private FormPanel postForm = null;
 	private HTMLPanel formHtml = null;
+	private HTMLPanel baseHtml = null;
 	
 	public LoginTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -21,6 +22,11 @@ public class LoginTemplate extends Template {
 	public FormPanel getPostForm() {
 		return this.postForm;
 	}
+	
+	//public native static void test() /*-{
+	//	<link rel='stylesheet' type='text/css' href='/media/css/login.css' />
+	//}-*/;
+	
 
 	@Override
 	public void fill() {
@@ -29,9 +35,13 @@ public class LoginTemplate extends Template {
 		this.postForm.setAction(RequestContext.getServerUrl() + "admin/");
 	    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.postForm.setMethod(FormPanel.METHOD_POST);
-	    HTMLPanel formHtml = new HTMLPanel(loginHtml);
-	    this.postForm.add(formHtml);
-		RootPanel.get().add(this.getPostForm());
+	    baseHtml = new HTMLPanel(loginHtml); 
+	    formHtml = new HTMLPanel(login);
+	    postForm.add(formHtml);
+	    RootPanel.get().add(baseHtml);
+	    RootPanel.get("content-main").add(postForm);
+	    //this.postForm.add(formHtml);
+		//RootPanel.get().add(this.getPostForm());
 		this.fillSubmitControls();
 	}
 	
@@ -46,7 +56,25 @@ public class LoginTemplate extends Template {
 	    });	
 	}
 
-	final static private String loginHtml = "<div id='container'>" +
+	final static private String loginHtml =
+		"<link rel='stylesheet' type='text/css' href='/media/css/login.css' />"+
+		"<div id='container'>" + 
+			"<div id='header'>"+
+    			"<div id='branding'>"+
+    				"<h1 id='site-name'>Digital Green administration</h1>"+
+    			"</div>"+
+    		"</div>"+
+    		"<div id='content' class='colM'>"+
+    			"<div id='content-main'></div>"+
+	    		"<br class='clear' />"+
+	    	"</div>"+    
+	    "</div>";
+		
+		
+		
+		
+		
+		/*"<div id='container'>" +
 					"<!-- Header -->" +
 					"<div id='header'>" +
 						"<div id='branding'>" +
@@ -67,5 +95,46 @@ public class LoginTemplate extends Template {
     						"</div>" +
     					"</div>" +
     				"</div>" +
-    			"</div>";
+    			"</div>";*/
+	
+	final static private String login =	
+			"<div class='form-row'>"+
+				"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />"+
+			"</div>"+
+			"<div class='form-row'>"+
+				"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />"+
+				"<input type='hidden' name='this_is_the_login_form' value='1' />"+
+			"</div>"+
+			"<div class='submit-row'>"+
+				"<label>&nbsp;</label><input id='submit-button' type='submit' value='Log in' />"+
+			"</div>";
+		
+		
+		
+		/*	"<div id='container'>" + 
+				"<div id='header'>"+
+	        		"<div id='branding'>"+
+	        			"<h1 id='site-name'>Digital Green administration</h1>"+
+	        		"</div>"+
+	        	"</div>"+
+	    	    "<div id='content' class='colM'>"+
+	    	    	"<div id='content-main'>"+
+	    	    		"<div class='form-row'>"+
+	    	    			"<label for='id_username'>Username:</label> <input type='text' name='username' id='id_username' />"+
+	    	    		"</div>"+
+	    	    		"<div class='form-row'>"+
+	    	    			"<label for='id_password'>Password:</label> <input type='password' name='password' id='id_password' />"+
+	    	    			"<input type='hidden' name='this_is_the_login_form' value='1' />"+
+	    	    		"</div>"+
+	    	    		"<div class='submit-row'>"+
+	    	    			"<label>&nbsp;</label><input id='submit-button' type='submit' value='Log in' />"+
+	    	    		"</div>"+
+	    	    	"</div>"+        
+	    	    	"<br class='clear' />"+
+	    	    "</div>"+    
+	    	"</div>"; */
+	
+
+		
+	
 }
