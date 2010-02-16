@@ -5,18 +5,15 @@ from calendar import week
 import datetime
 from dg.output.run_query import *
 
-def test_output(request, url):
-    date = datetime.date.today()
-    weekdelta = datetime.timedelta(weeks = -1)
+def test_output(request):
     
-    test_val = Village.objects.filter(start_date__range=(date+weekdelta, date)).count()
     return render_to_response('amline.html')
 
 def state_overview(request):
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
-    else:
+    else:   
         date_range = 0
         
     vid_prod_sql = """
@@ -338,29 +335,46 @@ def village_overview(request,id):
     return render_to_response('viewtable.html',{'item_list':return_val,'geography':'village'})
     
 
-def overview_flash_output(request):
+#TODO: Add Error checking for empting result sets.
+def overview_flash_state(request):
     vid_prod_sql = """
     SELECT VIDEO_PRODUCTION_END_DATE as date, count(*)
     FROM video
     GROUP BY VIDEO_PRODUCTION_END_DATE
     """
     
-    vid_prod_rs = run_query_dict(vid_prod_sql,'date')
+    sc_sql = """
+    SELECT DATE AS date, COUNT(*) FROM SCREENING
+    GROUP BY DATE
+    """
     
-    start_date = min(vid_prod_rs.keys())
+    adopt_sql = """
+    SELECT DATE_OF_ADOPTION as date, count(*)
+    FROM PERSON_ADOPT_PRACTICE
+    GROUP BY DATE_OF_ADOPTION
+    """
+    
+    vid_prod_rs = run_query_dict(vid_prod_sql,'date')
+    sc_rs = run_query_dict(sc_sql,'date');
+    adopt_rs = run_query_dict(adopt_sql, 'date'); 
+    start_date = min(min(vid_prod_rs.keys()), min(sc_rs.keys()), min(adopt_rs.keys()))
     today = datetime.date.today()
     
     diff = (today - start_date).days
     
     str_list = []
-    sum = 0
-    for i in range(1,diff+1):
+    sum_vid = sum_sc = sum_adopt = 0
+    for i in range(0,diff+1):
         iter_date = start_date + datetime.timedelta(days=i)
                 
         if iter_date in vid_prod_rs:
-            sum += vid_prod_rs[iter_date][0]
+            sum_vid += vid_prod_rs[iter_date][0]
+        if iter_date in sc_rs:
+            sum_sc += sc_rs[iter_date][0]
+        if iter_date in adopt_rs:
+            sum_adopt += adopt_rs[iter_date][0]
         
-        str_list.append(iter_date.__str__() +';'+ sum.__str__())
+        str_list.append(iter_date.__str__() +';'+ sum_vid.__str__()+';'+ sum_sc.__str__()+';'+ sum_adopt.__str__())
         
     return HttpResponse('\n'.join(str_list))
             

@@ -12,9 +12,9 @@
   <font></font>                                               <!-- [Arial] (font name) use device fonts, such as Arial, Times New Roman, Tahoma, Verdana... -->
   <text_size></text_size>                                     <!-- [11] (Number) text size of all texts. Every text size can be set individually in the settings below -->
   <text_color></text_color>                                   <!-- [#000000] (hex color code) main text color. Every text color can be set individually in the settings below-->
-  <decimals_separator></decimals_separator>                   <!-- [,] (string) decimal separator. Note, that this is for displaying data only. Decimals in data xml file must be separated with dot -->
+  <decimals_separator>.</decimals_separator>                   <!-- [,] (string) decimal separator. Note, that this is for displaying data only. Decimals in data xml file must be separated with dot -->
   <thousands_separator></thousands_separator>                 <!-- [ ] (string) thousand separator. use "none" if you don't want to separate -->
-  <digits_after_decimal>2</digits_after_decimal>              <!-- [] (Number) if your value has less digits after decimal then is set here, zeroes will be added -->
+  <digits_after_decimal>0</digits_after_decimal>              <!-- [] (Number) if your value has less digits after decimal then is set here, zeroes will be added -->
   <scientific_min></scientific_min>                           <!-- [0.000001] If absolute value of your number is equal or less then scientific_min, this number will be formatted using scientific notation, for example: 0.0000023 -> 2.3e-6 -->
   <scientific_max></scientific_max>                           <!-- [1000000000000000] If absolute value of your number is equal or bigger then scientific_max, this number will be formatted using scientific notation, for example: 15000000000000000 -> 1.5e16 -->
   <redraw></redraw>                                           <!-- [false] (true / false) if your chart's width or height is set in percents, and redraw is set to true, the chart will be redrawn then screen size changes -->
@@ -222,7 +222,7 @@
       <enabled>true</enabled>                                 <!-- [false] (true / false) whether to show values near legend entries or not -->
       <width>44</width>                                       <!-- [80] (Number) width of text field for value -->
       <align>left</align>                                     <!-- [right] (right / left) -->
-      <text><![CDATA[: ${value}]]></text>                     <!-- [{value}] ({title} {value} {series} {description} {percents}) You can format any text: {value} will be replaced with value, {description} - with description and so on. You can add your own text or html code too. -->
+      <text><![CDATA[: {value}]]></text>                     <!-- [{value}] ({title} {value} {series} {description} {percents}) You can format any text: {value} will be replaced with value, {description} - with description and so on. You can add your own text or html code too. -->
      </values>
   </legend>
   
@@ -327,7 +327,7 @@
       <text_color></text_color>                               <!-- [text_color] (hex color code) button text color -->
       <text_size></text_size>                                 <!-- [text_size](Number) button text size -->
       <text>                                                  <!-- [] (text) html tags may be used (supports <b>, <i>, <u>, <font>, <a href="">, <br/>. Enter text between []: <![CDATA[your <b>bold</b> and <i>italic</i> text]]>-->
-        <![CDATA[<b>Historical Crude Oil Prices</b>]]>
+        <![CDATA[<b>Time vs Metrics</b>]]>
       </text>        
     </label>    
   
@@ -341,7 +341,7 @@
     <graph gid="1">                                           <!-- if you are using XML data file, graph "gid" must match graph "gid" in data file -->
                                                             
       <axis>left</axis>                                       <!-- [left] (left/ right) indicates which y axis should be used -->
-      <title>Nominal</title>                                  <!-- [] (graph title) -->
+      <title>Total Video Production</title>                                  <!-- [] (graph title) -->
       <color>#FFCC00</color>                                  <!-- [] (hex color code) if not defined, uses colors from this array: #FF0000, #0000FF, #00FF00, #FF9900, #CC00CC, #00CCCC, #33FF00, #990000, #000066 -->
       <color_hover></color_hover>                             <!-- [#BBBB00] (hex color code) -->
       <line_alpha></line_alpha>                               <!-- [100] (0 - 100) -->
@@ -359,7 +359,7 @@
       <hidden></hidden>                                       <!-- [false] (true / false) vill not be visible until you check corresponding checkbox in the legend -->
       <selected></selected>                                   <!-- [true] (true / false) if true, balloon indicating value will be visible then roll over plot area -->
       <balloon_text>
-        <![CDATA[${value}]]>                                          <!-- [<b>{value}</b><br>{description}] ({title} {value} {series} {description} {percents}) You can format any balloon text: {title} will be replaced with real title, {value} - with value and so on. You can add your own text or html code too. -->
+        <![CDATA[{value}]]>                                          <!-- [<b>{value}</b><br>{description}] ({title} {value} {series} {description} {percents}) You can format any balloon text: {title} will be replaced with real title, {value} - with value and so on. You can add your own text or html code too. -->
       </balloon_text>
       <data_labels>
         <![CDATA[]]>                                          <!-- [] ({title} {value} {series} {description} {percents}) Data labels can display value (and more) near your point on the plot area. -->
@@ -370,6 +370,26 @@
       <data_labels_position></data_labels_position>           <!-- [above] (below / above) -->            
       <vertical_lines></vertical_lines>                       <!-- [false] (true / false) whether to draw vertical lines or not. If you want to show vertical lines only (without the graph, set line_alpha to 0 -->
       <visible_in_legend></visible_in_legend>                 <!-- [true] (true / false) whether to show legend entry for this graph or not -->
+    </graph>
+    
+    <graph gid="2">                                                            
+      <axis>left</axis>
+      <title>Total Screening</title>              
+      <color>#999999</color>
+      <selected>true</selected>                     
+      <balloon_text>
+        <![CDATA[{value}]]>
+      </balloon_text>
+    </graph>
+    
+    <graph gid="3">                                                            
+      <axis>left</axis>
+      <title>Total Adoptions</title>              
+      <color>#3366FF</color>
+      <selected>true</selected>                     
+      <balloon_text>
+        <![CDATA[{value}]]>
+      </balloon_text>
     </graph>
     
   </graphs>  
