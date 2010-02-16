@@ -59,13 +59,13 @@
 						screened
 					</td>
 					<td id='table2td'>
-						adoptions
+						Adoptions
 					</td>
 					<td id='table2td'>
-						practices
+						Persons
 					</td>
 					<td id='table2td'>
-						villages
+						Practices
 					</td>					
 				 </tr>
 				 {% for item in item_list %}
@@ -87,10 +87,13 @@
 							{{ item.tot_adopt }} </a>
 						</td>
 						<td id='table2td1'>
+						<a href=''>
+							{{ item.tot_per }} </a>
 							
 						</td>
 						<td id='table2td1'>
-							
+							<a href=''>
+							{{ item.tot_prac }} </a>
 						</td>										
 				 	</tr>
 				{% endfor %}					 

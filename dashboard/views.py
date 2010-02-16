@@ -12,3 +12,7 @@ def feed_animators(request, village_id):
 	#models = AutoModel.objects.filter(make=make)     
 	animators = Animator.objects.filter(assigned_villages=village)
 	return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
+
+def test_view(request):
+	    #Book.objects.filter(title__icontains=q)
+	    return render_to_response('results.html',{'body': "hi"}),

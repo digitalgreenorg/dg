@@ -392,6 +392,27 @@
       </balloon_text>
     </graph>
     
+    <graph gid="4">                                                            
+      <axis>left</axis>
+      <title>Total Practices</title>              
+      <color>#FF0000</color>
+      <selected>true</selected>                     
+      <balloon_text>
+        <![CDATA[{value}]]>
+      </balloon_text>
+    </graph>
+    
+    <graph gid="5">                                                            
+      <axis>left</axis>
+      <title>Total Persons</title>              
+      <color>#000000</color>
+      <selected>true</selected>                     
+      <balloon_text>
+        <![CDATA[{value}]]>
+      </balloon_text>
+    </graph>
+    
+    
   </graphs>  
   
 	<guides>	                                                 <!-- guides are straight lines drawn through all plot area at a give value. Can also be filled with color -->

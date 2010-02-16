@@ -6,6 +6,11 @@ from dg.forms import *
 from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
+from django.template.loader import get_template
+from django.template import Context
+from django.shortcuts import render_to_response
+
+
 import datetime
 #import cjson
 
@@ -622,7 +627,14 @@ def screening(request):
         else:
                 screenings = Screening.objects.order_by("-id")
                 return render_to_response('screenings.html', {'screenings': screenings})
-
+               
+def test_view(request):
+	    #Book.objects.filter(title__icontains=q)
+	   
+        q = Village.objects.raw('select * from dg_village')
+        return render_to_response('results.html',{'body': "%s" % q})
+    
+	   
 
 
 
