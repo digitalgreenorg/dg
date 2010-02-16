@@ -55,6 +55,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
+		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		String requestMethod = this.getRequestContext().getMethodTypeCtx();
@@ -67,23 +68,19 @@ public class ScreeningsTemplate extends BaseTemplate {
 				this.displayHtml = new HTMLPanel(screeningsAddHtml);
 				this.postForm.add(this.displayHtml);
 				super.setContentPanel(this.postForm);
-				super.setContentClassName("colM");
-				this.fillSubmitControls();
 			}else {
 				this.displayHtml = new HTMLPanel(screeningsListHtml);
 				super.setContentPanel(this.displayHtml);
-				super.setContentClassName("flex");
 			}
 		}
 		super.fill();
 		fillUserDefined();
+		this.fillSubmitControls();
 	}
 	
-	@Override
 	public void fillSubmitControls() {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
-			Button b = new Button("Save");
-		    b.setStyleName("button default");
+			Button b = Button.wrap(RootPanel.get("save").getElement());
 		    b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
@@ -91,8 +88,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 					region.response();
 				}
 		    });
-			super.setSubmitControlsPanel(b);
-			super.fillSubmitControls();
 		}
 	}
 	
@@ -135,7 +130,9 @@ public class ScreeningsTemplate extends BaseTemplate {
 					"</table>";
 
 	// Fill ids:  listing-form-body, add-link
-	final static private String screeningsListHtml = "<h1>Select screening to change</h1>" +
+	final static private String screeningsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+		"<div id='content' class='flex'>" +
+			"<h1>Select screening to change</h1>" +
 			"<div id='content-main'>" +
 				"<ul class='object-tools'>" +
 					"<li id='add-link'>" +                // Insert add link here
@@ -147,10 +144,13 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</div>" +
 					"</form>" +
 				"</div>" +
-			"</div>";
+			"</div>" +
+		"</div>";
 	
 	
-	final static private String screeningsAddHtml = "<h1>Add Screening</h1>" +
+	final static private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+		"<div id='content' class='colM'>" +
+			"<h1>Add Screening</h1>" +
 			"<div id='content-main'>" +
 			"<div>" +
 			"<fieldset class='module aligned '>" +
@@ -364,5 +364,9 @@ public class ScreeningsTemplate extends BaseTemplate {
 			"</script>" +
 			"</div>" +
 			"</div><script type='text/javascript' src='/media/js/dynamic_inlines_with_sort.js'></script>" +
+			"<div class='submit-row'>" +
+			"<input id='save' type='submit' value='Save' class='default' name='_save' />" +
+			"</div>" +
+			"</div>" +
 			"</div>";
 }

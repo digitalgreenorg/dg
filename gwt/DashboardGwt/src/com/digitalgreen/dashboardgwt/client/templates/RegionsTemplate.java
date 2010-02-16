@@ -149,8 +149,6 @@ public class RegionsTemplate extends BaseTemplate {
 				"</fieldset>" +
 				"<div class='submit-row'>" +
 					"<input id='save' type='submit' value='Save' class='default' name='_save' />" +
-					"<input id='save_a' type='submit' value='Save and add another' name='_addanother'/>" +
-					"<input id='save_c' type='submit' value='Save and continue editing' name='_continue' />" +
 				"</div>" +
 			"</div>" +
 		"</div>";
