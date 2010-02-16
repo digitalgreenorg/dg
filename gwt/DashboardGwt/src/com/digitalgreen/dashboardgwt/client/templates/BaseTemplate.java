@@ -61,7 +61,7 @@ public class BaseTemplate extends Template {
 	
 	// Override this
 	public void fillSubmitControls() {
-		RootPanel.get("container").add(this.submitControlsPanel);
+		RootPanel.get("content").add(this.submitControlsPanel);
 	}
 
 	final String BaseContentHtml = "<!-- Container -->" +

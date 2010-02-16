@@ -5,6 +5,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -52,6 +53,7 @@ public class RegionsTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
+		super.setBodyStyle("dashboard-screening change-form");
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			HashMap queryArgs = this.getRequestContext().getArgs();
 			String queryArg = (String)queryArgs.get("action");
@@ -63,22 +65,19 @@ public class RegionsTemplate extends BaseTemplate {
 				this.displayHtml = new HTMLPanel(regionsAddHtml);
 			    this.postForm.add(this.displayHtml);
 				super.setContentPanel(this.postForm);
-				super.setContentClassName("colM");
-				this.fillSubmitControls();
 			} else {
 				this.displayHtml = new HTMLPanel(regionsListHtml);
 				super.setContentPanel(this.displayHtml);
-				super.setContentClassName("flex");
 			}
 		}	
 		super.fill();
-		fillUserDefined();	
+		fillUserDefined();
+		this.fillSubmitControls();
 	}
 	
-	@Override
 	public void fillSubmitControls() {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
-			Button b = new Button("Save");
+			Button b = Button.wrap(RootPanel.get("save").getElement());
 		    b.setStyleName("button default");
 		    b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -87,8 +86,6 @@ public class RegionsTemplate extends BaseTemplate {
 					region.response();
 				}
 		    });
-			super.setSubmitControlsPanel(b);
-			super.fillSubmitControls();
 		}
 	}
 	
@@ -119,7 +116,9 @@ public class RegionsTemplate extends BaseTemplate {
 						"</tbody>" +
 					"</table>";
 						
-	final static private String regionsListHtml = "<h1>Select region to change</h1>" +
+	final static private String regionsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+						"<div id='content' class='flex'>" +
+							"<h1>Select region to change</h1>" +
 							"<div id='content-main'>" +
 								"<ul class='object-tools'>" +
 									"<li id='add-link'>" +                // Insert add link here
@@ -131,10 +130,13 @@ public class RegionsTemplate extends BaseTemplate {
 										"</div>" +
 									"</form>" +
 								"</div>" +
-							"</div>";
+							"</div>" +
+						"</div>";
 	
-	final static private String regionsAddHtml = "<h1>Add Regions</h1>" +
-			"<div>" +
+	final static private String regionsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+		"<div id='content' class='colM'>" +
+			"<h1>Add Regions</h1>" +
+			"<div id='content-main'>" +
 				"<fieldset class='module aligned '>" +
 					"<div class='form-row region_name  '>" +
 						"<div>" +
@@ -145,6 +147,11 @@ public class RegionsTemplate extends BaseTemplate {
 						"<div><label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
 					"</div>" +
 				"</fieldset>" +
-			"</div>";
-	
+				"<div class='submit-row'>" +
+					"<input id='save' type='submit' value='Save' class='default' name='_save' />" +
+					"<input id='save_a' type='submit' value='Save and add another' name='_addanother'/>" +
+					"<input id='save_c' type='submit' value='Save and continue editing' name='_continue' />" +
+				"</div>" +
+			"</div>" +
+		"</div>";
 	}
