@@ -147,7 +147,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 			"</div>" +
 		"</div>";
 	
-	
 	final static private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 		"<div id='content' class='colM'>" +
 			"<h1>Add Screening</h1>" +
