@@ -1,6 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.common;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 import java.util.HashMap;
 
@@ -14,6 +13,7 @@ public class RequestContext {
 	private String formAction = null;
 	private FormPanel data = null;
 	private HashMap args = null;
+	private String messageString = null;
 	
 	public RequestContext() {
 		this.methodTypeCtx = METHOD_GET;
@@ -25,6 +25,18 @@ public class RequestContext {
 		this.methodTypeCtx = method;
 		this.data = postForm;
 		this.args = new HashMap();
+	}
+	
+	public boolean hasMessages() {
+		return this.messageString != null;
+	}
+	
+	public void setMessageString(String messageString) {
+		this.messageString = messageString;
+	}
+	
+	public String getMessageString() {
+		return this.messageString;
 	}
 	
 	public String getMethodTypeCtx() {

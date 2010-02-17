@@ -1,6 +1,34 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class AnimatorAssignedVillagesTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
+
+public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
+	public AnimatorAssignedVillagesTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templatePlainType = "animator assigned villages";
+		String templateType = "animator_assigned_villages";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet = new AnimatorAssignedVillages(requestContext);
+		AnimatorAssignedVillages region = new AnimatorAssignedVillages(new RequestContext(RequestContext.METHOD_POST, 
+				getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templateType, templatePlainType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 	
 	final static private String animatorassignedvillageListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

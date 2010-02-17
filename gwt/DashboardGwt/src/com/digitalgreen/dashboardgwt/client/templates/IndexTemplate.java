@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
@@ -39,8 +40,10 @@ public class IndexTemplate extends BaseTemplate {
 		addHyperlink("g-2", "<a href='#auth/group/add/' class='addlink'>Add</a>", "auth/group/add", new BaseServlet());
 		addHyperlink("u-1", "<a href='#auth/user/'>Users</a>", "auth/user", new BaseServlet());
 		addHyperlink("u-2", "<a href='#auth/user/add/' class='addlink'>Add</a>", "auth/user", new BaseServlet());
-		addHyperlink("aa-1", "<a  href='#dashboard/animatorassignedvillage/'>Animator assigned villages</a>", "dashboard/animatorassignedvillage", new BaseServlet());
-		addHyperlink("aa-2", "<a  href='#dashboard/animatorassignedvillage/add' class='addlink'>Add</a>", "dashboard/animatorassignedvillage/add", new BaseServlet());
+		addHyperlink("aa-1", "<a  href='#dashboard/animatorassignedvillage/'>Animator assigned villages</a>", "dashboard/animatorassignedvillage", new AnimatorAssignedVillages());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("aa-2", "<a  href='#dashboard/animatorassignedvillage/add' class='addlink'>Add</a>", "dashboard/animatorassignedvillage/add", new AnimatorAssignedVillages(requestContext));
 		addHyperlink("a-1", "<a href='#dashboard/animator/'>Animators</a>", "dashboard/animator", new BaseServlet());
 		addHyperlink("a-2", "<a href='#dashboard/animator/add' class='addlink'>Add</a>", "dashboard/animator/add", new BaseServlet());
 		addHyperlink("b-1", "<a href='#dashboard/block/'>Blocks</a>", "dashboard/block", new BaseServlet());

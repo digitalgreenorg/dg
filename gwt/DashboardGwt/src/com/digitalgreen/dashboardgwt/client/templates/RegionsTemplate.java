@@ -15,78 +15,28 @@ import com.google.gwt.user.client.ui.RootPanel;
 import java.util.HashMap;
 
 public class RegionsTemplate extends BaseTemplate {
-	private FormPanel postForm = null;
-	private HTMLPanel displayHtml = null;
-	
 	public RegionsTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
 	
-	public FormPanel getPostForm() {
-		return this.postForm;
-	}
-	
-	private void fillUserDefined() {
-		HashMap queryArgs = this.getRequestContext().getArgs();
-		String queryArg = (String)queryArgs.get("action");
-		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
-			HTMLPanel listFormHtml = new HTMLPanel(regionsListFormHtml);
-			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
-			Hyperlink addLink = new Hyperlink();
-			addLink.setHTML("<a class='addlink' href='#add-regions-link'> Add region </a>");
-			// Take them to the add page for screenings
-			addLink.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					RequestContext requestContext = new RequestContext();
-					HashMap args = new HashMap();
-					args.put("action", "add");
-					requestContext.setArgs(args);
-					// Give the servlet control
-					Regions region = new Regions(requestContext);
-					region.response();
-				}
-			});
-			RootPanel.get("add-link").add(addLink);
-		}
-	}
-	
 	@Override
 	public void fill() {
-		super.setBodyStyle("dashboard-screening change-form");
-		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
-			HashMap queryArgs = this.getRequestContext().getArgs();
-			String queryArg = (String)queryArgs.get("action");
-			if(queryArg == "add") {
-				this.postForm = new FormPanel();
-				this.postForm.setAction(RequestContext.getServerUrl() + "add_region");
-			    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-			    this.postForm.setMethod(FormPanel.METHOD_POST);
-				this.displayHtml = new HTMLPanel(regionsAddHtml);
-			    this.postForm.add(this.displayHtml);
-				super.setContentPanel(this.postForm);
-			} else {
-				this.displayHtml = new HTMLPanel(regionsListHtml);
-				super.setContentPanel(this.displayHtml);
-			}
-		}	
+		String templateType = "regions";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Regions addRegionServlet = new Regions(requestContext);
+		Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
+				getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
+		// Add it to the rootpanel
 		super.fill();
-		fillUserDefined();
-		this.fillSubmitControls();
-	}
-	
-	public void fillSubmitControls() {
-		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
-			Button b = Button.wrap(RootPanel.get("save").getElement());
-		    b.setStyleName("button default");
-		    b.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
-												 getPostForm()));
-					region.response();
-				}
-		    });
-		}
+		// Now add hyperlinks
+		super.fillDGLinkControls(templateType, templateType, regionsListFormHtml, addRegionServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
 	}
 	
 	final static private String regionsListFormHtml = "<div class='actions'>" +

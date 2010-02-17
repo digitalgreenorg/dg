@@ -15,80 +15,28 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ScreeningsTemplate extends BaseTemplate {
-	private FormPanel postForm = null;
-	private HTMLPanel displayHtml = null;
-	
 	public ScreeningsTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
 	
-	public FormPanel getPostForm() {
-		return this.postForm;
-	}
-	
-	private void fillUserDefined() {
-		HashMap queryArgs = this.getRequestContext().getArgs();
-		String queryArg = (String)queryArgs.get("action");
-		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
-			HTMLPanel listFormHtml = new HTMLPanel(screeningsListFormHtml);
-			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
-			Hyperlink addLink = new Hyperlink();
-			addLink.setHTML("<a class='addlink' href='#add-screenings-link'> Add screening </a>");
-			// Take them to the add page for screenings
-			addLink.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					// Assume a GET request so call the empty constructer
-					RequestContext requestContext = new RequestContext();
-					HashMap args = new HashMap();
-					// Prepare the servlet to render the add page
-					args.put("action", "add");
-					requestContext.setArgs(args);
-					// Now give the servlet control
-					Screenings screening = new Screenings(requestContext);
-					screening.response();
-				}
-			});
-			RootPanel.get("add-link").add(addLink);
-		}
-	}
-	
 	@Override
 	public void fill() {
-		super.setBodyStyle("dashboard-screening change-form");
-		HashMap queryArgs = this.getRequestContext().getArgs();
-		String queryArg = (String)queryArgs.get("action");
-		String requestMethod = this.getRequestContext().getMethodTypeCtx();
-		if(requestMethod == RequestContext.METHOD_GET) {
-			if(queryArg == "add") {
-				this.postForm = new FormPanel();
-				this.postForm.setAction(RequestContext.getServerUrl() + "add_screening");
-				this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-				this.postForm.setMethod(FormPanel.METHOD_POST);
-				this.displayHtml = new HTMLPanel(screeningsAddHtml);
-				this.postForm.add(this.displayHtml);
-				super.setContentPanel(this.postForm);
-			}else {
-				this.displayHtml = new HTMLPanel(screeningsListHtml);
-				super.setContentPanel(this.displayHtml);
-			}
-		}
+		String templateType = "screenings";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Screenings addScreeningServlet = new Screenings(requestContext);
+		Screenings screening = new Screenings(new RequestContext(RequestContext.METHOD_POST, 
+				   getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml);
+		// Add it to the rootpanel
 		super.fill();
-		fillUserDefined();
-		this.fillSubmitControls();
-	}
-	
-	public void fillSubmitControls() {
-		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
-			Button b = Button.wrap(RootPanel.get("save").getElement());
-		    b.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
-														   getPostForm()));
-					region.response();
-				}
-		    });
-		}
+		// Now add hyperlinks
+		super.fillDGLinkControls(templateType, templateType, screeningsListFormHtml, addScreeningServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(screening);
 	}
 	
 	// Fill ids:  data-rows

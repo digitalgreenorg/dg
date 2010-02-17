@@ -14,9 +14,22 @@ public class Template implements TemplateInterface {
 		this.requestContext = requestContext;
 	}
 	
-	public void fill() {	
+	public void fill() {
+		RootPanel.get("error-space").clear();
+		if(this.getRequestContext().hasMessages()) {
+			String messageStartHtml = "<p class='errornote'>";
+			String messageEndHtml = "</p>";
+			HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
+					this.getRequestContext().getMessageString() + 
+					messageEndHtml);
+			RootPanel.get("error-space").add(messagePanel);
+		}
 	}
 
+	public RequestContext getRequestContext() {
+		return this.requestContext;
+	}
+	
 	public Widget getContentPanel() {
 		return this.contentPanel;
 	}
