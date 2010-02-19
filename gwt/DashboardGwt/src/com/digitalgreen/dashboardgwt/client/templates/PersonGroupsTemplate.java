@@ -1,6 +1,34 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class PersonGroupsTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
+
+public class PersonGroupsTemplate extends BaseTemplate{
+	
+	public PersonGroupsTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templatePlainType = "Person Groups";
+		String templateType = "person_groups";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		PersonGroups addPersonsGroupsServlet = new PersonGroups(requestContext);
+		PersonGroups region = new PersonGroups(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, persongroupsListHtml, persongroupsAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 	
 	final static private String persongroupsListFormHtml = "<div class='actions'>" +
 									"<label>Action: <select name='action'>" +

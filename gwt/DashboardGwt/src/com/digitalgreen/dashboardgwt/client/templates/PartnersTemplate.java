@@ -1,6 +1,33 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class PartnersTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Partners;
+
+public class PartnersTemplate extends BaseTemplate {
+	public PartnersTemplate (RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templateType = "Partner";
+		String templatePlainType = "dashboard/partners/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Partners addPartnersServlet = new Partners(requestContext);
+		Partners region = new Partners(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 	
 	final static private String partnersListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

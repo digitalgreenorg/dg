@@ -1,6 +1,36 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class DevelopmentManagersTemplate {
+import java.util.HashMap;
+
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.DevelopmentManagers;
+
+public class DevelopmentManagersTemplate extends BaseTemplate {
+	
+	public DevelopmentManagersTemplate(RequestContext requestContext){
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templatePlainType = "Development Manager";
+		String templateType = "dashboard/developmentmanager/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
+		DevelopmentManagers region = new DevelopmentManagers(new RequestContext(RequestContext.METHOD_POST, 
+				getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, dmListHtml, dmAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templateType, templatePlainType, dmListFormHtml, addDevelopmentManagersServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 
 	final static private String dmListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -112,8 +142,6 @@ public class DevelopmentManagersTemplate {
 											"</fieldset>" +
 											"<div class='submit-row' >" +
 												"<input type='submit' value='Save' class='default' name='_save' />" +
-												"<input id='save_a' type='submit' value='Save and add another' name='_addanother'/>" +
-												"<input id='save_c' type='submit' value='Save and continue editing' name='_continue' />" +
 											"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
 												"<script type='text/javascript'>" +

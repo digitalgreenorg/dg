@@ -12,6 +12,7 @@ public class Template implements TemplateInterface {
 	
 	public Template(RequestContext requestContext) {
 		this.requestContext = requestContext;
+		RootPanel.get().clear();
 	}
 	
 	public void fill() {

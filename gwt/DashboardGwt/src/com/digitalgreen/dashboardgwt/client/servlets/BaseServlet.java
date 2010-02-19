@@ -10,7 +10,7 @@ import com.google.gwt.user.client.Cookies;
 public class BaseServlet implements ServletInterface {
 	
 	protected RequestContext requestContext = null;	
-	private boolean isLoggedInCtx = false;
+	private static boolean isLoggedInCtx = false;
 	
 	// Slightly breaks abstraction since the RequestContext should be 
 	// created in the template as a GET request, similar to how 
@@ -28,11 +28,11 @@ public class BaseServlet implements ServletInterface {
 	}
 	
 	public boolean isLoggedIn() {
-		return this.isLoggedInCtx;
+		return isLoggedInCtx;
 	}
 	
 	public void setIsLoggedIn(boolean loggedIn) {
-		this.isLoggedInCtx = loggedIn;
+		isLoggedInCtx = loggedIn;
 	}
 	
 	public void redirectTo(BaseServlet servlet) {

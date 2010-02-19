@@ -11,8 +11,8 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
-		String templatePlainType = "animator assigned villages";
-		String templateType = "animator_assigned_villages";
+		String templateType = "Animator Assigned Village";
+		String templatePlainType = "dashboard/animatorassignedvillage/add";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
@@ -25,7 +25,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templateType, templatePlainType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet);
+		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(region);
 	}
@@ -109,8 +109,6 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 									"</fieldset>" +
 									"<div class='submit-row' >" +
 										"<input type='submit' value='Save' class='default' name='_save' />" +
-										"<input id='save_a' type='submit' value='Save and add another' name='_addanother'/>" +
-										"<input id='save_c' type='submit' value='Save and continue editing' name='_continue' />" +
 									"</div>" +
 									"<script type='text/javascript'>document.getElementById('id_animator').focus();</script>" +
 									"<script type='text/javascript'>" +

@@ -1,6 +1,36 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class BloacksTemplate {
+import java.util.HashMap;
+
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
+
+public class BlocksTemplate extends BaseTemplate{
+	
+	public BlocksTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templateType = "Block";
+		String templatePlainType = "dashboard/block/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Blocks addBlocksServlet = new Blocks(requestContext);
+		Blocks region = new Blocks(new RequestContext(RequestContext.METHOD_POST, 
+				getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, blocksListHtml, blocksAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 	
 	final static private String blocksListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -34,7 +64,7 @@ public class BloacksTemplate {
 									"</tbody>" +
 								"</table>";
 	
-	final static private String blocksFormHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final static private String blocksListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='flex'>" +
 								"<h1>Select Block to change</h1>" +
 								"<div id='content-main'>" +
@@ -51,7 +81,7 @@ public class BloacksTemplate {
 								"</div>" +
 							"</div>";
 	
-	final static private String bloaksAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final static private String blocksAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='colM'>" +
 								"<h1>Add Block</h1>" +
 								"<div id='content-main'>" +
@@ -78,8 +108,6 @@ public class BloacksTemplate {
 											"</fieldset>" +
 											"<div class='submit-row' >" +
 												"<input type='submit' value='Save' class='default' name='_save' />" +
-												"<input id='save_a' type='submit' value='Save and add another' name='_addanother'/>" +
-												"<input id='save_c' type='submit' value='Save and continue editing' name='_continue' />" +
 											"</div>" +
 											"<script type='text/javascript'>document.getElementById('id_block_name').focus();</script>" +
 											"<script type='text/javascript'>" +

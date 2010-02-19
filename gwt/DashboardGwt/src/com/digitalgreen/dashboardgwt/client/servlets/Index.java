@@ -4,6 +4,9 @@ import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
 
 public class Index extends BaseServlet {	
+	public Index(){
+		super();
+	}
 	
 	@Override
 	public void response () {

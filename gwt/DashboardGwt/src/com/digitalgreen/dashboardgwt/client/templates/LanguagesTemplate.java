@@ -1,6 +1,35 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class LanguagesTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Languages;
+
+public class LanguagesTemplate extends BaseTemplate{
+	
+	public LanguagesTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templateType = "Languages";
+		String templatePlainType = "dashboard/language/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Languages addLanguagesServlet = new Languages(requestContext);
+		Languages region = new Languages(new RequestContext(RequestContext.METHOD_POST, 
+				getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, languagesListHtml, languagesAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 	
 	final static private String languagesListFormHtml = "<div class='actions'>" +
 							"<label>Action: <select name='action'>" +
@@ -27,7 +56,7 @@ public class LanguagesTemplate {
 							"</tbody>" +
 						"</table>";
 	
-	final static private String languagesFormHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final static private String languagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select Language to change</h1>" +
 									"<div id='content-main'>" +

@@ -1,6 +1,35 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class AnimatorsTemplate {
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Animators;
+
+import java.util.HashMap;
+
+public class AnimatorsTemplate extends BaseTemplate {
+	
+	public AnimatorsTemplate(RequestContext requestContext){
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill(){
+		String templateType = "Animator";
+		String templatePlainType = "dashboard/animators/add";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Animators addAnimatorsServlet = new Animators(requestContext);
+		Animators region = new Animators(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 
 	final static private String animatorsListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -200,8 +229,6 @@ public class AnimatorsTemplate {
 											"</div>" +
 											"<div class='submit-row' >" +
 												"<input type='submit' value='Save' class='default' name='_save' />" +
-												"<input type='submit' value='Save and add another' name='_addanother'  />" +
-												"<input type='submit' value='Save and continue editing' name='_continue' />" +
 											"</div>" +
 											"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
 											"<script type='text/javascript'>" +

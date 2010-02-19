@@ -1,6 +1,34 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class FieldOfficerTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
+
+public class FieldOfficerTemplate extends BaseTemplate{
+	
+	public FieldOfficerTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
+	
+	@Override
+	public void fill() {
+		String templatePlainType = "Field Officer";
+		String templateType = "field_officer";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		FieldOfficers addFieldOfficersServlet = new FieldOfficers(requestContext);
+		FieldOfficers region = new FieldOfficers(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, fieldofficerListHtml, fieldofficerAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templateType, templatePlainType, fieldofficerListFormHtml, addFieldOfficersServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
 
 	final static private String fieldofficerListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -44,7 +72,7 @@ public class FieldOfficerTemplate {
 									"</div>" +
 								"</div>";
 	
-	final static private String fieldofficeAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final static private String fieldofficerAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add field officer</h1>" +
 									"<div id='content-main'>" +

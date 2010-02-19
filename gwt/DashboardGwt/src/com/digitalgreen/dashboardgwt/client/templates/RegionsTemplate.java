@@ -21,7 +21,8 @@ public class RegionsTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
-		String templateType = "regions";
+		String templateType = "Region";
+		String templatePlainType = "dashboard/region/add/";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
@@ -34,7 +35,7 @@ public class RegionsTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templateType, templateType, regionsListFormHtml, addRegionServlet);
+		super.fillDGLinkControls(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(region);
 	}

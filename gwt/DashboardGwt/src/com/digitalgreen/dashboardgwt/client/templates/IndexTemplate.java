@@ -2,9 +2,24 @@ package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
+import com.digitalgreen.dashboardgwt.client.servlets.Animators;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
+import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
+import com.digitalgreen.dashboardgwt.client.servlets.DevelopmentManagers;
+import com.digitalgreen.dashboardgwt.client.servlets.Districts;
+import com.digitalgreen.dashboardgwt.client.servlets.Equipments;
+import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
+import com.digitalgreen.dashboardgwt.client.servlets.Languages;
+import com.digitalgreen.dashboardgwt.client.servlets.Partners;
+import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
+import com.digitalgreen.dashboardgwt.client.servlets.Persons;
+import com.digitalgreen.dashboardgwt.client.servlets.Practices;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
+import com.digitalgreen.dashboardgwt.client.servlets.States;
+import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
+import com.digitalgreen.dashboardgwt.client.servlets.Videos;
+import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -36,36 +51,54 @@ public class IndexTemplate extends BaseTemplate {
 		super.setContentPanel(indexHtml);
 		super.fill();
 		RequestContext requestContext = null;
-		addHyperlink("g-1", "<a href='#auth/group'>Groups</a>", "auth/group", new BaseServlet());
-		addHyperlink("g-2", "<a href='#auth/group/add/' class='addlink'>Add</a>", "auth/group/add", new BaseServlet());
-		addHyperlink("u-1", "<a href='#auth/user/'>Users</a>", "auth/user", new BaseServlet());
-		addHyperlink("u-2", "<a href='#auth/user/add/' class='addlink'>Add</a>", "auth/user", new BaseServlet());
 		addHyperlink("aa-1", "<a  href='#dashboard/animatorassignedvillage/'>Animator assigned villages</a>", "dashboard/animatorassignedvillage", new AnimatorAssignedVillages());
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("aa-2", "<a  href='#dashboard/animatorassignedvillage/add' class='addlink'>Add</a>", "dashboard/animatorassignedvillage/add", new AnimatorAssignedVillages(requestContext));
-		addHyperlink("a-1", "<a href='#dashboard/animator/'>Animators</a>", "dashboard/animator", new BaseServlet());
-		addHyperlink("a-2", "<a href='#dashboard/animator/add' class='addlink'>Add</a>", "dashboard/animator/add", new BaseServlet());
-		addHyperlink("b-1", "<a href='#dashboard/block/'>Blocks</a>", "dashboard/block", new BaseServlet());
-		addHyperlink("b-2", "<a href='#dashboard/block/add' class='addlink'>Add</a>", "dashboard/block/add", new BaseServlet());
-		addHyperlink("d-1", "<a href='#dashboard/developmentmanager/'>Development managers</a>", "dashboard/developmentmanager", new BaseServlet());
-		addHyperlink("d-2", "<a href='#dashboard/developmentmanager/add' class='addlink'>Add</a>", "dashboard/developmentmanager/add", new BaseServlet());
-		addHyperlink("di-1", "<a href='#dashboard/district/'>Districts</a>", "dashboard/district", new BaseServlet());
-		addHyperlink("di-2", "<a href='#dashboard/district/add' class='addlink'>Add</a>", "dashboard/district/add", new BaseServlet());
-		addHyperlink("e-1", "<a href='#dashboard/equipment/'>Equipments</a>", "dashboard/equipment", new BaseServlet());
-		addHyperlink("e-2", "<a href='#dashboard/equipment/add' class='addlink'>Add</a>", "dashboard/equipment/add", new BaseServlet());
-		addHyperlink("f-1", "<a href='#dashboard/fieldofficer/'>Field officers</a>", "dashboard/fieldofficer", new BaseServlet());
-		addHyperlink("f-2", "<a href='#dashboard/fieldofficer/add' class='addlink'>Add</a>", "dashboard/fieldofficer/add", new BaseServlet());
-		addHyperlink("l-1", "<a href='#dashboard/language/'>Languages</a>", "dashboard/language", new BaseServlet());
-		addHyperlink("l-2", "<a href='#dashboard/language/add' class='addlink'>Add</a>", "dashboard/language/add", new BaseServlet());
-		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new BaseServlet());		
-		addHyperlink("p-2", "<a href='#dashboard/partners/add' class='addlink'>Add</a>", "dashboard/partners/add", new BaseServlet());
-		addHyperlink("pg-1","<a href='#dashboard/persongroups/'>Person groups</a>", "dashboard/persongroups", new BaseServlet());
-		addHyperlink("pg-2","<a href='#dashboard/persongroups/add' class='addlink'>Add</a>", "dashboard/persongroups/add", new BaseServlet());
-		addHyperlink("pe-1", "<a href='#dashboard/person/'>Persons</a>", "dashboard/person", new BaseServlet());
-		addHyperlink("pe-2", "<a href='#dashboard/person/add' class='addlink'>Add</a>", "dashboard/person/add", new BaseServlet());
-		addHyperlink("pr-1", "<a href='#dashboard/practices/'>Practices</a>", "dashboard/practices", new BaseServlet());
-		addHyperlink("pr-2", "<a href='#dashboard/practices/add' class='addlink'>Add</a>", "dashboard/practices/add", new BaseServlet());
+		addHyperlink("a-1", "<a href='#dashboard/animator/'>Animators</a>", "dashboard/animator", new Animators());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("a-2", "<a href='#dashboard/animator/add' class='addlink'>Add</a>", "dashboard/animator/add", new Animators(requestContext));
+		addHyperlink("b-1", "<a href='#dashboard/block/'>Blocks</a>", "dashboard/block", new Blocks());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("b-2", "<a href='#dashboard/block/add' class='addlink'>Add</a>", "dashboard/block/add", new Blocks(requestContext));
+		addHyperlink("d-1", "<a href='#dashboard/developmentmanager/'>Development managers</a>", "dashboard/developmentmanager", new DevelopmentManagers());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("d-2", "<a href='#dashboard/developmentmanager/add' class='addlink'>Add</a>", "dashboard/developmentmanager/add", new DevelopmentManagers(requestContext));
+		addHyperlink("di-1", "<a href='#dashboard/district/'>Districts</a>", "dashboard/district", new Districts());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("di-2", "<a href='#dashboard/district/add' class='addlink'>Add</a>", "dashboard/district/add", new Districts(requestContext));
+		addHyperlink("e-1", "<a href='#dashboard/equipment/'>Equipments</a>", "dashboard/equipment", new Equipments());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("e-2", "<a href='#dashboard/equipment/add' class='addlink'>Add</a>", "dashboard/equipment/add", new Equipments(requestContext));
+		addHyperlink("f-1", "<a href='#dashboard/fieldofficer/'>Field officers</a>", "dashboard/fieldofficer", new FieldOfficers());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("f-2", "<a href='#dashboard/fieldofficer/add' class='addlink'>Add</a>", "dashboard/fieldofficer/add", new FieldOfficers(requestContext));
+		addHyperlink("l-1", "<a href='#dashboard/language/'>Languages</a>", "dashboard/language", new Languages());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("l-2", "<a href='#dashboard/language/add' class='addlink'>Add</a>", "dashboard/language/add", new Languages(requestContext));
+		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new Partners());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("p-2", "<a href='#dashboard/partners/add' class='addlink'>Add</a>", "dashboard/partners/add", new Partners(requestContext));
+		addHyperlink("pg-1","<a href='#dashboard/persongroups/'>Person groups</a>", "dashboard/persongroups", new PersonGroups());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("pg-2","<a href='#dashboard/persongroups/add' class='addlink'>Add</a>", "dashboard/persongroups/add", new PersonGroups(requestContext));
+		addHyperlink("pe-1", "<a href='#dashboard/person/'>Persons</a>", "dashboard/person", new Persons());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("pe-2", "<a href='#dashboard/person/add' class='addlink'>Add</a>", "dashboard/person/add", new Persons(requestContext));
+		addHyperlink("pr-1", "<a href='#dashboard/practices/'>Practices</a>", "dashboard/practices", new Practices());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("pr-2", "<a href='#dashboard/practices/add' class='addlink'>Add</a>", "dashboard/practices/add", new Practices(requestContext));
 		addHyperlink("r-1", "<a href='#dashboard/region/'>Regions</a>", "dashboard/region", new Regions());
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -74,37 +107,28 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("s-2", "<a href='#dashboard/screening/add' class='addlink'>Add</a>", "dashboard/screening/add", new Screenings(requestContext));
-		addHyperlink("st-1", "<a id='st-1' href='#dashboard/state/'>States</a>", "dashboard/state", new BaseServlet());
-		addHyperlink("st-2", "<a id='st-2' href='#dashboard/state/add' class='addlink'>Add</a>", "dashboard/state/add", new BaseServlet());
-		addHyperlink("t-1", "<a href='#dashboard/training/'>Trainings</a>", "dashboard/training", new BaseServlet());
-		addHyperlink("t-2", "<a href='#dashboard/training/add' class='addlink'>Add</a>", "dashboard/training/add", new BaseServlet());
-		addHyperlink("v-1", "<a href='#dashboard/video/'>Videos</a>", "dashboard/video", new BaseServlet());
-		addHyperlink("v-2", "<a href='#dashboard/video/add' class='addlink'>Add</a>", "dashboard/video/add", new BaseServlet());
-		addHyperlink("vi-1", "<a href='#dashboard/village/'>Villages</a>", "dashboard/village", new BaseServlet());
-		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new BaseServlet());
+		addHyperlink("st-1", "<a id='st-1' href='#dashboard/state/'>States</a>", "dashboard/state", new States());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("st-2", "<a id='st-2' href='#dashboard/state/add' class='addlink'>Add</a>", "dashboard/state/add", new States(requestContext));
+		addHyperlink("t-1", "<a href='#dashboard/training/'>Trainings</a>", "dashboard/training", new Trainings());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("t-2", "<a href='#dashboard/training/add' class='addlink'>Add</a>", "dashboard/training/add", new Trainings(requestContext));
+		addHyperlink("v-1", "<a href='#dashboard/video/'>Videos</a>", "dashboard/video", new Videos());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("v-2", "<a href='#dashboard/video/add' class='addlink'>Add</a>", "dashboard/video/add", new Videos(requestContext));
+		addHyperlink("vi-1", "<a href='#dashboard/village/'>Villages</a>", "dashboard/village", new Villages());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
 	}
 	
 	final static private String indexContentHtml = "<div id='content' class='colMS'>" +
 							"<h1>Administration</h1>" +
 								"<div id='content-main'>" +
 									"<div class='module'>" +
-										"<table summary='Models available in the Auth application.'>" +
-											"<caption><a href='auth/' class='section'>Auth</a></caption>" +
-												"<tr>" +
-													"<th id='g-1' scope='row'>" +
-													"</th>" +
-													"<td id='g-2'>" +
-													"</td>" +
-												"</tr>" +
-     											"<tr>" +
-     												"<th id='u-1' scope='row'>" +
-     												"</th>" +
-     												"<td id='u-2'>" +
-     												"</td>" +
-     											"</tr>" +
-     									"</table>" +
-     								"</div>" +
-     								"<div class='module'>" +
      								"<table summary='Models available in the Dashboard application.'>" +
      									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
      										"<tr>" +

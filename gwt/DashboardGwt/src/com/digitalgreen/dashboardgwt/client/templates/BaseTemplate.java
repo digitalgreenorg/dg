@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
+import com.digitalgreen.dashboardgwt.client.servlets.Login;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -45,6 +46,7 @@ public class BaseTemplate extends Template {
 	
 	@Override
 	public void fill() {
+		RootPanel.get("logout").insert(logoutHyperlink(), 0);
 		RootPanel.get("container").add(this.getContentPanel());
 		super.fill();
 	}
@@ -60,9 +62,9 @@ public class BaseTemplate extends Template {
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
 			Hyperlink addLink = new Hyperlink();
-			addLink.setHTML("<a class='addlink' href='#add-" + 
+			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
-					"-link'> Add " + templatePlainType + "</a>");
+					"'> Add " + templatePlainType + "</a>");
 			// Take them to the add page for screenings
 			addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -108,18 +110,33 @@ public class BaseTemplate extends Template {
 		    });
 		}
 	}
+	
+	private Hyperlink logoutHyperlink(){
+		Hyperlink link = new Hyperlink("<a href='/logout'>Logout</a>", true, null);
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST, getPostForm());
+				requestContext.getArgs().put("action", "logout");
+				Login login = new Login(requestContext);
+				login.response();
+			}
+		});
+		
+		return link;
+	}
 
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
 		"<!-- Header -->" +
 		"<div id='header'>" +
 			"<div id='branding'>" +
-				"<h1 id='site-name'>Digital Green administration</h1>" +
+				"<h1 id='site-name'>Digital Green Administration</h1>" +
 			"</div>" +
 			"<div id='user-tools'>" +
 				"Welcome," +
-				"<strong>digitalgreen</strong>." +
-				"<a href='/admin/logout/'>Log out</a>" +
+				"<strong id='username'>digitalgreen</strong>." +
+				"<label id='logout'>" +
+				"</label>" +
 			"</div>" +
 		"</div>" +
 		"<div id='error-space'></div>" +

@@ -1,10 +1,88 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-public class EquipmentsTemplate {
+import java.util.HashMap;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.Equipments;
+
+public class EquipmentsTemplate extends BaseTemplate{
 	
-	final static private String equipementsListFormHtml = "";
+	public EquipmentsTemplate(RequestContext requestContext) {
+		super(requestContext);
+	}
 	
-	final static private String equipmentsListHtml = "";
+	@Override
+	public void fill() {
+		String templateType = "Equipment";
+		String templatePlainType = "dashboard/equipment/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		Equipments addEquipmentsServlet = new Equipments(requestContext);
+		Equipments region = new Equipments(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		// Draw the content of the template depending on the request type (GET/POST)
+		super.fillDGTemplate(templateType, equipmentsListHtml, equipmentsAddHtml);
+		// Add it to the rootpanel
+		super.fill();
+		// Now add hyperlinks
+		super.fillDGLinkControls(templatePlainType, templateType, equipementsListFormHtml, addEquipmentsServlet);
+		// Now add any submit control buttons
+		super.fillDGSubmitControls(region);
+	}
+
+	final static private String equipementsListFormHtml = "<div class='actions'>" +
+									"<label>Action: <select name='action'>" + 
+										"<option value='' selected='selected'>---------</option>" + 
+										"<option value='delete_selected'>Delete selected equipments</option>" + 
+										"</select>" +
+									"</label>" + 
+									"<button type='submit' class='button' title='Run the selected action' name='index' value='0'>Go</button>" + 
+								"</div>" + 
+								"<table cellspacing='0'>" + 
+									"<thead>" + 
+										"<tr>" + 
+											"<th>" +
+												"<input type='checkbox' id='action-toggle' />" + 
+											"</th>" +
+											"<th>" + 
+												"<a href='?ot=asc&amp;o=1'>" + 
+													"Equipment type" +
+												"</a>" +
+											"</th>" +
+											"<th>" + 
+												"<a href='?ot=asc&amp;o=2'>" + 
+													"Model no" +
+												"</a>" +
+											"</th>" +
+											"<th>" + 
+												"<a href='?ot=asc&amp;o=3'>" + 
+													"Serial no" +
+												"</a>" +
+											"</th>" + 
+										"</tr>" + 
+									"</thead>" + 
+									"<tbody>" + 
+										"<div id='data-rows'" +
+										"</div>" +
+									"</tbody>" + 
+								"</table>";
+	
+	final static private String equipmentsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+									"<div id='content' class='flex'>" +
+										"<h1>Select Equipment to change</h1>" +
+										"<div id='content-main'>" +
+											"<ul class='object-tools'>" +
+												"<li id='add-link'>" +                // Insert add link here
+												"</li>" +
+											"</ul>" +
+											"<div class='module' id='changelist'>" +
+												"<form action='' method='post'>" +
+													"<div id='listing-form-body'>" +  // Insert form data here
+													"</div>" +
+												"</form>" +
+											"</div>" +
+										"</div>" +
+									"</div>";
 	
 	final static private String equipmentsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" + 
 								"<div id='content' class='colM'>" +
@@ -53,8 +131,6 @@ public class EquipmentsTemplate {
 												"</fieldset>" +
 												"<div class='submit-row' >" +
 													"<input type='submit' value='Save' class='default' name='_save' />" +
-													"<input type='submit' value='Save and add another' name='_addanother'  />" +
-													"<input type='submit' value='Save and continue editing' name='_continue' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_equipment_type').focus();</script>" +
 												"<script type='text/javascript'>" +
