@@ -19,8 +19,7 @@ public class TrainingTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Trainings addTrainingsServlet = new Trainings(requestContext);
-		Trainings region = new Trainings(new RequestContext(RequestContext.METHOD_POST, 
-				getPostForm()));
+		Trainings training = new Trainings(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml);
 		// Add it to the rootpanel
@@ -28,7 +27,7 @@ public class TrainingTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(training);
 	}
 	
 	final static private String trainingListFormHtml = "<div class='actions'>" +

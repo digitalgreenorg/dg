@@ -8,7 +8,6 @@ public class LoginData extends BaseData {
 	
 	public LoginData(RequestContext requestContext) {
 		super();
-		this.formData = requestContext.getFormPanelCtx();
 	}
 	
 }

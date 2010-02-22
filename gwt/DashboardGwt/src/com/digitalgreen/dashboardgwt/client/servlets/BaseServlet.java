@@ -1,9 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
-import java.util.Arrays;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
-import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.Template;
 import com.google.gwt.user.client.Cookies;
 

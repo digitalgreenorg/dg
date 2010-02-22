@@ -33,23 +33,26 @@
     <!--                                           -->
     <link href="/media/css/dynamic_inlines_with_sort.css" type="text/css" media="all" rel="stylesheet" />
 	<link href="/media/css/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" />
+	
+	<!-- JQuery stuff -->
+	<script type="text/javascript" src="/media/js/lib/jquery.js"></script>
+	<script type="text/javascript" src="/media/js/lib/jquery.bgiframe.min.js"></script>
+	<script type="text/javascript" src="/media/js/lib/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="/media/js/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+
 	<script type="text/javascript" src="/media/js/a"></script>
 	<script type="text/javascript" src="/media/js/core.js"></script>
 	<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
 	<script type="text/javascript" src="/media/js/getElementsBySelector.js"></script>
 	<script type="text/javascript" src="/media/js/actions.js"></script>
 	<script type="text/javascript" src="/media/js/admin/DateTimeShortcuts.js"></script>
-	<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript" src="/media/js/filter1.js"></script>
 	<script type="text/javascript" src="/media/js/ui/ui.core.js"></script>
 	<script type="text/javascript" src="/media/js/ui/ui.sortable.js"></script>
 	<script type="text/javascript" src="/media/js/dynamic_inlines_with_sort.js"></script>
 	<script type="text/javascript" src="/media/js/filter_person.js"></script>
 	<script type="text/javascript" src="/media/js/calendar.js"></script>
-	<script type="text/javascript" src="/media/js/lib/jquery.js"></script>
-	<script type="text/javascript" src="/media/js/lib/jquery.bgiframe.min.js"></script>
-	<script type="text/javascript" src="/media/js/lib/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="/media/js/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="/media/js/SelectBox.js"></script>
 	<script type="text/javascript" src="/media/js/SelectFilter2.js"></script>
 
@@ -67,6 +70,24 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body class="">
+  	<script type="text/javascript">
+  		function getFormHtml(formId) {
+  			return $('#' + formId).html();
+ 		}
+ 		
+ 		function getFormString(formId) {
+ 			return $('#' + formId).serialize();
+ 		}
+ 
+ 		// TODO:  selectors/radio buttons are still broken
+ 		function populateForm(formId, queryString) {
+ 			var queryObject = $.parseQuery(queryString);
+ 			for (i in queryObject) {
+ 				$("'[name=" + i + "]'").val(queryObject[i]);
+ 			}
+ 		}
+  	</script>
+  	
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

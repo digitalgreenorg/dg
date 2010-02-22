@@ -18,7 +18,7 @@ public class VideosTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Videos addVideosServlet = new Videos(requestContext);
-		Videos region = new Videos(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		Videos video = new Videos(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml);
 		// Add it to the rootpanel
@@ -26,8 +26,9 @@ public class VideosTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, videosListFormHtml, addVideosServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
-	}	
+		super.fillDGSubmitControls(video);
+	}
+	
 	final static private String videosListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
     								"<option value='' selected='selected'>---------</option>" +

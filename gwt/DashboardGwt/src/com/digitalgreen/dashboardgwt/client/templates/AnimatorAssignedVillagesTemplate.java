@@ -18,8 +18,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet = new AnimatorAssignedVillages(requestContext);
-		AnimatorAssignedVillages region = new AnimatorAssignedVillages(new RequestContext(RequestContext.METHOD_POST, 
-				getPostForm()));
+		AnimatorAssignedVillages animatorAssignedVillage = new AnimatorAssignedVillages(BaseTemplate.setupDgPostContext(this.postForm.getElement().getId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml);
 		// Add it to the rootpanel
@@ -27,7 +26,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(animatorAssignedVillage);
 	}
 	
 	final static private String animatorassignedvillageListFormHtml = "<div class='actions'>" +

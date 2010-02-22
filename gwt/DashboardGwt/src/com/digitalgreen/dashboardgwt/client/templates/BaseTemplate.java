@@ -5,20 +5,15 @@ import java.util.HashMap;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
-import com.digitalgreen.dashboardgwt.client.servlets.Regions;
-import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
@@ -115,7 +110,7 @@ public class BaseTemplate extends Template {
 		Hyperlink link = new Hyperlink("<a href='/logout'>Logout</a>", true, null);
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST, getPostForm());
+				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 				requestContext.getArgs().put("action", "logout");
 				Login login = new Login(requestContext);
 				login.response();
@@ -124,6 +119,31 @@ public class BaseTemplate extends Template {
 		
 		return link;
 	}
+
+	protected String getDgFormId() {
+		return this.postForm.getElement().getId();
+	}
+
+	protected static RequestContext setupDgPostContext(String id) {
+		String formHtml = BaseTemplate.getForm(id);
+		String formQueryString = BaseTemplate.getFormString(id);
+		RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		requestContext.getArgs().put("formHtml", formHtml);
+		requestContext.getArgs().put("formQueryString", formQueryString);
+		return requestContext;
+	}
+	
+	public static native String getForm(String formId) /*-{
+		return $wnd.getFormHtml(formId);
+	}-*/;
+
+	public static native String getFormString(String formId) /*-{
+		return $wnd.getFormString(formId);
+	}-*/;
+		
+	public static native String populateForm(String formId, String queryString) /*-{
+		return $wnd.populateForm(formId, queryString);
+	}-*/;
 
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +

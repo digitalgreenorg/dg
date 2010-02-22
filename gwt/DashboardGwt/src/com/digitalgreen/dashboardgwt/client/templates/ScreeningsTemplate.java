@@ -28,8 +28,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Screenings addScreeningServlet = new Screenings(requestContext);
-		Screenings screening = new Screenings(new RequestContext(RequestContext.METHOD_POST, 
-				   getPostForm()));
+		Screenings screening = new Screenings(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml);
 		// Add it to the rootpanel

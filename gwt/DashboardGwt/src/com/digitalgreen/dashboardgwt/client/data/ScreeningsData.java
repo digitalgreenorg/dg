@@ -8,6 +8,5 @@ public class ScreeningsData extends BaseData {
 	
 	public ScreeningsData(RequestContext requestContext) {
 		super();
-		this.formData = requestContext.getFormPanelCtx();
 	}
 }

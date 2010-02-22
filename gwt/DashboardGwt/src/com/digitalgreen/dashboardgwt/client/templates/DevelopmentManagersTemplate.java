@@ -20,8 +20,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
-		DevelopmentManagers region = new DevelopmentManagers(new RequestContext(RequestContext.METHOD_POST, 
-				getPostForm()));
+		DevelopmentManagers developmentManager = new DevelopmentManagers(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, dmListHtml, dmAddHtml);
 		// Add it to the rootpanel
@@ -29,7 +28,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templateType, templatePlainType, dmListFormHtml, addDevelopmentManagersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(developmentManager);
 	}
 
 	final static private String dmListFormHtml = "<div class='actions'>" +

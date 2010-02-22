@@ -19,7 +19,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		PersonGroups addPersonsGroupsServlet = new PersonGroups(requestContext);
-		PersonGroups region = new PersonGroups(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		PersonGroups personGroup = new PersonGroups(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, persongroupsListHtml, persongroupsAddHtml);
 		// Add it to the rootpanel
@@ -27,7 +27,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(personGroup);
 	}
 	
 	final static private String persongroupsListFormHtml = "<div class='actions'>" +

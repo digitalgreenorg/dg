@@ -11,7 +11,6 @@ public class RequestContext {
 	
 	private String methodTypeCtx = null;
 	private String formAction = null;
-	private FormPanel data = null;
 	private HashMap args = null;
 	private String messageString = null;
 	
@@ -20,13 +19,11 @@ public class RequestContext {
 		this.args = new HashMap();
 	}
 	
-	// method is most likely POST
-	public RequestContext(String method, FormPanel postForm) {
+	public RequestContext(String method) {
 		this.methodTypeCtx = method;
-		this.data = postForm;
 		this.args = new HashMap();
 	}
-	
+
 	public boolean hasMessages() {
 		return this.messageString != null;
 	}
@@ -42,11 +39,7 @@ public class RequestContext {
 	public String getMethodTypeCtx() {
 		return this.methodTypeCtx;
 	}
-	
-	public FormPanel getFormPanelCtx() {
-		return this.data;
-	}
-	
+
 	public String getFormAction() {
 		return this.formAction;
 	}

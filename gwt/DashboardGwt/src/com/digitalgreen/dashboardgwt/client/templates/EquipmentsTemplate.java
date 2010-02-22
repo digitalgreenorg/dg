@@ -19,7 +19,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Equipments addEquipmentsServlet = new Equipments(requestContext);
-		Equipments region = new Equipments(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		Equipments equipment = new Equipments(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, equipmentsListHtml, equipmentsAddHtml);
 		// Add it to the rootpanel
@@ -27,7 +27,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, equipementsListFormHtml, addEquipmentsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(equipment);
 	}
 
 	final static private String equipementsListFormHtml = "<div class='actions'>" +

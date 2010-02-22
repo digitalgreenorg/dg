@@ -19,7 +19,7 @@ public class PracticeTemplate  extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Practices addPracticesServlet = new Practices(requestContext);
-		Practices region = new Practices(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		Practices practice = new Practices(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, practiceListHtml, practiceAddHtml);
 		// Add it to the rootpanel
@@ -27,9 +27,9 @@ public class PracticeTemplate  extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, practiceListFormHtml, addPracticesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(practice);
 	}
-	
+
 	final static private String practiceListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
     								"<option value='' selected='selected'>---------</option>" +
@@ -81,12 +81,14 @@ public class PracticeTemplate  extends BaseTemplate{
 												"<fieldset class='module aligned '>" +
 													"<div class='form-row practice_name  '>" +
 														"<div>" +
-															"<label for='id_practice_name' class='required'>Practice name:</label><input id='id_practice_name' type='text' class='vTextField' name='practice_name' maxlength='200' />" +
+															"<label for='id_practice_name' class='required'>Practice name:</label>" +
+															"<input id='id_practice_name' type='text' class='vTextField' name='practice_name' maxlength='200' />" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row seasonality  '>" +
 														"<div>" +
-															"<label for='id_seasonality' class='required'>Seasonality:</label><select name='seasonality' id='id_seasonality'>" +
+															"<label for='id_seasonality' class='required'>Seasonality:</label>" +
+																"<select name='seasonality' id='id_seasonality'>" +
 																"<option value='' selected='selected'>---------</option>" +
 																"<option value='Jan'>January</option>" +
 																"<option value='Feb'>February</option>" +
@@ -111,7 +113,8 @@ public class PracticeTemplate  extends BaseTemplate{
 													"</div>" +
 													"<div class='form-row summary  '>" +
 														"<div>" +
-															"<label for='id_summary'>Summary:</label><textarea id='id_summary' rows='10' cols='40' name='summary' class='vLargeTextField'></textarea>" +
+															"<label for='id_summary'>Summary:</label>" +
+															"<textarea id='id_summary' rows='10' cols='40' name='summary' class='vLargeTextField'></textarea>" +
 														"</div>" +
 													"</div>" +
 												"</fieldset>" +

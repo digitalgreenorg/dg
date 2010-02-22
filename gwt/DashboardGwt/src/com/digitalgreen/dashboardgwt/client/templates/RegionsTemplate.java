@@ -28,8 +28,7 @@ public class RegionsTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Regions addRegionServlet = new Regions(requestContext);
-		Regions region = new Regions(new RequestContext(RequestContext.METHOD_POST, 
-				getPostForm()));
+		Regions region = new Regions(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
 		// Add it to the rootpanel
@@ -95,7 +94,10 @@ public class RegionsTemplate extends BaseTemplate {
 						"</div>" +
 					"</div>" +
 					"<div class='form-row start_date'>" +
-						"<div><label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
+						"<div>" +
+							"<label for='id_start_date'>Start date:</label>" +
+							"<input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
+						"</div>" +
 					"</div>" +
 				"</fieldset>" +
 				"<div class='submit-row'>" +

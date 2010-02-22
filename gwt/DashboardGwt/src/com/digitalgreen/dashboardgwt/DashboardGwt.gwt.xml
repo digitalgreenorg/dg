@@ -11,6 +11,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
   <!-- Other module inherits                                      -->
   <inherits name="com.google.gwt.http.HTTP" />
+  <inherits name="com.google.gwt.json.JSON" />
   <stylesheet src='DashboardGwt.css' />
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.digitalgreen.dashboardgwt.client.DashboardGwt'/>

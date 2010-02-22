@@ -16,23 +16,20 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
-	private Database db;
+	private static Database db;
+	private static String databaseName = DashboardGwt.getDatabaseName();
+
 	private ResultSet lastResultSet;
-	private boolean isOnline;
-	private String databaseName;
 	private String responseText = null;
 	private int requestError = 0;
 	
 	final static private int ERROR_RESPONSE = 1;
 	final static private int ERROR_SERVER = 2;
-	
-	public BaseData() {
-		this.databaseName = DashboardGwt.getDatabaseName();
-		this.isOnline = DashboardGwt.getCurrentOnlineStatus();
-	}
+
+	public class Data {}
 	
 	protected boolean isOnline() {
-		return this.isOnline;
+		return DashboardGwt.getCurrentOnlineStatus();
 	}
 	
 	protected boolean isRequestError() {
@@ -69,25 +66,31 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.request(RequestBuilder.GET, url);
 	}
 	
-	public void post(FormPanel postForm) {
-		postForm.submit();
-		// TODO:  handle failed submits
-		// - add a submit complete handler
+	public void post(String url) {
+		this.request(RequestBuilder.GET, url);
 	}
 	
-	public void open() {
-		this.db = Factory.getInstance().createDatabase();
-        db.open(this.databaseName);
+	public static void dbOpen() {
+		BaseData.db = Factory.getInstance().createDatabase();
+        db.open(BaseData.databaseName);
 	}
 	
-	public void close() {
+	public static void dbClose() {
 		try {
-			db.close();
+			BaseData.db.close();
 		} catch (DatabaseException e) {
 			Window.alert("Database close error: " + e.toString());
 		}
 	}
 
+	public void dbStartTransaction() {
+		this.execute("BEGIN TRANSACTION;");
+	}
+	
+	public void dbCommit() {
+		this.execute("COMMIT;");	
+	}
+	
 	public void delete(String deleteSql, String ...args) {
 		this.execute(deleteSql, args);	
 	}
@@ -103,11 +106,15 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public void update(String updateSql, String ...args) {
 		this.execute(updateSql, args);
 	}
+
+	public int getLastInsertRowId() {
+		return BaseData.db.getLastInsertRowId();
+	}
 	
 	private void execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
-			this.lastResultSet = db.execute(sql, args);
+			this.lastResultSet = BaseData.db.execute(sql, args);
 		} catch (DatabaseException e) {
 			Window.alert("Database execute error: " + e.toString());
 		}

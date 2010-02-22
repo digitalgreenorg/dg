@@ -38,6 +38,8 @@ public class Login extends BaseServlet {
 				Cookies.removeCookie("sessionid");
 				this.redirectTo(new Login());
 			} else {
+				Window.alert("Got here");
+				Window.alert("Hash map = " + queryArgs.toString());
 				Cookies.setCookie("sessionid", "true");
 				this.redirectTo(new Index());
 			}

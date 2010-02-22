@@ -18,7 +18,7 @@ public class PartnersTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Partners addPartnersServlet = new Partners(requestContext);
-		Partners region = new Partners(new RequestContext(RequestContext.METHOD_POST, getPostForm()));
+		Partners partner = new Partners(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml);
 		// Add it to the rootpanel
@@ -26,7 +26,7 @@ public class PartnersTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(partner);
 	}
 	
 	final static private String partnersListFormHtml = "<div class='actions'>" +
