@@ -28,6 +28,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	public class Data {}
 	
+	protected static Database getDb() {
+		return BaseData.db;
+	}
+	
 	protected boolean isOnline() {
 		return DashboardGwt.getCurrentOnlineStatus();
 	}
