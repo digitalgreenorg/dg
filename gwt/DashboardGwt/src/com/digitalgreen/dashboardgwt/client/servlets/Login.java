@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 
 import java.util.HashMap;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.LoginTemplate;
 import com.google.gwt.user.client.Cookies;
@@ -38,10 +39,16 @@ public class Login extends BaseServlet {
 				Cookies.removeCookie("sessionid");
 				this.redirectTo(new Login());
 			} else {
-				Window.alert("Got here");
-				Window.alert("Hash map = " + queryArgs.toString());
-				Cookies.setCookie("sessionid", "true");
-				this.redirectTo(new Index());
+				if(true || LoginData.authenticate((String)this.form.get("username"), 
+						(String)this.form.get("password"))) {
+					Cookies.setCookie("sessionid", "true");
+					this.redirectTo(new Index());
+					
+				} else {
+					RequestContext requestContext = new RequestContext();
+					requestContext.setMessageString("Invalid credentials, please try again");
+					this.redirectTo(new Login(requestContext));
+				}
 			}
 		} else if (method == RequestContext.METHOD_GET) {
 			// Most likely do nothing in this GET case

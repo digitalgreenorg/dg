@@ -37,9 +37,9 @@ public class LoginTemplate extends Template {
 		this.postForm.setAction(RequestContext.getServerUrl() + "admin/");
 	    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.postForm.setMethod(FormPanel.METHOD_POST);
-	    baseHtml = new HTMLPanel(loginHtml); 
-	    postForm.add(baseHtml);
-	    RootPanel.get().add(postForm);
+	    this.baseHtml = new HTMLPanel(loginHtml); 
+	    postForm.add(this.baseHtml);
+	    RootPanel.get().add(this.postForm);
 	    this.fillSubmitControls();
 	}
 	
@@ -48,8 +48,10 @@ public class LoginTemplate extends Template {
 		final String id = this.postForm.getElement().getId();
 	    b.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Window.alert("BEFORE setupDg");
-				Login login = new Login(BaseTemplate.setupDgPostContext(id));
+				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+				String formQueryString = BaseTemplate.getFormString("login-form");
+				requestContext.getArgs().put("formQueryString", formQueryString);
+				Login login = new Login(requestContext);
 				login.response();
 			}
 	    });

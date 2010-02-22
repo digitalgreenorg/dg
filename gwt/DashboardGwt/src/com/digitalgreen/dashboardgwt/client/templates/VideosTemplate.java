@@ -17,16 +17,16 @@ public class VideosTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Videos addVideosServlet = new Videos(requestContext);
-		Videos video = new Videos(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Videos addVideosServlet = new Videos(requestContext);
+		Videos saveVideo = new Videos(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, videosListFormHtml, addVideosServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(video);
+		super.fillDGSubmitControls(saveVideo);
 	}
 	
 	final static private String videosListFormHtml = "<div class='actions'>" +

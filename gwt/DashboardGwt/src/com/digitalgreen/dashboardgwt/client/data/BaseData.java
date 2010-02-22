@@ -22,6 +22,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private ResultSet lastResultSet;
 	private String responseText = null;
 	private int requestError = 0;
+	private BaseData.Data data;
 	
 	final static private int ERROR_RESPONSE = 1;
 	final static private int ERROR_SERVER = 2;

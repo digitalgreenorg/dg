@@ -1,5 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
+import java.util.HashMap;
+
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
 import com.digitalgreen.dashboardgwt.client.templates.Template;
@@ -8,8 +10,9 @@ import com.google.gwt.user.client.Cookies;
 public class BaseServlet implements ServletInterface {
 	
 	protected RequestContext requestContext = null;	
+	protected HashMap form = null;
 	private static boolean isLoggedInCtx = false;
-	
+
 	// Slightly breaks abstraction since the RequestContext should be 
 	// created in the template as a GET request, similar to how 
 	// POSTs work.
@@ -19,10 +22,18 @@ public class BaseServlet implements ServletInterface {
 	
 	public BaseServlet(RequestContext requestContext) {
 		this.requestContext = requestContext;
+		this.form = this.requestContext.getArgs();
+		if (this.form.containsKey((String)"formQueryString")) {
+			
+		}
 	}
 	
 	protected String getMethodTypeCtx() {
 		return this.requestContext.getMethodTypeCtx();
+	}
+	
+	public RequestContext getRequestContext() {
+		return this.requestContext;
 	}
 	
 	public boolean isLoggedIn() {

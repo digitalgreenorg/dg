@@ -28,7 +28,7 @@ public class RegionsTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Regions addRegionServlet = new Regions(requestContext);
-		Regions region = new Regions(BaseTemplate.setupDgPostContext(this.getDgFormId()));
+		Regions saveRegion = new Regions(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
 		// Add it to the rootpanel
@@ -36,7 +36,7 @@ public class RegionsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(region);
+		super.fillDGSubmitControls(saveRegion);
 	}
 	
 	final static private String regionsListFormHtml = "<div class='actions'>" +

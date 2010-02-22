@@ -19,16 +19,16 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
-		DevelopmentManagers developmentManager = new DevelopmentManagers(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, dmListHtml, dmAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
+		DevelopmentManagers saveDevelopmentManager = new DevelopmentManagers(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templateType, templatePlainType, dmListFormHtml, addDevelopmentManagersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(developmentManager);
+		super.fillDGSubmitControls(saveDevelopmentManager);
 	}
 
 	final static private String dmListFormHtml = "<div class='actions'>" +

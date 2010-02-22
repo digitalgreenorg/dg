@@ -17,16 +17,16 @@ public class PartnersTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Partners addPartnersServlet = new Partners(requestContext);
-		Partners partner = new Partners(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Partners addPartnersServlet = new Partners(requestContext);
+		Partners savePartner = new Partners(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(partner);
+		super.fillDGSubmitControls(savePartner);
 	}
 	
 	final static private String partnersListFormHtml = "<div class='actions'>" +

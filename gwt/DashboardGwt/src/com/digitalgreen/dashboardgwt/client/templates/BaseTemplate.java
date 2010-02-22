@@ -80,6 +80,7 @@ public class BaseTemplate extends Template {
 		if(requestMethod == RequestContext.METHOD_GET) {
 			if(queryArg == "add") {
 				this.postForm = new FormPanel();
+				this.postForm.getElement().setId("add-form");
 				this.postForm.setAction(RequestContext.getServerUrl() + 
 						"add_" + 
 						templateType);
@@ -99,11 +100,19 @@ public class BaseTemplate extends Template {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
 		    b.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {				
+				public void onClick(ClickEvent event) {
+					// The query string can only be formed if we're on the page with 
+					// the add-form id, set when we got a GET request on the page
+					String formQueryString = BaseTemplate.getFormString("add-form");
+					servlet.getRequestContext().getArgs().put("formQueryString", formQueryString);
 					servlet.response();
 				}
 		    });
 		}
+	}
+	
+	public static RequestContext setupDgPostContext(String id) {
+		return null;
 	}
 	
 	private Hyperlink logoutHyperlink(){
@@ -122,15 +131,6 @@ public class BaseTemplate extends Template {
 
 	protected String getDgFormId() {
 		return this.postForm.getElement().getId();
-	}
-
-	protected static RequestContext setupDgPostContext(String id) {
-		String formHtml = BaseTemplate.getForm(id);
-		String formQueryString = BaseTemplate.getFormString(id);
-		RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		requestContext.getArgs().put("formHtml", formHtml);
-		requestContext.getArgs().put("formQueryString", formQueryString);
-		return requestContext;
 	}
 	
 	public static native String getForm(String formId) /*-{

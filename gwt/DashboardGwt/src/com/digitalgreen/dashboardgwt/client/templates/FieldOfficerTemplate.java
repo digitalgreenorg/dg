@@ -19,7 +19,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		FieldOfficers addFieldOfficersServlet = new FieldOfficers(requestContext);
-		FieldOfficers fieldOfficer = new FieldOfficers(BaseTemplate.setupDgPostContext(this.getDgFormId()));
+		FieldOfficers saveFieldOfficer = new FieldOfficers(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, fieldofficerListHtml, fieldofficerAddHtml);
 		// Add it to the rootpanel
@@ -27,7 +27,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templateType, templatePlainType, fieldofficerListFormHtml, addFieldOfficersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(fieldOfficer);
+		super.fillDGSubmitControls(saveFieldOfficer);
 	}
 
 	final static private String fieldofficerListFormHtml = "<div class='actions'>" +

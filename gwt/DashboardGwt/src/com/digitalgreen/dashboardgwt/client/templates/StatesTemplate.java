@@ -20,7 +20,7 @@ public class StatesTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		States addStatesServlet = new States(requestContext);
-		States state = new States(BaseTemplate.setupDgPostContext(this.getDgFormId()));
+		States saveState = new States(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, statesListHtml, statesAddHtml);
 		// Add it to the rootpanel
@@ -28,7 +28,7 @@ public class StatesTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, statesListFormHtml, addStatesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(state);
+		super.fillDGSubmitControls(saveState);
 	}
 	
 	final static private String statesListFormHtml = "<div class='actions'>" +

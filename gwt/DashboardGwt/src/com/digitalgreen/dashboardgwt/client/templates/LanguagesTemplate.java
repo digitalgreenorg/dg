@@ -18,16 +18,16 @@ public class LanguagesTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Languages addLanguagesServlet = new Languages(requestContext);
-		Languages language = new Languages(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, languagesListHtml, languagesAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Languages addLanguagesServlet = new Languages(requestContext);
+		Languages saveLanguage = new Languages(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(language);
+		super.fillDGSubmitControls(saveLanguage);
 	}
 	
 	final static private String languagesListFormHtml = "<div class='actions'>" +

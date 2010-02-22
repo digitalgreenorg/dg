@@ -18,7 +18,7 @@ public class VillagesTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Villages addVillagesServlet = new Villages(requestContext);
-		Villages village = new Villages(BaseTemplate.setupDgPostContext(this.getDgFormId()));
+		Villages saveVillage = new Villages(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml);
 		// Add it to the rootpanel
@@ -26,7 +26,7 @@ public class VillagesTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(village);
+		super.fillDGSubmitControls(saveVillage);
 	}
 
 	final static private String villagesListFormHtml = "<div class='actions'>" +

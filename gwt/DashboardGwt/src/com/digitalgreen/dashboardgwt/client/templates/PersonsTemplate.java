@@ -19,16 +19,16 @@ public class PersonsTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Persons addPersonsServlet = new Persons(requestContext);
-		Persons person = new Persons(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, personsListHtml, personsAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Persons addPersonsServlet = new Persons(requestContext);
+		Persons savePerson = new Persons(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, personsListFormHtml, addPersonsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(person);
+		super.fillDGSubmitControls(savePerson);
 	}
 
 	final static private String personsListFormHtml = "<div class='actions'>" +

@@ -19,16 +19,16 @@ public class BlocksTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Blocks addBlocksServlet = new Blocks(requestContext);
-		Blocks block = new Blocks(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, blocksListHtml, blocksAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Blocks addBlocksServlet = new Blocks(requestContext);
+		Blocks saveBlock = new Blocks(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(block);
+		super.fillDGSubmitControls(saveBlock);
 	}
 	
 	final static private String blocksListFormHtml = "<div class='actions'>" +

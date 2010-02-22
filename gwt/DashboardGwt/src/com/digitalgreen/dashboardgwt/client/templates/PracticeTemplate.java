@@ -18,16 +18,16 @@ public class PracticeTemplate  extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		Practices addPracticesServlet = new Practices(requestContext);
-		Practices practice = new Practices(BaseTemplate.setupDgPostContext(this.getDgFormId()));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, practiceListHtml, practiceAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		Practices addPracticesServlet = new Practices(requestContext);
+		Practices savePractice = new Practices(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, practiceListFormHtml, addPracticesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(practice);
+		super.fillDGSubmitControls(savePractice);
 	}
 
 	final static private String practiceListFormHtml = "<div class='actions'>" +

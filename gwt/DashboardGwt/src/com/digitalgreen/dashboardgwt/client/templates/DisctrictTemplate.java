@@ -20,7 +20,7 @@ public class DisctrictTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Districts addDistrictsServlet = new Districts(requestContext);
-		Districts district = new Districts(BaseTemplate.setupDgPostContext(this.getDgFormId()));
+		Districts saveDistrict = new Districts(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, districtListHtml, districtAddHtml);
 		// Add it to the rootpanel
@@ -28,7 +28,7 @@ public class DisctrictTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(district);
+		super.fillDGSubmitControls(saveDistrict);
 	}
 
 	final static private String districtListFormHtml = "<div class='actions'>" +
