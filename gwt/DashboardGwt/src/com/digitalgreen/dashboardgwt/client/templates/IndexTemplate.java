@@ -30,9 +30,22 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class IndexTemplate extends BaseTemplate {
 	
+	
+	
 	public IndexTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
+	
+	private void goOffline(){
+		Button button = new Button("GO OFFLINE");
+		RootPanel.get("goOffline").add(button);
+		button.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	   Window.alert("GO OFFLINE");
+			      }
+	    });
+	}
+	
 	
 	private void addHyperlink(String id, String linkTxt, String tokenTxt, final BaseServlet servlet) {
 		Hyperlink link = new Hyperlink(linkTxt, true, tokenTxt); 
@@ -124,6 +137,10 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
+		
+		HTMLPanel h = new HTMLPanel("<div id = 'goOffline' style='float: right; margin: 100px;'></div>");
+		RootPanel.get("container").add(h);
+		goOffline();
 	}
 	
 	final static private String indexContentHtml = "<div id='content' class='colMS'>" +
