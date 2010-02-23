@@ -98,6 +98,18 @@ overview = r"""
     ORDER BY {{geography|upper }}_NAME
     """
     
+#Query for the drop down menu in search box
+#Context Required: geog can be (state/district/block/village(
+#                  id for(district/block/village)
+#                  geog_parent (e.g. 'state'->'district'->'block'->'village'
+search_drop_down_list = r"""
+SELECT id, {{geog|upper}}_NAME AS name
+FROM {{geog}}
+{% ifnotequal geog 'state' %}
+WHERE {{geog_parent}}_id = {{id}}
+{% endifnotequal %}
+ORDER BY name
+"""
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)

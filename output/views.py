@@ -13,6 +13,19 @@ def test_output(request):
 
 def overview(request,geog,id):
     
+    if('village' in request.GET and request.GET['village'] and request.GET['village']!='-1'):
+        geog = 'village'
+        id = int(request.GET['village'])
+    elif('block' in request.GET and request.GET['block'] and request.GET['block']!='-1'):
+        geog = 'block'
+        id = int(request.GET['block'])
+    elif('district' in request.GET and request.GET['district'] and request.GET['district']!='-1'):
+        geog = 'district'
+        id = int(request.GET['district'])        
+    elif('state' in request.GET and request.GET['state'] and request.GET['state']!='-1'):
+        geog = 'state'
+        id = int(request.GET['state'])    
+         
     geog_list = ['country','state','district','block','village']
     if(geog == 'village' or geog not in geog_list):
         raise Http404()
@@ -59,33 +72,42 @@ def overview_drop_down(request):
      and 'id' in request.GET and request.GET['id']:
          geog = request.GET['geog']
          id = request.GET['id']
+         id = int(id)
     else:
         raise Http404()
     
     return_val = []
     if (geog=='state'):
-      return_val.append("<select name='state' id = 'statesId' onChange=\"dochange('city', this.value)\">");
+      #return_val.append("<select class='select' name='state' id = 'statesId' onChange=\"dochange('district', this.value)\">");
       return_val.append("<option value='-1'>Select State</option>");
-      # rs = db call
+      rs = run_query(construct_query(database.search_drop_down_list,dict(geog='state')));
       for row in rs:       
-          return_val.append("<option value="+row['id']+" >"+row['name']+"</option>" );
+          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
      
-    elif (geog=='city'):
-      return_val.append("<select name='city' id = 'cityId' onChange=\"dochange('district', this.value)\">");
-      return_val.append("<option value='-1'>Select District</option>");                  
-      #rs = db.call
-      for row in rs:       
-          return_val.append("<option value="+row['id']+" >"+row['name']+"</option>" );
-      
     elif (geog=='district'):
-      return_val.append("<select name='district' id = 'districtId' >");
+      #return_val.append("<select class='select' name='district' id = 'districtId' onChange=\"dochange('block', this.value)\">");
       return_val.append("<option value='-1'>Select District</option>");                  
-      #rs = db call
+      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='state',id=id)));
       for row in rs:       
-          return_val.append("<option value="+row['id']+" >"+row['name']+"</option>" );
+          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
       
-    return_val.append("</select>");
-         
+    elif (geog=='block'):
+      #return_val.append("<select class='select' name='block' id = 'blockId' onChange=\"dochange('village', this.value)\">>");
+      return_val.append("<option value='-1'>Select Block</option>");                  
+      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='district',id=id)));
+      for row in rs:       
+          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
+
+    elif (geog=='village'):
+      #return_val.append("<select class='select' name='village' id = 'villageId' >");
+      return_val.append("<option value='-1'>Select Village</option>");                  
+      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='block',id=id)));
+      for row in rs:       
+          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
+      
+    #return_val.append("</select>");
+    
+    return HttpResponse('\n'.join(return_val))     
     
          
 def overview_line_graph(request,geog,id):
