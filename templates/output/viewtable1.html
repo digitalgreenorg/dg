@@ -103,6 +103,45 @@
 	        } // end else
 	    } // end Apply function
 	    
+	//<!-- For Search's drop-down list -->
+	
+	function Inint_AJAX() {
+        try { return new ActiveXObject("Msxml2.XMLHTTP");  } catch(e) {} //IE
+        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {} //IE
+        try { return new XMLHttpRequest();          } catch(e) {} //Native Javascript
+        alert("XMLHttpRequest not supported");
+        return null;
+        };
+       
+        function dochange(src, val) {
+        var req = Inint_AJAX();
+        req.onreadystatechange = function () {
+         if (req.readyState==4) {
+              if (req.status==200) {
+              		elemId = src+"Id"
+              		var flag = false;
+					$(".select").each(function() {
+						if(flag == true){
+							this.value = -1
+							this.disabled = true;
+						}
+						if (this.name == src) {
+							flag = true;
+						}
+					
+					});
+				   document.getElementById(elemId).disabled = false;
+                   document.getElementById(elemId).innerHTML=req.responseText; //retuen value
+              }
+         }
+        };
+        req.open("GET", "/output/dropdownval/?geog="+src+"&id="+val); //make connection
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=iso-8859-1"); // set Header
+        req.send(null); //send value
+        }
+       
+        window.onLoad=dochange('state', -1);         // value in first dropdown
+    
 	</script>
 
 </head>
@@ -175,44 +214,26 @@
 			<div id='searchbodytitle'>
 				Customize your Search
 			</div>
-			<form id='levelsearch'>
-				<div id='searchbody1'>
-					<select id='select'>
-  						<option>Select Country</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-					</select>
+			<form id='levelsearch' action="" method="get">
+				<div class='dropdown' id='state'>
+				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+					<option value='-1'>Select State</option>
+				</select>				
 				</div>
-				<div id='searchbody2'>
-					<select id='select'>
-  						<option>Select State</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-					</select>
+				<div class='dropdown' id='district'>
+				<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
+					<option value='-1'>Select District</option>
+				</select>	
 				</div>
-				<div id='searchbody3'>
-					<select id='select'>
-  						<option>Select District</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-					</select>
+				<div class='dropdown' id='block'>
+				<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+					<option value='-1'>Select Block</option>
+				</select>				
 				</div>			
-				<div id='searchbody4'>
-					<select id='select'>
-  						<option>Select Villages</option>
-  						<option>Saab</option>
-  						<option>Mercedes</option>
-  						<option>Audi</option>
-					</select>
+				<div class='dropdown' id='village'>
+				<select class='select' name='village' id = 'villageId'>
+					<option value='-1'>Select Village</option>
+				</select>					
 				</div>
 				<div id='searchbody5'>
 					<input id='searchsubmitbtn' type="submit" value="GO">
@@ -323,5 +344,7 @@
 		// ]]>
 	</script>
 <!-- end of amline script -->
+
+
 </body>
 </html>
