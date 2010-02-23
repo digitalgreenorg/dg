@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -19,6 +20,9 @@ public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
 	protected FormPanel postForm = null;
 	protected HTMLPanel displayHtml = null;
+	protected Label usrStr = new Label();
+	protected Label errMsg = new Label();
+	
 	
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -39,9 +43,27 @@ public class BaseTemplate extends Template {
 		RootPanel.get("content").setStyleName(className);
 	}
 	
+	public void setUserLable(String usr){
+		this.usrStr.setText(usr);
+	}
+	
+	public String getUserLabel(){
+		return this.usrStr.getText();
+	}
+	
+	public void setErrMsg(String msg){
+		this.errMsg.setText(msg);
+	}
+	
+	public String getErrMsg(){
+		return this.errMsg.getText();
+	}
+	
 	@Override
 	public void fill() {
+		RootPanel.get("user").insert(usrStr, 0);
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
+		RootPanel.get("error-space").add(errMsg);
 		RootPanel.get("container").add(this.getContentPanel());
 		super.fill();
 	}
@@ -152,11 +174,8 @@ public class BaseTemplate extends Template {
 			"<div id='branding'>" +
 				"<h1 id='site-name'>Digital Green Administration</h1>" +
 			"</div>" +
-			"<div id='user-tools'>" +
-				"Welcome," +
-				"<strong id='username'>digitalgreen</strong>." +
-				"<label id='logout'>" +
-				"</label>" +
+			"<div id='user-tools'>Welcome, " +
+				"<b id='user'></b><acronym id='logout' title='Logout'></acronym>" +
 			"</div>" +
 		"</div>" +
 		"<div id='error-space'></div>" +
