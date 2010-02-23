@@ -94,7 +94,7 @@ public class VillagesTemplate extends BaseTemplate {
 															"<div>" +
 																"<label for='id_block' class='required'>Block:</label><select name='block' id='id_block'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/block/add/' class='add-another' id='add_id_block' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row no_of_households  '>" +
@@ -338,7 +338,7 @@ public class VillagesTemplate extends BaseTemplate {
 																			"<td class='partner'>" +
 																				"<select name='home_village-0-partner' id='id_home_village-0-partner'>" +
 																					"<option value='' selected='selected'>---------</option>" +
-																				"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_home_village-0-partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																				"</select>" +
 																			"</td>" +
 																			"<td class='delete'></td>" +
 																		"</tr>" +
@@ -390,7 +390,7 @@ public class VillagesTemplate extends BaseTemplate {
 																			"<td class='partner'>" +
 																				"<select name='home_village-1-partner' id='id_home_village-1-partner'>" +
 																					"<option value='' selected='selected'>---------</option>" +
-																				"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_home_village-1-partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																				"</select>" +
 																			"</td>" +
 																			"<td class='delete'></td>" +
 																		"</tr>" +
@@ -442,7 +442,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"<td class='partner'>" +
 																			"<select name='home_village-2-partner' id='id_home_village-2-partner'>" +
 																				"<option value='' selected='selected'>---------</option>" +
-																			"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_home_village-2-partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																			"</select>" +
 																		"</td>" +
 																		"<td class='delete'></td>" +
 																	"</tr>" +
@@ -494,7 +494,7 @@ public class VillagesTemplate extends BaseTemplate {
 																	"<td class='partner'>" +
 																		"<select name='home_village-3-partner' id='id_home_village-3-partner'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_home_village-3-partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -546,7 +546,7 @@ public class VillagesTemplate extends BaseTemplate {
 																	"<td class='partner'>" +
 																		"<select name='home_village-4-partner' id='id_home_village-4-partner'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_home_village-4-partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +

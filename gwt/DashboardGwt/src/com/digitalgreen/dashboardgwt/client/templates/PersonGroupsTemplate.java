@@ -114,7 +114,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 														"<div>" +
 															"<label for='id_village' class='required'>Village:</label><select name='village' id='id_village'>" +
 																"<option value='' selected='selected'>---------</option>" +
-															"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+															"</select>" +
 														"</div>" +
 													"</div>" +
 												"</fieldset>" +
@@ -171,7 +171,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-0-village' id='id_person_set-0-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-0-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -209,7 +209,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-1-village' id='id_person_set-1-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-1-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -247,7 +247,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-2-village' id='id_person_set-2-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-2-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -285,7 +285,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-3-village' id='id_person_set-3-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-3-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -323,7 +323,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-4-village' id='id_person_set-4-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-4-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -361,7 +361,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-5-village' id='id_person_set-5-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-5-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -399,7 +399,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-6-village' id='id_person_set-6-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-6-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -437,7 +437,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-7-village' id='id_person_set-7-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-7-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -475,7 +475,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-8-village' id='id_person_set-8-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-8-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -513,7 +513,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-9-village' id='id_person_set-9-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-9-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -551,7 +551,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-10-village' id='id_person_set-10-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-10-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -589,7 +589,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-11-village' id='id_person_set-11-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-11-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -627,7 +627,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-12-village' id='id_person_set-12-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-12-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -665,7 +665,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-13-village' id='id_person_set-13-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-13-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -703,7 +703,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-14-village' id='id_person_set-14-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-14-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -741,7 +741,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-15-village' id='id_person_set-15-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-15-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -779,7 +779,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-16-village' id='id_person_set-16-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-16-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -817,7 +817,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-17-village' id='id_person_set-17-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-17-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -855,7 +855,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-18-village' id='id_person_set-18-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-18-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -893,7 +893,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-19-village' id='id_person_set-19-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-19-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -931,7 +931,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-20-village' id='id_person_set-20-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-20-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -969,7 +969,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-21-village' id='id_person_set-21-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-21-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -1007,7 +1007,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-22-village' id='id_person_set-22-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-22-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -1045,7 +1045,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-23-village' id='id_person_set-23-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-23-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -1083,7 +1083,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-24-village' id='id_person_set-24-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-24-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -1121,7 +1121,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																	"<td class='village'>" +
 																		"<select name='person_set-25-village' id='id_person_set-25-village'>" +
 																			"<option value='' selected='selected'>---------</option>" +
-																		"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-25-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																		"</select>" +
 																	"</td>" +
 																	"<td class='delete'></td>" +
 																"</tr>" +
@@ -1159,7 +1159,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																"<td class='village'>" +
 																	"<select name='person_set-26-village' id='id_person_set-26-village'>" +
 																		"<option value='' selected='selected'>---------</option>" +
-																	"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-26-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																	"</select>" +
 																"</td>" +
 																"<td class='delete'></td>" +
 															"</tr>" +
@@ -1197,7 +1197,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																"<td class='village'>" +
 																	"<select name='person_set-27-village' id='id_person_set-27-village'>" +
 																		"<option value='' selected='selected'>---------</option>" +
-																	"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-27-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																	"</select>" +
 																"</td>" +
 																"<td class='delete'></td>" +
 															"</tr>" +
@@ -1235,7 +1235,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																"<td class='village'>" +
 																	"<select name='person_set-28-village' id='id_person_set-28-village'>" +
 																		"<option value='' selected='selected'>---------</option>" +
-																	"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-28-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																	"</select>" +
 																"</td>" +
 																"<td class='delete'></td>" +
 															"</tr>" +
@@ -1273,7 +1273,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 																"<td class='village'>" +
 																	"<select name='person_set-29-village' id='id_person_set-29-village'>" +
 																		"<option value='' selected='selected'>---------</option>" +
-																	"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_person_set-29-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																	"</select>" +
 																"</td>" +
 																"<td class='delete'></td>" +
 															"</tr>" +

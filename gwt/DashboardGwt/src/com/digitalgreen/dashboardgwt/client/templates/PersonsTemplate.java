@@ -172,14 +172,13 @@ public class PersonsTemplate extends BaseTemplate{
 													                "$('#lookup_village').val('');" +
 													            "});" +
 													        "</script>" +
-													        "<a href='/admin/dashboard/village/add/' class='add-another' id='add_id_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 													    "</div>" +
 													"</div>" +
 													"<div class='form-row group  '>" +
 														"<div>" +
 															"<label for='id_group'>Group:</label><select name='group' id='id_group'>" +
 																"<option value='' selected='selected'>---------</option>" +
-															"</select><a href='/admin/dashboard/persongroups/add/' class='add-another' id='add_id_group' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+															"</select>" +
 														"</div>" +
 													"</div>" +
 												"</fieldset>" +
@@ -194,7 +193,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-0-practice' class='required'>Practice:</label><select name='personadoptpractice_set-0-practice' id='id_personadoptpractice_set-0-practice'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personadoptpractice_set-0-practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row prior_adoption_flag  '>" +
@@ -238,7 +237,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-1-practice' class='required'>Practice:</label><select name='personadoptpractice_set-1-practice' id='id_personadoptpractice_set-1-practice'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personadoptpractice_set-1-practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row prior_adoption_flag  '>" +
@@ -282,7 +281,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-2-practice' class='required'>Practice:</label><select name='personadoptpractice_set-2-practice' id='id_personadoptpractice_set-2-practice'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_personadoptpractice_set-2-practice' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row prior_adoption_flag  '>" +

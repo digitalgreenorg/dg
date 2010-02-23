@@ -152,14 +152,14 @@ public class AnimatorsTemplate extends BaseTemplate {
 													"<div>" +
 														"<label for='id_partner' class='required'>Partner:</label><select name='partner' id='id_partner'>" +
 															"<option value='' selected='selected'>---------</option>" +
-														"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+														"</select>" +
 													"</div>" +
 												"</div>" +
 												"<div class='form-row home_village  '>" +
 													"<div>" +
 														"<label for='id_home_village' class='required'>Home village:</label><select name='home_village' id='id_home_village'>" +
 															"<option value='' selected='selected'>---------</option>" +
-														"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_home_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+														"</select>" +
 													"</div>" +
 												"</div>" +
 											"</fieldset>" +
@@ -174,7 +174,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-0-village' class='required'>Village:</label><select name='animatorassignedvillage_set-0-village' id='id_animatorassignedvillage_set-0-village'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_animatorassignedvillage_set-0-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row start_date  '>" +
@@ -194,7 +194,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-1-village' class='required'>Village:</label><select name='animatorassignedvillage_set-1-village' id='id_animatorassignedvillage_set-1-village'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_animatorassignedvillage_set-1-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row start_date  '>" +
@@ -214,7 +214,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-2-village' class='required'>Village:</label><select name='animatorassignedvillage_set-2-village' id='id_animatorassignedvillage_set-2-village'>" +
 																	"<option value='' selected='selected'>---------</option>" +
-																"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_animatorassignedvillage_set-2-village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+																"</select>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row start_date  '>" +

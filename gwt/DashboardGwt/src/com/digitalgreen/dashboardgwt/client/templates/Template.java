@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,6 +19,7 @@ public class Template implements TemplateInterface {
 	public void fill() {
 		RootPanel.get("error-space").clear();
 		if(this.getRequestContext().hasMessages()) {
+			Window.alert("in template");
 			String messageStartHtml = "<p class='errornote'>";
 			String messageEndHtml = "</p>";
 			HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 

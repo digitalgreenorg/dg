@@ -111,14 +111,14 @@ public class DisctrictTemplate extends BaseTemplate{
 												"<div>" +
 													"<label for='id_state' class='required'>State:</label><select name='state' id='id_state'>" +
 														"<option value='' selected='selected'>---------</option>" +
-													"</select><a href='/admin/dashboard/state/add/' class='add-another' id='add_id_state' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+													"</select>" +
 													"</div>" +
 											"</div>" +
 											"<div class='form-row fieldofficer  '>" +
 												"<div>" +
 													"<label for='id_fieldofficer' class='required'>Fieldofficer:</label><select name='fieldofficer' id='id_fieldofficer'>" +
 														"<option value='' selected='selected'>---------</option>" +
-													"</select><a href='/admin/dashboard/fieldofficer/add/' class='add-another' id='add_id_fieldofficer' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+													"</select>" +
 												"</div>" +
 											"</div>" +
 											"<div class='form-row fieldofficer_startday  '>" +
@@ -130,7 +130,7 @@ public class DisctrictTemplate extends BaseTemplate{
 												"<div>" +
 													"<label for='id_partner' class='required'>Partner:</label><select name='partner' id='id_partner'>" +
 														"<option value='' selected='selected'>---------</option>" +
-													"</select><a href='/admin/dashboard/partners/add/' class='add-another' id='add_id_partner' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+													"</select>" +
 												"</div>" +
 											"</div>" +
 										"</fieldset>" +

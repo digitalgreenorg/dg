@@ -130,7 +130,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 													"<div>" +
 														"<label for='id_region' class='required'>Region:</label><select name='region' id='id_region'>" +
 															"<option value='' selected='selected'>---------</option>" +
-															"</select><a href='/admin/dashboard/region/add/' class='add-another' id='add_id_region' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+															"</select>" +
 													"</div>" +
 												"</div>" +
 												"<div class='form-row start_day  '>" +

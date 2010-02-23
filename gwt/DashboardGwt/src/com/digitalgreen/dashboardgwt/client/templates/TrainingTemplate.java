@@ -152,21 +152,20 @@ public class TrainingTemplate extends BaseTemplate{
 														            "$('#lookup_village').val('');" +
 														        "});" +
         													"</script>" +
-        													"<a href='/admin/dashboard/village/add/' class='add-another' id='add_id_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
         												"</div>" +
         											"</div>" +
         											"<div class='form-row development_manager_present  '>" +
         												"<div>" +
         													"<label for='id_development_manager_present'>Development manager present:</label><select name='development_manager_present' id='id_development_manager_present'>" +
         														"<option value='' selected='selected'>---------</option>" +
-        													"</select><a href='/admin/dashboard/developmentmanager/add/' class='add-another' id='add_id_development_manager_present' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+        													"</select>" +
         												"</div>" +
         											"</div>" +
         											"<div class='form-row field_officer_present  '>" +
         												"<div>" +
         													"<label for='id_field_officer_present' class='required'>Field officer present:</label><select name='field_officer_present' id='id_field_officer_present'>" +
         														"<option value='' selected='selected'>---------</option>" +
-        													"</select><a href='/admin/dashboard/fieldofficer/add/' class='add-another' id='add_id_field_officer_present' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+        													"</select>" +
         												"</div>" +
         											"</div>" +
         											"<div class='form-row animators_trained  '>" +

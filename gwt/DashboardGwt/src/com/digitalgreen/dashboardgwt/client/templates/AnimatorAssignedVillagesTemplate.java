@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.templates;
 import java.util.HashMap;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
+import com.google.gwt.user.client.Window;
 
 public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 	public AnimatorAssignedVillagesTemplate(RequestContext requestContext) {
@@ -19,13 +20,17 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml);
+		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet = new AnimatorAssignedVillages(requestContext);
+		AnimatorAssignedVillages animatorAssignedVillage = new AnimatorAssignedVillages(BaseTemplate.setupDgPostContext(this.postForm.getElement().getId()));
+		Window.alert("in aav templt");
+
 		// Add it to the rootpanel
 		super.fill();
 		
-		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet = new AnimatorAssignedVillages(requestContext);
+		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet1 = new AnimatorAssignedVillages(requestContext);
 		AnimatorAssignedVillages saveAnimatorAssignedVillage = new AnimatorAssignedVillages(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet);
+		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveAnimatorAssignedVillage);
 	}
@@ -91,14 +96,14 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 											"<div>" +
 												"<label for='id_animator' class='required'>Animator:</label><select name='animator' id='id_animator'>" +
 												"<option value='' selected='selected'>---------</option>" +
-												"</select><a href='/admin/dashboard/animator/add/' class='add-another' id='add_id_animator' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+												"</select>" +
 											"</div>" +
 										"</div>" +
 										"<div class='form-row village  '>" +
 											"<div>" +
 												"<label for='id_village' class='required'>Village:</label><select name='village' id='id_village'>" +
 												"<option value='' selected='selected'>---------</option>" +
-												"</select><a href='/admin/dashboard/village/add/' class='add-another' id='add_id_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+												"</select>" +
 											"</div>" +
 										"</div>" +
 										"<div class='form-row start_date  '>" +

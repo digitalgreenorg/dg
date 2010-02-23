@@ -101,7 +101,7 @@ public class BlocksTemplate extends BaseTemplate{
 													"<div>" +
 														"<label for='id_district' class='required'>District:</label><select name='district' id='id_district'>" +
 															"<option value='' selected='selected'>---------</option>" +
-															"</select><a href='/admin/dashboard/district/add/' class='add-another' id='add_id_district' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+															"</select>" +
 													"</div>" +
 												"</div>" +
 											"</fieldset>" +

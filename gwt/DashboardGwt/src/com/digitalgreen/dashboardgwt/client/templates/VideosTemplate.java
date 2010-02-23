@@ -127,7 +127,7 @@ public class VideosTemplate extends BaseTemplate {
     													"<div>" +
     														"<label for='id_language' class='required'>Language:</label><select name='language' id='id_language'>" +
     															"<option value='' selected='selected'>---------</option>" +
-    														"</select><a href='/admin/dashboard/language/add/' class='add-another' id='add_id_language' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+    														"</select>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row storybase  '>" +
@@ -208,7 +208,6 @@ public class VideosTemplate extends BaseTemplate {
 														            "$('#lookup_village').val('');" +
 														        "});" +
 													        "</script>" +
-													        "<a href='/admin/dashboard/village/add/' class='add-another' id='add_id_village' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 													    "</div>" +
 												    "</div>" +
 												    "<div class='form-row facilitator  '>" +
@@ -220,7 +219,7 @@ public class VideosTemplate extends BaseTemplate {
 												    "</div>" +
 												    "<div class='form-row cameraoperator  '>" +
 												    	"<div>" +
-												    		"<label for='id_cameraoperator' class='required'>Cameraoperator:</label><select disabled='true' name='cameraoperator' id='id_cameraoperator'>" +
+												    		"<label for='id_cameraoperator' class='required'>Camera Operator:</label><select disabled='true' name='cameraoperator' id='id_cameraoperator'>" +
 												    			"<option value='' selected='selected'>---------</option>" +
 												    		"</select>" +
 												    	"</div>" +
@@ -229,7 +228,6 @@ public class VideosTemplate extends BaseTemplate {
 												    	"<div>" +
 												    		"<label for='id_related_agricultural_practices' class='required'>Related agricultural practices:</label><select multiple='multiple' name='related_agricultural_practices' id='id_related_agricultural_practices'>" +
 												    		"</select><script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/'); });</script>" +
-												    		"<a href='/admin/dashboard/practices/add/' class='add-another' id='add_id_related_agricultural_practices' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
@@ -237,7 +235,6 @@ public class VideosTemplate extends BaseTemplate {
 												    	"<div>" +
 												    		"<label for='id_farmers_shown' class='required'>Farmers shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
 												    		"</select><script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/'); });</script>" +
-												    		"<a href='/admin/dashboard/person/add/' class='add-another' id='add_id_farmers_shown' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
@@ -300,7 +297,7 @@ public class VideosTemplate extends BaseTemplate {
 														"<div>" +
 															"<label for='id_supplementary_video_produced'>Supplementary video produced:</label><select name='supplementary_video_produced' id='id_supplementary_video_produced'>" +
 																"<option value='' selected='selected'>---------</option>" +
-															"</select><a href='/admin/dashboard/video/add/' class='add-another' id='add_id_supplementary_video_produced' onclick='return showAddAnotherPopup(this);'> <img src='/media/img/admin/icon_addlink.gif' width='10' height='10' alt='Add Another'/></a>" +
+															"</select>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row video_suitable_for  '>" +
