@@ -22,12 +22,21 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private ResultSet lastResultSet;
 	private String responseText = null;
 	private int requestError = 0;
-	private BaseData.Data data;
+	protected BaseData.Data data;
 	
 	final static private int ERROR_RESPONSE = 1;
 	final static private int ERROR_SERVER = 2;
 
-	public class Data {}
+	public BaseData() {
+	}
+
+	public class Data {
+		public Data() {}
+	}
+	
+	public BaseData.Data getData() {
+		return this.data;
+	}
 	
 	protected static Database getDb() {
 		return BaseData.db;
@@ -116,7 +125,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return BaseData.db.getLastInsertRowId();
 	}
 	
-	private void execute(String sql, String ...args) {
+	public void execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
 			this.lastResultSet = BaseData.db.execute(sql, args);
