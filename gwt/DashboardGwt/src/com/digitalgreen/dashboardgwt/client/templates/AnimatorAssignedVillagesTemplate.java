@@ -20,9 +20,6 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml);
-		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet = new AnimatorAssignedVillages(requestContext);
-		AnimatorAssignedVillages animatorAssignedVillage = new AnimatorAssignedVillages(BaseTemplate.setupDgPostContext(this.postForm.getElement().getId()));
-		Window.alert("in aav templt");
 
 		// Add it to the rootpanel
 		super.fill();
