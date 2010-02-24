@@ -28,12 +28,14 @@ def run_query_dict(query_string, dict_key, *query_args):
         
     return return_list
 
+
 #Query for Total Video Production in Overview module
 #Context Required:'type' can be (production/screening/adoption/practice/person)
 #                :'geography' can be (state/district/block/village
 #                : 'to_date' and 'from_date' (as required by MySQL) are OPTIONAL
-overview = r"""
-     SELECT {{geography|first }}.id, {{geography|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
+#                : id of parent geography (e.g. for 'district' parent is 'state'). For state, this can be omitted
+overview = r"""    
+    SELECT {{geog_child|first }}.id, {{geog_child|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
     FROM state s
         LEFT OUTER JOIN district d on (s.id = d.state_id)
         LEFT OUTER JOIN block b on (b.district_id = d.id)
@@ -87,15 +89,13 @@ overview = r"""
         {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}    
     {% endif %}
        )
-    {% ifequal geography 'district' %}
-        WHERE s.id = {{id}}
-    {% else %}{% ifequal geography 'block' %}
-        WHERE d.id = {{id}}
-    {% else %}{% ifequal geography 'village' %}
-        WHERE b.id = {{id}}
-    {% endifequal %}{% endifequal %}{% endifequal %}
-    GROUP BY {{geography|upper }}_NAME
-    ORDER BY {{geography|upper }}_NAME
+       
+    {% ifnotequal geography 'country' %}
+       WHERE {{geography|first}}.id = {{id}}
+    {% endifnotequal %}
+    
+    GROUP BY {{geog_child|upper }}_NAME
+    ORDER BY {{geog_child|upper }}_NAME
     """
     
 #Query for the drop down menu in search box
@@ -280,7 +280,33 @@ SELECT date, count(*)
 {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
 """
 
+def video_malefemale_ratio(arg_dict):
+    sql = []
+    sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   person p, video_farmers_shown vs')
+    if 'geog' in arg_dict:
+        if arg_dict['geog'] == 'state':
+            sql.append(r""", village vil, block b, district d 
+            WHERE p.village_id = vil.id AND vil.block_id = b.id 
+            AND b.district_id = d.id AND d.state_id ="""+ str(arg_dict['id'])+' AND')                
+        elif arg_dict['geog'] == 'district':
+            sql.append(r""", village vil, block b 
+            WHERE  p.village_id = vil.id AND vil.block_id = b.id 
+            AND b.district_id ="""+ str(arg_dict['id'])+' AND')
+        elif arg_dict['geog'] == 'block':
+            sql.append(r""", village vil 
+            WHERE  p.village_id = vil.id AND vil.block_id ="""+ str(arg_dict['id'])+' AND')
         
+        elif arg_dict['geog'] == 'village':
+            sql.append(r' WHERE  p.village_id ='+ str(arg_dict['id'])+' AND')
+
+    if 'from_date' in arg_dict and 'to_date' in arg_dict:
+        sql[1:1] = [",video vid"]
+        sql[3:3] = ["vid.id = vs.video_id AND"]
+        sql.append('vid.VIDEO_PRODUCTION_END_DATE BETWEEN \''+arg_dict['from_date']+'\' AND \''+arg_dict['to_date']+'\' AND')
+    
+    sql.append(r'vs.person_id = p.id GROUP BY p.GENDER')
+
+    return ' '.join(sql)        
         
         
         
