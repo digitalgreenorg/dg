@@ -4,11 +4,11 @@ from dg.dashboard.models import *
 from calendar import week
 import datetime
 from dg.output  import database
-from dg.output.database import run_query, run_query_dict, construct_query
+from dg.output.database import run_query, run_query_dict, construct_query, video_malefemale_ratio
 
 def test_output(request):
     
-    return render_to_response('amline.html')
+    return render_to_response('ampie.html')
 
 
 def overview(request,geog,id):
@@ -27,28 +27,33 @@ def overview(request,geog,id):
         id = int(request.GET['state'])    
          
     geog_list = ['country','state','district','block','village']
-    if(geog == 'village' or geog not in geog_list):
+    if(geog not in geog_list):
         raise Http404()
-    flash_geog = geog
-    geog = geog_list[geog_list.index(geog)+1]
+            
+    
+    if(geog == 'village'):
+        geog_child = 'village'
+    
+    else:
+        geog_child = geog_list[geog_list.index(geog)+1]
     
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
         to_date = request.GET['to_date']
-        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,from_date=from_date,to_date=to_date,id=id)));
-        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,from_date=from_date,to_date=to_date,id=id)));
-        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,from_date=from_date,to_date=to_date,id=id)));
-        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,from_date=from_date,to_date=to_date,id=id)));
-        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,from_date=from_date,to_date=to_date,id=id)));
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
     else:
         date_range = 0
-        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,id=id)));
-        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,id=id)));
-        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,id=id)));
-        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,id=id)));
-        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,id=id)));
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,id=id)));
+        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,id=id)));
+        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,id=id)));
+        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,id=id)));
+        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,id=id)));
     
     return_val = vid_prod
     if (len(vid_screening) != len(return_val)) or (len(return_val)!=len(adoption))or \
@@ -64,8 +69,8 @@ def overview(request,geog,id):
         return_val[i]['tot_scr'] = vid_screening[i]['tot_scr']
         return_val[i]['tot_pra'] = tot_prac[i]['tot_pra']
         return_val[i]['tot_per'] = tot_per[i]['tot_per'] 
-        
-    return render_to_response('viewtable1.html',{'item_list':return_val,'geography':geog,'flash_geog':flash_geog,'id':id})
+            
+    return render_to_response('viewtable1.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id})
     
 def overview_drop_down(request):
     if 'geog' in request.GET and request.GET['geog'] \
@@ -153,7 +158,35 @@ def overview_line_graph(request,geog,id):
     return HttpResponse('\n'.join(str_list))
     
 
+# Pie chart for male-female ratio in video module  
+def video_pie_graph_mf_ratio(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        male_female_ratio_sql = video_malefemale_ratio(dict(geog = geog, id = id,from_date = from_date, to_date = to_date))    
     
+    else:
+        male_female_ratio_sql = video_malefemale_ratio(dict(geog = geog, id = id))
     
+    return_val = run_query(male_female_ratio_sql);
+  
+    str_list = []
+    str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    if return_val == []:
+        str_list.append('There are No Video Productions in this region')
+    else:
+        for i in range(len(return_val)):
+            if return_val[i]['gender'] == 'F':
+                str_list.append('Female;'+return_val [i]['count'].__str__()+\
+                                ';;;;Ratio of videos featuring Female actors')
+            else:
+                str_list.append('Male;'+return_val [i]['count'].__str__()+\
+                                ';;#3299CC;;Ratio of videos featuring male actors')
+       
+    
+    return HttpResponse('\n'.join(str_list))    
     
     
