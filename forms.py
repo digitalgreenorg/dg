@@ -4,8 +4,12 @@ from django.forms import ModelForm
 from django.forms.extras.widgets import *
 
 class RegionForm(ModelForm):
+        class Meta:
+                model = Region
+
+class RegionTestForm(ModelForm):
 	class Meta:
-		model = Region
+		model = RegionTest
 
 class StateForm(ModelForm):
 	class Meta:

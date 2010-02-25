@@ -13,7 +13,8 @@ from django.shortcuts import render_to_response
 
 import datetime
 #import cjson
-
+from django.core import serializers
+from django.contrib import auth
 
 # autocomplete widget
 import operator
@@ -88,13 +89,30 @@ def hours_ahead(reqest,offset):
 
 
 def test(request, village_id):
-	#print request.POST
         village = Village.objects.get(pk=int(village_id))
         animators = Animator.objects.filter(assigned_villages=village)
         #return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
-        from django.core import serializers
         json_subcat = serializers.serialize("json", animators)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        return HttpResponse("callback0(" + json_subcat + ");", mimetype="application/javascript")
+
+
+def test_gwt(request, region_id):
+	if request.method == 'POST':
+		form = RegionTestForm(request.POST)
+		if form.is_valid():
+			#new_form = form.save()
+	       		new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			print new_form.id
+			new_form.save()
+			print request.POST
+		        return HttpResponse("Success")
+		else:
+			print "post requestfailure"
+			return HttpResponse("Failure")
+	else:
+		print "get request"
+		return HttpResponse("Get Request")
 
 	
 
@@ -113,7 +131,6 @@ def feed_animators(request, village_id):
 def feeds_animators(request, village_id):
         village = Village.objects.get(pk=int(village_id))
 	animators = Animator.objects.filter(assigned_villages=village)
-	from django.core import serializers
 	json_subcat = serializers.serialize("json", animators)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
@@ -121,7 +138,6 @@ def feeds_animators(request, village_id):
 def feeds_groups(request, village_id):
 	village = Village.objects.get(pk=int(village_id))
 	person_groups = PersonGroups.objects.filter(village=village)
-	from django.core import serializers
 	json_subcat = serializers.serialize("json", person_groups)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
@@ -129,7 +145,6 @@ def feeds_groups(request, village_id):
 def feeds_persons(request, group_id):
 	group = PersonGroups.objects.get(pk=int(group_id))
 	persons = Person.objects.filter(group=group)
-	from django.core import serializers
 	json_subcat = serializers.serialize("json", persons)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
@@ -137,11 +152,29 @@ def feeds_persons(request, group_id):
 def feeds_persons_village(request, village_id):
 	village = Village.objects.get(pk=int(village_id))
 	persons = Person.objects.filter(village=village_id)
-	from django.core import serializers
 	json_subcat = serializers.serialize("json", persons)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
 
+def login_view(request):
+    if request.method == 'POST':
+	    username = request.POST.get('username', '')
+	    password = request.POST.get('password', '')
+	    print request.POST
+	    print username
+	    print password
+	    user = auth.authenticate(username=username, password=password)
+	    if user is not None and user.is_active:
+	        # Correct password, and the user is marked "active"
+	        auth.login(request, user)
+		print "works"
+	        # Redirect to a success page.
+	        return HttpResponse("True")
+	    else:
+	        # Show an error page
+        	return HttpResponse("False")
+    else:
+	return HttpResponse("error")
 
 def add_language(request):
 	if request.method == 'POST':
@@ -180,7 +213,13 @@ def add_region(request):
 			return render_to_response('add_region.html',{'form':form})
 	else:
 		form = RegionForm()
-		return render_to_response('add_region.html',{'form':form})
+		#from django.core import serializers
+	        #json_subcat = serializers.serialize("json", form)
+        	#return HttpResponse(json_subcat, mimetype="application/javascript")
+                #temp = cjson.encode(form)
+                #return HttpResponse(temp, mimetype="text/plain")
+		return HttpResponse(form)
+		#return render_to_response('add_region.html',{'form':form})
 
 
 def region(request):
@@ -191,7 +230,8 @@ def region(request):
 		return redirect('region')
 	else:
 		regions = Region.objects.order_by("-id")
-		return render_to_response('regions.html', {'regions': regions})
+		return HttpResponse(regions)
+		#return render_to_response('regions.html', {'regions': regions})
 
 
 def add_state(request):
@@ -600,6 +640,7 @@ def video(request):
 def add_screening(request):
         PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=2)
         if request.method == 'POST':
+		print request.POST
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
 
@@ -615,6 +656,10 @@ def add_screening(request):
         else:
                 form = ScreeningForm()
                 formset = PersonMeetingAttendanceInlineFormSet()
+                #json_subcat1 = serializers.serialize("json", form)
+		#json_subcat2 = serializers.serialize("json", formset)
+                #return HttpResponse(json_subcat , mimetype="application/javascript")
+		#return HttpResponse("{'form': %s, 'formset': %s}" % (json_subcat1, json_subcat2))
                 return render_to_response('add_screening.html',{'form':form, 'formset':formset})
 
 

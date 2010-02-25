@@ -57,6 +57,16 @@ SUITABLE_FOR = (
 )
 
 
+class RegionTest(models.Model):
+    region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
+    start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
+    id = models.AutoField(primary_key=True, db_column = 'id')
+    class Meta:
+        db_table = u'REGION_TEST'
+
+    def __unicode__(self):
+        return self.region_name
+
 class Region(models.Model):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -366,7 +376,7 @@ class Video(models.Model):
         return self.title
 
 class Practices(models.Model):
-    practice_name = models.CharField(max_length=200, db_column='PRACTICE_NAME')
+    practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
     seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
     summary = models.TextField(db_column='SUMMARY', blank=True) 
     class Meta:
