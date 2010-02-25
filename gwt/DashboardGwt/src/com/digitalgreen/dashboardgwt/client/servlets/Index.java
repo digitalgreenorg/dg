@@ -1,22 +1,21 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import java.util.HashMap;
 
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
-import com.google.gwt.user.client.Window;
 
 public class Index extends BaseServlet {	
 	public Index(){
 		super();
 	}
 	
-	public Index(RequestContext requestContext){
+	public Index(RequestContext requestContext) {
 		super(requestContext);
 	}
-	
+
 	@Override
 	public void response () {
 		super.response();

@@ -1,18 +1,19 @@
 package com.digitalgreen.dashboardgwt.client.common;
 
-import com.google.gwt.user.client.ui.FormPanel;
 import java.util.HashMap;
 
 // Emulating a marshalled HTTP request object
 public class RequestContext {
 	static public String METHOD_GET = "GET";
 	static public String METHOD_POST = "POST";
-	static public String SERVER_HOST = "174.129.13.106";
+	static public String SERVER_HOST = "http://174.129.13.106";
 	
 	private String methodTypeCtx = null;
 	private String formAction = null;
 	private HashMap args = null;
 	private String messageString = null;
+	private String queryString = null;
+	private Form formTemplate = null;
 	
 	public RequestContext() {
 		this.methodTypeCtx = METHOD_GET;
@@ -22,6 +23,19 @@ public class RequestContext {
 	public RequestContext(String method) {
 		this.methodTypeCtx = method;
 		this.args = new HashMap();
+	}
+
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
+	}
+	
+	// TODO:  check for a form template after Form class in common is implemented
+	public boolean hasQueryString() {
+		return (queryString != null);
+	}
+	
+	public String getQueryString() {
+		return this.queryString;
 	}
 
 	public boolean hasMessages() {

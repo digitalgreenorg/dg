@@ -2,6 +2,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 
 import java.util.HashMap;
 
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
 import com.digitalgreen.dashboardgwt.client.templates.Template;
@@ -19,15 +20,18 @@ public class BaseServlet implements ServletInterface {
 	public BaseServlet() {
 		this.requestContext = new RequestContext();
 	}
-	
+
 	public BaseServlet(RequestContext requestContext) {
 		this.requestContext = requestContext;
-		this.form = this.requestContext.getArgs();
-		if (this.form.containsKey((String)"formQueryString")) {
-			
+		// Most likely a POST request that has a queryString/formTemplate
+		if(this.requestContext.hasQueryString()) {
+			// TODO:  Enable this once the Form class is implemented.
+			// Form formTemplate = this.requestContext.getFormTemplate();
+			// formTemplate.parseQueryString(this.requestContext.getQueryString());
+			this.form = Form.flatten(this.requestContext.getQueryString());
 		}
 	}
-	
+
 	protected String getMethodTypeCtx() {
 		return this.requestContext.getMethodTypeCtx();
 	}
@@ -54,7 +58,7 @@ public class BaseServlet implements ServletInterface {
 	
 	// Override this
 	public void response() {
-		String loggedInCtx = Cookies.getCookie("sessionid");
+		String loggedInCtx = Cookies.getCookie("username");
 		// Must have a cookie
 		if(loggedInCtx == null || loggedInCtx == "") {
 			this.setIsLoggedIn(false);

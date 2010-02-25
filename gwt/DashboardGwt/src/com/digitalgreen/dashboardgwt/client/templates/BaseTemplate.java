@@ -31,7 +31,7 @@ public class BaseTemplate extends Template {
 	
 	private void initUI() {
 		this.baseContentHtmlPanel = new HTMLPanel(BaseContentHtml);
-		RootPanel.get().clear();
+		//RootPanel.get().clear();
 		RootPanel.get().insert(this.baseContentHtmlPanel, 0);
 	}
 	
@@ -133,10 +133,6 @@ public class BaseTemplate extends Template {
 		}
 	}
 	
-	public static RequestContext setupDgPostContext(String id) {
-		return null;
-	}
-	
 	private Hyperlink logoutHyperlink(){
 		Hyperlink link = new Hyperlink("<a href='/logout'>Logout</a>", true, null);
 		link.addClickHandler(new ClickHandler() {
@@ -175,7 +171,7 @@ public class BaseTemplate extends Template {
 				"<h1 id='site-name'>Digital Green Administration</h1>" +
 			"</div>" +
 			"<div id='user-tools'>Welcome, " +
-				"<b id='user'></b><acronym id='logout' title='Logout'></acronym>" +
+				"<b id='user'></b><span id='logout'>Logout</span>" +
 			"</div>" +
 		"</div>" +
 		"<div id='error-space'></div>" +

@@ -1,41 +1,39 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
-import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.json.client.JSONException;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.core.client.JsArray;
 
 public class LoginTemplate extends Template {
 	private FormPanel postForm = null;
-	private HTMLPanel formHtml = null;
 	private HTMLPanel baseHtml = null;
+	private Form loginAddForm = null;
 	
 	public LoginTemplate(RequestContext requestContext) {
 		super(requestContext);
-	}
-	
-	public FormPanel getPostForm() {
-		return this.postForm;
+		// TODO:  Instantiate all possible form templates.  Enable this.
+		// this.loginAddForm = new Form((new LoginData()).getData());
 	}
 
+	private Form getLoginAddForm() {
+		// TODO Auto-generated method stub
+		return this.loginAddForm; 
+	}
+	
 	@Override
 	public void fill() {
 		super.setBodyStyle("login");
 		this.postForm = new FormPanel();
 		this.postForm.getElement().setId("login-form");
-		this.postForm.setAction(RequestContext.getServerUrl() + "admin/");
-	    this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+		this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.postForm.setMethod(FormPanel.METHOD_POST);
 	    this.baseHtml = new HTMLPanel(loginHtml); 
 	    postForm.add(this.baseHtml);
@@ -50,10 +48,13 @@ public class LoginTemplate extends Template {
 			public void onClick(ClickEvent event) {
 				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 				String formQueryString = BaseTemplate.getFormString("login-form");
-				requestContext.getArgs().put("formQueryString", formQueryString);
+				// TODO:  Finish the form implementation before doing this
+				Window.alert(formQueryString);
+				requestContext.setQueryString(formQueryString);
 				Login login = new Login(requestContext);
 				login.response();
 			}
+
 	    });
 	}
 

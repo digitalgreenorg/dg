@@ -17,7 +17,6 @@ public class Template implements TemplateInterface {
 	}
 	
 	public void fill() {
-		RootPanel.get("error-space").clear();
 		if(this.getRequestContext().hasMessages()) {
 			Window.alert("in template");
 			String messageStartHtml = "<p class='errornote'>";
@@ -25,7 +24,7 @@ public class Template implements TemplateInterface {
 			HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
 					this.getRequestContext().getMessageString() + 
 					messageEndHtml);
-			RootPanel.get("error-space").add(messagePanel);
+			RootPanel.get("error-space").insert(messagePanel, 0);
 		}
 	}
 
