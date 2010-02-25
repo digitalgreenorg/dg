@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Window;
 public class Schema {
 	
 	public static void createSchema() {
-		BaseData.dbOpen();
 		try {
 			BaseData.dbStartTransaction();
 			BaseData.getDb().execute(RegionsData.createTable);
@@ -47,9 +46,6 @@ public class Schema {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		BaseData.dbClose();
-		
 	}
 	
 	public static void dropSchema() {}

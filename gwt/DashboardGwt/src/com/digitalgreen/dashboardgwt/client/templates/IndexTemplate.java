@@ -47,9 +47,8 @@ public class IndexTemplate extends BaseTemplate {
 		    	   requestContext.getArgs().put("action", "gooffline");
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
-		    	   DashboardGwt.toggleConnection(false);
 		    	   button.setText("GO ONLINE");
-			      }
+		      }
 	    });
 	}
 	

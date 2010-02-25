@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
+import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import java.util.HashMap;
 
@@ -30,6 +31,7 @@ public class Index extends BaseServlet {
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg == "gooffline"){
 					IndexData.createTables();
+					DashboardGwt.toggleConnection(false);
 				}
 			}
 			else{

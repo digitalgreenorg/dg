@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class ScreeningsData extends BaseData {
 
@@ -27,6 +28,10 @@ public class ScreeningsData extends BaseData {
 		super(callbacks);
 	}
 
+	public Object postPageData() {
+		return null;
+	}
+	
 	// Get all information to display the screening add page.
 	public Object getAddPageData() {
 		if(this.isOnline()) {

@@ -43,19 +43,16 @@ public class Login extends BaseServlet {
 				LoginData loginData = new LoginData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results == "1") {
-							Window.alert("GOT A RESPONSE");
 							Cookies.setCookie("username", (String)getServlet().form.get("username"));
 							getServlet().redirectTo(new Index());
 						} else {
-							Window.alert("GOT A RESPONSE, negative");
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid credentials, please try again");
+							requestContext.setMessageString("Invalid credentials, please try again.");
 							getServlet().redirectTo(new Login(requestContext));				
 						}
 					}
 					
 					public void onlineErrorCallback() {
-						Window.alert("GOT AN ERROR connecting to server");
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("There was an internal error.  Please contact support.");
 						getServlet().redirectTo(new Login(requestContext));				
@@ -73,7 +70,6 @@ public class Login extends BaseServlet {
 						}
 					}
 				});
-				Window.alert("FORM=" + this.form.toString());
 				loginData.apply(loginData.authenticate((String)this.form.get("username"),
 						(String)this.form.get("password")));
 			}

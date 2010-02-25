@@ -24,6 +24,7 @@ public class Template implements TemplateInterface {
 			HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
 					this.getRequestContext().getMessageString() + 
 					messageEndHtml);
+			Window.alert("the message is = " + this.getRequestContext().getMessageString());
 			RootPanel.get("error-space").insert(messagePanel, 0);
 		}
 	}

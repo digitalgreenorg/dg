@@ -1,14 +1,10 @@
 package com.digitalgreen.dashboardgwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.google.gwt.http.client.*;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals

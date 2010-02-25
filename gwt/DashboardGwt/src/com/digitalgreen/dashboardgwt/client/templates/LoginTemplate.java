@@ -38,6 +38,7 @@ public class LoginTemplate extends Template {
 	    this.baseHtml = new HTMLPanel(loginHtml); 
 	    postForm.add(this.baseHtml);
 	    RootPanel.get().add(this.postForm);
+	    super.fill();
 	    this.fillSubmitControls();
 	}
 	
@@ -49,7 +50,6 @@ public class LoginTemplate extends Template {
 				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 				String formQueryString = BaseTemplate.getFormString("login-form");
 				// TODO:  Finish the form implementation before doing this
-				Window.alert(formQueryString);
 				requestContext.setQueryString(formQueryString);
 				Login login = new Login(requestContext);
 				login.response();
@@ -66,6 +66,7 @@ public class LoginTemplate extends Template {
     				"<h1 id='site-name'>Digital Green administration</h1>"+
     			"</div>"+
     		"</div>"+
+    		"<div id='error-space'></div>" +
     		"<div id='content' class='colM'>"+
     			"<div id='content-main'>" +
     				"<div class='form-row'>"+

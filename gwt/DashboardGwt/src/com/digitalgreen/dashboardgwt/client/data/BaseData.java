@@ -71,14 +71,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 			Request request = builder.sendRequest(postData, new RequestCallback() {
 			public void onResponseReceived(Request request, Response response) {
-				Window.alert("HEY RESPONSE = " + response.getStatusCode() + " AND text = " + response.getText());
-				if (response.getStatusCode() == 200) {
-					Window.alert("COMING IN SUCCESS?");
+				if(response.getStatusCode() == 200) {
 					dataOnlineCallbacks.onlineSuccessCallback(response.getText());
 				}
 			}
 			public void onError(Request request, Throwable exception) {
-				Window.alert("COMING INTO ERROR?");
 				setRequestError(BaseData.ERROR_RESPONSE);
 				dataOnlineCallbacks.onlineErrorCallback();
 			}		           
