@@ -65,7 +65,7 @@ public class DashboardGwt implements EntryPoint {
 		this.timer.schedule(this.timeDelay);
 	}
 	
-	private static void toggleConnection(boolean isOnline) {
+	public static void toggleConnection(boolean isOnline) {
 		DashboardGwt.isOnline = isOnline;
 	}
 	

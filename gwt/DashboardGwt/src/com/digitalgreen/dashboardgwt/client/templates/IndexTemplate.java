@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
@@ -38,15 +39,16 @@ public class IndexTemplate extends BaseTemplate {
 	}
 	
 	private void goOfflineButton(){
-		Button button = new Button("GO OFFLINE");
+		final Button button = new Button("GO OFFLINE");
 		RootPanel.get("goOffline").add(button);
 		button.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	   Window.alert("GO OFFLINE");
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "gooffline");
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
+		    	   DashboardGwt.toggleConnection(false);
+		    	   button.setText("GO ONLINE");
 			      }
 	    });
 	}
