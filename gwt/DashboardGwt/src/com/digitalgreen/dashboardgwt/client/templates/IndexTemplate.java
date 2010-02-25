@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.DevelopmentManagers;
 import com.digitalgreen.dashboardgwt.client.servlets.Districts;
 import com.digitalgreen.dashboardgwt.client.servlets.Equipments;
 import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
+import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.servlets.Languages;
 import com.digitalgreen.dashboardgwt.client.servlets.Partners;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
@@ -36,12 +37,16 @@ public class IndexTemplate extends BaseTemplate {
 		super(requestContext);
 	}
 	
-	private void goOffline(){
+	private void goOfflineButton(){
 		Button button = new Button("GO OFFLINE");
 		RootPanel.get("goOffline").add(button);
 		button.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   Window.alert("GO OFFLINE");
+		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	   requestContext.getArgs().put("action", "gooffline");
+		    	   Index index = new Index(requestContext);
+		    	   index.response();
 			      }
 	    });
 	}
@@ -140,7 +145,7 @@ public class IndexTemplate extends BaseTemplate {
 		
 		HTMLPanel h = new HTMLPanel("<div id = 'goOffline' style='float: right; margin: 100px;'></div>");
 		RootPanel.get("container").add(h);
-		goOffline();
+		goOfflineButton();
 	}
 	
 	final static private String indexContentHtml = "<div id='content' class='colMS'>" +
