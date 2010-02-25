@@ -8,6 +8,7 @@ public class UsersData extends BaseData {
 										  "(last_inserted_id INTEGER PRIMARY KEY NOT NULL, " +
 										  "username VARCHAR(100), password VARCHAR(100));";  
 	
+	
 	public UsersData(RequestContext requestContext) {
 		super();
 	}
