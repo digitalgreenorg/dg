@@ -97,12 +97,12 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 	}
 
-	public void dbStartTransaction() {
-		this.execute("BEGIN TRANSACTION;");
+	public static void dbStartTransaction() throws DatabaseException {
+		db.execute("BEGIN TRANSACTION;");
 	}
 	
-	public void dbCommit() {
-		this.execute("COMMIT;");	
+	public static void dbCommit() throws DatabaseException {
+		db.execute("COMMIT;");	
 	}
 	
 	public void delete(String deleteSql, String ...args) {

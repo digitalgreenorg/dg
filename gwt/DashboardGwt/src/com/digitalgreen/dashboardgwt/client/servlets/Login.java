@@ -42,8 +42,7 @@ public class Login extends BaseServlet {
 				if(true || LoginData.authenticate((String)this.form.get("username"), 
 						(String)this.form.get("password"))) {
 					Cookies.setCookie("sessionid", "true");
-					this.redirectTo(new Index());
-					
+					this.redirectTo(new Index());	
 				} else {
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("Invalid credentials, please try again");
