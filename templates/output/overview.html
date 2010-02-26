@@ -388,18 +388,21 @@
 				//var arr = from_date.split('-');
 				var zoom_from_date, zoom_to_date;
 				
-				if(new Date(from_date) > new Date('{{flash_from_date}}'))
+				if(new Date('{{flash_from_date}}') > new Date(to_date))
+					zoom_from_date = to_date
+				else if(new Date(from_date) > new Date('{{flash_from_date}}'))
 					zoom_from_date = from_date;
 				else 
 					zoom_from_date = '{{flash_from_date}}';
 				
 				if(new Date(to_date) < new Date('{{flash_to_date}}'))
 					zoom_to_date = to_date;
-				else 
+				else if(new Date('{{flash_to_date}}') < new Date(from_date))
+					 zoom_to_date = from_date;
+				else
 					zoom_to_date = '{{flash_to_date}}';
 			  
-			  
-			  flashMovie.setZoom(zoom_from_date,zoom_to_date);
+			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
 			  
 			 }
 			}
