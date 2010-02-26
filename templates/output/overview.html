@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
        
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
-    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />
     
            
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
@@ -38,19 +38,9 @@
             today_date = newdate.getDate(); 
             today_year = newdate.getFullYear();
                          
-            document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; // default date for datepicker2
-            	    
-	    }	
-	
-	    function Apply(){
-	    
-	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
-	        var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
-	        if(date1.length==40 || date2.length==40){	 
-	           document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
-	             	                        
-	        }
-	        else{
+            {% if from_date and to_date %}
+				date1 = '{{from_date}}';
+				date2 = '{{to_date}}';
 	            var d11= date1.indexOf('-');
 	            var date1day = date1.substring(0, d11); // get the day for the date1
 	            var date1str1 = date1.substring(d11+1, date1.length);
@@ -98,8 +88,25 @@
 	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
 	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1day + "," + " " + date1year;
 	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2day + "," + " " + date2year;
-	            timelinedesc1close();
-	            	           
+			{% else %}
+				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; // default date for datepicker2
+			{% endif %}
+			
+            	    
+	    }	
+	
+	    function Apply(){
+	    
+	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+	        var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
+	        if(date1.length==40 || date2.length==40){	 
+	           document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
+	             	                        
+	        }
+	        else{
+	            
+				window.location.href = '/output/overview/{{flash_geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
+					            	           
 	        } // end else
 	    } // end Apply function
 	    
@@ -113,7 +120,22 @@
         return null;
         };
        
-        function dochange(src, val) {
+	function regionSelect() {
+		url = "./?state="+$("#stateId").val(){% if from_date and to_date %}+"&from_date={{from_date}}&to_date={{to_date}}"{%endif%};
+		if(!($("#districtId").attr("disabled"))) {
+			url += "&district="+$("#districtId").val();
+		}
+		if(!($("#blockId").attr("disabled"))) {
+			url += "&block="+$("#blockId").val();
+		}
+		if(!($("#villageId").attr("disabled"))) {
+			url += "&village="+$("#villageId").val();
+		}
+			
+		window.location.href = url;
+	}
+	
+    function dochange(src, val) {
         var req = Inint_AJAX();
         req.onreadystatechange = function () {
          if (req.readyState==4) {
@@ -159,6 +181,7 @@
 						<div id='datepicker1'/> </div> 
 						<div id='datepickergap'> &nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp; </div>
 						<div id='datepicker2'> </div>
+						<a id = 'resetdate' href='/output/overview/{{flash_geog}}/{{id}}/'>Reset</a>
 						<div id='timelinedescfooter'>
 							Above are the pre-chosen dates. Customize your own range of timeline  	
 						</div>
@@ -178,7 +201,7 @@
 						    <div id='inlinedatepicker1desc'>
 						        from: 
 						    </div>						
-						    <div id='inlinedatepicker1'>						       												    				  							
+						    <div id='inlinedatepicker1'>
 						    </div>
 						    <div id='inlinedatepicker1format'>
 						        (dd-mm-yyyy) 
@@ -186,7 +209,7 @@
 						    <div id='inlinedatepicker2desc'>
 						        to:
 						    </div>													
-						    <div id='inlinedatepicker2'>												    				  							
+						    <div id='inlinedatepicker2'>
 						    </div>
 						    <div id='inlinedatepicker2format'>
 						        (dd-mm-yyyy) 
@@ -214,7 +237,7 @@
 			<div id='searchbodytitle'>
 				Customize your Search
 			</div>
-			<form id='levelsearch' action="" method="get">
+			
 				<div class='dropdown' id='state'>
 				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
 					<option value='-1'>Select State</option>
@@ -236,33 +259,12 @@
 				</select>					
 				</div>
 				<div id='searchbody5'>
-					<input id='searchsubmitbtn' type="submit" value="GO">
+					<input id='searchsubmitbtn' type='submit' onclick="regionSelect()" value="GO">
 				</div>
-			</form>	
+				
+				
 		</div>			
 			
-		
-		<div id='table1'>
-			<div id='table1td1'>
-				
-			</div>
-			<div id='table1td2'>
-				<div id='table1td2div1'>
-				</div>
-				<div id='table1td2div2'>
-				</div>
-				<div id='table1td2div3'>
-					Total number of Videos -  
-				</div>					
-			</div>
-			<div id='table1td3'>
-				<div id='table1td3div1'>
-				</div>
-				<div id='table1td3div2'>
-					Total number of -
-				</div>
-			</div>			
-		</div>
 		<div id='tabledynamic'>
 		   		<table id='table2' cellpadding="0px" cellspacing="0px">
 					<tr>
@@ -289,8 +291,12 @@
 					{% for item in item_list %}
 				 	<tr>
 						<td id='table2td1'>
-							<a href='/output/overview/{{geography}}/{{item.id}}'>
+							{% ifequal item.name 'None' %}
+							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ item.name }} </a>
+							{% else %}
+							{{ item.name }}
+							{% endifequal %}
 						</td>
 						<td id='table2td1'> 
 							<a href=''>
@@ -317,6 +323,37 @@
 									 
 				</table>					
 			</div>
+		
+		<div id='totaltable'>
+		<table id='table2' cellpadding="0px" cellspacing="0px">
+			<tr>
+						<td class='table2td3'>
+							{% if par_geog.name %}{{par_geog.name}}{% else %}India{%endif%}
+						</td>
+						<td class='table2td3'> 
+							<a href=''>
+							{{par_geog.tot_vid}}</a>
+						</td>
+						<td class='table2td3'> 
+						    <a href=''>
+							{{ par_geog.tot_scr }}</a>
+						</td>
+						<td class='table2td3'> 
+							<a href=''>
+							{{ par_geog.tot_ado }} </a>
+						</td>
+						<td class='table2td3'>
+							<a href=''>
+							{{ par_geog.tot_pra }} </a>
+						</td>
+						<td class='table2td3'>
+							<a href=''>
+							{{ par_geog.tot_per }} </a>
+						</td>										
+				 	</tr>
+			</table>
+		</div>
+		
 			<div id='baselinegraph'>
 			    <div id='baselinegraphtitle'>
 				    Baseline Graph View
@@ -336,10 +373,45 @@
 <!-- amline script--> 
 	 <script type="text/javascript">
 		// <![CDATA[		
-		var so = new SWFObject("/media/Output/amline/amline.swf", "amline", "900", "400", "8", "#FFFFFF");
+		var so = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "900", "400", "8", "#FFFFFF");
 		so.addVariable("path", "/media/Output/amline/");
 		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file",'/output/overview/line/{{flash_geog}}/{{id}}/');
+		so.addVariable("chart_id", "line_chart");
+		var from_date = null, to_date = null;
+			{%if flash_from_date and flash_to_date %}
+			function amChartInited(chart_id){	
+			  flashMovie = document.getElementById(chart_id);	
+			  
+			  if(from_date!=null)
+			  {
+				//var arr = from_date.split('-');
+				var zoom_from_date, zoom_to_date;
+				
+				if(new Date(from_date) > new Date('{{flash_from_date}}'))
+					zoom_from_date = from_date;
+				else 
+					zoom_from_date = '{{flash_from_date}}';
+				
+				if(new Date(to_date) < new Date('{{flash_to_date}}'))
+					zoom_to_date = to_date;
+				else 
+					zoom_to_date = '{{flash_to_date}}';
+			  
+			  
+			  flashMovie.setZoom(zoom_from_date,zoom_to_date);
+			  
+			 }
+			}
+			function amGetZoom(chart_id, from, to, from_xid, to_xid){
+			  if(from_date==null)
+				from_date = from;
+			  if(to_date==null)
+				to_date = to;		      
+			}
+			{% endif %}
+			
+		
 		so.write("flashcontent");
 		// ]]>
 	</script>

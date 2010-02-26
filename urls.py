@@ -61,15 +61,11 @@ urlpatterns = patterns('',
 	(r'^dashboard/screening/add/$', add_screening),
 	(r'^dashboard/screenings/$', screening),
 	(r'^dashboard/login/$', login),
-	(r'^dashboard/logout/$', logout),
+	(r'^dashboard/logout/$', logout),    
     
-    (r'^output/test1/$',test_output),
     (r'^output/dropdownval/$',overview_drop_down),
-    (r'^output/overview/(country|state|district|block|state)/(\d+)/$',overview),
-    (r'^output/overview/line/(country|state|district|block|state)/(\d+)/$',overview_line_graph),
-    #('^$',homepage),
-	#('^time/$',current_datetime),
-	#(r'^time/plus/(\d{1,2})/$',hours_ahead),
-
+    (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overview),
+    (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',overview_line_graph),
+    
 )
 

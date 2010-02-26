@@ -3,13 +3,10 @@ from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 from calendar import week
 import datetime
+import string
 from dg.output  import database
 from dg.output.database import run_query, run_query_dict, construct_query, video_malefemale_ratio
-
-def test_output(request):
-    
-    return render_to_response('ampie.html')
-
+import django 
 
 def overview(request,geog,id):
     
@@ -22,9 +19,13 @@ def overview(request,geog,id):
     elif('district' in request.GET and request.GET['district'] and request.GET['district']!='-1'):
         geog = 'district'
         id = int(request.GET['district'])        
-    elif('state' in request.GET and request.GET['state'] and request.GET['state']!='-1'):
-        geog = 'state'
-        id = int(request.GET['state'])    
+    elif('state' in request.GET and request.GET['state']): 
+        if(request.GET['state']=='-1'):
+            geog='country'
+            id = 1
+        else:
+            geog = 'state'
+            id = int(request.GET['state'])    
          
     geog_list = ['country','state','district','block','village']
     if(geog not in geog_list):
@@ -40,15 +41,27 @@ def overview(request,geog,id):
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
+
         from_date = request.GET['from_date']
+        temp = string.split(from_date,'-')
+        temp.reverse()
+        mysql_from_date='-'.join(temp)
+
         to_date = request.GET['to_date']
-        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
-        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
-        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
-        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
-        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        temp = string.split(to_date,'-')
+        temp.reverse()
+        mysql_to_date='-'.join(temp)
+        
+        par_geog = run_query(database.overview_sum_geog(dict(geog=geog,from_date=mysql_from_date,to_date=mysql_to_date,id=id)))
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+
     else:
         date_range = 0
+        par_geog = run_query(database.overview_sum_geog(dict(geog=geog,id=id)))
         vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,id=id)));
         vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,id=id)));
         adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,id=id)));
@@ -69,8 +82,11 @@ def overview(request,geog,id):
         return_val[i]['tot_scr'] = vid_screening[i]['tot_scr']
         return_val[i]['tot_pra'] = tot_prac[i]['tot_pra']
         return_val[i]['tot_per'] = tot_per[i]['tot_per'] 
-            
-    return render_to_response('viewtable1.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id})
+    if date_range==1:
+        return render_to_response('overview.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id,\
+                                                 'from_date':from_date,'to_date':to_date,'flash_from_date':mysql_from_date,'flash_to_date':mysql_to_date,'par_geog':par_geog[0]})
+    else:
+        return render_to_response('overview.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id,'par_geog':par_geog[0]})
     
 def overview_drop_down(request):
     if 'geog' in request.GET and request.GET['geog'] \
@@ -80,39 +96,24 @@ def overview_drop_down(request):
          id = int(id)
     else:
         raise Http404()
+    geog_list = ['state','district','block','village']
+    if geog=='state':
+        geog_parent = 'state'
+    else:
+        geog_parent = geog_list[geog_list.index(geog)-1]
     
-    return_val = []
-    if (geog=='state'):
-      #return_val.append("<select class='select' name='state' id = 'statesId' onChange=\"dochange('district', this.value)\">");
-      return_val.append("<option value='-1'>Select State</option>");
-      rs = run_query(construct_query(database.search_drop_down_list,dict(geog='state')));
-      for row in rs:       
-          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
-     
-    elif (geog=='district'):
-      #return_val.append("<select class='select' name='district' id = 'districtId' onChange=\"dochange('block', this.value)\">");
-      return_val.append("<option value='-1'>Select District</option>");                  
-      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='state',id=id)));
-      for row in rs:       
-          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
-      
-    elif (geog=='block'):
-      #return_val.append("<select class='select' name='block' id = 'blockId' onChange=\"dochange('village', this.value)\">>");
-      return_val.append("<option value='-1'>Select Block</option>");                  
-      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='district',id=id)));
-      for row in rs:       
-          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
-
-    elif (geog=='village'):
-      #return_val.append("<select class='select' name='village' id = 'villageId' >");
-      return_val.append("<option value='-1'>Select Village</option>");                  
-      rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent='block',id=id)));
-      for row in rs:       
-          return_val.append("<option value="+str(row['id'])+" >"+row['name']+"</option>" );
-      
-    #return_val.append("</select>");
     
-    return HttpResponse('\n'.join(return_val))     
+    temp = """
+    <option value='-1'>Select {{geog|title}}</option>
+    {% for row in rs %}
+    <option value="{{row.id}}">{{row.name}}</option>
+    {%endfor%}
+    """
+    t = django.template.Template(temp);
+    rs = run_query(construct_query(database.search_drop_down_list,dict(geog=geog,geog_parent=geog_parent,id=id)));
+    html = t.render(django.template.Context(dict(geog=geog,rs=rs)))
+    
+    return HttpResponse(html)
     
          
 def overview_line_graph(request,geog,id):
