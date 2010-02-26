@@ -455,7 +455,7 @@ def overview_sum_geog(arg_dict):
     """)
 
     if(arg_dict['geog']!='country'):
-        return_val.append(",(SELECT " + arg_dict['geog'].upper() + "_NAME as name from " + arg_dict['geog'] + " where id = " +arg_dict['id'] + ") t6")
+        return_val.append(",(SELECT " + arg_dict['geog'].upper() + "_NAME as name from " + arg_dict['geog'].upper() + " where id = " +arg_dict['id'] + ") t6")
         
     return_val.append(')')
 
