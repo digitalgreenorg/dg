@@ -321,7 +321,7 @@ def overview_sum_geog(arg_dict):
             if(loc_geog == arg_dict['geog']):
                 break
             child_geog = a[i-1]
-            sql.append("JOIN "+loc_geog.upper() +" "+loc_geog[0]+" on ("+child_geog[0].upper() + "." + loc_geog + "_id = " + loc_geog[0] + ".id)")
+            sql.append("JOIN "+loc_geog.upper() +" "+loc_geog[0]+" on ("+child_geog[0] + "." + loc_geog + "_id = " + loc_geog[0] + ".id)")
 
         if(arg_dict['geog']!='village'):
             sql.append('WHERE '+ a[a.index(arg_dict['geog'])-1][0] + '.' + arg_dict['geog'] + '_id = '+arg_dict['id']);
