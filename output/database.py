@@ -104,7 +104,7 @@ overview = r"""
 #                  geog_parent (e.g. 'state'->'district'->'block'->'village'
 search_drop_down_list = r"""
 SELECT id, {{geog|upper}}_NAME AS name
-FROM {{geog}}
+FROM {{geog|upper}}
 {% ifnotequal geog 'state' %}
 WHERE {{geog_parent}}_id = {{id}}
 {% endifnotequal %}
