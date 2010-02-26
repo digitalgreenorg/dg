@@ -36,23 +36,23 @@ def run_query_dict(query_string, dict_key, *query_args):
 #                : id of parent geography (e.g. for 'district' parent is 'state'). For state, this can be omitted
 overview = r"""    
     SELECT {{geog_child|first }}.id, {{geog_child|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
-    FROM state s
-        LEFT OUTER JOIN district d on (s.id = d.state_id)
-        LEFT OUTER JOIN block b on (b.district_id = d.id)
-        LEFT OUTER JOIN village v on (v.block_id = b.id)
+    FROM STATE s
+        LEFT OUTER JOIN DISTRICT d on (s.id = d.state_id)
+        LEFT OUTER JOIN BLOCK b on (b.district_id = d.id)
+        LEFT OUTER JOIN VILLAGE v on (v.block_id = b.id)
     {% ifequal type 'production' %}
-        LEFT OUTER JOIN video pro on (pro.village_id = v.id
+        LEFT OUTER JOIN VIDEO pro on (pro.village_id = v.id
     {% else %}{% ifequal type 'screening' %}
-        LEFT OUTER JOIN screening scr on (scr.village_id = v.id
+        LEFT OUTER JOIN SCREENING scr on (scr.village_id = v.id
     {% else %}{% ifequal type 'adoption' %}
-        LEFT OUTER JOIN person p on (p.village_id = v.id)
-        LEFT OUTER JOIN person_adopt_practice ado  on (ado.person_id = p.id
+        LEFT OUTER JOIN PERSON p on (p.village_id = v.id)
+        LEFT OUTER JOIN PERSON_ADOPT_PRACTICE ado  on (ado.person_id = p.id
     {% else %}{% ifequal type 'practice' %}
-        LEFT OUTER JOIN video vid on (vid.village_id = v.id)
-        LEFT OUTER JOIN video_related_agricultural_practices vid_pr
+        LEFT OUTER JOIN VIDEO vid on (vid.village_id = v.id)
+        LEFT OUTER JOIN VIDEO_related_agricultural_practices vid_pr
                 ON (vid_pr.video_id = vid.id
     {% else %}{% ifequal type 'person' %}
-        LEFT OUTER JOIN person per on (per.village_id = v.id
+        LEFT OUTER JOIN PERSON per on (per.village_id = v.id
     {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
     
     {% if to_date and from_date  %}
@@ -69,20 +69,20 @@ overview = r"""
             AND  per.id in 
                                 (
                                     SELECT vs.person_id
-                                    FROM video_farmers_shown vs, video v
+                                    FROM VIDEO_farmers_shown vs, VIDEO v
                                     WHERE vs.video_id = v.id
                                     AND v.VIDEO_PRODUCTION_END_DATE between '{{from_date}}' and '{{to_date}}'
             
                                     UNION
             
                                     SELECT person_id
-                                    FROM person_adopt_practice
+                                    FROM PERSON_ADOPT_PRACTICE
                                     WHERE DATE_OF_ADOPTION between '{{from_date}}' and '{{to_date}}'
             
                                     UNION
             
                                     SELECT pa.person_id
-                                    FROM person_meeting_attendance pa, screening sc
+                                    FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
                                     WHERE pa.screening_id = sc.id
                                     AND sc.DATE between '{{from_date}}' and '{{to_date}}'
                                 )
@@ -120,25 +120,25 @@ overview_line_chart = """
 SELECT date, COUNT(*)
     FROM(
          SELECT vid_pr.practices_id , MIN(VIDEO_PRODUCTION_END_DATE) AS date    
-         FROM video vid, video_related_agricultural_practices vid_pr
+         FROM VIDEO vid, VIDEO_related_agricultural_practices vid_pr
         {%ifequal geography 'village' %}
             WHERE vid.id = vid_pr.video_id AND vid.village_id = {{id}}
         {% endifequal %}
         {%ifequal geography 'block' %}
-            , village vil
+            , VILLAGE vil
             WHERE vid.id = vid_pr.video_id 
             AND vid.village_id = vil.id
             AND vil.block_id = {{id}}        
         {% endifequal %}
         {%ifequal geography 'district' %}
-            , village vil , block b
+            , VILLAGE vil , BLOCK b
             WHERE vid.id = vid_pr.video_id 
             AND vid.village_id = vil.id 
             AND vil.block_id = b.id 
             AND b.district_id = {{id}}
         {% endifequal %}
         {%ifequal geography 'state' %}
-            , village vil , block b, district d
+            , VILLAGE vil , BLOCK b, DISTRICT d
             WHERE vid.id = vid_pr.video_id 
             AND vid.village_id = vil.id 
             AND vil.block_id = b.id 
@@ -154,41 +154,41 @@ SELECT date, count(*)
         SELECT person_id, min(date) as date
         FROM (
             SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
-            FROM video_farmers_shown vs, video vid
+            FROM VIDEO_farmers_shown vs, VIDEO vid
             WHERE vs.video_id = vid.id
 
             UNION
 
             SELECT  person_id , DATE_OF_ADOPTION AS date
-            FROM person_adopt_practice pa
+            FROM PERSON_ADOPT_PRACTICE pa
 
             UNION
 
             SELECT  pa.person_id, DATE
-            FROM person_meeting_attendance pa, screening sc
+            FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
             WHERE pa.screening_id = sc.id
 
         ) as tab
         {%ifequal geography 'village' %}
-            , person p
+            , PERSON p
             WHERE tab.person_id = p.id 
             AND p.village_id = {{id}}
         {% endifequal %}
         {%ifequal geography 'block' %}
-            , person p, village vil
+            , PERSON p, VILLAGE vil
             WHERE tab.person_id = p.id 
             AND p.village_id = vil.id 
             AND vil.block_id = {{id}}        
         {% endifequal %}
         {%ifequal geography 'district' %}
-            , person p, village vil , block b
+            , PERSON p, VILLAGE vil , BLOCK b
             WHERE tab.person_id = p.id 
             AND p.village_id = vil.id 
             AND vil.block_id = b.id
             AND b.district_id = {{id}}
         {% endifequal %}
         {%ifequal geography 'state' %}
-            , person p, village vil , block b, district d
+            , PERSON p, VILLAGE vil , BLOCK b, DISTRICT d
             WHERE tab.person_id = p.id 
             AND p.village_id = vil.id 
             AND vil.block_id = b.id 
@@ -200,23 +200,23 @@ SELECT date, count(*)
     GROUP BY date
 {%else%}{% ifequal type 'production' %}
     SELECT VIDEO_PRODUCTION_END_DATE as date, count(*)
-    FROM video vid
+    FROM VIDEO vid
     {%ifequal geography 'village' %}
         WHERE vid.village_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'block' %}
-        , village vil
+        , VILLAGE vil
         WHERE vid.village_id = vil.id 
         AND vil.block_id = {{id}}        
     {% endifequal %}
     {%ifequal geography 'district' %}
-        , village vil , block b
+        , VILLAGE vil , BLOCK b
         WHERE vid.village_id = vil.id 
         AND vil.block_id = b.id 
         AND b.district_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'state' %}
-        , village vil , block b, district d
+        , VILLAGE vil , BLOCK b, DISTRICT d
         WHERE vid.village_id = vil.id 
         AND vil.block_id = b.id 
         AND b.district_id = d.id 
@@ -225,23 +225,23 @@ SELECT date, count(*)
     GROUP BY VIDEO_PRODUCTION_END_DATE
 {%else%}{% ifequal type 'screening' %}
     SELECT DATE AS date, count(*)
-    FROM screening sc
+    FROM SCREENING sc
     {%ifequal geography 'village' %}
         WHERE sc.village_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'block' %}
-        , village vil
+        , VILLAGE vil
         WHERE sc.village_id = vil.id 
         AND vil.block_id = {{id}}        
     {% endifequal %}
     {%ifequal geography 'district' %}
-        , village vil , block b
+        , VILLAGE vil , BLOCK b
         WHERE sc.village_id = vil.id 
         AND vil.block_id = b.id 
         AND b.district_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'state' %}
-        , village vil , block b, district d
+        , VILLAGE vil , BLOCK b, DISTRICT d
         WHERE sc.village_id = vil.id 
         AND vil.block_id = b.id 
         AND b.district_id = d.id 
@@ -252,24 +252,24 @@ SELECT date, count(*)
     SELECT DATE_OF_ADOPTION as date, count(*)
     FROM PERSON_ADOPT_PRACTICE pa
     {%ifequal geography 'village' %}
-        , person p
+        , PERSON p
         WHERE pa.person_id = p.id AND p.village_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'block' %}
-        , person p, village vil
+        , PERSON p, VILLAGE vil
         WHERE pa.person_id = p.id 
         AND p.village_id = vil.id
         AND vil.block_id = {{id}}        
     {% endifequal %}
     {%ifequal geography 'district' %}
-        , person p, village vil , block b
+        , PERSON p, VILLAGE vil , BLOCK b
         WHERE pa.person_id = p.id 
         AND p.village_id = vil.id
         AND vil.block_id = b.id 
         AND b.district_id = {{id}}
     {% endifequal %}
     {%ifequal geography 'state' %}
-        , person p, village vil , block b, district d
+        , PERSON p, VILLAGE vil , BLOCK b, DISTRICT d
         WHERE pa.person_id = p.id 
         AND p.village_id = vil.id
         AND vil.block_id = b.id 
@@ -282,25 +282,25 @@ SELECT date, count(*)
 
 def video_malefemale_ratio(arg_dict):
     sql = []
-    sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   person p, video_farmers_shown vs')
+    sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   PERSON p, VIDEO_farmers_shown vs')
     if 'geog' in arg_dict:
         if arg_dict['geog'] == 'state':
-            sql.append(r""", village vil, block b, district d 
+            sql.append(r""", VILLAGE vil, BLOCK b, DISTRICT d 
             WHERE p.village_id = vil.id AND vil.block_id = b.id 
             AND b.district_id = d.id AND d.state_id ="""+ str(arg_dict['id'])+' AND')                
         elif arg_dict['geog'] == 'district':
-            sql.append(r""", village vil, block b 
+            sql.append(r""", VILLAGE vil, BLOCK b 
             WHERE  p.village_id = vil.id AND vil.block_id = b.id 
             AND b.district_id ="""+ str(arg_dict['id'])+' AND')
         elif arg_dict['geog'] == 'block':
-            sql.append(r""", village vil 
+            sql.append(r""", VILLAGE vil 
             WHERE  p.village_id = vil.id AND vil.block_id ="""+ str(arg_dict['id'])+' AND')
         
         elif arg_dict['geog'] == 'village':
             sql.append(r' WHERE  p.village_id ='+ str(arg_dict['id'])+' AND')
 
     if 'from_date' in arg_dict and 'to_date' in arg_dict:
-        sql[1:1] = [",video vid"]
+        sql[1:1] = [",VIDEO vid"]
         sql[3:3] = ["vid.id = vs.video_id AND"]
         sql.append('vid.VIDEO_PRODUCTION_END_DATE BETWEEN \''+arg_dict['from_date']+'\' AND \''+arg_dict['to_date']+'\' AND')
     
@@ -330,7 +330,7 @@ def overview_sum_geog(arg_dict):
     return_val = []
     return_val.append("""
     select * from (
-    (select count(scr.id) as tot_scr from screening scr """)
+    (select count(scr.id) as tot_scr from SCREENING scr """)
     
     if(arg_dict['geog']=='country' and 'from_date' in arg_dict and 'to_date' in arg_dict):
         return_val.append("WHERE scr.DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -338,7 +338,7 @@ def overview_sum_geog(arg_dict):
         if(arg_dict['geog']=='village'):
             return_val.append('WHERE scr.village_id = '+arg_dict['id'])
         else:
-            return_val.append("JOIN village v on (scr.village_id = v.id)")
+            return_val.append("JOIN VILLAGE v on (scr.village_id = v.id)")
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("AND scr.DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -346,14 +346,14 @@ def overview_sum_geog(arg_dict):
     return_val.append("""
     ) t1
     ,
-    (select count(vid.id) as tot_vid from video vid""")
+    (select count(vid.id) as tot_vid from VIDEO vid""")
     if(arg_dict['geog']=='country' and 'from_date' in arg_dict and 'to_date' in arg_dict):
         return_val.append("WHERE VIDEO_PRODUCTION_END_DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
     else:
         if(arg_dict['geog']=='village'):
             return_val.append('WHERE vid.village_id = '+arg_dict['id'])
         else:
-            return_val.append("JOIN village v on (vid.village_id = v.id)")
+            return_val.append("JOIN VILLAGE v on (vid.village_id = v.id)")
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("AND VIDEO_PRODUCTION_END_DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -362,8 +362,8 @@ def overview_sum_geog(arg_dict):
     ) t2
     ,
     (select count(ado.id) as tot_ado
-    from person p
-    join person_adopt_practice ado  on (ado.person_id = p.id)""")
+    from PERSON p
+    join PERSON_ADOPT_PRACTICE ado  on (ado.person_id = p.id)""")
     
     if(arg_dict['geog']=='country' and 'from_date' in arg_dict and 'to_date' in arg_dict):
         return_val.append("WHERE ado.DATE_OF_ADOPTION between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -371,7 +371,7 @@ def overview_sum_geog(arg_dict):
         if(arg_dict['geog']=='village'):
             return_val.append('WHERE p.village_id = '+arg_dict['id'])
         else:
-            return_val.append("JOIN village v on (p.village_id = v.id)")
+            return_val.append("JOIN VILLAGE v on (p.village_id = v.id)")
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("AND ado.DATE_OF_ADOPTION between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -380,8 +380,8 @@ def overview_sum_geog(arg_dict):
     ) t3
     ,
     (select count(distinct vid_pr.practices_id) as tot_pra
-    from video vid
-    JOIN video_related_agricultural_practices vid_pr ON (vid_pr.video_id = vid.id)""")
+    from VIDEO vid
+    JOIN VIDEO_related_agricultural_practices vid_pr ON (vid_pr.video_id = vid.id)""")
     
     if(arg_dict['geog']=='country' and 'from_date' in arg_dict and 'to_date' in arg_dict):
         return_val.append("WHERE VIDEO_PRODUCTION_END_DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -389,7 +389,7 @@ def overview_sum_geog(arg_dict):
         if(arg_dict['geog']=='village'):
             return_val.append('WHERE vid.village_id = '+arg_dict['id'])
         else:
-            return_val.append("JOIN village v on (vid.village_id = v.id)")
+            return_val.append("JOIN VILLAGE v on (vid.village_id = v.id)")
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("AND VIDEO_PRODUCTION_END_DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
@@ -398,26 +398,26 @@ def overview_sum_geog(arg_dict):
     ) t4
     ,
     (select count(per.id) as tot_per
-    from person per""")
+    from PERSON per""")
     
     if(arg_dict['geog']=='country' and 'from_date' in arg_dict and 'to_date' in arg_dict):
         return_val.append("""WHERE per.id in 
                                 (
                                     SELECT vs.person_id
-                                    FROM video_farmers_shown vs, video v
+                                    FROM VIDEO_farmers_shown vs, VIDEO v
                                     WHERE vs.video_id = v.id
                                     AND v.VIDEO_PRODUCTION_END_DATE between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']+ """\'
             
                                     UNION
             
                                     SELECT person_id
-                                    FROM person_adopt_practice
+                                    FROM PERSON_ADOPT_PRACTICE
                                     WHERE DATE_OF_ADOPTION between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']+ """\'
             
                                     UNION
             
                                     SELECT pa.person_id
-                                    FROM person_meeting_attendance pa, screening sc
+                                    FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
                                     WHERE pa.screening_id = sc.id
                                     AND sc.DATE between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']+ """\'
                                 )""")
@@ -425,26 +425,26 @@ def overview_sum_geog(arg_dict):
         if(arg_dict['geog']=='village'):
             return_val.append('WHERE per.village_id = '+arg_dict['id'])
         else:
-            return_val.append("JOIN village v on (per.village_id = v.id)")
+            return_val.append("JOIN VILLAGE v on (per.village_id = v.id)")
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("""AND  per.id in 
                                 (
                                     SELECT vs.person_id
-                                    FROM video_farmers_shown vs, video v
+                                    FROM VIDEO_farmers_shown vs, VIDEO v
                                     WHERE vs.video_id = v.id
                                     AND v.VIDEO_PRODUCTION_END_DATE between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date'] + """\'
             
                                     UNION
             
                                     SELECT person_id
-                                    FROM person_adopt_practice
+                                    FROM PERSON_ADOPT_PRACTICE
                                     WHERE DATE_OF_ADOPTION between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date'] + """\'
             
                                     UNION
             
                                     SELECT pa.person_id
-                                    FROM person_meeting_attendance pa, screening sc
+                                    FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
                                     WHERE pa.screening_id = sc.id
                                     AND sc.DATE between \'""" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date'] + """\'
                                 )""")
