@@ -291,12 +291,12 @@
 					{% for item in item_list %}
 				 	<tr>
 						<td id='table2td1'>
-							{% ifequal item.name 'None' %}
+							{% ifnotequal item.id None %}
 							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ item.name }} </a>
 							{% else %}
 							{{ item.name }}
-							{% endifequal %}
+							{% endifnotequal  %}
 						</td>
 						<td id='table2td1'> 
 							<a href=''>
