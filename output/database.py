@@ -284,6 +284,8 @@ def video_malefemale_ratio(arg_dict):
     sql = []
     sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   PERSON p, VIDEO_farmers_shown vs')
     if 'geog' in arg_dict:
+        if arg_dict['geog'] == 'country':
+            sql.append('where')
         if arg_dict['geog'] == 'state':
             sql.append(r""", VILLAGE vil, BLOCK b, DISTRICT d 
             WHERE p.village_id = vil.id AND vil.block_id = b.id 
@@ -461,3 +463,53 @@ def overview_sum_geog(arg_dict):
 
     
     return '\n'.join(return_val)
+
+def video_actor_wise_pie(**args):
+    sql = []
+    sql.append("""SELECT actors, count(*) as count
+    FROM VIDEO vid""")
+    if 'geog' in args:
+        if args['geog'] == 'village':
+            sql.append("WHERE vid.village_id = "+str(args['id']))
+        elif args['geog'] == 'block':
+            sql.append(""", VILLAGE v
+            WHERE vid.village_id = v.id
+            AND v.block_id = """ +str(args['id']))
+        elif args['geog'] == 'district':    
+            sql.append(""", VILLAGE v, BLOCK b
+            WHERE vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = """ +str(args['id']))
+        elif args['geog'] == 'state':
+            sql.append(""",VILLAGE v, BLOCK b, DISTRICT d
+            WHERE vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = d.id
+            AND d.state_id = """ +str(args['id']))
+
+    if 'from_date' in args and 'to_date' in args:
+        if args['geog'] == 'country':
+            sql.append(" WHERE VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                        "\' AND \'"+args['to_date'] + "\'")
+        else:
+            sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                       "\' AND \'"+args['to_date']+"\'")
+
+    sql.append("GROUP BY actors")
+    return "\n".join(sql)
+
+def video_month_bar_year(arg_dict):
+    return """
+    SELECT min(YEAR( vid.VIDEO_PRODUCTION_END_DATE )) as min_year, 
+           max(YEAR( vid.VIDEO_PRODUCTION_END_DATE )) as max_year
+    FROM VIDEO vid"""
+
+def video_month_bar(arg_dict):
+    
+    return  """
+    SELECT COUNT( DISTINCT VID.ID ) as count , MONTH( VID.VIDEO_PRODUCTION_END_DATE ) AS
+    MONTH, YEAR( vid.VIDEO_PRODUCTION_END_DATE ) AS YEAR
+    FROM VIDEO VID
+    GROUP BY MONTH, YEAR
+    ORDER BY YEAR, MONTH
+    """

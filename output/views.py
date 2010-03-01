@@ -182,12 +182,168 @@ def video_pie_graph_mf_ratio(request,geog,id):
         for i in range(len(return_val)):
             if return_val[i]['gender'] == 'F':
                 str_list.append('Female;'+return_val [i]['count'].__str__()+\
-                                ';;;;Ratio of videos featuring Female actors')
+                                ';true;99FF33;;Ratio of videos featuring Female actors')
             else:
                 str_list.append('Male;'+return_val [i]['count'].__str__()+\
-                                ';;#3299CC;;Ratio of videos featuring male actors')
-       
+                                ';;339900;;Ratio of videos featuring male actors')
     
     return HttpResponse('\n'.join(str_list))    
+
+class MyDate:
+    def __str__(self):
+        return (str(self.m)+','+str(self.y))
+    
+    def __init__(self, month, year):
+        if(month not in range(1,13)):
+            raise Exception,"Invalid Params"
+        self.m = month
+        self.y = year
+    
+    def addMonth(self,delta):
+        if delta < 1:
+            raise Exception('Only positive delta allowed')
+        
+        self.m += delta;
+        self.y += (self.m-1)/12
+        self.m = self.m%12
+        
+        if(self.m==0): self.m = 12
+        
+        
+    def compare(self,date1):
+        if(self.y < date1.y):
+            return -1
+        elif(self.y > date1.y):
+            return 1
+        elif(self.m < date1.m):
+            return -1
+        elif(self.m > date1.m):
+            return 1
+        else:
+            return 0
+        
+def make_dict(dic):
+    min = int(dic[0]['YEAR'])
+    max = int(dic[-1]['YEAR'])+1
+    
+    return_val = {}
+    for y in range(min,max):
+        return_val[y] = {}
+        for item in dic:
+            if int(item['YEAR'])>y:
+                break
+            if int(item['YEAR'])==y:
+                return_val[y][int(item['MONTH'])] = item['count']
     
     
+    return return_val
+
+def video_monthwise_bar_data(request,geog,id):
+    id = int(id)
+    date_range = 0
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query(database.video_month_bar(dict(geog = geog, id = id,from_date = from_date, to_date = to_date)))    
+    
+    else:
+        rs = run_query(database.video_month_bar(dict(geog = geog, id = id)));
+    
+    if rs:
+        dic = make_dict(rs)
+    else:
+        return HttpResponse(';');
+        
+    if date_range is not 1:
+        from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
+        to_date = str(rs[len(rs)-1]['YEAR'])+'-'+str(rs[len(rs)-1]['MONTH'])+'-01'
+    
+    from_date = MyDate(* [int(x) for x in reversed(from_date.split('-')[:2])])
+    to_date = MyDate(* [int(x) for x in reversed(to_date.split('-')[:2])])
+    
+    data = [['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']]
+    #dic = make_dict(rs)
+    
+    
+    if(from_date.y != to_date.y):
+        loop_from = MyDate(1,from_date.y)
+        loop_to = MyDate(12, to_date.y)
+    else:
+        loop_from = from_date;
+        loop_to = to_date;
+    while(loop_from.compare(loop_to)!=1):
+        if(loop_from.compare(from_date)==-1 or loop_from.compare(to_date)==1):
+            data[loop_from.m - 1][-1] += ';'
+            loop_from.addMonth(1)
+            continue
+        if(loop_from.y in dic and loop_from.m in dic[loop_from.y]):
+            data[loop_from.m - 1].append(str(dic[loop_from.y][loop_from.m]))
+        else:
+            data[loop_from.m - 1].append(str(0))
+        
+        loop_from.addMonth(1)
+    
+    return HttpResponse((';\n'.join([';'.join(x) for x in data if len(x) > 1]))+(';'))
+
+def video_monthwise_bar_settings(request,geog,id):
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        from_year = int(from_date.split('-')[0])
+        to_year = int(to_date.split('-')[0]);
+        
+    else:
+        rs = run_query(database.video_month_bar_year({}))
+        from_year = int(rs[0]['min_year'])
+        to_year = int(rs[0]['max_year'])
+    
+
+    year_list = range(from_year,to_year+1)
+    
+    #Making Settings file
+    settings = []
+    settings.append(r'<settings><graphs>')
+    
+    for year in year_list:
+        settings.append(r'<graph><type/><title>'+str(year)+'</title></graph>')
+        
+        
+    settings.append(r'</graphs></settings>')
+    settings = ''.join(settings)
+    
+    return HttpResponse(settings)
+
+def video_actor_wise_pie(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query_dict(database.video_actor_wise_pie(geog=geog,id=id,from_date=from_date,to_date=to_date),\
+                            'actors')
+    
+    else:
+        rs = run_query_dict(database.video_actor_wise_pie(geog=geog,id=id),'actors')
+    
+    actors = ['Individual','Group','Family']
+  
+    str_list = []
+    str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    if not rs:
+       return HttpResponse('')
+    else:
+        for actor in actors:
+            if(actor[0] in rs):
+                str_list.append(actor+';'+str(rs[actor[0]][0])+';;;;Ratio of Videos featuring '+actor+\
+                                ' actor')
+            else:
+                str_list.append(actor+';0;;;;Ratio of Videos featuring '+actor+\
+                                ' actor')
+                
+    return HttpResponse('\n'.join(str_list)) 
+    
+def video_module(request,geog,id):
+    
+    return render_to_response('video_module.html',dict(geog=geog,id=id))

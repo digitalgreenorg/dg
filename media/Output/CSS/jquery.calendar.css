@@ -6,8 +6,8 @@ div.calendar
 
 div.calendar.popup
 {
-  margin-left: -40px;
-  margin-top: -100px;
+  margin-left: 0px;
+  margin-top: 0px;
   z-index: 9999;
 }
 

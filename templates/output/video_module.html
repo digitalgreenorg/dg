@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<title> Video Analytics </title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+ <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css"> 
+  <!--<link type="text/css" rel="stylesheet" href="/media/Output/CSS/jquery-ui-1.7.2.custom.css">   -->     
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
+    <!--[if IE]>
+        <link type='text/css' rel='stylesheet' href='CSS/StyleSheetIE.css' />
+    <![endif]-->           
+    <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
+    <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
+	<script type="text/javascript" language="javascript" src="/media/Output/JS/JGridPage.js"></script>  
+	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
+<script type="text/javascript">
+	    
+	    function Default(){
+	        var newdate = new Date();
+	        var currentmonth = newdate.getMonth();
+	        var month_name=new Array(12);
+            month_name[0]="January"
+            month_name[1]="February"
+            month_name[2]="March"
+            month_name[3]="April"
+            month_name[4]="May"
+            month_name[5]="June"
+            month_name[6]="July"
+            month_name[7]="August"
+            month_name[8]="September"
+            month_name[9]="October"
+            month_name[10]="November"
+            month_name[11]="December"
+            today_month = month_name[currentmonth];
+            today_date = newdate.getDate(); 
+            today_year = newdate.getFullYear();
+                         
+            document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; // default date for datepicker2
+            	    
+	    }	
+	
+	    function Apply(){
+	    
+	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+	        var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
+	        if(date1.length==40 || date2.length==40){	 
+	           document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
+	             	                        
+	        }
+	        else{
+	            var d11= date1.indexOf('-');
+	            var date1day = date1.substring(0, d11); // get the day for the date1
+	            var date1str1 = date1.substring(d11+1, date1.length);
+	            var d12= date1str1.indexOf('-');
+	            var date1month = date1str1.substring(0, d12); // get the month for date1
+	            
+	            if(date1month=="01"){ date1month="January"; }
+	            if(date1month=="02"){ date1month="February"; }
+	            if(date1month=="03"){ date1month="March"; }
+	            if(date1month=="04"){ date1month="April"; }
+	            if(date1month=="05"){ date1month="May"; }
+	            if(date1month=="06"){ date1month="June"; }
+	            if(date1month=="07"){ date1month="July"; }
+	            if(date1month=="08"){ date1month="August"; }	            
+	            if(date1month=="09"){ date1month="September"; }
+	            if(date1month=="10"){ date1month="October"; }
+	            if(date1month=="11"){ date1month="November"; }
+	            if(date1month=="12"){ date1month="December"; }
+	            
+	            var date1str1 = date1str1.substring(d12+1, date1.length);
+	            var d13= date1str1.length;
+	            var date1year = date1str1.substring(0, d13);	// get the year for the date1
+	            
+	            var d21= date2.indexOf('-');
+	            var date2day = date2.substring(0, d21); // get the day for the date2
+	            var date2str1 = date2.substring(d21+1, date2.length);
+	            var d22= date2str1.indexOf('-');
+	            var date2month = date2str1.substring(0, d22); // get the month for date2            
+	            
+	            if(date2month=="01"){ date2month="January"; }
+	            if(date2month=="02"){ date2month="February"; }
+	            if(date2month=="03"){ date2month="March"; }
+	            if(date2month=="04"){ date2month="April"; }
+	            if(date2month=="05"){ date2month="May"; }
+	            if(date2month=="06"){ date2month="June"; }
+	            if(date2month=="07"){ date2month="July"; }
+	            if(date2month=="08"){ date2month="August"; }	            
+	            if(date2month=="09"){ date2month="September"; }
+	            if(date2month=="10"){ date2month="October"; }
+	            if(date2month=="11"){ date2month="November"; }
+	            if(date2month=="12"){ date2month="December"; }	            
+	            
+	            var date2str1 = date2str1.substring(d22+1, date2.length);
+	            var d23= date2str1.length;
+	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
+	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1day + "," + " " + date1year;
+	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2day + "," + " " + date2year;
+	            timelinedesc1close();
+	            	           
+	        } // end else
+	    } // end Apply function
+	    
+	</script>
+</head>
+
+<body id='mainbody' onload='Default()'>
+	<div id='tablegrid'> 				
+		
+	<div id='defaultheader'>
+	</div>	
+	<div id='default'>		
+		
+		<div id='gridfooter'>		
+				<div id='timeline'>
+					<div id='timelinedesc'>
+
+						<div id='datepicker1'/> </div> 
+						<div id='datepickergap'> &nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp; </div>
+						<div id='datepicker2'> </div>
+						<div id='timelinedescfooter'>
+							Above are the pre-chosen dates. Customize your own range of timeline  	
+						</div>
+						<div id='timelinedescfooter1'>												 			
+						</div>
+
+		  </div>					
+	  </div>
+				<div id='timelinedesc1'>
+						    <div id='timelinedesc1btntop'>
+							    hide &nbsp; &nbsp; 
+						    </div>
+						`   <div id='timelinedesc1calender'>						        
+						    </div>						    
+						    <div id='inlinedatepickerheader'>
+
+						        Choose the range of timeline<br />&nbsp;&nbsp;from the calenders at the left
+						    </div>
+						    <div id='inlinedatepicker1desc'>
+						        from: 
+						    </div>						
+						    <div id='inlinedatepicker1'>						       												    				  							
+						    </div>
+						    <div id='inlinedatepicker1format'>
+						        (dd-mm-yyyy) 
+						    </div>						
+						    <div id='inlinedatepicker2desc'>
+
+						        to:
+						    </div>													
+						    <div id='inlinedatepicker2'>												    				  							
+						    </div>
+						    <div id='inlinedatepicker2format'>
+						        (dd-mm-yyyy) 
+						    </div>
+						    <div id='inlinedatepickersubmitbtn'>
+						        <input type="submit" value="Apply" onclick='Apply()'/>
+						    </div>
+						    <div id='inlinedatepickererrormsg'>
+
+						    </div>
+						   
+						<div id='inlinedatepickerbg'>
+						    <div id='inlinedatepicker1-container'>
+						    </div>	
+						    <div id='inlinedatepickerdiv'>
+						        __
+						    </div>					    
+						    <div id='inlinedatepicker2-container'>
+						    </div>
+						</div>								
+	  </div>
+
+</div>
+
+
+		
+		
+		<div id="searchbody">
+			<div id="searchbodytitle">
+				Customize your Search
+			</div>
+			<form id="levelsearch">
+				<div id="searchbody1">
+					<select id="select">
+  						<option>Select state</option>
+  						<option selected="selected">Saab</option>
+  						<option>Mercedes</option>
+  						<option>Audi</option>
+					</select>
+				</div>
+				<div id="searchbody2">
+					<select id="select">
+  						<option selected="selected">Select District</option>
+  						<option>Saab</option>
+  						<option>Mercedes</option>
+  						<option>Audi</option>
+					</select>
+				</div>
+				<div id="searchbody3">
+					<select id="select">
+  						<option selected="selected">Select Blocks</option>
+  						<option>Saab</option>
+  						<option>Mercedes</option>
+  						<option>Audi</option>
+					</select>
+				</div>			
+				<div id="searchbody4">
+					<select id="select">
+  						<option selected="selected">Select Villages</option>
+  						<option>Saab</option>
+  						<option>Mercedes</option>
+  						<option>Audi</option>
+					</select>
+				</div>
+				<div id="searchbody5">
+					<input id="searchsubmitbtn" value="GO" type="submit">
+				</div>
+			</form></div> 
+			<div id="analytics">
+				<table align="center">
+					<tr>
+						<td> Video Analytics </td>
+					</tr>
+				</table>
+			</div>
+			
+						
+			
+			<div id="analytics1">
+		<table id="analytics1_table"  width="913" border="0" cellspacing="5px">
+      	<tbody>
+				<tr id="analytics1_tr1">
+        			<td id="analytics1_td1" scope="col"  width="50%" height="31"><div align="left" ><span class="style7"> &nbsp;&nbsp;<span class="style21">Total Number of Videos Produced:<br /> </span></span>
+          			</td>
+					<td id="analytics1_td2" scope="col" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Total Number of Videos Screened:
+        			</span>
+      				</td>
+				</tr>
+      			<tr id="analytics1_tr2"> 
+        			<td id="analytics1_tr2td1" scope="row" height="31" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Average Time Taken to Produce Video:</span></span> 
+        			</td>
+					<td id="analytics1_tr2td2">&nbsp;</td>
+		  </tr>
+    	</tbody>
+		</table>
+	</div>
+	
+						
+			<div id="tabledynamic0">
+		   		<table id="table_video" cellpadding="0px" cellspacing="0px" border="0">
+					<tr id="tabledynamic0_tr1">
+					    <td width="50%" class="moduletd"  >
+						Monthly Video Production	
+						</td>
+						<td width=50% class='moduletd'>
+					 Male/Female Ratio--Actors		
+						</td>
+					</tr>
+					<tr >
+						<td id = "flash_area_monthwise_bar" width=50% height="300px" class="moduletd1"> </td>
+						<td width=50% height="300px" class="moduletd1">
+							<div id = "flash_area_mf_ratio" height='150px'></div>
+							<div id = "flash_area_actor_ratio" height='150px'></div>
+						</td>
+					</tr>
+					<tr>
+						<td width=50% class="video_footer" height="15px"> </td>
+						<td width=50% class="video_footer"  height="15px"> </td>
+					</tr>		
+				</table>
+				</div>
+				
+			<div id="tabledynamic1">
+				<table id="table_video1" cellpadding="0px" cellspacing="0px" border="0">								
+					<tr id="">
+						<td width="50%" class="moduletd" > Practice wise Video Production </td>
+						<td width="50%" class="moduletd"> Language Wise Video Production </td>
+					</tr>
+					<tr>
+						<td width=50% height="300px" class="moduletd1"> </td>
+						<td width=50% height="300px" class="moduletd1"> </td>
+					</tr>
+					<tr>
+						<td width=50%  height="15px"> </td>
+						<td width=50%   height="15px"></td>
+					</tr>
+				</table>
+			</div>
+				
+				<div id="tabledynamic2">
+					<table id="table_video2" cellpadding="0px" cellspacing="0px" border="0" >	
+					<tr >
+						<td class='moduletd'>Video Type  
+						</td>
+						<td class='moduletd'>Number of videos  
+						</td>
+				 	</tr>
+					<tr>
+						<td width=50% height="250px" class="moduletd1"> </td>
+						<td width=50% height="250px" class="moduletd1"> </td>
+					 </tr>
+					<tr>
+						<td width=50%  height="15px"> </td>
+						<td width=50%   height="15px"> </td>
+					</tr>
+				</table>
+			</div>
+									 
+								
+			</div></div>
+			</div>
+			<div id="footer">
+
+</div>
+<script type="text/javascript" src="/media/Output/ampie/swfobject.js"></script>
+<script type="text/javascript" src="/media/Output/amcolumn/swfobject.js"></script>
+
+<script type="text/javascript">
+		// <![CDATA[		
+	var so = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", "420", "150", "8", "#FFFFFF");
+	so.addVariable("path", "/media/Output/ampie/");
+	so.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	so.addVariable("data_file", encodeURIComponent("/output/video/mfpie/{{geog}}/{{id}}/"));
+	so.write("flash_area_mf_ratio");
+	
+	var actor_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "150", "8", "#FFFFFF");
+	actor_wise_pie.addVariable("path", "/media/Output/ampie/");
+	actor_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	actor_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/actorpie/{{geog}}/{{id}}/"));
+	actor_wise_pie.write("flash_area_actor_ratio");
+	
+	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "300", "8", "#FFFFFF");
+	monthbar.addVariable("path", "/media/Output/amcolumn/");
+	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
+	var additional_chart_settings = '';
+	var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/district/5/", async: false }).responseText;
+	
+	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+	monthbar.addVariable("data_file",'/output/video/monthbar/data/district/5/');
+			
+	monthbar.addVariable("preloader_color", "#999999");
+	monthbar.write("flash_area_monthwise_bar");
+</script>
+
+
+</body>
+</html>

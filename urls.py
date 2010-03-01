@@ -20,14 +20,14 @@ urlpatterns = patterns('',
 	(r'^feeds/persons/(\d+)/$', feeds_persons),
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
-	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
+#	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
 
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     	(r'^hello/$', hello),
 	(r'^animators-by-village-id/(\d+)/$', feed_animators),
         (r'/search/', search),
-	(r'^dashboard/login/$', login_view),
+#	(r'^dashboard/login/$', login_view),
 	(r'^dashboard/language/add/$', add_language),
 	(r'^dashboard/languages/(?P<language>[^/]+)/$',language),
 	(r'^dashboard/region/add/$',add_region),
@@ -66,6 +66,11 @@ urlpatterns = patterns('',
     (r'^output/dropdownval/$',overview_drop_down),
     (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overview),
     (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',overview_line_graph),
-    
+    (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',video_module),
+    (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',video_pie_graph_mf_ratio),
+    (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',video_actor_wise_pie),
+    (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_data),
+    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings),
+
 )
 
