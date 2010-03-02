@@ -285,7 +285,7 @@ def video_monthwise_bar_data(request,geog,id):
         
         loop_from.addMonth(1)
     
-    return HttpResponse((';\n'.join([';'.join(x) for x in data if len(x) > 1]))+(';'))
+    return HttpResponse('\n'.join([';'.join(x) for x in data if len(x) > 1]))
 
 def video_monthwise_bar_settings(request,geog,id):
     if 'from_date' in request.GET and request.GET['from_date'] \
