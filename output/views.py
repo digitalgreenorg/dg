@@ -303,13 +303,13 @@ def video_monthwise_bar_settings(request,geog,id):
     
     #Making Settings file
     settings = []
-    settings.append(r'<settings><graphs>')
+    settings.append(r'<graphs>')
     
     for year in year_list:
         settings.append(r'<graph><type/><title>'+str(year)+'</title></graph>')
         
         
-    settings.append(r'</graphs></settings>')
+    settings.append(r'</graphs>')
     settings = ''.join(settings)
     
     return HttpResponse(settings)
@@ -343,6 +343,53 @@ def video_actor_wise_pie(request,geog,id):
                                 ' actor')
                 
     return HttpResponse('\n'.join(str_list)) 
+    
+def video_language_wise_bar_data(request,geog,id):
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query(database.video_language_wise_bar(geog=geog,id=id,from_date=from_date,to_date=to_date))
+    
+    else:
+        rs = run_query(database.video_language_wise_bar(geog=geog,id=id))
+    
+    return_val = []
+    for row in rs:
+        return_val.append(row['lname']+';'+str(row['count']))
+        
+    return HttpResponse('\n'.join(return_val))
+    
+
+def video_geog_pie_data(request,geog,id):
+    geog_list = ['country','state','district','block','village']
+    if(geog not in geog_list):
+        raise Http404()
+    
+    if(geog == 'village'):
+        geog_child = 'village'
+    
+    else:
+        geog_child = geog_list[geog_list.index(geog)+1]
+    
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child, \
+                                                                    from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+    else:
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,id=id)));
+    
+    
+    return_val = []
+    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    for item in vid_prod:
+        return_val.append(item['name']+';'+str(item['tot_pro'])+";;;;Ratio of Video Productions in "+item['name'])
+        
+    
+    return HttpResponse('\n'.join(return_val))
+        
     
 def video_module(request,geog,id):
     

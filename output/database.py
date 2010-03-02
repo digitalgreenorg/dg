@@ -498,6 +498,45 @@ def video_actor_wise_pie(**args):
     sql.append("GROUP BY actors")
     return "\n".join(sql)
 
+def video_language_wise_bar(**args):
+    sql = []
+    sql.append("""SELECT l.language_name as lname, COUNT(vid.id) as count
+            FROM LANGUAGE l, VIDEO vid
+            """)
+
+    if 'geog' in args:
+        if args['geog'] == 'village':
+            sql.append("WHERE vid.language_id = l.id AND vid.village_id = "+str(args['id']))
+        elif args['geog'] == 'block':
+            sql.append(""", VILLAGE v
+            WHERE vid.language_id = l.id
+            AND vid.village_id = v.id
+            AND v.block_id = """ +str(args['id']))
+        elif args['geog'] == 'district':    
+            sql.append(""", VILLAGE v, BLOCK b
+            WHERE vid.language_id = l.id
+            AND vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = """ +str(args['id']))
+        elif args['geog'] == 'state':
+            sql.append(""",VILLAGE v, BLOCK b, DISTRICT d
+            WHERE vid.language_id = l.id
+            AND vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = d.id
+            AND d.state_id = """ +str(args['id']))
+        elif args['geog'] == 'country':
+            sql.append("WHERE vid.language_id = l.id")
+
+    if 'from_date' in args and 'to_date' in args:
+            sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                       "\' AND \'"+args['to_date']+"\'")
+
+        
+    sql.append("""GROUP BY language_name""")
+
+    return '\n'.join(sql)
+
 def video_month_bar_year(arg_dict):
     return """
     SELECT min(YEAR( vid.VIDEO_PRODUCTION_END_DATE )) as min_year, 

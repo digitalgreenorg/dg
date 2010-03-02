@@ -283,7 +283,7 @@
 					</tr>
 					<tr>
 						<td width=50% height="300px" class="moduletd1"> </td>
-						<td width=50% height="300px" class="moduletd1"> </td>
+						<td id = "flash_area_languagewise_bar" width=50% height="300px" class="moduletd1"> </td>
 					</tr>
 					<tr>
 						<td width=50%  height="15px"> </td>
@@ -301,8 +301,8 @@
 						</td>
 				 	</tr>
 					<tr>
-						<td width=50% height="250px" class="moduletd1"> </td>
-						<td width=50% height="250px" class="moduletd1"> </td>
+						<td width=50% height="300px" class="moduletd1"> </td>
+						<td id = "flash_area_geogwise_pie" width=50% height="300px" class="moduletd1"> </td>
 					 </tr>
 					<tr>
 						<td width=50%  height="15px"> </td>
@@ -334,17 +334,32 @@
 	actor_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/actorpie/{{geog}}/{{id}}/"));
 	actor_wise_pie.write("flash_area_actor_ratio");
 	
-	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "300", "8", "#FFFFFF");
+	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "monthbar", "420", "300", "8", "#FFFFFF");
 	monthbar.addVariable("path", "/media/Output/amcolumn/");
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	var additional_chart_settings = '';
 	var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/district/5/", async: false }).responseText;
 	
-	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+	monthbar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series},{title}: Video Productions = {value}</balloon_text></column>"+additional_chart_settings+"</settings>"));
 	monthbar.addVariable("data_file",'/output/video/monthbar/data/district/5/');
-			
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
+	
+	
+	var languagebar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "languagebar", "420", "300", "8", "#FFFFFF");
+	languagebar.addVariable("path", "/media/Output/amcolumn/");
+	languagebar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
+	languagebar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series}: Video Productions = {value}</balloon_text></column><graphs><graph><type/><title>Language</title></graph></graphs></settings>"));
+	languagebar.addVariable("data_file",'/output/video/languagebar/data/{{geog}}/{{id}}/');			
+	languagebar.addVariable("preloader_color", "#999999");
+	languagebar.write("flash_area_languagewise_bar");
+	
+	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "300", "8", "#FFFFFF");
+	geog_wise_pie.addVariable("path", "/media/Output/ampie/");
+	geog_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	geog_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/geogpie/{{geog}}/{{id}}/"));
+	geog_wise_pie.addVariable("additional_chart_settings", encodeURIComponent("<settings><legend><enabled>true</enabled></legend></settings>"));
+	geog_wise_pie.write("flash_area_geogwise_pie");
 </script>
 
 

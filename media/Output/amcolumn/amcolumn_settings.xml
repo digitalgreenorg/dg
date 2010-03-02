@@ -11,9 +11,6 @@
 <grow_time>1</grow_time>
 <grow_effect>strong</grow_effect>
 −
-<balloon_text>
-{title}: Video Productions = {value}
-</balloon_text>
 </column>
 −
 <plot_area>
@@ -87,7 +84,7 @@
 −
 <legend>
 <enabled/>
-<align/>
+<align>center</align>
 <border_alpha>100</border_alpha>
 <border_color>E7E7E7</border_color>
 <margins>5</margins>

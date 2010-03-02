@@ -69,6 +69,8 @@ urlpatterns = patterns('',
     (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',video_module),
     (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',video_pie_graph_mf_ratio),
     (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',video_actor_wise_pie),
+    (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',video_geog_pie_data),
+    (r'^output/video/languagebar/data/(country|state|district|block|village)/(\d+)/$',video_language_wise_bar_data),
     (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_data),
     (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings),
 
