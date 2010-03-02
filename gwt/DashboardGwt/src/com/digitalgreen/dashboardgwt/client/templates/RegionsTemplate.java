@@ -84,6 +84,8 @@ public class RegionsTemplate extends BaseTemplate {
 						"</div>";
 	
 	final static private String regionsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+			"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +
+			"<script src='/media/js/calendar.js' type='text/javascript'></script>" +
 		"<div id='content' class='colM'>" +
 			"<h1>Add Regions</h1>" +
 			"<div id='content-main'>" +
@@ -97,7 +99,11 @@ public class RegionsTemplate extends BaseTemplate {
 						"<div>" +
 							"<label for='id_start_date'>Start date:</label>" +
 							"<input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-						"</div>" +
+							"<span>&nbsp;" +
+								"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+								"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+								"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a></span>" +
+						"</div>" + 
 					"</div>" +
 				"</fieldset>" +
 				"<div class='submit-row'>" +
