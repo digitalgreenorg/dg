@@ -104,16 +104,31 @@ public class ScreeningsTemplate extends BaseTemplate {
 										"<div class='form-row date  '>" +
 											"<div>" +
 												"<label for='id_date' class='required'>Date:</label><input id='id_date' type='text' class='vDateField' name='date' size='10' />" +
+												"<span>&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+													"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+												"</span>" +
 											"</div>" +
 										"</div>" +
 										"<div class='form-row start_time  '>" +
 											"<div>" +
 												"<label for='id_start_time' class='required'>Start time:</label><input id='id_start_time' type='text' class='vTimeField' name='start_time' size='8' />" +
+												"<span>&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.handleClockQuicklink(0, new Date().getHourMinuteSecond());'>Now</a>&nbsp;|&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.openClock(0);' id='clocklink0'>" +
+													"<img src='/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
+												"</span>" +
 											"</div>" +
 										"</div>" +
 										"<div class='form-row end_time  '>" +
 											"<div>" +
 												"<label for='id_end_time' class='required'>End time:</label><input id='id_end_time' type='text' class='vTimeField' name='end_time' size='8' />" +
+												"<span>&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.handleClockQuicklink(0, new Date().getHourMinuteSecond());'>Now</a>&nbsp;|&nbsp;" +
+													"<a href='javascript:DateTimeShortcuts.openClock(0);' id='clocklink0'>" +
+													"<img src='/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
+												"</span>" +
 											"</div>" +
 										"</div>" +
 										"<div class='form-row location  '>" +

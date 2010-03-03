@@ -111,7 +111,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 															"<span>&nbsp;" +
 																"<a href='javascript:DateTimeShortcuts.handleClockQuicklink(0, new Date().getHourMinuteSecond());'>Now</a>&nbsp;|&nbsp;" +
 																"<a href='javascript:DateTimeShortcuts.openClock(0);' id='clocklink0'>" +
-																"<img src='http://174.129.13.106/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
+																"<img src='/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
 															"</span>" +
 														"</div>" +
 													"</div>" +
