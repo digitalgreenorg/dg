@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 // Emulating a marshalled HTTP request object
 public class RequestContext {
+	final static private String DEFAULT_USERNAME_ARG_NAME = "loggedin_user";
+	
 	static public String METHOD_GET = "GET";
 	static public String METHOD_POST = "POST";
 	static public String SERVER_HOST = "http://174.129.13.106";
@@ -72,5 +74,13 @@ public class RequestContext {
 	
 	public static String getServerUrl() {
 		return "http://" + SERVER_HOST + "/";
+	}
+	
+	public void setDefaultLoggedInUserArg(String username) {
+		this.args.put(RequestContext.DEFAULT_USERNAME_ARG_NAME, username);
+	}
+	
+	public String getDefaultLoggedInUserArg() {
+		return (String)this.args.get(RequestContext.DEFAULT_USERNAME_ARG_NAME);
 	}
 }

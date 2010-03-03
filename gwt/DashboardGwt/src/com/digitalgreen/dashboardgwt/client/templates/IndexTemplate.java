@@ -67,7 +67,6 @@ public class IndexTemplate extends BaseTemplate {
 	public void fill() {
 		super.setBodyStyle("dashboard");
 		HTMLPanel indexHtml = new HTMLPanel(indexContentHtml);
-		super.usrStr.setText("digitalgreen.");
 		super.setContentPanel(indexHtml);
 		super.fill();
 		RequestContext requestContext = null;

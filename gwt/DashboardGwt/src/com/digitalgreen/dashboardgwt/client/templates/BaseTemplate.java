@@ -20,9 +20,6 @@ public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
 	protected FormPanel postForm = null;
 	protected HTMLPanel displayHtml = null;
-	protected Label usrStr = new Label();
-	protected Label errMsg = new Label();
-	
 	
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -43,27 +40,10 @@ public class BaseTemplate extends Template {
 		RootPanel.get("content").setStyleName(className);
 	}
 	
-	public void setUserLable(String usr){
-		this.usrStr.setText(usr);
-	}
-	
-	public String getUserLabel(){
-		return this.usrStr.getText();
-	}
-	
-	public void setErrMsg(String msg){
-		this.errMsg.setText(msg);
-	}
-	
-	public String getErrMsg(){
-		return this.errMsg.getText();
-	}
-	
 	@Override
 	public void fill() {
-		RootPanel.get("user").insert(usrStr, 0);
+		RootPanel.get("user-name").add(new HTMLPanel("b", this.getRequestContext().getDefaultLoggedInUserArg() + "."));
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
-		RootPanel.get("error-space").add(errMsg);
 		RootPanel.get("container").add(this.getContentPanel());
 		super.fill();
 	}
@@ -134,7 +114,8 @@ public class BaseTemplate extends Template {
 	}
 	
 	private Hyperlink logoutHyperlink(){
-		Hyperlink link = new Hyperlink("<a href='/logout'>Logout</a>", true, null);
+		Hyperlink link = new Hyperlink("<a href='#/logout'>Log out</a>", true, null);
+		link.setStyleName("logoutClass");
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
@@ -145,10 +126,6 @@ public class BaseTemplate extends Template {
 		});
 		
 		return link;
-	}
-
-	protected String getDgFormId() {
-		return this.postForm.getElement().getId();
 	}
 	
 	public static native String getForm(String formId) /*-{
@@ -170,8 +147,8 @@ public class BaseTemplate extends Template {
 			"<div id='branding'>" +
 				"<h1 id='site-name'>Digital Green Administration</h1>" +
 			"</div>" +
-			"<div id='user-tools'>Welcome, " +
-				"<b id='user'></b><span id='logout'>Logout</span>" +
+			"<div id='user-tools'>Welcome, <span id='user-name'></span>" +
+			"<span id='logout'></span>" +
 			"</div>" +
 		"</div>" +
 		"<div id='error-space'></div>" +

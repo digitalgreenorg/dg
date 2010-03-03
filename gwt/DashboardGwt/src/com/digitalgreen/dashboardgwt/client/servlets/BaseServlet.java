@@ -63,6 +63,7 @@ public class BaseServlet implements ServletInterface {
 		if(loggedInCtx == null || loggedInCtx == "") {
 			this.setIsLoggedIn(false);
 		} else {
+			this.requestContext.setDefaultLoggedInUserArg(loggedInCtx);
 			this.setIsLoggedIn(true);
 		}
 	}

@@ -32,12 +32,10 @@ public class LoginData extends BaseData {
 	}
 
 	public Object authenticate(String username, String password) {
-		if(this.isOnline()){
-			/*
-			String postData = "username=" + username + "&password=" + password;
-			this.post(RequestContext.SERVER_HOST + ":8000/dashboard/login/", postData);
-			*/
+		if(this.isOnline()) {
 			this.dataOnlineCallbacks.onlineSuccessCallback("1");
+			//String postData = "username=" + username + "&password=" + password;
+			//this.post("http://127.0.0.1:8000/dashboard/login/", postData);
 		} else {
 			// Check if DB User row has the same username.
 			String query = "SELECT username FROM User WHERE" +
