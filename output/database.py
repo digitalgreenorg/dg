@@ -280,6 +280,8 @@ SELECT date, count(*)
 {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
 """
 
+# query constructor for malefeamle ratio pie chaart
+
 def video_malefemale_ratio(arg_dict):
     sql = []
     sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   PERSON p, VIDEO_farmers_shown vs')
@@ -308,8 +310,31 @@ def video_malefemale_ratio(arg_dict):
     
     sql.append(r'vs.person_id = p.id GROUP BY p.GENDER')
 
-    return ' '.join(sql)        
+    return ' '.join(sql)
+
+# query constructor for month wise production of videos bar graph.
+def video_month_bar(arg_dict):
+    sql = []
+    sql.append(r' SELECT COUNT( DISTINCT vid.ID ) AS count, MONTH( vid.VIDEO_PRODUCTION_END_DATE ) AS MONTH,YEAR( vid.VIDEO_PRODUCTION_END_DATE ) AS YEAR FROM VIDEO vid, VILLAGE vil')
+    if 'geog' in arg_dict:
+        if arg_dict['geog'] == 'state':
+            sql.append(r',BLOCK b, DISTRICT d WHERE vid.village_id = vil.id AND vil.block_id = b.id AND b.district_id = d.id AND d.state_id = '+str(arg_dict['id']) )
+        elif arg_dict['geog'] == 'district':
+            sql.append(r""",BLOCK b WHERE vid.village_id = vil.id AND vil.block_id = b.id AND b.district_id = """+str(arg_dict['id']) )
         
+        elif arg_dict['geog'] == 'block':
+            sql.append(r""" WHERE vid.village_id = vil.id AND vil.block_id = """+str(arg_dict['id']) )
+        
+        elif arg_dict['geog'] == 'village':
+            sql.append(r""" WHERE vid.village_id = """+str(arg_dict['id']) )
+        
+    if 'from_date' in arg_dict and 'to_date' in arg_dict:
+        sql.append(' AND vid.VIDEO_PRODUCTION_END_DATE BETWEEN \''+arg_dict['from_date']+'\' AND \''+arg_dict['to_date']+ ' \'  ')
+    
+    sql.append(r""" GROUP BY YEAR,MONTH ORDER BY YEAR,MONTH """)
+    
+    return ''.join(sql)
+
 # geog can be (country,state,district,block,village)
 #id of the geog
 #from_date and to_date (optional)
@@ -344,7 +369,7 @@ def overview_sum_geog(arg_dict):
             return_val.append(sql);
         if('from_date' in arg_dict and 'to_date' in arg_dict):
             return_val.append("AND scr.DATE between \'" + arg_dict['from_date'] + "\' and \'" + arg_dict['to_date']  +"\'")
-        
+
     return_val.append("""
     ) t1
     ,
@@ -537,18 +562,81 @@ def video_language_wise_bar(**args):
 
     return '\n'.join(sql)
 
+
 def video_month_bar_year(arg_dict):
     return """
     SELECT min(YEAR( vid.VIDEO_PRODUCTION_END_DATE )) as min_year, 
            max(YEAR( vid.VIDEO_PRODUCTION_END_DATE )) as max_year
     FROM VIDEO vid"""
 
-def video_month_bar(arg_dict):
-    
-    return  """
-    SELECT COUNT( DISTINCT VID.ID ) as count , MONTH( VID.VIDEO_PRODUCTION_END_DATE ) AS
-    MONTH, YEAR( vid.VIDEO_PRODUCTION_END_DATE ) AS YEAR
-    FROM VIDEO VID
-    GROUP BY MONTH, YEAR
-    ORDER BY YEAR, MONTH
-    """
+# This below section contains Query constructors for  
+# total number of videos/screenings/avg time taken.
+#arguments (geod, id) and (from_date, to_date) optional
+
+def video_tot_video(**args):
+    sql = []
+    sql.append(r' SELECT COUNT(DISTINCT VID.id ) AS count FROM VIDEO VID, VILLAGE VIL')
+    if 'geog' in args:
+        if args['geog'] == 'state':
+            sql.append(r',BLOCK B, DISTRICT D WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+        elif args['geog'] == 'district':
+            sql.append(r""",BLOCK B WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+        
+        elif args['geog'] == 'block':
+            sql.append(r""" WHERE VID.village_id = VIL.id AND VIL.block_id  = """+str(args['id']) )
+        
+        elif args['geog'] == 'village':
+            sql.append(r""" WHERE VID.village_id = """+str(args['id']) )
+        
+    if 'from_date' in args and 'to_date' in args:
+        sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+           
+    return ''.join(sql)
+
+# Query constructor for generating total screenings.
+#arguments (geod, id) and (from_date, to_date) optional
+
+def video_tot_scr(**args):
+    sql = []
+    sql.append(r' SELECT COUNT(DISTINCT SC.id ) AS count FROM SCREENING SC, VILLAGE VIL')
+    if 'geog' in args:
+        if args['geog'] == 'state':
+            sql.append(r',BLOCK B, DISTRICT D WHERE SC.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+        elif args['geog'] == 'district':
+            sql.append(r""",BLOCK B WHERE SC.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+        
+        elif args['geog'] == 'block':
+            sql.append(r""" WHERE SC.village_id = VIL.id AND VIL.block_id  = """+str(args['id']) )
+        
+        elif args['geog'] == 'village':
+            sql.append(r""" WHERE SC.village_id = """+str(args['id']) )
+        
+    if 'from_date' in args and 'to_date' in args:
+        sql.append(' AND SC.DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+           
+    return ''.join(sql)
+
+# Query constructor for generating average time taken to produce video
+#arguments (geod, id) and (from_date, to_date) optional
+
+def video_avg_time(**args):
+    sql = []
+    sql.append(r' SELECT DISTINCT VID.id, DATEDIFF(VIDEO_PRODUCTION_END_DATE,VIDEO_PRODUCTION_START_DATE) as dif FROM VIDEO VID, VILLAGE VIL')
+    if 'geog' in args:
+        if args['geog'] == 'state':
+            sql.append(r',BLOCK B, DISTRICT D WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+        elif args['geog'] == 'district':
+            sql.append(r""",BLOCK B WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+        
+        elif args['geog'] == 'block':
+            sql.append(r""" WHERE VID.village_id = VIL.id AND VIL.block_id  = """+str(args['id']) )
+        
+        elif args['geog'] == 'village':
+            sql.append(r""" WHERE VID.village_id = """+str(args['id']) )
+        
+    if 'from_date' in args and 'to_date' in args:
+        sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+           
+    return ''.join(sql)
+
+
