@@ -5,8 +5,14 @@ from calendar import week
 import datetime
 import string
 from dg.output  import database
-from dg.output.database import run_query, run_query_dict, construct_query, video_malefemale_ratio
+from dg.output.database import run_query, run_query_dict, construct_query, video_malefemale_ratio, video_month_bar
 import django 
+
+def test_output(request,geog,id):
+    
+    #return render_to_response('amcolumn.html')
+    return render_to_response('amcolumn.html',{'flash_geog':geog,'id':id})
+
 
 def overview(request,geog,id):
     
@@ -159,7 +165,8 @@ def overview_line_graph(request,geog,id):
     return HttpResponse('\n'.join(str_list))
     
 
-# Pie chart for male-female ratio in video module  
+# Pie chart for male-female ratio in video module 
+ 
 def video_pie_graph_mf_ratio(request,geog,id):
     id = int(id)
     if 'from_date' in request.GET and request.GET['from_date'] \
@@ -288,30 +295,39 @@ def video_monthwise_bar_data(request,geog,id):
     return HttpResponse('\n'.join([';'.join(x) for x in data if len(x) > 1]))
 
 def video_monthwise_bar_settings(request,geog,id):
+    id = int(id)
+     
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         from_year = int(from_date.split('-')[0])
         to_year = int(to_date.split('-')[0]);
         
     else:
-        rs = run_query(database.video_month_bar_year({}))
-        from_year = int(rs[0]['min_year'])
-        to_year = int(rs[0]['max_year'])
-    
-
-    year_list = range(from_year,to_year+1)
+        rs = run_query(database.video_month_bar(dict(geog = geog, id = id)));
+        year_list = []
+        for i in range(len(rs)):
+            if rs [i]['YEAR'] not in year_list:
+                year_list.append(rs[i]['YEAR'])
+        if year_list:
+            from_year = int(min(year_list))
+            to_year = int(max(year_list))
+            year_list = range(from_year,to_year+1)
     
     #Making Settings file
-    settings = []
-    settings.append(r'<graphs>')
-    
-    for year in year_list:
-        settings.append(r'<graph><type/><title>'+str(year)+'</title></graph>')
-        
-        
-    settings.append(r'</graphs>')
-    settings = ''.join(settings)
-    
+            settings = []
+            settings.append(r'<settings><graphs>')
+            
+            for year in year_list:
+                settings.append(r'<graph><type/><title>'+str(year)+'</title></graph>')
+                
+                
+            settings.append(r'</graphs></settings>')
+            settings = ''.join(settings)
+            
+        else:
+            settings = []
+            settings.append(r'<settings><graphs></settings></graphs>')
+           
     return HttpResponse(settings)
 
 def video_actor_wise_pie(request,geog,id):
@@ -392,5 +408,40 @@ def video_geog_pie_data(request,geog,id):
         
     
 def video_module(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        tot_vid = run_query(database.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date))
+        tot_scr = run_query(database.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date))
+        tot_avg = run_query(database.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date))
+    else:
+        date_range = 0    
+        tot_vid = run_query(database.video_tot_video(geog = geog, id = id))
+        tot_scr = run_query(database.video_tot_scr(geog = geog, id = id))
+        tot_avg = run_query(database.video_avg_time(geog = geog, id = id))
+        
+    # calculating average
+    tot = 0
+    for i in range(len(tot_avg)):
+        if tot_avg[i]['dif'] == 0:
+            tot_avg[i]['dif'] = 1
     
-    return render_to_response('video_module.html',dict(geog=geog,id=id))
+    for i in range(len(tot_avg)):
+        tot = tot + tot_avg[i]['dif']
+    
+    tot_video = tot_vid[0]['count']
+    tot_screening = tot_scr[0]['count']
+    if len(tot_avg) == 0:
+        tot_average = 0
+    else:
+        tot_average = tot/len(tot_avg)
+        
+    
+    return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,tot_screening=tot_screening, \
+                                                       tot_average= tot_average))
+    #{'tot_video':tot_video,'tot_screening':tot_screening,'tot_average':tot_average}
+
+
