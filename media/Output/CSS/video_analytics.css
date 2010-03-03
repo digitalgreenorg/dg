@@ -9,11 +9,11 @@
 #analytics1_tr2 { width:450px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center;color: #666666 }
 
 
-.moduletd  {width:450px; background-image: url(/media/Output/Images/Video_module_header.png); background-repeat:no-repeat; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
+.moduletd  {width:450px; background-image: url(/media/Output/Images/module_header.png); background-repeat:no-repeat; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
 
 .moduletd1 { width:450px; border-left-style: ridge; border-left-color:#66CC00; border-right-style: ridge; border-right-color: #66CC00 }
 
-.video_footer {width:450px; background-image:; background-repeat:no-repeat;}
+.video_footer {width:450px; background-image:url(/media/Output/Images/module_footer1.png); background-repeat:no-repeat;}
 #footer {
 background-image:url(/media/Output/Images/defaultfooterbg1.png);
 background-repeat:no-repeat;
