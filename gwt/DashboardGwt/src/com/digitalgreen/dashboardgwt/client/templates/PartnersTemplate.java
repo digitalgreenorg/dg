@@ -86,6 +86,11 @@ public class PartnersTemplate extends BaseTemplate {
 													"<div class='form-row date_of_association  '>" +
 														"<div>" +
 															"<label for='id_date_of_association'>Date of association:</label><input id='id_date_of_association' type='text' class='vDateField' name='date_of_association' size='10' />" +
+															"<span>&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row phone_no  '>" +

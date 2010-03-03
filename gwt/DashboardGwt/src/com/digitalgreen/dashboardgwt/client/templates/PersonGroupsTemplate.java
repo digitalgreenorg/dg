@@ -108,6 +108,11 @@ public class PersonGroupsTemplate extends BaseTemplate{
 													"<div class='form-row timings  '>" +
 														"<div>" +
 															"<label for='id_timings'>Timings:</label><input id='id_timings' type='text' class='vTimeField' name='timings' size='8' />" +
+															"<span>&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.handleClockQuicklink(0, new Date().getHourMinuteSecond());'>Now</a>&nbsp;|&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.openClock(0);' id='clocklink0'>" +
+																"<img src='http://174.129.13.106/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
+															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row village  '>" +

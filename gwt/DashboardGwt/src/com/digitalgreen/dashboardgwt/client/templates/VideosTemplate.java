@@ -116,11 +116,21 @@ public class VideosTemplate extends BaseTemplate {
     												"<div class='form-row video_production_start_date  '>" +
     													"<div>" +
     														"<label for='id_video_production_start_date' class='required'>Video production start date:</label><input id='id_video_production_start_date' type='text' class='vDateField' name='video_production_start_date' size='10' />" +
+    														"<span>&nbsp;" +
+    															"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+    															"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+    															"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+    														"</span>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row video_production_end_date  '>" +
     													"<div>" +
     														"<label for='id_video_production_end_date' class='required'>Video production end date:</label><input id='id_video_production_end_date' type='text' class='vDateField' name='video_production_end_date' size='10' />" +
+    														"<span>&nbsp;" +
+    															"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+    															"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+    															"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+    														"</span>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row language  '>" +
@@ -266,11 +276,21 @@ public class VideosTemplate extends BaseTemplate {
 													"<div class='form-row edit_start_date  '>" +
 														"<div>" +
 															"<label for='id_edit_start_date'>Edit start date:</label><input id='id_edit_start_date' type='text' class='vDateField' name='edit_start_date' size='10' />" +
+															"<span>&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row edit_finish_date  '>" +
 														"<div>" +
 															"<label for='id_edit_finish_date'>Edit finish date:</label><input id='id_edit_finish_date' type='text' class='vDateField' name='edit_finish_date' size='10' />" +
+															"<span>&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row thematic_quality  '>" +
@@ -291,6 +311,11 @@ public class VideosTemplate extends BaseTemplate {
 													"<div class='form-row approval_date  '>" +
 														"<div>" +
 															"<label for='id_approval_date'>Approval date:</label><input id='id_approval_date' type='text' class='vDateField' name='approval_date' size='10' />" +
+															"<span>&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row supplementary_video_produced  '>" +

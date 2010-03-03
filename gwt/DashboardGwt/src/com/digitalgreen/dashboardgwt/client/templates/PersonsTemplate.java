@@ -208,6 +208,11 @@ public class PersonsTemplate extends BaseTemplate{
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
 																"<label for='id_personadoptpractice_set-0-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-0-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-0-date_of_adoption' size='10' />" +
+																"<span>&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+																"</span>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +
@@ -252,6 +257,11 @@ public class PersonsTemplate extends BaseTemplate{
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
 																"<label for='id_personadoptpractice_set-1-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-1-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-1-date_of_adoption' size='10' />" +
+																"<span>&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+																"</span>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +
@@ -296,6 +306,11 @@ public class PersonsTemplate extends BaseTemplate{
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
 																"<label for='id_personadoptpractice_set-2-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-2-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-2-date_of_adoption' size='10' />" +
+																"<span>&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
+																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
+																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
+																"</span>" +
 															"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +
