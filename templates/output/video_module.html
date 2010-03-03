@@ -235,14 +235,15 @@
 		<table id="analytics1_table"  width="913" border="0" cellspacing="5px">
       	<tbody>
 				<tr id="analytics1_tr1">
-        			<td id="analytics1_td1" scope="col"  width="50%" height="31"><div align="left" ><span class="style7"> &nbsp;&nbsp;<span class="style21">Total Number of Videos Produced:<br /> </span></span>
-          			</td>
-					<td id="analytics1_td2" scope="col" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Total Number of Videos Screened:
+        			<td id="analytics1_td1" scope="col"  width="50%" height="31"><div align="left" ><span class="style7"> &nbsp;&nbsp;<span class="style21">Total Number of Videos Produced: &nbsp;&nbsp;{{tot_video}}<br /> 
+        			  </span></span>
+       			  </td>
+					<td id="analytics1_td2" scope="col" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Total Number of Videos Screened:&nbsp;&nbsp;{{tot_screening}}
         			</span>
       				</td>
 				</tr>
       			<tr id="analytics1_tr2"> 
-        			<td id="analytics1_tr2td1" scope="row" height="31" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Average Time Taken to Produce Video:</span></span> 
+        			<td id="analytics1_tr2td1" scope="row" height="31" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Average Time Taken to Produce Video:&nbsp;&nbsp;{{tot_average}} Days</span></span> 
         			</td>
 					<td id="analytics1_tr2td2">&nbsp;</td>
 		  </tr>
@@ -266,6 +267,8 @@
 						<td width=50% height="300px" class="moduletd1">
 							<div id = "flash_area_mf_ratio" height='150px'></div>
 							<div id = "flash_area_actor_ratio" height='150px'></div>
+														
+							
 						</td>
 					</tr>
 					<tr>
@@ -334,14 +337,15 @@
 	actor_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/actorpie/{{geog}}/{{id}}/"));
 	actor_wise_pie.write("flash_area_actor_ratio");
 	
-	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "monthbar", "420", "300", "8", "#FFFFFF");
+	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "300", "8", "#FFFFFF");
 	monthbar.addVariable("path", "/media/Output/amcolumn/");
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	var additional_chart_settings = '';
-	var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/district/5/", async: false }).responseText;
+	var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
 	
-	monthbar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series},{title}: Video Productions = {value}</balloon_text></column>"+additional_chart_settings+"</settings>"));
-	monthbar.addVariable("data_file",'/output/video/monthbar/data/district/5/');
+	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+	monthbar.addVariable("data_file",'/output/video/monthbar/data/{{geog}}/{{id}}/');
+			
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
 	
@@ -349,7 +353,7 @@
 	var languagebar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "languagebar", "420", "300", "8", "#FFFFFF");
 	languagebar.addVariable("path", "/media/Output/amcolumn/");
 	languagebar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
-	languagebar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series}: Video Productions = {value}</balloon_text></column><graphs><graph><type/><title>Language</title></graph></graphs></settings>"));
+	languagebar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series}: Video Production = {value}</balloon_text></column><graphs><graph><type/><title>Language</title></graph></graphs></settings>"));
 	languagebar.addVariable("data_file",'/output/video/languagebar/data/{{geog}}/{{id}}/');			
 	languagebar.addVariable("preloader_color", "#999999");
 	languagebar.write("flash_area_languagewise_bar");
