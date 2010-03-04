@@ -1,6 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
@@ -57,6 +56,7 @@ public class IndexTemplate extends BaseTemplate {
 		Hyperlink link = new Hyperlink(linkTxt, true, tokenTxt); 
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				Template.addLoadingMessage();
 				servlet.response();
 			}	
 		});

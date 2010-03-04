@@ -28,7 +28,6 @@ public class BaseTemplate extends Template {
 	
 	private void initUI() {
 		this.baseContentHtmlPanel = new HTMLPanel(BaseContentHtml);
-		//RootPanel.get().clear();
 		RootPanel.get().insert(this.baseContentHtmlPanel, 0);
 	}
 	
@@ -65,6 +64,7 @@ public class BaseTemplate extends Template {
 			// Take them to the add page for screenings
 			addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					Template.addLoadingMessage();
 					servlet.response();
 				}
 			});
@@ -103,6 +103,7 @@ public class BaseTemplate extends Template {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
 		    b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					Template.addLoadingMessage();
 					// The query string can only be formed if we're on the page with 
 					// the add-form id, set when we got a GET request on the page
 					String formQueryString = BaseTemplate.getFormString("add-form");

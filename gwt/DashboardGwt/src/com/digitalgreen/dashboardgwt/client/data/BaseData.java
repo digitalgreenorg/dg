@@ -58,7 +58,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private void setResponseText(String responseText) {
 		this.responseText = responseText;
 	}
-	
+
 	private void setRequestError(int errorCode) {
 		this.requestError = errorCode;
 	}
@@ -82,7 +82,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		});
 		} catch (RequestException e) {
 			// Couldn't connect to server
-			Window.alert("GOT A MASSIVE SERVER ERROR");
 			setRequestError(BaseData.ERROR_SERVER);
 		}
 	}
