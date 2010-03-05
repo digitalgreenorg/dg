@@ -25,15 +25,7 @@ public class Login extends BaseServlet {
 		super.response();
 		String method = this.getMethodTypeCtx();
 		
-		if(this.isLoggedIn()) {
-			super.redirectTo(new Index());
-		}
-
 		if(method == RequestContext.METHOD_POST) {
-			// - authenticate by checking backend
-			// - get some user data like role and set in cookie
-			// - set cookie if auth successful
-			// - redirect to index
 			HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 			String queryArg = (String)queryArgs.get("action");
 			if(queryArg == "logout"){
@@ -66,7 +58,7 @@ public class Login extends BaseServlet {
 						} else {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Invalid credentials, please try again");
-							getServlet().redirectTo(new Login(requestContext));				
+							getServlet().redirectTo(new Login(requestContext));		
 						}
 					}
 				});
@@ -74,8 +66,12 @@ public class Login extends BaseServlet {
 						(String)this.form.get("password")));
 			}
 		} else if (method == RequestContext.METHOD_GET) {
-			// Most likely do nothing in this GET case
-			this.fillTemplate(new LoginTemplate(this.requestContext));
+			if(this.isLoggedIn()) {
+				super.redirectTo(new Index());
+			} else {
+				// Most likely do nothing in this GET case
+				super.fillTemplate(new LoginTemplate(this.requestContext));
+			}
 		}
 	}
 }

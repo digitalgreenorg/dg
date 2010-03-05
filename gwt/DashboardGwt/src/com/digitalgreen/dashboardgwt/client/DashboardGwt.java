@@ -8,7 +8,7 @@ import com.google.gwt.user.client.Timer;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals
-	private static boolean isOnline = true;
+	private static boolean isOnline = false;
 	
 	final static private String digitalgreenDatabaseName = "digitalgreen";
 	final static private int timerDelayFactor = 2;

@@ -53,7 +53,6 @@ public class Template implements TemplateInterface {
 			messageHtml.setStyleName("messageSpinnerDivClass");
 			RootPanel.get("error-space").insert(imageHtml, 0);
 			RootPanel.get("error-space").insert(messageHtml, 1);
-			Window.alert("THERE?");
 		} catch (Exception e) {}
 	}
 	
