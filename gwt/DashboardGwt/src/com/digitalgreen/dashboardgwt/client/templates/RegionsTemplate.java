@@ -34,47 +34,16 @@ public class RegionsTemplate extends BaseTemplate {
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
 		// Add it to the rootpanel
-		//Now add any listings if it is a list template
-		this.fillListings();
 		super.fill();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
-		
+
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveRegion);
 		
 	}
 	
-	protected void fillListings(){
-		HashMap queryArgs = this.getRequestContext().getArgs();
-		List regions = (List)queryArgs.get("listing");
-		String requestMethod = this.getRequestContext().getMethodTypeCtx();
-		if(requestMethod == RequestContext.METHOD_GET) {
-			if(regions  != null){
-				String style;
-				ArrayList region;
-				String tableRows ="";
-				for (int row = 0; row < regions.size(); ++row) {
-					if(row%2==0)
-						style= "row2";
-					else
-						style = "row1";
-					region = (ArrayList) regions.get(row);
-                	tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ (Integer)region.get(0) +"' name='_selected_action' /></td><th><a href='/admin/dashboard/region/"+ (Integer)region.get(0) +"/'>" + (String)region.get(1) +"</a></th></tr>";
-				}
-				//Window.alert(tableRows);
-				//RootPanel.get("data-rows").add(new HTMLPanel(tableRows));
-				
-				regionsListFormHtml = regionsListFormHtml + tableRows + "</tbody></table>";
-			}
-		}
-		
-	}
-	
-	
-	
-	
-	static private String regionsListFormHtml = "<div class='actions'>" +
+	private String regionsListFormHtml = "<div class='actions'>" +
 						"<label>Action: <select name='action'>" +
 							"<option value='' selected='selected'>---------</option>" +
 							"<option value='delete_selected'>Delete selected regions</option>" +
@@ -96,14 +65,9 @@ public class RegionsTemplate extends BaseTemplate {
 							"</tr>" +
 						"</thead>" +
 						"<tbody>";
-	
-	//+
-	//						"<div id='data-rows'" +       // Insert data rows here
-	//						"</div>" +
-	//					"</tbody>" +
-	//				"</table>";
+							
 						
-	final static private String regionsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final  private String regionsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 						"<div id='content' class='flex'>" +
 							"<h1>Select region to change</h1>" +
 							"<div id='content-main'>" +
@@ -120,7 +84,7 @@ public class RegionsTemplate extends BaseTemplate {
 							"</div>" +
 						"</div>";
 	
-	final static private String regionsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final  private String regionsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 			"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +
 			"<script src='/media/js/calendar.js' type='text/javascript'></script>" +
 		"<div id='content' class='colM'>" +
