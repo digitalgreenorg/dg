@@ -32,6 +32,7 @@ public class Login extends BaseServlet {
 				Cookies.removeCookie("username");
 				this.redirectTo(new Login());
 			} else {
+
 				LoginData loginData = new LoginData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results == "1") {

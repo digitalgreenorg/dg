@@ -32,9 +32,6 @@ public class LoginData extends BaseData {
 	}
 
 	public Object authenticate(String username, String password) {
-		if(!this.isOnline()) {
-			return false;
-		}
 		
 		if(this.isOnline()) {
 			this.dataOnlineCallbacks.onlineSuccessCallback("1");
