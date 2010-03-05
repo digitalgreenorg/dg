@@ -2,21 +2,26 @@ package com.digitalgreen.dashboardgwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.BaseData;
+import com.digitalgreen.dashboardgwt.client.data.LoginData;
+import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals
-	private static boolean isOnline = true;
 	
-	final static private String digitalgreenDatabaseName = "digitalgreen";
 	final static private int timerDelayFactor = 2;
 	final static private int timerDelayDefault = 5000;
 	private Timer timer;
 	private int timeDelay;
 
 	public void onModuleLoad() {
+		setup();
 		Index index  = new Index();
 		index.response();
 		/*
@@ -30,6 +35,25 @@ public class DashboardGwt implements EntryPoint {
 		*/
 	}
 		
+	/* Sets the status of the application as online / offline
+	 * This function is called every time the application is refreshed */ 
+	private void setup(){
+		BaseData instance = new BaseData();
+		if(instance.checkIfUserTableExists()){
+			int status = instance.getApplicationStatus();
+			if(status == 0){
+				ApplicationConstants.toggleConnection(false);
+			}
+			else{
+				ApplicationConstants.toggleConnection(true);
+			}	
+		}
+		else{
+			ApplicationConstants.toggleConnection(true);
+		}
+	}
+
+	
 	private void checkServerConnection() {
 		String url = RequestContext.getServerUrl();
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
@@ -37,18 +61,18 @@ public class DashboardGwt implements EntryPoint {
 			Request request = builder.sendRequest(null, new RequestCallback() {
 			public void onResponseReceived(Request request, Response response) {
 				if (response.getStatusCode() == 200) {
-					DashboardGwt.toggleConnection(true);
+					ApplicationConstants.toggleConnection(true);
 					computeTimerDelay();
 				}
 			}
 			public void onError(Request request, Throwable exception) {
-				DashboardGwt.toggleConnection(false);
+				ApplicationConstants.toggleConnection(false);
 				computeTimerDelay();
 			}		           
 		});
 		} catch (RequestException e) {
 			// Couldn't connect to server
-			DashboardGwt.toggleConnection(false);
+			ApplicationConstants.toggleConnection(false);
 			computeTimerDelay();
 		}
 	}
@@ -62,15 +86,5 @@ public class DashboardGwt implements EntryPoint {
 		this.timer.schedule(this.timeDelay);
 	}
 	
-	public static void toggleConnection(boolean isOnline) {
-		DashboardGwt.isOnline = isOnline;
-	}
 	
-	public static boolean getCurrentOnlineStatus() {
-		return DashboardGwt.isOnline;
-	}
-	
-	public static String getDatabaseName() {
-		return DashboardGwt.digitalgreenDatabaseName;
-	}
 }

@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
@@ -26,8 +27,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class IndexTemplate extends BaseTemplate {
 	
@@ -37,18 +40,49 @@ public class IndexTemplate extends BaseTemplate {
 		super(requestContext);
 	}
 	
-	private void goOfflineButton(){
-		final Button button = new Button("GO OFFLINE");
-		RootPanel.get("goOffline").add(button);
-		button.addClickHandler(new ClickHandler() {
+	private void goOfflineOnline(){
+		final Button offlineButton = new Button("GO OFFLINE");
+		final Button onlineButton = new Button("GO ONLINE");
+		final Button syncButton = new Button("SYNC");
+		VerticalPanel vpanel = new VerticalPanel();
+		HorizontalPanel hpanel = new HorizontalPanel();
+		hpanel.add(offlineButton);
+		hpanel.add(syncButton);
+		vpanel.add(hpanel);
+		vpanel.add(onlineButton);
+		RootPanel.get("goOffline").add(vpanel);
+		
+		offlineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "gooffline");
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
-		    	   button.setText("GO ONLINE");
-		      }
+		      }		      
 	    });
+		
+		onlineButton.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	   requestContext.getArgs().put("action", "goonline");
+		    	   Index index = new Index(requestContext);
+		    	   index.response();
+		      }		      
+	    });
+		
+		syncButton.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	   Window.alert("Functionality yet to be implemented");
+		      }		      
+	    });
+		
+		if (!ApplicationConstants.getCurrentOnlineStatus()){
+			offlineButton.setEnabled(false);
+			syncButton.setEnabled(false);
+		}
+		else{
+			onlineButton.setEnabled(false);
+		}	
 	}
 	
 	
@@ -142,10 +176,11 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
-		
+
 		HTMLPanel h = new HTMLPanel("<div id = 'goOffline' style='float: right; margin: 100px;'></div>");
 		RootPanel.get("container").add(h);
-		goOfflineButton();
+		goOfflineOnline();
+		
 	}
 	
 	final static private String indexContentHtml = "<div id='content' class='colMS'>" +

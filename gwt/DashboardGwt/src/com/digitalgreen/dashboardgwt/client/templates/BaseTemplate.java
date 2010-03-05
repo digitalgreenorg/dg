@@ -1,10 +1,13 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -93,14 +96,19 @@ public class BaseTemplate extends Template {
 				super.setContentPanel(this.postForm);
 			}else {
 				this.displayHtml = new HTMLPanel(listHtml);
+				
 				super.setContentPanel(this.displayHtml);
 			}
 		}	
 	}
 	
+	
+	
 	protected void fillDGSubmitControls(final BaseServlet servlet) {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
+			
+			//b.addStyleName(".button.default, input.default[type=\"submit\"], .submit-row input.default ");
 		    b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					Template.addLoadingMessage();

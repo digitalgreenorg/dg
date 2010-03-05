@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.DashboardGwt;
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
@@ -17,16 +18,26 @@ import com.google.gwt.user.client.Window;
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private static Database db;
-	private static String databaseName = DashboardGwt.getDatabaseName();
+	private static String databaseName = ApplicationConstants.getDatabaseName();
 
 	private String responseText = null;
 	private int requestError = 0;
 	protected BaseData.Data data;
 	protected ResultSet lastResultSet;
 	
-	final static private int ERROR_RESPONSE = 1;
-	final static private int ERROR_SERVER = 2;
+	final static public int ERROR_RESPONSE = 1;
+	final static public int ERROR_SERVER = 2;
+	
+	protected static String getLastInsertedID = "SELECT last_inserted_id FROM `user` WHERE username= ?;";
+	
+	protected static String updateLastInsertedID = "UPDATE `user` SET last_inserted_id = ? WHERE username = ?;";
+	
+	protected static String getApplicationStatus = "SELECT `app_status` FROM `user`;";
+	
+	protected static String updateApplicationStatus = "UPDATE `user` SET app_status=? WHERE username = ?;";
 
+	protected static String userTableExists = "SELECT * FROM sqlite_master where type='table' and name = 'user';";
+	
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
 	public class Data {
@@ -48,7 +59,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	protected static boolean isOnline() {
-		return DashboardGwt.getCurrentOnlineStatus();
+		return ApplicationConstants.getCurrentOnlineStatus();
 	}
 	
 	protected boolean isRequestError() {
@@ -77,12 +88,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 			public void onError(Request request, Throwable exception) {
 				setRequestError(BaseData.ERROR_RESPONSE);
-				dataOnlineCallbacks.onlineErrorCallback();
+				dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
 			}		           
 		});
 		} catch (RequestException e) {
 			// Couldn't connect to server
 			setRequestError(BaseData.ERROR_SERVER);
+			dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_SERVER);
 		}
 	}
 	
@@ -94,9 +106,14 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.request(RequestBuilder.POST, url, postData);
 	}
 	
-	public static void dbOpen() {
-		BaseData.db = Factory.getInstance().createDatabase();
-        db.open(BaseData.databaseName);
+	public static Boolean dbOpen() {
+		try{
+			BaseData.db = Factory.getInstance().createDatabase();
+			db.open(BaseData.databaseName);
+			return true;
+		}catch (Exception e){
+			return false;
+		}
 	}
 	
 	public static void dbClose() {
@@ -115,42 +132,137 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		db.execute("COMMIT;");	
 	}
 	
+	public void create(String createSql, String ...args){
+		BaseData.dbOpen();
+		this.execute(createSql, args);
+		BaseData.dbClose();
+	}
+	
 	public void delete(String deleteSql, String ...args) {
-		this.execute(deleteSql, args);	
+		BaseData.dbOpen();
+		try {
+			BaseData.dbStartTransaction();
+			this.execute(deleteSql, args);
+			BaseData.dbCommit();
+			BaseData.dbClose();
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			Window.alert("Database error: " + e.toString());
+			BaseData.dbClose();
+		}
 	}
 
 	public void insert(String insertSql, String ...args) {
-		this.execute(insertSql, args);
+		try {
+			BaseData.dbOpen();
+			BaseData.dbStartTransaction();
+			this.execute(insertSql, args);
+			BaseData.dbCommit();
+			BaseData.dbClose();
+		} catch (DatabaseException e) {
+			Window.alert("Database error: " + e.toString());
+			BaseData.dbClose();
+		}
+		
+	}
+	
+	public void update(String updateSql, String ...args) {
+		BaseData.dbOpen();
+		try {
+			BaseData.dbStartTransaction();
+			this.execute(updateSql, args);
+			BaseData.dbCommit();
+			BaseData.dbClose();
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			Window.alert("Database error: " + e.toString());
+			BaseData.dbClose();
+		}
 	}
 
+	/* Cannot close the database after a select statement. 
+	 * Closing the database will delete the Result Set */
 	public void select(String selectSql, String ...args) {
 		this.execute(selectSql, args);
 	}
-
-	public void update(String updateSql, String ...args) {
-		this.execute(updateSql, args);
-	}
-
-	public int getLastInsertRowId() {
-		return BaseData.db.getLastInsertRowId();
+	
+	public String getNextRowId(){
+		try {
+			int id;
+			BaseData.dbOpen();
+			this.select(getLastInsertedID, ApplicationConstants.getUsernameCookie());
+			if (this.getResultSet().isValidRow()){
+				id = this.getResultSet().getFieldAsInt(0);
+				id++;
+				BaseData.dbClose();
+				return id+"";
+			} 
+		}catch (DatabaseException e) {
+				Window.alert("Database exception error : " +  e.toString());
+				BaseData.dbClose();
+		}
+		return "error";
 	}
 	
+	
+	public void updateLastInsertedID(){
+			String id = this.getNextRowId();
+			this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
+	}
+	
+	public boolean checkIfUserTableExists(){
+		BaseData.dbOpen();
+		this.select(userTableExists);
+		if (this.getResultSet().isValidRow()){
+			BaseData.dbClose();
+			return true;
+		}
+		else{
+			BaseData.dbClose();
+			return false;
+		}	
+	}
+	
+	public int getApplicationStatus(){
+		try{
+			BaseData.dbOpen();
+			this.select(getApplicationStatus);
+			if (this.getResultSet().isValidRow()){
+				int status = this.getResultSet().getFieldAsInt(0);
+				return status;
+			}
+		} catch (DatabaseException e) {
+			Window.alert("Database exception error : " +  e.toString());
+		}finally {
+			BaseData.dbClose();	
+		}
+		return -1;
+	}
+	
+
+	public void updateAppStatus(String app_status, String username){
+		this.update(updateApplicationStatus, app_status,username );
+	}
+	
+	
 	protected ResultSet getResultSet() {
-		if(this.lastResultSet != null && this.lastResultSet.isValidRow())
-			return this.lastResultSet;
-		return null;
+		//if(this.lastResultSet != null && this.lastResultSet.isValidRow())
+		return this.lastResultSet;
+		//return null;
 	}
 	
 	public void execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
-			BaseData.dbOpen();
+			//BaseData.dbOpen();
 			this.lastResultSet = BaseData.db.execute(sql, args);
+			
 		} catch (DatabaseException e) {
-			Window.alert("Database execute error: " + e.toString());
-		} finally {
+			Window.alert("Database execute error:" + e.toString());
+		} /*finally {
 			BaseData.dbClose();
-		}
+			// Closing the database making the value of lastResultSet as null
+		}*/
 	}
 	
 	// Basically a wrapper around a core data function to execute

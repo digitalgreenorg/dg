@@ -5,5 +5,4 @@ interface OfflineDataInterface {
 	public void insert(String insertSql, String ...args);
 	public void delete(String deleteSql, String ...args);
 	public void update(String updateSql, String ...args);
-	public int getLastInsertRowId();
 }

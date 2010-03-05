@@ -7,6 +7,8 @@ public class Schema {
 	
 	public static void createSchema() {
 		try {
+			
+			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
 			BaseData.getDb().execute(RegionsData.createTable);
 			BaseData.getDb().execute(EquipmentHoldersData.createTable);
@@ -38,9 +40,10 @@ public class Schema {
 			BaseData.getDb().execute(PersonMeetingAttendanceData.createTable);
 			BaseData.getDb().execute(PersonAdoptPracticeData.createTable);
 			BaseData.getDb().execute(EquipmentsData.createTable);
-			BaseData.getDb().execute(UsersData.createTable);
+			BaseData.getDb().execute(LoginData.createTable);
 			BaseData.getDb().execute(FormsData.createTable);
 			BaseData.dbCommit();
+			BaseData.dbClose();
 		} catch (DatabaseException e) {
 			Window.alert("Database Exception : Error in creating the tables");
 			// TODO Auto-generated catch block

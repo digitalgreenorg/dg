@@ -2,6 +2,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 
 import java.util.HashMap;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
@@ -59,7 +60,7 @@ public class BaseServlet implements ServletInterface {
 	
 	// Override this
 	public void response() {
-		String loggedInCtx = Cookies.getCookie("username");
+		String loggedInCtx = ApplicationConstants.getUsernameCookie();
 		// Must have a cookie
 		if(loggedInCtx == null || loggedInCtx == "") {
 			this.setIsLoggedIn(false);

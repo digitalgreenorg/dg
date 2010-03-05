@@ -13,6 +13,6 @@ public class OnlineOfflineCallbacks {
 	}
 	
 	public void onlineSuccessCallback(String results) {}
-	public void onlineErrorCallback() {}
+	public void onlineErrorCallback(int errorCode) {}
 	public void offlineSuccessCallback(Object results) {}
 }
