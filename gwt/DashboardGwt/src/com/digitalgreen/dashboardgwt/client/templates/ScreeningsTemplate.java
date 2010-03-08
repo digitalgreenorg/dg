@@ -96,6 +96,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 					"</div>";
 	
 	final static private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+			"<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
+			"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
 						"<div id='content' class='colM'>" +
 							"<h1>Add Screening</h1>" +
 							"<div id='content-main'>" +

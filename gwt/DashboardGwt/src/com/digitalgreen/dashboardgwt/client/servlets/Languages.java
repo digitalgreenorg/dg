@@ -2,6 +2,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.templates.LanguagesTemplate;
+import com.google.gwt.user.client.Window;
 
 public class Languages extends BaseServlet{
 	

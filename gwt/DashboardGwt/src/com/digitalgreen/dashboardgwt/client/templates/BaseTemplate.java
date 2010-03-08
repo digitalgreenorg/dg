@@ -10,6 +10,9 @@ import com.digitalgreen.dashboardgwt.client.servlets.Login;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -23,6 +26,9 @@ public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
 	protected FormPanel postForm = null;
 	protected HTMLPanel displayHtml = null;
+	protected Label usrStr = new Label();
+	protected Label errMsg = new Label();
+	String historyToken = "";	
 	
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -40,6 +46,30 @@ public class BaseTemplate extends Template {
 	
 	public void setContentClassName(String className) {
 		RootPanel.get("content").setStyleName(className);
+	}
+	
+	public void setUserLable(String usr){
+		this.usrStr.setText(usr);
+	}
+	
+	public String getUserLabel(){
+		return this.usrStr.getText();
+	}
+	
+	public void setErrMsg(String msg){
+		this.errMsg.setText(msg);
+	}
+	
+	public String getErrMsg(){
+		return this.errMsg.getText();
+	}
+	
+	public void setHistoryToken(String token){
+		this.historyToken = token;
+	}
+	
+	public String getHistoryToken(){
+		return this.historyToken;
 	}
 	
 	@Override
@@ -165,7 +195,7 @@ public class BaseTemplate extends Template {
 	public static native String populateForm(String formId, String queryString) /*-{
 		return $wnd.populateForm(formId, queryString);
 	}-*/;
-
+	
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
 		"<!-- Header -->" +

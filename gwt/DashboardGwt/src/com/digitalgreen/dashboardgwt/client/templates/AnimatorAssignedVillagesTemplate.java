@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.templates;
 import java.util.HashMap;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 
 public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
