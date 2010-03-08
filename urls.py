@@ -21,7 +21,6 @@ urlpatterns = patterns('',
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
 #	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
-
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     	(r'^hello/$', hello),
@@ -62,7 +61,7 @@ urlpatterns = patterns('',
 	(r'^dashboard/screenings/$', screening),
 	(r'^dashboard/login/$', login),
 	(r'^dashboard/logout/$', logout),    
-    
+    (r'^output/test1/(country|state|district|block|village)/(\d+)$',test_output),
 
     (r'^output/dropdownval/$',overview_drop_down),
     (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overview),
@@ -70,10 +69,11 @@ urlpatterns = patterns('',
     (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',video_module),
     (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',video_pie_graph_mf_ratio),
     (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',video_actor_wise_pie),
+    (r'^output/video/typepie/(country|state|district|block|village)/(\d+)/$',video_type_wise_pie),
     (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',video_geog_pie_data),
+    (r'^output/video/practicescatter/(country|state|district|block|village)/(\d+)/$',video_practice_wise_scatter),
     (r'^output/video/languagebar/data/(country|state|district|block|village)/(\d+)/$',video_language_wise_bar_data),
     (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_data),
-    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings),
+    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings)
 
 )
-
