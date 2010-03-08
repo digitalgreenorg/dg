@@ -1,0 +1,13 @@
+[x];[y];[value];[bullet_color];[bullet_size];[url];[description]
+1;1;1;;;;Compost
+2;2;2;;;;Harvesting
+3;1;1;;;;Herbal medicine
+4;4;4;;;;Intercultural
+5;6;6;;;;Nursery
+6;4;4;;;;Pest & Disease Management
+7;1;1;;;;Seed Treatment
+8;4;4;;;;Sowing
+9;1;1;;;;Staking
+10;2;2;;;;Success story 
+11;2;2;;;;Transplantation
+12;1;1;;;;Yield comparaision

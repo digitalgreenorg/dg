@@ -232,7 +232,7 @@
 						
 			
 			<div id="analytics1">
-		<table id="analytics1_table"  width="913" border="0" cellspacing="5px">
+		<table id="analytics1_table"  width="913" border="0"  cellspacing="5px">
       	<tbody>
 				<tr id="analytics1_tr1">
         			<td id="analytics1_td1" scope="col"  width="50%" height="31"><div align="left" ><span class="style7"> &nbsp;&nbsp;<span class="style21">Total Number of Videos Produced: &nbsp;&nbsp;{{tot_video}}<br /> 
@@ -265,7 +265,9 @@
 					<tr >
 						<td id = "flash_area_monthwise_bar" width=50% height="300px" class="moduletd1"> </td>
 						<td width=50% height="300px" class="moduletd1">
+						<br />	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#666666"  ><b>Male Female Ratio</b></font>
 							<div id = "flash_area_mf_ratio" height='150px'></div>
+<br />	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#666666"  ><b>Actors Ratio</b></font>
 							<div id = "flash_area_actor_ratio" height='150px'></div>
 														
 							
@@ -285,7 +287,7 @@
 						<td width="50%" class="moduletd"> Language Wise Video Production </td>
 					</tr>
 					<tr>
-						<td width=50% height="300px" class="moduletd1"> </td>
+						<td id="flash_area_practice_type_scatter"  width=50% height="300px" class="moduletd1"> </td>
 						<td id = "flash_area_languagewise_bar" width=50% height="300px" class="moduletd1"> </td>
 					</tr>
 					<tr>
@@ -298,14 +300,13 @@
 				<div id="tabledynamic2">
 					<table id="table_video2" cellpadding="0px" cellspacing="0px" border="0" >	
 					<tr >
-						<td class='moduletd'>Video Type  
-						</td>
-						<td class='moduletd'>Number of videos  
-						</td>
-				 	</tr>
+						<td class='moduletd'>Video Type </td>
+						<td class='moduletd'>Number Of Videos </td>
+					</tr>
+					
 					<tr>
-						<td width=50% height="300px" class="moduletd1"> </td>
-						<td id = "flash_area_geogwise_pie" width=50% height="300px" class="moduletd1"> </td>
+						<td id = "flash_area_video_type_pie" width=50% height="300px" class="moduletd1"> </td>
+   						<td id = "flash_area_geogwise_pie" width=50% height="300px" class="moduletd1"> </td>
 					 </tr>
 					<tr>
 						<td width=50%  height="15px"> </td>
@@ -325,13 +326,15 @@
 
 <script type="text/javascript">
 		// <![CDATA[		
-	var so = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", "420", "150", "8", "#FFFFFF");
+	var so = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", "420", "200", "8", "#FFFFFF");
 	so.addVariable("path", "/media/Output/ampie/");
 	so.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 	so.addVariable("data_file", encodeURIComponent("/output/video/mfpie/{{geog}}/{{id}}/"));
 	so.write("flash_area_mf_ratio");
 	
-	var actor_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "150", "8", "#FFFFFF");
+		
+	
+	var actor_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "250", "8", "#FFFFFF");
 	actor_wise_pie.addVariable("path", "/media/Output/ampie/");
 	actor_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 	actor_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/actorpie/{{geog}}/{{id}}/"));
@@ -358,12 +361,26 @@
 	languagebar.addVariable("preloader_color", "#999999");
 	languagebar.write("flash_area_languagewise_bar");
 	
-	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "300", "8", "#FFFFFF");
+	
+	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "350", "8", "#FFFFFF");
 	geog_wise_pie.addVariable("path", "/media/Output/ampie/");
 	geog_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 	geog_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/geogpie/{{geog}}/{{id}}/"));
 	geog_wise_pie.addVariable("additional_chart_settings", encodeURIComponent("<settings><legend><enabled>true</enabled></legend></settings>"));
 	geog_wise_pie.write("flash_area_geogwise_pie");
+	
+	var type_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "400", "8", "#FFFFFF");
+	type_wise_pie.addVariable("path", "/media/Output/ampie/");
+	type_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	type_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/typepie/{{geog}}/{{id}}/"));
+	type_wise_pie.write("flash_area_video_type_pie");
+	
+	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
+	practice.addVariable("path", "amxy/");
+	practice.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
+	practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/"));
+	practice.write("flash_area_practice_type_scatter");
+	
 </script>
 
 

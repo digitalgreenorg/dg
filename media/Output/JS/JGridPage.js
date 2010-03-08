@@ -4,29 +4,29 @@ function gridview(){
 	    
 	// for the default view
     $("div#tableheader").find("div#tableheaderleft").mouseover(function() {
-           alert("hi1");
+          // alert("hi1");
 		   	  $(this).css('background-image', 'url(Images/columnbgheader1.png)');			  
     });  
 	
     $("div#tableheader").find("div#tableheaderleft").mouseleave(function() {
-           alert("hi2");
+           //alert("hi2");
 		   	  $(this).css('background-image', 'url(Images/columnbgheader.png)');	            
     });
 	
 	// for the Overview div
     $("div#tableheader").find("div#tableheaderright").mouseover(function() {
-           alert("hi3");
+         //  alert("hi3");
 		   	  $(this).css('background-image', 'url(Images/columnbgheader1.png)');			  
     });  
 	
     $("div#tableheader").find("div#tableheaderright").mouseleave(function() {
-           alert("hi4");
+          // alert("hi4");
 		   	  $(this).css('background-image', 'url(Images/columnbgheader.png)');	            
     });
 
 	
 	$("table#table2").find("td#table2td").mouseover(function() {
-          alert("hi5");
+         // alert("hi5");
 		   	  $(this).css('background-color', '#d6fb75');			  
     });  
 	

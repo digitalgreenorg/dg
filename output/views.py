@@ -44,6 +44,7 @@ def overview(request,geog,id):
     else:
         geog_child = geog_list[geog_list.index(geog)+1]
     
+    
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
@@ -73,8 +74,40 @@ def overview(request,geog,id):
         adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,id=id)));
         tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,id=id)));
         tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,id=id)));
+                
+        vid_prod_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='production',geography=geog,id=id)),'date');
+        sc_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='screening',geography=geog,id=id)),'date');
+        adopt_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='adoption',geography=geog,id=id)),'date');
+        prac_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='practice',geography=geog,id=id)),'date');
+        person_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='person',geography=geog,id=id)),'date');
+            
+        start_date = today = datetime.date.today()
+        if vid_prod_rs:
+            start_date = min(start_date, *(vid_prod_rs.keys()))
+        if sc_rs:
+            start_date = min(start_date,*(sc_rs.keys()))
+        if adopt_rs:
+            start_date = min(start_date,*(adopt_rs.keys()))
+        if prac_rs:
+            start_date = min(start_date,*(prac_rs.keys()))
+        if person_rs:
+            start_date = min(start_date,*(person_rs.keys()))
+
+    if (geog == 'country'):
+        over_all_data = par_geog 
+    #written by sreenivas to return parent id
+    parent_id = run_query(database.overview_parent_id(dict(geog = geog, id = id)))
+    par_id = parent_id [0]['id']
+    block_name = 'block'
+    if geog == 'village':
+        block_name = parent_id[0]['name']
+        if date_range == 0:            
+            par_geog = run_query(database.overview_sum_geog(dict(geog='block',id=par_id)))
+        else:
+            par_geog = run_query(database.overview_sum_geog(dict(geog='block',from_date=mysql_from_date,to_date=mysql_to_date,id=par_id)))
     
     return_val = vid_prod
+    
     if (len(vid_screening) != len(return_val)) or (len(return_val)!=len(adoption))or \
     (len(return_val)!=len(tot_per)) or (len(return_val)!=len(tot_prac)):
         raise Exception,"Query return list not of same size"
@@ -87,12 +120,16 @@ def overview(request,geog,id):
         return_val[i]['tot_ado'] = adoption[i]['tot_ado']
         return_val[i]['tot_scr'] = vid_screening[i]['tot_scr']
         return_val[i]['tot_pra'] = tot_prac[i]['tot_pra']
-        return_val[i]['tot_per'] = tot_per[i]['tot_per'] 
+        return_val[i]['tot_per'] = tot_per[i]['tot_per']
+        
+        
     if date_range==1:
-        return render_to_response('overview.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id,\
-                                                 'from_date':from_date,'to_date':to_date,'flash_from_date':mysql_from_date,'flash_to_date':mysql_to_date,'par_geog':par_geog[0]})
+        return render_to_response('overview.html',{'item_list':return_val,'over_all_data':over_all_data,'block_name':block_name,'par_id':par_id,'geography':geog_child,'flash_geog':geog,'id':id,\
+                            'from_date':from_date,'to_date':to_date,'flash_from_date':mysql_from_date,\
+                            'flash_to_date':mysql_to_date,'par_geog':par_geog[0]})
     else:
-        return render_to_response('overview.html',{'item_list':return_val,'geography':geog_child,'flash_geog':geog,'id':id,'par_geog':par_geog[0]})
+        return render_to_response('overview.html',{'item_list':return_val,'par_id':par_id,'geography':geog_child,\
+                            'block_name':block_name,'start_date':start_date,'flash_geog':geog,'id':id,'par_geog':par_geog[0]})
     
 def overview_drop_down(request):
     if 'geog' in request.GET and request.GET['geog'] \
@@ -358,7 +395,38 @@ def video_actor_wise_pie(request,geog,id):
                 str_list.append(actor+';0;;;;Ratio of Videos featuring '+actor+\
                                 ' actor')
                 
-    return HttpResponse('\n'.join(str_list)) 
+    return HttpResponse('\n'.join(str_list))
+
+def video_type_wise_pie(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query_dict(database.video_type_wise_pie(geog=geog,id=id,from_date=from_date,to_date=to_date),\
+                            'VIDEO_TYPE')
+    
+    else:
+        rs = run_query_dict(database.video_type_wise_pie(geog=geog,id=id),'VIDEO_TYPE')
+    
+    video_type = ['1Demonstration','2success story','3Activity Introduction','4Discussion', '5General Awareness']
+  
+    str_list = []
+    str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    if not rs:
+       return HttpResponse('')
+    else:
+        for type in video_type:
+            if(int(type[0]) in rs):
+                str_list.append(type[1:]+';'+str(rs[int(type[0])][0])+';;;;Ratio of Videos featuring '+type[1:]+\
+                                ' type')
+            else:
+                str_list.append(type[1:]+';0;;;;Ratio of Videos featuring '+type[1:]+\
+                                ' type')
+                
+    return HttpResponse('\n'.join(str_list))
+
     
 def video_language_wise_bar_data(request,geog,id):
     if 'from_date' in request.GET and request.GET['from_date'] \
@@ -405,8 +473,33 @@ def video_geog_pie_data(request,geog,id):
         
     
     return HttpResponse('\n'.join(return_val))
+
         
     
+def video_practice_wise_scatter(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id,from_date=from_date,to_date=to_date))
+    
+    else:
+        rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id))
+        
+    return_val = []
+    return_val.append('[x];[y];[value];[bullet_color];[bullet_size];[url];[description]')
+    i=0
+    for item in rs:
+        i +=1
+        return_val.append(str(i)+';'+str(item['count'])+';'+str(item['count'])+';;;;'+item['name'])
+        
+    
+    return HttpResponse('\n'.join(return_val))
+
+
+
 def video_module(request,geog,id):
     id = int(id)
     if 'from_date' in request.GET and request.GET['from_date'] \

@@ -19,6 +19,30 @@
 	<script type="text/javascript">
 	    
 	    function Default(){
+		
+			// for default from - date 
+	        var startdate = '{{start_date}}';
+	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
+	        var sdyear = startdate.substring(0, sd); // get the year for the date1
+	        var sd1 = startdate.substring(sd+1, startdate.length);
+	        var sd2= sd1.indexOf('-');
+	        var sdmonth = sd1.substring(0, sd2); // get the month for date1
+	        var sddate = sd1.substring(sd2+1, sd1.length);
+	        
+	        if(sdmonth=="01"){ sdmonth="January"; }
+	        if(sdmonth=="02"){ sdmonth="February"; }
+	        if(sdmonth=="03"){ sdmonth="March"; }
+	        if(sdmonth=="04"){ sdmonth="April"; }
+	        if(sdmonth=="05"){ sdmonth="May"; }
+	        if(sdmonth=="06"){ sdmonth="June"; }
+	        if(sdmonth=="07"){ sdmonth="July"; }
+	        if(sdmonth=="08"){ sdmonth="August"; }	            
+	        if(sdmonth=="09"){ sdmonth="September"; }
+	        if(sdmonth=="10"){ sdmonth="October"; }
+	        if(sdmonth=="11"){ sdmonth="November"; }
+	        if(sdmonth=="12"){ sdmonth="December"; }        
+	        
+			
 	        var newdate = new Date();
 	        var currentmonth = newdate.getMonth();
 	        var month_name=new Array(12);
@@ -89,7 +113,9 @@
 	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1day + "," + " " + date1year;
 	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2day + "," + " " + date2year;
 			{% else %}
-				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; // default date for datepicker2
+				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; //datepicker2
+				//document.getElementById('datepicker1').innerHTML = '{{start_date}}'; //datepicker1
+				document.getElementById('datepicker1').innerHTML = sdmonth + " " + sddate + "," + " " + sdyear; // datepicker1
 			{% endif %}
 			
             	    
@@ -288,9 +314,12 @@
 						</td>					
 					</tr>
 					
-					{% for item in item_list %}
+					
+										
+					{% for item in item_list|dictsortreversed:"tot_pra"%}
 				 	<tr>
 						<td id='table2td1'>
+
 							{% ifnotequal item.id None %}
 							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ item.name }} </a>
@@ -299,25 +328,26 @@
 							{% endifnotequal  %}
 						</td>
 						<td id='table2td1'> 
-							<a href=''>
-							{{ item.tot_pro }} </a>
+							
+							{{ item.tot_pro }} 
 						</td>
 						<td id='table2td1'> 
-						    <a href=''>
-							{{ item.tot_scr }} </a>
+						    
+							{{ item.tot_scr }} 
 						</td>
 						<td id='table2td1'> 
-							<a href=''>
-							{{ item.tot_ado }} </a>
+							
+							{{ item.tot_ado }} 
 						</td>
 						<td id='table2td1'>
-							<a href=''>
-							{{ item.tot_pra }} </a>
+							
+							{{ item.tot_pra }}
 						</td>
 						<td id='table2td1'>
-							<a href=''>
-							{{ item.tot_per }} </a>
-						</td>										
+
+							{{ item.tot_per }} 
+						</td>
+						
 				 	</tr>
 					{% endfor %}
 									 
@@ -328,28 +358,53 @@
 		<table id='table2' cellpadding="0px" cellspacing="0px">
 			<tr>
 						<td class='table2td3'>
-							{% if par_geog.name %}{{par_geog.name}}{% else %}India{%endif%}
+							{% ifequal flash_geog  'state' %}							
+							<a href='/output/overview/country/1'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal flash_geog  'district' %}							
+							<a href='/output/overview/state/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal flash_geog  'block' %}							
+							<a href='/output/overview/district/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal flash_geog  'village' %}							
+							<a href='/output/overview/block/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ block_name }} </a>
+							{% endifequal%}
+							{% if par_geog.name %}
+							{% else %}
+								India
+							{%endif%}
+						</td>
+	
+						<td class='table2td3'> 
+	
+							{{par_geog.tot_vid}}
 						</td>
 						<td class='table2td3'> 
-							<a href=''>
-							{{par_geog.tot_vid}}</a>
+						   
+							{{ par_geog.tot_scr }}
 						</td>
 						<td class='table2td3'> 
-						    <a href=''>
-							{{ par_geog.tot_scr }}</a>
-						</td>
-						<td class='table2td3'> 
-							<a href=''>
-							{{ par_geog.tot_ado }} </a>
+						
+							{{ par_geog.tot_ado }} 
 						</td>
 						<td class='table2td3'>
-							<a href=''>
-							{{ par_geog.tot_pra }} </a>
+							
+							{{ par_geog.tot_pra }} 
 						</td>
 						<td class='table2td3'>
-							<a href=''>
-							{{ par_geog.tot_per }} </a>
-						</td>										
+							
+							{{ par_geog.tot_per }} 
+							
+						</td>
+
 				 	</tr>
 			</table>
 		</div>

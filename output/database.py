@@ -280,6 +280,28 @@ SELECT date, count(*)
 {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
 """
 
+#Returns parent level region id
+
+def overview_parent_id(arg_dict):
+    sql = []
+    if 'geog' in arg_dict:
+        if arg_dict['geog'] == 'district':
+            sql.append(r"""SELECT state_id as id FROM DISTRICT d WHERE d.id =  """+str(arg_dict['id']) )
+        
+        elif arg_dict['geog'] == 'block':
+            sql.append(r""" SELECT district_id as id FROM BLOCK b WHERE b.id =  """+str(arg_dict['id']) )
+        
+        elif arg_dict['geog'] == 'village':
+            sql.append(r""" SELECT vil.block_id as id, b.BLOCK_NAME AS name FROM VILLAGE vil, BLOCK b WHERE vil.block_id = b.id and vil.id =  """+str(arg_dict['id']) )
+        elif arg_dict['geog'] == 'country':
+            sql.append(r'SELECT 1 AS id ')
+        elif arg_dict['geog'] == 'state':
+            sql.append(r'SELECT 1 AS id ')
+    
+        
+    return ''.join(sql)
+
+
 # query constructor for malefeamle ratio pie chaart
 
 def video_malefemale_ratio(arg_dict):
@@ -329,7 +351,13 @@ def video_month_bar(arg_dict):
             sql.append(r""" WHERE vid.village_id = """+str(arg_dict['id']) )
         
     if 'from_date' in arg_dict and 'to_date' in arg_dict:
-        sql.append(' AND vid.VIDEO_PRODUCTION_END_DATE BETWEEN \''+arg_dict['from_date']+'\' AND \''+arg_dict['to_date']+ ' \'  ')
+        if arg_dict['geog'] == 'country':
+            sql.append(" WHERE vid.VIDEO_PRODUCTION_END_DATE BETWEEN \'"+arg_dict['from_date']+ \
+                        "\' AND \'"+arg_dict['to_date'] + "\'")
+        else:
+            sql.append(" AND vid.VIDEO_PRODUCTION_END_DATE BETWEEN \'"+arg_dict['from_date']+ \
+                       "\' AND \'"+arg_dict['to_date']+"\'")
+        
     
     sql.append(r""" GROUP BY YEAR,MONTH ORDER BY YEAR,MONTH """)
     
@@ -589,7 +617,10 @@ def video_tot_video(**args):
             sql.append(r""" WHERE VID.village_id = """+str(args['id']) )
         
     if 'from_date' in args and 'to_date' in args:
-        sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        if args['geog'] == 'country':
+            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        else:
+            sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
     return ''.join(sql)
 
@@ -598,21 +629,25 @@ def video_tot_video(**args):
 
 def video_tot_scr(**args):
     sql = []
-    sql.append(r' SELECT COUNT(DISTINCT SC.id ) AS count FROM SCREENING SC, VILLAGE VIL')
+    sql.append(r' SELECT COUNT(DISTINCT SC.video_id) AS count FROM SCREENING_videoes_screened SC, VIDEO VID')
     if 'geog' in args:
         if args['geog'] == 'state':
-            sql.append(r',BLOCK B, DISTRICT D WHERE SC.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+            sql.append(r',VILLAGE VIL,BLOCK B, DISTRICT D WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+       
         elif args['geog'] == 'district':
-            sql.append(r""",BLOCK B WHERE SC.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+            sql.append(r""",BLOCK B WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
         
         elif args['geog'] == 'block':
-            sql.append(r""" WHERE SC.village_id = VIL.id AND VIL.block_id  = """+str(args['id']) )
+            sql.append(r""" WHERE SC.video_id =VID.id AND VID.village_id  = VIL.id AND VIL.block_id  = """+str(args['id']) )
         
         elif args['geog'] == 'village':
-            sql.append(r""" WHERE SC.village_id = """+str(args['id']) )
+            sql.append(r""" WHERE SC.video_id =VID.id AND VID.village_id  = """+str(args['id']) )
         
     if 'from_date' in args and 'to_date' in args:
-        sql.append(' AND SC.DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        if args['geog'] == 'country':
+            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        else:
+            sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
     return ''.join(sql)
 
@@ -635,8 +670,81 @@ def video_avg_time(**args):
             sql.append(r""" WHERE VID.village_id = """+str(args['id']) )
         
     if 'from_date' in args and 'to_date' in args:
-        sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        if args['geog'] == 'country':
+            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+        else:
+            sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
     return ''.join(sql)
 
 
+def video_type_wise_pie(**args):
+    sql = []
+    sql.append("""SELECT VIDEO_TYPE, count(*) as count
+    FROM VIDEO vid""")
+    if 'geog' in args:
+        if args['geog'] == 'village':
+            sql.append("WHERE vid.village_id = "+str(args['id']))
+        elif args['geog'] == 'block':
+            sql.append(""", VILLAGE v
+            WHERE vid.village_id = v.id
+            AND v.block_id = """ +str(args['id']))
+        elif args['geog'] == 'district':    
+            sql.append(""", VILLAGE v, BLOCK b
+            WHERE vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = """ +str(args['id']))
+        elif args['geog'] == 'state':
+            sql.append(""",VILLAGE v, BLOCK b, DISTRICT d
+            WHERE vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = d.id
+            AND d.state_id = """ +str(args['id']))
+
+    if 'from_date' in args and 'to_date' in args:
+        if args['geog'] == 'country':
+            sql.append(" WHERE VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                        "\' AND \'"+args['to_date'] + "\'")
+        else:
+            sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                       "\' AND \'"+args['to_date']+"\'")
+
+    sql.append("GROUP BY VIDEO_TYPE ORDER BY VIDEO_TYPE")
+    return "\n".join(sql)
+
+
+def video_practice_wise_scatter(**args):
+    sql = []
+    sql.append("""SELECT PRACTICE_NAME as name, COUNT(vid.id) as count
+            FROM PRACTICES p,VIDEO_related_agricultural_practices vap, VIDEO vid""")
+    if 'geog' in args:
+        if args['geog'] == 'village':
+            sql.append("WHERE p.id = vap.practices_id AND vap.video_id = vid.id AND vid.village_id = "+str(args['id']))
+        elif args['geog'] == 'country':
+            sql.append("WHERE p.id = vap.practices_id AND vap.video_id = vid.id")
+        elif args['geog'] == 'block':
+            sql.append(""", VILLAGE v
+            WHERE p.id = vap.practices_id AND vap.video_id = vid.id AND vid.village_id = v.id
+            AND v.block_id = """ +str(args['id']))
+        elif args['geog'] == 'district':    
+            sql.append(""", VILLAGE v, BLOCK b
+            WHERE p.id = vap.practices_id AND vap.video_id = vid.id AND vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = """ +str(args['id']))
+        elif args['geog'] == 'state':
+            sql.append(""",VILLAGE v, BLOCK b, DISTRICT d
+            WHERE p.id = vap.practices_id AND vap.video_id = vid.id AND vid.village_id = v.id
+            AND v.block_id = b.id
+            AND b.district_id = d.id
+            AND d.state_id = """ +str(args['id']))
+
+    if 'from_date' in args and 'to_date' in args:
+        if args['geog'] == 'country':
+            sql.append(" WHERE VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                        "\' AND \'"+args['to_date'] + "\'")
+        else:
+            sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+                       "\' AND \'"+args['to_date']+"\'")
+
+    sql.append("GROUP BY PRACTICE_NAME ORDER BY PRACTICE_NAME")
+    return "\n".join(sql) 
