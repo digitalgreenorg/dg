@@ -161,8 +161,8 @@ class VideoForm(forms.ModelForm):
 		def clean(self, value):         
 			return value      
 
-        facilitator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
-    	cameraoperator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
+        facilitator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
+    	cameraoperator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
 
 	class Meta:
 		model = Video

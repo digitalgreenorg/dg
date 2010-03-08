@@ -103,15 +103,15 @@ def test_gwt(request, region_id):
 			#new_form = form.save()
 	       		new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
-			print new_form.id
+			#print new_form.id
 			new_form.save()
-			print request.POST
+			#print request.POST
 		        return HttpResponse("Success")
 		else:
-			print "post requestfailure"
+			#print "post requestfailure"
 			return HttpResponse("Failure")
 	else:
-		print "get request"
+		#print "get request"
 		return HttpResponse("Get Request")
 
 	
@@ -160,14 +160,14 @@ def login_view(request):
     if request.method == 'POST':
 	    username = request.POST.get('username', '')
 	    password = request.POST.get('password', '')
-	    print request.POST
-	    print username
-	    print password
+	    #print request.POST
+	    #print username
+	    #print password
 	    user = auth.authenticate(username=username, password=password)
 	    if user is not None and user.is_active:
 	        # Correct password, and the user is marked "active"
 	        auth.login(request, user)
-		print "works"
+		#print "works"
 	        # Redirect to a success page.
 	        return HttpResponse("True")
 	    else:
@@ -640,7 +640,7 @@ def video(request):
 def add_screening(request):
         PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=2)
         if request.method == 'POST':
-		print request.POST
+		#print request.POST
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
 

@@ -63,6 +63,7 @@ urlpatterns = patterns('',
 	(r'^dashboard/login/$', login),
 	(r'^dashboard/logout/$', logout),    
     
+
     (r'^output/dropdownval/$',overview_drop_down),
     (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overview),
     (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',overview_line_graph),

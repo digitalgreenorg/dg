@@ -425,7 +425,7 @@ class PersonAdoptPractice(models.Model):
     person = models.ForeignKey(Person) 
     practice = models.ForeignKey(Practices) 
     prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
-    date_of_adoption = models.DateField(null=True, db_column='DATE_OF_ADOPTION', blank=True) 
+    date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION') 
     quality = models.CharField(max_length=200, db_column='QUALITY', blank=True) 
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
