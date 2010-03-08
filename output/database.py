@@ -747,4 +747,43 @@ def video_practice_wise_scatter(**args):
                        "\' AND \'"+args['to_date']+"\'")
 
     sql.append("GROUP BY PRACTICE_NAME ORDER BY PRACTICE_NAME")
-    return "\n".join(sql) 
+    return "\n".join(sql)
+
+def overview_min_date(**args):
+    sql = []
+    if 'geog' in args:
+        if(args['geog'] == 'village'):
+            temp = "WHERE x.village_id = "+str(args['id'])
+            from_clause = ''
+        elif(args['geog'] == 'block'):
+            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = "+str(args['id'])
+            from_clause = ",VILLAGE VIL "
+        elif(args['geog'] == 'district'):
+            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = " +str(args['id'])
+            from_clause = ",VILLAGE VIL ,BLOCK B "
+        elif(args['geog'] == 'state'):
+            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = " +str(args['id'])
+            from_clause = ",VILLAGE VIL,BLOCK B, DISTRICT D "
+        elif(args['geog'] == 'country'):
+            temp = ''
+            from_clause = ''
+   
+    sql.append("""
+    SELECT MIN(DATE) as date
+    FROM (
+       SELECT MIN(VIDEO_PRODUCTION_END_DATE) AS DATE
+       FROM VIDEO x""" + from_clause + temp + """
+    
+       UNION
+       SELECT MIN(DATE) AS DATE
+       FROM SCREENING x"""+ from_clause + temp + """
+    
+       UNION
+       SELECT MIN(DATE_OF_ADOPTION) AS DATE
+        FROM PERSON_adopt_practice PA""")
+    if temp:
+        sql.append("""
+        , PERSON x """ + from_clause + temp + """ AND PA.person_id = x.id""")
+   
+    sql.append(") AS T1")
+    return '\n'.join(sql)

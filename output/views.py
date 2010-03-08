@@ -75,24 +75,12 @@ def overview(request,geog,id):
         tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,id=id)));
         tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,id=id)));
                 
-        vid_prod_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='production',geography=geog,id=id)),'date');
-        sc_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='screening',geography=geog,id=id)),'date');
-        adopt_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='adoption',geography=geog,id=id)),'date');
-        prac_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='practice',geography=geog,id=id)),'date');
-        person_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='person',geography=geog,id=id)),'date');
-            
-        start_date = today = datetime.date.today()
-        if vid_prod_rs:
-            start_date = min(start_date, *(vid_prod_rs.keys()))
-        if sc_rs:
-            start_date = min(start_date,*(sc_rs.keys()))
-        if adopt_rs:
-            start_date = min(start_date,*(adopt_rs.keys()))
-        if prac_rs:
-            start_date = min(start_date,*(prac_rs.keys()))
-        if person_rs:
-            start_date = min(start_date,*(person_rs.keys()))
-
+        min_date = run_query(database.overview_min_date(geog = geog, id=id))
+        start_date = min_date[0]['date']
+        if not start_date:
+            start_date = datetime.date.today()
+               
+        
     if (geog == 'country'):
         over_all_data = par_geog 
     #written by sreenivas to return parent id
