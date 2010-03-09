@@ -7,6 +7,7 @@ import string
 from dg.output  import database
 from dg.output.database import run_query, run_query_dict, construct_query, video_malefemale_ratio, video_month_bar
 import django 
+import random
 
 def test_output(request,geog,id):
     
@@ -475,17 +476,33 @@ def video_practice_wise_scatter(request,geog,id):
     
     else:
         rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id))
-        
+    
+    if not rs:
+        return HttpResponse('');
+    
+    count_prac_dict = {}
+    for item in rs:
+        if item['count'] in count_prac_dict:
+            count_prac_dict[item['count']].append(item['name'])
+        else:
+            count_prac_dict[item['count']] = [item['name']]
+    
+    x_axis_len = max([len(x) for x in count_prac_dict.values()]) * 2
+    
     return_val = []
     return_val.append('[x];[y];[value];[bullet_color];[bullet_size];[url];[description]')
-    i=0
-    for item in rs:
-        i +=1
-        return_val.append(str(i)+';'+str(item['count'])+';'+str(item['count'])+';;;;'+item['name'])
-        
+    
+    random.seed();
+    for tot,pracs in count_prac_dict.iteritems():
+        flag = [ 0 for i in range(0,x_axis_len+1)]
+        for prac in pracs:        
+            x = random.randrange(1,x_axis_len)
+            while(flag[x] != 0):
+                x = random.randrange(1,x_axis_len)
+            flag[x] = 1
+            return_val.append(str(x)+';'+str(tot)+';'+str(tot)+';;;;'+prac)
     
     return HttpResponse('\n'.join(return_val))
-
 
 
 def video_module(request,geog,id):

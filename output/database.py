@@ -306,7 +306,7 @@ def overview_parent_id(arg_dict):
 
 def video_malefemale_ratio(arg_dict):
     sql = []
-    sql.append(r'SELECT COUNT(DISTINCT p.id) as count, p.GENDER as gender FROM   PERSON p, VIDEO_farmers_shown vs')
+    sql.append(r'SELECT COUNT(*) as count, p.GENDER as gender FROM   PERSON p, VIDEO_farmers_shown vs')
     if 'geog' in arg_dict:
         if arg_dict['geog'] == 'country':
             sql.append('where')
@@ -746,7 +746,7 @@ def video_practice_wise_scatter(**args):
             sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
                        "\' AND \'"+args['to_date']+"\'")
 
-    sql.append("GROUP BY PRACTICE_NAME ORDER BY PRACTICE_NAME")
+    sql.append("GROUP BY PRACTICE_NAME ORDER BY count")
     return "\n".join(sql)
 
 def overview_min_date(**args):

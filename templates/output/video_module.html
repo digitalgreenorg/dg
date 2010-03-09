@@ -376,7 +376,7 @@
 	type_wise_pie.write("flash_area_video_type_pie");
 	
 	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
-	practice.addVariable("path", "amxy/");
+	practice.addVariable("path", "/media/Output/amxy/");
 	practice.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
 	practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/"));
 	practice.write("flash_area_practice_type_scatter");
