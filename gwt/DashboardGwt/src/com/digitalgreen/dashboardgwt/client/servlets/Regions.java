@@ -16,6 +16,8 @@ import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
+import com.google.gwt.json.client.JSONParser;
+
 public class Regions extends BaseServlet {
 	public Regions() {
 		super();
@@ -40,8 +42,14 @@ public class Regions extends BaseServlet {
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
-							/*Data sucessfully saved */
-							/*Do something*/								
+							Window.alert("regions = " + results);
+							JSONParser.parse(results);
+							RegionsData regiondata = new RegionsData();
+							List regions = regiondata.getRegions();
+							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Region successfully saved");
+							requestContext.getArgs().put("listing", regions);
+							getServlet().redirectTo(new Regions(requestContext ));						
 						} else {
 							/*Error in saving the data*/			
 						}
@@ -65,6 +73,7 @@ public class Regions extends BaseServlet {
 							RegionsData regiondata = new RegionsData();
 							List regions = regiondata.getRegions();
 							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
 							getServlet().redirectTo(new Regions(requestContext ));
 						} else {
@@ -79,14 +88,6 @@ public class Regions extends BaseServlet {
 				// Comment the below line when you are not running the code form a hosted mode.
 				regionData.apply(regionData.postPageData(this.requestContext.getQueryString()));
 
-				
-				/* Comment out the below lines when running the code in the hosted mode*/ 
-				/*RegionsData regiondata = new RegionsData();
-				regiondata.createRegion(this.form.get("region_name").toString(), this.form.get("start_date").toString());
-				List regions = regiondata.getRegions();
-				RequestContext requestContext = new RequestContext();
-				requestContext.getArgs().put("listing", regions);
-				this.redirectTo(new Regions(requestContext ));*/
 			}
 			else {
 				this.fillTemplate(new RegionsTemplate(this.requestContext));

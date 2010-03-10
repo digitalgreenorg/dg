@@ -29,6 +29,8 @@ public class RegionsData extends BaseData {
 		}
 	}
 	
+	protected static String tableID = "01";
+	
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `region` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"REGION_NAME VARCHAR(100) NOT NULL ," +
@@ -37,6 +39,8 @@ public class RegionsData extends BaseData {
 	protected static String insertSql = "INSERT INTO region VALUES (?, ?, ?)";
 	
 	protected static String listRegions = "SELECT id, REGION_NAME FROM region ORDER BY(-id)";
+	
+	protected static String postURL = "/dashboard/saveregion/";
 	
 	public RegionsData() {
 		super();
@@ -47,9 +51,11 @@ public class RegionsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public void createRegion(String region_name, String start_date){
+	public void createRegion(String queryArg){
+		HashMap form = Form.flatten(queryArg);
 		String id = this.getNextRowId();
-		this.insert(insertSql, id, region_name, start_date );
+		this.insert(insertSql, id, form.get("region_name").toString(), form.get("start_date").toString() );
+		this.saveQueryString(tableID, id, queryArg, "0", "A");
 		this.updateLastInsertedID();
 	}
 	
@@ -64,9 +70,7 @@ public class RegionsData extends BaseData {
 					region.add(this.getResultSet().getFieldAsInt(0));
 					region.add(this.getResultSet().getFieldAsString(1));
 					regions.add(region);
-	    	      }
-				
-				
+	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
 				// TODO Auto-generated catch block
@@ -84,11 +88,10 @@ public class RegionsData extends BaseData {
 	
 	public Object postPageData(String queryArg) {
 		if(this.isOnline()){
-			//Post something, still need to be implemented
+			this.post(RequestContext.SERVER_HOST + this.postURL, queryArg);
 		}
 		else{
-			HashMap form = Form.flatten(queryArg);
-			this.createRegion(form.get("region_name").toString(), form.get("start_date").toString());
+			this.createRegion(queryArg);
 			return true;
 		}
 		

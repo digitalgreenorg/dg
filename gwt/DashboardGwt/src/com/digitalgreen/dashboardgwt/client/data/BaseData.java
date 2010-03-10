@@ -38,6 +38,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	protected static String userTableExists = "SELECT * FROM sqlite_master where type='table' and name = 'user';";
 	
+	protected static String saveQueryString = "INSERT INTO `formqueue` VALUES (? , ? , ? , ? , ?);";
+	
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
 	public class Data {
@@ -244,6 +246,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.update(updateApplicationStatus, app_status,username );
 	}
 	
+	public void saveQueryString(String ...args){
+		this.insert(saveQueryString, args);
+	}
 	
 	protected ResultSet getResultSet() {
 		//if(this.lastResultSet != null && this.lastResultSet.isValidRow())

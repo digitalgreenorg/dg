@@ -66,7 +66,7 @@ public class LoginData extends BaseData {
 
 		if(this.isOnline()){
 			String postData = "username=" + username + "&password=" + password;
-			this.post(RequestContext.SERVER_HOST + "postURL", postData);
+			this.post(RequestContext.SERVER_HOST + this.postURL, postData);
 			//String postData = "username=" + username + "&password=" + password;
 			//this.post("http://127.0.0.1:8000/dashboard/login/", postData);
 		} else {

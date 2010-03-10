@@ -38,6 +38,7 @@ public class Login extends BaseServlet {
 				    LoginData loginData = new LoginData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results == "1") {
+							Window.alert("successful login");
 							ApplicationConstants.setUsernameCookie((String)getServlet().form.get("username"));
 							ApplicationConstants.setPasswordCookie((String)getServlet().form.get("password"));
 							getServlet().redirectTo(new Index());
@@ -75,12 +76,8 @@ public class Login extends BaseServlet {
 				});
 				    
 				// Comment the below line when you are not running the code form a hosted mode.
-				//loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
+				loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
 				
-				/*Comment out the below lines when running the code from a hosted mode*/
-				ApplicationConstants.setUsernameCookie((String)this.form.get("username"));
-				ApplicationConstants.setPasswordCookie((String)this.form.get("password"));
-				this.redirectTo(new Index());
 			}
 		} else if (method == RequestContext.METHOD_GET) {
 				if(this.isLoggedIn()) {

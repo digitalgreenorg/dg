@@ -38,7 +38,7 @@ public class Index extends BaseServlet {
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg == "gooffline"){
 					IndexData.createTables();	
-					/*IndexData indexData = new IndexData(new OnlineOfflineCallbacks(this) {
+					IndexData indexData = new IndexData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(results != "0") {
 								Window.alert("GOT A RESPONSE");
@@ -67,27 +67,27 @@ public class Index extends BaseServlet {
 								requestContext.setMessageString("Problem in the connection with the server.");
 							else
 								requestContext.setMessageString("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Login(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							// If login success in the offline case
 							// This case will never occur for this servlet.
 						}
-					});*/
+					});
 					
 					// Comment the below line when you are not running the code form a hosted mode.
-					//indexData.apply(indexData.getGlobalPrimaryKey(Cookies.getCookie("username")));
+					indexData.apply(indexData.getGlobalPrimaryKey(Cookies.getCookie("username")));
 					
 					/*Comment out the below lines when running the code from an hosted mode*/
-					LoginData user = new LoginData();
+					/*LoginData user = new LoginData();
 					user.delete();
 					user.create();
 					user.insert("1000000", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
 					ApplicationConstants.toggleConnection(false);
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("You are ready to go offline!!. ");
-					this.redirectTo(new Index(requestContext));
+					this.redirectTo(new Index(requestContext));*/
 				}
 				else if (queryArg == "goonline"){
 					LoginData user = new LoginData();

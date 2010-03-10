@@ -30,7 +30,9 @@ public class RegionsTemplate extends BaseTemplate {
 		super.fillDGSubmitControls(saveRegion);
 	}
 	
-	private String regionsListFormHtml = "<div class='actions'>" +
+	private String regionsListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
+						"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
+						"<div class='actions'>" +
 						"<label>Action: <select name='action'>" +
 							"<option value='' selected='selected'>---------</option>" +
 							"<option value='delete_selected'>Delete selected regions</option>" +
@@ -83,7 +85,7 @@ public class RegionsTemplate extends BaseTemplate {
 					"</div>" +
 					"<div class='form-row start_date'>" +
 						"<div>" +
-							"<label for='id_start_date'>Start date:</label>" +
+							"<label for='id_start_date'>Start date:</label>" +	
 							"<input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
 						"</div>" + 
 					"</div>" +

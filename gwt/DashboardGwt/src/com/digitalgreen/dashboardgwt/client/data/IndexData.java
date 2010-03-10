@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window;
 
 public class IndexData extends BaseData {
 	
+	protected static String postURL = "/dashboard/getkey/";
 		
 	public IndexData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
@@ -21,8 +22,8 @@ public class IndexData extends BaseData {
 	public Object getGlobalPrimaryKey(String username) {
 		// Make a call to the Django view and get the primary key
 		String postData = "username=" + username;
-		Window.alert(postData);
-		this.post(RequestContext.SERVER_HOST + ":8000/dashboard/getkey/", postData);
+		//Window.alert(postData);
+		this.post(RequestContext.SERVER_HOST + this.postURL, postData);
 		return true;
 	}
 }
