@@ -2,19 +2,7 @@ package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
-import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.RootPanel;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class RegionsTemplate extends BaseTemplate {
 	public RegionsTemplate(RequestContext requestContext) {
@@ -40,7 +28,6 @@ public class RegionsTemplate extends BaseTemplate {
 
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveRegion);
-		
 	}
 	
 	private String regionsListFormHtml = "<div class='actions'>" +
@@ -85,8 +72,6 @@ public class RegionsTemplate extends BaseTemplate {
 						"</div>";
 	
 	final  private String regionsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
-			"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +
-			"<script src='/media/js/calendar.js' type='text/javascript'></script>" +
 		"<div id='content' class='colM'>" +
 			"<h1>Add Regions</h1>" +
 			"<div id='content-main'>" +
@@ -100,10 +85,6 @@ public class RegionsTemplate extends BaseTemplate {
 						"<div>" +
 							"<label for='id_start_date'>Start date:</label>" +
 							"<input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-							"<span>&nbsp;" +
-								"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-								"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-								"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a></span>" +
 						"</div>" + 
 					"</div>" +
 				"</fieldset>" +
@@ -111,5 +92,7 @@ public class RegionsTemplate extends BaseTemplate {
 					"<input id='save' value='Save' class='default' name='_save' />" +
 				"</div>" +
 			"</div>" +
-		"</div>";
+		"</div>" +
+		"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+		"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 	}
