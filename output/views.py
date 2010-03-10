@@ -59,7 +59,7 @@ def overview(request,geog,id):
         temp = string.split(to_date,'-')
         temp.reverse()
         mysql_to_date='-'.join(temp)
-        
+                
         par_geog = run_query(database.overview_sum_geog(dict(geog=geog,from_date=mysql_from_date,to_date=mysql_to_date,id=id)))
         vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
         vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
@@ -69,6 +69,7 @@ def overview(request,geog,id):
 
     else:
         date_range = 0
+        country_data = run_query(database.overview_sum_geog(dict(geog='country',id='1')))
         par_geog = run_query(database.overview_sum_geog(dict(geog=geog,id=id)))
         vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,id=id)));
         vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,id=id)));
@@ -81,9 +82,8 @@ def overview(request,geog,id):
         if not start_date:
             start_date = datetime.date.today()
                
-        
-    if (geog == 'country'):
-        over_all_data = par_geog 
+    # Return static country data            
+    country_data = run_query(database.overview_sum_geog(dict(geog='country',id='1')))    
     #written by sreenivas to return parent id
     parent_id = run_query(database.overview_parent_id(dict(geog = geog, id = id)))
     par_id = parent_id [0]['id']
@@ -113,11 +113,11 @@ def overview(request,geog,id):
         
         
     if date_range==1:
-        return render_to_response('overview.html',{'item_list':return_val,'over_all_data':over_all_data,'block_name':block_name,'par_id':par_id,'geography':geog_child,'flash_geog':geog,'id':id,\
+        return render_to_response('overview.html',{'item_list':return_val,'country_data':country_data[0],'block_name':block_name,'par_id':par_id,'geography':geog_child,'flash_geog':geog,'id':id,\
                             'from_date':from_date,'to_date':to_date,'flash_from_date':mysql_from_date,\
                             'flash_to_date':mysql_to_date,'par_geog':par_geog[0]})
     else:
-        return render_to_response('overview.html',{'item_list':return_val,'par_id':par_id,'geography':geog_child,\
+        return render_to_response('overview.html',{'item_list':return_val,'country_data':country_data[0],'par_id':par_id,'geography':geog_child,\
                             'block_name':block_name,'start_date':start_date,'flash_geog':geog,'id':id,'par_geog':par_geog[0]})
     
 def overview_drop_down(request):
@@ -506,7 +506,30 @@ def video_practice_wise_scatter(request,geog,id):
 
 
 def video_module(request,geog,id):
-    id = int(id)
+    
+    if('village' in request.GET and request.GET['village'] and request.GET['village']!='-1'):
+        geog = 'village'
+        id = int(request.GET['village'])
+    elif('block' in request.GET and request.GET['block'] and request.GET['block']!='-1'):
+        geog = 'block'
+        id = int(request.GET['block'])
+    elif('district' in request.GET and request.GET['district'] and request.GET['district']!='-1'):
+        geog = 'district'
+        id = int(request.GET['district'])        
+    elif('state' in request.GET and request.GET['state']): 
+        if(request.GET['state']=='-1'):
+            geog='country'
+            id = 1
+        else:
+            geog = 'state'
+            id = int(request.GET['state'])    
+         
+    geog_list = ['country','state','district','block','village']
+    if(geog not in geog_list):
+        raise Http404()
+    
+    
+    #id = int(id)
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
@@ -537,9 +560,13 @@ def video_module(request,geog,id):
     else:
         tot_average = tot/len(tot_avg)
         
+    if date_range==1:
+        return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,\
+                                                    tot_screening=tot_screening, tot_average= tot_average,from_date = from_date,to_date=to_date))
+    else:
+        return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,\
+                                                    tot_screening=tot_screening, tot_average= tot_average))
     
-    return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,tot_screening=tot_screening, \
-                                                       tot_average= tot_average))
     #{'tot_video':tot_video,'tot_screening':tot_screening,'tot_average':tot_average}
 
 
