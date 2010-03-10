@@ -635,10 +635,10 @@ def video_tot_scr(**args):
             sql.append(r',VILLAGE VIL,BLOCK B, DISTRICT D WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
        
         elif args['geog'] == 'district':
-            sql.append(r""",BLOCK B WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+            sql.append(r""",VILLAGE VIL,BLOCK B WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
         
         elif args['geog'] == 'block':
-            sql.append(r""" WHERE SC.video_id =VID.id AND VID.village_id  = VIL.id AND VIL.block_id  = """+str(args['id']) )
+            sql.append(r""" ,VILLAGE VIL WHERE SC.video_id =VID.id AND VID.village_id  = VIL.id AND VIL.block_id  = """+str(args['id']) )
         
         elif args['geog'] == 'village':
             sql.append(r""" WHERE SC.video_id =VID.id AND VID.village_id  = """+str(args['id']) )
@@ -753,16 +753,16 @@ def overview_min_date(**args):
     sql = []
     if 'geog' in args:
         if(args['geog'] == 'village'):
-            temp = "WHERE x.village_id = "+str(args['id'])
+            temp = " WHERE x.village_id = "+str(args['id'])
             from_clause = ''
         elif(args['geog'] == 'block'):
-            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = "+str(args['id'])
+            temp = " WHERE x.village_id = VIL.id AND VIL.block_id = "+str(args['id'])
             from_clause = ",VILLAGE VIL "
         elif(args['geog'] == 'district'):
-            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = " +str(args['id'])
+            temp = " WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = " +str(args['id'])
             from_clause = ",VILLAGE VIL ,BLOCK B "
         elif(args['geog'] == 'state'):
-            temp = "WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = " +str(args['id'])
+            temp = " WHERE x.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = " +str(args['id'])
             from_clause = ",VILLAGE VIL,BLOCK B, DISTRICT D "
         elif(args['geog'] == 'country'):
             temp = ''
