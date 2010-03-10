@@ -270,7 +270,7 @@ class Person(models.Model):
         db_table = u'PERSON'
 
     def __unicode__(self):
-        return self.person_name
+        return  u'%s (%s)' % (self.person_name, self.village) 
 
 class PersonRelations(models.Model):
     person = models.ForeignKey(Person,related_name='person') 
