@@ -9,8 +9,8 @@ from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render_to_response
-
-
+from django.db import connection, transaction
+from dg.output.database import run_query 
 import datetime
 #import cjson
 from django.core import serializers
@@ -101,17 +101,13 @@ def test_gwt(request, region_id):
 		form = RegionTestForm(request.POST)
 		if form.is_valid():
 			#new_form = form.save()
-	       		new_form  = form.save(commit=False)
+			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
-			#print new_form.id
 			new_form.save()
-			#print request.POST
-		        return HttpResponse("Success")
+			return HttpResponse("Success")
 		else:
-			#print "post requestfailure"
 			return HttpResponse("Failure")
 	else:
-		#print "get request"
 		return HttpResponse("Get Request")
 
 	
@@ -119,7 +115,7 @@ def test_gwt(request, region_id):
 
 def feed_animators(request, village_id):
         village = Village.objects.get(pk=int(village_id))
-	animators = Animator.objects.filter(assigned_villages=village)
+        animators = Animator.objects.filter(assigned_villages=village)
 		#str = "test" + "\t" + "Model" + "\n" + "test1" + "\t" + "Model1";	
 		#temp = cjson.encode(str)
 		#return HttpResponse(temp, mimetype="text/plain")
@@ -129,7 +125,7 @@ def feed_animators(request, village_id):
 
 
 def feeds_animators(request, village_id):
-        village = Village.objects.get(pk=int(village_id))
+	village = Village.objects.get(pk=int(village_id))
 	animators = Animator.objects.filter(assigned_villages=village)
 	json_subcat = serializers.serialize("json", animators)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
@@ -160,21 +156,53 @@ def login_view(request):
     if request.method == 'POST':
 	    username = request.POST.get('username', '')
 	    password = request.POST.get('password', '')
-	    #print request.POST
-	    #print username
-	    #print password
 	    user = auth.authenticate(username=username, password=password)
 	    if user is not None and user.is_active:
 	        # Correct password, and the user is marked "active"
-	        auth.login(request, user)
-		#print "works"
-	        # Redirect to a success page.
-	        return HttpResponse("True")
+	        #auth.login(request, user)
+	        return HttpResponse("1")
 	    else:
 	        # Show an error page
-        	return HttpResponse("False")
+        	return HttpResponse("0")
     else:
-	return HttpResponse("error")
+	    return HttpResponse("error")
+
+def get_key_for_user(request):
+	if request.method == 'POST':
+		MILLION_CONSTANT = 1000000
+		username = request.POST.get('username', '')
+		user_id = run_query("Select id from auth_user where username = %s", username)
+		if len(user_id) > 0 :
+			result = run_query("Select id from user where user_id = %s", user_id[0].get('id'));
+			if len(result) == 0:
+				query_string = "insert into user(id, user_id) values (%s, %s)"
+				id = int (user_id[0].get('id')) * MILLION_CONSTANT
+				query_args = [id, user_id[0].get('id')]
+				cursor = connection.cursor()
+				cursor.execute(query_string, query_args)
+				transaction.commit_unless_managed()
+				return HttpResponse(id)
+			else:	
+				return HttpResponse(result[0].get('id'))
+		else:
+			return HttpResponse("0")
+	else:
+		return HttpResponse("error")
+	
+	
+def save_region(request):
+	if request.method == 'POST':
+		#print request.POST
+		form = RegionForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			#print "works"
+			return HttpResponse("1")
+		else:
+			#print "error"
+			return HttpResponse("0")	
+	
 
 def add_language(request):
 	if request.method == 'POST':
@@ -204,6 +232,7 @@ def language(request,language):
 
 def add_region(request):
 	if request.method == 'POST':
+		#print request.POST
 		form = RegionForm(request.POST)
 		if form.is_valid():	
 			# This should redirect to show region page
@@ -218,8 +247,8 @@ def add_region(request):
         	#return HttpResponse(json_subcat, mimetype="application/javascript")
                 #temp = cjson.encode(form)
                 #return HttpResponse(temp, mimetype="text/plain")
-		return HttpResponse(form)
-		#return render_to_response('add_region.html',{'form':form})
+		#return HttpResponse(form)
+		return render_to_response('add_region.html',{'form':form})
 
 
 def region(request):
@@ -230,8 +259,8 @@ def region(request):
 		return redirect('region')
 	else:
 		regions = Region.objects.order_by("-id")
-		return HttpResponse(regions)
-		#return render_to_response('regions.html', {'regions': regions})
+		#return HttpResponse(regions)
+		return render_to_response('regions.html', {'regions': regions})
 
 
 def add_state(request):
@@ -640,7 +669,6 @@ def video(request):
 def add_screening(request):
         PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=2)
         if request.method == 'POST':
-		#print request.POST
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
 

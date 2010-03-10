@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
-        (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 	(r'^ajax_filtered_fields/', include('ajax_filtered_fields.urls')),
 	(r'^feeds/animators/(\d+)/$', feeds_animators),
 	(r'^feeds/groups/(\d+)/$', feeds_groups),
@@ -23,10 +23,12 @@ urlpatterns = patterns('',
 #	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
-    	(r'^hello/$', hello),
+    (r'^hello/$', hello),
 	(r'^animators-by-village-id/(\d+)/$', feed_animators),
-        (r'/search/', search),
+    (r'/search/', search),
+    (r'^dashboard/getkey/$', get_key_for_user),
 #	(r'^dashboard/login/$', login_view),
+    (r'^dashboard/saveregion/$', save_region),
 	(r'^dashboard/language/add/$', add_language),
 	(r'^dashboard/languages/(?P<language>[^/]+)/$',language),
 	(r'^dashboard/region/add/$',add_region),
