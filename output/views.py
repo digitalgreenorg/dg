@@ -197,19 +197,9 @@ def video_pie_graph_mf_ratio(request,geog,id):
     id = int(id)
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
-        date_range = 1
-                
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
-        to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        male_female_ratio_sql = video_malefemale_ratio(dict(geog = geog, id = id,from_date = mysql_from_date, to_date = mysql_to_date))    
-    
+        to_date = request.GET['to_date']        
+        male_female_ratio_sql = video_malefemale_ratio(dict(geog = geog, id = id,from_date = from_date, to_date = to_date))    
     else:
         male_female_ratio_sql = video_malefemale_ratio(dict(geog = geog, id = id))
     
@@ -286,15 +276,8 @@ def video_monthwise_bar_data(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        rs = run_query(database.video_month_bar(dict(geog = geog, id = id,from_date = mysql_from_date, to_date = mysql_to_date)))    
+        rs = run_query(database.video_month_bar(dict(geog = geog, id = id,from_date = from_date, to_date = to_date)))    
     
     else:
         rs = run_query(database.video_month_bar(dict(geog = geog, id = id)));
@@ -377,15 +360,8 @@ def video_actor_wise_pie(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        rs = run_query_dict(database.video_actor_wise_pie(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date),\
+        rs = run_query_dict(database.video_actor_wise_pie(geog=geog,id=id,from_date=from_date,to_date=to_date),\
                             'actors')
     
     else:
@@ -412,16 +388,10 @@ def video_type_wise_pie(request,geog,id):
     id = int(id)
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        rs = run_query_dict(database.video_type_wise_pie(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date),\
+        rs = run_query_dict(database.video_type_wise_pie(geog=geog,id=id,from_date=from_date,to_date=to_date),\
                             'VIDEO_TYPE')
     
     else:
@@ -450,15 +420,8 @@ def video_language_wise_bar_data(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        rs = run_query(database.video_language_wise_bar(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))
+        rs = run_query(database.video_language_wise_bar(geog=geog,id=id,from_date=from_date,to_date=to_date))
     
     else:
         rs = run_query(database.video_language_wise_bar(geog=geog,id=id))
@@ -485,16 +448,9 @@ def video_geog_pie_data(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
         vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child, \
-                                                                    from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+                                                                    from_date=from_date,to_date=to_date,id=id)));
     else:
         vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,id=id)));
     
@@ -515,15 +471,8 @@ def video_practice_wise_scatter(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        mysql_to_date='-'.join(temp)
-        rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))
+        rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id,from_date=from_date,to_date=to_date))
     
     else:
         rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id))
@@ -587,20 +536,30 @@ def video_module(request,geog,id):
         from_date = request.GET['from_date']
         temp = string.split(from_date,'-')
         temp.reverse()
-        mysql_from_date='-'.join(temp)
+        if(len(temp[0]) == 2 ):
+            mysql_from_date = from_date
+        else:
+            mysql_from_date='-'.join(temp)
 
         to_date = request.GET['to_date']
         temp = string.split(to_date,'-')
         temp.reverse()
-        mysql_to_date='-'.join(temp)
+        if(len(temp[0]) == 2 ):
+            mysql_to_date = to_date
+        else:
+            mysql_to_date='-'.join(temp)
         tot_vid = run_query(database.video_tot_video(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))
         tot_scr = run_query(database.video_tot_scr(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))
         tot_avg = run_query(database.video_avg_time(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))
     else:
-        date_range = 0    
+        date_range = 0
         tot_vid = run_query(database.video_tot_video(geog = geog, id = id))
         tot_scr = run_query(database.video_tot_scr(geog = geog, id = id))
         tot_avg = run_query(database.video_avg_time(geog = geog, id = id))
+        min_date = run_query(database.video_min_date(geog = geog, id=id))
+        start_date = min_date[0]['date']
+        if not start_date:
+            start_date = datetime.date.today()
         
     # calculating average
     tot = 0
@@ -612,6 +571,7 @@ def video_module(request,geog,id):
         tot = tot + tot_avg[i]['dif']
     
     tot_video = tot_vid[0]['count']
+    print 
     tot_screening = tot_scr[0]['count']
     if len(tot_avg) == 0:
         tot_average = 0
@@ -620,10 +580,10 @@ def video_module(request,geog,id):
         
     if date_range==1:
         return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,\
-                                                    tot_screening=tot_screening, tot_average= tot_average,from_date = from_date,to_date=to_date))
+                                                    tot_screening=tot_screening, tot_average= tot_average,from_date = mysql_from_date,to_date=mysql_to_date))
     else:
         return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_video,\
-                                                    tot_screening=tot_screening, tot_average= tot_average))
+                                                    start_date = start_date, tot_screening=tot_screening, tot_average= tot_average))
     
     #{'tot_video':tot_video,'tot_screening':tot_screening,'tot_average':tot_average}
 

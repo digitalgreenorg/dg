@@ -787,3 +787,19 @@ def overview_min_date(**args):
    
     sql.append(") AS T1")
     return '\n'.join(sql)
+
+def video_min_date(**args):
+    sql = []
+    sql.append("SELECT MIN(VIDEO_PRODUCTION_END_DATE) as date from VIDEO VID ")
+    if 'geog' in args:
+        if(args['geog'] == 'village'):
+            sql.append(" WHERE VID.village_id = "+str(args['id']))
+            from_clause = ''
+        elif(args['geog'] == 'block'):
+            sql.append(" , VILLAGE VIL WHERE VID.village_id = VIL.id AND VIL.block_id = "+str(args['id']))
+        elif(args['geog'] == 'district'):
+            sql.append(" ,VILLAGE VIL ,BLOCK B WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = " +str(args['id']))
+        elif(args['geog'] == 'state'):
+            sql.append(",VILLAGE VIL,BLOCK B, DISTRICT D  WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = " +str(args['id']))
+     
+    return '\n'.join(sql)
