@@ -22,8 +22,18 @@ public class ScreeningsData extends BaseData {
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	
 	public class Data extends BaseData.Data {
+		public Data() {}
 	}
 
+	@Override
+	public Data getNewData() {
+		return new Data();
+	}
+	
+	public ScreeningsData() {
+		super();
+	}
+	
 	public ScreeningsData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
 	}

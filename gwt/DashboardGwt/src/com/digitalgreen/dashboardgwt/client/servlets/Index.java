@@ -77,17 +77,17 @@ public class Index extends BaseServlet {
 					});
 					
 					// Comment the below line when you are not running the code form a hosted mode.
-					indexData.apply(indexData.getGlobalPrimaryKey(Cookies.getCookie("username")));
+					//indexData.apply(indexData.getGlobalPrimaryKey(Cookies.getCookie("username")));
 					
 					/*Comment out the below lines when running the code from an hosted mode*/
-					/*LoginData user = new LoginData();
+					LoginData user = new LoginData();
 					user.delete();
 					user.create();
 					user.insert("1000000", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
 					ApplicationConstants.toggleConnection(false);
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("You are ready to go offline!!. ");
-					this.redirectTo(new Index(requestContext));*/
+					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg == "goonline"){
 					LoginData user = new LoginData();

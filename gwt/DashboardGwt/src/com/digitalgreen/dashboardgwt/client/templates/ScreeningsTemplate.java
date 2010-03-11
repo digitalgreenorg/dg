@@ -27,12 +27,12 @@ public class ScreeningsTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		Screenings addScreeningServlet = new Screenings(requestContext);
+		Screenings saveScreening = new Screenings(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml);
 		// Add it to the rootpanel
 		super.fill();
-		Screenings addScreeningServlet = new Screenings(requestContext);
-		Screenings saveScreening = new Screenings(new RequestContext(RequestContext.METHOD_POST));
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet);
 		// Now add any submit control buttons

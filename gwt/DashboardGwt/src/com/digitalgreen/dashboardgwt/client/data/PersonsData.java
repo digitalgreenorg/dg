@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
 
 public class PersonsData extends BaseData {
 
@@ -19,6 +20,19 @@ public class PersonsData extends BaseData {
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(group_id) REFERENCES person_groups(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ;  
+	
+	public class Data extends BaseData.Data {
+		public Data() {}
+	}
+
+	@Override
+	public Data getNewData() {
+		return new Data();
+	}
+	
+	public PersonsData() {
+		super();
+	}
 	
 	public PersonsData(RequestContext requestContext) {
 		super();

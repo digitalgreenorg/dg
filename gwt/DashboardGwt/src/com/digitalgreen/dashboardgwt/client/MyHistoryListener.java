@@ -12,7 +12,6 @@ import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 
 public class MyHistoryListener implements ValueChangeHandler<String> {
 
-	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		// TODO redirect to corresponding servlets
 		

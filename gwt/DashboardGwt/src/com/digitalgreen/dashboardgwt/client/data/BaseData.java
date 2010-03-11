@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
-import com.digitalgreen.dashboardgwt.client.DashboardGwt;
+import java.util.ArrayList;
+import java.util.Arrays;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.gears.client.Factory;
@@ -17,13 +18,48 @@ import com.google.gwt.user.client.Window;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
+	public class Data implements Cloneable {
+		
+		protected int id;
+		
+		public Data() {}
+		
+		// Override this
+		public Object clone() {
+			Data obj = new Data();
+			obj.id = this.id;
+			return obj;
+		}
+		
+		// Override this
+		public String getPrefixName() {
+			return null;
+		}
+		// Override this
+		public void setObjValueFromString(String key, Object val) {}
+
+		// Override this
+		public void save() {
+			BaseData baseDataDbApis = new BaseData();
+			this.id = baseDataDbApis.autoInsert(this.getFormInsertValues());
+		}
+
+		// Override this
+		public void save(BaseData.Data withForeignKey) {}
+		// Override this
+		public String[] getFormInsertValues() {
+			return null;
+		}
+	}
+	
 	private static Database db;
 	private static String databaseName = ApplicationConstants.getDatabaseName();
 
-	private String responseText = null;
 	private int requestError = 0;
 	protected BaseData.Data data;
 	protected ResultSet lastResultSet;
+	protected String table_name = "";
+	protected String[] fields = {};
 	
 	final static public int ERROR_RESPONSE = 1;
 	final static public int ERROR_SERVER = 2;
@@ -36,17 +72,17 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
-	public class Data {
-		public Data() {}
-	}
-
 	public BaseData() {}
 
 	public BaseData(OnlineOfflineCallbacks callbacks) {
 		this.dataOnlineCallbacks = callbacks;
 	}
+
+	public Data getNewData() {
+		return new Data();
+	}
 	
-	public BaseData.Data getData() {
+	public Data getData() {
 		return this.data;
 	}
 	
@@ -62,10 +98,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return this.requestError == BaseData.ERROR_RESPONSE || this.requestError == BaseData.ERROR_SERVER;
 	}
 	
-	private void setResponseText(String responseText) {
-		this.responseText = responseText;
-	}
-
 	private void setRequestError(int errorCode) {
 		this.requestError = errorCode;
 	}
@@ -102,7 +134,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.request(RequestBuilder.POST, url, postData);
 	}
 	
-	public static Boolean dbOpen() {
+	public static boolean dbOpen() {
 		try{
 			BaseData.db = Factory.getInstance().createDatabase();
 			db.open(BaseData.databaseName);
@@ -136,44 +168,43 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public void delete(String deleteSql, String ...args) {
 		BaseData.dbOpen();
-		try {
-			BaseData.dbStartTransaction();
-			this.execute(deleteSql, args);
-			BaseData.dbCommit();
-			BaseData.dbClose();
-		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
-			Window.alert("Database error: " + e.toString());
-			BaseData.dbClose();
-		}
+		this.execute(deleteSql, args);
+		BaseData.dbClose();
 	}
 
 	public void insert(String insertSql, String ...args) {
-		try {
-			BaseData.dbOpen();
-			BaseData.dbStartTransaction();
-			this.execute(insertSql, args);
-			BaseData.dbCommit();
-			BaseData.dbClose();
-		} catch (DatabaseException e) {
-			Window.alert("Database error: " + e.toString());
-			BaseData.dbClose();
+		BaseData.dbOpen();
+		this.execute(insertSql, args);
+		BaseData.dbClose();
+	}
+
+	public int autoInsert(String ...args) {
+		String insertSql = "INSERT INTO " + this.table_name + " VALUES (";
+		for(int i=0; i < this.fields.length; i++) {
+			if(i == this.fields.length - 1) {
+				insertSql += "?";
+			} else {
+				insertSql += "?, ";
+			}
 		}
-		
+		insertSql += ");";
+		String newId = this.getNextRowId();
+		if(newId != "ERROR") {
+			ArrayList tempList = (ArrayList)Arrays.asList(args);
+			tempList.add(0, newId);
+			BaseData.dbOpen();
+			this.insert(insertSql, (String[])tempList.toArray());
+			this.updateLastInsertedID(newId);
+			BaseData.dbClose();
+			return (new Integer(newId)).intValue();
+		}
+		return -1;
 	}
 	
 	public void update(String updateSql, String ...args) {
 		BaseData.dbOpen();
-		try {
-			BaseData.dbStartTransaction();
-			this.execute(updateSql, args);
-			BaseData.dbCommit();
-			BaseData.dbClose();
-		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
-			Window.alert("Database error: " + e.toString());
-			BaseData.dbClose();
-		}
+		this.execute(updateSql, args);
+		BaseData.dbClose();
 	}
 
 	/* Cannot close the database after a select statement. 
@@ -184,26 +215,28 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public String getNextRowId(){
 		try {
-			int id;
 			BaseData.dbOpen();
 			this.select(getLastInsertedID, ApplicationConstants.getUsernameCookie());
 			if (this.getResultSet().isValidRow()){
-				id = this.getResultSet().getFieldAsInt(0);
-				id++;
+				int id = this.getResultSet().getFieldAsInt(0);
 				BaseData.dbClose();
-				return id+"";
+				return (new Integer(++id)).toString();
 			} 
-		}catch (DatabaseException e) {
+		} catch (DatabaseException e) {
 				Window.alert("Database exception error : " +  e.toString());
 				BaseData.dbClose();
 		}
-		return "error";
+		return "ERROR";
 	}
-	
-	
+		
 	public void updateLastInsertedID(){
 			String id = this.getNextRowId();
 			this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
+	}
+	
+	// To avoid another select to get the global id
+	public void updateLastInsertedID(String id){
+		this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
 	}
 	
 	public boolean checkIfUserTableExists(){
@@ -241,23 +274,16 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	protected ResultSet getResultSet() {
-		//if(this.lastResultSet != null && this.lastResultSet.isValidRow())
 		return this.lastResultSet;
-		//return null;
 	}
 	
 	public void execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
-			//BaseData.dbOpen();
-			this.lastResultSet = BaseData.db.execute(sql, args);
-			
+			this.lastResultSet = BaseData.db.execute(sql, args);	
 		} catch (DatabaseException e) {
 			Window.alert("Database execute error:" + e.toString());
-		} /*finally {
-			BaseData.dbClose();
-			// Closing the database making the value of lastResultSet as null
-		}*/
+		}
 	}
 	
 	// Basically a wrapper around a core data function to execute
