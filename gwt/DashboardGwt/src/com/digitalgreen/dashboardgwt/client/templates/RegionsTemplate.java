@@ -1,8 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData.Data;
+import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
+import com.google.gwt.user.client.Window;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegionsTemplate extends BaseTemplate {
 	public RegionsTemplate(RequestContext requestContext) {
@@ -23,12 +30,39 @@ public class RegionsTemplate extends BaseTemplate {
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
 		// Add it to the rootpanel
 		super.fill();
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
-
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveRegion);
 	}
+	
+	
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List regions = (List)queryArgs.get("listing");			
+			if(regions  != null){
+				String tableRows ="";
+				String style;
+				RegionsData.Data region;
+				for (int row = 0; row < regions.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					region = (RegionsData.Data) regions.get(row);
+					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ region.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/region/"+ region.getId() +"/'>" + region.getRegionName() +"</a></th></tr>";
+				}
+				regionsListFormHtml = regionsListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
 	
 	private String regionsListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 						"<script type='text/javascript' src='/media/js/calendar.js'></script>" +

@@ -15,10 +15,16 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
-	public class Data implements Cloneable {
+	public static class Type extends JavaScriptObject {
+		protected Type() {}
+	}
+	
+	public class Data implements Cloneable  {
 		
 		protected int id;
 		
@@ -77,7 +83,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public BaseData(OnlineOfflineCallbacks callbacks) {
 		this.dataOnlineCallbacks = callbacks;
 	}
-
+		
 	public Data getNewData() {
 		return new Data();
 	}

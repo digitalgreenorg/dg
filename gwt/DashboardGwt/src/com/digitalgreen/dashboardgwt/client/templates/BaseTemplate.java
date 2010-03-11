@@ -88,23 +88,6 @@ public class BaseTemplate extends Template {
 		String queryArg = (String)queryArgs.get("action");
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
-			// Add Listings
-			List regions = (List)queryArgs.get("listing");			
-			if(regions  != null){
-				String tableRows ="";
-				String style;
-				ArrayList region;
-				for (int row = 0; row < regions.size(); ++row) {
-					if(row%2==0)
-						style= "row2";
-					else
-						style = "row1";
-					region = (ArrayList) regions.get(row);
-	               	tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ (Integer)region.get(0) +"' name='_selected_action' /></td><th><a href='/admin/dashboard/region/"+ (Integer)region.get(0) +"/'>" + (String)region.get(1) +"</a></th></tr>";
-				}
-				inputListFormHtml = inputListFormHtml + tableRows + "</tbody></table>";
-			}
-			
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
 			Hyperlink addLink = new Hyperlink();

@@ -74,11 +74,14 @@ public class Login extends BaseServlet {
 					}
 				});
 				    
-				// Comment the below line when you are not running the code form a hosted mode.
-				//loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
-				ApplicationConstants.setUsernameCookie((String)this.form.get("username"));
-				ApplicationConstants.setPasswordCookie((String)this.form.get("password"));
-				this.redirectTo(new Index());
+				// Comment the below line when you are not running the code form a hosted mode.   
+				loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
+				 
+				 // Comment the below line when you are running the code form a hosted mode.
+				 /*ApplicationConstants.setUsernameCookie((String)this.form.get("username"));
+				 ApplicationConstants.setPasswordCookie((String)this.form.get("password"));
+				 this.redirectTo(new Index());*/
+
 			}
 		} else if (method == RequestContext.METHOD_GET) {
 				if(this.isLoggedIn()) {

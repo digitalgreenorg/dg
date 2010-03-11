@@ -15,8 +15,7 @@ import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-
-import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.core.client.JsArray;
 
 public class Regions extends BaseServlet {
 	public Regions() {
@@ -37,15 +36,12 @@ public class Regions extends BaseServlet {
 			String method = this.getMethodTypeCtx();
 			if(method == RequestContext.METHOD_POST) {
 
-				//this.form = Form.flatten(this.requestContext.getQueryString());
-
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							Window.alert("regions = " + results);
-							JSONParser.parse(results);
 							RegionsData regiondata = new RegionsData();
-							List regions = regiondata.getRegions();
+							List regions = regiondata.getRegions(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
@@ -68,7 +64,6 @@ public class Regions extends BaseServlet {
 					}
 					
 					public void offlineSuccessCallback(Object results) {
-						// If login success in the offline case		
 						if((Boolean)results) {
 							RegionsData regiondata = new RegionsData();
 							List regions = regiondata.getRegions();
@@ -85,7 +80,6 @@ public class Regions extends BaseServlet {
 					}
 				});
 				
-				// Comment the below line when you are not running the code form a hosted mode.
 				regionData.apply(regionData.postPageData(this.requestContext.getQueryString()));
 
 			}
