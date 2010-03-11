@@ -740,7 +740,7 @@ def video_practice_wise_scatter(**args):
 
     if 'from_date' in args and 'to_date' in args:
         if args['geog'] == 'country':
-            sql.append(" WHERE VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
+            sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \
                         "\' AND \'"+args['to_date'] + "\'")
         else:
             sql.append(" AND VIDEO_PRODUCTION_END_DATE BETWEEN \'"+args['from_date']+ \

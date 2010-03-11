@@ -437,18 +437,17 @@ function Default(){
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	var additional_chart_settings = '';
 	{% if from_date and to_date %}
+		monthbar.addVariable("data_file", encodeURIComponent("/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		monthbar.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/");
+	{% endif %}
+
+	{% if from_date and to_date %}
 		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}", async: false }).responseText;
 	{% else %}
 		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
 	{% endif %}
 	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
-
-
-	{% if from_date and to_date %}
-		monthbar.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}");
-	{% else %}
-		monthbar.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/");
-	{% endif %}
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
 
@@ -458,7 +457,7 @@ function Default(){
 	languagebar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	languagebar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series}: Video Production = {value}</balloon_text></column><graphs><graph><type/><title>Language</title></graph></graphs></settings>"));
 	{% if from_date and to_date %}
-		languagebar.addVariable("data_file",'/output/video/languagebar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}');
+		languagebar.addVariable("data_file", encodeURIComponent("/output/video/languagebar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		languagebar.addVariable("data_file",'/output/video/languagebar/data/{{geog}}/{{id}}/');						
 	{% endif %}

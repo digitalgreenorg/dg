@@ -372,7 +372,7 @@ def video_actor_wise_pie(request,geog,id):
     str_list = []
     str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     if not rs:
-       return HttpResponse('')
+       return HttpResponse(';')
     else:
         for actor in actors:
             if(actor[0] in rs):
@@ -402,7 +402,7 @@ def video_type_wise_pie(request,geog,id):
     str_list = []
     str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     if not rs:
-       return HttpResponse('')
+       return HttpResponse(';')
     else:
         for type in video_type:
             if(int(type[0]) in rs):
@@ -427,6 +427,8 @@ def video_language_wise_bar_data(request,geog,id):
         rs = run_query(database.video_language_wise_bar(geog=geog,id=id))
     
     return_val = []
+    if not rs:
+        return HttpResponse(';');
     for row in rs:
         return_val.append(row['lname']+';'+str(row['count']))
         
@@ -478,7 +480,7 @@ def video_practice_wise_scatter(request,geog,id):
         rs = run_query(database.video_practice_wise_scatter(geog=geog,id=id))
     
     if not rs:
-        return HttpResponse('');
+        return HttpResponse(';');
     
     count_prac_dict = {}
     for item in rs:
