@@ -618,7 +618,7 @@ def video_tot_video(**args):
         
     if 'from_date' in args and 'to_date' in args:
         if args['geog'] == 'country':
-            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+            sql.append(' WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
         else:
             sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
@@ -645,7 +645,7 @@ def video_tot_scr(**args):
         
     if 'from_date' in args and 'to_date' in args:
         if args['geog'] == 'country':
-            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+            sql.append(' WHERE SC.video_id = VID.id AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
         else:
             sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
@@ -671,7 +671,7 @@ def video_avg_time(**args):
         
     if 'from_date' in args and 'to_date' in args:
         if args['geog'] == 'country':
-            sql.append('WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+            sql.append(' WHERE VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
         else:
             sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
@@ -780,7 +780,7 @@ def overview_min_date(**args):
     
        UNION
        SELECT MIN(DATE_OF_ADOPTION) AS DATE
-        FROM PERSON_adopt_practice PA""")
+        FROM PERSON_ADOPT_PRACTICE PA""")
     if temp:
         sql.append("""
         , PERSON x """ + from_clause + temp + """ AND PA.person_id = x.id""")
