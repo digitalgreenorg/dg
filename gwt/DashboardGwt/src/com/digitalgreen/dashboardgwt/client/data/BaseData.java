@@ -29,16 +29,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	final static public int ERROR_SERVER = 2;
 	
 	protected static String getLastInsertedID = "SELECT last_inserted_id FROM `user` WHERE username= ?;";
-	
 	protected static String updateLastInsertedID = "UPDATE `user` SET last_inserted_id = ? WHERE username = ?;";
-	
 	protected static String getApplicationStatus = "SELECT `app_status` FROM `user`;";
-	
 	protected static String updateApplicationStatus = "UPDATE `user` SET app_status=? WHERE username = ?;";
-
 	protected static String userTableExists = "SELECT * FROM sqlite_master where type='table' and name = 'user';";
-	
-	protected static String saveQueryString = "INSERT INTO `formqueue` VALUES (? , ? , ? , ? , ?);";
 	
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
@@ -244,10 +238,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	public void updateAppStatus(String app_status, String username){
 		this.update(updateApplicationStatus, app_status,username );
-	}
-	
-	public void saveQueryString(String ...args){
-		this.insert(saveQueryString, args);
 	}
 	
 	protected ResultSet getResultSet() {

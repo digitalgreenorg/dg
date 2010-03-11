@@ -32,11 +32,11 @@ public class RegionsData extends BaseData {
 	protected static String tableID = "01";
 	
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `region` " +
-												"(id INTEGER PRIMARY KEY NOT NULL ," +
-												"REGION_NAME VARCHAR(100) NOT NULL ," +
+												"(id INTEGER PRIMARY KEY NOT NULL," +
+												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";  
 	
-	protected static String insertSql = "INSERT INTO region VALUES (?, ?, ?)";
+	protected static String insertSql = "INSERT INTO region VALUES (?, ?, ?);";
 	
 	protected static String listRegions = "SELECT id, REGION_NAME FROM region ORDER BY(-id)";
 	
@@ -54,8 +54,9 @@ public class RegionsData extends BaseData {
 	public void createRegion(String queryArg){
 		HashMap form = Form.flatten(queryArg);
 		String id = this.getNextRowId();
-		this.insert(insertSql, id, form.get("region_name").toString(), form.get("start_date").toString() );
-		this.saveQueryString(tableID, id, queryArg, "0", "A");
+		this.insert(insertSql, id, (String)form.get("region_name"), (String)form.get("start_date") );
+		FormQueueData formQueue = new FormQueueData();
+		formQueue.saveQueryString(tableID, id, queryArg, "0", "A");
 		this.updateLastInsertedID();
 	}
 	

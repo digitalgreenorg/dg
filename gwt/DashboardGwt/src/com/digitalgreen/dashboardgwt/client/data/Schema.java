@@ -41,7 +41,7 @@ public class Schema {
 			BaseData.getDb().execute(PersonAdoptPracticeData.createTable);
 			BaseData.getDb().execute(EquipmentsData.createTable);
 			BaseData.getDb().execute(LoginData.createTable);
-			BaseData.getDb().execute(FormsData.createTable);
+			BaseData.getDb().execute(FormQueueData.createTable);
 			BaseData.dbCommit();
 			BaseData.dbClose();
 		} catch (DatabaseException e) {

@@ -2,10 +2,8 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
-public class FormsData extends BaseData {
+public class FormQueueData extends BaseData {
 
-	//protected static String TableData = "CREATE TABLE IF NOT EXISTS `table`(table_id INTEGER PRIMARY KEY, table_name VARCHAR NOT NULL );";
-	
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `formqueue` " +
 										  "(table_id INTEGER NOT NULL, " +
 										  "global_pk_id INTEGER NOT NULL PRIMARY KEY, " +
@@ -13,10 +11,13 @@ public class FormsData extends BaseData {
 										  "sync_status BOOLEAN, " +
 										  "action CHAR(1)); ";  
 	
-	//protected static String insertIntoTable = "INSERT INTO `table` (table_name) VALUES ('screening');"
+	protected static String saveQueryString = "INSERT INTO `formqueue` VALUES (? , ? , ? , ? , ?);";
 	
-	
-	public FormsData(RequestContext requestContext) {
+	public FormQueueData() {
 		super();
+	}
+	
+	public void saveQueryString(String ...args){
+		this.insert(saveQueryString, args);
 	}
 }
