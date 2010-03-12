@@ -1,31 +1,31 @@
-
-
-#analytics {border:hidden; font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666 }
-
-#analytics1 { margin-left:4px; margin-right:4px; border-color:#006633; }
-
-#analytics1_tr1 { width:450px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center; color: #666666; }
-
-#analytics1_tr2 { width:450px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center;color: #666666 }
-
-
-.moduletd  {width:450px; background-image: url(../Images/header.png); height:50px; background-repeat:no-repeat; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
-
-.moduletd1 { width:450px; border-left-style: ridge; border-left-color:#66CC00; border-right-style: ridge; border-right-color: #66CC00; border-bottom-color: #66CC00; border-bottom-style:ridge}
-
-.video_footer {width:450px; background-image:; background-repeat:no-repeat;}
-#footer {
-background-image:url(/media/Output/Images/defaultfooterbg1.png);
-background-repeat:no-repeat;
-height:30px;
-margin-left:15%;
-margin-top:0;
-width:922px;
-}
-#tabledynamic1		{ margin-top:6px; margin-left:10px; float:none; width:900px; border-spacing:8px; table-layout:auto;  }
-#tabledynamic0		{ margin-top:6px; margin-left:10px; float:none; width:900px; border-spacing:8px; }
-#tabledynamic2		{ margin-top:6px; margin-left:10px; float:none; width:900px; border-spacing:8px; }
-
  
+#analytics 					{ margin-top:5px; float:none; margin-left:10px; width:899px; border-style:solid; border-color:#add540; border-width:1px; }
 
-#table_videotd5 {background-image:url(Images/video_footer.png); background-repeat:no-repeat;}
+#analyticstitle				{ font-size:24px; font-family:calibri; font-weight:bold; color: #465420; text-align:center; width:898px}
+#analyticsbody				{ margin-top:5px; width:898px; background-color:#fcfeef; height:80px; margin-bottom:5px}
+
+#analyticsbodydesc			{ float:left; margin-top:3px; font-size:16px; font-family:calibri; font-weight:normal; color: #465420; width:436px; margin-right:3px; margin-left:5px; background-color:#defaa9; height:30px; padding-left:5px; padding-top:5px}
+
+#graphtable					{width:899px; float:none; margin-top:10px;}
+
+/*
+ #analytics1 				{ float:none; margin-left:4px; margin-right:4px; border-color:#006633; margin-top:10px }
+
+#analytics1_tr1 			{ width:450px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center; color: #333333; font-stretch: narrower }
+			
+*/
+
+#graphtable					{ margin-top:5px; margin-bottom:5px; margin-left:10px; border-top-style: solid; border-top-color: #9ce94f; border-top-width:1px;}
+#graphtabletd				{ width:899px;}
+#graphdiv1					{ margin-top:5px; float:left; width:443px; margin-left:2px; margin-right:2px; margin-bottom:10px}
+#graphdiv1title				{ margin-top:1px; margin-left:2px; margin-right:2px; float:none; width:440px; height: 40px; border-style: solid; border-color: #9ce94f; border-width:1px;  }
+#graphdiv1titledesc			{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black}
+.graphdiv1desc				{ min-height:520px; margin-top:0px; margin-left:2px; margin-right:2px; float:none; width:440px; border-style: solid; border-color: #9ce94f; border-width:1px; background-color:#ffffff; padding-top:10px;}
+.graphdiv1desc1				{ min-height:400px; margin-top:0px; margin-left:2px; margin-right:2px; float:none; width:440px; border-style: solid; border-color: #9ce94f; border-width:1px; background-color:#ffffff; padding-top:10px;}
+.subgraphdiv1desc			{ min-height:400px; margin-top:5px; margin-left:0px; margin-right:0px; width:438px;}
+.subgraphdiv1desc1			{ min-height:160px; margin-top:2px}
+.number						{ font-size:18px; font-family:calibri; font-weight:bold; color: #465420;}
+.moduletd  					{ float:none; width:450px; height:40px; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
+
+
+.video_footer 				{ width:450px;}

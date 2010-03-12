@@ -1,0 +1,60 @@
+#mainbody						{ background-color:#dfedc5}
+
+/* Center class */
+#tablegrid						{ margin-left:15%; margin-top:2px}
+#default						{ margin-top:0px; margin-left:0%; width: 920px; background-color:#ffffff; border-color:#add540; border-style:solid; border-width:1px ;float:none}
+#defaultfooter					{ margin-top:0px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultfooterbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
+
+#gridfooter						{ margin-left:0px; margin-top:5px; border-width:0px; border-style:solid; border-color:#FFFFFF; width:900px; padding-top:10px}
+
+/*
+#defaultheader					{ margin-top:2px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultheaderbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
+*/
+
+
+/* Customize your search */ 
+#searchbody						{ margin-top:0px; margin-left:10px; width:899px; height:50px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
+#searchbodytitle				{ z-index:9900; color:#465420; font-family:Calibri; font-size:14px; font-weight:bold; padding-top:10px; padding-left:15px; padding-right:5px; margin-top:10px; margin-left:0px;}
+#searchbodytitleimg				{ z-index:9900; background:url("/media/Output/Images/searchbg10.png"); background-repeat:no-repeat; width:46px; height:29px; margin-top:-29px; margin-left:150px; position:absolute}
+#searchlevel					{ margin-top:0px; margin-left:0px; float:none; padding-top:0px; }
+.searchbody1					{ float:left; color:#465420; font-family:Calibri; font-size:12px; font-weight:normal; padding-top:10px; padding-left:25px; padding-right:20px}
+#searchbody5					{ float:left; color:#465420; font-family:Calibri; font-size:12px; font-weight:normal; padding-top:8px; padding-left:15px; padding-right:5px} 
+.select							{ background-color:#e4f1c9; border-style:solid; border-width:1px; border-color:#666666; width:160px; text-align:center}
+
+/* Calender CSS */
+#dglogo							{ float:left; margin-top:0px; margin-left:10px;  background:url("/media/Output/Images/dglogo1.png"); background-repeat:no-repeat;; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+
+#timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+#timelinedesc1btntop			{ background:url("/media/Output/Images/closebtn1.png"); background-repeat:no-repeat; width:50px; height:16px; margin-top:5px; margin-left:93.5%; color:#666666; font-family:Calibri; font-size:10px; font-weight:normal; padding-top:2px; padding-right:20px;padding-left:-10px}
+	
+#timelinedescfooter				{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-top:42px; margin-left:10px; position:absolute;}
+#timelinedescfooter1			{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-left:405px; width:16px; height:16px; margin-top:41px; position:absolute; background:url("/media/Output/Images/applybtn2.png"); background-repeat:no-repeat;}
+
+#inlinedatepicker1				{ margin-top:62px; padding-left:0px; margin-left:670px; position:absolute; width:120px; height:20px; padding-top:5px; font-family:Calibri; font-size:16px; font-weight:bold; background-color:#f1f5d7; padding-top:5px; border-width:2px; border-style:solid; border-color:#e9efc0;}
+#inlinedatepicker2				{ margin-top:112px; padding-left:0px; margin-left:670px; position:absolute; width:120px; height:20px; padding-top:5px; font-family:Calibri; font-size:16px; font-weight:bold; background-color:#f1f5d7; padding-top:5px; border-width:2px; border-style:solid; border-color:#e9efc0;}
+
+#timelinedesc1calender			{ margin-top:-5px; padding-left:9px; margin-left:600px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; color:#a9a9a8; background:url("/media/Output/Images/timelinedesc1calenderbg2.png"); background-repeat:no-repeat; width:100px; height:64px} 
+#inlinedatepickerheader			{ margin-top:5px; padding-left:9px; margin-left:690px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; color:#a9a9a8; text-align:left}
+#inlinedatepicker1desc			{ margin-top:70px; padding-left:9px; margin-left:620px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal;}
+#inlinedatepicker2desc			{ margin-top:120px; padding-left:9px; margin-left:635px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal;}
+#inlinedatepicker1format		{ margin-top:70px; padding-left:9px; margin-left:800px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal}
+#inlinedatepicker2format		{ margin-top:120px; padding-left:9px; margin-left:800px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal}
+#inlinedatepickersubmitbtn		{ margin-top:150px; padding-left:0px; margin-left:670px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7;}
+#inlinedatepickerresetbtn		{ margin-top:150px; padding-left:0px; margin-left:735px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7;}
+
+#inlinedatepickererrormsg		{ margin-top:180px; padding-left:0px; margin-left:645px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7; padding:4px;}
+
+#inlinedatepickerbg				{ margin-top:5px; padding-right:5px; margin-left:7px; position:absolute; width:580px; height:200px; background-color:#f1f5d7}
+
+#inlinedatepicker1-container	{ margin-top:5px;margin-left:10px; position:absolute}
+#inlinedatepickerdiv			{ margin-top:75px;margin-left:280px; position:absolute}
+#inlinedatepicker2-container	{ margin-top:5px; margin-left:370px; position:absolute}
+
+#datepicker1					{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:10px; width:160px; height:25px; padding-top:8px; border-right-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
+#datepickergap					{ float:left; background-color:#f1f5d7; border-bottom-style:solid; border-top-style:solid; border-bottom-width:1px; border-bottom-color:#e7efb6; border-top-width:1px; border-top-color:#e7efb6; margin-top:5px; margin-left:0px; margin-right:0px; height:25px; padding-top:8px}
+#datepicker2 					{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:160px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
+#datepicker12reset				{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:54px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
+
+a#resetdate						{ text-decoration:none; color:#c2c2c2; font-family:Calibri; font-size:16px; font-weight: bold; }
+a#resetdate:hover				{ text-decoration:underline; color:#666666; font-family:Calibri; font-size:16px; font-weight: bold; }

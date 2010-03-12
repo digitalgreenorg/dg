@@ -1,30 +1,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 
 <title> Video Analytics </title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
- <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css"> 
-  <!--<link type="text/css" rel="stylesheet" href="/media/Output/CSS/jquery-ui-1.7.2.custom.css">   -->     
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">   
+    
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
-    <!--[if IE]>
-        <link type='text/css' rel='stylesheet' href='CSS/StyleSheetIE.css' />
-    <![endif]-->           
+    <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css">
+              
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
     <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
-	<script type="text/javascript" language="javascript" src="/media/Output/JS/JGridPage.js"></script>  
+	<script type="text/javascript" src="/media/Output/JS/JGridPage.js"></script>  
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
-<script type="text/javascript">
+	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.min.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.pack.js"></script>
+    
+    <script type="text/javascript" src="/media/Output/ampie/swfobject.js"></script>
+    <script type="text/javascript" src="/media/Output/amcolumn/swfobject.js"></script>
+
+
+	<script type="text/javascript">
 	    
-function Default(){
+
+		function Default(){
 		
 			// for default from - date 
 	        var startdate = '{{start_date}}';
-			
+			//alert(startdate);
 	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
 	        var sdyear = startdate.substring(0, sd); // get the year for the date1
 	        var sd1 = startdate.substring(sd+1, startdate.length);
@@ -45,8 +53,7 @@ function Default(){
 	        if(sdmonth=="11"){ sdmonth="November"; }
 	        if(sdmonth=="12"){ sdmonth="December"; }        
 	        
-			
-	        var newdate = new Date();
+			var newdate = new Date();
 	        var currentmonth = newdate.getMonth();
 	        var month_name=new Array(12);
             month_name[0]="January"
@@ -113,8 +120,8 @@ function Default(){
 	            var date2str1 = date2str1.substring(d22+1, date2.length);
 	            var d23= date2str1.length;
 	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
-	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1day + "," + " " + date1year;
-	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2day + "," + " " + date2year;
+	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1year + "," + " " + date1day;
+	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2year + "," + " " + date2day;
 			{% else %}
 				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; //datepicker2
 				//document.getElementById('datepicker1').innerHTML = '{{start_date}}'; //datepicker1
@@ -161,8 +168,8 @@ function Default(){
 	        else{
 	            
 				window.location.href = '/output/video/module/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
-					            	           
 	        } // end else
+
 	    }
 		
 		
@@ -194,41 +201,37 @@ function Default(){
         }
        
         window.onLoad=dochange('state', -1);         // value in first dropdown
-    
-	    
 	</script>
 </head>
 
 <body id='mainbody' onload='Default()'>
-	<div id='tablegrid'> 				
-		
-	<div id='defaultheader'>
-	</div>	
+ <div id='tablegrid'> 	
+	<!-- <div id='defaultheader'> </div>  -->	
 	<div id='default'>		
 		
-		<div id='gridfooter'>		
-				<div id='timeline'>
+		<div id='gridfooter'>
+		        <div id="dglogo"> 		            
+		        </div>		        		
+		        <div id='timeline'>
 					<div id='timelinedesc'>
-
-						<div id='datepicker1'/> </div> 
+					    <div id='datepicker1'/></div>
 						<div id='datepickergap'> &nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp; </div>
 						<div id='datepicker2'> </div>
+						<div id='datepicker12reset'> <a id = 'resetdate' href='/output/video/module/{{geog}}/{{id}}/'>Reset</a> </div>
 						<div id='timelinedescfooter'>
 							Above are the pre-chosen dates. Customize your own range of timeline  	
 						</div>
 						<div id='timelinedescfooter1'>												 			
 						</div>
-
-		  </div>					
-	  </div>
+				</div>					
+				        				    
 				<div id='timelinedesc1'>
 						    <div id='timelinedesc1btntop'>
 							    hide &nbsp; &nbsp; 
 						    </div>
-						`   <div id='timelinedesc1calender'>						        
+						    <div id='timelinedesc1calender'>						        
 						    </div>						    
 						    <div id='inlinedatepickerheader'>
-
 						        Choose the range of timeline<br />&nbsp;&nbsp;from the calenders at the left
 						    </div>
 						    <div id='inlinedatepicker1desc'>
@@ -240,7 +243,6 @@ function Default(){
 						        (dd-mm-yyyy) 
 						    </div>						
 						    <div id='inlinedatepicker2desc'>
-
 						        to:
 						    </div>													
 						    <div id='inlinedatepicker2'>												    				  							
@@ -251,162 +253,132 @@ function Default(){
 						    <div id='inlinedatepickersubmitbtn'>
 						        <input type="submit" value="Apply" onclick='Apply()'/>
 						    </div>
+						    <div id='inlinedatepickerresetbtn'>
+						        <input type="reset" value="Reset" onclick='Reset()'/>
+						    </div>
 						    <div id='inlinedatepickererrormsg'>
-
 						    </div>
 						   
-						<div id='inlinedatepickerbg'>
-						    <div id='inlinedatepicker1-container'>
-						    </div>	
-						    <div id='inlinedatepickerdiv'>
-						        __
-						    </div>					    
-						    <div id='inlinedatepicker2-container'>
-						    </div>
-						</div>								
-	  </div>
-
-</div>
-
-
+						    <div id='inlinedatepickerbg'>
+						        <div id='inlinedatepicker1-container'>
+						        </div>	
+						        <div id='inlinedatepickerdiv'>
+						            __
+						        </div>					    
+						        <div id='inlinedatepicker2-container'>
+						        </div>
+						    </div>								
+				</div>
+	    </div>	
 		
+		<div id='searchbodytitle'> Customize your Search </div>
+	    <div id='searchbodytitleimg'> </div>
 		
-<div id='searchbody'>
-			<div id='searchbodytitle'>
-				Customize your Search
-			</div>
+		<div id='searchbody'>			
+			<div id='searchlevel'>
 			
-				<div class='dropdown' id='state'>
-				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					<option value='-1'>Select State</option>
-				</select>				
+			    <div class='searchbody1' id='state'>
+				    <select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+					    <option value='-1'>Select State</option>
+				    </select>				
 				</div>
-				<div class='dropdown' id='district'>
-				<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
-					<option value='-1'>Select District</option>
-				</select>	
+
+				<div class='searchbody1' id='district'>
+				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
+					    <option value='-1'>Select District</option>
+				    </select>	
 				</div>
-				<div class='dropdown' id='block'>
-				<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
-					<option value='-1'>Select Block</option>
-				</select>				
+
+				<div class='searchbody1' id='block'>
+				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+					    <option value='-1'>Select Block</option>
+				    </select>				
 				</div>			
-				<div class='dropdown' id='village'>
-				<select class='select' name='village' id = 'villageId'>
-					<option value='-1'>Select Village</option>
-				</select>					
+
+				<div class='searchbody1' id='village'>
+				    <select class='select' name='village' id = 'villageId'>
+					    <option value='-1'>Select Village</option>
+				    </select>					
 				</div>
+
 				<div id='searchbody5'>
-					<input id='searchsubmitbtn' type='submit' onclick="regionSelect()" value="GO">
-				</div>
-				
-				
-		</div>			
-				
-			<div id="analytics">
-				<table align="center">
-					<tr>
-						<td> Video Analytics </td>
-					</tr>
-				</table>
-			</div>
-			
-						
-			
-			<div id="analytics1">
-		<table id="analytics1_table"  width="913" border="0"  cellspacing="5px">
-      	<tbody>
-				<tr id="analytics1_tr1">
-        			<td id="analytics1_td1" scope="col"  width="50%" height="31"><div align="left" ><span class="style7"> &nbsp;&nbsp;<span class="style21">Total Number of Videos Produced: &nbsp;&nbsp;{{tot_video}}<br /> 
-        			  </span></span>
-       			  </td>
-					<td id="analytics1_td2" scope="col" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Total Number of Videos Screened:&nbsp;&nbsp;{{tot_screening}}
-        			</span>
-      				</td>
-				</tr>
-      			<tr id="analytics1_tr2"> 
-        			<td id="analytics1_tr2td1" scope="row" height="31" width="50%"><div align="left"><span class="style7">&nbsp;&nbsp;<span class="style21">Average Time Taken to Produce Video:&nbsp;&nbsp;{{tot_average}} Days</span></span> 
-        			</td>
-					<td id="analytics1_tr2td2">&nbsp;</td>
-		  </tr>
-    	</tbody>
+					<input id='Submit1' type='submit' onclick="regionSelect()" value="GO">
+				</div> 						
+		    </div> <!-- search level-->
+	    </div>	<!-- searchbody-->		    
+	    
+	    <div id="analyticstitle"> Video Analytics </div>
+	    <div id="analytics">			
+			<div id="analyticsbody">
+				<div id="analyticsbodydesc"> Total Number of Videos Produced: <span class="number"> {{tot_video}} </span>  </div>
+				<div id="analyticsbodydesc"> Total Number of Videos Screened: <span class="number"> {{tot_screening}} </span>    </div>
+				<div id="analyticsbodydesc"> Total Number of Videos Produced:                      </div>
+				<div id="analyticsbodydesc"> Average Time Taken to Produce a Video:	<span class="number"> {{tot_average}} </span> </div>	
+			</div>			
+		</div> <!-- analytics -->	
+		
+		
+		<table cellpadding="0px" cellspacing="0px" border="0" id="graphtable">
+			<tr>
+				<td id="graphtabletd">					
+						<div id="graphdiv1">
+							<div id="graphdiv1title">
+								<div id="graphdiv1titledesc" >	Actor & Male/Female Ratio </div>
+							</div>
+							<div class="graphdiv1desc">
+								<div class="subgraphdiv1desc">
+									<div  class="subgraphdiv1desc1" id="flash_area_actor_ratio" >										
+									</div>
+									<div class="subgraphdiv1desc2" id="flash_area_mf_ratio">										
+									</div>
+								</div>	
+							</div>												
+						</div>
+						<div id="graphdiv1">
+							<div id="graphdiv1title"> <div id="graphdiv1titledesc" >  Monthly Video Production </div>	
+							</div>
+							<div class="graphdiv1desc" id="flash_area_monthwise_bar">								
+							</div>						
+						</div>					
+				</td>
+			</tr>
+			<tr>
+				<td id="graphtabletd">					
+						<div id="graphdiv1">
+							<div id="graphdiv1title"> <div id="graphdiv1titledesc" >	Practice based Video Productions </div>	
+							</div>
+							<div class="graphdiv1desc1" id = "flash_area_practice_type_scatter">						
+							</div>						
+						</div>
+						<div id="graphdiv1">
+							<div id="graphdiv1title"> <div id="graphdiv1titledesc" >   Language Based Video Productions </div>	
+							</div>
+							<div class="graphdiv1desc1" id = "flash_area_languagewise_bar" >
+							</div>						
+						</div>					
+				</td>
+			</tr>
+			<tr>
+				<td id="graphtabletd">					
+						<div id="graphdiv1">
+							<div id="graphdiv1title">	<div id="graphdiv1titledesc" >	Video Type </div>
+							</div>
+							<div class="graphdiv1desc1" id = "flash_area_video_type_pie" >
+							</div>						
+						</div>
+						<div id="graphdiv1">
+							<div id="graphdiv1title"> <div id="graphdiv1titledesc" >	Number of Videos </div>
+							</div>
+							<div class="graphdiv1desc1" id = "flash_area_geogwise_pie" >
+							</div>						
+						</div>					
+				</td>
+			</tr>
 		</table>
-	</div>
-	
-						
-			<div id="tabledynamic0">
-		   		<table id="table_video" cellpadding="0px" cellspacing="0px" border="0">
-					<tr id="tabledynamic0_tr1">
-					    <td width="50%" class="moduletd"  >
-						Monthly Video Production	
-						</td>
-						<td width=50% class='moduletd'>
-					 Male/Female Ratio--Actors		
-						</td>
-					</tr>
-					<tr >
-						<td id = "flash_area_monthwise_bar" width=50% height="300px" class="moduletd1"> </td>
-						<td width=50% height="300px" class="moduletd1">
-						<br />	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#666666"  ><b>Male Female Ratio</b></font>
-							<div id = "flash_area_mf_ratio" height='150px'></div>
-<br />	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#666666"  ><b>Actors Ratio</b></font>
-							<div id = "flash_area_actor_ratio" height='150px'></div>
-														
-							
-						</td>
-					</tr>
-					<tr>
-						<td width=50% class="video_footer" height="15px"> </td>
-						<td width=50% class="video_footer"  height="15px"> </td>
-					</tr>		
-				</table>
-				</div>
-				
-			<div id="tabledynamic1">
-				<table id="table_video1" cellpadding="0px" cellspacing="0px" border="0">								
-					<tr id="">
-						<td width="50%" class="moduletd" > Practice wise Video Production </td>
-						<td width="50%" class="moduletd"> Language Wise Video Production </td>
-					</tr>
-					<tr>
-						<td id="flash_area_practice_type_scatter"  width=50% height="300px" class="moduletd1"> </td>
-						<td id = "flash_area_languagewise_bar" width=50% height="300px" class="moduletd1"> </td>
-					</tr>
-					<tr>
-						<td width=50%  height="15px"> </td>
-						<td width=50%   height="15px"></td>
-					</tr>
-				</table>
-			</div>
-				
-				<div id="tabledynamic2">
-					<table id="table_video2" cellpadding="0px" cellspacing="0px" border="0" >	
-					<tr >
-						<td class='moduletd'>Video Type </td>
-						<td class='moduletd'>Number Of Videos </td>
-					</tr>
-					
-					<tr>
-						<td id = "flash_area_video_type_pie" width=50% height="300px" class="moduletd1"> </td>
-   						<td id = "flash_area_geogwise_pie" width=50% height="300px" class="moduletd1"> </td>
-					 </tr>
-					<tr>
-						<td width=50%  height="15px"> </td>
-						<td width=50%   height="15px"> </td>
-					</tr>
-				</table>
-			</div>
-									 
-								
-			</div></div>
-			</div>
-			<div id="footer">
-
-</div>
-</div>
-<script type="text/javascript" src="/media/Output/ampie/swfobject.js"></script>
-<script type="text/javascript" src="/media/Output/amcolumn/swfobject.js"></script>
-
+		    	    	
+    </div>	<!-- default-->				
+</div>  <!-- tablegrid-->
+ 
 <script type="text/javascript">
 		// <![CDATA[		
 	
@@ -436,6 +408,7 @@ function Default(){
 	monthbar.addVariable("path", "/media/Output/amcolumn/");
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	var additional_chart_settings = '';
+
 	{% if from_date and to_date %}
 		monthbar.addVariable("data_file", encodeURIComponent("/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
@@ -447,7 +420,9 @@ function Default(){
 	{% else %}
 		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
 	{% endif %}
+
 	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
 
@@ -456,11 +431,13 @@ function Default(){
 	languagebar.addVariable("path", "/media/Output/amcolumn/");
 	languagebar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	languagebar.addVariable("additional_chart_settings", encodeURIComponent("<settings><column><balloon_text>{series}: Video Production = {value}</balloon_text></column><graphs><graph><type/><title>Language</title></graph></graphs></settings>"));
+
 	{% if from_date and to_date %}
 		languagebar.addVariable("data_file", encodeURIComponent("/output/video/languagebar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		languagebar.addVariable("data_file",'/output/video/languagebar/data/{{geog}}/{{id}}/');						
 	{% endif %}
+
 	languagebar.addVariable("preloader_color", "#999999");
 	languagebar.write("flash_area_languagewise_bar");
 		
@@ -489,12 +466,14 @@ function Default(){
 	
 	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
 	practice.addVariable("path", "/media/Output/amxy/");
+
 	practice.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
 	{% if from_date and to_date %}
 		practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/"));
 	{% endif %}
+
 	practice.write("flash_area_practice_type_scatter");
 	
 </script>

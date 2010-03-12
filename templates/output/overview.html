@@ -4,22 +4,26 @@
 <head>
     <title>Welcome to the Digital Green</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
-       
-    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
-    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />
     
-           
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
+              
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
     <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
-	<script type="text/javascript" language="javascript" src="/media/Output/JS/JGridPage.js"></script>  
+	<script type="text/javascript" src="/media/Output/JS/JGridPage.js"></script>  
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
-	<script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
-	
-	<script type="text/javascript">
+	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.min.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.pack.js"></script>
+
+	<script type="text/javascript">   
 	    
-	    function Default(){
-		
+	    
+	    function Default(){ 
+	        
 			// for default from - date 
 	        var startdate = '{{start_date}}';
 	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
@@ -134,10 +138,21 @@
 				window.location.href = '/output/overview/{{flash_geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
 					            	           
 	        } // end else
-	    } // end Apply function
-	    
-	//<!-- For Search's drop-down list -->
+	    } // end Apply function    
 	
+	
+	function Reset() {
+	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+	        var date2 = document.getElementById('inlinedatepicker1').innerHTML;
+	        if(date1.length!=null || date2.length!=null){	
+	           //alert("hi"); 
+	           document.getElementById('inlinedatepicker1').innerHTML = "";
+	           document.getElementById('inlinedatepicker2').innerHTML = "";               	                        
+	        }   
+	        
+    }// end Reset function 
+	
+	//<!-- For Search's drop-down list -->
 	function Inint_AJAX() {
         try { return new ActiveXObject("Msxml2.XMLHTTP");  } catch(e) {} //IE
         try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {} //IE
@@ -188,38 +203,38 @@
         req.send(null); //send value
         }
        
-        window.onLoad=dochange('state', -1);         // value in first dropdown
-    
+        window.onLoad=dochange('state', -1);         // value in first dropdown      
+	       
 	</script>
 
 </head>
 
 <body id='mainbody' onload='Default()'>
-	<div id='tablegrid'> 				
-		
-	<div id='defaultheader'>
-	</div>	
+ <div id='tablegrid'> 	
+	<!-- <div id='defaultheader'> </div>  -->	
 	<div id='default'>		
 		
-		<div id='gridfooter'>		
-				<div id='timeline'>
+		<div id='gridfooter'>
+				<div id="dglogo"> 		            
+		        </div>		
+		        <div id='timeline'>
 					<div id='timelinedesc'>
-						<div id='datepicker1'/> </div> 
+					    <div id='datepicker1'/></div> 
 						<div id='datepickergap'> &nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp; </div>
 						<div id='datepicker2'> </div>
-						<a id = 'resetdate' href='/output/overview/{{flash_geog}}/{{id}}/'>Reset</a>
+						<div id='datepicker12reset'> <a id = 'resetdate' href='/output/overview/{{flash_geog}}/{{id}}/'>Reset</a> </div>
 						<div id='timelinedescfooter'>
 							Above are the pre-chosen dates. Customize your own range of timeline  	
 						</div>
 						<div id='timelinedescfooter1'>												 			
-						</div>
-					</div>					
-				</div>
+						</div>										
+				    </div>
+        				    
 				<div id='timelinedesc1'>
 						    <div id='timelinedesc1btntop'>
 							    hide &nbsp; &nbsp; 
 						    </div>
-						`   <div id='timelinedesc1calender'>						        
+						    <div id='timelinedesc1calender'>						        
 						    </div>						    
 						    <div id='inlinedatepickerheader'>
 						        Choose the range of timeline<br />&nbsp;&nbsp;from the calenders at the left
@@ -227,7 +242,7 @@
 						    <div id='inlinedatepicker1desc'>
 						        from: 
 						    </div>						
-						    <div id='inlinedatepicker1'>
+						    <div id='inlinedatepicker1'>						       												    				  							
 						    </div>
 						    <div id='inlinedatepicker1format'>
 						        (dd-mm-yyyy) 
@@ -235,7 +250,7 @@
 						    <div id='inlinedatepicker2desc'>
 						        to:
 						    </div>													
-						    <div id='inlinedatepicker2'>
+						    <div id='inlinedatepicker2'>												    				  							
 						    </div>
 						    <div id='inlinedatepicker2format'>
 						        (dd-mm-yyyy) 
@@ -243,89 +258,152 @@
 						    <div id='inlinedatepickersubmitbtn'>
 						        <input type="submit" value="Apply" onclick='Apply()'/>
 						    </div>
+						    <div id='inlinedatepickerresetbtn'>
+						        <input type="reset" value="Reset" onclick='Reset()'/>
+						    </div>
 						    <div id='inlinedatepickererrormsg'>
 						    </div>
 						   
-						<div id='inlinedatepickerbg'>
-						    <div id='inlinedatepicker1-container'>
-						    </div>	
-						    <div id='inlinedatepickerdiv'>
-						        __
-						    </div>					    
-						    <div id='inlinedatepicker2-container'>
-						    </div>
-						</div>								
+						    <div id='inlinedatepickerbg'>
+						        <div id='inlinedatepicker1-container'>
+						        </div>	
+						        <div id='inlinedatepickerdiv'>
+						            __
+						        </div>					    
+						        <div id='inlinedatepicker2-container'>
+						        </div>
+						    </div>								
 				 </div>
-		</div>
+	    </div>	
 		
+		<div id='searchbodytitle'> Customize your Search </div>
+	    <div id='searchbodytitleimg'> </div>
 		
-		<div id='searchbody'>
-			<div id='searchbodytitle'>
-				Customize your Search
-			</div>
+		<div id='searchbody'>			
+			<div id='searchlevel'>
 			
-				<div class='dropdown' id='state'>
-				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					<option value='-1'>Select State</option>
-				</select>				
+			    <div class='searchbody1' id='state'>
+				    <select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+					    <option value='-1'>Select State</option>
+				    </select>				
 				</div>
-				<div class='dropdown' id='district'>
-				<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
-					<option value='-1'>Select District</option>
-				</select>	
+				<div class='searchbody1' id='district'>
+				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
+					    <option value='-1'>Select District</option>
+				    </select>	
 				</div>
-				<div class='dropdown' id='block'>
-				<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
-					<option value='-1'>Select Block</option>
-				</select>				
+				<div class='searchbody1' id='block'>
+				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+					    <option value='-1'>Select Block</option>
+				    </select>				
 				</div>			
-				<div class='dropdown' id='village'>
-				<select class='select' name='village' id = 'villageId'>
-					<option value='-1'>Select Village</option>
-				</select>					
+				<div class='searchbody1' id='village'>
+				    <select class='select' name='village' id = 'villageId'>
+					    <option value='-1'>Select Village</option>
+				    </select>					
 				</div>
 				<div id='searchbody5'>
-					<input id='searchsubmitbtn' type='submit' onclick="regionSelect()" value="GO">
-				</div>
-				
-				
-		</div>			
-			
+					<input id='Submit1' type='submit' onclick="regionSelect()" value="GO">
+				</div> 						
+		</div>
+	</div>				
+		
+		<div id='table1'>
+		    <div id='table1div1'>
+		        <div id='table1desc'>Total Video Productions</div> 
+		        <div id='table1val'> {{country_data.tot_vid}}  </div>
+		        
+		    </div>
+		    
+		    <div id='table1div2'>
+		        <div id='table1desc'>Total Disseminations</div> 
+		        <div id='table1val'> {{country_data.tot_scr}}  </div>
+		    </div>
+		    
+		    <div id='table1div3'>
+		        <div id='table1desc'>Total Adoptions</div> 
+		        <div id='table1val'> {{country_data.tot_ado}}  </div>
+		    </div>
+		    
+		    <div id='table1div4'>
+		        <div id='table1desc'>Total Agricultural Practices </div> 
+		        <div id='table1val'> {{country_data.tot_pra}}  </div>
+		    </div>			
+		</div>
+		
 		<div id='tabledynamic'>
 		   		<table id='table2' cellpadding="0px" cellspacing="0px">
 					<tr>
+					    <td id='table2td3'>					        
+					    </td>
 						<td id='table2td2'>
-							{{geography|title}}
+							<div id='table2td2div'>
+								{{geography|title}}
+							</div>							
 						</td>
 						<td id='table2td'>
-							Produced
+							<div id='table2tdv2'> Videos Produced 
+							    <div id='table2tdv2desc'>
+							        The total number of videos produced in a given location
+							    </div>
+							</div>
+							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
 						</td>
+						
 						<td id='table2td'>
-							Screened
+						    <div id='table2tdv2'> Disseminations
+							    <div id='table2tdv2desc'>
+							        The total number of unique videos that have been screened 
+							    </div>
+							</div>
+							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>
+														
 						</td>
+						
 						<td id='table2td'>
-							Adoptions
+						    <div id='table2tdv2'> Farmer Adoptions
+							    <div id='table2tdv2desc'>
+							        The total number of adoptions 
+							    </div>
+							</div>
+							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
 						</td>
+						
 						<td id='table2td'>
-							Practices
+							<div id='table2tdv2'> Agricultural Practices
+							    <div id='table2tdv2desc'>
+							        The total number of unique videos that have been screened 
+							    </div>
+							</div>
+							<div id='table2tdv3'> 
+								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>  
+							</div>
 						</td>
-						<td id='table2td'>
-							Persons
+						<td id='table2tdf'>
+							<div id='table2tdv2'> Farmers 
+							    <div id='table2tdv2desc'>
+							        The total number of farmers in location 
+							    </div>
+							</div>
+							<div id='table2tdv3'>  
+								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>	
+							</div>
 						</td>					
-					</tr>
-					
-					
-										
-					{% for item in item_list|dictsortreversed:"tot_pra"%}
+					</tr>				 
+				 	
+				 	{% for item in item_list|dictsortreversed:"tot_pra"%}
 				 	<tr>
-						<td id='table2td1'>
-
-							{% ifnotequal item.id None %}
-							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
-							{{ item.name }} </a>
-							{% else %}
-							{{ item.name }}
-							{% endifnotequal  %}
+				 	    <td id='table2td3'>
+				 	        {{ forloop.counter }}
+				 	    </td>
+						<td id='table2td4'>
+							
+								{% ifnotequal item.id None %}
+									<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+									{{ item.name }} </a>
+								{% else %}
+									{{ item.name }}
+								{% endifnotequal  %}
 						</td>
 						<td id='table2td1'> 
 							
@@ -343,22 +421,22 @@
 							
 							{{ item.tot_pra }}
 						</td>
-						<td id='table2td1'>
+						<td id='table2td5'>
 
 							{{ item.tot_per }} 
-						</td>
-						
+						</td>																
 				 	</tr>
-					{% endfor %}
-									 
+				 	{% endfor %}									 
 				</table>					
 			</div>
-		
-		<div id='totaltable'>
-		<table id='table2' cellpadding="0px" cellspacing="0px">
-			<tr>
-						<td class='table2td3'>
-							{% ifequal flash_geog  'state' %}							
+			
+			<div id='totaltable'>
+		        <table id='table3' cellpadding="0px" cellspacing="0px">
+			        <tr>
+			            <td id='table2td6'>					        
+					    </td>
+					    <td id='table2td7'>	
+					        {% ifequal flash_geog  'state' %}							
 							<a href='/output/overview/country/1'>
 							{{ par_geog.name }} </a>
 							{%endifequal%}
@@ -380,55 +458,52 @@
 							{% if par_geog.name %}
 							{% else %}
 								India
-							{%endif%}
-						</td>
-	
-						<td class='table2td3'> 
-	
-							{{par_geog.tot_vid}}
-						</td>
-						<td class='table2td3'> 
-						   
-							{{ par_geog.tot_scr }}
-						</td>
-						<td class='table2td3'> 
-						
-							{{ par_geog.tot_ado }} 
-						</td>
-						<td class='table2td3'>
-							
-							{{ par_geog.tot_pra }} 
-						</td>
-						<td class='table2td3'>
-							
-							{{ par_geog.tot_per }} 
-							
-						</td>
-
-				 	</tr>
-			</table>
-		</div>
-		
-			<div id='baselinegraph'>
-			    <div id='baselinegraphtitle'>
-				    Baseline Graph View
-			    </div>			    			    			
+							{%endif%}				        
+					    </td>
+					    <td id='table2td1'> 
+					        {{par_geog.tot_vid}}
+					    </td>
+					    <td id='table2td1'> 
+					        {{ par_geog.tot_scr }}
+					    </td>
+					    <td id='table2td1'> 
+						    {{ par_geog.tot_ado }} 
+					    </td>
+					    <td id='table2td1'>
+					        {{ par_geog.tot_pra }} 
+					    </td>
+					    <td id='table2td5'>
+					        {{ par_geog.tot_per }} 
+					    </td>										
+		            </tr>
+			    </table>
+		    </div>
+			
+			<div id='baselinegraphtitle'>
+			    Baseline Graph View
 			</div>
-			<div id='baselinegraph1'>
+			<div id='baselinegraphtitleimg'>
+			    
+			</div>			    			    			
+			<div id='baselinegraph'>
+				< click me !>
+			</div>
+			<div id='baselinegraph1'>					
 			        <div id="flashcontent">
 						<strong>You need to upgrade your Flash Player</strong>
-					</div>
-			        			        
-			</div>    
-		
-	</div>
-	<div id='defaultfooter'>
-	</div>	
-	 
+					</div>		        			        
+			</div>	
+    </div>  
+</div>   
+ 
 <!-- amline script--> 
+	 <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
+	 
 	 <script type="text/javascript">
+	 		 
 		// <![CDATA[		
 		var so = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "900", "400", "8", "#FFFFFF");
+		
 		so.addVariable("path", "/media/Output/amline/");
 		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 		so.addVariable("data_file",'/output/overview/line/{{flash_geog}}/{{id}}/');
@@ -471,10 +546,19 @@
 			
 		
 		so.write("flashcontent");
+		
 		// ]]>
 	</script>
 <!-- end of amline script -->
 
-
+<div> 
+    <div id='hello'>        
+    </div>
+    <div id='hello1'>
+        <img src="Images/land.png" alt="temp"/>
+        H. No-61, Jodhpur Park, 
+    </div>
+</div>
+ 
 </body>
 </html>

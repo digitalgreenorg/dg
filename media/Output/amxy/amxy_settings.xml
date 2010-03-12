@@ -4,11 +4,11 @@
   <skip_rows>1</skip_rows>
   <background>
     <alpha>100</alpha>
-    <border_color>006600</border_color>
-    <border_alpha>20</border_alpha>
+    <border_color></border_color>
+    <border_alpha></border_alpha>
   </background>
   <plot_area>
-    <border_color>009900</border_color>
+    <border_color></border_color>
   </plot_area>
   <grid>
     <x>
@@ -40,11 +40,7 @@
   <legend>
     <enabled>0</enabled>
   </legend>
-  <help>
-    <balloon>
-      <text>Select the area to enlarge</text>
-    </balloon>
-  </help>
+  
   <bullets>
     <hover_brightness>20</hover_brightness>
     <grow_time>1.8</grow_time>
@@ -62,7 +58,7 @@
   </graphs>
   <labels>
     <label lid="0">
-      <text><![CDATA[<b>Bubble chart example</b>]]></text>
+      <text></text>
       <x>10</x>
       <y>20</y>
       <align>center</align>
