@@ -572,8 +572,7 @@ def video_module(request,geog,id):
     for i in range(len(tot_avg)):
         tot = tot + tot_avg[i]['dif']
     
-    tot_video = tot_vid[0]['count']
-    print 
+    tot_video = tot_vid[0]['count'] 
     tot_screening = tot_scr[0]['count']
     if len(tot_avg) == 0:
         tot_average = 0
