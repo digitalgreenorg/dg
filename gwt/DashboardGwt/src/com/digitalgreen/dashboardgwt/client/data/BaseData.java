@@ -54,7 +54,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 	}
 	
-	private static Database db;
+	private static Database db = null;
 	private static String databaseName = ApplicationConstants.getDatabaseName();
 
 	private int requestError = 0;
@@ -107,20 +107,14 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	protected void save() {
-		Window.alert("Save inside");
 		BaseData.dbOpen();
-		Window.alert("After open");
 		try {
 			BaseData.dbStartTransaction();
-			Window.alert("After transaction start");
 			this.form.save(this.queryString);
-			Window.alert("after form save");
 			FormQueueData formQueue = new FormQueueData();
 			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.queryString, "0", "A");
-			Window.alert("After savequerystring");
 			BaseData.dbCommit();
-			Window.alert("after commit");
-		} catch (DatabaseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}	
 		BaseData.dbClose();
@@ -176,8 +170,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public static boolean dbOpen() {
 		try{
-			BaseData.db = Factory.getInstance().createDatabase();
-			db.open(BaseData.databaseName);
+			if(BaseData.db == null) {
+				BaseData.db = Factory.getInstance().createDatabase();
+				db.open(BaseData.databaseName);
+			}
 			return true;
 		}catch (Exception e){
 			return false;
@@ -186,7 +182,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public static void dbClose() {
 		try {
-			BaseData.db.close();
+			if(BaseData.db != null) {
+				BaseData.db.close();
+			}
+			BaseData.db = null;
 		} catch (DatabaseException e) {
 			Window.alert("Database close error: " + e.toString());
 		}
@@ -214,7 +213,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	public void insert(String insertSql, String ...args) {
 		BaseData.dbOpen();
-		Window.alert("Called open in insert");
 		this.execute(insertSql, args);
 		BaseData.dbClose();
 	}
@@ -229,9 +227,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 		}
 		insertSql += ");";
-		Window.alert("Before getnextrowid call");
 		String newId = this.getNextRowId();
-		Window.alert("checking right after getnextrowid call");
 		if(!newId.equals("ERROR")) {
 			ArrayList tempList = new ArrayList();
 			// Better ideas?
@@ -244,9 +240,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			for(int i=0; i < tempList.size(); i++) {
 				tempListString[i] = (String)tempList.get(i);
 			}
-			Window.alert("Before insert in qutoInsert");
 			this.insert(insertSql, tempListString);
-			Window.alert("after insert in qutoInsert");
 			this.updateLastInsertedID(newId);
 			return Integer.parseInt(newId);
 		}
@@ -301,7 +295,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		else{
 			BaseData.dbClose();
 			return false;
-		}	
+		}
 	}
 	
 	public int getApplicationStatus(){

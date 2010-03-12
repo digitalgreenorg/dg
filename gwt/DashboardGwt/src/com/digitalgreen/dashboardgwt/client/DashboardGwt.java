@@ -52,7 +52,7 @@ public class DashboardGwt implements EntryPoint {
 	 * This function is called every time the application is refreshed */ 
 	private void setup(){
 		BaseData instance = new BaseData();
-		if(instance.checkIfUserTableExists()){
+		if(instance.checkIfUserTableExists()) {
 			int status = instance.getApplicationStatus();
 			if(status == 0){
 				ApplicationConstants.toggleConnection(false);
