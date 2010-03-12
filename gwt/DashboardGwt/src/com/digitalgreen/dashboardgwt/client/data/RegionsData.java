@@ -92,7 +92,8 @@ public class RegionsData extends BaseData {
 												"START_DATE DATE NULL DEFAULT NULL);";  
 	protected static String insertSql = "INSERT INTO region VALUES (?, ?, ?);";
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
-	protected static String postURL = "/dashboard/saveregion/";
+	protected static String saveRegionURL = "/dashboard/saveregion/";
+	protected static String getRegionURL = "/dashboard/getregions/";
 	protected String table_name = "region";
 	protected String[] fields = {"id", "region_name", "start_date"};
 	
@@ -181,15 +182,26 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
+
 	public Object postPageData() {
-		if(this.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.postURL, this.queryString);
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveRegionURL, this.queryString);
 		}
 		else{
 			this.save();
 			return true;
 		}
 		
+		return false;
+	}
+	
+	public Object getPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionURL);
+		}
+		else{
+			return true;
+		}
 		return false;
 	}
 	

@@ -94,7 +94,7 @@ public class BaseTemplate extends Template {
 			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
 					"'> Add " + templatePlainType + "</a>");
-			// Take them to the add page for screenings
+			// Take them to the add page
 			addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					Template.addLoadingMessage();

@@ -152,7 +152,9 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pr-2", "<a href='#dashboard/practices/add' class='addlink'>Add</a>", "dashboard/practices/add", new Practices(requestContext));
-		addHyperlink("r-1", "<a href='#dashboard/region/'>Regions</a>", "dashboard/region", new Regions());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "list");
+		addHyperlink("r-1", "<a href='#dashboard/region/'>Regions</a>", "dashboard/region", new Regions(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("r-2", "<a href='#dashboard/region/add' class='addlink'>Add</a>", "dashboard/region/add", new Regions(requestContext));

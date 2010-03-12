@@ -59,7 +59,7 @@ public class Regions extends BaseServlet {
 							requestContext.setMessageString("Problem in the connection with the server.");
 						else
 							requestContext.setMessageString("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Login(requestContext));	
+						getServlet().redirectTo(new Regions(requestContext));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
@@ -83,7 +83,57 @@ public class Regions extends BaseServlet {
 
 			}
 			else {
-				this.fillTemplate(new RegionsTemplate(this.requestContext));
+				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
+				String queryArg = (String)queryArgs.get("action");
+				if(queryArg == "list"){
+					RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String results) {
+							if(results != null) {
+								RegionsData regiondata = new RegionsData();
+								List regions = regiondata.getRegions(results);
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("listing", regions);
+								getServlet().redirectTo(new Regions(requestContext ));						
+							} else {
+								/*Error in saving the data*/			
+							}
+						}
+						
+						public void onlineErrorCallback(int errorCode) {
+							Window.alert("GOT AN ERROR connecting to server");
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessageString("Problem in the connection with the server.");
+							else
+								requestContext.setMessageString("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Regions(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object results) {
+							if((Boolean)results) {
+								RegionsData regiondata = new RegionsData();
+								List regions = regiondata.getRegions();
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("listing", regions);
+								getServlet().redirectTo(new Regions(requestContext ));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessageString("Local Database error");
+								getServlet().redirectTo(new Regions(requestContext));				
+							}
+							
+						}
+					});
+					
+					regionData.apply(regionData.getPageData());
+					
+				}
+				else{
+					this.fillTemplate(new RegionsTemplate(this.requestContext));
+				}
+				
 			}
 			
 		}
