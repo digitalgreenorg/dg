@@ -39,7 +39,6 @@ public class Regions extends BaseServlet {
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
-							Window.alert("regions = " + results);
 							RegionsData regiondata = new RegionsData();
 							List regions = regiondata.getRegions(results);
 							RequestContext requestContext = new RequestContext();
