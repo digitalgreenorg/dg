@@ -391,7 +391,7 @@
 						</td>					
 					</tr>				 
 				 	
-				 	{% for item in item_list|dictsortreversed:"tot_pra"%}
+				 	{% for item in item_list %}
 				 	<tr>
 				 	    <td id='table2td3'>
 				 	        {{ forloop.counter }}
@@ -399,11 +399,15 @@
 						<td id='table2td4'>
 							
 								{% ifnotequal item.id None %}
-									<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
-									{{ item.name }} </a>
-								{% else %}
-									{{ item.name }}
-								{% endifnotequal  %}
+							{% ifnotequal flash_geog  'village' %}
+							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ item.name }} </a>
+							{% else %}
+							{{ item.name }}
+							{% endifnotequal  %}
+							{% else %}
+							{{ item.name }}
+							{% endifnotequal  %}
 						</td>
 						<td id='table2td1'> 
 							
