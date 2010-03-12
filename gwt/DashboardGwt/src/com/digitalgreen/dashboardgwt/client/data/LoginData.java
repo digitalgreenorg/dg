@@ -43,7 +43,6 @@ public class LoginData extends BaseData {
 	
 	public LoginData() {
 		super();
-		this.data = new Data();
 	}
 
 	public LoginData(OnlineOfflineCallbacks callbacks) {

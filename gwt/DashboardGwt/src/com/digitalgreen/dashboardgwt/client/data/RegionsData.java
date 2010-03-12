@@ -25,14 +25,17 @@ public class RegionsData extends BaseData {
 
 	public class Data extends BaseData.Data {
 		
-		public Data() {}
-		
 		final private static String COLLECTION_PREFIX = "region";
 			
 		private String region_name;
 		private String start_date;
 		
+		public Data() {
+			super();
+		}
+		
 		public Data(int id, String region_name, String start_date) {
+			super();
 			this.id = id;
 			this.region_name = region_name;
 			this.start_date = start_date;
@@ -52,7 +55,8 @@ public class RegionsData extends BaseData {
 		}
 		
 		public Object clone() {
-			Data obj = (Data)super.clone();
+			Data obj = new Data();
+			obj.id = this.id;
 			obj.region_name = this.region_name;
 			obj.start_date = this.start_date;
 			return obj;
@@ -75,8 +79,9 @@ public class RegionsData extends BaseData {
 		}
 		
 		@Override
-		public String[] getFormInsertValues() {
-			return new String[]{this.region_name, this.start_date};
+		public void save() {
+			RegionsData regionsDataDbApis = new RegionsData();
+			this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
 		}
 	}
 
@@ -89,7 +94,7 @@ public class RegionsData extends BaseData {
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
 	protected static String postURL = "/dashboard/saveregion/";
 	protected String table_name = "region";
-	protected String[] fields = {"region_name", "start_date"};
+	protected String[] fields = {"id", "region_name", "start_date"};
 	
 	public RegionsData() {
 		super();
@@ -99,12 +104,32 @@ public class RegionsData extends BaseData {
 		super(callbacks);
 	}
 	
+	public RegionsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+		super(callbacks, form, queryString);
+	}
+
+	@Override
+	public Data getNewData() {
+		return new Data();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return RegionsData.tableID;
+	}
+	
+	protected String getTableName() {
+		return this.table_name;
+	}
+	
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
 	public void createRegion(String queryArg){
 		HashMap form = Form.flatten(queryArg);
 		String id = this.getNextRowId();
 		this.insert(insertSql, id, (String)form.get("region_name"), (String)form.get("start_date") );
-		FormQueueData formQueue = new FormQueueData();
-		formQueue.saveQueryString(tableID, id, queryArg, "0", "A");
 		this.updateLastInsertedID();
 	}
 	
@@ -148,7 +173,6 @@ public class RegionsData extends BaseData {
 		}
 		BaseData.dbClose();
 		return regions;
-		
 	}
 
 	
@@ -157,12 +181,12 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
-	public Object postPageData(String queryArg) {
+	public Object postPageData() {
 		if(this.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.postURL, queryArg);
+			this.post(RequestContext.SERVER_HOST + this.postURL, this.queryString);
 		}
 		else{
-			this.createRegion(queryArg);
+			this.save();
 			return true;
 		}
 		

@@ -35,7 +35,7 @@ public class Regions extends BaseServlet {
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method == RequestContext.METHOD_POST) {
-
+				Form form = (Form)this.requestContext.getArgs().get("form");
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
@@ -77,9 +77,9 @@ public class Regions extends BaseServlet {
 						}
 						
 					}
-				});
+				}, form, this.requestContext.getQueryString());
 				
-				regionData.apply(regionData.postPageData(this.requestContext.getQueryString()));
+				regionData.apply(regionData.postPageData());
 
 			}
 			else {

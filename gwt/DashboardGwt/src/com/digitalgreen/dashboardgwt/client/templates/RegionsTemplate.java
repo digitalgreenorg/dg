@@ -1,13 +1,9 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData.Data;
-import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
-import com.google.gwt.user.client.Window;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +21,11 @@ public class RegionsTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Regions addRegionServlet = new Regions(requestContext);
-		Regions saveRegion = new Regions(new RequestContext(RequestContext.METHOD_POST));
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new RegionsData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		Regions saveRegion = new Regions(saveRequestContext);
+
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
 		// Add it to the rootpanel

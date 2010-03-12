@@ -6,36 +6,44 @@ import java.util.Set;
 
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.BaseData.Data;
+import com.google.gwt.user.client.Window;
 
 public class Form {
 	private BaseData.Data parent;
 	private Object[] dependents = null;
-	private String queryString = null;
 	private HashMap dataFormat = null;
 	
 	public Form(BaseData.Data parent) {
 		this.parent = parent;
+		this.dependents = new Object[] {};
+		this.dataFormat = new HashMap();
 	}
 	
 	public Form(BaseData.Data parent, Object[] dependents) {
 		this.parent = parent;
 		this.dependents = dependents;
+		this.dataFormat = new HashMap();
 	}
 	
+	public BaseData.Data getParent() {
+		return this.parent;
+	}
+
 	public HashMap getDataFormat() {
 		return this.dataFormat;
 	}
 
 	// Save the dataFormat representation of the Form.  Transaction details
 	// are left up to the caller.
-	public void save() {
+	public void save(String queryString) {
+		this.parseQueryString(queryString);
 		// Save the parent first to get a FK for its dependents
 		this.parent.save();
-		String[] dataFormatKeys = (String[])dataFormat.keySet().toArray();
-		for(String key : dataFormatKeys) {
-			Object value = dataFormat.get(key);
+		Object[] dataFormatKeys = dataFormat.keySet().toArray();
+		for(int i=0; i < dataFormatKeys.length; i++) {
+			Object value = dataFormat.get(dataFormatKeys[i]);
 			if(value instanceof ArrayList) {
-				for(int i=0; i < ((ArrayList)value).size(); i++) {
+				for(int j=0; j < ((ArrayList)value).size(); j++) {
 					((BaseData.Data)((ArrayList)value).get(i)).save(this.parent);
 				}
 			} else {
@@ -107,17 +115,25 @@ public class Form {
 		dataFormat.put(prefixName, newDataObj);
 	}
 	
+	private void collectParent(BaseData.Data parent, HashMap sourceDict) {
+		Object[] sourceKeys = sourceDict.keySet().toArray();
+		for(int i=0; i < sourceKeys.length; i++) {
+			setDataObjectField(this.parent, (String)sourceKeys[i], sourceDict.get(sourceKeys[i]));
+		}
+		dataFormat.put((String)parent.getPrefixName(), this.parent);
+	}
+	
 	// Return a tree data representation of a parsed query string.
 	public void parseQueryString(String queryString) {
 		HashMap sourceDict = Form.flatten(queryString);
+		collectParent(this.parent, sourceDict);
 		for(int j=0; j < this.dependents.length; j++) {
 			Object dataFormatted = null;
 			if(this.dependents[j] instanceof ArrayList) {
 				collectDependencies((ArrayList)this.dependents[j], sourceDict);
 			} else if (this.dependents[j] instanceof BaseData.Data) {
 				collectDependency((BaseData.Data)this.dependents[j], sourceDict);
-			}
-			
+			}	
 		}
 	}
 }

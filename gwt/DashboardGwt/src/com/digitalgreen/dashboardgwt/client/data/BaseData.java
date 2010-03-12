@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
@@ -32,9 +33,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		
 		// Override this
 		public Object clone() {
-			Data obj = new Data();
-			obj.id = this.id;
-			return obj;
+			return null;
 		}
 		
 		// Override this
@@ -45,16 +44,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		public void setObjValueFromString(String key, Object val) {}
 
 		// Override this
-		public void save() {
-			BaseData baseDataDbApis = new BaseData();
-			this.id = baseDataDbApis.autoInsert(this.getFormInsertValues());
-		}
+		public void save() {}
 
 		// Override this
 		public void save(BaseData.Data withForeignKey) {}
-		// Override this
-		public String[] getFormInsertValues() {
-			return null;
+		
+		public int getId() {
+			return this.id;
 		}
 	}
 	
@@ -62,7 +58,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private static String databaseName = ApplicationConstants.getDatabaseName();
 
 	private int requestError = 0;
-	protected BaseData.Data data;
+	
+	protected Form form = null;
+	protected String queryString = null;
 	protected ResultSet lastResultSet;
 	protected String table_name = "";
 	protected String[] fields = {};
@@ -83,13 +81,49 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public BaseData(OnlineOfflineCallbacks callbacks) {
 		this.dataOnlineCallbacks = callbacks;
 	}
-		
+	
+	public BaseData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+		this.dataOnlineCallbacks = callbacks;
+		this.form = form;
+		this.queryString = queryString;
+	}
+	
+	// Override this
 	public Data getNewData() {
 		return new Data();
 	}
 	
-	public Data getData() {
-		return this.data;
+	// Override this
+	protected String getTableId() {
+		return "";
+	}
+	
+	protected String getTableName() {
+		return this.table_name;
+	}
+	
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
+	protected void save() {
+		Window.alert("Save inside");
+		BaseData.dbOpen();
+		Window.alert("After open");
+		try {
+			BaseData.dbStartTransaction();
+			Window.alert("After transaction start");
+			this.form.save(this.queryString);
+			Window.alert("after form save");
+			FormQueueData formQueue = new FormQueueData();
+			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.queryString, "0", "A");
+			Window.alert("After savequerystring");
+			BaseData.dbCommit();
+			Window.alert("after commit");
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}	
+		BaseData.dbClose();
 	}
 	
 	protected static Database getDb() {
@@ -180,29 +214,41 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	public void insert(String insertSql, String ...args) {
 		BaseData.dbOpen();
+		Window.alert("Called open in insert");
 		this.execute(insertSql, args);
 		BaseData.dbClose();
 	}
 
 	public int autoInsert(String ...args) {
-		String insertSql = "INSERT INTO " + this.table_name + " VALUES (";
-		for(int i=0; i < this.fields.length; i++) {
-			if(i == this.fields.length - 1) {
+		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
+		for(int i=0; i < this.getFields().length; i++) {
+			if(i == this.getFields().length - 1) {
 				insertSql += "?";
 			} else {
 				insertSql += "?, ";
 			}
 		}
 		insertSql += ");";
+		Window.alert("Before getnextrowid call");
 		String newId = this.getNextRowId();
-		if(newId != "ERROR") {
-			ArrayList tempList = (ArrayList)Arrays.asList(args);
+		Window.alert("checking right after getnextrowid call");
+		if(!newId.equals("ERROR")) {
+			ArrayList tempList = new ArrayList();
+			// Better ideas?
+			for(int i=0; i < args.length; i++) {
+				tempList.add(args[i]);
+			}
 			tempList.add(0, newId);
-			BaseData.dbOpen();
-			this.insert(insertSql, (String[])tempList.toArray());
+			String[] tempListString = new String[] {};
+			// Better ideas?
+			for(int i=0; i < tempList.size(); i++) {
+				tempListString[i] = (String)tempList.get(i);
+			}
+			Window.alert("Before insert in qutoInsert");
+			this.insert(insertSql, tempListString);
+			Window.alert("after insert in qutoInsert");
 			this.updateLastInsertedID(newId);
-			BaseData.dbClose();
-			return (new Integer(newId)).intValue();
+			return Integer.parseInt(newId);
 		}
 		return -1;
 	}
@@ -235,13 +281,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return "ERROR";
 	}
 		
-	public void updateLastInsertedID(){
+	public void updateLastInsertedID() {
 			String id = this.getNextRowId();
 			this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
 	}
 	
 	// To avoid another select to get the global id
-	public void updateLastInsertedID(String id){
+	public void updateLastInsertedID(String id) {
 		this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
 	}
 	
