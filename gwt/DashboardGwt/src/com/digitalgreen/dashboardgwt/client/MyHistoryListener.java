@@ -1,14 +1,7 @@
 package com.digitalgreen.dashboardgwt.client;
 
-import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
-import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
-//import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 
 public class MyHistoryListener implements ValueChangeHandler<String> {
 

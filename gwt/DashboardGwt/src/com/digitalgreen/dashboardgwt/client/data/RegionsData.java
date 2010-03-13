@@ -15,12 +15,8 @@ public class RegionsData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		
-		 public final native String getPk() /*-{ return this.pk; }-*/; 
-		 public final native String getModel() /*-{ return this.model; }-*/;
-		 public final native String getRegionName() /*-{ return this.fields.region_name; }-*/;
-		 public final native String getStartDate() /*-{ return this.fields.start_date; }-*/;
-		 public final native Object getFields() /*-{ return this.fields ; }-*/;
+		public final native String getRegionName() /*-{ return this.fields.region_name; }-*/;
+		public final native String getStartDate() /*-{ return this.fields.start_date; }-*/;
 	}
 
 	public class Data extends BaseData.Data {
@@ -39,11 +35,6 @@ public class RegionsData extends BaseData {
 			this.id = id;
 			this.region_name = region_name;
 			this.start_date = start_date;
-		}
-		
-		/*Getter methods*/
-		public int getId(){
-			return this.id;
 		}
 		
 		public String getRegionName(){
@@ -90,7 +81,6 @@ public class RegionsData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL," +
 												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";  
-	protected static String insertSql = "INSERT INTO region VALUES (?, ?, ?);";
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
 	protected static String saveRegionURL = "/dashboard/saveregion/";
 	protected static String getRegionURL = "/dashboard/getregions/";
@@ -127,13 +117,6 @@ public class RegionsData extends BaseData {
 		return this.fields;
 	}
 	
-	public void createRegion(String queryArg){
-		HashMap form = Form.flatten(queryArg);
-		String id = this.getNextRowId();
-		this.insert(insertSql, id, (String)form.get("region_name"), (String)form.get("start_date") );
-		this.updateLastInsertedID();
-	}
-	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -154,7 +137,7 @@ public class RegionsData extends BaseData {
 	
 	public List getRegions(){
 		BaseData.dbOpen();
-		List regions= new ArrayList();
+		List regions = new ArrayList();
 		this.select(listRegions);
 		if (this.getResultSet().isValidRow()){
 			try {
@@ -168,20 +151,10 @@ public class RegionsData extends BaseData {
 				BaseData.dbClose();
 			}
 			
-		}else{
-			Window.alert("No rows returned");
-			
 		}
 		BaseData.dbClose();
 		return regions;
 	}
-
-	
-	public List listOfRegions(){
-		List regions= new ArrayList();
-		return regions;
-	}
-	
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){

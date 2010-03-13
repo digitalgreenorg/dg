@@ -1,33 +1,37 @@
 package com.digitalgreen.dashboardgwt.client.common;
 
-import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.google.gwt.user.client.Cookies;
 
-public class ApplicationConstants{
+public class ApplicationConstants {
 	
 	private static boolean isOnline = true;
 	
 	public static String digitalgreenDatabaseName = "digitalgreen";
 	
-	public static String getUsernameCookie(){
+	public static String getUsernameCookie() {
 		return Cookies.getCookie("username");
 	}
 	
-	public static void setUsernameCookie(String username){
+	public static void setUsernameCookie(String username) {
 		Cookies.setCookie("username", username);
 	}
 	
-	public static String getPasswordCookie(){
+	public static String getPasswordCookie() {
 		return Cookies.getCookie("password");
 	}
 	
-	public static void setPasswordCookie(String password){
+	public static void setPasswordCookie(String password) {
 		Cookies.setCookie("password", password);
 	}
 	
-	public static void deleteCookies(){
+	public static void deleteCookies() {
 		Cookies.removeCookie("username");
 		Cookies.removeCookie("password");
+	}
+	
+	public static void setLoginCookies(String username, String password) {
+		ApplicationConstants.setUsernameCookie(username);
+		ApplicationConstants.setPasswordCookie(password);
 	}
 	
 	public static void toggleConnection(boolean isOnline) {

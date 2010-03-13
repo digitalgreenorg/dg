@@ -34,11 +34,8 @@ public class LoginData extends BaseData {
 	  " dirty_bit CHAR(1));";
 
 	protected static String deleteTable = "DROP TABLE IF EXISTS `user`;";
-	
 	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?);";
-	
 	protected static String selectUser = "SELECT username FROM user WHERE username=? AND password = ?";
-
 	protected static String postURL = "/dashboard/login/"; 
 	
 	public LoginData() {
@@ -65,22 +62,21 @@ public class LoginData extends BaseData {
 
 		if(this.isOnline()){
 			String postData = "username=" + username + "&password=" + password;
-			this.post(RequestContext.SERVER_HOST + this.postURL, postData);
+			this.post(RequestContext.SERVER_HOST + LoginData.postURL, postData);
 		} else {
 			// Check if DB User row has the same username.
 			try {
-				this.dbOpen();
+				LoginData.dbOpen();
 				this.select(selectUser, username, password);
 				ResultSet resultSet = this.getResultSet();
-				if(resultSet.isValidRow() && resultSet.getFieldAsString(0) == username) {
+				if(resultSet.isValidRow()) {
 					resultSet.close();
-					this.dbClose();
+					LoginData.dbClose();
 					return true;
 				}
 			} catch (DatabaseException e) {
-				this.dbClose();
+				LoginData.dbClose();
 				Window.alert("Database Exception : " + e.toString());
-				
 			}
 		}
 		return false;

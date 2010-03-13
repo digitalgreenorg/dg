@@ -132,8 +132,10 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("f-2", "<a href='#dashboard/fieldofficer/add' class='addlink'>Add</a>", "dashboard/fieldofficer/add", new FieldOfficers(requestContext));
-		addHyperlink("l-1", "<a href='#dashboard/language/'>Languages</a>", "dashboard/language", new Languages());
 		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "list");
+		addHyperlink("l-1", "<a href='#dashboard/language/'>Languages</a>", "dashboard/language", new Languages(requestContext));
+		requestContext = new RequestContext();	
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("l-2", "<a href='#dashboard/language/add' class='addlink'>Add</a>", "dashboard/language/add", new Languages(requestContext));
 		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new Partners());

@@ -22,30 +22,12 @@ import com.digitalgreen.dashboardgwt.client.servlets.*;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals
-	
-	final static private int timerDelayFactor = 2;
-	final static private int timerDelayDefault = 5000;
-	private Timer timer;
-	private int timeDelay;
 	public HashMap hMap = new HashMap();
 
 	public void onModuleLoad() {
-		createHashMap();
 		setup();
 		Index index  = new Index();
 		index.response();
-		/*
-		this.timer = new Timer() {
-			@Override
-			public void run() {
-				checkServerConnection();
-			}
-		};
-		this.timer.schedule(this.timeDelay);
-		*/
-		
-		History.addValueChangeHandler(new MyHistoryListener());
-    	History.fireCurrentHistoryState(); 
 	}
 
 	/* Sets the status of the application as online / offline
@@ -64,39 +46,6 @@ public class DashboardGwt implements EntryPoint {
 		else{
 			ApplicationConstants.toggleConnection(true);
 		}
-	}
-
-	
-	private void checkServerConnection() {
-		String url = RequestContext.getServerUrl();
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
-		try {
-			Request request = builder.sendRequest(null, new RequestCallback() {
-			public void onResponseReceived(Request request, Response response) {
-				if (response.getStatusCode() == 200) {
-					ApplicationConstants.toggleConnection(true);
-					computeTimerDelay();
-				}
-			}
-			public void onError(Request request, Throwable exception) {
-				ApplicationConstants.toggleConnection(false);
-				computeTimerDelay();
-			}		           
-		});
-		} catch (RequestException e) {
-			// Couldn't connect to server
-			ApplicationConstants.toggleConnection(false);
-			computeTimerDelay();
-		}
-	}
-
-	private void computeTimerDelay() {
-		this.timeDelay *= DashboardGwt.timerDelayFactor;
-		// 30 mins
-		if(this.timeDelay > 1000 * 60 * 30) {
-			this.timeDelay = DashboardGwt.timerDelayDefault;
-		}
-		this.timer.schedule(this.timeDelay);
 	}
 	
 	private void createHashMap() {

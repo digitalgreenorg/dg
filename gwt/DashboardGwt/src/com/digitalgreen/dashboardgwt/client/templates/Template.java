@@ -44,7 +44,7 @@ public class Template implements TemplateInterface {
 	public void setBodyStyle(String styleName) {
 		RootPanel.get().setStyleName(styleName);
 	}
-	
+
 	private static void addSpinnerMessage(String message) {
 		try {
 			HTMLPanel imageHtml = new HTMLPanel("<img src='/media/img/admin/ajax-loader.gif' /> ");	

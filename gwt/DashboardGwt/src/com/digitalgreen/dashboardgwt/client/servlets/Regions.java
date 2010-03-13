@@ -34,7 +34,7 @@ public class Regions extends BaseServlet {
 			super.redirectTo(new Login());
 		} else {
 			String method = this.getMethodTypeCtx();
-			if(method == RequestContext.METHOD_POST) {
+			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = (Form)this.requestContext.getArgs().get("form");
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
@@ -51,7 +51,6 @@ public class Regions extends BaseServlet {
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						Window.alert("GOT AN ERROR connecting to server");
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
 							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
@@ -85,7 +84,7 @@ public class Regions extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
+				if(queryArg.equals("list")){
 					RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
@@ -98,9 +97,8 @@ public class Regions extends BaseServlet {
 								/*Error in saving the data*/			
 							}
 						}
-						
+					
 						public void onlineErrorCallback(int errorCode) {
-							Window.alert("GOT AN ERROR connecting to server");
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
 								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
@@ -122,20 +120,15 @@ public class Regions extends BaseServlet {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessageString("Local Database error");
 								getServlet().redirectTo(new Regions(requestContext));				
-							}
-							
+							}	
 						}
 					});
-					
-					regionData.apply(regionData.getPageData());
-					
+					regionData.apply(regionData.getPageData());	
 				}
 				else{
 					this.fillTemplate(new RegionsTemplate(this.requestContext));
 				}
-				
 			}
-			
 		}
 	}
 }

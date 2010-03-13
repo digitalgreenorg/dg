@@ -25,21 +25,19 @@ public class Login extends BaseServlet {
 	@Override
 	public void response() {
 		super.response();
-		String method = this.getMethodTypeCtx();
-		
-		if(method == RequestContext.METHOD_POST) {
-
+		String method = this.getMethodTypeCtx();		
+		if(method.equals(RequestContext.METHOD_POST)) {
 			HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 			String queryArg = (String)queryArgs.get("action");
-			if(queryArg == "logout"){
+			if(queryArg.equals("logout")){
 				ApplicationConstants.deleteCookies();
 				this.redirectTo(new Login());
 			} else {
 				    LoginData loginData = new LoginData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results == "1") {
-							ApplicationConstants.setUsernameCookie((String)getServlet().form.get("username"));
-							ApplicationConstants.setPasswordCookie((String)getServlet().form.get("password"));
+						if(results.equals("1")) {
+							ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
+									(String)getServlet().form.get("password"));
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
@@ -63,34 +61,34 @@ public class Login extends BaseServlet {
 					public void offlineSuccessCallback(Object results) {
 						// If login success in the offline case
 						if((Boolean)results) {
-							ApplicationConstants.setUsernameCookie((String)getServlet().form.get("username"));
-							ApplicationConstants.setPasswordCookie((String)getServlet().form.get("password"));
+							ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
+									(String)getServlet().form.get("password"));
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Invalid credentials, please try again");
-							getServlet().redirectTo(new Login(requestContext));		
+							getServlet().redirectTo(new Login(requestContext));	
 						}
 					}
 				});
 				    
 				// Comment the below line when you are not running the code form a hosted mode.   
-				//loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
+				loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
 				 
-				 // Comment the below line when you are running the code form a hosted mode.
-				 ApplicationConstants.setUsernameCookie((String)this.form.get("username"));
-				 ApplicationConstants.setPasswordCookie((String)this.form.get("password"));
-				 this.redirectTo(new Index());
+				// Comment the below line when you are running the code form a hosted mode.
+				// ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
+				// (String)getServlet().form.get("password"));
+				// this.redirectTo(new Index());
 
 			}
-		} else if (method == RequestContext.METHOD_GET) {
-				if(this.isLoggedIn()) {
-					super.redirectTo(new Index());
-				}
-				else{
-					// Most likely do nothing in this GET case
-					this.fillTemplate(new LoginTemplate(this.requestContext));	
-				}
+		} else if (method.equals(RequestContext.METHOD_GET)) {
+			if(this.isLoggedIn()) {
+				super.redirectTo(new Index());
+			}
+			else{
+				// Most likely do nothing in this GET case
+				this.fillTemplate(new LoginTemplate(this.requestContext));
+			}
 		}
 	}
 }

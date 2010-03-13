@@ -21,8 +21,12 @@ import com.google.gwt.core.client.JsArray;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
+	
 	public static class Type extends JavaScriptObject {
 		protected Type() {}
+		public final native String getPk() /*-{ return this.pk; }-*/; 
+		public final native String getModel() /*-{ return this.model; }-*/;
+		public final native Object getFields() /*-{ return this.fields ; }-*/;
 	}
 	
 	public class Data implements Cloneable  {
