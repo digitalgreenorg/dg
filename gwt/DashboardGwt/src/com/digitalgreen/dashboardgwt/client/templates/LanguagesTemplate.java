@@ -65,30 +65,6 @@ public class LanguagesTemplate extends BaseTemplate{
 			}
 		}
 	}
-	private String regionsListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
-	"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
-	"<div class='actions'>" +
-	"<label>Action: <select name='action'>" +
-		"<option value='' selected='selected'>---------</option>" +
-		"<option value='delete_selected'>Delete selected regions</option>" +
-		"</select>" +
-	"</label>" +
-	"<button type='submit' class='button' title='Run the selected action' name='index' value='0'>Go</button>" +
-"</div>" +
-"<table cellspacing='0'>" +
-	"<thead>" +
-		"<tr>" +
-			"<th>" +
-				"<input type='checkbox' id='action-toggle' />" +
-			"</th>" +
-			"<th>" +
-				"<a href='?ot=asc&amp;o=1'>" +
-					"Region" +
-				"</a>" +
-			"</th>" +
-		"</tr>" +
-	"</thead>" +
-	"<tbody>";
 	
 	private String languagesListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 											"<script type='text/javascript' src='/media/js/calendar.js'></script>" + 
@@ -105,7 +81,7 @@ public class LanguagesTemplate extends BaseTemplate{
 								"<tr>" +
 									"<th>" +
 										"<input type='checkbox' id='action-toggle' />" +
-									"</th>" +
+									"</th>" +	
 									"<th>" +
 									"<a href='?ot=asc&amp;o=1'>" +
 										"Language" +

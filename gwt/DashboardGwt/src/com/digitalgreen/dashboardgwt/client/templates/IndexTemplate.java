@@ -34,8 +34,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class IndexTemplate extends BaseTemplate {
 	
-	
-	
 	public IndexTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
@@ -138,7 +136,9 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext = new RequestContext();	
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("l-2", "<a href='#dashboard/language/add' class='addlink'>Add</a>", "dashboard/language/add", new Languages(requestContext));
-		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new Partners());
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "list");
+		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new Partners(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("p-2", "<a href='#dashboard/partners/add' class='addlink'>Add</a>", "dashboard/partners/add", new Partners(requestContext));

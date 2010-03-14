@@ -1,7 +1,11 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.PartnersData;
 import com.digitalgreen.dashboardgwt.client.servlets.Partners;
 
 public class PartnersTemplate extends BaseTemplate {
@@ -17,19 +21,52 @@ public class PartnersTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new PartnersData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		Partners addPartnersServlet = new Partners(requestContext);
+		Partners savePartner = new Partners(saveRequestContext);
+		
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml);
 		// Add it to the rootpanel
 		super.fill();
-		Partners addPartnersServlet = new Partners(requestContext);
-		Partners savePartner = new Partners(new RequestContext(RequestContext.METHOD_POST));
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(savePartner);
 	}
 	
-	final static private String partnersListFormHtml = "<div class='actions'>" +
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List partners = (List)queryArgs.get("listing");			
+			if(partners  != null){
+				String tableRows ="";
+				String style;
+				PartnersData.Data partner;
+				for (int row = 0; row < partners.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					partner = (PartnersData.Data)partners.get(row);
+					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ partner.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/partner/"+ partner.getId() +"/'>" + partner.getPartnerName() +"</a></th></tr>";
+				}
+				partnersListFormHtml = partnersListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
+	private String partnersListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
+											"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected Partners</option>" +
@@ -44,15 +81,13 @@ public class PartnersTemplate extends BaseTemplate {
 											"<input type='checkbox' id='action-toggle' />" +
 										"</th>" +
 										"<th>" +
+										"<a href='?ot=asc&amp;o=1'>" +
 											"Partner" +
-										"</th>" +
-									"</tr>" +
-								"</thead>" +
-								"<tbody>" +
-									"<div id='data-rows'" +       // Insert data rows here
-									"</div>" +
-								"</tbody>" +
-							"</table>";
+										"</a>" +
+								"</th>" +
+							"</tr>" +
+						"</thead>" +
+						"<tbody>";
 	
 	final static private String partnersListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
@@ -75,9 +110,7 @@ public class PartnersTemplate extends BaseTemplate {
 								"<div id='content' class='colM'>" +
 									"<h1>Add Partner</h1>" +
 									"<div id='content-main'>" +
-										"<form enctype='multipart/form-data' action='' method='post' id='partners_form'>" +
-											"<div>" +
-												"<fieldset class='module aligned '>" +
+										"<fieldset class='module aligned '>" +
 													"<div class='form-row partner_name  '>" +
 														"<div>" +
 															"<label for='id_partner_name' class='required'>Partner name:</label><input id='id_partner_name' type='text' class='vTextField' name='partner_name' maxlength='100' />" +
@@ -85,12 +118,8 @@ public class PartnersTemplate extends BaseTemplate {
 													"</div>" +
 													"<div class='form-row date_of_association  '>" +
 														"<div>" +
-															"<label for='id_date_of_association'>Date of association:</label><input id='id_date_of_association' type='text' class='vDateField' name='date_of_association' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
+															"<label for='id_date_of_association'>Date of association:</label>" +
+															"<input id='id_date_of_association' type='text' class='vDateField' name='date_of_association' size='10' />" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row phone_no  '>" +
@@ -105,15 +134,12 @@ public class PartnersTemplate extends BaseTemplate {
 													"</div>" +
 												"</fieldset>" +
 												"<div class='submit-row' >" +
-													"<input type='submit' value='Save' class='default' name='_save' />" +
+													"<input id='save' value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_partner_name').focus();</script>" +
-												"<script type='text/javascript'>" +
-												"</script>" +
 											"</div>" +
-										"</form>" +
-									"</div>" +
-									"<br class='clear' />" +
-								"</div>";
-
+											"<br class='clear' />" +
+										"</div>" +
+									"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+									"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }
