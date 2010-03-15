@@ -7,11 +7,12 @@ from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
-from django.template import Context
+from django.template import Context, Template
 from django.shortcuts import render_to_response
 from django.db import connection, transaction
 from dg.output.database import run_query 
 import datetime
+import re
 #import cjson
 from django.core import serializers
 from django.contrib import auth
@@ -143,6 +144,31 @@ def feeds_persons(request, group_id):
 	persons = Person.objects.filter(group=group)
 	json_subcat = serializers.serialize("json", persons)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def feed_person_html(request):
+	return_val = []
+	group_id = request.GET.getlist('groups')
+	init_id = request.GET.get('init')
+	if(not(group_id and init_id and group_id[0])):
+		return HttpResponse('"html":\'Error\'');
+	all_persons = Person.objects.all()
+	persons = []
+	for i in group_id:
+		persons.extend(all_persons.filter(group=(PersonGroups.objects.get(pk=int(i)))))
+	persons.append('')
+	pracs = Practices.objects.all()
+	
+	html = get_template('feeds/screening_view_person.txt')
+	prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
+	
+	chomp = re.compile('\n|\t')
+	return_val.append('{')
+	return_val.append('"tot_val": '+str(len(persons)+int(init_id))+',')
+	return_val.append('"html": \'' + chomp.sub('',html.render(Context(dict(persons=persons,all_persons=all_persons,init=init_id)))) +'\',')
+	return_val.append('"prac": \'' + chomp.sub('',prac_list.render(Context(dict(practices=pracs))))+'\'')
+	return_val.append('}')
+	
+	return HttpResponse('\n'.join(return_val))
 
 
 def feeds_persons_village(request, village_id):

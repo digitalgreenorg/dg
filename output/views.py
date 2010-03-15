@@ -323,34 +323,35 @@ def video_monthwise_bar_settings(request,geog,id):
      
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
-        from_year = int(from_date.split('-')[0])
-        to_year = int(to_date.split('-')[0]);
-        
+        from_year = int(request.GET['from_date'].split('-')[0])
+        to_year = int(request.GET['to_date'].split('-')[0]);
+        year_list = range(from_year,to_year+1,1)
     else:
         rs = run_query(database.video_month_bar(dict(geog = geog, id = id)));
         year_list = []
         for i in range(len(rs)):
             if rs [i]['YEAR'] not in year_list:
                 year_list.append(rs[i]['YEAR'])
-        if year_list:
-            from_year = int(min(year_list))
-            to_year = int(max(year_list))
-            year_list = range(from_year,to_year+1)
-    
-    #Making Settings file
-            settings = []
-            settings.append(r'<settings><graphs>')
-            
-            for year in year_list:
-                settings.append(r'<graph><type/><title>'+str(year)+'</title><balloon_text>{series}: Video Production = {value}</balloon_text></graph>')
                 
-                
-            settings.append(r'</graphs></settings>')
-            settings = ''.join(settings)
+    if year_list:
+        from_year = int(min(year_list))
+        to_year = int(max(year_list))
+        year_list = range(from_year,to_year+1)
+
+        #Making Settings file
+        settings = []
+        settings.append(r'<settings><graphs>')
+        
+        for year in year_list:
+            settings.append(r'<graph><type/><title>'+str(year)+'</title><balloon_text>{series}: Video Production = {value}</balloon_text></graph>')
             
-        else:
-            settings = []
-            settings.append(r'<settings><graphs></settings></graphs>')
+            
+        settings.append(r'</graphs></settings>')
+        settings = ''.join(settings)
+        
+    else:
+        settings = []
+        settings.append(r'<settings><graphs></settings></graphs>')
            
     return HttpResponse(settings)
 
