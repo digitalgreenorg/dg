@@ -13,11 +13,11 @@
 #tablebody			{ margin-left:3%; margin-top:0px;}
 #table1				{ margin-left:10px; margin-top:10px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
 
-#table1div1			{ margin-left:5px; width:276px;background-color:#edfacd; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
-#table1div2			{ margin-left:0px; width:198px;background-color:#edfacd; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div3			{ margin-left:0px; width:198px;background-color:#edfacd; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div4			{ margin-left:0px; width:203px;background-color:#edfacd; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1desc			{ padding-left:5px; color:#9fbb62; font-family:Calibri; font-size:14px; font-weight:normal; }
+#table1div1			{ margin-left:5px; width:175px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
+#table1div2			{ margin-left:0px; width:281px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div3			{ margin-left:0px; width:140px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div4			{ margin-left:0px; width:280px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1desc			{ padding-left:5px; color:#465420; font-family:Calibri; font-size:15px; font-weight:normal; }
 #table1val			{ padding-left:5px; color:#efb11c; font-family:Times New Roman; font-size:25px; font-weight:bold; }
 
 #tabledynamic		{ margin-top:0px; margin-left:10px; float:none; width:900px }

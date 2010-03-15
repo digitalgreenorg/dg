@@ -13,7 +13,7 @@
 
 
 /* Customize your search */ 
-#searchbody						{ margin-top:0px; margin-left:10px; width:899px; height:50px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
+#searchbody						{ margin-top:0px; margin-left:10px; width:898px; height:50px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
 #searchbodytitle				{ z-index:9900; color:#465420; font-family:Calibri; font-size:14px; font-weight:bold; padding-top:10px; padding-left:15px; padding-right:5px; margin-top:10px; margin-left:0px;}
 #searchbodytitleimg				{ z-index:9900; background:url("/media/Output/Images/searchbg10.png"); background-repeat:no-repeat; width:46px; height:29px; margin-top:-29px; margin-left:150px; position:absolute}
 #searchlevel					{ margin-top:0px; margin-left:0px; float:none; padding-top:0px; }

@@ -318,18 +318,7 @@
   <labels>                                                    <!-- LABELS -->
                                                               <!-- you can add as many labels as you want. Some html tags supported: <b>, <i>, <u>, <font>, <a href=""> -->
                                                               <!-- labels can also be added in data xml file, using exactly the same structure like it is here -->
-    <label lid="0">
-      <x></x>                                                 <!-- [0] (Number / Number% / !Number) -->
-      <y>20</y>                                               <!-- [0] (Number / Number% / !Number) -->
-      <rotate></rotate>                                       <!-- [false] (true / false) -->
-      <width>520</width>                                      <!-- [] (Number / Number%) if empty, will stretch from left to right untill label fits -->
-      <align>center</align>                                   <!-- [left] (left / center / right) -->  
-      <text_color></text_color>                               <!-- [text_color] (hex color code) button text color -->
-      <text_size></text_size>                                 <!-- [text_size](Number) button text size -->
-      <text>                                                  <!-- [] (text) html tags may be used (supports <b>, <i>, <u>, <font>, <a href="">, <br/>. Enter text between []: <![CDATA[your <b>bold</b> and <i>italic</i> text]]>-->
-        <![CDATA[<b>Time vs Metrics</b>]]>
-      </text>        
-    </label>    
+     
   
   </labels>
   

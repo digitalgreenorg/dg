@@ -24,6 +24,8 @@ function defaultload(){
             $("div#default").corner();  
                     
             $("div#table2td2div").corner("round 4px");          
+            
+            $("div#graphdiv0title").gradient({ from: 'e1fa9d', to: 'b6ea27' });
             $("div#graphdiv1title").gradient({ from: 'e1fa9d', to: 'b6ea27' });
             //$("div#moduletd0div").corner("round 4px");
             
@@ -55,7 +57,7 @@ function clicktable2tdv2() {
 
             $("div#table2tdv2desc").hide(); 
     
-            $("div#table2tdv2").click(function(){    
+            $("div#table2tdv2").mouseover(function(){    
                 $(this).find("div#table2tdv2desc").show();
                 //$("div#table2tdv2").find("div#table2tdv2desc").fadeOut(9000);    
             }); 
