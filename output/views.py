@@ -415,7 +415,45 @@ def video_type_wise_pie(request,geog,id):
     return HttpResponse('\n'.join(str_list))
 
     
-def video_language_wise_bar_data(request,geog,id):
+def video_language_wise_scatter_data(request,geog,id):
+    id = int(id)
+    if 'from_date' in request.GET and request.GET['from_date'] \
+    and 'to_date' in request.GET and request.GET['to_date']:
+        date_range = 1
+        from_date = request.GET['from_date']
+        to_date = request.GET['to_date']
+        rs = run_query(database.video_language_wise_scatter(geog=geog,id=id,from_date=from_date,to_date=to_date))
+    
+    else:
+        rs = run_query(database.video_language_wise_scatter(geog=geog,id=id))
+    
+    if not rs:
+        return HttpResponse(';');
+    
+    count_lang_dict = {}
+    for item in rs:
+        if item['count'] in count_lang_dict:
+            count_lang_dict[item['count']].append(item['lname'])
+        else:
+            count_lang_dict[item['count']] = [item['lname']]
+    
+    x_axis_len = max([len(x) for x in count_lang_dict.values()]) * 2
+    
+    return_val = []
+    return_val.append('[x];[y];[value];[bullet_color];[bullet_size];[url];[description]')
+    
+    random.seed();
+    for tot,pracs in count_lang_dict.iteritems():
+        flag = [ 0 for i in range(0,x_axis_len+1)]
+        for prac in pracs:        
+            x = random.randrange(1,x_axis_len)
+            while(flag[x] != 0):
+                x = random.randrange(1,x_axis_len)
+            flag[x] = 1
+            return_val.append(str(x)+';'+str(tot)+';'+str(tot)+';;;;'+prac)
+    
+    return HttpResponse('\n'.join(return_val))
+    
     if 'from_date' in request.GET and request.GET['from_date'] \
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1

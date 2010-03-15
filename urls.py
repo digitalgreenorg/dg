@@ -74,7 +74,7 @@ urlpatterns = patterns('',
     (r'^output/video/typepie/(country|state|district|block|village)/(\d+)/$',video_type_wise_pie),
     (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',video_geog_pie_data),
     (r'^output/video/practicescatter/(country|state|district|block|village)/(\d+)/$',video_practice_wise_scatter),
-    (r'^output/video/languagebar/data/(country|state|district|block|village)/(\d+)/$',video_language_wise_bar_data),
+    (r'^output/video/languagescatter/data/(country|state|district|block|village)/(\d+)/$',video_language_wise_scatter_data),
     (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_data),
     (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings)
 

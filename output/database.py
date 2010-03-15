@@ -145,6 +145,10 @@ SELECT date, COUNT(*)
             AND b.district_id = d.id 
             AND d.state_id = {{id}}
         {% endifequal %}
+        {%ifequal geography 'country' %}
+            WHERE vid.id = vid_pr.video_id
+        {% endifequal %}
+        
         GROUP BY practices_id
          ) AS tab1
      GROUP BY date
@@ -551,7 +555,7 @@ def video_actor_wise_pie(**args):
     sql.append("GROUP BY actors")
     return "\n".join(sql)
 
-def video_language_wise_bar(**args):
+def video_language_wise_scatter(**args):
     sql = []
     sql.append("""SELECT l.language_name as lname, COUNT(vid.id) as count
             FROM LANGUAGE l, VIDEO vid
