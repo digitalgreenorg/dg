@@ -411,7 +411,8 @@
 						</td>
 						<td id='table2td1'> 
 							
-							{{ item.tot_pro }} 
+							<a href='/output/video/module/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ item.tot_pro }} </a> 
 						</td>
 						<td id='table2td1'> 
 						    
