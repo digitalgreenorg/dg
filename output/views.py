@@ -342,7 +342,7 @@ def video_monthwise_bar_settings(request,geog,id):
             settings.append(r'<settings><graphs>')
             
             for year in year_list:
-                settings.append(r'<graph><type/><title>'+str(year)+'</title></graph>')
+                settings.append(r'<graph><type/><title>'+str(year)+'</title><balloon_text>{series}: Video Production = {value}</balloon_text></graph>')
                 
                 
             settings.append(r'</graphs></settings>')
