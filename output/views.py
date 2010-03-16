@@ -451,7 +451,7 @@ def video_language_wise_scatter_data(request,geog,id):
             while(flag[x] != 0):
                 x = random.randrange(1,x_axis_len)
             flag[x] = 1
-            return_val.append(str(x)+';'+str(tot)+';'+str(tot)+';;;;'+prac)
+            return_val.append(str(x)+';'+str(tot)+';'+str(tot)+';FFCC00;;;;'+prac)
     
     return HttpResponse('\n'.join(return_val))
     
@@ -499,7 +499,7 @@ def video_geog_pie_data(request,geog,id):
     return_val = []
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     for item in vid_prod:
-        return_val.append(item['name']+';'+str(item['tot_pro'])+";;;;Ratio of Video Productions in "+item['name'])
+        return_val.append(item['name']+';'+str(item['tot_pro'])+";;;/output/video/module/"+geog_child+"/"+str(item['id'])+";Ratio of Video Productions in "+item['name'])
         
     
     return HttpResponse('\n'.join(return_val))

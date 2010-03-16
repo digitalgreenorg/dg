@@ -35,7 +35,7 @@ def run_query_dict(query_string, dict_key, *query_args):
 #                : 'to_date' and 'from_date' (as required by MySQL) are OPTIONAL
 #                : id of parent geography (e.g. for 'district' parent is 'state'). For state, this can be omitted
 overview = r"""    
-    SELECT {{geog_child|first }}.id, {{geog_child|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
+    SELECT {{geog_child|first }}.id as id, {{geog_child|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
     FROM STATE s
         LEFT OUTER JOIN DISTRICT d on (s.id = d.state_id)
         LEFT OUTER JOIN BLOCK b on (b.district_id = d.id)
