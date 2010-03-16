@@ -185,7 +185,7 @@ def login_view(request):
 	    user = auth.authenticate(username=username, password=password)
 	    if user is not None and user.is_active:
 	        # Correct password, and the user is marked "active"
-	        #auth.login(request, user)
+	        auth.login(request, user)
 	        return HttpResponse("1")
 	    else:
 	        # Show an error page
@@ -221,13 +221,29 @@ def save_region(request):
 		#print request.POST
 		form = RegionForm(request.POST)
 		if form.is_valid():	
+			#print request.COOKIES["username"]
 			# This should redirect to show region page
 			form.save()
 			#print "works"
-			return HttpResponse("1")
+			#return HttpResponse("1")
+			return HttpResponseRedirect('/dashboard/getregions/')
 		else:
 			#print "error"
 			return HttpResponse("0")	
+		
+def get_regions(request):
+	if request.method == 'POST':
+		# This should handle the region DELETE request
+
+		# Now redirect back to ourselves as a GET to re-render the page
+		return redirect('region')
+	else:
+		regions = Region.objects.order_by("-id")
+		#regions = Region.objects.get(region_name="Beacons100")
+		print regions
+		json_subcat = serializers.serialize("json", regions)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+		#return render_to_response('regions.html', {'regions': regions})
 	
 
 def add_language(request):
@@ -285,8 +301,8 @@ def region(request):
 		return redirect('region')
 	else:
 		regions = Region.objects.order_by("-id")
-		#return HttpResponse(regions)
-		return render_to_response('regions.html', {'regions': regions})
+		return HttpResponse(regions)
+		#return render_to_response('regions.html', {'regions': regions})
 
 
 def add_state(request):
@@ -300,7 +316,11 @@ def add_state(request):
 			return render_to_response('add_state.html',{'form':form})
 	else:
 		form = StateForm()
-		return render_to_response('add_state.html',{'form':form})
+		#temp = cjson.encode(form)
+		return HttpResponse(form);
+		#json_subcat = serializers.serialize("json", form)
+		#return HttpResponse(json_subcat, mimetype="application/javascript")
+		#return render_to_response('add_state.html',{'form':form})
 
 
 def state(request):
