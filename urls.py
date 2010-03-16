@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 from dg.views import *
 from django.contrib.auth.views import login, logout
 from dg.output.views import *
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -20,15 +21,18 @@ urlpatterns = patterns('',
 	(r'^feeds/persons/$', feed_person_html),
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
-#	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
+	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
+    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     (r'^hello/$', hello),
 	(r'^animators-by-village-id/(\d+)/$', feed_animators),
     (r'/search/', search),
     (r'^dashboard/getkey/$', get_key_for_user),
-#	(r'^dashboard/login/$', login_view),
+	(r'^dashboard/login/$', login_view),
     (r'^dashboard/saveregion/$', save_region),
+    (r'^dashboard/getregions/$', get_regions),
+    (r'^dashboard/addstates/$', add_state),
 	(r'^dashboard/language/add/$', add_language),
 	(r'^dashboard/languages/(?P<language>[^/]+)/$',language),
 	(r'^dashboard/region/add/$',add_region),
