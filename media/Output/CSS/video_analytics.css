@@ -26,14 +26,14 @@
 /*#table1div4		{ margin-left:0px; width:300px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;} */
 
 
-#graphtable0				{ margin-top:5px; margin-bottom:5px; margin-left:10px; border-top-style: solid; border-top-color: #9ce94f; border-top-width:1px;}
+#graphtable0				{ margin-top:0px; margin-bottom:5px; margin-left:10px; }
 #graphtabletd0				{ width:899px; margin-top:0px}
 #graphdiv0					{ margin-top:5px; float:none; width:888px; margin-left:5px; margin-bottom:10px; }
 #graphdiv0title				{ margin-top:1px; margin-left:0px; float:none; width:888px; height: 40px; border-style: solid; border-color: #9ce94f; border-width:1px;  }
 #graphdiv0desc				{ margin-top:0px; margin-left:0px; float:none; margin-right:0px; width:888px; border-style: solid; border-color: #9ce94f; border-width:1px; padding-top:10px;min-height:350px }
 
 #graphdiv0titledesc1		{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black; float:left; width:441px}
-#graphdiv0titledesc2		{ margin-top:10px; text-align:center; float:left; width:3px; background-color:Green; height:20px}
+#graphdiv0titledesc2		{ margin-top:10px; text-align:center; float:left; width:3px; height:20px}
 #graphdiv0titledesc3		{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black; float:left; width:441px}
 
 .subgraphdiv0desc1			{ min-height:300px; margin-top:0px; margin-left:2px; margin-right:2px; float:left; width:435px; padding-top:20px; background-color:White;}
@@ -42,11 +42,12 @@
 
 /* Graph View Charts*/
 
-#graphtable					{ margin-top:0px; margin-bottom:5px; margin-left:10px; float:none}
+#graphtable					{ margin-top:10px; margin-bottom:0px; margin-left:10px; float:none}
 #graphtabletd				{ width:899px; margin-top:0px}
 #graphdiv1					{ margin-top:0px; float:left; width:445px; margin-left:2px; margin-bottom:10px}
 #graphdiv1title				{ margin-top:1px; margin-left:2px; margin-right:2px; float:none; width:440px; height: 40px; border-style: solid; border-color: #9ce94f; border-width:1px;  }
 #graphdiv1titledesc			{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black}
+
 .graphdiv1desc				{ min-height:400px; margin-top:0px; margin-left:2px; margin-right:2px; float:none; width:440px; border-style: solid; border-color: #9ce94f; border-width:1px; background-color:#ffffff; padding-top:10px;}
 
 .number						{ font-size:18px; font-family:calibri; font-weight:bold; color: #465420;}

@@ -13,6 +13,7 @@ function defaultload(){
 
     		var myWidth = window.innerWidth;
             var myHeight = window.innerHeight;
+                        
             
             $("#searchbody").gradient({ from: 'cff988', to: 'ffffff' });
             $("div#baselinegraph").gradient({ from: 'cff988', to: 'ffffff' });
@@ -254,6 +255,7 @@ function dateRange() {
 };
 /** This is run when the page is fully loaded */
 $(document).ready(function(){   
+   
     gridview();
 	datepick();
 	chk();

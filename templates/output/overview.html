@@ -18,6 +18,7 @@
 	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
     <script type="text/javascript" src="/media/Output/JS/jquery.gradient.min.js"></script>
     <script type="text/javascript" src="/media/Output/JS/jquery.gradient.pack.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript">   
 	    
@@ -333,24 +334,25 @@
 		
 		<div id='tabledynamic'>
 		   		<table id='table2' cellpadding="0px" cellspacing="0px">
+					<thead>
 					<tr>
-					    <td id='table2td3'>					        
-					    </td>
-						<td id='table2td2'>
+					    <th id='table2td3'>					        
+					    </th>
+						<th id='table2td2'>
 							<div id='table2td2div'>
 								{{geography|title}}
 							</div>							
-						</td>
-						<td id='table2td'>
+						</th>
+						<th id='table2td'>
 							<div id='table2tdv2'> Videos Produced 
 							    <div id='table2tdv2desc'>
 							        The total number of videos produced in a given location
 							    </div>
 							</div>
 							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
-						</td>
+						</th>
 						
-						<td id='table2td'>
+						<th id='table2td'>
 						    <div id='table2tdv2'> Disseminations
 							    <div id='table2tdv2desc'>
 							        The total number of unique videos that have been screened 
@@ -358,18 +360,18 @@
 							</div>
 							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>
 														
-						</td>
+						</th>
 						
-						<td id='table2td'>
+						<th id='table2td'>
 						    <div id='table2tdv2'> Farmer Adoptions
 							    <div id='table2tdv2desc'>
 							        The total number of adoptions 
 							    </div>
 							</div>
 							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
-						</td>
+						</th>
 						
-						<td id='table2td'>
+						<th id='table2td'>
 							<div id='table2tdv2'> Agricultural Practices
 							    <div id='table2tdv2desc'>
 							        The total number of agricultural practices followed 
@@ -378,8 +380,8 @@
 							<div id='table2tdv3'> 
 								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>  
 							</div>
-						</td>
-						<td id='table2tdf'>
+						</th>
+						<th id='table2tdf'>
 							<div id='table2tdv2'> Farmers 
 							    <div id='table2tdv2desc'>
 							        The total number of farmers associated 
@@ -388,10 +390,12 @@
 							<div id='table2tdv3'>  
 								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>	
 							</div>
-						</td>					
+						</th>					
 					</tr>				 
+				 	</thead>
 				 	
 				 	{% for item in item_list %}
+				 	<tbody>
 				 	<tr>
 				 	    <td id='table2td3'>
 				 	        {{ forloop.counter }}
@@ -431,7 +435,9 @@
 							{{ item.tot_per }} 
 						</td>																
 				 	</tr>
-				 	{% endfor %}									 
+				 	</tbody>				 	
+				 	{% endfor %}
+				 										 
 				</table>					
 			</div>
 			
@@ -483,6 +489,7 @@
 		            </tr>
 			    </table>
 		    </div>
+		    
 			
 			<div id='baselinegraphtitle'>
 			    Baseline Graph View

@@ -23,6 +23,9 @@
 #tabledynamic		{ margin-top:0px; margin-left:10px; float:none; width:900px }
 #totaltable 		{ margin-top:3px; margin-left:10px; float:none; width:900px;}
 #table2 			{ margin-left:0%; border-width:thin; border-style:solid; border-color:#339900; float:none; margin-top:0px}
+
+#mytable 			{ margin-left:10px; border-width:thin; border-style:solid; border-color:#339900; float:none; margin-top:5px; width:898px}
+
 #table3 			{ margin-left:0%; border-width:thin; border-style:solid; border-color:#339900; float:none; margin-top:0px}
 
 #table2td			{ width:143px; height:30px; background-color:#e1fb9b; border-right-color:#339900; border-right-width:1px; border-right-style:solid; border-bottom-color:#339900; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; text-align:right}

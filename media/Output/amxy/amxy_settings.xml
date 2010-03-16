@@ -34,8 +34,13 @@
   <values>
     <x>
       <enabled>0</enabled>
+	  <text_size>8</text_size>
       <skip_first>0</skip_first>
     </x>
+	<y>
+      <color>999999</color>
+      <text_size>10</text_size>
+    </y>
   </values>
   <legend>
     <enabled>0</enabled>
@@ -58,10 +63,14 @@
   </graphs>
   <labels>
     <label lid="0">
-      <text></text>
-      <x>10</x>
-      <y>20</y>
-      <align>center</align>
+       <text><![CDATA[<font face="Times new Roman">No. of Videos</font>]]></text>
+      <x>20</x>
+      <y>200</y>
+      <width>0</width>
+      <text_size>15</text_size>
+	  <fill_color>333333</fill_color>
+      <rotate>1</rotate>
+      <align>right</align>
     </label>
   </labels>
 </settings>
