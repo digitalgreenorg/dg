@@ -147,14 +147,42 @@ def overview_drop_down(request):
     
     return HttpResponse(html)
     
-         
+    
+#This is the method to generate Data for line graph for # vs time. (eg Overview module)
+#Takes 'type' GET param which can be 'prod','screen','prac','person','adopt'
+#    Based on the 'type', it generates the data for that set only
+#    If 'type' is not specified, it generates for all.         
 def overview_line_graph(request,geog,id):
     id = int(id)
-    vid_prod_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='production',geography=geog,id=id)),'date');
-    sc_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='screening',geography=geog,id=id)),'date');
-    adopt_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='adoption',geography=geog,id=id)),'date');
-    prac_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='practice',geography=geog,id=id)),'date');
-    person_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='person',geography=geog,id=id)),'date');
+    if('type' in request.GET):
+        type = request.GET.getlist('type')
+    else:
+        type = ['prod','screen','prac','person','adopt']
+    
+    if('prod' in type):
+        vid_prod_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='production',geography=geog,id=id)),'date');
+    else:
+        vid_prod_rs = []
+        
+    if('screen' in type):
+        sc_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='screening',geography=geog,id=id)),'date');
+    else:
+        sc_rs = []
+        
+    if('adopt' in type):
+        adopt_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='adoption',geography=geog,id=id)),'date');
+    else:
+        adopt_rs = []
+        
+    if('prac' in type):
+        prac_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='practice',geography=geog,id=id)),'date');
+    else:
+        prac_rs = []
+        
+    if('person' in type):
+        person_rs = run_query_dict(construct_query(database.overview_line_chart,dict(type='person',geography=geog,id=id)),'date');
+    else:
+        person_rs = []
         
     start_date = today = datetime.date.today()
     if vid_prod_rs:
@@ -185,8 +213,16 @@ def overview_line_graph(request,geog,id):
             sum_prac += prac_rs[iter_date][0]
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
-        str_list.append(iter_date.__str__() +';'+ sum_vid.__str__()+';'+ sum_sc.__str__()+';'+ sum_adopt.__str__() \
-                        +';'+ sum_prac.__str__()+';'+ sum_person.__str__())
+            
+        append_str = iter_date.__str__() +';'
+        if('prod' in type): append_str += str(sum_vid)+';'
+        if('screen' in type): append_str += str(sum_sc)+';'       
+        if('adopt' in type): append_str += str(sum_adopt)+';'    
+        if('prac' in type): append_str +=  str(sum_prac)+';'   
+        if('person' in type): append_str += str(sum_person)+';'
+        
+        
+        str_list.append(append_str[:-1])
         
     return HttpResponse('\n'.join(str_list))
     

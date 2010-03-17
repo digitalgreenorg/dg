@@ -351,7 +351,7 @@
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >	Video Production over Time </div>	
 							</div>
-							<div class="graphdiv1desc" id = "">						
+							<div class="graphdiv1desc" id = "flash_area_vid_prod_time">						
 							</div>						
 						</div>
 						<div id="graphdiv1">
@@ -495,6 +495,55 @@
 	{% endif %}
 
 	practice.write("flash_area_practice_type_scatter");
+	
+	var videoprod_line = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "420", "400", "8", "#FFFFFF");
+	
+	videoprod_line.addVariable("path", "/media/Output/amline/");
+	videoprod_line.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	videoprod_line.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/?type=prod');
+	videoprod_line.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Video Production</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'))
+	videoprod_line.addVariable("chart_id", "video_line_chart");
+	var from_date = null, to_date = null;
+		{%if from_date and to_date %}
+		function amChartInited(chart_id){	
+		  flashMovie = document.getElementById(chart_id);	
+		  
+		  if(from_date!=null)
+		  {
+			//var arr = from_date.split('-');
+			var zoom_from_date, zoom_to_date;
+			
+			if(new Date('{{from_date}}') > new Date(to_date))
+				zoom_from_date = to_date
+			else if(new Date(from_date) > new Date('{{from_date}}'))
+				zoom_from_date = from_date;
+			else 
+				zoom_from_date = '{{from_date}}';
+			
+			if(new Date(to_date) < new Date('{{to_date}}'))
+				zoom_to_date = to_date;
+			else if(new Date('{{to_date}}') < new Date(from_date))
+				 zoom_to_date = from_date;
+			else
+				zoom_to_date = '{{to_date}}';
+		  
+			flashMovie.setZoom(zoom_from_date,zoom_to_date);
+		  
+		 }
+		}
+		function amGetZoom(chart_id, from, to, from_xid, to_xid){
+		  if(from_date==null)
+			from_date = from;
+		  if(to_date==null)
+			to_date = to;		      
+		}
+		{% endif %}
+		
+	
+	videoprod_line.write("flash_area_vid_prod_time");
+
 	
 </script>
 

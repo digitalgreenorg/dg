@@ -517,8 +517,15 @@
 		var so = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "900", "400", "8", "#FFFFFF");
 		
 		so.addVariable("path", "/media/Output/amline/");
-		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 		so.addVariable("data_file",'/output/overview/line/{{flash_geog}}/{{id}}/');
+		so.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Video Production</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Screening</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="5"><title>Total Persons</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'))
 		so.addVariable("chart_id", "line_chart");
 		var from_date = null, to_date = null;
 			{%if flash_from_date and flash_to_date %}
@@ -562,15 +569,5 @@
 		// ]]>
 	</script>
 <!-- end of amline script -->
-
-<div> 
-    <div id='hello'>        
-    </div>
-    <div id='hello1'>
-        <img src="Images/land.png" alt="temp"/>
-        H. No-61, Jodhpur Park, 
-    </div>
-</div>
- 
 </body>
 </html>
