@@ -245,6 +245,84 @@ def get_regions(request):
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 		#return render_to_response('regions.html', {'regions': regions})
 	
+def save_fieldofficer(request):
+    if request.method == 'POST':
+    	print request.POST
+        form = FieldOfficerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #print request.COOKIES["username"]
+            return HttpResponseRedirect('/dashboard/getfieldofficers/')
+        else:
+            return HttpResponse("0")
+
+def get_fieldofficers(request):
+    if request.method == 'POST':
+        return redirect('fieldofficer')
+    else:
+        fieldofficers = FieldOfficer.objects.order_by("-id")
+        print fieldofficers
+        json_subcat = serializers.serialize("json", fieldofficers)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_practice(request):
+    if request.method == 'POST':
+    	print "save if : hi"
+        form = PracticeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getpractices/')
+        else:
+    	    print "save else : hi"
+            return HttpResponse("0")
+        
+def get_practices(request):
+    if request.method == 'POST':
+    	#print "get if : hi"
+        return redirect('practice')
+    else:
+    	#print "get else : hi"
+        practices = Practices.objects.order_by("-id")
+        #print practices
+        json_subcat = serializers.serialize("json", practices)
+        #print "get else : after json"
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_language(request):
+    if request.method == 'POST':
+        form = LanguageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getlanguages/')
+        else:
+            return HttpResponse("0")
+        
+def get_languages(request):
+    if request.method == 'POST':
+        return redirect('language')
+    else:
+        languages = Language.objects.order_by("-id")
+        print languages
+        json_subcat = serializers.serialize("json", languages)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_partner(request):
+    if request.method == 'POST':
+        form = PartnerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getpartners/')
+        else:
+            return HttpResponse("0")
+        
+def get_partners(request):
+    if request.method == 'POST':
+        return redirect('partner')
+    else:
+        partners = Partner.objects.order_by("-id")
+        print partners
+        json_subcat = serializers.serialize("json", partners)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def add_language(request):
 	if request.method == 'POST':
