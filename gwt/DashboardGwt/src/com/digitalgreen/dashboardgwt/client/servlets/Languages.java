@@ -1,15 +1,24 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
+
 import java.util.HashMap;
 import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.LanguagesData;
+
 import com.digitalgreen.dashboardgwt.client.templates.LanguagesTemplate;
+import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
+import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+
+import com.google.gwt.json.client.JSONParser;
 
 public class Languages extends BaseServlet{
 	
@@ -28,6 +37,7 @@ public class Languages extends BaseServlet{
 		if (!this.isLoggedIn()) {
 			super.redirectTo(new Login());
 		} else {
+
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = (Form)this.requestContext.getArgs().get("form");

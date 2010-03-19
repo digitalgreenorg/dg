@@ -6,12 +6,13 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
 
 public class PartnersData extends BaseData {
-
+	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native String getPartnerName() /*-{ return this.fields.partner_name; }-*/;
@@ -22,7 +23,7 @@ public class PartnersData extends BaseData {
 		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 	}
 	
-public class Data extends BaseData.Data {
+	public class Data extends BaseData.Data {
 		
 		final private static String COLLECTION_PREFIX = "partners";
 			
@@ -111,6 +112,7 @@ public class Data extends BaseData.Data {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
 	
+
 	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
 	protected static String savePartnerURL = "/dashboard/savepartner/";
 	protected static String getPartnerURL = "/dashboard/getpartners/";
@@ -120,6 +122,7 @@ public class Data extends BaseData.Data {
 	
 	public PartnersData() {
 		super();
+
 	}
 	
 	public PartnersData(OnlineOfflineCallbacks callbacks) {

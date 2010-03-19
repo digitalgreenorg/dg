@@ -16,7 +16,7 @@ public class LanguagesData extends BaseData {
 		protected Type() {}
 		public final native String getLanguageName() /*-{ return this.fields.language_name; }-*/;
 	}
-	
+
 	public class Data extends BaseData.Data {
 		
 		final private static String COLLECTION_PREFIX = "language";

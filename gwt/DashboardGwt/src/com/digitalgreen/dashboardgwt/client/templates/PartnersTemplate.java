@@ -89,7 +89,7 @@ public class PartnersTemplate extends BaseTemplate {
 						"</thead>" +
 						"<tbody>";
 	
-	final static private String partnersListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String partnersListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select Partner to change</h1>" +
 									"<div id='content-main'>" +
@@ -106,7 +106,7 @@ public class PartnersTemplate extends BaseTemplate {
 									"</div>" +
 								"</div>";
 	
-	final static private String partnersAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String partnersAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add Partner</h1>" +
 									"<div id='content-main'>" +

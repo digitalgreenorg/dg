@@ -5,12 +5,19 @@ import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.LanguagesData;
 import com.digitalgreen.dashboardgwt.client.data.PartnersData;
 import com.digitalgreen.dashboardgwt.client.templates.LanguagesTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.PartnersTemplate;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
+
+import com.google.gwt.json.client.JSONParser;
+
 
 public class Partners extends BaseServlet{
 	

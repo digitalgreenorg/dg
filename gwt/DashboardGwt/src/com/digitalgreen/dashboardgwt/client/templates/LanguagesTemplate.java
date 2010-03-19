@@ -91,7 +91,7 @@ public class LanguagesTemplate extends BaseTemplate{
 						"</thead>" +
 						"<tbody>";
 	
-	final static private String languagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String languagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select Language to change</h1>" +
 									"<div id='content-main'>" +
@@ -108,7 +108,7 @@ public class LanguagesTemplate extends BaseTemplate{
 									"</div>" +
 								"</div>";
 	
-	final static private String languagesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String languagesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add language</h1>" +
 									"<div id='content-main'>" +
@@ -125,6 +125,7 @@ public class LanguagesTemplate extends BaseTemplate{
 										"<script type='text/javascript'>document.getElementById('id_language_name').focus();</script>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>";
-
+								"</div>" +
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

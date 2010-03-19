@@ -1,8 +1,12 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.FieldOfficersData;
 import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
+
 
 public class FieldOfficerTemplate extends BaseTemplate{
 	
@@ -12,25 +16,63 @@ public class FieldOfficerTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
-		String templatePlainType = "Field Officer";
-		String templateType = "field_officer";
+		String templateType = "Field Officer";
+		String templatePlainType = "dashboard/fieldofficer/add";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new FieldOfficersData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
 		FieldOfficers addFieldOfficersServlet = new FieldOfficers(requestContext);
-		FieldOfficers saveFieldOfficer = new FieldOfficers(new RequestContext(RequestContext.METHOD_POST));
+		FieldOfficers saveFieldOfficer = new FieldOfficers(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, fieldofficerListHtml, fieldofficerAddHtml);
+		
 		// Add it to the rootpanel
 		super.fill();
+		
+		//Now add listings
+		this.fillListings();
+		
 		// Now add hyperlinks
-		super.fillDGLinkControls(templateType, templatePlainType, fieldofficerListFormHtml, addFieldOfficersServlet);
+		super.fillDGLinkControls(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet);
+		
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveFieldOfficer);
 	}
+	
+	public void fillListings(){
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add"){
+			
+			// Add Listing
+			List fieldOfficers = (List)queryArgs.get("listing");
+			if(fieldOfficers != null){
+				String tableRows = "";
+				String style;
+				FieldOfficersData.Data fieldofficer;
+				for (int row=0; row<fieldOfficers.size(); ++row){
+					if(row%2 == 0)
+						style = "row2";
+					else 
+						style = "row1";
+					fieldofficer = (FieldOfficersData.Data) fieldOfficers.get(row);
+					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='actoin-select' value='" + fieldofficer.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/fieldofficer/" + fieldofficer.getId() + "/'>" + fieldofficer.getFieldOfficerName() + "</a></th></tr>";
+				}
+				fieldofficerListFormHtml = fieldofficerListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
 
-	final static private String fieldofficerListFormHtml = "<div class='actions'>" +
+	private String fieldofficerListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
+												"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected field officers</option>" +
@@ -45,15 +87,13 @@ public class FieldOfficerTemplate extends BaseTemplate{
 												"<input type='checkbox' id='action-toggle' />" +
 											"</th>" +
 											"<th>" +
-												"Field officer" +
+												"<a href='?ot=asc&amp;o=1'>" +
+													"Field officer" +
+												"</a>" +
 											"</th>" +
 										"</tr>" +
 									"</thead>" +
-									"<tbody>" +
-										"<div id='data-rows'" +       // Insert data rows here
-										"</div>" +
-									"</tbody>" +
-								"</table>";
+									"<tbody>";
 	
 	final static private String fieldofficerListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
@@ -74,60 +114,51 @@ public class FieldOfficerTemplate extends BaseTemplate{
 	
 	final static private String fieldofficerAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
-									"<h1>Add field officer</h1>" +
+									"<h1>Add Field Officer</h1>" +
 									"<div id='content-main'>" +
-										"<form enctype='multipart/form-data' action='' method='post' id='fieldofficer_form'>" +
-											"<div>" +
-												"<fieldset class='module aligned '>" +
-													"<div class='form-row name  '>" +
-														"<div>" +
-															"<label for='id_name' class='required'>Name:</label><input id='id_name' type='text' class='vTextField' name='name' maxlength='100' />" +
-														"</div>" +
-													"</div>" +
-													"<div class='form-row age  '>" +
-														"<div>" +
-															"<label for='id_age'>Age:</label><input id='id_age' type='text' class='vIntegerField' name='age' />" +
-														"</div>" +
-													"</div>" +
-													"<div class='form-row gender  '>" +
-														"<div>" +
-															"<label for='id_gender' class='required'>Gender:</label><select name='gender' id='id_gender'>" +
-																"<option value='' selected='selected'>---------</option>" +
-																"<option value='M'>Male</option>" +
-																"<option value='F'>Female</option>" +
-															"</select>" +
-														"</div>" +
-													"</div>" +
-													"<div class='form-row hire_date  '>" +
-														"<div>" +
-															"<label for='id_hire_date'>Hire date:</label><input id='id_hire_date' type='text' class='vDateField' name='hire_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
-														"</div>" +
-													"</div>" +
-													"<div class='form-row phone_no  '>" +
-														"<div>" +
-															"<label for='id_phone_no'>Phone no:</label><input id='id_phone_no' type='text' class='vTextField' name='phone_no' maxlength='100' />" +
-														"</div>" +
-													"</div>" +
-													"<div class='form-row address  '>" +
-														"<div>" +
-															"<label for='id_address'>Address:</label><input id='id_address' type='text' class='vTextField' name='address' maxlength='500' />" +
-														"</div>" +
-													"</div>" +
-												"</fieldset>" +
-												"<div class='submit-row' >" +
-													"<input type='submit' value='Save' class='default' name='_save' />" +
+										"<fieldset class='module aligned '>" +
+											"<div class='form-row name  '>" +
+												"<div>" +
+													"<label for='id_name' class='required'>Name:</label><input id='id_name' type='text' class='vTextField' name='name' maxlength='100' />" +
 												"</div>" +
-												"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
-												"<script type='text/javascript'>" +
-												"</script>" +
 											"</div>" +
-										"</form>" +
+											"<div class='form-row age  '>" +
+												"<div>" +
+													"<label for='id_age'>Age:</label><input id='id_age' type='text' class='vIntegerField' name='age' />" +
+												"</div>" +
+											"</div>" +
+											"<div class='form-row gender  '>" +
+												"<div>" +
+													"<label for='id_gender' class='required'>Gender:</label><select name='gender' id='id_gender'>" +
+														"<option value='' selected='selected'>---------</option>" +
+														"<option value='M'>Male</option>" +
+														"<option value='F'>Female</option>" +
+													"</select>" +
+												"</div>" +
+											"</div>" +
+											"<div class='form-row hire_date  '>" +
+												"<div>" +
+													"<label for='id_hire_date'>Hire date:</label><input id='id_hire_date' type='text' class='vDateField' name='hire_date' size='10' />" +
+												"</div>" +
+											"</div>" +
+											"<div class='form-row phone_no  '>" +
+												"<div>" +
+													"<label for='id_phone_no'>Phone no:</label><input id='id_phone_no' type='text' class='vTextField' name='phone_no' maxlength='100' />" +
+												"</div>" +
+											"</div>" +
+											"<div class='form-row address  '>" +
+												"<div>" +
+													"<label for='id_address'>Address:</label><input id='id_address' type='text' class='vTextField' name='address' maxlength='500' />" +
+												"</div>" +
+											"</div>" +
+										"</fieldset>" +
+										"<div class='submit-row' >" +
+											"<input id='save' value='Save' class='default' name='_save' />" +
+										"</div>" +
+										"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
 									"</div>" +
 									"<br class='clear' />" +
-									"</div>";
+								"</div>" +
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }
