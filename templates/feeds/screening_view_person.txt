@@ -1,17 +1,12 @@
 {% for person in persons %}
-<tr class="{% cycle 'row1' 'row2' %}{% if forloop.last %} add_template{% endif %}" style="{% if forloop.last %}display: none;{% endif %}">
+<tr class="{% cycle 'row1' 'row2' %}">
 <td class="original">
 	<input type="hidden" id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-id" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-id">
     <input type="hidden" id="id_personmeetingattendance_set-forloop.counter{{ forloop.counter0|add:init }}-screening" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-screening">
 </td>
 <td class="person">
 	<select id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-person" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-person">
-	{% if forloop.last %}
-		<option selected="selected" value="">---------</option>
-		{% for p in all_persons %}
-		<option value="{{p.id}}">{{p.person_name}}</option>
-		{% endfor %}
-	{% else %}<option value="{{person.id}}">{{person.person_name}}</option>{% endif %}		
+		<option value="{{person.id}}">{{person.person_name}} ({{person.village}})</option>		
 	</select>
 	<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-person" class="add-another" href="/admin/dashboard/person/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a>
 </td>
@@ -46,9 +41,7 @@
 	<input type="text" maxlength="500" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_question" class="vTextField" id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_question">
 </td>
 <td class="delete">
-{% if not forloop.last %}
-	<a class="delete" style="cursor: pointer;" id="" onClick = "$(this).parent(\'td\').parent(\'tr\').remove()"><img width="10" height="10" style="margin-top: 0.5em;" alt="Delete row" src="/media/img/admin/icon_deletelink.gif"></a>
-{% endif %}
+	<a class="delete" style="cursor: pointer;" id="" onClick = "$(this).parent('td').parent('tr').remove()"><img width="10" height="10" style="margin-top: 0.5em;" alt="Delete row" src="/media/img/admin/icon_deletelink.gif"></a>
 </td>
 </tr>
 {% endfor %}

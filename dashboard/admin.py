@@ -23,12 +23,15 @@ from django.utils.encoding import smart_str
 from dg.dashboard.widgets import ForeignKeySearchInput
 from django.conf.urls.defaults import *
 
-
-
-	
+class PersonMeetingAttendanceForm(forms.ModelForm):
+    person = forms.ModelChoiceField(Animator.objects.none())
+    class Meta:
+        model = PersonMeetingAttendance
+    
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
-    extra = 2  
+    raw_id_fields = ("person",)
+    extra = 0
 
 class ScreeningForm(forms.ModelForm):
     class DynamicChoiceField(forms.ChoiceField):     
@@ -135,12 +138,11 @@ class ScreeningAdmin(admin.ModelAdmin):
     class Media:
 	js = (
 		settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/filter1.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
+				settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
 		settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/dynamic_inlines_with_sort.js",
+		settings.ADMIN_MEDIA_PREFIX + "js/screening_page.js",
 		#settings.ADMIN_MEDIA_PREFIX + "js/dynamicinline.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/filter_person.js",
+		
 	)
 
 	css = {

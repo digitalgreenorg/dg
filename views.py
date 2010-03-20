@@ -13,6 +13,7 @@ from django.db import connection, transaction
 from dg.output.database import run_query 
 import datetime
 import re
+import json
 #import cjson
 from django.core import serializers
 from django.contrib import auth
@@ -124,52 +125,73 @@ def feed_animators(request, village_id):
 
 
 
-
-def feeds_animators(request, village_id):
-	village = Village.objects.get(pk=int(village_id))
-	animators = Animator.objects.filter(assigned_villages=village)
-	json_subcat = serializers.serialize("json", animators)
-	return HttpResponse(json_subcat, mimetype="application/javascript")
-
-
-def feeds_groups(request, village_id):
-	village = Village.objects.get(pk=int(village_id))
-	person_groups = PersonGroups.objects.filter(village=village)
-	json_subcat = serializers.serialize("json", person_groups)
-	return HttpResponse(json_subcat, mimetype="application/javascript")
-
-
 def feeds_persons(request, group_id):
 	group = PersonGroups.objects.get(pk=int(group_id))
 	persons = Person.objects.filter(group=group)
 	json_subcat = serializers.serialize("json", persons)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
-def feed_person_html(request):
-	return_val = []
+
+#Takes 'mode' parameter
+#On mode = 0 , returns only list of persons and tot_val (value of TOTAL FORM in "Screening" page)
+#On mode = 1, returns prac_list, persons and tot_val
+def feed_person_html_on_person_group(request):
+	mode = int(request.GET.get('mode'))
 	group_id = request.GET.getlist('groups')
 	init_id = request.GET.get('init')
-	if(not(group_id and init_id and group_id[0])):
-		return HttpResponse('"html":\'Error\'');
+	
+	if(not(group_id and init_id) or mode not in [0,1]):
+		return HttpResponse('{"html":\'Error\'}');
+	
 	all_persons = Person.objects.all()
 	persons = []
-	for i in group_id:
-		persons.extend(all_persons.filter(group=(PersonGroups.objects.get(pk=int(i)))))
-	persons.append('')
-	pracs = Practices.objects.all()
-	
+	if group_id[0]:
+		persons = Person.objects.all().filter(group__in = \
+											  (PersonGroups.objects.all().filter(pk__in = group_id)))
+											  
+		
 	html = get_template('feeds/screening_view_person.txt')
+	
+	chomp = re.compile('\r|\n|\t')
+	if(mode==0):
+		return HttpResponse(json.dumps(dict(tot_val=str(len(persons)+int(init_id)), \
+								 html = chomp.sub('',html.render(Context(dict(persons=persons,init=init_id)))), \
+								 prac = chomp.sub('',get_prac()))))
+	elif(mode==1):
+		return HttpResponse(json.dumps(dict(tot_val=str(len(persons)+int(init_id)), \
+								 html = chomp.sub('',html.render(Context(dict(persons=persons,init=init_id)))), \
+								 prac = chomp.sub('',get_prac()))))
+		
+	
+#return Practices in Options <options ..>...</option>
+def get_prac():
+	pracs = Practices.objects.all()
 	prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
-	
-	chomp = re.compile('\n|\t')
-	return_val.append('{')
-	return_val.append('"tot_val": '+str(len(persons)+int(init_id))+',')
-	return_val.append('"html": \'' + chomp.sub('',html.render(Context(dict(persons=persons,all_persons=all_persons,init=init_id)))) +'\',')
-	return_val.append('"prac": \'' + chomp.sub('',prac_list.render(Context(dict(practices=pracs))))+'\'')
-	return_val.append('}')
-	
-	return HttpResponse('\n'.join(return_val))
+	return prac_list.render(Context(dict(practices=pracs)))
 
+
+# Takes 'mode' argument 
+# mode : 0 Return only Practice_list
+# mode : 1 Returns animator_list, persongroup_list, person_list (requires 'vil_id')
+# mode : 2 Returns animator_list, persongroup_list, person_list, practice_list (requires 'vil_id')
+def feed_person_prac_pg_anim(request):
+	mode = int(request.GET.get('mode'));
+	if(mode!=1): prac = get_prac();
+	if(mode==0): return HttpResponse(json.dumps(dict(prac_list=prac))) 
+	if 'vil_id' in request.GET:
+		vil_id=int(request.GET.get('vil_id'))
+		village = Village.objects.select_related(depth=1).get(id=int(vil_id))
+		anim = serializers.serialize("json", Animator.objects.filter(assigned_villages=village))		
+		pg = serializers.serialize("json", PersonGroups.objects.filter(village=village))		
+		p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
+		per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}} ({{p.village}})</option>{% endfor %}""")
+		if(mode==1):
+			return HttpResponse(json.dumps(dict(per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+		elif(mode==2):
+			return HttpResponse(json.dumps(dict(prac_list=prac,per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+	
+	return HttpResponse('')
+		
 
 def feeds_persons_village(request, village_id):
 	village = Village.objects.get(pk=int(village_id))
