@@ -29,7 +29,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		FieldOfficers saveFieldOfficer = new FieldOfficers(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, fieldofficerListHtml, fieldofficerAddHtml);
+		super.fillDGTemplate(templateType, fieldofficerListHtml, fieldofficerAddHtml, addDataToElementID);
 		
 		// Add it to the rootpanel
 		super.fill();
@@ -44,6 +44,8 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		super.fillDGSubmitControls(saveFieldOfficer);
 	}
 	
+	final private String addDataToElementID[] = null;
+
 	public void fillListings(){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");

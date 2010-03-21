@@ -22,7 +22,7 @@ public class DisctrictTemplate extends BaseTemplate{
 		Districts addDistrictsServlet = new Districts(requestContext);
 		Districts saveDistrict = new Districts(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, districtListHtml, districtAddHtml);
+		super.fillDGTemplate(templateType, districtListHtml, districtAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
@@ -31,6 +31,8 @@ public class DisctrictTemplate extends BaseTemplate{
 		super.fillDGSubmitControls(saveDistrict);
 	}
 
+	final private String addDataToElementID[] = null;
+	
 	final static private String districtListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +

@@ -31,7 +31,7 @@ public class LanguagesTemplate extends BaseTemplate{
 		Languages saveLanguage = new Languages(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, languagesListHtml, languagesAddHtml);
+		super.fillDGTemplate(templateType, languagesListHtml, languagesAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
@@ -65,6 +65,8 @@ public class LanguagesTemplate extends BaseTemplate{
 			}
 		}
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	private String languagesListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 											"<script type='text/javascript' src='/media/js/calendar.js'></script>" + 

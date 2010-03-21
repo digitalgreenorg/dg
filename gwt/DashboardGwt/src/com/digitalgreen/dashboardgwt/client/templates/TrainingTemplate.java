@@ -21,7 +21,7 @@ public class TrainingTemplate extends BaseTemplate{
 		Trainings addTrainingsServlet = new Trainings(requestContext);
 		Trainings saveTraining = new Trainings(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml);
+		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
@@ -29,6 +29,8 @@ public class TrainingTemplate extends BaseTemplate{
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveTraining);
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	final static private String trainingListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

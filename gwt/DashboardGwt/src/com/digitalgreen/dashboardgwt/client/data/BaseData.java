@@ -115,7 +115,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		try {
 			BaseData.dbStartTransaction();
 			this.form.save(this.queryString);
-			FormQueueData formQueue = new FormQueueData();
+			FormQueueData formQueue = new FormQueueData();			 
 			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.queryString, "0", "A");
 			BaseData.dbCommit();
 		} catch (Exception e) {

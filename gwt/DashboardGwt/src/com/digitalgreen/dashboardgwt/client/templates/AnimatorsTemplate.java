@@ -20,7 +20,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml);
+		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		Animators addAnimatorsServlet = new Animators(requestContext);
@@ -30,6 +30,8 @@ public class AnimatorsTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveAnimator);
 	}
+	
+	final private String addDataToElementID [] = null;
 
 	final static private String animatorsListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

@@ -29,7 +29,7 @@ public class PartnersTemplate extends BaseTemplate {
 		
 		
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml);
+		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
@@ -63,6 +63,8 @@ public class PartnersTemplate extends BaseTemplate {
 			}
 		}
 	}
+
+	final private String addDataToElementID[] = null;
 	
 	private String partnersListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 											"<script type='text/javascript' src='/media/js/calendar.js'></script>" +

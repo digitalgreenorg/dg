@@ -20,7 +20,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, dmListHtml, dmAddHtml);
+		super.fillDGTemplate(templateType, dmListHtml, dmAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
@@ -30,6 +30,8 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveDevelopmentManager);
 	}
+	
+	final private String addDataToElementID[] = null;
 
 	final static private String dmListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -150,7 +152,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 												"</div>" +
 											"</fieldset>" +
 											"<div class='submit-row' >" +
-												"<input type='submit' value='Save' class='default' name='_save' />" +
+												"<input id='Save' value='Save' class='default' name='_save' />" +
 											"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
 												"<script type='text/javascript'>" +

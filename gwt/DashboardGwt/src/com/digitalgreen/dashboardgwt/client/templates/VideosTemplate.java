@@ -18,7 +18,7 @@ public class VideosTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml);
+		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		Videos addVideosServlet = new Videos(requestContext);
@@ -28,6 +28,8 @@ public class VideosTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveVideo);
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	final static private String videosListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +

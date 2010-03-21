@@ -20,7 +20,7 @@ public class VillagesTemplate extends BaseTemplate {
 		Villages addVillagesServlet = new Villages(requestContext);
 		Villages saveVillage = new Villages(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml);
+		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
@@ -29,6 +29,8 @@ public class VillagesTemplate extends BaseTemplate {
 		super.fillDGSubmitControls(saveVillage);
 	}
 
+	final private String addDataToElementID[] = null;
+	
 	final static private String villagesListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +

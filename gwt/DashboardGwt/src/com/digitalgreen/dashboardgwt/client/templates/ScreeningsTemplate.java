@@ -30,7 +30,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		Screenings addScreeningServlet = new Screenings(requestContext);
 		Screenings saveScreening = new Screenings(new RequestContext(RequestContext.METHOD_POST));
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml);
+		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
@@ -38,6 +38,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveScreening);
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	// Fill ids:  data-rows
 	final static private String screeningsListFormHtml = "<div class='actions'>" +

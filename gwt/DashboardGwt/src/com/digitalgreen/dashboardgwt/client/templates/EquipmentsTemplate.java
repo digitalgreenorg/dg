@@ -19,7 +19,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, equipmentsListHtml, equipmentsAddHtml);
+		super.fillDGTemplate(templateType, equipmentsListHtml, equipmentsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		Equipments addEquipmentsServlet = new Equipments(requestContext);
@@ -30,6 +30,8 @@ public class EquipmentsTemplate extends BaseTemplate{
 		super.fillDGSubmitControls(saveEquipment);
 	}
 
+	final private String addDataToElementID[] = null;
+	
 	final static private String equipementsListFormHtml = "<div class='actions'>" +
 									"<label>Action: <select name='action'>" + 
 										"<option value='' selected='selected'>---------</option>" + 

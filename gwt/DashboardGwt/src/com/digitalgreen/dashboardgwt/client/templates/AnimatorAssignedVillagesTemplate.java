@@ -20,7 +20,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml);
+		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml, addDataToElementID);
 
 		// Add it to the rootpanel
 		super.fill();
@@ -32,6 +32,8 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveAnimatorAssignedVillage);
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	final static private String animatorassignedvillageListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

@@ -1,9 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData;
+import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.servlets.States;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class StatesTemplate extends BaseTemplate{
 	
@@ -20,18 +26,57 @@ public class StatesTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		States addStatesServlet = new States(requestContext);
-		States saveState = new States(new RequestContext(RequestContext.METHOD_POST));
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new StatesData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		States saveState = new States(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, statesListHtml, statesAddHtml);
+		super.fillDGTemplate(templateType, statesListHtml, statesAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, statesListFormHtml, addStatesServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveState);
 	}
 	
-	final static private String statesListFormHtml = "<div class='actions'>" +
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List states = (List)queryArgs.get("listing");			
+			if(states  != null){
+				String tableRows ="";
+				String style;
+				StatesData.Data state;
+				for (int row = 0; row < states.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					state = (StatesData.Data) states.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+								  "<td><input type='checkbox' class='action-select' value='"+ state.getId() + "' name='_selected_action' /></td>" +
+									"<th><a href='/admin/dashboard/region/"+ state.getId() +"/'>" + state.getStateName()+"</a></th>" +
+									"<td>"+ state.getRegion().getRegionName() + "</td>" +
+								"</tr>";
+				}
+				statesListFormHtml = statesListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
+	
+	
+	// A list of Element IDs that need to receive the data before the template is loaded. 
+	final private String addDataToElementID[] = {"id_region"};
+	
+	private String statesListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
     								"<option value='' selected='selected'>---------</option>" +
     								"<option value='delete_selected'>Delete selected states</option>" +
@@ -57,14 +102,10 @@ public class StatesTemplate extends BaseTemplate{
     									"</th>" +
     								"</tr>" +
     							"</thead>" +
-    							"<tbody>"  +
-    								"<div id='data-rows'" +       // Insert data rows here
-    								"</div>" +
-    							"</tbody>" +
-    						"</table>";
+    							"<tbody>";
 
 	// Fill ids:  listing-form-body, add-link
-	final static private String statesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final  private String statesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select State to change</h1>" +
 									"<div id='content-main'>" +
@@ -81,12 +122,12 @@ public class StatesTemplate extends BaseTemplate{
 									"</div>" +
 								"</div>";
 
-	final static private String statesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final  private String statesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add State</h1>" +
 									"<div id='content-main'>" +
-										"<form enctype='multipart/form-data' action='' method='post' id='state_form'>" +
-											"<div>" +
+										//"<!--form enctype='multipart/form-data' action='' method='post' id='state_form'-->" +
+											//"<div>" +
 												"<fieldset class='module aligned '>" +
 													"<div class='form-row state_name  '>" +
 														"<div>" +
@@ -103,23 +144,19 @@ public class StatesTemplate extends BaseTemplate{
 													"<div class='form-row start_date  '>" +
 														"<div>" +
 															"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 												"</fieldset>" +
 												"<div class='submit-row' >" +
-													"<input type='submit' value='Save' class='default' name='_save' />" +
+													"<input id='save' value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_state_name').focus();</script>" +
-												"<script type='text/javascript'>" +
-												"</script>" +
-											"</div>" +
-										"</form>" +
+											//"</div>" +
+										//"</form>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>"; 
+								"</div>"+
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>"; 
+	
 }

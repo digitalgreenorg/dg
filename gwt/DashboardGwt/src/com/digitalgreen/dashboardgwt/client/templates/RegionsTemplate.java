@@ -27,7 +27,7 @@ public class RegionsTemplate extends BaseTemplate {
 		Regions saveRegion = new Regions(saveRequestContext);
 
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml);
+		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
@@ -37,7 +37,6 @@ public class RegionsTemplate extends BaseTemplate {
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveRegion);
 	}
-	
 	
 	protected void fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
@@ -63,6 +62,7 @@ public class RegionsTemplate extends BaseTemplate {
 		}
 	}
 	
+	final private String addDataToElementID[] = null;
 	
 	private String regionsListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 						"<script type='text/javascript' src='/media/js/calendar.js'></script>" +

@@ -20,7 +20,7 @@ public class BlocksTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, blocksListHtml, blocksAddHtml);
+		super.fillDGTemplate(templateType, blocksListHtml, blocksAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		Blocks addBlocksServlet = new Blocks(requestContext);
@@ -30,6 +30,8 @@ public class BlocksTemplate extends BaseTemplate{
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveBlock);
 	}
+	
+	final private String addDataToElementID[] = null;
 	
 	final static private String blocksListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +

@@ -20,7 +20,7 @@ public class PersonsTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, personsListHtml, personsAddHtml);
+		super.fillDGTemplate(templateType, personsListHtml, personsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		Persons addPersonsServlet = new Persons(requestContext);
@@ -31,6 +31,8 @@ public class PersonsTemplate extends BaseTemplate{
 		super.fillDGSubmitControls(savePerson);
 	}
 
+	final private String addDataToElementID[] = null;
+	
 	final static private String personsListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +

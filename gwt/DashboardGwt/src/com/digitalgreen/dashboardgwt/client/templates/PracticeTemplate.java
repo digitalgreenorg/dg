@@ -30,7 +30,7 @@ public class PracticeTemplate  extends BaseTemplate{
 		Practices savePractice = new Practices(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, practiceListHtml, practiceAddHtml);
+		super.fillDGTemplate(templateType, practiceListHtml, practiceAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
@@ -67,6 +67,8 @@ public class PracticeTemplate  extends BaseTemplate{
 		}
 	}
 
+	final private String addDataToElementID[] = null;
+	
 	private String practiceListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 							"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
 							"<div class='actions'>" +

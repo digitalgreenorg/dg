@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
@@ -74,7 +75,7 @@ public class BaseTemplate extends Template {
 	
 	@Override
 	public void fill() {
-		RootPanel.get("user-name").add(new HTMLPanel("b", this.getRequestContext().getDefaultLoggedInUserArg() + "."));
+		RootPanel.get("user-name").add(new HTMLPanel("b", ApplicationConstants.getUsernameCookie() + "."));
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
 		RootPanel.get("container").add(this.getContentPanel());
 		super.fill();
@@ -107,7 +108,7 @@ public class BaseTemplate extends Template {
 	
 	protected void fillDGTemplate(String templateType, 
 								  String listHtml,
-								  String addHtml) {
+								  String addHtml, String addDataToElementID[]) {
 		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
@@ -122,11 +123,19 @@ public class BaseTemplate extends Template {
 				this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 				this.postForm.setMethod(FormPanel.METHOD_POST);
 				this.displayHtml = new HTMLPanel(addHtml);
+				
+				String addData = (String)queryArgs.get("addPageData");
+				if(addData != null && addDataToElementID.length > 0  ){
+					HTMLPanel h = new HTMLPanel(addData);
+					for(int i = 0; i< addDataToElementID.length;i++){
+						this.displayHtml.getElementById(addDataToElementID[i]).setInnerHTML(h.getElementById(addDataToElementID[i]).getInnerHTML());
+					}
+				}
+				
 				this.postForm.add(this.displayHtml);
 				super.setContentPanel(this.postForm);
-			}else {
-				this.displayHtml = new HTMLPanel(listHtml);
-				
+			}else{
+				this.displayHtml = new HTMLPanel(listHtml);				
 				super.setContentPanel(this.displayHtml);
 			}
 		}	
