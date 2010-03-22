@@ -164,11 +164,11 @@ public class StatesData extends BaseData {
 		return states;
 	}
 	
-	public List getStates(String json){
+	public List getStatesOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getStates(){
+	public List getStatesOffline(){
 		BaseData.dbOpen();
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
@@ -220,7 +220,7 @@ public class StatesData extends BaseData {
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();
-		List regions = regionData.getRegions();
+		List regions = regionData.getRegionsOffline();
 		RegionsData.Data region;
 		String html = "<select name=\"region\" id=\"id_region\">";
 		for(int i=0; i< regions.size(); i++){

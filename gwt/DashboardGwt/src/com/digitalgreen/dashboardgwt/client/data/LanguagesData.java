@@ -119,11 +119,11 @@ public class LanguagesData extends BaseData {
 		return languages;
 	}
 	
-	public List getLanguages(String json){
+	public List getLanguagesOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getLanguages(){
+	public List getLanguagesOffline(){
 		BaseData.dbOpen();
 		List languages = new ArrayList();
 		this.select(listLanguages);

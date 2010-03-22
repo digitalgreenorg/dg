@@ -42,7 +42,7 @@ public class Partners extends BaseServlet{
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						PartnersData partnersData = new PartnersData();
-						List partners = partnersData.getPartners(results);
+						List partners = partnersData.getPartnersOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
@@ -66,7 +66,7 @@ public class Partners extends BaseServlet{
 				public void offlineSuccessCallback(Object results) {
 					if((Boolean)results) {
 						PartnersData partnerData = new PartnersData();
-						List partners = partnerData.getPartners();
+						List partners = partnerData.getPartnersOffline();
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
@@ -88,7 +88,7 @@ public class Partners extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							PartnersData partnersData = new PartnersData();
-							List partners = partnersData.getPartners(results);
+							List partners = partnersData.getPartnersOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", partners);
 							getServlet().redirectTo(new Partners(requestContext));						
@@ -111,7 +111,7 @@ public class Partners extends BaseServlet{
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							PartnersData partnersData = new PartnersData();
-							List partners = partnersData.getPartners();
+							List partners = partnersData.getPartnersOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", partners);
 							getServlet().redirectTo(new Partners(requestContext));

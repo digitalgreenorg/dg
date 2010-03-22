@@ -76,11 +76,4 @@ public class RequestContext {
 		return "http://" + SERVER_HOST + "/";
 	}
 	
-	public void setDefaultLoggedInUserArg(String username) {
-		this.args.put(RequestContext.DEFAULT_USERNAME_ARG_NAME, username);
-	}
-	
-	public String getDefaultLoggedInUserArg() {
-		return (String)this.args.get(RequestContext.DEFAULT_USERNAME_ARG_NAME);
-	}
 }

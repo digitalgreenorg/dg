@@ -131,11 +131,11 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
-	public List getRegions(String json){
+	public List getRegionsOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getRegions(){
+	public List getRegionsOffline(){
 		BaseData.dbOpen();
 		List regions = new ArrayList();
 		this.select(listRegions);

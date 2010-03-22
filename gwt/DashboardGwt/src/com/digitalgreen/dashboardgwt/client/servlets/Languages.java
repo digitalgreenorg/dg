@@ -45,7 +45,7 @@ public class Languages extends BaseServlet{
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						LanguagesData languagesData = new LanguagesData();
-						List languages = languagesData.getLanguages(results);
+						List languages = languagesData.getLanguagesOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Language successfully saved");
 						requestContext.getArgs().put("listing", languages);
@@ -69,7 +69,7 @@ public class Languages extends BaseServlet{
 				public void offlineSuccessCallback(Object results) {
 					if((Boolean)results) {
 						LanguagesData languageData = new LanguagesData();
-						List languages = languageData.getLanguages();
+						List languages = languageData.getLanguagesOffline();
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Language successfully saved");
 						requestContext.getArgs().put("listing", languages);
@@ -91,7 +91,7 @@ public class Languages extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							LanguagesData languagesData = new LanguagesData();
-							List languages = languagesData.getLanguages(results);
+							List languages = languagesData.getLanguagesOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", languages);
 							getServlet().redirectTo(new Languages(requestContext ));						
@@ -114,7 +114,7 @@ public class Languages extends BaseServlet{
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							LanguagesData languagesData = new LanguagesData();
-							List languages = languagesData.getLanguages();
+							List languages = languagesData.getLanguagesOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", languages);
 							getServlet().redirectTo(new Languages(requestContext));

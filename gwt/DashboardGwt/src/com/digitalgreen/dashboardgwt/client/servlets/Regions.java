@@ -40,7 +40,7 @@ public class Regions extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							RegionsData regiondata = new RegionsData();
-							List regions = regiondata.getRegions(results);
+							List regions = regiondata.getRegionsOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
@@ -64,7 +64,7 @@ public class Regions extends BaseServlet {
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							RegionsData regiondata = new RegionsData();
-							List regions = regiondata.getRegions();
+							List regions = regiondata.getRegionsOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
@@ -89,7 +89,7 @@ public class Regions extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								RegionsData regiondata = new RegionsData();
-								List regions = regiondata.getRegions(results);
+								List regions = regiondata.getRegionsOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", regions);
 								getServlet().redirectTo(new Regions(requestContext ));						
@@ -112,7 +112,7 @@ public class Regions extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								RegionsData regiondata = new RegionsData();
-								List regions = regiondata.getRegions();
+								List regions = regiondata.getRegionsOffline();
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", regions);
 								getServlet().redirectTo(new Regions(requestContext ));

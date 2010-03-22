@@ -38,9 +38,8 @@ public class FieldOfficers extends BaseServlet{
 				FieldOfficersData fieldOfficerData = new FieldOfficersData(new OnlineOfflineCallbacks(this){
 					public void onlineSuccessCallback(String results){
 						if(results != null){
-							Window.alert("in onlineSuccessCallback");
 							FieldOfficersData fieldofficersData = new FieldOfficersData();
-							List fieldOfficers = fieldofficersData.getFieldOfficers(results);
+							List fieldOfficers = fieldofficersData.getFieldOfficersOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Field Officer successfully saved.");
 							requestContext.getArgs().put("listing", fieldOfficers);
@@ -65,7 +64,7 @@ public class FieldOfficers extends BaseServlet{
 						// If login success in the offline case		
 						if((Boolean)results) {
 							FieldOfficersData fieldOfficerData = new FieldOfficersData();
-							List fieldOfficers = fieldOfficerData.getFieldOfficers();
+							List fieldOfficers = fieldOfficerData.getFieldOfficersOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Field Officer successfully saved.");
 							requestContext.getArgs().put("listing", fieldOfficers);
@@ -87,7 +86,7 @@ public class FieldOfficers extends BaseServlet{
 						public void onlineSuccessCallback(String results){
 							if(results != null){
 								FieldOfficersData fieldofficerdata = new FieldOfficersData();
-								List fieldOfficers = fieldofficerdata.getFieldOfficers(results);
+								List fieldOfficers = fieldofficerdata.getFieldOfficersOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", fieldOfficers);
 								getServlet().redirectTo(new FieldOfficers(requestContext));
@@ -112,7 +111,7 @@ public class FieldOfficers extends BaseServlet{
 						public void offlineSuccessCallback(Object results){
 							if((Boolean)results){
 								FieldOfficersData fieldofficerdata = new FieldOfficersData();
-								List fieldOfficers = fieldofficerdata.getFieldOfficers();
+								List fieldOfficers = fieldofficerdata.getFieldOfficersOffline();
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", fieldOfficers);
 								getServlet().redirectTo(new FieldOfficers(requestContext));
