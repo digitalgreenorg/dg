@@ -62,6 +62,12 @@ _new_template = '';
 var is_edit,is_inited = false;
 
 jQuery(function($) {
+	$('body').append('<div id="box"></div><div id="screen"></div>');
+	$(window).resize(function(){
+		$('#box').css("display") == 'block'?showStatus(null):"";
+	});
+	showStatus("Intializing the page. Please wait.");
+	
 	vil_id = $("#id_village").val()
 	if(vil_id>0) {
 	
@@ -97,6 +103,7 @@ jQuery(function($) {
 					_new_template = (template).replace(/--per_list--/g, obj.per_list);			
 					initialize_add_screening();
 					
+					hideStatus();
 				}
 		});
 	}
@@ -109,16 +116,27 @@ jQuery(function($) {
 				data:{mode:0},
 				success: function(obj) {
 				template = (template).replace(/--prac_list--/g, obj.prac_list);
-				_prac_list = obj.prac_list;
+				_prac_list = obj.prac_list;				
 				}
 		});
 		//Disabling 'Person Group' & 'Animator Widgets' & showing msg 'Select village to enable' besides
 		$("#id_farmer_groups_targeted,#id_animator").attr('disabled', 'disabled');
 		$(".form-row.farmer_groups_targeted div, .form-row.animator div").append('<text class="error_msg" style="font-size:20px;float:center; margin-left:50px;margin-top:70px;">Select Village to Enable</text>');
+		hideStatus();
 	}
 
 	
 });
+function  showStatus(msg){
+	$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
+	$('#box').css({'display': 'block'});
+	if(msg != null)
+		$('#box').html(msg);	
+}
+function hideStatus() {
+	$('#box').css('display', 'none');
+	$('#screen').css('display', 'none');
+}
 
 //Function to clear section of Person-Meeting-Attendance
 function clear_table(tab) {
@@ -290,6 +308,7 @@ function update_id_fields(row, new_position)
 function filter()
 {
 	if($("#id_village").val()>0){
+		showStatus("Loading Person Groups & Animators.");
 		$.ajax({ type: "GET", 
 				dataType: 'json',
 				url: "/feeds/person_pract/", 
@@ -307,7 +326,9 @@ function filter()
 						$("#id_farmer_groups_targeted,#id_animator").removeAttr("disabled");
 						$(".error_msg").remove();
 						initialize_add_screening();
+						
 					}
+					hideStatus();
 				}
 		});
 	}	
@@ -334,6 +355,7 @@ function update_animators(j){
 //Function called on Person Selection
 function filter_person() {	
 	
+	showStatus("Loading persons..");
 	//Get the Value of 'Initial-forms' and Person Group selected.
 	grps = $('#id_farmer_groups_targeted').val();
 	init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
@@ -363,6 +385,7 @@ function filter_person() {
 					    table.append(new_html);			
 					  	//Set Total forms
 					 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
+					 	hideStatus();
 					 }
 			 
 		 });

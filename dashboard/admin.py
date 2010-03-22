@@ -146,7 +146,7 @@ class ScreeningAdmin(admin.ModelAdmin):
 	)
 
 	css = {
-		'all':('/media/css/dynamic_inlines_with_sort.css',)
+		'all':('/media/css/screening_page.css',)
 	}
    	
 class ReviewerInline(generic.GenericTabularInline):
