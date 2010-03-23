@@ -1,3 +1,6 @@
+element.style		{-moz-border-radius: 10px 10px 10px 10px;}
+
+#navigation			{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:200px;}
  
 #analytics 					{ margin-top:5px; float:none; margin-left:10px; width:899px; border-style:solid; border-color:#add540; border-width:1px; }
 
@@ -18,6 +21,8 @@
 /* Analytics Stats total */
 
 #table1				{ margin-left:10px; margin-top:10px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
+
+
 #table1div1			{ margin-left:5px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
 #table1div2			{ margin-left:0px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
 #table1div3			{ margin-left:0px; width:298px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
@@ -55,3 +60,35 @@
 
 
 .video_footer 				{ width:450px;}
+<!-- navigation -->
+
+element.style		{-moz-border-radius: 10px 10px 10px 10px;}
+
+#navigation			{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:192px; font-color:#586835; font-family:calibri;}
+
+#navigation_1		{background-color:#defaa9; border:0px; margin-left:2px; margin-top:0px; width:171px; min-height: 180px;} 
+
+.nav_1				{margin-top:5px; font-size:18px; padding-left:4px;}
+
+#nav_0				{margin-top:5px; color:#efb11c; font-family:"Times New Roman"; font-size:16px; font-weight:bold; padding-left:4px;}
+
+a:link {
+COLOR: #0000FF;
+TEXT-DECORATION: none;
+}
+
+a:visited {
+COLOR: #586835;
+TEXT-DECORATION: none;
+}
+a:hover {
+COLOR: #efb11c;
+TEXT-DECORATION: underline;
+}
+
+a:active {
+COLOR: #006600;
+TEXT-DECORATION: underline;
+}
+
+

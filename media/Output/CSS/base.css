@@ -1,7 +1,7 @@
 #mainbody						{ background-color:#dfedc5}
 
 /* Center class */
-#tablegrid						{ margin-left:15%; margin-top:2px}
+#tablegrid						{ margin-top:2px}
 #default						{ margin-top:0px; margin-left:0%; width: 920px; background-color:#ffffff; border-color:#add540; border-style:solid; border-width:1px ;float:none}
 #defaultfooter					{ margin-top:0px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultfooterbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
 

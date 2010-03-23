@@ -10,7 +10,7 @@
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css">
-              
+     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/navigation.css">         
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
     <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
@@ -205,8 +205,24 @@
 </head>
 
 <body id='mainbody' onload='Default()'>
+<table>
+	<tr>
+		<td valign="top">
+		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
+		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
+				<a href="">Overview</font> </a>
+			</div>
+			<div class="nav_1" style="margin-left:5px;">
+				<a href=""> Video analytics </a>
+			</div>
+		</div>
+		</td>
+	<td>	
  <div id='tablegrid'> 	
-	<!-- <div id='defaultheader'> </div>  -->	
+	<!-- <div id='defaultheader'> </div>  -->
+	
+
+	
 	<div id='default'>		
 		
 		<div id='gridfooter'>
@@ -331,7 +347,7 @@
 				<td id="graphtabletd">					
 						<div id="graphdiv1">
 							<div id="graphdiv1title">
-								<div id="graphdiv1titledesc" >	Geographic distribution of Videos	</div>
+								<div id="graphdiv1titledesc" > Videos per Geography </div>
 							</div>
 							<div class="graphdiv1desc" id="flash_area_geogwise_pie">								
 							</div>												
@@ -401,10 +417,10 @@
 				</td>
 			</tr>			
 		</table>
-		    	    	
+				    	    	
     </div>	<!-- default-->				
 </div>  <!-- tablegrid-->
- 
+ </td></tr></table>
 <script type="text/javascript">
 		// <![CDATA[		
 	
