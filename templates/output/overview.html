@@ -23,10 +23,11 @@
 	<script type="text/javascript">   
 	    
 	    
-	    function Default(){ 
-	        
+	function Default(){ 
+	
 			// for default from - date 
 	        var startdate = '{{start_date}}';
+			//alert(startdate);
 	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
 	        var sdyear = startdate.substring(0, sd); // get the year for the date1
 	        var sd1 = startdate.substring(sd+1, startdate.length);
@@ -47,8 +48,7 @@
 	        if(sdmonth=="11"){ sdmonth="November"; }
 	        if(sdmonth=="12"){ sdmonth="December"; }        
 	        
-			
-	        var newdate = new Date();
+			var newdate = new Date();
 	        var currentmonth = newdate.getMonth();
 	        var month_name=new Array(12);
             month_name[0]="January"
@@ -115,31 +115,29 @@
 	            var date2str1 = date2str1.substring(d22+1, date2.length);
 	            var d23= date2str1.length;
 	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
-	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1day + "," + " " + date1year;
-	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2day + "," + " " + date2year;
+	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1year + "," + " " + date1day;
+	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2year + "," + " " + date2day;
 			{% else %}
 				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; //datepicker2
 				//document.getElementById('datepicker1').innerHTML = '{{start_date}}'; //datepicker1
 				document.getElementById('datepicker1').innerHTML = sdmonth + " " + sddate + "," + " " + sdyear; // datepicker1
 			{% endif %}
-			
-            	    
-	    }	
+	}
 	
-	    function Apply(){
-	    
-	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
-	        var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
-	        if(date1.length==40 || date2.length==40){	 
-	           document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
-	             	                        
-	        }
-	        else{
-	            
-				window.location.href = '/output/overview/{{flash_geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
-					            	           
-	        } // end else
-	    } // end Apply function    
+	
+	function Apply(){
+		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+		var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
+		if(date1.length==40 || date2.length==40){	 
+		   document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
+										
+		}
+		else{
+			
+			window.location.href = '/output/overview/{{flash_geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
+										   
+		} // end else
+	} // end Apply function    
 	
 	
 	function Reset() {
@@ -149,68 +147,62 @@
 	           //alert("hi"); 
 	           document.getElementById('inlinedatepicker1').innerHTML = "";
 	           document.getElementById('inlinedatepicker2').innerHTML = "";               	                        
-	        }   
+	        }
 	        
     }// end Reset function 
 	
 	//<!-- For Search's drop-down list -->
-	function Inint_AJAX() {
-        try { return new ActiveXObject("Msxml2.XMLHTTP");  } catch(e) {} //IE
-        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {} //IE
-        try { return new XMLHttpRequest();          } catch(e) {} //Native Javascript
-        alert("XMLHttpRequest not supported");
-        return null;
-        };
-       
+	      
 	function regionSelect() {
 		url = "./?state="+$("#stateId").val(){% if from_date and to_date %}+"&from_date={{from_date}}&to_date={{to_date}}"{%endif%};
-		if(!($("#districtId").attr("disabled"))) {
+		if(!($("#districtId").attr("disabled")))
 			url += "&district="+$("#districtId").val();
-		}
-		if(!($("#blockId").attr("disabled"))) {
+		if(!($("#blockId").attr("disabled"))) 
 			url += "&block="+$("#blockId").val();
-		}
-		if(!($("#villageId").attr("disabled"))) {
+		if(!($("#villageId").attr("disabled")))
 			url += "&village="+$("#villageId").val();
-		}
 			
 		window.location.href = url;
 	}
 	
     function dochange(src, val) {
-        var req = Inint_AJAX();
-        req.onreadystatechange = function () {
-         if (req.readyState==4) {
-              if (req.status==200) {
-              		elemId = src+"Id"
+		$.ajax({ type: "GET", 
+				url: "/output/dropdownval/?geog="+src+"&id="+val,
+				success: function(html) {                    
               		var flag = false;
 					$(".select").each(function() {
-						if(flag == true){
-							this.value = -1
-							this.disabled = true;
-						}
-						if (this.name == src) {
+						if(flag == true)
+							$(this).val(-1).attr('disabled','disabled');
+						if (this.name == src)
 							flag = true;
-						}
 					
 					});
-				   document.getElementById(elemId).disabled = false;
-                   document.getElementById(elemId).innerHTML=req.responseText; //retuen value
+				   $("#"+src+"Id").html(html).removeAttr('disabled');                   
               }
-         }
-        };
-        req.open("GET", "/output/dropdownval/?geog="+src+"&id="+val); //make connection
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=iso-8859-1"); // set Header
-        req.send(null); //send value
+         });
         }
-       
-        window.onLoad=dochange('state', -1);         // value in first dropdown      
+               
+    //window.onLoad=dochange('state', -1);         // value in first dropdown      
 	       
 	</script>
 
 </head>
 
 <body id='mainbody' onload='Default()'>
+<table>
+	<tr>
+		<td valign="top">
+		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
+		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
+				<a href="/output/overview/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
+			</div>
+			<div class="nav_1" style="margin-left:5px;">
+				<a href="/output/video/module/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video analytics </a>
+			</div>
+		</div>
+		</td>
+	<td>	
+
  <div id='tablegrid'> 	
 	<!-- <div id='defaultheader'> </div>  -->	
 	<div id='default'>		
@@ -285,22 +277,40 @@
 			
 			    <div class='searchbody1' id='state'>
 				    <select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					    <option value='-1'>Select State</option>
+					    <option value='-1' {% ifequal geog 'country' %}selected="selected"{% endifequal %}>Select State</option>
+						{% for key,item in sel_val.0.items %}
+						<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
 				    </select>				
 				</div>
 				<div class='searchbody1' id='district'>
-				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
+				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not sel_val.1 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select District</option>
+						{%if sel_val.1 %}
+						{% for key,item in sel_val.1.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>	
 				</div>
 				<div class='searchbody1' id='block'>
-				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not sel_val.2 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select Block</option>
+						{%if sel_val.2 %}
+						{% for key,item in sel_val.2.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>				
 				</div>			
 				<div class='searchbody1' id='village'>
-				    <select class='select' name='village' id = 'villageId'>
+				    <select class='select' name='village' id = 'villageId'  {% if not sel_val.3 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select Village</option>
+						{%if sel_val.3 %}
+						{% for key,item in sel_val.3.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>					
 				</div>
 				<div id='searchbody5'>
@@ -311,24 +321,34 @@
 		
 		<div id='table1'>
 		    <div id='table1div1'>
-		        <div id='table1desc'>National Video Productions</div> 
+		        <div id='table1desc'>National Total Video Productions</div> 
 		        <div id='table1val'> {{country_data.tot_vid}}  </div>
 		        
 		    </div>
 		    
 		    <div id='table1div2'>
-		        <div id='table1desc'>National Disseminations</div> 
+		        <div id='table1desc'>National Total Disseminations</div> 
 		        <div id='table1val'> {{country_data.tot_scr}}  </div>
 		    </div>
 		    
 		    <div id='table1div3'>
-		        <div id='table1desc'>National Adoptions</div> 
+		        <div id='table1desc'>National Total Adoptions</div> 
 		        <div id='table1val'> {{country_data.tot_ado}}  </div>
 		    </div>
 		    
 		    <div id='table1div4'>
-		        <div id='table1desc'>National Agricultural Practices </div> 
+		        <div id='table1desc'>National Total Agricultural Practices </div> 
 		        <div id='table1val'> {{country_data.tot_pra}}  </div>
+		    </div>
+			
+			<div id='table1div5'>
+		        <div id='table1desc'>National Total Person Groups </div> 
+		        <div id='table1val'> {{country_data.tot_pg}}  </div>
+		    </div>
+			 
+			<div id='table1div5'>
+		        <div id='table1desc'>National Total Villages </div>
+		        <div id='table1val'> {{country_data.tot_vil}}  </div>
 		    </div>
 			
 			 			
@@ -496,13 +516,13 @@
 		    
 			
 			<div id='baselinegraphtitle'>
-			    Baseline Graph View
+			    Cumulative Graph View
 			</div>
 			<div id='baselinegraphtitleimg'>
 			    
 			</div>			    			    			
 			<div id='baselinegraph'>
-				< click me !>
+				<br/><!--< click me !>-->
 			</div>
 			<div id='baselinegraph1'>					
 			        <div id="flashcontent">
@@ -511,7 +531,7 @@
 			</div>	
     </div>  
 </div>   
- 
+ </td></tr></table>
 <!-- amline script--> 
 	 <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
 	 

@@ -60,35 +60,6 @@ element.style		{-moz-border-radius: 10px 10px 10px 10px;}
 
 
 .video_footer 				{ width:450px;}
-<!-- navigation -->
 
-element.style		{-moz-border-radius: 10px 10px 10px 10px;}
-
-#navigation			{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:192px; font-color:#586835; font-family:calibri;}
-
-#navigation_1		{background-color:#defaa9; border:0px; margin-left:2px; margin-top:0px; width:171px; min-height: 180px;} 
-
-.nav_1				{margin-top:5px; font-size:18px; padding-left:4px;}
-
-#nav_0				{margin-top:5px; color:#efb11c; font-family:"Times New Roman"; font-size:16px; font-weight:bold; padding-left:4px;}
-
-a:link {
-COLOR: #0000FF;
-TEXT-DECORATION: none;
-}
-
-a:visited {
-COLOR: #586835;
-TEXT-DECORATION: none;
-}
-a:hover {
-COLOR: #efb11c;
-TEXT-DECORATION: underline;
-}
-
-a:active {
-COLOR: #006600;
-TEXT-DECORATION: underline;
-}
 
 

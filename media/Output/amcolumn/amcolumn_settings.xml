@@ -1,219 +1,82 @@
-<?xml version="1.0" encoding="iso-8859-1"?><settings>
-<data_type>csv</data_type>
-<font>Tahoma</font>
-<text_size>8</text_size>
-<depth>15</depth>
-<angle>30</angle>
+<?xml version="1.0" encoding="iso-8859-1"?>
 
-<column>
-<width>55</width>
-<spacing>0</spacing>
-<grow_time>1</grow_time>
-<grow_effect>strong</grow_effect>
+<settings>
+	<data_type>csv</data_type>
+	<depth>15</depth>
+	<angle>30</angle>
 
-</column><settings>
-  <font>Tahoma</font>
-  <plot_area>
-    <margins>
-      <left>40</left>
-      <right>20</right>
-    </margins>
-  </plot_area>
-  <grid>
-    <category>
-      <alpha>10</alpha>
-      <dashed>1</dashed>
-    </category>
-    <value>
-      <alpha>10</alpha>
-      <dashed>1</dashed>
-    </value>
-  </grid>
-  <axes>
-    <category>
-      <width>1</width>
-      <color>E7E7E7</color>
-    </category>
-    <value>
-      <width>1</width>
-      <color>E7E7E7</color>
-    </value>
-  </axes>
-  
-   <!--<values>
-    <category>
-      <color></color>
-      <text_size>12</text_size>
-    </category>
-    <value>
-      <color></color>
-      <text_size>12</text_size>
-      <min>0</min>
-    </value>
-  </values>-->
-  
-  <values>
-    <category>
-      <color>FF00FF</color>
-      <text_size>10</text_size>
-    </category>
-    <value>
-      <color>FF00FF</color>
-      <text_size>13</text_size>
-      <min>0</min>
-    </value>
-  </values>
-  
-  <!--<values>
-  
-    <category>
-      <color>999999</color>
-    </category>
-    <value>
-      <min>0</min>
-    </value>
-  </values> -->
-  
-  <balloon>
-    <alpha>80</alpha>
-    <text_color>000000</text_color>
-    <corner_radius>4</corner_radius>
-    <border_width>3</border_width>
-    <border_color>000000</border_color>
-    <border_alpha>50</border_alpha>
-  </balloon>
-  <legend>
-    <border_color>E7E7E7</border_color>
-    <border_alpha>100</border_alpha>
-    <margins>5</margins>
-    <align>center</align>
-  </legend>
-  <depth>15</depth>
-  <column>
-    <width>55</width>
-    <spacing>0</spacing>
-    <grow_time>1</grow_time>
-    <grow_effect>strong</grow_effect>
-  </column>
-     
+	<column>
+		<width>55</width>
+		<spacing>0</spacing>
+		<grow_time>1</grow_time>
+		<grow_effect>strong</grow_effect>
+	</column>
+	<plot_area>
+		<margins>
+		  <left>40</left>
+		  <right>20</right>
+		</margins>
+	  </plot_area>
+	<axes>
+		<category>
+		  <width>1</width>
+		  <color>E7E7E7</color>
+		</category>
+		<value>
+		  <width>1</width>
+		  <color>E7E7E7</color>
+		</value>
+	  </axes> 
+	<grid>
+		<category>
+			<alpha>10</alpha>
+			<dashed>true</dashed>
+		</category>
 
-<labels>
-    <label lid="0">
-      <text><![CDATA[<font face="Times new Roman">No. of  Videos</font>
-  <b/>
-</text>]]></text>
-      <x>-25</x>
-      <y>200</y>
-      <width>0</width>
-      <text_color>00CC33</text_color>
-      <text_size>17</text_size>
-      <rotate>1</rotate>
-      <align>center</align>
-    </label>
-  </labels>
-  </settings>
-<plot_area>
-
-<margins>
-<left>40</left>
-<right>20</right>
-</margins>
-</plot_area>
-
-<grid>
-
-<category>
-<alpha>10</alpha>
-<dashed>true</dashed>
-</category>
-
-<value>
-<alpha>10</alpha>
-<dashed>true</dashed>
-</value>
-</grid>
-
-<values>
-    <category>
-      <color>999999</color>
-      <text_size>10</text_size>
-    </category>
-    <value>
-      <color>999999</color>
-      <text_size>10</text_size>
-      <min>0</min>
-    </value>
-  </values>
-  
-
-<!--<values>
-
-<category>
-<color>999999</color>
-</category>
-
-<value>
-<min>0</min>
-</value>
-</values>-->
-
-<axes>
-
-<category>
-<color>E7E7E7</color>
-<width>1</width>
-</category>
-
-<value>
-<color>#E7E7E7</color>
-<width>1</width>
-</value>
-</axes>
-
-<balloon>
-<text_color>000000</text_color>
-<corner_radius>4</corner_radius>
-<border_width>3</border_width>
-<border_alpha>50</border_alpha>
-<border_color>#000000</border_color>
-<alpha>80</alpha>
-</balloon>
-
-<labels>
-
-<label>
-<x>0</x>
-<y>7</y>
-<text_color>000000</text_color>
-<text_size>13</text_size>
-<align>center</align>
-
-<text>
-        <b></b>
- </text>
-</label>
-<label lid="0">
-      <text><![CDATA[<font face="Times new Roman">No. of Videos</font>
-  <b/>
-</text>]]></text>
-      <x>-2</x>
-      <y>160</y>
-      <width>0</width>
-      <text_color>333333</text_color>
-      <text_size>15</text_size>
-      <rotate>1</rotate>
-      <align>center</align>
-    </label>
-</labels>
-
-<legend>
-<enabled/>
-<align>center</align>
-<border_alpha>100</border_alpha>
-<border_color>E7E7E7</border_color>
-<text_size>12</text_size>
-<margins>5</margins>
-</legend>
-
-
+		<value>
+			<alpha>10</alpha>
+			<dashed>true</dashed>
+		</value>
+	</grid>
+	<values>
+		<category>
+		  <color>999999</color>
+		  <text_size>10</text_size>
+		</category>
+		<value>
+		  <color>999999</color>
+		  <text_size>10</text_size>
+		  <min>0</min>
+		</value>
+	</values>
+	<balloon>
+		<text_color>000000</text_color>
+		<corner_radius>4</corner_radius>
+		<border_width>3</border_width>
+		<border_alpha>50</border_alpha>
+		<border_color>#000000</border_color>
+		<alpha>80</alpha>
+	</balloon>
+	<labels>
+		<label lid="0">
+			  <text><![CDATA[<font face="Times new Roman">No. of Videos</font>
+		  <b/>
+		</text>]]></text>
+			  <x>-2</x>
+			  <y>160</y>
+			  <width>0</width>
+			  <text_color>333333</text_color>
+			  <text_size>15</text_size>
+			  <rotate>1</rotate>
+			  <align>center</align>
+		</label>
+	</labels>
+	<legend>
+		<enabled/>
+		<align>center</align>
+		<border_alpha>100</border_alpha>
+		<border_color>E7E7E7</border_color>
+		<text_size>12</text_size>
+		<margins>5</margins>
+	</legend>
 </settings>

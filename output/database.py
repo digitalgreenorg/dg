@@ -15,6 +15,9 @@ def run_query(query_string, *query_args):
         return_list.append(dict(zip(col_names,row)))
     return return_list
 
+#this returns 
+#{ dict_key : (tuple of remaing columns), ...}
+
 def run_query_dict(query_string, dict_key, *query_args):
     return_list = {}
     cursor = connection.cursor()
@@ -25,6 +28,22 @@ def run_query_dict(query_string, dict_key, *query_args):
         raise Exception, dict_key+" is not the first column in returned query's column list"
     for row in rows:
         return_list[row[0]] = row[1:]
+        
+    return return_list
+
+#this returns 
+#{ dict_key : [list of remaing columns], ...}
+
+def run_query_dict_list(query_string, dict_key, *query_args):
+    return_list = {}
+    cursor = connection.cursor()
+    cursor.execute(query_string,query_args)
+    col_names = [desc[0] for desc in cursor.description]
+    rows = cursor.fetchall()
+    if(dict_key != col_names[0]):
+        raise Exception, dict_key+" is not the first column in returned query's column list"
+    for row in rows:
+        return_list[row[0]] = list(row[1:])
         
     return return_list
 
@@ -110,6 +129,28 @@ WHERE {{geog_parent}}_id = {{id}}
 {% endifnotequal %}
 ORDER BY name
 """
+
+#Query for extra data for country in Overview page
+def overview_nation_pg_vil_total():
+    return """SELECT * FROM
+          (SELECT COUNT(*) AS tot_vil FROM VILLAGE) t1,
+          (SELECT COUNT(*) AS tot_pg FROM PERSON_GROUPS) t2"""
+
+
+#Query for breadcrumbs
+def breadcrumbs_options_sql(geog,id):
+    geog_list = ['village','block','district','state'];
+    
+    if(geog!='state'):
+        par_geog = geog_list[geog_list.index(geog)+1];        
+        return construct_query("""SELECT {{geog|first}}1.id ,{{geog|first}}1.{{geog|upper}}_NAME, {{geog|first}}1.{{par_geog}}_id
+        FROM {{geog}} {{geog|first}}1, {{geog}} {{geog|first}}2
+        WHERE {{geog|first}}1.{{par_geog}}_id = {{geog|first}}2.{{par_geog}}_id
+            and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
+    else:
+        return 'SELECT id, STATE_NAME as name FROM STATE'
+    
+
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)
@@ -660,7 +701,7 @@ def video_tot_scr(**args):
 
 def video_avg_time(**args):
     sql = []
-    sql.append(r' SELECT DISTINCT VID.id, DATEDIFF(VIDEO_PRODUCTION_END_DATE,VIDEO_PRODUCTION_START_DATE) as dif FROM VIDEO VID, VILLAGE VIL')
+    sql.append(r' SELECT AVG(DATEDIFF(VIDEO_PRODUCTION_END_DATE ,VIDEO_PRODUCTION_START_DATE)+1) as avg FROM VIDEO VID, VILLAGE VIL')
     if 'geog' in args:
         if args['geog'] == 'state':
             sql.append(r',BLOCK B, DISTRICT D WHERE VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )

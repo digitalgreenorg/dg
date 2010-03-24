@@ -10,13 +10,15 @@
 #tableheaderright	{ background:url("/media/Output/Images/columnbgheader.png"); background-repeat:no-repeat; margin-left:101px; margin-top:0px; width:100px; height:45px; text-align:center; padding-top:25px; color:#FFFFFF; font-family:Calibri; font-size:15px; font-weight:bolder; float:none }
 
 
-#tablebody			{ margin-left:3%; margin-top:0px;}
+#tablebody			{ margin-lefrt:3%; margin-top:0px;}
 #table1				{ margin-left:10px; margin-top:10px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
 
-#table1div1			{ margin-left:5px; width:175px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
-#table1div2			{ margin-left:0px; width:281px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div3			{ margin-left:0px; width:140px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div4			{ margin-left:0px; width:280px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div1			{ margin-left:5px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
+#table1div2			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div3			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div4			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div5			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div6			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
 #table1desc			{ padding-left:5px; color:#465420; font-family:Calibri; font-size:15px; font-weight:normal; }
 #table1val			{ padding-left:5px; color:#efb11c; font-family:Times New Roman; font-size:25px; font-weight:bold; }
 
@@ -56,7 +58,7 @@ a#desclink:hover	{ text-decoration:underline; color:#586835}
 
 #table2td1			{ width:143px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; text-align:center}
 #table2td1 a		{ text-decoration:none; color:#000000; font-family:Calibri; font-size:12px; }
-#table2td1 a:hover	{ text-decoration:none; color:#405c04; font-family:Calibri; font-size:12px; }
+#table2td1 a:hover	{ text-decoration:underline; color:#efb11c }
 
 	
 #baselinegraph					{ margin-top:40px; margin-left:10px; width:899px; height:20px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}

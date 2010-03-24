@@ -131,76 +131,63 @@
             	    
 	    }	
 			
-		//<!-- For Search's drop-down list -->
+   	
 	
-	function Inint_AJAX() {
-        try { return new ActiveXObject("Msxml2.XMLHTTP");  } catch(e) {} //IE
-        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch(e) {} //IE
-        try { return new XMLHttpRequest();          } catch(e) {} //Native Javascript
-        alert("XMLHttpRequest not supported");
-        return null;
-        };
-       
+	function Apply(){
+	
+		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+		var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
+		if(date1.length==40 || date2.length==40){	 
+		   document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
+										
+		}
+		else{
+			
+			window.location.href = '/output/video/module/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
+		} // end else
+
+	}
+	function Reset() {
+	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
+	        var date2 = document.getElementById('inlinedatepicker1').innerHTML;
+	        if(date1.length!=null || date2.length!=null){	
+	           //alert("hi"); 
+	           document.getElementById('inlinedatepicker1').innerHTML = "";
+	           document.getElementById('inlinedatepicker2').innerHTML = "";               	                        
+	        }
+	        
+    }// end Reset function 	
+		
+		//<!-- For Search's drop-down list -->
+	      
 	function regionSelect() {
 		url = "./?state="+$("#stateId").val(){% if from_date and to_date %}+"&from_date={{from_date}}&to_date={{to_date}}"{%endif%};
-		if(!($("#districtId").attr("disabled"))) {
+		if(!($("#districtId").attr("disabled")))
 			url += "&district="+$("#districtId").val();
-		}
-		if(!($("#blockId").attr("disabled"))) {
+		if(!($("#blockId").attr("disabled"))) 
 			url += "&block="+$("#blockId").val();
-		}
-		if(!($("#villageId").attr("disabled"))) {
+		if(!($("#villageId").attr("disabled")))
 			url += "&village="+$("#villageId").val();
-		}
 			
 		window.location.href = url;
 	}
 	
-	
-	    function Apply(){
-	    
-	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
-	        var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
-	        if(date1.length==40 || date2.length==40){	 
-	           document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
-	             	                        
-	        }
-	        else{
-	            
-				window.location.href = '/output/video/module/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
-	        } // end else
-
-	    }
-		
-		
-		 function dochange(src, val) {
-        var req = Inint_AJAX();
-        req.onreadystatechange = function () {
-         if (req.readyState==4) {
-              if (req.status==200) {
-              		elemId = src+"Id"
+    function dochange(src, val) {
+		$.ajax({ type: "GET", 
+				url: "/output/dropdownval/?geog="+src+"&id="+val,
+				success: function(html) {                    
               		var flag = false;
 					$(".select").each(function() {
-						if(flag == true){
-							this.value = -1
-							this.disabled = true;
-						}
-						if (this.name == src) {
+						if(flag == true)
+							$(this).val(-1).attr('disabled','disabled');
+						if (this.name == src)
 							flag = true;
-						}
 					
 					});
-				   document.getElementById(elemId).disabled = false;
-                   document.getElementById(elemId).innerHTML=req.responseText; //retuen value
+				   $("#"+src+"Id").html(html).removeAttr('disabled');                   
               }
-         }
-        };
-        req.open("GET", "/output/dropdownval/?geog="+src+"&id="+val); //make connection
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=iso-8859-1"); // set Header
-        req.send(null); //send value
+         });
         }
-       
-        window.onLoad=dochange('state', -1);         // value in first dropdown
 	</script>
 </head>
 
@@ -210,10 +197,10 @@
 		<td valign="top">
 		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
 		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
-				<a href="">Overview</font> </a>
+				<a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
 			</div>
 			<div class="nav_1" style="margin-left:5px;">
-				<a href=""> Video analytics </a>
+				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video analytics </a>
 			</div>
 		</div>
 		</td>
@@ -295,31 +282,45 @@
 			
 			    <div class='searchbody1' id='state'>
 				    <select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					    <option value='-1'>Select State</option>
+					    <option value='-1' {% ifequal geog 'country' %}selected="selected"{% endifequal %}>Select State</option>
+						{% for key,item in sel_val.0.items %}
+						<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
 				    </select>				
 				</div>
-
 				<div class='searchbody1' id='district'>
-				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)">
+				    <select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not sel_val.1 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select District</option>
+						{%if sel_val.1 %}
+						{% for key,item in sel_val.1.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>	
 				</div>
-
 				<div class='searchbody1' id='block'>
-				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+				    <select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not sel_val.2 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select Block</option>
+						{%if sel_val.2 %}
+						{% for key,item in sel_val.2.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>				
 				</div>			
-
 				<div class='searchbody1' id='village'>
-				    <select class='select' name='village' id = 'villageId'>
+				    <select class='select' name='village' id = 'villageId'  {% if not sel_val.3 %}disabled='disabled' {% endif %}>
 					    <option value='-1'>Select Village</option>
+						{%if sel_val.3 %}
+						{% for key,item in sel_val.3.items %}
+						<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+						{%endfor%}
+						{%endif%}
 				    </select>					
 				</div>
-
 				<div id='searchbody5'>
 					<input id='Submit1' type='submit' onclick="regionSelect()" value="GO">
-				</div> 						
+				</div> 									
 		    </div> <!-- search level-->
 	    </div>	<!-- searchbody-->		    
 	    
@@ -452,18 +453,20 @@
 	var additional_chart_settings = '';
 
 	{% if from_date and to_date %}
+		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}", async: false }).responseText;
+	{% else %}
+		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
+	{% endif %}
+	if(additional_chart_settings.length > 0)
+		monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+		
+	{% if from_date and to_date %}
 		monthbar.addVariable("data_file", encodeURIComponent("/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		monthbar.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/");
 	{% endif %}
 
-	{% if from_date and to_date %}
-		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}", async: false }).responseText;
-	{% else %}
-		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
-	{% endif %}
-
-	monthbar.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+	
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
 
@@ -550,6 +553,8 @@
 		 }
 		}
 		function amGetZoom(chart_id, from, to, from_xid, to_xid){
+		  if(chart_id != 'video_line_chart')
+			return;			
 		  if(from_date==null)
 			from_date = from;
 		  if(to_date==null)
