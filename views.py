@@ -10,9 +10,8 @@ from django.template.loader import get_template
 from django.template import Context, Template
 from django.shortcuts import render_to_response
 from django.db import connection, transaction
-from dg.output.database import run_query 
+from dg.output.database import run_query, run_query_dict
 import datetime
-import re
 import json
 #import cjson
 from django.core import serializers
@@ -207,7 +206,8 @@ def login_view(request):
 	    user = auth.authenticate(username=username, password=password)
 	    if user is not None and user.is_active:
 	        # Correct password, and the user is marked "active"
-	        auth.login(request, user)
+	        #auth.login(request, user)
+	        request.session['username'] = user
 	        return HttpResponse("1")
 	    else:
 	        # Show an error page
@@ -237,114 +237,212 @@ def get_key_for_user(request):
 	else:
 		return HttpResponse("error")
 	
-	
-def save_region(request):
+def set_key_for_user(request):
+	if request.method =='POST':
+		user_id = run_query("Select id from auth_user where username = %s", request.POST.get('username', ''));
+		if len(user_id) > 0:
+			sql_query = "update user set id=%s where user_id =%s"
+			query_args = [request.POST.get('id', ''), user_id[0].get('id')]
+			cursor = connection.cursor()
+			cursor.execute(sql_query ,query_args)
+			transaction.commit_unless_managed()
+			return HttpResponse("synced")
+		else:
+			return HttpResponse("0")
+		
+		
+def save_region_online(request):
 	if request.method == 'POST':
-		#print request.POST
 		form = RegionForm(request.POST)
 		if form.is_valid():	
-			#print request.COOKIES["username"]
-			# This should redirect to show region page
+			#print request.session.get('username')
 			form.save()
-			#print "works"
-			#return HttpResponse("1")
-			return HttpResponseRedirect('/dashboard/getregions/')
+			return HttpResponseRedirect('/dashboard/getregionsonline/')
 		else:
-			#print "error"
-			return HttpResponse("0")	
+			return HttpResponse("0")
+	else:
+	   form = RegionForm()
+	   return HttpResponse(form)	
 		
-def get_regions(request):
+def get_regions_online(request):
 	if request.method == 'POST':
-		# This should handle the region DELETE request
-
-		# Now redirect back to ourselves as a GET to re-render the page
 		return redirect('region')
 	else:
 		regions = Region.objects.order_by("-id")
-		#regions = Region.objects.get(region_name="Beacons100")
-		print regions
 		json_subcat = serializers.serialize("json", regions)
 		return HttpResponse(json_subcat, mimetype="application/javascript")
-		#return render_to_response('regions.html', {'regions': regions})
+		
 	
-def save_fieldofficer(request):
+def save_region_offline(request):
+	if request.method == 'POST':
+		form = RegionForm(request.POST)
+		print request.POST
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+def save_state_online(request):
+	if request.method == 'POST':
+		print request.POST
+		form = StateForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getstatesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = StateForm()
+		return HttpResponse(form)
+	
+	
+def get_states_online(request):
+	if request.method == 'POST':
+		return redirect('states')
+	else:
+		states = State.objects.select_related('region').order_by("-id")
+		json_subcat = serializers.serialize("json", states,  relations=('region',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_state_offline(request):
+	if request.method == 'POST':
+		form = StateForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+def save_fieldofficer_online(request):
     if request.method == 'POST':
-    	print request.POST
         form = FieldOfficerForm(request.POST)
         if form.is_valid():
             form.save()
-            #print request.COOKIES["username"]
-            return HttpResponseRedirect('/dashboard/getfieldofficers/')
+            return HttpResponseRedirect('/dashboard/getfieldofficersonline/')
         else:
             return HttpResponse("0")
+    else:
+    	form = FieldOfficerForm()
+    	return HttpResponse(form);
 
-def get_fieldofficers(request):
+def get_fieldofficers_online(request):
     if request.method == 'POST':
         return redirect('fieldofficer')
     else:
         fieldofficers = FieldOfficer.objects.order_by("-id")
-        print fieldofficers
         json_subcat = serializers.serialize("json", fieldofficers)
         return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_fieldofficer_offline(request):
+	if request.method == 'POST':
+		form = FieldOfficerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")       
 
-def save_practice(request):
+def save_practice_online(request):
     if request.method == 'POST':
-    	print "save if : hi"
         form = PracticeForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getpractices/')
+            return HttpResponseRedirect('/dashboard/getpracticesonline/')
         else:
-    	    print "save else : hi"
             return HttpResponse("0")
+    else:
+    	form = PracticeForm()
+    	return HttpResponse(form);           
         
-def get_practices(request):
+def get_practices_online(request):
     if request.method == 'POST':
-    	#print "get if : hi"
         return redirect('practice')
     else:
-    	#print "get else : hi"
         practices = Practices.objects.order_by("-id")
-        #print practices
         json_subcat = serializers.serialize("json", practices)
-        #print "get else : after json"
         return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_practice_offline(request):
+	if request.method == 'POST':
+		form = PracticeForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")          
 
-def save_language(request):
+def save_language_online(request):
     if request.method == 'POST':
         form = LanguageForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getlanguages/')
+            return HttpResponseRedirect('/dashboard/getlanguagesonline/')
         else:
             return HttpResponse("0")
+    else:
+    	form = LanguageForm()
+    	return HttpResponse(form);           
+           
         
-def get_languages(request):
+def get_languages_online(request):
     if request.method == 'POST':
         return redirect('language')
     else:
         languages = Language.objects.order_by("-id")
-        print languages
         json_subcat = serializers.serialize("json", languages)
         return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_language_offline(request):
+	if request.method == 'POST':
+		form = LanguageForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")       
 
-def save_partner(request):
+def save_partner_online(request):
     if request.method == 'POST':
         form = PartnerForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getpartners/')
+            return HttpResponseRedirect('/dashboard/getpartnersonline/')
         else:
             return HttpResponse("0")
+    else:
+    	form = PartnerForm()
+    	return HttpResponse(form);            
         
-def get_partners(request):
+def get_partners_online(request):
     if request.method == 'POST':
         return redirect('partner')
     else:
-        partners = Partner.objects.order_by("-id")
-        print partners
+        partners = Partners.objects.order_by("-id")
         json_subcat = serializers.serialize("json", partners)
         return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_partner_offline(request):
+	if request.method == 'POST':
+		form = PartnerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")        
 
 def add_language(request):
 	if request.method == 'POST':

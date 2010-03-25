@@ -3,6 +3,10 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 
+class LanguageForm(ModelForm):
+        class Meta:
+                model = Language
+
 class RegionForm(ModelForm):
         class Meta:
                 model = Region
