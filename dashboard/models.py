@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-
+from django.contrib.auth.models import User
 
 # Variables
 GENDER_CHOICES = (
@@ -447,13 +447,9 @@ class Equipment(models.Model):
     equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True)
     class Meta:
         db_table = u'EQUIPMENT_ID'
-
-class UserRole(models.Model):
-    username = models.CharField(max_length=300, primary_key=True, unique='True')
-    password = models.CharField(max_length=500)
-    role = models.CharField(max_length=1,choices=ROLE)
-    
+     
 class UserPermission(models.Model):    
-    username = models.ForeignKey(UserRole)
+    username = models.ForeignKey(User)
+    role = models.CharField(max_length=1,choices=ROLE)
     region_operated = models.ForeignKey(Region)
     district_operated = models.ForeignKey(District)
