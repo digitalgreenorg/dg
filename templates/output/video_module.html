@@ -10,7 +10,7 @@
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css">
-     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/navigation.css">         
+            
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
     <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
@@ -28,111 +28,23 @@
 	<script type="text/javascript">
 	    
 
-		function Default(){
-		
-			// for default from - date 
-	        var startdate = '{{start_date}}';
-			//alert(startdate);
-	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
-	        var sdyear = startdate.substring(0, sd); // get the year for the date1
-	        var sd1 = startdate.substring(sd+1, startdate.length);
-	        var sd2= sd1.indexOf('-');
-	        var sdmonth = sd1.substring(0, sd2); // get the month for date1
-	        var sddate = sd1.substring(sd2+1, sd1.length);
-	        
-	        if(sdmonth=="01"){ sdmonth="January"; }
-	        if(sdmonth=="02"){ sdmonth="February"; }
-	        if(sdmonth=="03"){ sdmonth="March"; }
-	        if(sdmonth=="04"){ sdmonth="April"; }
-	        if(sdmonth=="05"){ sdmonth="May"; }
-	        if(sdmonth=="06"){ sdmonth="June"; }
-	        if(sdmonth=="07"){ sdmonth="July"; }
-	        if(sdmonth=="08"){ sdmonth="August"; }	            
-	        if(sdmonth=="09"){ sdmonth="September"; }
-	        if(sdmonth=="10"){ sdmonth="October"; }
-	        if(sdmonth=="11"){ sdmonth="November"; }
-	        if(sdmonth=="12"){ sdmonth="December"; }        
-	        
-			var newdate = new Date();
-	        var currentmonth = newdate.getMonth();
-	        var month_name=new Array(12);
-            month_name[0]="January"
-            month_name[1]="February"
-            month_name[2]="March"
-            month_name[3]="April"
-            month_name[4]="May"
-            month_name[5]="June"
-            month_name[6]="July"
-            month_name[7]="August"
-            month_name[8]="September"
-            month_name[9]="October"
-            month_name[10]="November"
-            month_name[11]="December"
-            today_month = month_name[currentmonth];
-            today_date = newdate.getDate(); 
-            today_year = newdate.getFullYear();
-                         
-            {% if from_date and to_date %}
-				date1 = '{{from_date}}';
-				date2 = '{{to_date}}';
-	            var d11= date1.indexOf('-');
-	            var date1day = date1.substring(0, d11); // get the day for the date1
-	            var date1str1 = date1.substring(d11+1, date1.length);
-	            var d12= date1str1.indexOf('-');
-	            var date1month = date1str1.substring(0, d12); // get the month for date1
-	            
-	            if(date1month=="01"){ date1month="January"; }
-	            if(date1month=="02"){ date1month="February"; }
-	            if(date1month=="03"){ date1month="March"; }
-	            if(date1month=="04"){ date1month="April"; }
-	            if(date1month=="05"){ date1month="May"; }
-	            if(date1month=="06"){ date1month="June"; }
-	            if(date1month=="07"){ date1month="July"; }
-	            if(date1month=="08"){ date1month="August"; }	            
-	            if(date1month=="09"){ date1month="September"; }
-	            if(date1month=="10"){ date1month="October"; }
-	            if(date1month=="11"){ date1month="November"; }
-	            if(date1month=="12"){ date1month="December"; }
-	            
-	            var date1str1 = date1str1.substring(d12+1, date1.length);
-	            var d13= date1str1.length;
-	            var date1year = date1str1.substring(0, d13);	// get the year for the date1
-	            
-	            var d21= date2.indexOf('-');
-	            var date2day = date2.substring(0, d21); // get the day for the date2
-	            var date2str1 = date2.substring(d21+1, date2.length);
-	            var d22= date2str1.indexOf('-');
-	            var date2month = date2str1.substring(0, d22); // get the month for date2            
-	            
-	            if(date2month=="01"){ date2month="January"; }
-	            if(date2month=="02"){ date2month="February"; }
-	            if(date2month=="03"){ date2month="March"; }
-	            if(date2month=="04"){ date2month="April"; }
-	            if(date2month=="05"){ date2month="May"; }
-	            if(date2month=="06"){ date2month="June"; }
-	            if(date2month=="07"){ date2month="July"; }
-	            if(date2month=="08"){ date2month="August"; }	            
-	            if(date2month=="09"){ date2month="September"; }
-	            if(date2month=="10"){ date2month="October"; }
-	            if(date2month=="11"){ date2month="November"; }
-	            if(date2month=="12"){ date2month="December"; }	            
-	            
-	            var date2str1 = date2str1.substring(d22+1, date2.length);
-	            var d23= date2str1.length;
-	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
-	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1year + "," + " " + date1day;
-	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2year + "," + " " + date2day;
+	//Function to Apply Dates in Date picker when the page loads	    
+	function Default(){ 
+			var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+			
+			{% if from_date and to_date %}
+	        var from_date = new Date('{{from_date}}');
+			var to_date = new Date('{{to_date}}');
 			{% else %}
-				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; //datepicker2
-				//document.getElementById('datepicker1').innerHTML = '{{start_date}}'; //datepicker1
-				document.getElementById('datepicker1').innerHTML = sdmonth + " " + sddate + "," + " " + sdyear; // datepicker1
-			{% endif %}
+			var from_date = new Date('{{start_date}}');
+			var to_date = new Date();
+	        {% endif %}
 			
-            	    
-	    }	
-			
-   	
+			$("#datepicker1").html(month[from_date.getMonth()]+" "+from_date.getDate()+", "+from_date.getFullYear());
+			$("#datepicker2").html(month[to_date.getMonth()]+" "+to_date.getDate()+", "+to_date.getFullYear());
+	}
 	
+	//Function for apply button in date picker
 	function Apply(){
 	
 		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
@@ -147,6 +59,8 @@
 		} // end else
 
 	}
+	
+	//Function for Reset button in datepicker
 	function Reset() {
 	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
 	        var date2 = document.getElementById('inlinedatepicker1').innerHTML;
@@ -158,8 +72,9 @@
 	        
     }// end Reset function 	
 		
-		//<!-- For Search's drop-down list -->
-	      
+	//<!-- For Search's drop-down list -->
+	
+	//Function called on clicking 'Go' button for region select drop-downs
 	function regionSelect() {
 		url = "./?state="+$("#stateId").val(){% if from_date and to_date %}+"&from_date={{from_date}}&to_date={{to_date}}"{%endif%};
 		if(!($("#districtId").attr("disabled")))
@@ -172,6 +87,7 @@
 		window.location.href = url;
 	}
 	
+	//Function to enable/disable and fill option in Selects for region select drop downs
     function dochange(src, val) {
 		$.ajax({ type: "GET", 
 				url: "/output/dropdownval/?geog="+src+"&id="+val,
@@ -339,7 +255,7 @@
 		    
 		    <div id='table1div3'>
 		        <div id='table1desc'>Average Time Taken to Produce a Video</div> 
-		        <div id='table1val'> {{tot_average}} days</div>
+		        <div id='table1val'> {{tot_average|floatformat:2}} days</div>
 		    </div>  		    		
 		</div>	   
 	    				

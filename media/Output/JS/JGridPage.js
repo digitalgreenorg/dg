@@ -201,13 +201,13 @@ function datepick(){
 	
 	$("#inlinedatepicker1").calendar({
 	    parentElement: '#inlinedatepicker1-container',
-	    dateFormat: '%d-%m-%Y'	
+	    dateFormat: '%Y-%m-%d'	
 	});
 	
 	// calender for inlinedatepicker2
 	$("#inlinedatepicker2").calendar({
 	    parentElement: '#inlinedatepicker2-container',
-	    dateFormat: '%d-%m-%Y'	
+	    dateFormat: '%Y-%m-%d'	
 	});
 	//$("#inlinedatepicker1").simpleDatepicker({ changeYear: true });
 	//$("#inlinedatepicker1").simpleDatepicker({ changeMonth: true });

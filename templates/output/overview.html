@@ -21,111 +21,26 @@
     <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript">   
-	    
-	    
-	function Default(){ 
 	
-			// for default from - date 
-	        var startdate = '{{start_date}}';
-			//alert(startdate);
-	        var sd= startdate.indexOf('-'); // calculate index value for first hyphen(-)
-	        var sdyear = startdate.substring(0, sd); // get the year for the date1
-	        var sd1 = startdate.substring(sd+1, startdate.length);
-	        var sd2= sd1.indexOf('-');
-	        var sdmonth = sd1.substring(0, sd2); // get the month for date1
-	        var sddate = sd1.substring(sd2+1, sd1.length);
-	        
-	        if(sdmonth=="01"){ sdmonth="January"; }
-	        if(sdmonth=="02"){ sdmonth="February"; }
-	        if(sdmonth=="03"){ sdmonth="March"; }
-	        if(sdmonth=="04"){ sdmonth="April"; }
-	        if(sdmonth=="05"){ sdmonth="May"; }
-	        if(sdmonth=="06"){ sdmonth="June"; }
-	        if(sdmonth=="07"){ sdmonth="July"; }
-	        if(sdmonth=="08"){ sdmonth="August"; }	            
-	        if(sdmonth=="09"){ sdmonth="September"; }
-	        if(sdmonth=="10"){ sdmonth="October"; }
-	        if(sdmonth=="11"){ sdmonth="November"; }
-	        if(sdmonth=="12"){ sdmonth="December"; }        
-	        
-			var newdate = new Date();
-	        var currentmonth = newdate.getMonth();
-	        var month_name=new Array(12);
-            month_name[0]="January"
-            month_name[1]="February"
-            month_name[2]="March"
-            month_name[3]="April"
-            month_name[4]="May"
-            month_name[5]="June"
-            month_name[6]="July"
-            month_name[7]="August"
-            month_name[8]="September"
-            month_name[9]="October"
-            month_name[10]="November"
-            month_name[11]="December"
-            today_month = month_name[currentmonth];
-            today_date = newdate.getDate(); 
-            today_year = newdate.getFullYear();
-                         
-            {% if from_date and to_date %}
-				date1 = '{{from_date}}';
-				date2 = '{{to_date}}';
-	            var d11= date1.indexOf('-');
-	            var date1day = date1.substring(0, d11); // get the day for the date1
-	            var date1str1 = date1.substring(d11+1, date1.length);
-	            var d12= date1str1.indexOf('-');
-	            var date1month = date1str1.substring(0, d12); // get the month for date1
-	            
-	            if(date1month=="01"){ date1month="January"; }
-	            if(date1month=="02"){ date1month="February"; }
-	            if(date1month=="03"){ date1month="March"; }
-	            if(date1month=="04"){ date1month="April"; }
-	            if(date1month=="05"){ date1month="May"; }
-	            if(date1month=="06"){ date1month="June"; }
-	            if(date1month=="07"){ date1month="July"; }
-	            if(date1month=="08"){ date1month="August"; }	            
-	            if(date1month=="09"){ date1month="September"; }
-	            if(date1month=="10"){ date1month="October"; }
-	            if(date1month=="11"){ date1month="November"; }
-	            if(date1month=="12"){ date1month="December"; }
-	            
-	            var date1str1 = date1str1.substring(d12+1, date1.length);
-	            var d13= date1str1.length;
-	            var date1year = date1str1.substring(0, d13);	// get the year for the date1
-	            
-	            var d21= date2.indexOf('-');
-	            var date2day = date2.substring(0, d21); // get the day for the date2
-	            var date2str1 = date2.substring(d21+1, date2.length);
-	            var d22= date2str1.indexOf('-');
-	            var date2month = date2str1.substring(0, d22); // get the month for date2            
-	            
-	            if(date2month=="01"){ date2month="January"; }
-	            if(date2month=="02"){ date2month="February"; }
-	            if(date2month=="03"){ date2month="March"; }
-	            if(date2month=="04"){ date2month="April"; }
-	            if(date2month=="05"){ date2month="May"; }
-	            if(date2month=="06"){ date2month="June"; }
-	            if(date2month=="07"){ date2month="July"; }
-	            if(date2month=="08"){ date2month="August"; }	            
-	            if(date2month=="09"){ date2month="September"; }
-	            if(date2month=="10"){ date2month="October"; }
-	            if(date2month=="11"){ date2month="November"; }
-	            if(date2month=="12"){ date2month="December"; }	            
-	            
-	            var date2str1 = date2str1.substring(d22+1, date2.length);
-	            var d23= date2str1.length;
-	            var date2year = date2str1.substring(0, d23);	// get the year for the date2  
-	            document.getElementById('datepicker1').innerHTML = date1month +" "+ date1year + "," + " " + date1day;
-	            document.getElementById('datepicker2').innerHTML = date2month +" "+ date2year + "," + " " + date2day;
+	//Function to Apply Dates in Date picker when the page loads	    
+	function Default(){ 
+			var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+			
+			{% if from_date and to_date %}
+	        var from_date = new Date('{{from_date}}');
+			var to_date = new Date('{{to_date}}');
 			{% else %}
-				document.getElementById('datepicker2').innerHTML = today_month + " " + today_date + "," + " " + today_year; //datepicker2
-				//document.getElementById('datepicker1').innerHTML = '{{start_date}}'; //datepicker1
-				document.getElementById('datepicker1').innerHTML = sdmonth + " " + sddate + "," + " " + sdyear; // datepicker1
-			{% endif %}
+			var from_date = new Date('{{start_date}}');
+			var to_date = new Date();
+	        {% endif %}
+			
+			$("#datepicker1").html(month[from_date.getMonth()]+" "+from_date.getDate()+", "+from_date.getFullYear());
+			$("#datepicker2").html(month[to_date.getMonth()]+" "+to_date.getDate()+", "+to_date.getFullYear());
 	}
 	
-	
+	//Function for apply button in date picker
 	function Apply(){
+	
 		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
 		var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
 		if(date1.length==40 || date2.length==40){	 
@@ -134,12 +49,12 @@
 		}
 		else{
 			
-			window.location.href = '/output/overview/{{flash_geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
-										   
+			window.location.href = '/output/overview/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
 		} // end else
-	} // end Apply function    
+
+	}
 	
-	
+	//Function for Reset button in datepicker
 	function Reset() {
 	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
 	        var date2 = document.getElementById('inlinedatepicker1').innerHTML;
@@ -149,10 +64,11 @@
 	           document.getElementById('inlinedatepicker2').innerHTML = "";               	                        
 	        }
 	        
-    }// end Reset function 
-	
+    }// end Reset function 	
+		
 	//<!-- For Search's drop-down list -->
-	      
+	
+	//Function called on clicking 'Go' button for region select drop-downs
 	function regionSelect() {
 		url = "./?state="+$("#stateId").val(){% if from_date and to_date %}+"&from_date={{from_date}}&to_date={{to_date}}"{%endif%};
 		if(!($("#districtId").attr("disabled")))
@@ -165,6 +81,7 @@
 		window.location.href = url;
 	}
 	
+	//Function to enable/disable and fill option in Selects for region select drop downs
     function dochange(src, val) {
 		$.ajax({ type: "GET", 
 				url: "/output/dropdownval/?geog="+src+"&id="+val,
@@ -181,9 +98,7 @@
               }
          });
         }
-               
-    //window.onLoad=dochange('state', -1);         // value in first dropdown      
-	       
+
 	</script>
 
 </head>
@@ -194,10 +109,10 @@
 		<td valign="top">
 		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
 		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
-				<a href="/output/overview/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
+				<a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
 			</div>
 			<div class="nav_1" style="margin-left:5px;">
-				<a href="/output/video/module/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video analytics </a>
+				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video analytics </a>
 			</div>
 		</div>
 		</td>
@@ -215,7 +130,7 @@
 					    <div id='datepicker1'/></div> 
 						<div id='datepickergap'> &nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&nbsp;&nbsp;&nbsp; </div>
 						<div id='datepicker2'> </div>
-						<div id='datepicker12reset'> <a id = 'resetdate' href='/output/overview/{{flash_geog}}/{{id}}/'>Reset</a> </div>
+						<div id='datepicker12reset'> <a id = 'resetdate' href='/output/overview/{{geog}}/{{id}}/'>Reset</a> </div>
 						<div id='timelinedescfooter'>
 							Above are the pre-chosen dates. Customize your own range of timeline  	
 						</div>
@@ -425,7 +340,7 @@
 						<td id='table2td4'>
 							
 								{% ifnotequal item.id None %}
-							{% ifnotequal flash_geog  'village' %}
+							{% ifnotequal geog  'village' %}
 							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ item.name }} </a>
 							{% else %}
@@ -469,22 +384,22 @@
 			            <td id='table2td6'>					        
 					    </td>
 					    <td id='table2td7'>	
-					        {% ifequal flash_geog  'state' %}							
+					        {% ifequal geog  'state' %}							
 							<a href='/output/overview/country/1'>
 							{{ par_geog.name }} </a>
 							{%endifequal%}
 							
-							{% ifequal flash_geog  'district' %}							
+							{% ifequal geog  'district' %}							
 							<a href='/output/overview/state/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ par_geog.name }} </a>
 							{%endifequal%}
 							
-							{% ifequal flash_geog  'block' %}							
+							{% ifequal geog  'block' %}							
 							<a href='/output/overview/district/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ par_geog.name }} </a>
 							{%endifequal%}
 							
-							{% ifequal flash_geog  'village' %}							
+							{% ifequal geog  'village' %}							
 							<a href='/output/overview/block/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{ block_name }} </a>
 							{% endifequal%}
@@ -494,7 +409,7 @@
 							{%endif%}				        
 					    </td>
 					    <td id='table2td1'>
-						<a href='/output/video/module/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+						<a href='/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
 							{{par_geog.tot_vid}}  </a>  
 										        
 					    </td>
@@ -542,7 +457,7 @@
 		
 		so.addVariable("path", "/media/Output/amline/");
 		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so.addVariable("data_file",'/output/overview/line/{{flash_geog}}/{{id}}/');
+		so.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
 		so.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
 						<graph gid="1"><title>Total Video Production</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="2"><title>Total Screening</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
@@ -552,7 +467,7 @@
 						</graphs></settings>'))
 		so.addVariable("chart_id", "line_chart");
 		var from_date = null, to_date = null;
-			{%if flash_from_date and flash_to_date %}
+			{%if from_date and to_date %}
 			function amChartInited(chart_id){	
 			  flashMovie = document.getElementById(chart_id);	
 			  
@@ -561,19 +476,19 @@
 				//var arr = from_date.split('-');
 				var zoom_from_date, zoom_to_date;
 				
-				if(new Date('{{flash_from_date}}') > new Date(to_date))
+				if(new Date('{{from_date}}') > new Date(to_date))
 					zoom_from_date = to_date
-				else if(new Date(from_date) > new Date('{{flash_from_date}}'))
+				else if(new Date(from_date) > new Date('{{from_date}}'))
 					zoom_from_date = from_date;
 				else 
-					zoom_from_date = '{{flash_from_date}}';
+					zoom_from_date = '{{from_date}}';
 				
-				if(new Date(to_date) < new Date('{{flash_to_date}}'))
+				if(new Date(to_date) < new Date('{{to_date}}'))
 					zoom_to_date = to_date;
-				else if(new Date('{{flash_to_date}}') < new Date(from_date))
+				else if(new Date('{{to_date}}') < new Date(from_date))
 					 zoom_to_date = from_date;
 				else
-					zoom_to_date = '{{flash_to_date}}';
+					zoom_to_date = '{{to_date}}';
 			  
 			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
 			  

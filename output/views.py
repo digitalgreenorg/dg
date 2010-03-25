@@ -51,27 +51,15 @@ def overview(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        if(len(temp[0]) == 2 ):
-            mysql_from_date = from_date
-        else:
-            mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        if(len(temp[0]) == 2 ):
-            mysql_to_date = to_date
-        else:
-            mysql_to_date='-'.join(temp)
+        
                 
-        par_geog = run_query(database.overview_sum_geog(dict(geog=geog,from_date=mysql_from_date,to_date=mysql_to_date,id=id)))
-        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
-        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
-        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
-        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
-        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,from_date=mysql_from_date,to_date=mysql_to_date,id=id)));
+        par_geog = run_query(database.overview_sum_geog(dict(geog=geog,from_date=from_date,to_date=to_date,id=id)))
+        vid_prod = run_query(construct_query(database.overview,dict(type='production',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        vid_screening = run_query(construct_query(database.overview,dict(type='screening',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        adoption = run_query(construct_query(database.overview,dict(type='adoption',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        tot_prac = run_query(construct_query(database.overview,dict(type='practice',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
+        tot_per = run_query(construct_query(database.overview,dict(type='person',geography=geog,geog_child=geog_child,from_date=from_date,to_date=to_date,id=id)));
 
     else:
         date_range = 0
@@ -99,7 +87,7 @@ def overview(request,geog,id):
         if date_range == 0:            
             par_geog = run_query(database.overview_sum_geog(dict(geog='block',id=par_id)))
         else:
-            par_geog = run_query(database.overview_sum_geog(dict(geog='block',from_date=mysql_from_date,to_date=mysql_to_date,id=par_id)))
+            par_geog = run_query(database.overview_sum_geog(dict(geog='block',from_date=from_date,to_date=to_date,id=par_id)))
     
     return_val = vid_prod
     
@@ -119,12 +107,14 @@ def overview(request,geog,id):
         
         
     if date_range==1:
-        return render_to_response('overview.html',{'item_list':return_val,'country_data':country_data[0],'block_name':block_name,'par_id':par_id,'geography':geog_child,'flash_geog':geog,'id':id,\
-                            'from_date':from_date,'to_date':to_date,'flash_from_date':mysql_from_date,\
-                            'flash_to_date':mysql_to_date,'par_geog':par_geog[0],'sel_val': breadcrumbs_options(geog,id)})
+        return render_to_response('overview.html',{'item_list':return_val,'country_data':country_data[0],\
+                                                   'block_name':block_name,'par_id':par_id,'geography':geog_child,'geog':geog,'id':id,\
+                                                   'from_date':from_date,'to_date':to_date,\
+                                                   'par_geog':par_geog[0],'sel_val': breadcrumbs_options(geog,id)})
     else:
         return render_to_response('overview.html',{'item_list':return_val,'country_data':country_data[0],'par_id':par_id,'geography':geog_child,\
-                            'block_name':block_name,'start_date':start_date,'flash_geog':geog,'id':id,'par_geog':par_geog[0],'sel_val': breadcrumbs_options(geog,id)})
+                                                   'block_name':block_name,'start_date':start_date,'geog':geog,'id':id,'par_geog':par_geog[0], \
+                                                   'sel_val': breadcrumbs_options(geog,id)})
         
 #function for breadcrumbs
 #returns a list of geog upto state
@@ -136,9 +126,14 @@ def breadcrumbs_options(geog,id):
         return breadcrumbs_options('state',-1);
     geog_list = ['village','block','district','state'];
     return_val = []
+    
+    if(geog!='village'):
+        return_val.append(run_query_dict_list(database.breadcrumbs_options_sql(geog_list[geog_list.index(geog)-1],id,1),'id'))
+    #Starting from the passed geog, we'll calculate 'options' and append to return_val,
+    #and end up at top most geog 'state'.    
     for i in range(geog_list.index(geog),len(geog_list)):
         geog = geog_list[i]
-        query_return = run_query_dict_list(database.breadcrumbs_options_sql(geog,id),'id')
+        query_return = run_query_dict_list(database.breadcrumbs_options_sql(geog,id,0),'id')
         if(id!=-1):
             query_return[id].append('true')  
         if(geog!='state'):    
@@ -650,23 +645,10 @@ def video_module(request,geog,id):
     and 'to_date' in request.GET and request.GET['to_date']:
         date_range = 1
         from_date = request.GET['from_date']
-        temp = string.split(from_date,'-')
-        temp.reverse()
-        if(len(temp[0]) == 2 ):
-            mysql_from_date = from_date
-        else:
-            mysql_from_date='-'.join(temp)
-
         to_date = request.GET['to_date']
-        temp = string.split(to_date,'-')
-        temp.reverse()
-        if(len(temp[0]) == 2 ):
-            mysql_to_date = to_date
-        else:
-            mysql_to_date='-'.join(temp)
-        tot_vid = run_query(database.video_tot_video(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))[0]['count']
-        tot_scr = run_query(database.video_tot_scr(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))[0]['count']
-        tot_avg = run_query(database.video_avg_time(geog=geog,id=id,from_date=mysql_from_date,to_date=mysql_to_date))[0]['avg']
+        tot_vid = run_query(database.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date))[0]['count']
+        tot_scr = run_query(database.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date))[0]['count']
+        tot_avg = run_query(database.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date))[0]['avg']
     else:
         date_range = 0
         tot_vid = run_query(database.video_tot_video(geog = geog, id = id))[0]['count']
@@ -679,11 +661,8 @@ def video_module(request,geog,id):
            
     if date_range==1:
         return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_vid,\
-                                                    tot_screening=tot_scr, tot_average= tot_avg,from_date = mysql_from_date,to_date=mysql_to_date,sel_val= breadcrumbs_options(geog,id)))
+                                                    tot_screening=tot_scr, tot_average= tot_avg,from_date = from_date,to_date=to_date,sel_val= breadcrumbs_options(geog,id)))
     else:
         return render_to_response('video_module.html',dict(geog=geog,id=id,tot_video=tot_vid,\
                                                     start_date = start_date, tot_screening=tot_scr, tot_average= tot_avg,sel_val= breadcrumbs_options(geog,id)))
     
-    #{'tot_video':tot_video,'tot_screening':tot_screening,'tot_average':tot_average}
-
-

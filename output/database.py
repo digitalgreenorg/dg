@@ -138,17 +138,30 @@ def overview_nation_pg_vil_total():
 
 
 #Query for breadcrumbs
-def breadcrumbs_options_sql(geog,id):
+#Params: geog - options to be calculated for this geog
+#        id - id of 'geog' if is_child = false else it's parent geog's id
+#        is_child: flag(0/1) if the options are one level below then selected
+#                e.g for district 'x', option for x's blocks must be presented with nothing pre-selected.
+def breadcrumbs_options_sql(geog,id, is_child):
     geog_list = ['village','block','district','state'];
     
-    if(geog!='state'):
-        par_geog = geog_list[geog_list.index(geog)+1];        
-        return construct_query("""SELECT {{geog|first}}1.id ,{{geog|first}}1.{{geog|upper}}_NAME, {{geog|first}}1.{{par_geog}}_id
-        FROM {{geog}} {{geog|first}}1, {{geog}} {{geog|first}}2
-        WHERE {{geog|first}}1.{{par_geog}}_id = {{geog|first}}2.{{par_geog}}_id
-            and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
-    else:
+    if(geog=='state'):
         return 'SELECT id, STATE_NAME as name FROM STATE'
+    
+    par_geog = geog_list[geog_list.index(geog)+1]; 
+    
+    if(is_child == 1):
+        return construct_query(""" SELECT id, {{geog|upper}}_NAME 
+            FROM {{geog|upper}}
+            WHERE {{par_geog}}_id = {{id}}
+        """,dict(geog=geog,id=id,par_geog=par_geog))
+    
+    return construct_query("""SELECT {{geog|first}}1.id ,{{geog|first}}1.{{geog|upper}}_NAME, {{geog|first}}1.{{par_geog}}_id
+    FROM {{geog|upper}} {{geog|first}}1, {{geog|upper}} {{geog|first}}2
+    WHERE {{geog|first}}1.{{par_geog}}_id = {{geog|first}}2.{{par_geog}}_id
+        and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
+    
+        
     
 
 
