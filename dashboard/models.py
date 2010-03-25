@@ -56,6 +56,12 @@ SUITABLE_FOR = (
 	(4,'Nothing'),
 )
 
+ROLE = (
+        ('F','Field Officer'),
+        ('D', 'Development Manager'),
+        ('A', 'Administrator'),
+)
+
 
 class RegionTest(models.Model):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
@@ -75,7 +81,6 @@ class Region(models.Model):
 
     def __unicode__(self):
         return self.region_name
-
 
 class EquipmentHolder(models.Model):
     content_type = models.ForeignKey(ContentType)
@@ -405,7 +410,7 @@ class Screening(models.Model):
     class Meta:
         db_table = u'SCREENING'
     def __unicode__(self):
-	return u'%s %s' % (self.date, self.village)
+	       return u'%s %s' % (self.date, self.village)
 
 
 
@@ -442,9 +447,13 @@ class Equipment(models.Model):
     equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True)
     class Meta:
         db_table = u'EQUIPMENT_ID'
-     
 
-class Random(models.Model):
-	random_no = models.CharField(max_length=300)
-	random_date = models.DateField(null=True, blank=True)
-	radom_time = models.TimeField(null=True, blank=True)
+class UserRole(models.Model):
+    username = models.CharField(max_length=300, primary_key=True, unique='True')
+    password = models.CharField(max_length=500)
+    role = models.CharField(max_length=1,choices=ROLE)
+    
+class UserPermission(models.Model):    
+    username = models.ForeignKey(UserRole)
+    region_operated = models.ForeignKey(Region)
+    district_operated = models.ForeignKey(District)
