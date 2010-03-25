@@ -104,7 +104,7 @@ public class StatesData extends BaseData {
 		}
 	}
 
-	protected static String tableID = "05";
+	protected static String tableID = "5";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `state` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"STATE_NAME VARCHAR(100)  NOT NULL ," +
@@ -113,8 +113,9 @@ public class StatesData extends BaseData {
 												"FOREIGN KEY(region_id) references region(id));"; 
 
 	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id ORDER BY (-state.id);";
-	protected static String saveStateURL = "/dashboard/savestate/";
-	protected static String getStateURL = "/dashboard/getstates/";
+	protected static String saveStateOnlineURL = "/dashboard/savestateonline/";
+	protected static String getStateOnlineURL = "/dashboard/getstatesonline/";
+	protected static String saveStateOfflineURL = "/dashboard/savestateoffline/";
 	protected String table_name = "state";
 	protected String[] fields = {"id", "state_name", "region_id", "start_date"};
 	
@@ -146,6 +147,10 @@ public class StatesData extends BaseData {
 	
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	protected static String getSaveOfflineURL(){
+		return StatesData.saveStateOfflineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -198,7 +203,7 @@ public class StatesData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + StatesData.saveStateURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
@@ -210,7 +215,7 @@ public class StatesData extends BaseData {
 	
 	public Object getListPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + StatesData.getStateURL);
+			this.get(RequestContext.SERVER_HOST + StatesData.getStateOnlineURL);
 		}
 		else{
 			return true;
@@ -233,7 +238,7 @@ public class StatesData extends BaseData {
 	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + StatesData.saveStateURL);
+			this.get(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL);
 		}
 		else{
 			return retrieveDataAndConvertResultIntoHtml();

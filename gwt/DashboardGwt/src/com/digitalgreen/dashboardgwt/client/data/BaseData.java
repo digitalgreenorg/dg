@@ -102,6 +102,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return "";
 	}
 	
+	
 	protected String getTableName() {
 		return this.table_name;
 	}

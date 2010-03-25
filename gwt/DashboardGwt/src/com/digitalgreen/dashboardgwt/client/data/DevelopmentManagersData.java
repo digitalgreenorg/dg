@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class DevelopmentManagersData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE  IF NOT EXISTS `development_manager` " +
+	protected static String tableID = "4";
+	protected static String createTable = "CREATE TABLE  IF NOT EXISTS `development_manager` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"NAME VARCHAR(100)  NOT NULL ," +
 												"AGE INT  NULL DEFAULT NULL," +
@@ -19,8 +20,15 @@ public class DevelopmentManagersData extends BaseData {
 												"SALARY FLOAT(0,0)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) REFERENCES region(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
+	
+	protected static String saveDevelopmentManagerOfflineURL = "/dashboard/savedevelopmentmanageroffline/";
 
-	public DevelopmentManagersData(RequestContext requestContext) {
+	public DevelopmentManagersData() {
 		super();
+	}
+
+	@Override
+	protected String getTableId() {
+		return DevelopmentManagersData.tableID;
 	}
 }

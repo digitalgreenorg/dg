@@ -100,7 +100,7 @@ public class PartnersData extends BaseData {
 	}
 	
 	
-	protected static String tableID = "06";
+	protected static String tableID = "6";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `partners` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PARTNER_NAME VARCHAR(100)  NOT NULL ," +
@@ -114,8 +114,9 @@ public class PartnersData extends BaseData {
 	
 
 	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
-	protected static String savePartnerURL = "/dashboard/savepartner/";
-	protected static String getPartnerURL = "/dashboard/getpartners/";
+	protected static String savePartnerOnlineURL = "/dashboard/savepartneronline/";
+	protected static String getPartnerOnlineURL = "/dashboard/getpartnersonline/";
+	protected static String savePartnerOfflineURL = "/dashboard/savepartneroffline/";
 	protected String table_name = "partners";
 	protected String[] fields = {"id", "partner_name", "date_of_association", "phone_no", "address",
 			"reviewer_id", "equipmentholder_id"};
@@ -150,6 +151,11 @@ public class PartnersData extends BaseData {
 	protected String[] getFields() {
 		return this.fields;
 	}
+	
+	protected static String getSaveOfflineURL(){
+		return PartnersData.savePartnerOfflineURL;
+	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -201,7 +207,7 @@ public class PartnersData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.savePartnerURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + PartnersData.savePartnerOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
@@ -213,7 +219,7 @@ public class PartnersData extends BaseData {
 	
 	public Object getPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + PartnersData.getPartnerURL);
+			this.get(RequestContext.SERVER_HOST + PartnersData.getPartnerOnlineURL);
 		}
 		else{
 			return true;

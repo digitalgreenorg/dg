@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class DistrictsData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `district` " +
+	protected static String tableID = "8";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `district` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"DISTRICT_NAME VARCHAR(100)  NOT NULL ," +
 												"START_DATE DATE  NULL DEFAULT NULL," +
@@ -16,7 +17,14 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
 	
-	public DistrictsData(RequestContext requestContext) {
+	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";
+	
+	public DistrictsData() {
 		super();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return DistrictsData.tableID;
 	}
 }

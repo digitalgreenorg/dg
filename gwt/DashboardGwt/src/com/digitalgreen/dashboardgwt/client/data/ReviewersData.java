@@ -4,12 +4,20 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class ReviewersData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `reviewer` " +
+	protected static String tableID = "3";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `reviewer` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
+	protected static String saveReviewerOfflineURL = "/dashboard/saverevieweroffline/";
 	
-	public ReviewersData(RequestContext requestContext) {
+	public ReviewersData() {
 		super();
 	}
+
+	@Override
+	protected String getTableId() {
+		return ReviewersData.tableID;
+	}
+	
 }

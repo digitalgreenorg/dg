@@ -26,4 +26,18 @@ public class IndexData extends BaseData {
 		this.post(RequestContext.SERVER_HOST + this.postURL, postData);
 		return true;
 	}
+	
+	public Boolean checkIfUserEntryExistsInTable(String username){
+			BaseData.dbOpen();
+			this.select(LoginData.selectUser , username);
+			ResultSet resultSet = this.getResultSet();
+			if(resultSet.isValidRow()) {		
+				LoginData.dbClose();
+				return true;
+			}
+			else{
+				LoginData.dbClose();
+				return false;
+			}
+	}
 }

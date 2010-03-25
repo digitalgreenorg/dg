@@ -4,8 +4,9 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
 
 public class PersonsData extends BaseData {
-
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
+	
+	protected static String tableID = "13";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PERSON_NAME VARCHAR(100)  NOT NULL ," +
 												"FATHER_NAME VARCHAR(100)  NOT NULL ," +
@@ -19,7 +20,9 @@ public class PersonsData extends BaseData {
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(group_id) REFERENCES person_groups(id), " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ;  
+												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ; 
+	
+	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	
 	public class Data extends BaseData.Data {
 		public Data() {}
@@ -34,7 +37,8 @@ public class PersonsData extends BaseData {
 		super();
 	}
 	
-	public PersonsData(RequestContext requestContext) {
-		super();
+	@Override
+	protected String getTableId() {
+		return PersonsData.tableID;
 	}
 }

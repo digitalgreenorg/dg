@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class EquipmentsData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_id` " +
+	protected static String tableID = "30";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_id` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"EQUIPMENT_TYPE VARCHAR(300)  NOT NULL ," +
 												"MODEL_NO VARCHAR(300)  NOT NULL ," +
@@ -13,9 +14,16 @@ public class EquipmentsData extends BaseData {
 												"PROCUREMENT_DATE DATE NULL DEFAULT NULL," +
 												"WARRANTY_EXPIRATION_DATE DATE  NULL DEFAULT NULL," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";  
+												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
 	
-	public EquipmentsData(RequestContext requestContext) {
+	protected static String saveEquipmentOfflineURL = "/dashboard/saveequipmentoffline/";
+	
+	public EquipmentsData() {
 		super();
+	}
+	
+	@Override
+	protected String getTableId(){
+		return EquipmentsData.tableID;
 	}
 }

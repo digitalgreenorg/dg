@@ -97,8 +97,9 @@ public class PracticesData extends BaseData {
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
 												"SUMMARY TEXT NULL DEFAULT NULL );";  
 	protected static String listPractices = "SELECT * FROM practices ORDER BY(-id)";
-	protected static String savePracticeURL = "/dashboard/savepractice/";
-	protected static String getPracticeURL = "/dashboard/getpractices/";
+	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
+	protected static String getPracticeOnlineURL = "/dashboard/getpracticesonline/";
+	protected static String savePracticeOfflineURL = "/dashboard/savepracticeoffline/";
 	protected String table_name = "practices";
 	protected String[] fields = {"id", "practice_name", "seasonality", "summary"};
 	
@@ -133,6 +134,11 @@ public class PracticesData extends BaseData {
 	protected String[] getFields(){
 		return this.fields;
 	}
+	
+	protected static String getSaveOfflineURL(){
+		return PracticesData.savePracticeOfflineURL;
+	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -175,7 +181,7 @@ public class PracticesData extends BaseData {
 	
 	public Object postPageData(){
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.savePracticeURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + this.savePracticeOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
@@ -186,7 +192,7 @@ public class PracticesData extends BaseData {
 	
 	public Object getPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + PracticesData.getPracticeURL);
+			this.get(RequestContext.SERVER_HOST + PracticesData.getPracticeOnlineURL);
 		}
 		else {
 			return true;

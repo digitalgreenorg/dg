@@ -9,11 +9,23 @@ public class BlocksData extends BaseData {
 		public final native String getDistrictId() /*-{ return this.fields.district_id; }-*/;
 	}
 	
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` " +
+	protected static String tableID = "9";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"BLOCK_NAME VARCHAR(100)  NOT NULL ," +
 												"START_DATE DATE  NULL DEFAULT NULL," +
 												"district_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(district_id) REFERENCES district(id));";
+	
+	protected static String saveBlockOfflineURL = "/dashboard/saveblockoffline/";
+	
+	public BlocksData() {
+		super();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return BlocksData.tableID;
+	}
 	
 }

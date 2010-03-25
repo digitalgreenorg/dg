@@ -126,7 +126,7 @@ public class FieldOfficersData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "07";
+	protected static String tableID = "7";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `field_officer` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"NAME VARCHAR(100) NOT NULL ," +
@@ -141,8 +141,9 @@ public class FieldOfficersData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
-	protected static String saveFieldOfficerURL = "/dashboard/savefieldofficer/";
-	protected static String getFieldOfficersURL = "/dashboard/getfieldofficers/";
+	protected static String saveFieldOfficerOnlineURL = "/dashboard/savefieldofficeronline/";
+	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";
+	protected static String saveFieldOfficerOfflineURL = "/dashboard/savefieldofficeroffline/";
 	protected static String table_name = "field_officer";
 	protected static String[] fields = {"id", "name", "age", "gender", "hire_date", "salary",  "phone_no", "address", "reviewer_id", "equipmentholder_id"};
 	
@@ -177,6 +178,11 @@ public class FieldOfficersData extends BaseData {
 	protected String[] getFields() {
 		return FieldOfficersData.fields;
 	}
+	
+	protected static String getSaveOfflineURL(){
+		return FieldOfficersData.saveFieldOfficerOfflineURL;
+	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -223,7 +229,7 @@ public class FieldOfficersData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveFieldOfficerURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL, this.queryString);
 		}
 		else {
 			this.save();
@@ -234,7 +240,7 @@ public class FieldOfficersData extends BaseData {
 	
 	public Object getPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersURL);
+			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersOnlineURL);
 		}
 		else{
 			return true;

@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class AnimatorSalaryPerMonthData extends BaseData{
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator_salary_per_month` " +
+	protected static String tableID = "19";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator_salary_per_month` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"animator_id INT  NOT NULL DEFAULT 0," +
 												"DATE DATE  NOT NULL ," +
@@ -12,7 +13,14 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 												"PAY_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	
-	public AnimatorSalaryPerMonthData(RequestContext requestContext){
+	protected static String saveAnimatorSalaryPerMonthOfflineURL = "/dashboard/saveanimatorsalarypermonthoffline/";
+	
+	public AnimatorSalaryPerMonthData(){
 		super();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return AnimatorSalaryPerMonthData.tableID;
 	}
 }

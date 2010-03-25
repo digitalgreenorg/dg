@@ -70,8 +70,9 @@ public class LanguagesData extends BaseData {
 											"(id INTEGER PRIMARY KEY  NOT NULL ," +
 											"language_name VARCHAR(100)  NOT NULL );";  
 	protected static String listLanguages = "SELECT * FROM language ORDER BY(-id)";
-	protected static String saveLanguageURL = "/dashboard/savelanguage/";
-	protected static String getLanguageURL = "/dashboard/getlanguages/";
+	protected static String saveLanguageOnlineURL = "/dashboard/savelanguageonline/";
+	protected static String getLanguageOnlineURL = "/dashboard/getlanguagesonline/";
+	protected static String saveLanguageOfflineURL = "/dashboard/savelanguageoffline/";
 	protected String table_name = "language";
 	protected String[] fields = {"id", "language_name"};
 	
@@ -104,6 +105,11 @@ public class LanguagesData extends BaseData {
 	protected String[] getFields() {
 		return this.fields;
 	}
+	
+	protected static String getSaveOfflineURL(){
+		return LanguagesData.saveLanguageOfflineURL;
+	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -146,7 +152,7 @@ public class LanguagesData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveLanguageURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + LanguagesData.saveLanguageOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
@@ -158,7 +164,7 @@ public class LanguagesData extends BaseData {
 	
 	public Object getPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + LanguagesData.getLanguageURL);
+			this.get(RequestContext.SERVER_HOST + LanguagesData.getLanguageOnlineURL);
 		}
 		else{
 			return true;

@@ -76,14 +76,15 @@ public class RegionsData extends BaseData {
 		}
 	}
 
-	protected static String tableID = "01";
+	protected static String tableID = "1";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `region` " +
 												"(id INTEGER PRIMARY KEY NOT NULL," +
 												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";  
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
-	protected static String saveRegionURL = "/dashboard/saveregion/";
-	protected static String getRegionURL = "/dashboard/getregions/";
+	protected static String saveRegionOnlineURL = "/dashboard/saveregiononline/";
+	protected static String getRegionOnlineURL = "/dashboard/getregionsonline/";
+	protected static String saveRegionOfflineURL = "/dashboard/saveregionoffline/";
 	protected String table_name = "region";
 	protected String[] fields = {"id", "region_name", "start_date"};
 	
@@ -105,7 +106,7 @@ public class RegionsData extends BaseData {
 	}
 	
 	@Override
-	protected String getTableId() {
+	protected  String getTableId() {
 		return RegionsData.tableID;
 	}
 	
@@ -117,6 +118,10 @@ public class RegionsData extends BaseData {
 		return this.fields;
 	}
 	
+	protected static String getSaveOfflineURL(){
+		return RegionsData.saveRegionOfflineURL;
+	}
+
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -158,7 +163,7 @@ public class RegionsData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveRegionURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + this.saveRegionOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
@@ -170,7 +175,7 @@ public class RegionsData extends BaseData {
 	
 	public Object getPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionURL);
+			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionOnlineURL);
 		}
 		else{
 			return true;

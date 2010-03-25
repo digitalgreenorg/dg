@@ -26,6 +26,7 @@ public class LoginData extends BaseData {
 		}
 	}
 
+	protected static String tableID = "31";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `user` " +
 	  "(last_inserted_id INTEGER PRIMARY KEY NOT NULL, " +
 	  "username VARCHAR(100)," +
@@ -35,7 +36,9 @@ public class LoginData extends BaseData {
 
 	protected static String deleteTable = "DROP TABLE IF EXISTS `user`;";
 	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?);";
-	protected static String selectUser = "SELECT username FROM user WHERE username=? AND password = ?";
+	protected static String authenticateUser = "SELECT username FROM user WHERE username=? AND password = ?";
+	protected static String selectUser = "SELECT username FROM user WHERE username=?";
+	protected static String updateUser = "UPDATE `user` SET last_inserted_id=?,app_status=?, dirty_bit=? WHERE username = ? AND password = ?";
 	protected static String postURL = "/dashboard/login/"; 
 	
 	public LoginData() {
@@ -44,6 +47,11 @@ public class LoginData extends BaseData {
 
 	public LoginData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
+	}
+	
+	@Override
+	protected String getTableId(){
+		return LoginData.tableID;
 	}
 
 	public void create(){
@@ -54,12 +62,15 @@ public class LoginData extends BaseData {
 		this.delete(deleteTable);
 	}
 	
+	public void update(String primaryKey, String app_status, String dirty_bit, String username, String password ){
+		this.update(updateUser,  primaryKey, app_status, dirty_bit, username, password);
+	}
+	
 	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit) {
 		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit);
 	}
 	
 	public Object authenticate(String username, String password) {
-
 		if(this.isOnline()){
 			String postData = "username=" + username + "&password=" + password;
 			this.post(RequestContext.SERVER_HOST + LoginData.postURL, postData);
@@ -67,12 +78,15 @@ public class LoginData extends BaseData {
 			// Check if DB User row has the same username.
 			try {
 				LoginData.dbOpen();
-				this.select(selectUser, username, password);
+				this.select(authenticateUser, username, password);
 				ResultSet resultSet = this.getResultSet();
 				if(resultSet.isValidRow()) {
 					resultSet.close();
 					LoginData.dbClose();
 					return true;
+				}
+				else{
+					LoginData.dbClose();
 				}
 			} catch (DatabaseException e) {
 				LoginData.dbClose();
@@ -81,6 +95,5 @@ public class LoginData extends BaseData {
 		}
 		return false;
 	}
-	
 	
 }

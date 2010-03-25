@@ -8,6 +8,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import java.util.HashMap;
 
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
+import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
+import com.digitalgreen.dashboardgwt.client.data.Syncronisation;
 import com.digitalgreen.dashboardgwt.client.data.UsersData;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
@@ -42,8 +44,6 @@ public class Index extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != "0") {
 								LoginData user = new LoginData();
-								user.delete();
-								user.create();
 								user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
 								ApplicationConstants.toggleConnection(false);
 								RequestContext requestContext = new RequestContext();
@@ -68,24 +68,29 @@ public class Index extends BaseServlet {
 							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
-						public void offlineSuccessCallback(Object results) {
-							// If login success in the offline case
-							// This case will never occur for this servlet.
-						}
 					});
 					
 					// Comment the below line when you are not running the code form a hosted mode.
-					//indexData.apply(indexData.getGlobalPrimaryKey(Cookies.getCookie("username")));
+					if(!indexData.checkIfUserEntryExistsInTable(ApplicationConstants.getUsernameCookie()))
+						indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
+					else{
+						LoginData user = new LoginData();
+						user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+						ApplicationConstants.toggleConnection(false);
+						RequestContext requestContext = new RequestContext();
+						requestContext.setMessageString("You are ready to go offline!!. ");
+						this.redirectTo(new Index(requestContext));
+					}
 					
 					/*Comment out the below lines when running the code from an hosted mode*/
-					LoginData user = new LoginData();
+					/*LoginData user = new LoginData();
 					user.delete();
 					user.create();
 					user.insert("1000000", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
 					ApplicationConstants.toggleConnection(false);
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("You are ready to go offline!!. ");
-					this.redirectTo(new Index(requestContext));
+					this.redirectTo(new Index(requestContext));*/
 				}
 				else if (queryArg == "goonline"){
 					LoginData user = new LoginData();
@@ -94,6 +99,10 @@ public class Index extends BaseServlet {
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("You are ready to go Online. While you are online you will be able to sync your changes!");
 					this.redirectTo(new Index(requestContext));
+				}
+				else if (queryArg == "sync"){
+					Syncronisation syncronisation = new Syncronisation();
+					syncronisation.syncFromLocalToMain(this);
 				}
 			}
 			else{

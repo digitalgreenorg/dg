@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class PersonRelationsData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_relations` " +
+	protected static String tableID = "14";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_relations` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"person_id INT  NOT NULL DEFAULT 0," +
 												"relative_id INT  NOT NULL DEFAULT 0," +
@@ -12,7 +13,14 @@ public class PersonRelationsData extends BaseData {
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(relative_id) REFERENCES person(id));" ;
 	
-	public PersonRelationsData(RequestContext requestContext){
+	protected static String savePersonRelationOfflineURL = "/dashboard/savepersonrelationoffline/";
+	
+	public PersonRelationsData(){
 		super();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return PersonRelationsData.tableID;
 	}
 }

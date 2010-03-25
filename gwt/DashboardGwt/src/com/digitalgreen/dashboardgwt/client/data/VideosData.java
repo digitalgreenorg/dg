@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class VideosData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `video` " +
+	protected static String tableID = "22";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `video` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"TITLE VARCHAR(200)  NOT NULL ," +
 												"VIDEO_TYPE INT  NOT NULL DEFAULT 0," +
@@ -40,7 +41,14 @@ public class VideosData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(language_id) REFERENCES language(id) );";  
 	
-	public VideosData(RequestContext requestContext) {
+	protected static String saveVideoOfflineURL = "/dashboard/savevideooffline/";
+	
+	public VideosData() {
 		super();
+	}
+	
+	@Override
+	protected String getTableId(){
+		return VideosData.tableID;
 	}
 }

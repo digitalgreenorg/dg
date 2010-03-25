@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.common;
 
+import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 
 public class OnlineOfflineCallbacks {

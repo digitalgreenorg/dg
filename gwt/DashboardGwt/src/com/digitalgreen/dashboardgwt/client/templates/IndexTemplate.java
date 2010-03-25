@@ -70,7 +70,11 @@ public class IndexTemplate extends BaseTemplate {
 		
 		syncButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	   Window.alert("Functionality yet to be implemented");
+		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	   requestContext.getArgs().put("action", "sync");
+		    	   Index index = new Index(requestContext);
+		    	   index.response();
+		    	   //Window.alert("Functionality yet to be implemented");
 		      }		      
 	    });
 		

@@ -5,7 +5,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class ScreeningsData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening` " +
+	protected static String tableID = "25";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"DATE DATE  NOT NULL ," +
 												"START_TIME TIME  NOT NULL ," +
@@ -21,6 +22,8 @@ public class ScreeningsData extends BaseData {
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	
+	protected static String saveScreeningOfflineURL = "/dashboard/savescreeningoffline/";
+	
 	public class Data extends BaseData.Data {
 		public Data() {}
 	}
@@ -28,6 +31,11 @@ public class ScreeningsData extends BaseData {
 	@Override
 	public Data getNewData() {
 		return new Data();
+	}
+	
+	@Override
+	protected String getTableId(){
+		return ScreeningsData.tableID;
 	}
 	
 	public ScreeningsData() {

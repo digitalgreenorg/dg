@@ -4,7 +4,9 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class PersonMeetingAttendanceData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_meeting_attendance` " +
+	
+	protected static String tableID = "28";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_meeting_attendance` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"screening_id INT  NOT NULL DEFAULT 0," +
 												"person_id INT  NOT NULL DEFAULT 0," +
@@ -19,6 +21,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"FOREIGN KEY(expressed_interest_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_question_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_adoption_practice_id) REFERENCES practices(id) );";
+	protected static String savePersonMeetingAttendanceOfflineURL = "/dashboard/savepersonmeetingattendanceoffline/";
 	
 	public class Data extends BaseData.Data {
 		final private static String COLLECTION_PREFIX = "personmeetingattendance";
@@ -73,7 +76,12 @@ public class PersonMeetingAttendanceData extends BaseData {
 		}
 	}
 	
-	public PersonMeetingAttendanceData(RequestContext requestContext){
+	public PersonMeetingAttendanceData(){
 		super();
+	}
+	
+	@Override
+	protected String getTableId(){
+		return PersonMeetingAttendanceData.tableID;
 	}
 }

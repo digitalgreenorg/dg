@@ -4,7 +4,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class AnimatorsData extends BaseData {
 
-	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
+	protected static String tableID = "15";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"NAME VARCHAR(100)  NOT NULL ," +
 												"AGE INT  NULL DEFAULT NULL," +
@@ -21,7 +22,14 @@ public class AnimatorsData extends BaseData {
 												"FOREIGN KEY(home_village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
 	
-	public AnimatorsData(RequestContext requestContext) {
+	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
+	
+	public AnimatorsData() {
 		super();
+	}
+	
+	@Override
+	protected String getTableId() {
+		return AnimatorsData.tableID;
 	}
 }
