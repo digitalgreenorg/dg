@@ -13,6 +13,7 @@ from django.db import connection, transaction
 from dg.output.database import run_query, run_query_dict
 import datetime
 import cjson
+import re
 from django.core import serializers
 from django.contrib import auth
 
