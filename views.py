@@ -12,8 +12,7 @@ from django.shortcuts import render_to_response
 from django.db import connection, transaction
 from dg.output.database import run_query, run_query_dict
 import datetime
-import json
-#import cjson
+import cjson
 from django.core import serializers
 from django.contrib import auth
 
@@ -150,14 +149,14 @@ def feed_person_html_on_person_group(request):
 											  
 		
 	html = get_template('feeds/screening_view_person.txt')
-	
 	chomp = re.compile('\r|\n|\t')
+	
 	if(mode==0):
-		return HttpResponse(json.dumps(dict(tot_val=str(len(persons)+int(init_id)), \
+		return HttpResponse(cjson.encode(dict(tot_val=str(len(persons)+int(init_id)), \
 								 html = chomp.sub('',html.render(Context(dict(persons=persons,init=init_id)))), \
 								 prac = chomp.sub('',get_prac()))))
 	elif(mode==1):
-		return HttpResponse(json.dumps(dict(tot_val=str(len(persons)+int(init_id)), \
+		return HttpResponse(cjson.encode(dict(tot_val=str(len(persons)+int(init_id)), \
 								 html = chomp.sub('',html.render(Context(dict(persons=persons,init=init_id)))), \
 								 prac = chomp.sub('',get_prac()))))
 		
@@ -176,7 +175,7 @@ def get_prac():
 def feed_person_prac_pg_anim(request):
 	mode = int(request.GET.get('mode'));
 	if(mode!=1): prac = get_prac();
-	if(mode==0): return HttpResponse(json.dumps(dict(prac_list=prac))) 
+	if(mode==0): return HttpResponse(cjson.encode(dict(prac_list=prac))) 
 	if 'vil_id' in request.GET:
 		vil_id=int(request.GET.get('vil_id'))
 		village = Village.objects.select_related(depth=1).get(id=int(vil_id))
@@ -185,9 +184,9 @@ def feed_person_prac_pg_anim(request):
 		p = Person.objects.all().filter(village__block = village.block).order_by('person_name')
 		per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}} ({{p.village}})</option>{% endfor %}""")
 		if(mode==1):
-			return HttpResponse(json.dumps(dict(per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+			return HttpResponse(cjson.encode(dict(per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
 		elif(mode==2):
-			return HttpResponse(json.dumps(dict(prac_list=prac,per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
+			return HttpResponse(cjson.encode(dict(prac_list=prac,per_list=per_list.render(Context(dict(per=p))),anim=anim,pg=pg)))
 	
 	return HttpResponse('')
 		
