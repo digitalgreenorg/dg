@@ -63,7 +63,7 @@ a#desclink:hover	{ text-decoration:underline; color:#586835}
 	
 #baselinegraph					{ margin-top:40px; margin-left:10px; width:899px; height:20px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
 #baselinegraphtitle				{ z-index:9900; position:absolute; color:#465420; font-family:Calibri; font-size:14px; font-weight:bold; padding-top:10px; padding-left:15px; padding-right:5px; margin-top:10px; margin-left:0px}
-#baselinegraphtitleimg			{ z-index:9900; position:absolute; background:url("/media/Output/Images/baselinegraphbg3.png"); background-repeat:no-repeat; width:174px; height:38px; margin-top:10px; margin-left:150px}
+#baselinegraphtitleimg			{ z-index:9900; position:absolute; background:url("/media/Output/Images/baselinegraphbg3.png"); background-repeat:no-repeat; width:174px; height:38px; margin-top:10px; margin-left:160px}
 
 #baselinegraph1					{ color:#465420; font-family:Calibri; font-size:14px; font-weight:normal; padding-top:10px; padding-left:20px; padding-right:5px; margin-top:0px;}
 

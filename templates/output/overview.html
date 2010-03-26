@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Welcome to the Digital Green</title>
+    <title> Digital Green Analytics/Dashboard</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
     
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
@@ -112,7 +112,7 @@
 				<a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
 			</div>
 			<div class="nav_1" style="margin-left:5px;">
-				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video analytics </a>
+				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video </a>
 			</div>
 		</div>
 		</td>
@@ -123,7 +123,8 @@
 	<div id='default'>		
 		
 		<div id='gridfooter'>
-				<div id="dglogo"> 		            
+				<div id="dglogo">
+				<a href="http://www.digitalgreen.org/"><img src="/media/Output/Images/dglogo1.png"  /> </a>		            
 		        </div>		
 		        <div id='timeline'>
 					<div id='timelinedesc'>
@@ -236,33 +237,33 @@
 		
 		<div id='table1'>
 		    <div id='table1div1'>
-		        <div id='table1desc'>National Total Video Productions</div> 
+		        <div id='table1desc'>National  Video Productions</div> 
 		        <div id='table1val'> {{country_data.tot_vid}}  </div>
 		        
 		    </div>
 		    
 		    <div id='table1div2'>
-		        <div id='table1desc'>National Total Disseminations</div> 
+		        <div id='table1desc'>National  Disseminations</div> 
 		        <div id='table1val'> {{country_data.tot_scr}}  </div>
 		    </div>
 		    
 		    <div id='table1div3'>
-		        <div id='table1desc'>National Total Adoptions</div> 
+		        <div id='table1desc'>National  Adoptions</div> 
 		        <div id='table1val'> {{country_data.tot_ado}}  </div>
 		    </div>
 		    
 		    <div id='table1div4'>
-		        <div id='table1desc'>National Total Agricultural Practices </div> 
+		        <div id='table1desc'>National  Agricultural Practices </div> 
 		        <div id='table1val'> {{country_data.tot_pra}}  </div>
 		    </div>
 			
 			<div id='table1div5'>
-		        <div id='table1desc'>National Total Person Groups </div> 
+		        <div id='table1desc'>National  Person Groups </div> 
 		        <div id='table1val'> {{country_data.tot_pg}}  </div>
 		    </div>
 			 
 			<div id='table1div5'>
-		        <div id='table1desc'>National Total Villages </div>
+		        <div id='table1desc'>National  Villages </div>
 		        <div id='table1val'> {{country_data.tot_vil}}  </div>
 		    </div>
 			
@@ -302,7 +303,7 @@
 						<th id='table2td'>
 						    <div id='table2tdv2'> Farmer Adoptions
 							    <div id='table2tdv2desc'>
-							        The total number of adoptions 
+							       Total number of farmers following/taking up practice as demonstrated in DG video
 							    </div>
 							</div>
 							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							

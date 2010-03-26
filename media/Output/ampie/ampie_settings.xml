@@ -37,7 +37,7 @@
     <outline_alpha></outline_alpha>                           <!-- [0] (Number) -->
     <base_color></base_color>                                 <!-- [] (hex color code) color of first slice -->
     <brightness_step></brightness_step>                       <!-- [20] (-100 - 100) if base_color is used, every next slice is filled with lighter by brightnessStep % color. Use negative value if you want to get darker colors -->
-    <colors>#22da63,#e3ef58,#c0c961,#f9d12f,#95dbd4,#eeb4f0,#cdc3e4,#5eecda,#ea9ae5,#9ac7ea,#51be72,#5eecda,#f5f772,#86ec5e,#cd947d</colors>                                         <!-- [#FF0F00,#FF6600,#FF9E01,#FCD202,#F8FF01,#B0DE09,#04D215,#0D8ECF,#0D52D1,#2A0CD0,#8A0CCF,#CD0D74,#754DEB,#DDDDDD,#999999,#333333,#990000] (hex color codes separated by comas) -->
+    <colors>#46eaba,#22da63,#e3ef58,#c0c961,#f9d12f,#cd947d,#ea9ae5,#9ac7ea,#51be72,#f5f772,#86ec5e,#f2b030,#96267d</colors>                                         <!-- [#FF0F00,#FF6600,#FF9E01,#FCD202,#F8FF01,#B0DE09,#04D215,#0D8ECF,#0D52D1,#2A0CD0,#8A0CCF,#CD0D74,#754DEB,#DDDDDD,#999999,#333333,#990000] (hex color codes separated by comas) -->
     <link_target></link_target>                               <!-- [] (_blank, _top...) If pie slice has a link this is link target -->
     <alpha></alpha>                                           <!-- [100] (0 - 100) slices alpha. You can set individual alphas for every slice in data file. If you set alpha to 0 the slice will be inactive for mouse events and data labels will be hidden. This allows you to make not full pies and donuts. -->
     <hover_brightness></hover_brightness>                     <!-- [0] (from -255 to 255) The pie slice may darken/lighten when the use rolls over it. The intensity may be set here -->
@@ -146,18 +146,18 @@
     <text_size></text_size>                                   <!-- [text_size] (Number) -->
   </export_as_image>
   
-  <error_messages>                                            <!-- "error_messages" settings will be applied for all error messages except the one which is showed if settings file wasn't found -->
+  <error_messages>                                         <!-- "error_messages" settings will be applied for all error messages except the one which is showed if settings file wasn't found -->
     <enabled></enabled>                                       <!-- [true] (true / false) -->
     <x></x>                                                   <!-- [] (Number / Number% / !Number) x position of error message. If not set, will be aligned to the center -->
     <y></y>                                                   <!-- [] (Number / Number% / !Number) y position of error message. If not set, will be aligned to the center -->
     <color></color>                                           <!-- [#BBBB00] (hex color code) background color of error message. Separate color codes with comas for gradient -->
     <alpha></alpha>                                           <!-- [100] (0 - 100) background alpha -->
     <text_color></text_color>                                 <!-- [#FFFFFF] (hex color code) -->
-    <text_size></text_size>                                   <!-- [text_size] (Number) -->
+    <text_size>12</text_size>                                   <!-- [text_size] (Number) -->
   </error_messages>    
   
   <strings>
-    <no_data></no_data>                                       <!-- [No data for selected period] (text) if data is missing, this message will be displayed -->
+    <no_data>No Data for selected Geography</no_data>                                       <!-- [No data for selected period] (text) if data is missing, this message will be displayed -->
     <export_as_image></export_as_image>                       <!-- [Export as image] (text) text for right click menu -->
     <collecting_data></collecting_data>                       <!-- [Collecting data] (text) this text is displayed while exporting chart to an image -->
   </strings>  
@@ -178,18 +178,7 @@
   <labels>                                                    <!-- LABELS -->
                                                               <!-- you can add as many labels as you want -->
                                                               <!-- labels can also be added in data xml file, using exactly the same structure like it is here -->
-    <label lid="0">
-      <x>0</x>                                                <!-- [0] (Number / Number% / !Number) -->
-      <y>10</y>                                               <!-- [0] (Number / Number% / !Number) -->
-      <rotate>false</rotate>                                  <!-- [false] (true / false) -->
-      <width></width>                                         <!-- [] (Number / Number%) if empty, will stretch from left to right untill label fits -->
-      <align>center</align>                                   <!-- [left] (left / center / right) -->  
-      <text_color></text_color>                               <!-- [text_color] (hex color code) button text color -->
-      <text_size>12</text_size>                               <!-- [text_size](Number) button text size -->
-      <text>                                                  <!-- [] (text) html tags may be used (supports <b>, <i>, <u>, <font>, <a href="">, <br/>. Enter text between []: <![CDATA[your <b>bold</b> and <i>italic</i> text]]>-->
-        <![CDATA[<b></b>]]>
-      </text>        
-    </label>
+   
   </labels>
   
 	<!-- DATA can also be set in settings file. Just place data in CSV or XML format between <data></data> -->

@@ -22,7 +22,7 @@
 .select							{ background-color:#e4f1c9; border-style:solid; border-width:1px; border-color:#666666; width:160px; text-align:center}
 
 /* Calender CSS */
-#dglogo							{ float:left; margin-top:0px; margin-left:10px;  background:url("/media/Output/Images/dglogo1.png"); background-repeat:no-repeat;; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+#dglogo							{ float:left; margin-top:0px; margin-left:10px; background-repeat:no-repeat;; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
 
 #timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
 #timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
@@ -76,4 +76,10 @@ a:visited 			{COLOR: #586835;TEXT-DECORATION: none;}
 
 a:hover 			{COLOR: #efb11c;TEXT-DECORATION: underline;}
 
-a:active 			{COLOR: #006600;TEXT-DECORATION: underline;}
+a:active 			{COLOR: #006600;TEXT-DECORATION: underline;}>>>>>>> .r203
+<!--Dglogo-->
+#dglogo a:link 		{COLOR: #ffffff;TEXT-DECORATION: none;}
+
+#dglogo a:visited 	{COLOR:#ffffff;TEXT-DECORATION: none;}
+#dglogo a:hover 	{COLOR: #ffffff;TEXT-DECORATION: underline;}
+#dglogo a:active 	{COLOR: #FFFFFF;TEXT-DECORATION: underline;}
