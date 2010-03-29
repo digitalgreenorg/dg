@@ -1,16 +1,19 @@
-#mainbody						{ background-color:#dfedc5}
+#mainbody									{ background-color:#dfedc5}
 
+/* Nav Menu */
+#navmenu									{ margin-top:3px; margin-left:1%; width:150px; background-color:White; float:left; border-color:#add540; border-style:solid; border-width:1px; min-height:106px}	
+#navmenutitle								{ margin-left:10px; margin-top:0px; width:142px; background-color:#f0f4bd; margin-bottom:0px; height:80px; background:url("/media/Output/Images/navchartbg4.png"); background-repeat:no-repeat; }
+#navmenu ul#navmenulist li a				{ float:left; text-decoration:none; color:#445e1e; margin-left:5px; }
+#navmenu ul#navmenulist li a:visited		{ text-decoration:none; color:#445e1e; }
+#navmenu ul#navmenulist li a:hover			{ text-decoration:none; color:Orange; }
+#navmenulist								{ margin-top:0px; padding-top:0px}
+#navmenulist li 							{ display:block; margin-left:-30px; width:125px; height:20px; font-family:Calibri; font-size:18px; font-weight:bold; border-bottom-style:solid; border-bottom-width:2px; border-bottom-color:#d9ecaf; padding-top:5px; padding-left:2px}
+#navarrowimg								{ float:left; width:12px; height:15px; background:url("/media/Output/Images/arrowbg1.png"); background-repeat:no-repeat; margin-top:5px; margin-left:2px }
 /* Center class */
-#tablegrid						{ margin-top:2px}
-#default						{ margin-top:0px; margin-left:0%; width: 920px; background-color:#ffffff; border-color:#add540; border-style:solid; border-width:1px ;float:none}
-#defaultfooter					{ margin-top:0px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultfooterbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
-
-#gridfooter						{ margin-left:0px; margin-top:5px; border-width:0px; border-style:solid; border-color:#FFFFFF; width:900px; padding-top:10px}
-
-/*
-#defaultheader					{ margin-top:2px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultheaderbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
-*/
-
+#tablegrid									{ margin-top:2px; margin-left:1%; float:left}
+#default									{ margin-top:0px; margin-left:0%; width: 920px; background-color:#ffffff; border-color:#add540; border-style:solid; border-width:1px; float:none}
+#defaultfooter								{ margin-top:0px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultfooterbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
+#gridfooter									{ margin-left:0px; margin-top:5px; border-width:0px; border-style:solid; border-color:#FFFFFF; width:900px; padding-top:10px}
 
 /* Customize your search */ 
 #searchbody						{ margin-top:0px; margin-left:10px; width:898px; height:50px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
@@ -22,10 +25,11 @@
 .select							{ background-color:#e4f1c9; border-style:solid; border-width:1px; border-color:#666666; width:160px; text-align:center}
 
 /* Calender CSS */
-#dglogo							{ float:left; margin-top:0px; margin-left:10px; background-repeat:no-repeat;; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
+#dglogo							{ float:left; margin-top:0px; margin-left:10px; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
+#dglogo a img					{border-style:none}
 
 #timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
-#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; disabled:"disabled"}
 #timelinedesc1btntop			{ background:url("/media/Output/Images/closebtn1.png"); background-repeat:no-repeat; width:50px; height:16px; margin-top:5px; margin-left:93.5%; color:#666666; font-family:Calibri; font-size:10px; font-weight:normal; padding-top:2px; padding-right:20px;padding-left:-10px}
 	
 #timelinedescfooter				{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-top:42px; margin-left:10px; position:absolute;}
@@ -56,30 +60,6 @@
 #datepicker2 					{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:160px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
 #datepicker12reset				{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:54px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
 
-a#resetdate						{ text-decoration:none; color:#c2c2c2; font-family:Calibri; font-size:16px; font-weight: bold; }
+a#resetdate						{ text-decoration:none; color:#dbd026; font-family:Calibri; font-size:16px; font-weight: bold; }
 a#resetdate:hover				{ text-decoration:underline; color:#666666; font-family:Calibri; font-size:16px; font-weight: bold; }
-<!-- navigation -->
 
-element.style		{-moz-border-radius: 10px 10px 10px 10px;}
-
-#navigation			{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:192px; font-color:#586835; font-family:calibri;}
-
-#navigation_1		{background-color:#defaa9; border:0px; margin-left:2px; margin-top:0px; width:171px; min-height: 180px;} 
-
-.nav_1				{margin-top:5px; font-size:18px; padding-left:4px;}
-
-#nav_0				{margin-top:5px; color:#efb11c; font-family:"Times New Roman"; font-size:16px; font-weight:bold; padding-left:4px;}
-
-a:link				{COLOR: #0000FF; TEXT-DECORATION: none;}
-
-a:visited 			{COLOR: #586835;TEXT-DECORATION: none;}
-
-a:hover 			{COLOR: #efb11c;TEXT-DECORATION: underline;}
-
-a:active 			{COLOR: #006600;TEXT-DECORATION: underline;}>>>>>>> .r203
-<!--Dglogo-->
-#dglogo a:link 		{COLOR: #ffffff;TEXT-DECORATION: none;}
-
-#dglogo a:visited 	{COLOR:#ffffff;TEXT-DECORATION: none;}
-#dglogo a:hover 	{COLOR: #ffffff;TEXT-DECORATION: underline;}
-#dglogo a:active 	{COLOR: #FFFFFF;TEXT-DECORATION: underline;}

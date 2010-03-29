@@ -1,34 +1,21 @@
-element.style		{-moz-border-radius: 10px 10px 10px 10px;}
 
-#navigation			{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:200px;}
- 
-#analytics 					{ margin-top:5px; float:none; margin-left:10px; width:899px; border-style:solid; border-color:#add540; border-width:1px; }
+#navigation					{background-color:#FFFFFF; border:1px solid #ADD540; float:none; margin-left:1px; margin-top:2px; width:175px; min-height:200px;}
 
-#analyticstitle				{ font-size:24px; font-family:calibri; font-weight:bold; color: #465420; text-align:center; width:898px}
-#analyticsbody				{ margin-top:5px; width:898px; background-color:#fcfeef; height:80px; margin-bottom:5px}
-
-#analyticsbodydesc			{ float:left; margin-top:3px; font-size:16px; font-family:calibri; font-weight:normal; color: #465420; width:436px; margin-right:3px; margin-left:5px; background-color:#defaa9; height:30px; padding-left:5px; padding-top:5px}
+#analyticstitle				{ font-size:24px; font-family:calibri; font-weight:bold; color: #465420; text-align:center; width:898px; margin-bottom:0px}
 
 #graphtable					{width:899px; float:none; margin-top:10px;}
 
-/*
- #analytics1 				{ float:none; margin-left:4px; margin-right:4px; border-color:#006633; margin-top:10px }
-
-#analytics1_tr1 			{ width:450px; height:30px; background-color:#effbcf; border-right-color:#6ed13c; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center; color: #333333; font-stretch: narrower }
-			
-*/
-
 /* Analytics Stats total */
 
-#table1				{ margin-left:10px; margin-top:10px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
+#table1						{ margin-left:10px; margin-top:0px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
+#table1title				{ margin-top:5px; margin-left:10px; padding-top:5px; padding-left:10px; color:White; font-family:Calibri; font-size:14px; font-weight:bold; display:block; background-color:#a7d233; width:120px }
 
-
-#table1div1			{ margin-left:5px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
-#table1div2			{ margin-left:0px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div3			{ margin-left:0px; width:298px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1desc			{ padding-left:5px; color:#465420; font-family:Calibri; font-size:15px; font-weight:normal; }
-#table1val			{ padding-left:5px; color:#efb11c; font-family:Times New Roman; font-size:25px; font-weight:bold; }
-/*#table1div4		{ margin-left:0px; width:300px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;} */
+#table1div1					{ margin-left:5px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
+#table1div2					{ margin-left:0px; width:290px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div3					{ margin-left:0px; width:298px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1desc					{ padding-left:5px; color:#465420; font-family:Calibri; font-size:15px; font-weight:normal; }
+#table1val					{ padding-left:5px; color:#efb11c; font-family:Times New Roman; font-size:25px; font-weight:bold; }
+/*#table1div4				{ margin-left:0px; width:300px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;} */
 
 
 #graphtable0				{ margin-top:0px; margin-bottom:5px; margin-left:10px; }
@@ -47,19 +34,30 @@ element.style		{-moz-border-radius: 10px 10px 10px 10px;}
 
 /* Graph View Charts*/
 
-#graphtable					{ margin-top:10px; margin-bottom:0px; margin-left:10px; float:none}
-#graphtabletd				{ width:899px; margin-top:0px}
-#graphdiv1					{ margin-top:0px; float:left; width:445px; margin-left:2px; margin-bottom:10px}
-#graphdiv1title				{ margin-top:1px; margin-left:2px; margin-right:2px; float:none; width:440px; height: 40px; border-style: solid; border-color: #9ce94f; border-width:1px;  }
-#graphdiv1titledesc			{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black}
+#graphtable						{ margin-top:10px; margin-bottom:0px; margin-left:10px; float:none}
+#graphtabletd					{ width:899px; margin-top:0px}
+#graphdiv1						{ margin-top:0px; float:left; width:445px; margin-left:2px; margin-bottom:10px}
+#graphdiv1title					{ z-index:4000; margin-top:1px; margin-left:2px; margin-right:2px; float:none; width:440px; height: 40px; border-style: solid; border-color: #9ce94f; border-width:1px;  }
+#graphdiv1titledesc				{ margin-top:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black}
 
-.graphdiv1desc				{ min-height:400px; margin-top:0px; margin-left:2px; margin-right:2px; float:none; width:440px; border-style: solid; border-color: #9ce94f; border-width:1px; background-color:#ffffff; padding-top:10px;}
+#subgraphdiv1titledesc1			{ z-index:5000; margin-top:0px; margin-left:10px; text-align:center; font-family:Calibri; font-weight:bold; font-size:18px; color: Black; float:left; width:380px}
+#subgraphdiv1titledesc2			{ z-index:5000; margin-top:-2px; margin-left:15px; float:left; width:23px; height:22px; border-style: solid; border-color:Green; border-width:1px; padding-top:2px }
+#subgraphdiv1titledesc2 a img	{border-style:none}
 
-.number						{ font-size:18px; font-family:calibri; font-weight:bold; color: #465420;}
-.moduletd  					{ float:none; width:450px; height:40px; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
 
+.graphdiv1desc					{ z-index:5000; min-height:400px; margin-top:0px; margin-left:2px; margin-right:2px; float:none; width:440px; border-style: solid; border-color: #9ce94f; border-width:1px; background-color:#ffffff; padding-top:10px;}
 
-.video_footer 				{ width:450px;}
+.number							{ font-size:18px; font-family:calibri; font-weight:bold; color: #465420;}
+.moduletd  						{ float:none; width:450px; height:40px; border-right-color:#339900;  color:#586835;font-size:20px; font-family:calibra; font-weight:500; font-stretch:expanded; color: #666666;text-align:center}
+.video_footer 					{ width:450px;}
+
+/* Expansion Overlay of Charts - CSS */
+#expandview1					{ z-index:9900; position:fixed; top:2px; background-color:Black; left:15%;}
+#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; left:5%; top:5%; width:90%; height:550px; background-color:White; disabled:"disabled" }
+#expandview4					{ padding-left:50px; padding-top:10px}
+#expandviewtitle				{ border-bottom-color:#ecedec; border-bottom-style:solid; border-bottom-width:2px; float:left; margin-top:10px; margin-left:10px; width:95%; height:30px; font-family:Calibri; font-weight:bold; font-size:26px; color: Green; text-align:center }
+#expandviewclosebtn				{ float:left; margin-top:10px; margin-left:10px; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
+.expandviewchart				{ float:none; margin-top:10px; margin-left:10px}
 
 
 

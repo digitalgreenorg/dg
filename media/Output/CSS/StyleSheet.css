@@ -1,6 +1,11 @@
-/* CSS Document */
-#hello				{ z-index:9900; position:fixed; top:2px; background-color:Black; left:15%;}
-#hello1				{ border-color:#add540; border-style:solid; border-width:1px; z-index:9999; position:fixed; top:10%; left:10%; width:700px; height:500px;}
+/* Expansion Overlay of Charts - CSS */
+#expandview1					{ z-index:9900; position:fixed; top:2px; background-color:Black; left:15%;}
+#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; left:5%; top:5%; width:90%; height:550px; background-color:White; disabled:"disabled" }
+#expandview4					{ padding-left:5px; padding-top:10px}
+#expandviewtitle				{ border-bottom-color:#ecedec; border-bottom-style:solid; border-bottom-width:2px; float:left; margin-top:10px; margin-left:10px; width:95%; height:30px; font-family:Calibri; font-weight:bold; font-size:26px; color: Green; text-align:center }
+#expandviewclosebtn				{ float:left; margin-top:10px; margin-left:10px; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
+.expandviewchart				{ float:none; margin-top:10px; margin-left:10px}
+#expandviewbtn					{ margin-top:0px; margin-left:97%; width:21px; height:21px; background:url("/media/Output/Images/zoombg1.png"); background-repeat:no-repeat; border-color:Green; border-width:1px; border-style:solid; cursor:pointer; }
 
 #sort 				{ border-style:none; opacity:0.3;} 
 #sort:hover			{ border-left-style:solid; border-left-width:1px; border-left-color:#586835;opacity:1}
@@ -11,14 +16,15 @@
 
 
 #tablebody			{ margin-lefrt:3%; margin-top:0px;}
-#table1				{ margin-left:10px; margin-top:10px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
+#table1				{ margin-left:10px; margin-top:0px; background-color:#f4f6d8; width:898px; height:70px; float:none; border-top-style:solid; border-top-width:6px; border-top-color:#a7d233; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6; border-bottom-style:solid; border-bottom-width:1px; border-bottom-color:#e7e3a6; }
+#table1title		{ margin-top:5px; margin-left:10px; padding-top:5px; padding-left:10px; color:White; font-family:Calibri; font-size:14px; font-weight:bold; display:block; background-color:#a7d233; width:120px }
 
-#table1div1			{ margin-left:5px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
-#table1div2			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div3			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div4			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div5			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
-#table1div6			{ margin-left:0px; width:145px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div1			{ margin-left:5px; width:174px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; }
+#table1div2			{ margin-left:0px; width:139px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div3			{ margin-left:0px; width:139px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-right-style:solid; border-right-width:1px; border-right-color:#e7e3a6; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div4			{ margin-left:0px; width:139px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div5			{ margin-left:0px; width:141px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
+#table1div6			{ margin-left:0px; width:129px;background-color:#defaa9; padding:1px; float:left; height: 60px; margin-top:4px; border-left-style:solid; border-left-width:1px; border-left-color:#e7e3a6;}
 #table1desc			{ padding-left:5px; color:#465420; font-family:Calibri; font-size:15px; font-weight:normal; }
 #table1val			{ padding-left:5px; color:#efb11c; font-family:Times New Roman; font-size:25px; font-weight:bold; }
 
@@ -43,7 +49,8 @@
 
 
 #table2tdv2			{ width:123px; margin-left:0px; float:left; text-align:center; z-index:9000; padding-top:7px; cursor:pointer}
-#table2tdv2desc		{ width:215px; height:60px; margin-top:-72px; margin-left:-50px ; position:absolute; z-index:9000; background:url("/media/Output/Images/table2tdv2descbg2.png"); background-repeat:no-repeat; padding-top:5px }	
+#table2tdv2desc		{ width:215px; height:60px; margin-top:-72px; margin-left:-50px ; position:absolute; z-index:9000; background:url("/media/Output/Images/table2tdv2descbg2.png"); background-repeat:no-repeat; font-family:Calibri; font-size:14px; text-align:left; padding-top:3px; padding-left:5px; display:none }
+
 #table2tdv3			{ width:18px; height:30px; margin-left:0px; float:left;}
 a#desclink			{ text-decoration:none; color:#586835}
 a#desclink:hover	{ text-decoration:underline; color:#586835}
@@ -61,7 +68,7 @@ a#desclink:hover	{ text-decoration:underline; color:#586835}
 #table2td1 a:hover	{ text-decoration:underline; color:#efb11c }
 
 	
-#baselinegraph					{ margin-top:40px; margin-left:10px; width:899px; height:20px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
+#baselinegraph					{ margin-top:40px; margin-left:10px; width:899px; height:20px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid; }
 #baselinegraphtitle				{ z-index:9900; position:absolute; color:#465420; font-family:Calibri; font-size:14px; font-weight:bold; padding-top:10px; padding-left:15px; padding-right:5px; margin-top:10px; margin-left:0px}
 #baselinegraphtitleimg			{ z-index:9900; position:absolute; background:url("/media/Output/Images/baselinegraphbg3.png"); background-repeat:no-repeat; width:174px; height:38px; margin-top:10px; margin-left:160px}
 
