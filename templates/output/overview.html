@@ -468,7 +468,7 @@
 						<graph gid="5"><title>Total Persons</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						</graphs></settings>'))
 		so.addVariable("chart_id", "line_chart");
-		var from_date = null, to_date = null;
+		var from_date = null, to_date = null, from_date_str = '', to_date_str = '';
 			{%if from_date and to_date %}
 			function amChartInited(chart_id){	
 			  flashMovie = document.getElementById(chart_id);	
@@ -478,38 +478,44 @@
 				//var arr = from_date.split('-');
 				var zoom_from_date, zoom_to_date;
 				from_date_arr = '{{from_date}}'.split('-');
-				new_from_date = new Date(from_date_arr[0],parseInt(from_date_arr[1])-1,from_date_arr[2]);
+				new_from_date = new Date(parseInt(from_date_arr[0]),parseInt(from_date_arr[1],10)-1,parseInt(from_date_arr[2]));
 				
 				to_date_arr = '{{to_date}}'.split('-');
-				new_to_date = new Date(to_date_arr[0],parseInt(to_date_arr[1])-1,to_date_arr[2]);
+				new_to_date = new Date(parseInt(to_date_arr[0]),parseInt(to_date_arr[1],10)-1,parseInt(to_date_arr[2]));
 				
-				if(new_from_date > new Date(to_date))
-					zoom_from_date = to_date
-				else if(new Date(from_date) > new_from_date)
-					zoom_from_date = from_date;
+				if(new_from_date > to_date)
+					zoom_from_date = to_date_str
+				else if(from_date > new_from_date)
+					zoom_from_date = from_date_str;
 				else 
 					zoom_from_date = '{{from_date}}';
 				
-				if(new Date(to_date) < new_to_date)
-					zoom_to_date = to_date;
-				else if(new_to_date < new Date(from_date))
-					 zoom_to_date = from_date;
+				if(to_date < new_to_date)
+					zoom_to_date = to_date_str;
+				else if(new_to_date < from_date)
+					 zoom_to_date = from_date_str;
 				else
 					zoom_to_date = '{{to_date}}';
-			  
-			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
+				flashMovie.setZoom(zoom_from_date,zoom_to_date);
 			  
 			 }
 			}
-			function amGetZoom(chart_id, from, to, from_xid, to_xid){
-			  if(from_date==null)
+			function amGetZoom(chart_id, from, to, from_xid, to_xid){			
+			  if(from_date==null) {
 				from_date = from.split('-');
-				from_date = new Date(from_date[0],parseInt(from_date[1])-1,from_date[2]);
-			  if(to_date==null)
+				from_date = new Date(parseInt(from_date[0],10),parseInt(from_date[1],10)-1,parseInt(from_date[2],10));
+				
+				from_date_str = from;
+			 }
+			  if(to_date==null) {
 				to_date = to.split('-');
-				to_date = new Date(to_date[0],parseInt(to_date[1])-1,to_date[2]);
+				to_date = new Date(parseInt(to_date[0],10),parseInt(to_date[1],10)-1,parseInt(to_date[2],10));
+				
+				to_date_str = to;
+			}
 				
 			}
+			
 			{% endif %}
 			
 		
