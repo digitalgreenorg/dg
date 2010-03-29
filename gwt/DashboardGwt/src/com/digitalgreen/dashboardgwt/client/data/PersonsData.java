@@ -5,6 +5,24 @@ import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
 
 public class PersonsData extends BaseData {
 	
+	public static class Type extends BaseData.Type{
+		protected Type() {}
+	}
+	
+	public class Data extends BaseData.Data {
+		
+		final private static String COLLECTION_PREFIX = "person";
+		
+		public Data() {
+			super();
+		}
+
+		@Override
+		public String getPrefixName() {
+			return Data.COLLECTION_PREFIX;
+		}
+	}
+	
 	protected static String tableID = "13";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
@@ -24,21 +42,21 @@ public class PersonsData extends BaseData {
 	
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	
-	public class Data extends BaseData.Data {
-		public Data() {}
-	}
-
-	@Override
-	public Data getNewData() {
-		return new Data();
-	}
-	
 	public PersonsData() {
 		super();
 	}
 	
 	@Override
+	public Data getNewData() {
+		return new Data();
+	}
+	
+	@Override
 	protected String getTableId() {
-		return PersonsData.tableID;
+		return AnimatorsData.tableID;
+	}
+	
+	protected String getTableName() {
+		return this.table_name;
 	}
 }

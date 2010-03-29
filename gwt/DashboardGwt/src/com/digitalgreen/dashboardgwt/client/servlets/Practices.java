@@ -41,7 +41,7 @@ public class Practices extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							PracticesData practicesdata = new PracticesData();
-							List practices = practicesdata.getPracticesOnline(results);
+							List practices = practicesdata.getPracticesListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Practice successfully saved");
 							requestContext.getArgs().put("listing", practices);
@@ -65,7 +65,7 @@ public class Practices extends BaseServlet{
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							PracticesData practicedata = new PracticesData();
-							List practices = practicedata.getPracticesOffline();
+							List practices = practicedata.getPracticesListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Practice successfully saved");
 							requestContext.getArgs().put("listing", practices);
@@ -87,7 +87,7 @@ public class Practices extends BaseServlet{
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								PracticesData practicedata = new PracticesData();
-								List practices = practicedata.getPracticesOnline(results);
+								List practices = practicedata.getPracticesListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", practices);
 								getServlet().redirectTo(new Practices(requestContext));
@@ -110,7 +110,7 @@ public class Practices extends BaseServlet{
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								PracticesData practicedata = new PracticesData();
-								List practices = practicedata.getPracticesOffline();
+								List practices = practicedata.getPracticesListingOffline();
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", practices);
 								getServlet().redirectTo(new Practices(requestContext));

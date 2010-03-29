@@ -25,7 +25,6 @@ public class StatesData extends BaseData {
 			
 		private String state_name;
 		private String start_date;
-		//private int region_id;
 		private RegionsData.Data region;
 		
 		
@@ -41,13 +40,6 @@ public class StatesData extends BaseData {
 			this.region = region;
 		}
 		
-		/*public Data(int id, String state_name, int region_id, String start_date) {
-			super();
-			this.id = id;
-			this.state_name = state_name;
-			this.region_id = region_id;
-			this.start_date = start_date;
-		}*/
 		
 		public String getStateName(){
 			return this.state_name;
@@ -56,11 +48,6 @@ public class StatesData extends BaseData {
 		public String getStartDate(){
 			return this.start_date;
 		}
-
-		
-		/*public int getRegionId(){
-			return this.region_id;
-		}*/
 		
 		public RegionsData.Data getRegion(){
 			return this.region;
@@ -169,11 +156,11 @@ public class StatesData extends BaseData {
 		return states;
 	}
 	
-	public List getStatesOnline(String json){
+	public List getStatesListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getStatesOffline(){
+	public List getStatesListingOffline(){
 		BaseData.dbOpen();
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
@@ -196,11 +183,6 @@ public class StatesData extends BaseData {
 		return states;
 	}
 
-	public List getTemplateDataOnline(String json){
-		List relatedData = null;
-		return relatedData;
-	}
-	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
 			this.post(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL, this.queryString);
@@ -225,7 +207,7 @@ public class StatesData extends BaseData {
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();
-		List regions = regionData.getRegionsOffline();
+		List regions = regionData.getAllRegionsOffline();
 		RegionsData.Data region;
 		String html = "<select name=\"region\" id=\"id_region\">";
 		for(int i=0; i< regions.size(); i++){

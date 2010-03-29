@@ -174,11 +174,11 @@ public class PartnersData extends BaseData {
 		return partners;
 	}
 	
-	public List getPartnersOnline(String json){
+	public List getPartnersListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getPartnersOffline(){
+	public List getPartnersListingOffline(){
 		BaseData.dbOpen();
 		List partners = new ArrayList();
 		this.select(listPartners);

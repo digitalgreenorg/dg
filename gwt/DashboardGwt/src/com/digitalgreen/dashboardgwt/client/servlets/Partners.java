@@ -42,7 +42,7 @@ public class Partners extends BaseServlet{
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						PartnersData partnersData = new PartnersData();
-						List partners = partnersData.getPartnersOnline(results);
+						List partners = partnersData.getPartnersListingOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
@@ -66,7 +66,7 @@ public class Partners extends BaseServlet{
 				public void offlineSuccessCallback(Object results) {
 					if((Boolean)results) {
 						PartnersData partnerData = new PartnersData();
-						List partners = partnerData.getPartnersOffline();
+						List partners = partnerData.getPartnersListingOffline();
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
@@ -88,7 +88,7 @@ public class Partners extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							PartnersData partnersData = new PartnersData();
-							List partners = partnersData.getPartnersOnline(results);
+							List partners = partnersData.getPartnersListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", partners);
 							getServlet().redirectTo(new Partners(requestContext));						
@@ -111,7 +111,7 @@ public class Partners extends BaseServlet{
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							PartnersData partnersData = new PartnersData();
-							List partners = partnersData.getPartnersOffline();
+							List partners = partnersData.getPartnersListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", partners);
 							getServlet().redirectTo(new Partners(requestContext));

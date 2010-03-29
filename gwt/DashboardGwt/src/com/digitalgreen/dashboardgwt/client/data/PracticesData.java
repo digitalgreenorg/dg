@@ -154,11 +154,11 @@ public class PracticesData extends BaseData {
 		return practices;
 	}
 	
-	public List getPracticesOnline(String json){
+	public List getPracticesListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
-	public List getPracticesOffline(){
+	public List getPracticesListingOffline(){
 		BaseData.dbOpen();
 		List practices = new ArrayList();
 		this.select(listPractices);

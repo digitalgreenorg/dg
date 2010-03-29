@@ -200,11 +200,11 @@ public class FieldOfficersData extends BaseData {
 		return fieldOfficers;
 	}
 	
-	public List getFieldOfficersOnline(String json){
+	public List getFieldOfficersListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
-	public List getFieldOfficersOffline(){
+	public List getFieldOfficersListingOffline(){
 		BaseData.dbOpen();
 		List fieldOfficers = new ArrayList();
 		this.select(listFieldOfficers);

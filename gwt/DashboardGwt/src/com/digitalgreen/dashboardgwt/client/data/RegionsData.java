@@ -30,6 +30,12 @@ public class RegionsData extends BaseData {
 			super();
 		}
 		
+		public Data(int id, String region_name){
+			super();
+			this.id = id;
+			this.region_name = region_name;
+		}
+		
 		public Data(int id, String region_name, String start_date) {
 			super();
 			this.id = id;
@@ -80,7 +86,8 @@ public class RegionsData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `region` " +
 												"(id INTEGER PRIMARY KEY NOT NULL," +
 												"REGION_NAME VARCHAR(100) NOT NULL," +
-												"START_DATE DATE NULL DEFAULT NULL);";  
+												"START_DATE DATE NULL DEFAULT NULL);";
+	protected static String selectRegions = "SELECT id, region_name FROM region ORDER BY(region_name)";
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
 	protected static String saveRegionOnlineURL = "/dashboard/saveregiononline/";
 	protected static String getRegionOnlineURL = "/dashboard/getregionsonline/";
@@ -136,11 +143,11 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
-	public List getRegionsOnline(String json){
+	public List getRegionsListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getRegionsOffline(){
+	public List getRegionsListingOffline(){
 		BaseData.dbOpen();
 		List regions = new ArrayList();
 		this.select(listRegions);
@@ -161,6 +168,27 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 
+	public List getAllRegionsOffline(){
+		BaseData.dbOpen();
+		List regions = new ArrayList();
+		this.select(selectRegions);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data region = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					regions.add(region);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return regions;
+	}
+	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
 			this.post(RequestContext.SERVER_HOST + this.saveRegionOnlineURL, this.queryString);
