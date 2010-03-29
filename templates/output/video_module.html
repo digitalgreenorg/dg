@@ -10,16 +10,13 @@
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/StyleSheet.css' />
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/video_analytics.css">
-            
-    <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
-    <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
-	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
+     <link type="text/css" rel="stylesheet" href="/media/Output/CSS/navigation.css"> 
+             
+    <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>  	
 	<script type="text/javascript" src="/media/Output/JS/JGridPage.js"></script>  
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
-	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.min.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.pack.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>   
     
     <script type="text/javascript" src="/media/Output/ampie/swfobject.js"></script>
     <script type="text/javascript" src="/media/Output/amcolumn/swfobject.js"></script>
@@ -109,30 +106,23 @@
 </head>
 
 <body id='mainbody' onload='Default()'>
-<table>
-	<tr>
-		<td valign="top">
-		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
-		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
-				<a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
-			</div>
-			<div class="nav_1" style="margin-left:5px;">
-				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video  </a>
 
-			</div>
-		</div>
-		</td>
-	<td>	
+<div id="navmenu">
+	<div id="navmenutitle"></div>
+		<ul id="navmenulist">
+			<li> <div id='navarrowimg'></div> <a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>  </li>
+			<li> <div id='navarrowimg'></div> <a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Videos </a>  </li>
+		</ul>	
+</div>
+
  <div id='tablegrid'> 	
 	<!-- <div id='defaultheader'> </div>  -->
-	
-
 	
 	<div id='default'>		
 		
 		<div id='gridfooter'>
 		        <div id="dglogo"> 
-				<a href="http://www.digitalgreen.org/"><img src="/media/Output/Images/dglogo1.png"  /> </a>		            
+					<a href="http://www.digitalgreen.org" target="_blank"> <img src ="/media/Output/Images/dglogo1.png" alt='temp' title="Digital Green"> </a> 		            
 		        </div>		        		
 		        <div id='timeline'>
 					<div id='timelinedesc'>
@@ -244,15 +234,16 @@
 	    </div>	<!-- searchbody-->		    
 	    
 	    <div id="analyticstitle"> Video Analytics </div>
+	    
 	    <div id='table1'>
 		    <div id='table1div1'>
-		        <div id='table1desc'>Total Number of Videos Produced </div> 
+		        <div id='table1desc'>Total number of Videos Produced </div> 
 		        <div id='table1val'>  {{tot_video}} videos </div>
 		        
 		    </div>
 		    
 		    <div id='table1div2'>
-		        <div id='table1desc'>Total Number of distinct Videos Screened</div> 
+		        <div id='table1desc'> Total number of distinct Videos Screened </div> 
 		        <div id='table1val'> {{tot_screening}} videos  </div>
 		    </div>
 		    
@@ -267,14 +258,21 @@
 				<td id="graphtabletd">					
 						<div id="graphdiv1">
 							<div id="graphdiv1title">
-								<div id="graphdiv1titledesc" > Videos per Geography </div>
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Geographic distribution of Videos</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(1), func2(1) "> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>
 							</div>
 							<div class="graphdiv1desc" id="flash_area_geogwise_pie">								
 							</div>												
 						</div>
 						
 						<div id="graphdiv1">
-							<div id="graphdiv1title"> <div id="graphdiv1titledesc" >  Video Production per Month</div>	
+							<div id="graphdiv1title"> 
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Videos Produced per Month</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(2), func2(2)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>															
 							</div>
 							<div class="graphdiv1desc" id="flash_area_monthwise_bar">								
 							</div>						
@@ -285,14 +283,20 @@
 				<td id="graphtabletd">					
 						<div id="graphdiv1">
 							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >	Video Production over Time </div>	
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Videos Produced over Time</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(3), func2(3)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>	
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_vid_prod_time">						
 							</div>						
 						</div>
 						<div id="graphdiv1">
 							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >   Videos per Practice </div>	
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Videos per Practice</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(4), func2(4)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>									
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_practice_type_scatter" >
 							</div>						
@@ -302,15 +306,21 @@
 			<tr>
 				<td id="graphtabletd">					
 						<div id="graphdiv1">
-							<div id="graphdiv1title">	
-								<div id="graphdiv1titledesc" >	Videos per Language  </div>
+							<div id="graphdiv1title">
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Videos per Language</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(5), func2(5)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_language_scatter" >
 							</div>						
 						</div>
 						<div id="graphdiv1">
-							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >	Videos per Type</div>
+							<div id="graphdiv1title">
+								<div id="graphdiv1titledesc" >									
+									<div id="subgraphdiv1titledesc1">Videos per Type</div>
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(6), func2(6)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_video_type_pie" >
 							</div>						
@@ -340,11 +350,146 @@
 				    	    	
     </div>	<!-- default-->				
 </div>  <!-- tablegrid-->
- </td></tr></table>
-<script type="text/javascript">
-		// <![CDATA[		
+<br/>
+
+<div> 
+    <div id="expandview1">        
+    </div>       
+    <div id="expandview3">    	
+    	<div id="expandviewtitle"></div>
+    	<div id="expandviewclosebtn" title="Close"></div>    
+        <div class="expandviewchart" id="expandview4">        	
+        </div>     
+    </div>
+</div>
+
+<script type="text/javascript">	
+	var geog_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "1000", "400", "8", "#FFFFFF");
+	geog_wise_pie1.addParam("wmode", "transparent");
+	geog_wise_pie1.addVariable("path", "/media/Output/ampie/");
+	geog_wise_pie1.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
+	{% if from_date and to_date %}
+		geog_wise_pie1.addVariable("data_file", encodeURIComponent("/output/video/geogpie/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		geog_wise_pie1.addVariable("data_file", encodeURIComponent("/output/video/geogpie/{{geog}}/{{id}}/"));
+	{% endif %}
+	geog_wise_pie1.addVariable("additional_chart_settings", encodeURIComponent("<settings><legend><enabled>true</enabled></legend></settings>"));
+	//geog_wise_pie1.write("flash_area_geogwise_pie1");
 	
+	var monthbar1 = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "1000", "450", "8", "#FFFFFF");
+	monthbar1.addParam("wmode", "transparent");
+	monthbar1.addVariable("path", "/media/Output/amcolumn/");
+	monthbar1.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
+	var additional_chart_settings = '';
+
+	{% if from_date and to_date %}
+		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}", async: false }).responseText;
+	{% else %}
+		var additional_chart_settings= $.ajax({ type: "GET", url: "/output/video/monthbar/settings/{{geog}}/{{id}}/", async: false }).responseText;
+	{% endif %}
+	if(additional_chart_settings.length > 0)
+		monthbar1.addVariable("additional_chart_settings", encodeURIComponent(additional_chart_settings));
+		
+	{% if from_date and to_date %}
+		monthbar1.addVariable("data_file", encodeURIComponent("/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		monthbar1.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/");
+	{% endif %}	
+	monthbar1.addVariable("preloader_color", "#999999");
+	//monthbar1.write("flash_area_monthwise_bar1");
+	
+	
+	var videoprod_line1 = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "1000", "450", "8", "#FFFFFF");
+	videoprod_line1.addParam("wmode", "transparent");
+	videoprod_line1.addVariable("path", "/media/Output/amline/");
+	videoprod_line1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));  // you can set two or more different settings files here (separated by commas)
+	videoprod_line1.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/?type=prod');
+	videoprod_line1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'))
+	videoprod_line1.addVariable("chart_id", "video_line_chart");
+	var from_date = null, to_date = null;
+		{%if from_date and to_date %}
+		function amChartInited(chart_id){	
+		  flashMovie = document.getElementById(chart_id);	
+		  
+		  if(from_date!=null)
+		  {
+			//var arr = from_date.split('-');
+			var zoom_from_date, zoom_to_date;
+			
+			if(new Date('{{from_date}}') > new Date(to_date))
+				zoom_from_date = to_date
+			else if(new Date(from_date) > new Date('{{from_date}}'))
+				zoom_from_date = from_date;
+			else 
+				zoom_from_date = '{{from_date}}';
+			
+			if(new Date(to_date) < new Date('{{to_date}}'))
+				zoom_to_date = to_date;
+			else if(new Date('{{to_date}}') < new Date(from_date))
+				 zoom_to_date = from_date;
+			else
+				zoom_to_date = '{{to_date}}';
+		  
+			flashMovie.setZoom(zoom_from_date,zoom_to_date);
+		  
+		 }
+		}
+		function amGetZoom(chart_id, from, to, from_xid, to_xid){
+		  if(chart_id != 'video_line_chart')
+			return;			
+		  if(from_date==null)
+			from_date = from;
+		  if(to_date==null)
+			to_date = to;		      
+		}
+		{% endif %}		
+	//videoprod_line1.write("flash_area_vid_prod_time1");
+	
+	
+	var practice1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "1000", "500", "8", "#FFFFFF");
+	practice1.addParam("wmode", "transparent");
+	practice1.addVariable("path", "/media/Output/amxy/");
+	practice1.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
+	{% if from_date and to_date %}
+		practice1.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		practice1.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/"));
+	{% endif %}
+	//practice1.write("flash_area_practice_type_scatter1");
+	
+	var language1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "1000", "500", "8", "#FFFFFF");
+	language1.addParam("wmode", "transparent");
+	language1.addVariable("path", "/media/Output/amxy/");
+	language1.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
+	{% if from_date and to_date %}
+		language1.addVariable("data_file", encodeURIComponent("/output/video/languagescatter/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		language1.addVariable("data_file", encodeURIComponent("/output/video/languagescatter/data/{{geog}}/{{id}}/"));
+	{% endif %}
+	//language1.write("flash_area_language_scatter");
+	
+	var type_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "1000", "450", "8", "#FFFFFF");
+	type_wise_pie1.addParam("wmode", "transparent");
+	type_wise_pie1.addVariable("path", "/media/Output/ampie/");
+	type_wise_pie1.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
+	{% if from_date and to_date %}
+		type_wise_pie1.addVariable("data_file", encodeURIComponent("/output/video/typepie/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
+	{% else %}
+		type_wise_pie1.addVariable("data_file", encodeURIComponent("/output/video/typepie/{{geog}}/{{id}}/"));
+	{% endif %}
+	//type_wise_pie1.write("flash_area_video_type_pie");
+	
+	
+	
+	
+</script>
+
+<script type="text/javascript">
+		// <![CDATA[	
 	var male_female_pie = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", "420", "300", "8", "#FFFFFF");
+	male_female_pie.addParam("wmode", "transparent");
 	male_female_pie.addVariable("path", "/media/Output/ampie/");
 	male_female_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"))	// you can set two or more different settings files here (separated by commas)
 	{% if from_date and to_date %}// you can set two or more different settings files here (separated by commas)
@@ -352,13 +497,14 @@
 	{% else %}
 		male_female_pie.addVariable("data_file", encodeURIComponent("/output/video/mfpie/{{geog}}/{{id}}/"));
 	{% endif %}
-	
 	male_female_pie.write("flash_area_mf_ratio");
-			
+	
+	
 	
 	var actor_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "300", "8", "#FFFFFF");
+	actor_wise_pie.addParam("wmode", "transparent");
 	actor_wise_pie.addVariable("path", "/media/Output/ampie/");
-	actor_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));                // you can set two or more different settings files here (separated by commas)
+	actor_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));  // you can set two or more different settings files here (separated by commas)
 	{% if from_date and to_date %}// you can set two or more different settings files here (separated by commas)
 		actor_wise_pie.addVariable("data_file", encodeURIComponent("/output/video/actorpie/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
@@ -366,7 +512,10 @@
 	{% endif %}
 	actor_wise_pie.write("flash_area_actor_ratio");
 	
+	
+	
 	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "300", "8", "#FFFFFF");
+	monthbar.addParam("wmode", "transparent");
 	monthbar.addVariable("path", "/media/Output/amcolumn/");
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
 	var additional_chart_settings = '';
@@ -383,25 +532,27 @@
 		monthbar.addVariable("data_file", encodeURIComponent("/output/video/monthbar/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		monthbar.addVariable("data_file","/output/video/monthbar/data/{{geog}}/{{id}}/");
-	{% endif %}
-
-	
+	{% endif %}	
 	monthbar.addVariable("preloader_color", "#999999");
 	monthbar.write("flash_area_monthwise_bar");
+	
+	
 
 	var language = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
+	language.addParam("wmode", "transparent");
 	language.addVariable("path", "/media/Output/amxy/");
-
 	language.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
 	{% if from_date and to_date %}
 		language.addVariable("data_file", encodeURIComponent("/output/video/languagescatter/data/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		language.addVariable("data_file", encodeURIComponent("/output/video/languagescatter/data/{{geog}}/{{id}}/"));
 	{% endif %}
-
 	language.write("flash_area_language_scatter");
 	
+	
+	
 	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "350", "8", "#FFFFFF");
+	geog_wise_pie.addParam("wmode", "transparent");
 	geog_wise_pie.addVariable("path", "/media/Output/ampie/");
 	geog_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
 	{% if from_date and to_date %}
@@ -412,7 +563,10 @@
 	geog_wise_pie.addVariable("additional_chart_settings", encodeURIComponent("<settings><legend><enabled>true</enabled></legend></settings>"));
 	geog_wise_pie.write("flash_area_geogwise_pie");
 	
+	
+	
 	var type_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "400", "8", "#FFFFFF");
+	type_wise_pie.addParam("wmode", "transparent");
 	type_wise_pie.addVariable("path", "/media/Output/ampie/");
 	type_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
 	{% if from_date and to_date %}
@@ -422,20 +576,23 @@
 	{% endif %}
 	type_wise_pie.write("flash_area_video_type_pie");
 	
+	
+	
 	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
+	practice.addParam("wmode", "transparent");
 	practice.addVariable("path", "/media/Output/amxy/");
-
 	practice.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
 	{% if from_date and to_date %}
 		practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/?from_date={{from_date}}&to_date={{to_date}}"));
 	{% else %}
 		practice.addVariable("data_file", encodeURIComponent("/output/video/practicescatter/{{geog}}/{{id}}/"));
 	{% endif %}
-
 	practice.write("flash_area_practice_type_scatter");
 	
-	var videoprod_line = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "420", "400", "8", "#FFFFFF");
 	
+	
+	var videoprod_line = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "420", "400", "8", "#FFFFFF");
+	videoprod_line.addParam("wmode", "transparent");
 	videoprod_line.addVariable("path", "/media/Output/amline/");
 	videoprod_line.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)
 	videoprod_line.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/?type=prod');
@@ -496,7 +653,6 @@
 		
 	
 	videoprod_line.write("flash_area_vid_prod_time");
-
 	
 </script>
 

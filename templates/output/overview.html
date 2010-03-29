@@ -2,7 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title> Digital Green Analytics/Dashboard</title>
+    <title>Digital Green Analytics Dashboard</title>
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
     
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
@@ -10,18 +11,15 @@
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />        
               
     <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>    
-    <script type="text/javascript" src="/media/Output/JS/jquery-easing-1.3.pack.js"></script>
-	<script type="text/javascript" src="/media/Output/JS/jquery-ui-1.7.2.custom.min.js"></script>		
+    		
 	<script type="text/javascript" src="/media/Output/JS/JGridPage.js"></script>  
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.min.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/jquery.gradient.pack.js"></script>
+     <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
     <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
 
-	<script type="text/javascript">   
-	
+	<script type="text/javascript">  	    
 	//Function to Apply Dates in Date picker when the page loads	    
 	function Default(){ 
 			var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -105,27 +103,22 @@
 </head>
 
 <body id='mainbody' onload='Default()'>
-<table>
-	<tr>
-		<td valign="top">
-		<div id="navigation" style="-moz-border-radius: 10px 10px 10px 10px;">
-		 	<div class="nav_1" style="margin-left:5px; margin-top:20px">
-				<a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>
-			</div>
-			<div class="nav_1" style="margin-left:5px;">
-				<a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Video </a>
-			</div>
-		</div>
-		</td>
-	<td>	
+<div id="navmenu">
+	<div id="navmenutitle"></div>
+		<ul id="navmenulist">
+			<li> <div id='navarrowimg'></div> <a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>  </li>
+			<li> <div id='navarrowimg'></div> <a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Videos </a>  </li>		
+							
+		</ul>	
+</div>
 
  <div id='tablegrid'> 	
 	<!-- <div id='defaultheader'> </div>  -->	
 	<div id='default'>		
 		
 		<div id='gridfooter'>
-				<div id="dglogo">
-				<a href="http://www.digitalgreen.org/"><img src="/media/Output/Images/dglogo1.png"  /> </a>		            
+				<div id="dglogo"> 
+					<a href="http://www.digitalgreen.org" target="_blank"> <img src ="/media/Output/Images/dglogo1.png" alt='temp' title="Digital Green"> </a> 		            
 		        </div>		
 		        <div id='timeline'>
 					<div id='timelinedesc'>
@@ -236,36 +229,37 @@
 		</div>
 	</div>				
 		
-		<div id='table1'>
+		<div id='table1title'>National Statistics</div>	
+		<div id='table1'>					
 		    <div id='table1div1'>
-		        <div id='table1desc'>National  Video Productions</div> 
-		        <div id='table1val'> {{country_data.tot_vid}}  </div>
+		        <div id='table1desc'>Farmer Groups / Villages</div> 
+		        <div id='table1val'> {{country_data.tot_pg}} / {{country_data.tot_vil}}  </div>
 		        
 		    </div>
 		    
 		    <div id='table1div2'>
-		        <div id='table1desc'>National  Disseminations</div> 
-		        <div id='table1val'> {{country_data.tot_scr}}  </div>
+		        <div id='table1desc'>Videos Produced</div> 
+		        <div id='table1val'> {{country_data.tot_vid}}  </div>
 		    </div>
 		    
 		    <div id='table1div3'>
-		        <div id='table1desc'>National  Adoptions</div> 
-		        <div id='table1val'> {{country_data.tot_ado}}  </div>
+		        <div id='table1desc'>Disseminations</div> 
+		        <div id='table1val'> {{country_data.tot_scr}}  </div>
 		    </div>
 		    
 		    <div id='table1div4'>
-		        <div id='table1desc'>National  Agricultural Practices </div> 
-		        <div id='table1val'> {{country_data.tot_pra}}  </div>
+		        <div id='table1desc'>Adoptions </div> 
+		        <div id='table1val'> {{country_data.tot_ado}}  </div>
 		    </div>
 			
 			<div id='table1div5'>
-		        <div id='table1desc'>National  Person Groups </div> 
-		        <div id='table1val'> {{country_data.tot_pg}}  </div>
+		        <div id='table1desc'>Agricultural Practices </div> 
+		        <div id='table1val'> {{country_data.tot_pra}}  </div>
 		    </div>
 			 
 			<div id='table1div5'>
-		        <div id='table1desc'>National  Villages </div>
-		        <div id='table1val'> {{country_data.tot_vil}}  </div>
+		        <div id='table1desc'>  </div>
+		        <div id='table1val'>   </div>
 		    </div>
 			
 			 			
@@ -304,7 +298,7 @@
 						<th id='table2td'>
 						    <div id='table2tdv2'> Farmer Adoptions
 							    <div id='table2tdv2desc'>
-							       Total number of farmers following/taking up practice as demonstrated in DG video
+							    	Total number of farmers following or taking up practice as shown in DG video
 							    </div>
 							</div>
 							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
@@ -354,7 +348,7 @@
 						</td>
 						<td id='table2td1'> 
 							
-							<a href='/output/video/module/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							<a href='/output/video/module/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}' target="_blank">
 							{{ item.tot_pro }} </a> 
 						</td>
 						<td id='table2td1'> 
@@ -411,7 +405,7 @@
 							{%endif%}				        
 					    </td>
 					    <td id='table2td1'>
-						<a href='/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+						<a href='/output/video/module/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}' target="_blank">
 							{{par_geog.tot_vid}}  </a>  
 										        
 					    </td>
@@ -433,30 +427,100 @@
 		    
 			
 			<div id='baselinegraphtitle'>
-			    Cumulative Graph View
+			    Cumulative Line Graph
 			</div>
-			<div id='baselinegraphtitleimg'>
-			    
-			</div>			    			    			
-			<div id='baselinegraph'>
-				<br/><!--< click me !>-->
+			
+			<div id='baselinegraphtitleimg'>			    
+			</div>
+						    			    			
+			<div id='baselinegraph'>				
+			</div>
+			<div id='expandviewbtn' title='Zoom In'>
 			</div>
 			<div id='baselinegraph1'>					
 			        <div id="flashcontent">
 						<strong>You need to upgrade your Flash Player</strong>
 					</div>		        			        
 			</div>	
+			<br/>
     </div>  
-</div>   
- </td></tr></table>
+</div> 
+<br/>
+<div> 
+    <div id="expandview1">        
+    </div>       
+    <div id="expandview3">    	
+    	<div id="expandviewtitle"></div>
+    	<div id="expandviewclosebtn" title="Close"></div>    
+        <div class="expandviewchart" id="expandview4">        	
+        </div>     
+    </div>
+</div>
+
 <!-- amline script--> 
-	 <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
+
+	 <script type="text/javascript">	 		 
+		// <![CDATA[		
+		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "1160", "450", "8", "#FFFFFF");
+		so1.addParam("wmode", "transparent");
+		so1.addVariable("path", "/media/Output/amline/");
+		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
+		so1.addVariable("data_file",'/output/overview/line/{{flash_geog}}/{{id}}/');
+		so1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Screening</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="5"><title>Total Persons</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'))
+		so1.addVariable("chart_id", "line_chart");
+		var from_date = null, to_date = null;
+			{%if flash_from_date and flash_to_date %}
+			function amChartInited(chart_id){	
+			  flashMovie = document.getElementById(chart_id);	
+			  
+			  if(from_date!=null)
+			  {
+				//var arr = from_date.split('-');
+				var zoom_from_date, zoom_to_date;
+				
+				if(new Date('{{flash_from_date}}') > new Date(to_date))
+					zoom_from_date = to_date
+				else if(new Date(from_date) > new Date('{{flash_from_date}}'))
+					zoom_from_date = from_date;
+				else 
+					zoom_from_date = '{{flash_from_date}}';
+				
+				if(new Date(to_date) < new Date('{{flash_to_date}}'))
+					zoom_to_date = to_date;
+				else if(new Date('{{flash_to_date}}') < new Date(from_date))
+					 zoom_to_date = from_date;
+				else
+					zoom_to_date = '{{flash_to_date}}';
+			  
+			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
+			  
+			 }
+			}
+			function amGetZoom(chart_id, from, to, from_xid, to_xid){
+			  if(from_date==null)
+				from_date = from;
+			  if(to_date==null)
+				to_date = to;		      
+			}
+			{% endif %}			
+		
+		so1.write("flashcontent1");		
+		
+		// ]]>
+	</script>
+
 	 
 	 <script type="text/javascript">
 	 		 
 		// <![CDATA[		
 		var so = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "900", "400", "8", "#FFFFFF");
-		
+		so.addParam("wmode", "transparent");
 		so.addVariable("path", "/media/Output/amline/");
 		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 		so.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
@@ -513,7 +577,6 @@
 				
 				to_date_str = to;
 			}
-				
 			}
 			
 			{% endif %}
@@ -524,5 +587,6 @@
 		// ]]>
 	</script>
 <!-- end of amline script -->
+
 </body>
 </html>

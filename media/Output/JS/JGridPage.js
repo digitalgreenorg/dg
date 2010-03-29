@@ -4,17 +4,136 @@ var flagdefault = 0;
 var flagascen = 0;
 var flagdesc = 0;
 var imgcount = 0;
+
 var Pic = new Array();
-Pic[0] = '/media/Output/Images/table2tddefaultbg1.png';
-Pic[1] = '/media/Output/Images/table2tddescbg3.png';
-Pic[2] = '/media/Output/Images/table2tdascenbg3.png';
+Pic[0]  = '/media/Output/Images/table2tddefaultbg1.png';
+Pic[1]  = '/media/Output/Images/table2tddescbg3.png';
+Pic[2]  = '/media/Output/Images/table2tdascenbg3.png';
 
-function defaultload(){
+var myWidth  = window.innerWidth;
+var myHeight = window.innerHeight;
 
-    		var myWidth = window.innerWidth;
-            var myHeight = window.innerHeight;
-                        
-            
+function func1(temp){          
+		
+        var value = temp;
+        //alert("1");       
+
+        switch (value)
+		{
+			case 1:
+  				$("div#expandviewtitle").text('Geographical distribution of Videos');
+  				break;
+			case 2:
+  				$("div#expandviewtitle").text('Videos produced per Month');
+  				break;
+  			case 3:
+  				$("div#expandviewtitle").text('Videos produced over Time');
+  				break;
+  			case 4:
+  				$("div#expandviewtitle").text('Videos per Practice');
+  				break;
+  			case 5:
+  				$("div#expandviewtitle").text('Videos per Language');
+  				break;			
+			case 6:
+  				$("div#expandviewtitle").text('Videos per Type');
+  				break;			
+		}
+		
+				
+       	$('div#expandview1').removeAttr('disabled');
+        $('div#expandview3').removeAttr('disabled');        
+        
+		$("div#expandview1").css({
+                    "top": "0px",
+                    "left":"0px",
+                    "width":myWidth,
+                    "height":myHeight,
+                    "opacity":"0.7"                      
+        });          
+       	$("div#expandview1").fadeIn();        	   
+        $("div#expandview3").show();        
+        $("div#expandview3").corner();
+			
+}
+
+function func2(temp1)
+	{
+		$('div#expandview4').append(''); 
+		var value = temp1;	
+		switch (value)
+		{
+			case 1:
+  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+				geog_wise_pie1.write("alpha1");
+  				break;
+			case 2:
+				//alert("2");
+  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+				monthbar1.write("alpha1");
+				break;
+  			case 3:
+  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+				videoprod_line1.write("alpha1");
+				break;
+  			case 4:
+  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				practice1.write("alpha1");
+  				break;
+  			case 5:
+  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				language1.write("alpha1");
+  				break;			
+			case 6:
+  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				type_wise_pie1.write("alpha1");
+  				break;			
+		}
+		
+		
+	}
+
+
+function expandviewclose(){ 
+	     
+
+	$("div#expandviewclosebtn").click( function(){
+			$("div#expandview1").fadeOut();
+        	$("div#expandview3").hide();
+        	$("div#expandview1").attr('disabled', true);
+        	$("div#expandview3").attr('disabled', true);       			
+	});
+}
+
+function expandviewoverview(){ 	     
+
+	$("div#expandviewbtn").click( function(){
+		$('div#expandview1').removeAttr('disabled');
+        $('div#expandview3').removeAttr('disabled');        
+        
+		$("div#expandview1").css({
+                    "top": "0px",
+                    "left":"0px",
+                    "width":myWidth,
+                    "height":myHeight,
+                    "opacity":"0.7"                      
+        });          
+       	$("div#expandview1").fadeIn();        	   
+        $("div#expandview3").show();        
+        $("div#expandview3").corner();       			
+		$("div#expandviewtitle").text('Cumulative Line Graph');
+		$('div#expandview4').append('<div id="flashcontent1"></div>');
+  		so1.write("flashcontent1");
+	
+	});
+}
+
+function defaultload(){  		       
+                       
+            $("div#navmenu").corner();            
+            $("div#navmenutitle").corner("7px");
+                                    
+            //$("div#subgraphdiv1titledesc2").corner("5px");
             $("#searchbody").gradient({ from: 'cff988', to: 'ffffff' });
             $("div#baselinegraph").gradient({ from: 'cff988', to: 'ffffff' });
             
@@ -28,29 +147,8 @@ function defaultload(){
             
             $("div#graphdiv0title").gradient({ from: 'e1fa9d', to: 'b6ea27' });
             $("div#graphdiv1title").gradient({ from: 'e1fa9d', to: 'b6ea27' });
-            //$("div#moduletd0div").corner("round 4px");
-            
-            $("div#hello").hide();
-            $("div#hello1").hide();
-            var myWidth = window.innerWidth;
-            var myHeight = window.innerHeight;            
-            //alert(myWidth); 
-            $("div#baselinegraph").click(function(){
-                //$("div#default").hide();
-                $("#hello").css({
-                    "top": "0px",
-                    "left":"0px",
-                    "width":myWidth,
-                    "height":myHeight,
-                    "opacity":"0.7"                      
-                });                  
-                $("div#hello").fadeIn();
-                $("div#hello1").show();
-                // $("div#hello1").corner();
-                $("div#hello1").gradient({ from: 'cff988', to: 'ffffff' });
-                $("div#hello").corner();
-                //$("div#table2tdv2").find("div#table2tdv2desc").fadeOut(9000);    
-            });                        
+            //$("div#moduletd0div").corner("round 4px");            
+                                    
             
 }
 
@@ -58,7 +156,8 @@ function clicktable2tdv2() {
 
             $("div#table2tdv2desc").hide(); 
     
-            $("div#table2tdv2").mouseover(function(){    
+            $("div#table2tdv2").mouseover(function(){ 
+               	$(this).find("div#table2tdv2desc").removeAttr('disabled');	
                 $(this).find("div#table2tdv2desc").show();
                 //$("div#table2tdv2").find("div#table2tdv2desc").fadeOut(9000);    
             }); 
@@ -89,13 +188,7 @@ function chk(){
 } // chk() end
 
 
-
-function sortval(){    
-        
-} // sortval() end
-
-
-function gridview(){  
+function gridview(){ 
 
     	    
 	// for the default view
@@ -181,6 +274,7 @@ function gridview(){
 	
 	$("div#timelinedesc").find("div#timelinedescfooter1").click(function() {
         // alert("hi");
+        $("div#gridfooter").find("div#timelinedesc1").removeAttr('disabled');
 		$("div#gridfooter").find("div#timelinedesc1").show();
 		$(this).hide();
 		$("div#timelinedesc").find("div#timelinedescfooter").text('');
@@ -188,8 +282,9 @@ function gridview(){
     });
     
 	$("div#timelinedesc1").find("div#timelinedesc1btntop").click(function() {
-        // alert("hi");
+        // alert("hi");        
 		$("div#gridfooter").find("div#timelinedesc1").hide();
+		$("div#gridfooter").find("div#timelinedesc1").attr('disabled','true');
 		$("div#timelinedesc").find("div#timelinedescfooter1").fadeIn('slow');
 		$("div#timelinedesc").find("div#timelinedescfooter").text('Above are the pre-chosen dates. Customize your own range of timeline');
 		//$("div#gridfooter").find("div#timelinedesc").css('border-bottom', '1px');
@@ -254,13 +349,21 @@ function dateRange() {
 
 };
 /** This is run when the page is fully loaded */
-$(document).ready(function(){   
-   
+$(document).ready(function(){
+	$('div#expandview3').hide();
+	$('div#expandview1').attr('disabled', true);
+	$('div#expandview3').attr('disabled', true);  
+	$('#table2tdv2desc').attr('disabled', true);
+	$("div#timelinedesc1").attr('disabled', true);	
+	$("div#gridfooter").find("div#timelinedesc1").hide();   
     gridview();
 	datepick();
-	chk();
+	chk();	
+	expandviewoverview();
+	expandviewclose();
 	timelinedesc1close();
 	clicktable2tdv2();
 	defaultload();	
+	//sortval();
 });
 	
