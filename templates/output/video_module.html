@@ -33,15 +33,16 @@
 			var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 			
 			{% if from_date and to_date %}
-	        var from_date = new Date('{{from_date}}');
-			var to_date = new Date('{{to_date}}');
+	        var from_date = '{{from_date}}'.split('-');
+			var to_date = '{{to_date}}'.split('-');
 			{% else %}
-			var from_date = new Date('{{start_date}}');
+			var from_date = '{{start_date}}'.split('-');
 			var to_date = new Date();
+			to_date = [to_date.getFullYear(),to_date.getMonth()+1,to_date.getDate()];
 	        {% endif %}
 			
-			$("#datepicker1").html(month[from_date.getMonth()]+" "+from_date.getDate()+", "+from_date.getFullYear());
-			$("#datepicker2").html(month[to_date.getMonth()]+" "+to_date.getDate()+", "+to_date.getFullYear());
+			$("#datepicker1").html(month[parseInt(from_date[1])-1]+" "+from_date[2]+", "+from_date[0]);
+			$("#datepicker2").html(month[parseInt(to_date[1])-1]+" "+to_date[2]+", "+to_date[0]);
 	}
 	
 	//Function for apply button in date picker
@@ -443,41 +444,47 @@
 						</graphs></settings>'))
 	videoprod_line.addVariable("chart_id", "video_line_chart");
 	var from_date = null, to_date = null;
-		{%if from_date and to_date %}
-		function amChartInited(chart_id){	
-		  flashMovie = document.getElementById(chart_id);	
-		  
-		  if(from_date!=null)
-		  {
-			//var arr = from_date.split('-');
-			var zoom_from_date, zoom_to_date;
-			
-			if(new Date('{{from_date}}') > new Date(to_date))
-				zoom_from_date = to_date
-			else if(new Date(from_date) > new Date('{{from_date}}'))
-				zoom_from_date = from_date;
-			else 
-				zoom_from_date = '{{from_date}}';
-			
-			if(new Date(to_date) < new Date('{{to_date}}'))
-				zoom_to_date = to_date;
-			else if(new Date('{{to_date}}') < new Date(from_date))
-				 zoom_to_date = from_date;
-			else
-				zoom_to_date = '{{to_date}}';
-		  
-			flashMovie.setZoom(zoom_from_date,zoom_to_date);
-		  
-		 }
-		}
-		function amGetZoom(chart_id, from, to, from_xid, to_xid){
-		  if(chart_id != 'video_line_chart')
-			return;			
-		  if(from_date==null)
-			from_date = from;
-		  if(to_date==null)
-			to_date = to;		      
-		}
+			{%if from_date and to_date %}
+			function amChartInited(chart_id){	
+			  flashMovie = document.getElementById(chart_id);	
+			  
+			  if(from_date!=null)
+			  {
+				//var arr = from_date.split('-');
+				var zoom_from_date, zoom_to_date;
+				from_date_arr = '{{from_date}}'.split('-');
+				new_from_date = new Date(from_date_arr[0],parseInt(from_date_arr[1])-1,from_date_arr[2]);
+				
+				to_date_arr = '{{to_date}}'.split('-');
+				new_to_date = new Date(to_date_arr[0],parseInt(to_date_arr[1])-1,to_date_arr[2]);
+				
+				if(new_from_date > new Date(to_date))
+					zoom_from_date = to_date
+				else if(new Date(from_date) > new_from_date)
+					zoom_from_date = from_date;
+				else 
+					zoom_from_date = '{{from_date}}';
+				
+				if(new Date(to_date) < new_to_date)
+					zoom_to_date = to_date;
+				else if(new_to_date < new Date(from_date))
+					 zoom_to_date = from_date;
+				else
+					zoom_to_date = '{{to_date}}';
+			  
+			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
+			  
+			 }
+			}
+			function amGetZoom(chart_id, from, to, from_xid, to_xid){
+			  if(from_date==null)
+				from_date = from.split('-');
+				from_date = new Date(from_date[0],parseInt(from_date[1])-1,from_date[2]);
+			  if(to_date==null)
+				to_date = to.split('-');
+				to_date = new Date(to_date[0],parseInt(to_date[1])-1,to_date[2]);
+				
+			}
 		{% endif %}
 		
 	
