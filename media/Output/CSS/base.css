@@ -29,7 +29,7 @@
 #dglogo a img					{border-style:none}
 
 #timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
-#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; disabled:"disabled"}
+#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
 #timelinedesc1btntop			{ background:url("/media/Output/Images/closebtn1.png"); background-repeat:no-repeat; width:50px; height:16px; margin-top:5px; margin-left:93.5%; color:#666666; font-family:Calibri; font-size:10px; font-weight:normal; padding-top:2px; padding-right:20px;padding-left:-10px}
 	
 #timelinedescfooter				{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-top:42px; margin-left:10px; position:absolute;}

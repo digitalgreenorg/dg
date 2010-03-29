@@ -53,7 +53,7 @@
 
 /* Expansion Overlay of Charts - CSS */
 #expandview1					{ z-index:9900; position:fixed; top:2px; background-color:Black; left:15%;}
-#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; left:5%; top:5%; width:90%; height:550px; background-color:White; disabled:"disabled" }
+#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; left:5%; top:5%; width:90%; height:550px; background-color:White;}
 #expandview4					{ padding-left:50px; padding-top:10px}
 #expandviewtitle				{ border-bottom-color:#ecedec; border-bottom-style:solid; border-bottom-width:2px; float:left; margin-top:10px; margin-left:10px; width:95%; height:30px; font-family:Calibri; font-weight:bold; font-size:26px; color: Green; text-align:center }
 #expandviewclosebtn				{ float:left; margin-top:10px; margin-left:10px; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
