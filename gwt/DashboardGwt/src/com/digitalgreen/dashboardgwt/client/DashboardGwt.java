@@ -3,21 +3,11 @@ package com.digitalgreen.dashboardgwt.client;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dev.shell.BrowserChannel;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
-import com.digitalgreen.dashboardgwt.client.data.LoginData;
-import com.google.gwt.gears.client.database.ResultSet;
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.digitalgreen.dashboardgwt.client.servlets.*;
 
 public class DashboardGwt implements EntryPoint {

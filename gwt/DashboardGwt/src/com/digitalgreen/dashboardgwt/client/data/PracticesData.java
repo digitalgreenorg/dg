@@ -53,7 +53,7 @@ public class PracticesData extends BaseData {
 		}
 		
 		@Override
-		public Object clone(){
+		public BaseData.Data clone(){
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.practice_name = this.practice_name;

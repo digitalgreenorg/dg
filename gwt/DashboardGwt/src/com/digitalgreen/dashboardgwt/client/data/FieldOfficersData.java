@@ -63,7 +63,7 @@ public class FieldOfficersData extends BaseData {
 			return this.name;
 		}
 		
-		public Object clone(){
+		public BaseData.Data clone(){
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.name = this.name;
@@ -77,7 +77,7 @@ public class FieldOfficersData extends BaseData {
 			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
-		
+
 		@Override
 		public String getPrefixName(){
 			return Data.COLLECTION_PREFIX;

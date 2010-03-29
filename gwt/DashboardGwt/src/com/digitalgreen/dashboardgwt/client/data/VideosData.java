@@ -96,7 +96,7 @@ public class VideosData extends BaseData {
 			return this.village;
 		}
 		
-		public Object clone() {
+		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.title = this.title;

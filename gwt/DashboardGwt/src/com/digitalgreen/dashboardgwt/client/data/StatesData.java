@@ -53,11 +53,11 @@ public class StatesData extends BaseData {
 			return this.region;
 		}
 		
-		public Object clone() {
+		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.state_name = this.state_name;
-			obj.region = this.region;
+			obj.region = (RegionsData.Data)this.region.clone();
 			obj.start_date = this.start_date;
 			return obj;
 		}

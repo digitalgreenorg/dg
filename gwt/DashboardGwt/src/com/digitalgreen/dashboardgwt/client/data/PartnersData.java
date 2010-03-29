@@ -54,7 +54,7 @@ public class PartnersData extends BaseData {
 			return this.partner_name;
 		}
 		
-		public Object clone() {
+		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.partner_name = this.partner_name;
@@ -65,7 +65,7 @@ public class PartnersData extends BaseData {
 			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
-		
+
 		@Override
 		public String getPrefixName() {
 			return Data.COLLECTION_PREFIX;

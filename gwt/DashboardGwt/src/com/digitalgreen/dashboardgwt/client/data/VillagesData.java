@@ -2,8 +2,6 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.StatesData.Data;
 
 public class VillagesData extends BaseData {
 
@@ -51,7 +49,7 @@ public class VillagesData extends BaseData {
 			return this.block;
 		}
 		
-		public Object clone() {
+		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.village_name = this.village_name;

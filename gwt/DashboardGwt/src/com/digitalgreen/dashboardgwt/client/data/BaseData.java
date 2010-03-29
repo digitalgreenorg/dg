@@ -36,7 +36,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		public Data() {}
 		
 		// Override this
-		public Object clone() {
+		public BaseData.Data clone() {
 			return null;
 		}
 		
