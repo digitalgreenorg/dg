@@ -75,8 +75,8 @@ public class StatesData extends BaseData {
 				this.state_name = (String)val;
 			} else if(key.equals("region")) {
 				// Have to Create an instance of RegionsData to create an instance of RegionsData.Data -- any better way of doing this??
-				RegionsData region1 = new RegionsData();
-				this.region = region1.getNewData();
+				RegionsData region = new RegionsData();
+				this.region = region.getNewData();
 				this.region.id = Integer.parseInt((String)val);
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_date")) {
@@ -148,7 +148,7 @@ public class StatesData extends BaseData {
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
 		for(int i = 0; i < stateObjects.length(); i++){
-			RegionsData.Data r = region. new Data(Integer.parseInt(stateObjects.get(i).getRegion().getPk()), stateObjects.get(i).getRegion().getRegionName(), stateObjects.get(i).getRegion().getStartDate()) ;
+			RegionsData.Data r = region.new Data(Integer.parseInt(stateObjects.get(i).getRegion().getPk()), stateObjects.get(i).getRegion().getRegionName(), stateObjects.get(i).getRegion().getStartDate());
 			Data state = new Data(Integer.parseInt(stateObjects.get(i).getPk()), stateObjects.get(i).getStateName(), stateObjects.get(i).getStartDate(), r );
 			states.add(state);
 		}
@@ -168,16 +168,15 @@ public class StatesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					RegionsData.Data r = region. new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
+					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
 					Data state = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r);
 					states.add(state);
-	    	      }				
+				}				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
 				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
-			
 		}
 		BaseData.dbClose();
 		return states;

@@ -1,7 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
@@ -17,7 +16,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
@@ -29,7 +27,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		public final native Object getFields() /*-{ return this.fields ; }-*/;
 	}
 	
-	public class Data implements Cloneable  {
+	public class Data implements Cloneable {
 		
 		protected int id;
 		

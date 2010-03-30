@@ -121,10 +121,6 @@ public class RegionsData extends BaseData {
 		return this.table_name;
 	}
 	
-	protected String[] getFields() {
-		return this.fields;
-	}
-	
 	protected static String getSaveOfflineURL(){
 		return RegionsData.saveRegionOfflineURL;
 	}

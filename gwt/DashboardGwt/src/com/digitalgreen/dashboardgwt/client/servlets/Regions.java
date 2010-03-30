@@ -3,19 +3,12 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
-import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
-import com.digitalgreen.dashboardgwt.client.data.IndexData;
-import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
-import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.core.client.JsArray;
 
 public class Regions extends BaseServlet {
 	public Regions() {

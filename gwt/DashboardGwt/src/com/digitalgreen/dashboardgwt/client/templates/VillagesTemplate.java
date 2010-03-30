@@ -1,7 +1,16 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorsData;
+import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData;
+import com.digitalgreen.dashboardgwt.client.data.VillagesData;
+import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 
 public class VillagesTemplate extends BaseTemplate {
@@ -18,20 +27,57 @@ public class VillagesTemplate extends BaseTemplate {
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Villages addVillagesServlet = new Villages(requestContext);
-		Villages saveVillage = new Villages(new RequestContext(RequestContext.METHOD_POST));
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new VillagesData()).getNewData(), 
+				new Object[] {new ArrayList().add((new PersonGroupsData()).getNewData()),
+							  new ArrayList().add((new AnimatorsData()).getNewData())});
+		saveRequestContext.getArgs().put("form", saveForm);
+		Villages saveVillage = new Villages(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveVillage);
 	}
 
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List villages = (List)queryArgs.get("listing");			
+			if(villages != null){
+				String tableRows ="";
+				String style;
+				VillagesData.Data village;
+				for (int row = 0; row < villages.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					village = (VillagesData.Data)villages.get(row);
+					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ village.getId() + "' name='_selected_action' /></td>" +
+							"<th><a href='/admin/dashboard/region/"+ village.getId() +"/'>" + village.getVillageName() +"</a></th>" +
+							"<th><a href='/admin/dashboard/block/"+ village.getBlock().getId() +"/'>" + village.getBlock().getBlockName() +"</a></th>" +
+							"</tr>";
+				}
+				villagesListFormHtml = villagesListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
 	final private String addDataToElementID[] = null;
 	
-	final static private String villagesListFormHtml = "<div class='actions'>" +
+	private String villagesListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
+								"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected villages</option>" +
@@ -57,11 +103,7 @@ public class VillagesTemplate extends BaseTemplate {
 										"</th>" +
 									"</tr>" +
 								"</thead>" +
-								"<tbody>" +
-									"<div id='data-rows'" +       // Insert data rows here
-									"</div>" +
-								"</tbody>" +
-							"</table>";
+								"<tbody>";
 	
 	final static private String villagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
@@ -84,8 +126,7 @@ public class VillagesTemplate extends BaseTemplate {
 								"<div id='content' class='colM'>" +
 									"<h1>Add village</h1>" +
 										"<div id='content-main'>" +
-											"<form enctype='multipart/form-data' action='' method='post' id='village_form'>" +
-												"<div>" +
+											"<div>" +
 													"<fieldset class='module aligned '>" +
 														"<div class='form-row village_name  '>" +
 															"<div>" +
@@ -562,15 +603,15 @@ public class VillagesTemplate extends BaseTemplate {
 													"</div>" +
 												"</div>" +	
 												"<div class='submit-row' >" +
-													"<input type='submit' value='Save' class='default' name='_save' />" +
+													"<input value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_village_name').focus();</script>" +
 												"<script type='text/javascript'>" +
 												"</script>" +
 											"</div>" +
-										"</form>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>";
-
+								"</div>" +
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

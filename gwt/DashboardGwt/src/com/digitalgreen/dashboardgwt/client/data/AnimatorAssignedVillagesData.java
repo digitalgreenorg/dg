@@ -1,7 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-
 public class AnimatorAssignedVillagesData extends BaseData{
 	
 	protected static String tableID = "18";

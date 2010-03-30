@@ -317,7 +317,7 @@ public class VideosData extends BaseData {
 		List videos = new ArrayList();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < videoObjects.length(); i++){
-			VillagesData.Data v = village. new Data(Integer.parseInt(videoObjects.get(i).getVillage().getPk()), videoObjects.get(i).getVillage().getVillageName()) ;
+			VillagesData.Data v = village.new Data(Integer.parseInt(videoObjects.get(i).getVillage().getPk()), videoObjects.get(i).getVillage().getVillageName()) ;
 			Data video = new Data(Integer.parseInt(videoObjects.get(i).getPk()), videoObjects.get(i).getTitle(), videoObjects.get(i).getVideoProductionStartDate(), videoObjects.get(i).getVideoProductionEndDate(), v);
 			videos.add(video);
 		}
@@ -337,7 +337,7 @@ public class VideosData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5)) ;
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5)) ;
 					Data video = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), v);
 					videos.add(video);
 	    	      }				
