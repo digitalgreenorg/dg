@@ -2,7 +2,8 @@
 
 /* Nav Menu */
 #navmenu									{ margin-top:3px; margin-left:1%; width:150px; background-color:White; float:left; border-color:#add540; border-style:solid; border-width:1px; min-height:106px}	
-#navmenutitle								{ margin-left:10px; margin-top:0px; width:142px; background-color:#f0f4bd; margin-bottom:0px; height:80px; background:url("/media/Output/Images/navchartbg4.png"); background-repeat:no-repeat; }
+#navmenutitle								{ margin-left:10px; margin-top:2px; width:142px; margin-bottom:0px; height:80px;  background-repeat:no-repeat; cursor:pointer}
+#navmenutitle a img							{ border-style:none}
 #navmenu ul#navmenulist li a				{ float:left; text-decoration:none; color:#445e1e; margin-left:5px; }
 #navmenu ul#navmenulist li a:visited		{ text-decoration:none; color:#445e1e; }
 #navmenu ul#navmenulist li a:hover			{ text-decoration:none; color:Orange; }
@@ -25,11 +26,12 @@
 .select							{ background-color:#e4f1c9; border-style:solid; border-width:1px; border-color:#666666; width:160px; text-align:center}
 
 /* Calender CSS */
-#dglogo							{ float:left; margin-top:0px; margin-left:10px; width:190px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
-#dglogo a img					{border-style:none}
+#dglogo							{ float:left; margin-top:0px; margin-left:10px; width:190px; height:80px; text-align:left; background:url("/media/Output/Images/navchartbg5.png"); background-repeat:no-repeat; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
 
 #timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
-#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; display:none;}
+
+#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; display:none}
+
 #timelinedesc1btntop			{ background:url("/media/Output/Images/closebtn1.png"); background-repeat:no-repeat; width:50px; height:16px; margin-top:5px; margin-left:93.5%; color:#666666; font-family:Calibri; font-size:10px; font-weight:normal; padding-top:2px; padding-right:20px;padding-left:-10px}
 	
 #timelinedescfooter				{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-top:42px; margin-left:10px; position:absolute;}

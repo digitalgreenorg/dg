@@ -108,7 +108,7 @@
 <body id='mainbody' onload='Default()'>
 
 <div id="navmenu">
-	<div id="navmenutitle"></div>
+	<div id="navmenutitle"> <a href="http://www.digitalgreen.org" target="_blank"> <img src = "/media/Output/Images/dg_logo5.png" title="Digital Green"></a></div>
 		<ul id="navmenulist">
 			<li> <div id='navarrowimg'></div> <a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>  </li>
 			<li> <div id='navarrowimg'></div> <a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Videos </a>  </li>
@@ -121,8 +121,7 @@
 	<div id='default'>		
 		
 		<div id='gridfooter'>
-		        <div id="dglogo"> 
-					<a href="http://www.digitalgreen.org" target="_blank"> <img src ="/media/Output/Images/dglogo1.png" alt='temp' title="Digital Green"> </a> 		            
+		        <div id="dglogo" title="Dashboard"> 					 		            
 		        </div>		        		
 		        <div id='timeline'>
 					<div id='timelinedesc'>
@@ -260,7 +259,7 @@
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Geographic distribution of Videos</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(1), func2(1) "> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>-->
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(1)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
 								</div>
 							</div>
 							<div class="graphdiv1desc" id="flash_area_geogwise_pie">								
@@ -271,7 +270,7 @@
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Videos Produced per Month</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(2), func2(2)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>-->
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(2)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
 								</div>															
 							</div>
 							<div class="graphdiv1desc" id="flash_area_monthwise_bar">								
@@ -285,7 +284,9 @@
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Videos Produced over Time</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(3), func2(3)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	-->
+
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(3)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+
 								</div>	
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_vid_prod_time">						
@@ -295,7 +296,9 @@
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Videos per Practice</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(4), func2(4)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	-->
+
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(4)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+
 								</div>									
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_practice_type_scatter" >
@@ -309,7 +312,9 @@
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Videos per Language</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(5), func2(5)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	-->
+
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(5)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+
 								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_language_scatter" >
@@ -319,7 +324,9 @@
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
 									<div id="subgraphdiv1titledesc1">Videos per Type</div>
-									<!--<div id="subgraphdiv1titledesc2"> <a href="javascript:func1(6), func2(6)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	-->
+
+									<div id="subgraphdiv1titledesc2"> <a href="javascript:zoomIn(6)"> <img src="/media/Output/Images/zoombg1.png" title='Zoom In'> </a> </div>	
+
 								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "flash_area_video_type_pie" >
@@ -359,12 +366,13 @@
     	<div id="expandviewtitle"></div>
     	<div id="expandviewclosebtn" title="Close"></div>    
         <div class="expandviewchart" id="expandview4">        	
-        </div>     
+        </div> 
+        <br/>    
     </div>
 </div>-->
 
 <script type="text/javascript">	
-	var geog_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "1000", "400", "8", "#FFFFFF");
+	var geog_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", eochartwidth, eochartheight, "8", "#FFFFFF");
 	geog_wise_pie1.addParam("wmode", "transparent");
 	geog_wise_pie1.addVariable("path", "/media/Output/ampie/");
 	geog_wise_pie1.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
@@ -376,7 +384,7 @@
 	geog_wise_pie1.addVariable("additional_chart_settings", encodeURIComponent("<settings><legend><enabled>true</enabled></legend></settings>"));
 	//geog_wise_pie1.write("flash_area_geogwise_pie1");
 	
-	var monthbar1 = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "1000", "450", "8", "#FFFFFF");
+	var monthbar1 = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", eochartwidth, eochartheight, "8", "#FFFFFF");
 	monthbar1.addParam("wmode", "transparent");
 	monthbar1.addVariable("path", "/media/Output/amcolumn/");
 	monthbar1.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
@@ -399,7 +407,7 @@
 	//monthbar1.write("flash_area_monthwise_bar1");
 	
 	
-	var videoprod_line1 = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "1000", "450", "8", "#FFFFFF");
+	var videoprod_line1 = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", eochartwidth, eochartheight, "8", "#FFFFFF");
 	videoprod_line1.addParam("wmode", "transparent");
 	videoprod_line1.addVariable("path", "/media/Output/amline/");
 	videoprod_line1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));  // you can set two or more different settings files here (separated by commas)
@@ -448,7 +456,7 @@
 	//videoprod_line1.write("flash_area_vid_prod_time1");
 	
 	
-	var practice1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "1000", "500", "8", "#FFFFFF");
+	var practice1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", eochartwidth, eochartheight, "8", "#FFFFFF");
 	practice1.addParam("wmode", "transparent");
 	practice1.addVariable("path", "/media/Output/amxy/");
 	practice1.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
@@ -459,7 +467,7 @@
 	{% endif %}
 	//practice1.write("flash_area_practice_type_scatter1");
 	
-	var language1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "1000", "500", "8", "#FFFFFF");
+	var language1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", eochartwidth, eochartheight, "8", "#FFFFFF");
 	language1.addParam("wmode", "transparent");
 	language1.addVariable("path", "/media/Output/amxy/");
 	language1.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
@@ -470,7 +478,7 @@
 	{% endif %}
 	//language1.write("flash_area_language_scatter");
 	
-	var type_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "1000", "450", "8", "#FFFFFF");
+	var type_wise_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", eochartwidth, eochartheight, "8", "#FFFFFF");
 	type_wise_pie1.addParam("wmode", "transparent");
 	type_wise_pie1.addVariable("path", "/media/Output/ampie/");
 	type_wise_pie1.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
@@ -480,9 +488,6 @@
 		type_wise_pie1.addVariable("data_file", encodeURIComponent("/output/video/typepie/{{geog}}/{{id}}/"));
 	{% endif %}
 	//type_wise_pie1.write("flash_area_video_type_pie");
-	
-	
-	
 	
 </script>
 
@@ -514,7 +519,7 @@
 	
 	
 	
-	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "300", "8", "#FFFFFF");
+	var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "420", "390", "8", "#FFFFFF");
 	monthbar.addParam("wmode", "transparent");
 	monthbar.addVariable("path", "/media/Output/amcolumn/");
 	monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
@@ -538,7 +543,7 @@
 	
 	
 
-	var language = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
+	var language = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "390", "8", "#FFFFFF");
 	language.addParam("wmode", "transparent");
 	language.addVariable("path", "/media/Output/amxy/");
 	language.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
@@ -551,7 +556,7 @@
 	
 	
 	
-	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "350", "8", "#FFFFFF");
+	var geog_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "390", "8", "#FFFFFF");
 	geog_wise_pie.addParam("wmode", "transparent");
 	geog_wise_pie.addVariable("path", "/media/Output/ampie/");
 	geog_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
@@ -565,7 +570,7 @@
 	
 	
 	
-	var type_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "400", "8", "#FFFFFF");
+	var type_wise_pie = new SWFObject("/media/Output/ampie/ampie.swf", "actor_pie", "420", "390", "8", "#FFFFFF");
 	type_wise_pie.addParam("wmode", "transparent");
 	type_wise_pie.addVariable("path", "/media/Output/ampie/");
 	type_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml")); 
@@ -578,7 +583,7 @@
 	
 	
 	
-	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "400", "8", "#FFFFFF");
+	var practice = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", "420", "390", "8", "#FFFFFF");
 	practice.addParam("wmode", "transparent");
 	practice.addVariable("path", "/media/Output/amxy/");
 	practice.addVariable("settings_file", encodeURIComponent("/media/Output/amxy/amxy_settings.xml"));                    // you can set two or more different settings files here (separated by commas)
@@ -591,7 +596,7 @@
 	
 	
 	
-	var videoprod_line = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "420", "400", "8", "#FFFFFF");
+	var videoprod_line = new SWFObject("/media/Output/amline/amline.swf", "video_line_chart", "420", "390", "8", "#FFFFFF");
 	videoprod_line.addParam("wmode", "transparent");
 	videoprod_line.addVariable("path", "/media/Output/amline/");
 	videoprod_line.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));                // you can set two or more different settings files here (separated by commas)

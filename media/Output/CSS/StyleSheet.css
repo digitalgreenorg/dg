@@ -1,14 +1,14 @@
 /* Expansion Overlay of Charts - CSS */
-#expandview1					{ z-index:9900; position:fixed; top:2px; background-color:Black; left:15%;}
-#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; left:5%; top:5%; width:90%; height:550px; background-color:White; disabled:"disabled" }
+#expandview1					{ z-index:9900; position:fixed; background-color:Black; }
+#expandview3					{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; background-color:White; display:none }
 #expandview4					{ padding-left:5px; padding-top:10px}
 #expandviewtitle				{ border-bottom-color:#ecedec; border-bottom-style:solid; border-bottom-width:2px; float:left; margin-top:10px; margin-left:10px; width:95%; height:30px; font-family:Calibri; font-weight:bold; font-size:26px; color: Green; text-align:center }
-#expandviewclosebtn				{ float:left; margin-top:10px; margin-left:10px; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
+#expandviewclosebtn				{ float:left; margin-top:10px; margin-right:.5%; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
 .expandviewchart				{ float:none; margin-top:10px; margin-left:10px}
 #expandviewbtn					{ margin-top:0px; margin-left:97%; width:21px; height:21px; background:url("/media/Output/Images/zoombg1.png"); background-repeat:no-repeat; border-color:Green; border-width:1px; border-style:solid; cursor:pointer; }
 
-#sort 				{ border-style:none; opacity:0.3;} 
-#sort:hover			{ border-left-style:solid; border-left-width:1px; border-left-color:#586835;opacity:1}
+#sort 							{ border-style:none; opacity:0.3;} 
+#sort:hover						{ border-left-style:solid; border-left-width:1px; border-left-color:#586835;opacity:1}
 
 #tableheader		{ margin-top:2px; margin-left:15%;}
 #tableheaderleft	{ background:url("/media/Output/Images/columnbgheader.png"); background-repeat:no-repeat; margin-left:0px; margin-top:0px; width:100px; height:45px; text-align:center; padding-top:25px; color:#FFFFFF; font-family:Calibri; font-size:15px; font-weight:bolder; float:left}

@@ -16,7 +16,7 @@
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
-     <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
+    <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
     <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript">  	    
@@ -38,10 +38,9 @@
 	}
 	
 	//Function for apply button in date picker
-	function Apply(){
-	
+	function Apply(){	
 		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
-		var date2 = document.getElementById('inlinedatepicker2').innerHTML;	        
+		var date2 = document.getElementById('inlinedatepicker2').innerHTML;			        
 		if(date1.length==40 || date2.length==40){	 
 		   document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
 										
@@ -104,7 +103,7 @@
 
 <body id='mainbody' onload='Default()'>
 <div id="navmenu">
-	<div id="navmenutitle"></div>
+	<div id="navmenutitle"> <a href="http://www.digitalgreen.org" target="_blank"> <img src = "/media/Output/Images/dg_logo5.png" title="Digital Green"></a></div>
 		<ul id="navmenulist">
 			<li> <div id='navarrowimg'></div> <a href="/output/overview/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}">Overview</font> </a>  </li>
 			<li> <div id='navarrowimg'></div> <a href="/output/video/module/{{geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}"> Videos </a>  </li>		
@@ -117,8 +116,7 @@
 	<div id='default'>		
 		
 		<div id='gridfooter'>
-				<div id="dglogo"> 
-					<a href="http://www.digitalgreen.org" target="_blank"> <img src ="/media/Output/Images/dglogo1.png" alt='temp' title="Digital Green"> </a> 		            
+				<div id="dglogo" title="Dashboard"> 					 		            
 		        </div>		
 		        <div id='timeline'>
 					<div id='timelinedesc'>
@@ -148,7 +146,7 @@
 						    <div id='inlinedatepicker1'>						       												    				  							
 						    </div>
 						    <div id='inlinedatepicker1format'>
-						        (dd-mm-yyyy) 
+						        (yyyy-mm-dd) 
 						    </div>						
 						    <div id='inlinedatepicker2desc'>
 						        to:
@@ -156,7 +154,7 @@
 						    <div id='inlinedatepicker2'>												    				  							
 						    </div>
 						    <div id='inlinedatepicker2format'>
-						        (dd-mm-yyyy) 
+						        (yyyy-mm-dd) 
 						    </div>
 						    <div id='inlinedatepickersubmitbtn'>
 						        <input type="submit" value="Apply" onclick='Apply()'/>
@@ -453,7 +451,8 @@
     	<div id="expandviewtitle"></div>
     	<div id="expandviewclosebtn" title="Close"></div>    
         <div class="expandviewchart" id="expandview4">        	
-        </div>     
+        </div>
+        <br/>     
     </div>
 </div>-->
 
@@ -461,7 +460,7 @@
 
 <!--	 <script type="text/javascript">	 		 
 		// <![CDATA[		
-		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart", "1160", "450", "8", "#FFFFFF");
+		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart", eochartwidth, eochartheight, "8", "#FFFFFF");
 		so1.addParam("wmode", "transparent");
 		so1.addVariable("path", "/media/Output/amline/");
 		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));

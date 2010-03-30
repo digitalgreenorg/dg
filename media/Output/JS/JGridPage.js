@@ -1,126 +1,129 @@
 // JavaScript Document
 
-var flagdefault = 0;
-var flagascen = 0;
-var flagdesc = 0;
-var imgcount = 0;
+// width and height of screen and inner window
+var myWidth  = screen.width;
+var myHeight = screen.height;
 
-var Pic = new Array();
-Pic[0]  = '/media/Output/Images/table2tddefaultbg1.png';
-Pic[1]  = '/media/Output/Images/table2tddescbg3.png';
-Pic[2]  = '/media/Output/Images/table2tdascenbg3.png';
+//var winWidth  = window.innerWidth;
+//var winHeight = window.innerHeight;
 
-var myWidth  = window.innerWidth;
-var myHeight = window.innerHeight;
+var iewinWidth = document.documentElement.clientWidth;
+var iewinHeight = document.documentElement.clientHeight;
 
-function func1(temp){          
+// positioning of the expandedview3 div(container for the overlay expanded charts)
+var top3  = .05*(iewinHeight);
+var left3 = .03*(iewinWidth);
+
+// expanded overlay chart width and height according to the inner window dimensions
+var eochartwidth = .95*(.9*(iewinWidth));
+var	eochartheight= .85*(.9*(iewinHeight));   
+
+
+function zoomIn(temp){  		        
 		
-        var value = temp;
-        //alert("1");       
-
+        var value = temp; 
+                
+		// fill missing IE properties		
+    	if (!window.innerWidth) { 
+    		$("div#expandview3").uncorner(); 
+    		     	
+    	}
+    	else{
+    		$("div#expandview3").corner();  
+    	}
+    	
         switch (value)
 		{
 			case 1:
   				$("div#expandviewtitle").text('Geographical distribution of Videos');
-  				break;
-			case 2:
-  				$("div#expandviewtitle").text('Videos produced per Month');
-  				break;
-  			case 3:
-  				$("div#expandviewtitle").text('Videos produced over Time');
-  				break;
-  			case 4:
-  				$("div#expandviewtitle").text('Videos per Practice');
-  				break;
-  			case 5:
-  				$("div#expandviewtitle").text('Videos per Language');
-  				break;			
-			case 6:
-  				$("div#expandviewtitle").text('Videos per Type');
-  				break;			
-		}
-		
-				
-       	$('div#expandview1').removeAttr('disabled');
-        $('div#expandview3').removeAttr('disabled');        
-        
-		$("div#expandview1").css({
-                    "top": "0px",
-                    "left":"0px",
-                    "width":myWidth,
-                    "height":myHeight,
-                    "opacity":"0.7"                      
-        });          
-       	$("div#expandview1").fadeIn();        	   
-        $("div#expandview3").show();        
-        $("div#expandview3").corner();
-			
-}
-
-function func2(temp1)
-	{
-		$('div#expandview4').append(''); 
-		var value = temp1;	
-		switch (value)
-		{
-			case 1:
-  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+  				$('div#expandview4').html('<div id="alpha1"></div>'); 
 				geog_wise_pie1.write("alpha1");
   				break;
 			case 2:
-				//alert("2");
-  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+  				$("div#expandviewtitle").text('Videos produced per Month');
+  				$('div#expandview4').html('<div id="alpha1"></div>'); 
 				monthbar1.write("alpha1");
-				break;
+  				break;
   			case 3:
-  				$('div#expandview4').append('<div id="alpha1"></div>'); 
+  				$("div#expandviewtitle").text('Videos produced over Time');
+  				$('div#expandview4').html('<div id="alpha1"></div>'); 
 				videoprod_line1.write("alpha1");
-				break;
-  			case 4:
-  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				break;
+  			case 4:  				
+  				$("div#expandviewtitle").text('Videos per Practice');
+  				$('div#expandview4').html('<div id="alpha1"></div>');
   				practice1.write("alpha1");
   				break;
   			case 5:
-  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				$("div#expandviewtitle").text('Videos per Language');
+  				$('div#expandview4').html('<div id="alpha1"></div>');
   				language1.write("alpha1");
   				break;			
 			case 6:
-  				$('div#expandview4').append('<div id="alpha1"></div>');
+  				$("div#expandviewtitle").text('Videos per Type');
+  				$('div#expandview4').html('<div id="alpha1"></div>');
   				type_wise_pie1.write("alpha1");
   				break;			
 		}
 		
-		
-	}
-
-
-function expandviewclose(){ 
-	     
-
-	$("div#expandviewclosebtn").click( function(){
-			$("div#expandview1").fadeOut();
-        	$("div#expandview3").hide();
-        	$("div#expandview1").attr('disabled', true);
-        	$("div#expandview3").attr('disabled', true);       			
-	});
+		$("div#expandview1").css({
+                    "top": "0px",
+                    "left":"0px",
+                    "width":myWidth,
+                    "height":myHeight,
+                    "opacity":"0.7",                                          
+        });
+        
+        $("div#expandview3").css({
+                    "top": top3,
+                    "left":left3,
+                    "width":0.9*(iewinWidth)                                                                                 
+        });          
+       	$("div#expandview1").fadeIn();        	   
+        $("div#expandview3").show();      
+        
+			
 }
 
+function expandviewclose(){ 	     
+
+	$("div#expandviewclosebtn").click( function(){			
+        	$("div#expandview3").hide();        	
+        	$("div#expandview1").fadeOut();     			
+	});	
+}
+//TODO: Make this as on video page. 
 function expandviewoverview(){ 	     
 
-	$("div#expandviewbtn").click( function(){
-		$('div#expandview1').removeAttr('disabled');
-        $('div#expandview3').removeAttr('disabled');        
-        
+	// fill missing IE properties
+    	if (!window.innerWidth) { 
+    		$("div#expandview3").uncorner();   		
+    		top3 = .03*(iewinHeight);
+    		left3 = .03*(iewinWidth);    	
+        	//alert(eochartwidth +"yup"+eochartheight);
+        	winWidth = iewinWidth; 
+    	}
+    	else{
+    		$("div#expandview3").corner();  
+    	}
+
+
+	$("div#expandviewbtn").click( function(){       
 		$("div#expandview1").css({
                     "top": "0px",
                     "left":"0px",
                     "width":myWidth,
                     "height":myHeight,
                     "opacity":"0.7"                      
-        });          
+        });        
+        $("div#expandview3").css({
+            "top": top3,
+            "left":left3,
+            "width":.9*(iewinWidth)                                                                                         
+    	}); 
+    	//alert(.9*(window.innerWidth));        
        	$("div#expandview1").fadeIn();        	   
-        $("div#expandview3").show();        
-        $("div#expandview3").corner();       			
+        $("div#expandview3").show();          			
 		$("div#expandviewtitle").text('Cumulative Line Graph');
 		$('div#expandview4').append('<div id="flashcontent1"></div>');
   		so1.write("flashcontent1");
@@ -349,12 +352,7 @@ function dateRange() {
 
 };
 /** This is run when the page is fully loaded */
-$(document).ready(function(){
-	$('div#expandview3').hide();
-	$('div#expandview1').attr('disabled', true);
-	$('div#expandview3').attr('disabled', true);  
-	$('#table2tdv2desc').attr('disabled', true);
-	$("div#timelinedesc1").attr('disabled', true);	
+$(document).ready(function(){		
 	$("div#gridfooter").find("div#timelinedesc1").hide();   
     gridview();
 	datepick();
