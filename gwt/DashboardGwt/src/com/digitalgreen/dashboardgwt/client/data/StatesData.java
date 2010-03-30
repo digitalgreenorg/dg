@@ -40,6 +40,19 @@ public class StatesData extends BaseData {
 			this.region = region;
 		}
 		
+		public Data(int id, String state_name){
+			super();
+			this.id = id;
+			this.state_name = state_name;
+		}
+		
+		/*public Data(int id, String state_name, int region_id, String start_date) {
+			super();
+			this.id = id;
+			this.state_name = state_name;
+			this.region_id = region_id;
+			this.start_date = start_date;
+		}*/
 		
 		public String getStateName(){
 			return this.state_name;
@@ -174,7 +187,6 @@ public class StatesData extends BaseData {
 				}				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 		}
