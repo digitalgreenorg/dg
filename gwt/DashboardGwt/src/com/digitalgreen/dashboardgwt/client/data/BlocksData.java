@@ -1,7 +1,13 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import com.digitalgreen.dashboardgwt.client.common.Form;
+import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 
 public class BlocksData extends BaseData {
@@ -10,25 +16,19 @@ public class BlocksData extends BaseData {
 		protected Type() {}
 		public final native String getBlockName() /*-{ return this.fields.block_name; }-*/;
 		public final native String getStartDate() /*-{ return this.fields.start_date; }-*/;
-		public final native String getDistrictId() /*-{ return this.fields.district_id; }-*/;
+		public final native DistrictsData.Type getDistrict() /*-{ return this.fields.district; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "block";
-			
+		final protected static String COLLECTION_PREFIX = "block";
+		
 		private String block_name;
 		private String start_date;
 		private DistrictsData.Data district;
 		
-		public Data() {
+		public Data(){
 			super();
-		}
-		
-		public Data(int id, String block_name){
-			super();
-			this.id = id;
-			this.block_name = block_name;
 		}
 		
 		public Data(int id, String block_name, String start_date, DistrictsData.Data district){
@@ -39,23 +39,88 @@ public class BlocksData extends BaseData {
 			this.district = district;
 		}
 		
-		public String getBlockName() {
+		public Data(int id, String block_name){
+			super();
+			this.id = id;
+			this.block_name = block_name;
+		}
+		
+		public String getBlockName(){
 			return this.block_name;
+		}
+		
+		public String getStartDate(){
+			return this.start_date;
+		}
+		
+		public DistrictsData.Data getDistrict(){
+			return this.district;
+		}
+		
+		public BaseData.Data clone() {
+			Data obj = new Data();
+			obj.id = this.id;
+			obj.block_name = this.block_name;
+			obj.start_date = this.start_date;
+			obj.district = (DistrictsData.Data)this.district.clone();
+			return obj;
+		}
+		
+		@Override
+		public String getPrefixName() {
+			return Data.COLLECTION_PREFIX;
+		}
+		
+		@Override
+		public void setObjValueFromString(String key, Object val) {		
+			if(key.equals("id")) {
+				this.id = ((Integer)val).intValue();
+			}
+			else if(key.equals("block_name")){
+				this.block_name = (String)val;
+			}
+			else if(key.equals("start_date")){
+				this.start_date = (String)val;
+			}
+			else if(key.equals("district")){
+				DistrictsData district1 = new DistrictsData();
+				this.district = district1.getNewData();
+				this.district.id = Integer.parseInt((String)val);
+			}
+		}
+		
+		@Override
+		public void save() {
+			BlocksData blocksDataDbApis = new BlocksData();
+			this.id = blocksDataDbApis.autoInsert(this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
 		}
 	}
 	
-	protected static String tableID = "9";
-	protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` " +
+	protected static String tableID = "09";
+	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"BLOCK_NAME VARCHAR(100)  NOT NULL ," +
 												"START_DATE DATE  NULL DEFAULT NULL," +
 												"district_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(district_id) REFERENCES district(id));";
-	
+	protected static String listBlocks = "SELECT block.id, block.BLOCK_NAME, block.START_DATE, district.id, district.DISTRICT_NAME FROM block JOIN district ON block.district_id = district.id ORDER BY (-block.id);";
+	protected static String listAllBlocks = "SELECT id, BLOCK_NAME block ORDER BY (name);";
+	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
+	protected static String getBlockOnlineURL = "/dashboard/getblocksonline/";
 	protected static String saveBlockOfflineURL = "/dashboard/saveblockoffline/";
+	protected String table_name = "block";
+	protected String[] fields = {"id", "block_name", "start_date", "district_id"};
 	
 	public BlocksData() {
 		super();
+	}
+	
+	public BlocksData(OnlineOfflineCallbacks callbacks){
+		super(callbacks);
+	}
+	
+	public BlocksData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+		super(callbacks, form, queryString);
 	}
 	
 	@Override
@@ -68,7 +133,127 @@ public class BlocksData extends BaseData {
 		return BlocksData.tableID;
 	}
 	
-	public List getAllBlocksOffline() {
-		return null;
-	}	
+	@Override
+	protected String getTableName() {
+		return this.table_name;
+	}
+	
+	@Override
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
+	protected static String getSaveOfflineURL(){
+		return BlocksData.saveBlockOfflineURL;
+	}
+	
+	public final native JsArray<Type> asArrayOfData(String json) /*-{
+		return eval(json);
+	}-*/;
+	
+	public List serialize(JsArray<Type> blockObjects) {
+		List blocks = new ArrayList();
+		DistrictsData district = new DistrictsData();
+		for (int i = 0; i < blockObjects.length(); i++) {
+			DistrictsData.Data d = district. new Data(Integer.parseInt(blockObjects.get(i).getDistrict().getPk()), blockObjects.get(i).getDistrict().getDistrictName());
+			Data block = new Data(Integer.parseInt(blockObjects.get(i).getPk()), blockObjects.get(i).getBlockName(), blockObjects.get(i).getStartDate(), d);
+			blocks.add(block);
+		}
+		return blocks;
+	}
+	
+	public List getBlocksOnline(String json){
+		return this.serialize(this.asArrayOfData(json));		
+	}
+	
+	public List getBlocksLsitingOffline(){
+		BaseData.dbOpen();
+		List blocks = new ArrayList();
+		DistrictsData district = new DistrictsData();
+		this.select(listBlocks);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(4), this.getResultSet().getFieldAsString(5));
+					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
+					blocks.add(block);
+				}
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return blocks;
+	}
+	
+	public List getAllBlocksOffline(){
+		BaseData.dbOpen();
+		List blocks = new ArrayList();
+		DistrictsData district = new DistrictsData();
+		this.select(listAllBlocks);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(4), this.getResultSet().getFieldAsString(5));
+					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
+					blocks.add(block);
+				}
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return blocks;
+	}
+	
+	public List getTemplateDataOnline(String json){
+		List relatedData = null;
+		return relatedData;
+	}
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + BlocksData.saveBlockOnlineURL, this.queryString);
+		}
+		else{
+			this.save();
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public String retrieveDataAndConvertResultIntoHtml() {
+		DistrictsData districtData = new DistrictsData();
+		List districts = districtData.getAllDistrictsOffline();
+		DistrictsData.Data district;
+		String html = "<select name=\"district\" id=\"id_district\">";
+		for (int i=0; i < districts.size(); i++){
+			district = (DistrictsData.Data)districts.get(i);
+			html = html + "<option value = \"" + district.getId() + "\">" + district.getDistrictName() + "</option>";
+		}
+		html = html + "</select>";
+		return html;
+	}
+	
+	public Object getAddPageData() {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + BlocksData.saveBlockOnlineURL);
+		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
 }

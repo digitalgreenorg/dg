@@ -50,6 +50,12 @@ public class PartnersData extends BaseData {
 			this.equipmentholder_id = equipmentholder_id;
 		}
 		
+		public Data(int id, String partner_name){
+			super();
+			this.id = id;
+			this.partner_name = partner_name;
+		}
+		
 		public String getPartnerName(){
 			return this.partner_name;
 		}
@@ -111,9 +117,8 @@ public class PartnersData extends BaseData {
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
-	
-
-	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
+	protected static String listPartners = "SELECT * FROM partners ORDER BY (-id)";
+	protected static String listAllPartners = "SELECT id, partner_name FROM partners ORDER BY (name)";
 	protected static String savePartnerOnlineURL = "/dashboard/savepartneronline/";
 	protected static String getPartnerOnlineURL = "/dashboard/getpartnersonline/";
 	protected static String savePartnerOfflineURL = "/dashboard/savepartneroffline/";
@@ -199,7 +204,25 @@ public class PartnersData extends BaseData {
 				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
-			
+		}
+		BaseData.dbClose();
+		return partners;
+	}
+	
+	public List getAllPartnersOffline(){
+		BaseData.dbOpen();
+		List partners = new ArrayList();
+		this.select(listAllPartners);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data partner = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					partners.add(partner);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
 		}
 		BaseData.dbClose();
 		return partners;

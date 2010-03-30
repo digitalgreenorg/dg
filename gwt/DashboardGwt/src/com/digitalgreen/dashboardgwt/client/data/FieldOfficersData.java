@@ -59,6 +59,12 @@ public class FieldOfficersData extends BaseData {
 			this.equipmentholder_id = equipmentholder_id;
 		}
 		
+		public Data(int id, String name){
+			super();
+			this.id = id;
+			this.name = name;
+		}
+		
 		public String getFieldOfficerName(){
 			return this.name;
 		}
@@ -73,7 +79,7 @@ public class FieldOfficersData extends BaseData {
 			obj.salary = this.salary;
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
-			obj.reviewer_id  =this.reviewer_id;
+			obj.reviewer_id  = this.reviewer_id;
 			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
@@ -141,6 +147,7 @@ public class FieldOfficersData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
+	protected static String listAllFieldOfficers = "SELECT id, name FROM field_officer ORDER BY (name)";
 	protected static String saveFieldOfficerOnlineURL = "/dashboard/savefieldofficeronline/";
 	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";
 	protected static String saveFieldOfficerOfflineURL = "/dashboard/savefieldofficeroffline/";
@@ -224,6 +231,25 @@ public class FieldOfficersData extends BaseData {
 			}
 		}
 		BaseData.dbClose();		
+		return fieldOfficers;
+	}
+	
+	public List getAllFieldOfficersOffline(){
+		BaseData.dbOpen();
+		List fieldOfficers = new ArrayList();
+		this.select(listAllFieldOfficers);
+		if(this.getResultSet().isValidRow()){
+			try {
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					Data fieldOfficer = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					fieldOfficers.add(fieldOfficer);
+				}
+			} catch (DatabaseException e){
+				Window.alert("Database Exception: " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
 		return fieldOfficers;
 	}
 
