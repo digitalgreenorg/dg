@@ -6,6 +6,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.LanguagesData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -44,6 +45,12 @@ public class FieldOfficersData extends BaseData {
 			super();
 		}
 		
+		public Data(int id, String name){
+			super();
+			this.id = id;
+			this.name = name;
+		}
+		
 		public Data(int id, String name, String age, String gender, String hire_date, 
 				float salary, String phone_no, String address, int reviewer_id, int equipmentholder_id){
 			super();
@@ -59,12 +66,7 @@ public class FieldOfficersData extends BaseData {
 			this.equipmentholder_id = equipmentholder_id;
 		}
 		
-		public Data(int id, String name){
-			super();
-			this.id = id;
-			this.name = name;
-		}
-		
+
 		public String getFieldOfficerName(){
 			return this.name;
 		}
@@ -146,8 +148,8 @@ public class FieldOfficersData extends BaseData {
 												"equipmentholder_id INT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
+	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
-	protected static String listAllFieldOfficers = "SELECT id, name FROM field_officer ORDER BY (name)";
 	protected static String saveFieldOfficerOnlineURL = "/dashboard/savefieldofficeronline/";
 	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";
 	protected static String saveFieldOfficerOfflineURL = "/dashboard/savefieldofficeroffline/";
@@ -233,25 +235,30 @@ public class FieldOfficersData extends BaseData {
 		BaseData.dbClose();		
 		return fieldOfficers;
 	}
+
 	
 	public List getAllFieldOfficersOffline(){
 		BaseData.dbOpen();
-		List fieldOfficers = new ArrayList();
-		this.select(listAllFieldOfficers);
-		if(this.getResultSet().isValidRow()){
+		List fieldofficers = new ArrayList();
+		this.select(selectFieldOfficers);
+		if (this.getResultSet().isValidRow()){
 			try {
-				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data fieldOfficer = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
-					fieldOfficers.add(fieldOfficer);
-				}
-			} catch (DatabaseException e){
-				Window.alert("Database Exception: " + e.toString());
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data fieldofficer = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					fieldofficers.add(fieldofficer);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
+			
 		}
 		BaseData.dbClose();
-		return fieldOfficers;
+		return fieldofficers;
 	}
+	
+
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){

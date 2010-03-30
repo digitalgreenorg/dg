@@ -1,10 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.VideosData;
 import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 
 public class VideosTemplate extends BaseTemplate {
+	
 	public VideosTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
@@ -17,21 +22,57 @@ public class VideosTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		Videos addVideosServlet = new Videos(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new VideosData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		Videos saveVideo = new Videos(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
-		Videos addVideosServlet = new Videos(requestContext);
-		Videos saveVideo = new Videos(new RequestContext(RequestContext.METHOD_POST));
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, videosListFormHtml, addVideosServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveVideo);
 	}
 	
-	final private String addDataToElementID[] = null;
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List videos = (List)queryArgs.get("listing");			
+			if(videos  != null){
+				String tableRows ="";
+				String style;
+				VideosData.Data video;
+				for (int row = 0; row <videos.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					video = (VideosData.Data) videos.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+								  "<td><input type='checkbox' class='action-select' value='"+ video.getId() + "' name='_selected_action' /></td>" +
+									"<th><a href='/admin/dashboard/video/"+ video.getId() +"/'>" + video.getTitle()+"</a></th>" +
+									"<td>"+ video.getVillage().getVillageName() + "</td>"+
+									"<td>"+ video.getVideoProductionStartDate() + "</td>" +
+									"<td>"+ video.getVideoProductionEndDate() + "</td>" +
+								"</tr>";
+				}
+				videosListFormHtml = videosListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
 	
-	final static private String videosListFormHtml = "<div class='actions'>" +
+	final private String addDataToElementID[] = {"id_language", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
+	
+	private String videosListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
     								"<option value='' selected='selected'>---------</option>" +
     								"<option value='delete_selected'>Delete selected videos</option>" +
@@ -72,11 +113,7 @@ public class VideosTemplate extends BaseTemplate {
     									"</th>" +
     								"</tr>" +
     							"</thead>" +
-    							"<tbody>" +
-    								"<div id='data-rows'" +       // Insert data rows here
-    								"</div>" +
-    							"</tbody>" +
-    						"</table>";
+    							"<tbody>" ;
 ;
 	
 	final static private String videosListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
@@ -100,8 +137,8 @@ public class VideosTemplate extends BaseTemplate {
     							"<div id='content' class='colM'>" +
     								"<h1>Add video</h1>" +
     								"<div id='content-main'>" +
-    									"<form enctype='multipart/form-data' action='' method='post' id='video_form'>" +
-    										"<div>" +
+    									//"<form enctype='multipart/form-data' action='' method='post' id='video_form'>" +
+    										//"<div>" +
     											"<fieldset class='module aligned '>" +
     												"<div class='form-row title  '>" +
     													"<div>" +
@@ -112,27 +149,22 @@ public class VideosTemplate extends BaseTemplate {
     													"<div>" +
     														"<label for='id_video_type' class='required'>Video type:</label><select name='video_type' id='id_video_type'>" +
     															"<option value='' selected='selected'>---------</option>" +
+    															"<option value='1'>Demonstration</option>"+
+    															"<option value='2'>Success story/ Testimonial</option>"+
+    															"<option value='3'>Activity Introduction</option>"+
+    															"<option value='4'>Discussion</option>"+
+    															"<option value='5'>General Awareness</option>"+
     														"</select>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row video_production_start_date  '>" +
     													"<div>" +
     														"<label for='id_video_production_start_date' class='required'>Video production start date:</label><input id='id_video_production_start_date' type='text' class='vDateField' name='video_production_start_date' size='10' />" +
-    														"<span>&nbsp;" +
-    															"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-    															"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-    															"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-    														"</span>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row video_production_end_date  '>" +
     													"<div>" +
     														"<label for='id_video_production_end_date' class='required'>Video production end date:</label><input id='id_video_production_end_date' type='text' class='vDateField' name='video_production_end_date' size='10' />" +
-    														"<span>&nbsp;" +
-    															"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-    															"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-    															"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-    														"</span>" +
     													"</div>" +
     												"</div>" +
     												"<div class='form-row language  '>" +
@@ -146,6 +178,9 @@ public class VideosTemplate extends BaseTemplate {
     													"<div>" +
     														"<label for='id_storybase' class='required'>Storybase:</label><select name='storybase' id='id_storybase'>" +
     															"<option value='' selected='selected'>---------</option>" +
+    															"<option value='1'>Agricultural</option>"+
+    															"<option value='2'>Institutional</option>"+
+
     														"</select>" +
     													"</div>" +
     												"</div>" +
@@ -224,14 +259,14 @@ public class VideosTemplate extends BaseTemplate {
 												    "</div>" +
 												    "<div class='form-row facilitator  '>" +
 												    	"<div>" +
-												    		"<label for='id_facilitator' class='required'>Facilitator:</label><select disabled='true' name='facilitator' id='id_facilitator'>" +
+												    		"<label for='id_facilitator' class='required'>Facilitator:</label><select name='facilitator' id='id_facilitator'>" +
 												    			"<option value='' selected='selected'>---------</option>" +
 												    		"</select>" +
 												    	"</div>" +
 												    "</div>" +
 												    "<div class='form-row cameraoperator  '>" +
 												    	"<div>" +
-												    		"<label for='id_cameraoperator' class='required'>Camera Operator:</label><select disabled='true' name='cameraoperator' id='id_cameraoperator'>" +
+												    		"<label for='id_cameraoperator' class='required'>Camera Operator:</label><select name='cameraoperator' id='id_cameraoperator'>" +
 												    			"<option value='' selected='selected'>---------</option>" +
 												    		"</select>" +
 												    	"</div>" +
@@ -239,14 +274,18 @@ public class VideosTemplate extends BaseTemplate {
 												    "<div class='form-row related_agricultural_practices  '>" +
 												    	"<div>" +
 												    		"<label for='id_related_agricultural_practices' class='required'>Related agricultural practices:</label><select multiple='multiple' name='related_agricultural_practices' id='id_related_agricultural_practices'>" +
-												    		"</select><script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/'); });</script>" +
+												    		"</select>" +
+															"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
+															"<script type='text/javascript'>SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/');</script>"+
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
 												    "<div class='form-row farmers_shown  '>" +
 												    	"<div>" +
 												    		"<label for='id_farmers_shown' class='required'>Farmers shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
-												    		"</select><script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/'); });</script>" +
+												    		"</select>" +
+												    		"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
+												    		"<script type='text/javascript'>SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/');</script>"+
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
@@ -254,6 +293,9 @@ public class VideosTemplate extends BaseTemplate {
 												    	"<div>" +
 												    		"<label for='id_actors' class='required'>Actors:</label><select name='actors' id='id_actors'>" +
 												    			"<option value='' selected='selected'>---------</option>" +
+												    			"<option value='I'>Individual</option>"+
+												    			"<option value='F'>Family</option>"+
+												    			"<option value='G'>Group</option>"+
 												    		"</select>" +
 												    	"</div>" +
 												    "</div>" +
@@ -278,21 +320,11 @@ public class VideosTemplate extends BaseTemplate {
 													"<div class='form-row edit_start_date  '>" +
 														"<div>" +
 															"<label for='id_edit_start_date'>Edit start date:</label><input id='id_edit_start_date' type='text' class='vDateField' name='edit_start_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row edit_finish_date  '>" +
 														"<div>" +
 															"<label for='id_edit_finish_date'>Edit finish date:</label><input id='id_edit_finish_date' type='text' class='vDateField' name='edit_finish_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row thematic_quality  '>" +
@@ -313,11 +345,6 @@ public class VideosTemplate extends BaseTemplate {
 													"<div class='form-row approval_date  '>" +
 														"<div>" +
 															"<label for='id_approval_date'>Approval date:</label><input id='id_approval_date' type='text' class='vDateField' name='approval_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row supplementary_video_produced  '>" +
@@ -331,6 +358,10 @@ public class VideosTemplate extends BaseTemplate {
 														"<div>" +
 															"<label for='id_video_suitable_for' class='required'>Video suitable for:</label><select name='video_suitable_for' id='id_video_suitable_for'>" +
 																"<option value='' selected='selected'>---------</option>" +
+																"<option value='1'>Dissemination</option>"+
+																"<option value='2'>Video Production Training</option>"+
+																"<option value='3'>Dissemination Training</option>"+
+																"<option value='4'>Nothing</option>"+
 															"</select>" +
 														"</div>" +
 													"</div>" +
@@ -346,10 +377,13 @@ public class VideosTemplate extends BaseTemplate {
 												"<script type='text/javascript'>document.getElementById('id_title').focus();</script>" +
 												"<script type='text/javascript'>" +
 												"</script>" +
-											"</div>" +
-										"</form>" +
+											//"</div>" +
+										//"</form>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>";
+								"</div>"+
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>"; 
+	
 
 } 

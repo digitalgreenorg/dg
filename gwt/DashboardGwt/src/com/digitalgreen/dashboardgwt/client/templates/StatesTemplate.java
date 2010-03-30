@@ -5,11 +5,8 @@ import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.servlets.States;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class StatesTemplate extends BaseTemplate{
 	
@@ -62,7 +59,7 @@ public class StatesTemplate extends BaseTemplate{
 					state = (StatesData.Data) states.get(row);
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ state.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/region/"+ state.getId() +"/'>" + state.getStateName()+"</a></th>" +
+									"<th><a href='/admin/dashboard/state/"+ state.getId() +"/'>" + state.getStateName()+"</a></th>" +
 									"<td>"+ state.getRegion().getRegionName() + "</td>" +
 								"</tr>";
 				}

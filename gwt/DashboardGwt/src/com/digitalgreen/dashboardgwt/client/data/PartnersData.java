@@ -38,6 +38,12 @@ public class PartnersData extends BaseData {
 			super();
 		}
 		
+		public Data(int id, String partner_name) {
+			super();
+			this.id = id;
+			this.partner_name = partner_name;
+		}
+		
 		public Data(int id, String partner_name, String date_of_association, String phone_no,
 				String address, int reviewer_id, int equipmentholder_id) {
 			super();
@@ -49,12 +55,7 @@ public class PartnersData extends BaseData {
 			this.reviewer_id = reviewer_id;
 			this.equipmentholder_id = equipmentholder_id;
 		}
-		
-		public Data(int id, String partner_name){
-			super();
-			this.id = id;
-			this.partner_name = partner_name;
-		}
+
 		
 		public String getPartnerName(){
 			return this.partner_name;
@@ -117,8 +118,9 @@ public class PartnersData extends BaseData {
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
-	protected static String listPartners = "SELECT * FROM partners ORDER BY (-id)";
-	protected static String listAllPartners = "SELECT id, partner_name FROM partners ORDER BY (name)";
+	
+	protected static String selectPartners = "SELECT id, partner_name FROM partners ORDER BY(partner_name)";
+	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
 	protected static String savePartnerOnlineURL = "/dashboard/savepartneronline/";
 	protected static String getPartnerOnlineURL = "/dashboard/getpartnersonline/";
 	protected static String savePartnerOfflineURL = "/dashboard/savepartneroffline/";
@@ -208,11 +210,11 @@ public class PartnersData extends BaseData {
 		BaseData.dbClose();
 		return partners;
 	}
-	
+
 	public List getAllPartnersOffline(){
 		BaseData.dbOpen();
 		List partners = new ArrayList();
-		this.select(listAllPartners);
+		this.select(selectPartners);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -221,12 +223,15 @@ public class PartnersData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
+			
 		}
 		BaseData.dbClose();
 		return partners;
 	}
+
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){

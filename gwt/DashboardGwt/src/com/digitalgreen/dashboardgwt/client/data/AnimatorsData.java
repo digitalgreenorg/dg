@@ -30,7 +30,7 @@ public class AnimatorsData extends BaseData {
 			this.name = name;
 		}
 
-		public String getAnimatorNamer(){
+		public String getAnimatorName(){
 			return this.name;
 		}
 		

@@ -32,6 +32,12 @@ public class PracticesData extends BaseData {
 			super();
 		}
 		
+		public Data(int id, String practice_name){
+			super();
+			this.id = id;
+			this.practice_name = practice_name;
+		}
+		
 		public Data(int id, String practice_name, String seasonality, String summary){
 			super();
 			this.id = id;
@@ -95,7 +101,9 @@ public class PracticesData extends BaseData {
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PRACTICE_NAME VARCHAR(200)  NOT NULL ," +
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
-												"SUMMARY TEXT NULL DEFAULT NULL );";  
+												"SUMMARY TEXT NULL DEFAULT NULL );";
+	
+	protected static String selectPractices = "SELECT id, practice_name FROM practices ORDER BY(practice_name)";
 	protected static String listPractices = "SELECT * FROM practices ORDER BY(-id)";
 	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
 	protected static String getPracticeOnlineURL = "/dashboard/getpracticesonline/";
@@ -178,6 +186,27 @@ public class PracticesData extends BaseData {
 		BaseData.dbClose();
 		return practices;
 	}
+	
+	public List getAllPracticesOffline(){
+		BaseData.dbOpen();
+		List practices = new ArrayList();
+		this.select(selectPractices);
+		if(this.getResultSet().isValidRow()){
+			try {
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					Data practice = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					practices.add(practice);
+				}
+			}
+			catch(DatabaseException e){
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return practices;
+	}
+	
 	
 	public Object postPageData(){
 		if(BaseData.isOnline()){

@@ -69,6 +69,7 @@ public class LanguagesData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `language` " +
 											"(id INTEGER PRIMARY KEY  NOT NULL ," +
 											"language_name VARCHAR(100)  NOT NULL );";  
+	protected static String selectLanguages = "SELECT * FROM language ORDER BY(language_name);";
 	protected static String listLanguages = "SELECT * FROM language ORDER BY(-id)";
 	protected static String saveLanguageOnlineURL = "/dashboard/savelanguageonline/";
 	protected static String getLanguageOnlineURL = "/dashboard/getlanguagesonline/";
@@ -133,6 +134,27 @@ public class LanguagesData extends BaseData {
 		BaseData.dbOpen();
 		List languages = new ArrayList();
 		this.select(listLanguages);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data language = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					languages.add(language);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return languages;
+	}
+	
+	public List getAllLanguagesOffline(){
+		BaseData.dbOpen();
+		List languages = new ArrayList();
+		this.select(selectLanguages);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {

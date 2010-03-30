@@ -31,6 +31,13 @@ public class StatesData extends BaseData {
 		public Data() {
 			super();
 		}
+		
+		public Data(int id, String state_name) {
+			super();
+			this.id = id;
+			this.state_name = state_name;
+		}
+		
 
 		public Data(int id, String state_name,String start_date, RegionsData.Data region) {
 			super();
@@ -40,19 +47,6 @@ public class StatesData extends BaseData {
 			this.region = region;
 		}
 		
-		public Data(int id, String state_name){
-			super();
-			this.id = id;
-			this.state_name = state_name;
-		}
-		
-		/*public Data(int id, String state_name, int region_id, String start_date) {
-			super();
-			this.id = id;
-			this.state_name = state_name;
-			this.region_id = region_id;
-			this.start_date = start_date;
-		}*/
 		
 		public String getStateName(){
 			return this.state_name;
@@ -112,6 +106,7 @@ public class StatesData extends BaseData {
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) references region(id));"; 
 
+	protected static String selectStates = "SELECT id, state_name FROM state ORDER BY (state_name);";
 	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id ORDER BY (-state.id);";
 	protected static String saveStateOnlineURL = "/dashboard/savestateonline/";
 	protected static String getStateOnlineURL = "/dashboard/getstatesonline/";
@@ -187,6 +182,26 @@ public class StatesData extends BaseData {
 				}				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return states;
+	}
+	
+	public List getAllStatesOffline(){
+		BaseData.dbOpen();
+		List states = new ArrayList();
+		this.select(selectStates);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data state = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					states.add(state);
+				}				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 		}

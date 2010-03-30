@@ -1,7 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
-//import java.text.DateFormat;
-//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +7,6 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.StatesData.Data;
-import com.digitalgreen.dashboardgwt.client.data.StatesData.Type;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -69,6 +65,13 @@ public class VideosData extends BaseData {
 		public Data() {
 			super();
 		}
+		
+		public Data(int id, String title) {
+			super();
+			this.id = id;
+			this.title = title;
+		}
+		
 
 		public Data(int id, String title ,String video_production_start_date, String video_production_end_date,  VillagesData.Data village) {
 			super();
@@ -209,6 +212,13 @@ public class VideosData extends BaseData {
 		
 		@Override
 		public void save() {
+			//Calendar cal = Calendar.getInstance();
+		    //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+		    //this.last_modified = cal.YEAR + "-" + cal.MONTH + "-" +  cal.DAY_OF_MONTH + " " + cal.HOUR_OF_DAY + ":" + cal.MINUTE + ":" + cal.SECOND;
+			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+		    Window.alert("Save =" + this.last_modified);
+		    //this.last_modified =  sdf.format(cal.getTime());
 			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			//Date date = new Date();
 			//this.last_modified = dateFormat.format(date);
@@ -261,6 +271,7 @@ public class VideosData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(language_id) REFERENCES language(id) );";  
 
+	protected static String selectVideos = "SELECT video.id, video.title FROM video ORDER BY (video.title);";
 	protected static String listVideos = "SELECT video.id, video.title, video.video_production_start_date, " +
 										 "video.video_production_end_date, video.village_id, village.village_name " +
 										 "FROM video JOIN village ON video.village_id = village.id ORDER BY (-video.id);";
@@ -294,7 +305,7 @@ public class VideosData extends BaseData {
 	
 	@Override
 	protected String getTableId() {
-		return StatesData.tableID;
+		return VideosData.tableID;
 	}
 	
 	protected String getTableName() {
@@ -352,6 +363,28 @@ public class VideosData extends BaseData {
 		return videos;
 	}
 	
+	public List getAllVideosOffline(){
+		BaseData.dbOpen();
+		List videos = new ArrayList();
+		this.select(selectVideos);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data video = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					videos.add(video);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return videos;
+	}
+	
+	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
 			this.post(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL, this.queryString);
@@ -374,37 +407,48 @@ public class VideosData extends BaseData {
 		return false;
 	}	
 	
-	/*public String retrieveDataAndConvertResultIntoHtml(){
+	public String retrieveDataAndConvertResultIntoHtml(){
 		LanguagesData languageData = new LanguagesData();
-		List languages = languageData.getLanguagesListingOffline();
+		List languages = languageData.getAllLanguagesOffline();
 		LanguagesData.Data language;
-		String html1 = "<select name=\"language\" id=\"id_language\">";
+		String html = "<select name=\"language\" id=\"id_language\">";
 		for(int i=0; i< languages.size(); i++){
 			language = (LanguagesData.Data)languages.get(i);
-			html1 = html1 + "<option value = \"" + language.getId() +"\">" + language.getLanguageName() + "</option>";
+			html = html + "<option value = \"" + language.getId() +"\">" + language.getLanguageName() + "</option>";
 		}
-		html1 = html1 + "</select>";
+		html = html + "</select>";
 		
 		AnimatorsData animatorData = new AnimatorsData();
 		List facilitators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data facilitator;
-		String html2 = "<select name=\"facilitator\" id=\"id_facilitator\">";
+		html = html + "<select name=\"facilitator\" id=\"id_facilitator\">";
 		for(int i=0; i< facilitators.size(); i++){
 			facilitator = (AnimatorsData.Data)facilitators.get(i);
-			html2 = html2 + "<option value = \"" + facilitator.getId() +"\">" + facilitator.get .getLanguageName() + "</option>";
+			html = html + "<option value = \"" + facilitator.getId() +"\">" + facilitator.getAnimatorName() + "</option>";
 		}
-		return html1;
+		html = html + "</select>";
+		
+		List cameraoperators = animatorData.getAllAnimatorsOffline();
+		AnimatorsData.Data cameraoperator;
+		html = html + "<select name=\"cameraoperator\" id=\"id_cameraoperator\">";
+		for(int i=0; i< cameraoperators.size(); i++){
+			cameraoperator = (AnimatorsData.Data)cameraoperators.get(i);
+			html = html + "<option value = \"" + cameraoperator.getId() +"\">" + cameraoperator.getAnimatorName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		return html;
 	}
 	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL);
+			this.get(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL);
 		}
 		else{
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
-	}*/
+	}
 	
 
 }
