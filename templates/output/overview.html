@@ -17,7 +17,8 @@
 	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
     <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/sorter.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript">  	    
 	//Function to Apply Dates in Date picker when the page loads	    
@@ -35,6 +36,10 @@
 			
 			$("#datepicker1").html(month[parseInt(from_date[1],10)-1]+" "+from_date[2]+", "+from_date[0]);
 			$("#datepicker2").html(month[parseInt(to_date[1],10)-1]+" "+to_date[2]+", "+to_date[0]);
+			
+			
+			//Calling code for tablesorter
+			$('#table2').tablesorter();
 	}
 	
 	//Function for apply button in date picker
@@ -267,12 +272,15 @@
 		   		<table id='table2' cellpadding="0px" cellspacing="0px">
 					<thead>
 					<tr>
-					    <th id='table2td3'>					        
-					    </th>
+					    
 						<th id='table2td2'>
 							<div id='table2td2div'>
+							<div style='margin-top:3px; padding-top:3px; margin-left:7px;'>
 								{{geography|title}}
-							</div>							
+							</div>
+							</div>
+							<div id='table2tdv3'>  
+							</div>					
 						</th>
 						<th id='table2td'>
 							<div id='table2tdv2'> Videos Produced 
@@ -280,7 +288,7 @@
 							        The total number of videos produced in a given location
 							    </div>
 							</div>
-							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
+							<div id='table2tdv3'></div>
 						</th>
 						
 						<th id='table2td'>
@@ -289,7 +297,7 @@
 							        The total number of unique videos that have been screened 
 							    </div>
 							</div>
-							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>
+							<div id='table2tdv3'></div>
 														
 						</th>
 						
@@ -299,7 +307,7 @@
 							    	Total number of farmers following or taking up practice as shown in DG video
 							    </div>
 							</div>
-							<div id='table2tdv3'> <img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/> </div>							
+							<div id='table2tdv3'> </div>							
 						</th>
 						
 						<th id='table2td'>
@@ -309,7 +317,7 @@
 							    </div>
 							</div>
 							<div id='table2tdv3'> 
-								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>  
+							
 							</div>
 						</th>
 						<th id='table2tdf'>
@@ -319,18 +327,15 @@
 							    </div>
 							</div>
 							<div id='table2tdv3'>  
-								<img id='sort' src='/media/Output/Images/table2tddefaultbg1.png' alt="temp"/>	
+								
 							</div>
 						</th>					
 					</tr>				 
 				 	</thead>
-				 	
-				 	{% for item in item_list %}
 				 	<tbody>
+				 	{% for item in item_list %}
 				 	<tr>
-				 	    <td id='table2td3'>
-				 	        {{ forloop.counter }}
-				 	    </td>
+				 	    
 						<td id='table2td4'>
 							
 								{% ifnotequal item.id None %}
@@ -365,18 +370,16 @@
 
 							{{ item.tot_per }} 
 						</td>																
-				 	</tr>
-				 	</tbody>				 	
+				 	</tr>				 					 	
 				 	{% endfor %}
-				 										 
+				 	</tbody>									 
 				</table>					
 			</div>
 			
 			<div id='totaltable'>
 		        <table id='table3' cellpadding="0px" cellspacing="0px">
 			        <tr>
-			            <td id='table2td6'>					        
-					    </td>
+			            
 					    <td id='table2td7'>	
 					        {% ifequal geog  'state' %}							
 							<a href='/output/overview/country/1'>
@@ -459,58 +462,18 @@
 
 	 <script type="text/javascript">	 		 
 		// <![CDATA[		
-		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart", eochartwidth, eochartheight, "8", "#FFFFFF");
+		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
 		so1.addParam("wmode", "transparent");
 		so1.addVariable("path", "/media/Output/amline/");
 		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 		so1.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
 		so1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
 						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Total Screening</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="5"><title>Total Persons</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						</graphs></settings>'))
-		so1.addVariable("chart_id", "line_chart");
-		var from_date = null, to_date = null;
-			{%if flash_from_date and flash_to_date %}
-			function amChartInited(chart_id){	
-			  flashMovie = document.getElementById(chart_id);	
-			  
-			  if(from_date!=null)
-			  {
-				//var arr = from_date.split('-');
-				var zoom_from_date, zoom_to_date;
-				
-				if(new Date('{{flash_from_date}}') > new Date(to_date))
-					zoom_from_date = to_date
-				else if(new Date(from_date) > new Date('{{flash_from_date}}'))
-					zoom_from_date = from_date;
-				else 
-					zoom_from_date = '{{flash_from_date}}';
-				
-				if(new Date(to_date) < new Date('{{flash_to_date}}'))
-					zoom_to_date = to_date;
-				else if(new Date('{{flash_to_date}}') < new Date(from_date))
-					 zoom_to_date = from_date;
-				else
-					zoom_to_date = '{{flash_to_date}}';
-			  
-			    flashMovie.setZoom(zoom_from_date,zoom_to_date);
-			  
-			 }
-			}
-			function amGetZoom(chart_id, from, to, from_xid, to_xid){
-			  if(from_date==null)
-				from_date = from;
-			  if(to_date==null)
-				to_date = to;		      
-			}
-			{% endif %}			
-		
-		so1.write("flashcontent1");		
-		
-		// ]]>
+						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'));
 	</script>
 
 	 
@@ -523,11 +486,11 @@
 		so.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 		so.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
 		so.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
-						<graph gid="1"><title>Total Video Production</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Total Screening</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="5"><title>Total Persons</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						</graphs></settings>'))
 		so.addVariable("chart_id", "line_chart");
 		var from_date = null, to_date = null, from_date_str = '', to_date_str = '';
