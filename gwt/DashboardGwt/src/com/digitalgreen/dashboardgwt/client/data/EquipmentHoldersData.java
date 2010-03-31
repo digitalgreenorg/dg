@@ -1,7 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-
 public class EquipmentHoldersData extends BaseData {
 
 	protected static String tableID = "2";

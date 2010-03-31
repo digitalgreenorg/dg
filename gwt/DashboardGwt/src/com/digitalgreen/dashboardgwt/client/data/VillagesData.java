@@ -70,6 +70,7 @@ public class VillagesData extends BaseData {
 			return this.block;
 		}
 		
+		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
@@ -97,7 +98,7 @@ public class VillagesData extends BaseData {
 			} else if(key.equals("block_id")) {
 				BlocksData block = new BlocksData();
 				this.block = block.getNewData();
-				this.block.id = Integer.parseInt((String)val);
+				this.block.id = ((Integer)val).intValue();
 			} else if(key.equals("no_of_households")) {
 				this.no_of_households = ((Integer)val).intValue();
 			} else if(key.equals("population")) {
