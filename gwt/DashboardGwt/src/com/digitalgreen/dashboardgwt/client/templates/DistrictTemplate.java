@@ -64,6 +64,7 @@ public class DistrictTemplate extends BaseTemplate{
 									"</td><td>" + district.getPartner().getPartnerName() + "</td>" +
 								"</tr>";
 				}
+				Window.alert("table rows = " + tableRows);
 				districtListFormHtml = districtListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
@@ -71,7 +72,7 @@ public class DistrictTemplate extends BaseTemplate{
 
 	final private String addDataToElementID[] = {"id_state", "id_fieldofficer", "id_partner"};
 	
-	static private String districtListFormHtml = "<div class='actions'>" +
+	private String districtListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected districts</option>" +

@@ -135,7 +135,7 @@ public class DistrictsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "08";
+	protected static String tableID = "8";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `district` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"DISTRICT_NAME VARCHAR(100)  NOT NULL ," +
@@ -147,8 +147,8 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(state_id) REFERENCES state(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
-	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (name)";
-	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id AS state_id, state.state_name, field_officer.id AS fieldofficer_id, field_officer.name AS fieldofficer_name, district.fieldofficer_startday, partners.id AS partner_id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON district.partner_id = field_officer.id ORDER BY (-district.id);";
+	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (district_name)";
+	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id);";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
 	protected static String getDistrictOnlineURL = "/dashboard/getdistrictsonline/";
 	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";
@@ -201,12 +201,17 @@ public class DistrictsData extends BaseData {
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		PartnersData partner = new PartnersData();
 		for(int i = 0; i < districtObjects.length(); i++){
+			
 			StatesData.Data s = state.new Data(Integer.parseInt(districtObjects.get(i).getState().getPk()), districtObjects.get(i).getState().getStateName());
+			
 			FieldOfficersData.Data f = fieldofficer. new Data(Integer.parseInt(districtObjects.get(i).getFieldOfficer().getPk()), 
 					districtObjects.get(i).getFieldOfficer().getFieldOfficerName());
+			
 			PartnersData.Data p = partner.new Data(Integer.parseInt(districtObjects.get(i).getPartner().getPk()), 
 					districtObjects.get(i).getPartner().getPartnerName());
+			
 			Data district = new Data(Integer.parseInt(districtObjects.get(i).getPk()), districtObjects.get(i).getDistrictName(), districtObjects.get(i).getStartDtae(), s, f, districtObjects.get(i).getFieldOfficerStartDay(), p);
+			
 			districts.add(district);
 		}
 		return districts;
@@ -218,22 +223,29 @@ public class DistrictsData extends BaseData {
 	
 	// for listing districts for district page
 	public List getDistrictsListingsOffline() {
+		//Window.alert("in listing offline");
 		BaseData.dbOpen();
 		List districts = new ArrayList();
 		StatesData state = new StatesData();
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		PartnersData partner = new PartnersData();
 		this.select(listDistricts);
+		//Window.alert("in listing b4 offline if...");
 		if(this.getResultSet().isValidRow()){
+			//Window.alert("in listing offline if...");
 			try{
+				
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					
+
 					StatesData.Data s = state. new Data(this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsString(4));
+
 					FieldOfficersData.Data f = fieldofficer. new Data(this.getResultSet().getFieldAsInt(5), this.getResultSet().getFieldAsString(6));
+					
 					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsInt(8), this.getResultSet().getFieldAsString(9));
+					
 					Data district = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), s, f, this.getResultSet().getFieldAsString(7), p);
-					
+
 					districts.add(district);
 				}
 			}

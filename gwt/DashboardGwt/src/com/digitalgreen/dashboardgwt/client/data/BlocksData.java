@@ -96,7 +96,7 @@ public class BlocksData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "09";
+	protected static String tableID = "9";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"BLOCK_NAME VARCHAR(100)  NOT NULL ," +
@@ -154,9 +154,13 @@ public class BlocksData extends BaseData {
 	public List serialize(JsArray<Type> blockObjects) {
 		List blocks = new ArrayList();
 		DistrictsData district = new DistrictsData();
+		
 		for (int i = 0; i < blockObjects.length(); i++) {
+
 			DistrictsData.Data d = district. new Data(Integer.parseInt(blockObjects.get(i).getDistrict().getPk()), blockObjects.get(i).getDistrict().getDistrictName());
+			
 			Data block = new Data(Integer.parseInt(blockObjects.get(i).getPk()), blockObjects.get(i).getBlockName(), blockObjects.get(i).getStartDate(), d);
+			
 			blocks.add(block);
 		}
 		return blocks;
@@ -174,11 +178,15 @@ public class BlocksData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(4), this.getResultSet().getFieldAsString(5));
+		
+					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsString(4));
+					
 					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
+					
 					blocks.add(block);
 				}
-			} catch (DatabaseException e) {
+			} 
+			catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
 				BaseData.dbClose();
 			}
