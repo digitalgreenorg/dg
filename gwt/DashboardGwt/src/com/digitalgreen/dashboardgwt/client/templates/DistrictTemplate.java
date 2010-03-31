@@ -1,9 +1,12 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
-
+import java.util.List;
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Districts;
+import com.google.gwt.user.client.Window;
 
 public class DistrictTemplate extends BaseTemplate{
 	
@@ -20,20 +23,55 @@ public class DistrictTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Districts addDistrictsServlet = new Districts(requestContext);
-		Districts saveDistrict = new Districts(new RequestContext(RequestContext.METHOD_POST));
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new DistrictsData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		Districts saveDistrict = new Districts(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, districtListHtml, districtAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveDistrict);
 	}
-
-	final private String addDataToElementID[] = null;
 	
-	final static private String districtListFormHtml = "<div class='actions'>" +
+	protected void fillListings(){
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// Add Listings
+			List districts = (List)queryArgs.get("listing");
+			if (districts != null) {
+				String tableRows ="";
+				String style;
+				DistrictsData.Data district;
+				for ( int row = 0; row < districts.size(); row++) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					district = (DistrictsData.Data) districts.get(row);
+					tableRows += "<tr class='" + style + "'>" +
+									"<td><input type='checkbox' class='action-select' value='" + district.getId() + "' name='_selected_action' /></td>" +
+									"<th><a href='/admin/dashboard/district/" + district.getId() + "/'>" + district.getDistrictName() + "</a></th>" +
+									"<td>" + district.getState().getStateName() + "</td><td>" + district.getFieldOfficer().getFieldOfficerName() + 
+									"</td><td>" + district.getPartner().getPartnerName() + "</td>" +
+								"</tr>";
+				}
+				districtListFormHtml = districtListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+
+	final private String addDataToElementID[] = {"id_state", "id_fieldofficer", "id_partner"};
+	
+	static private String districtListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected districts</option>" +
@@ -92,65 +130,50 @@ public class DistrictTemplate extends BaseTemplate{
 						"<div id='content' class='colM'>" +
 						"<h1>Add district</h1>" +
 							"<div id='content-main'>" +
-								"<form enctype='multipart/form-data' action='' method='post' id='district_form'>" +
-									"<div>" +
-										"<fieldset class='module aligned '>" +
-											"<div class='form-row district_name  '>" +
-												"<div>" +
-													"<label for='id_district_name' class='required'>District name:</label><input id='id_district_name' type='text' class='vTextField' name='district_name' maxlength='100' />" +
-												"</div>" +
-											"</div>" +
-											"<div class='form-row start_date  '>" +
-												"<div>" +
-													"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-													"<span>&nbsp;" +
-														"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-														"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-														"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-													"</span>" +
-												"</div>" +
-											"</div>" +
-											"<div class='form-row state  '>" +
-												"<div>" +
-													"<label for='id_state' class='required'>State:</label><select name='state' id='id_state'>" +
-														"<option value='' selected='selected'>---------</option>" +
-													"</select>" +
-													"</div>" +
-											"</div>" +
-											"<div class='form-row fieldofficer  '>" +
-												"<div>" +
-													"<label for='id_fieldofficer' class='required'>Fieldofficer:</label><select name='fieldofficer' id='id_fieldofficer'>" +
-														"<option value='' selected='selected'>---------</option>" +
-													"</select>" +
-												"</div>" +
-											"</div>" +
-											"<div class='form-row fieldofficer_startday  '>" +
-												"<div>" +
-													"<label for='id_fieldofficer_startday'>Fieldofficer startday:</label><input id='id_fieldofficer_startday' type='text' class='vDateField' name='fieldofficer_startday' size='10' />" +
-													"<span>&nbsp;" +
-														"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-														"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-														"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-													"</span>" +
-												"</div>" +
-											"</div>" +
-											"<div class='form-row partner  '>" +
-												"<div>" +
-													"<label for='id_partner' class='required'>Partner:</label><select name='partner' id='id_partner'>" +
-														"<option value='' selected='selected'>---------</option>" +
-													"</select>" +
-												"</div>" +
-											"</div>" +
-										"</fieldset>" +
-										"<div class='submit-row' >" +
-											"<input type='submit' value='Save' class='default' name='_save' />" +
+								"<fieldset class='module aligned '>" +
+									"<div class='form-row district_name  '>" +
+										"<div>" +
+											"<label for='id_district_name' class='required'>District name:</label><input id='id_district_name' type='text' class='vTextField' name='district_name' maxlength='100' />" +
 										"</div>" +
-										"<script type='text/javascript'>document.getElementById('id_district_name').focus();</script>" +
-										"<script type='text/javascript'>" +
-										"</script>" +
 									"</div>" +
-								"</form>" +
+									"<div class='form-row start_date  '>" +
+										"<div>" +
+											"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
+										"</div>" +
+									"</div>" +
+									"<div class='form-row state  '>" +
+										"<div>" +
+											"<label for='id_state' class='required'>State:</label><select name='state' id='id_state'>" +
+												"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
+										"</div>" +
+									"</div>" +
+									"<div class='form-row fieldofficer  '>" +
+										"<div>" +
+											"<label for='id_fieldofficer' class='required'>Fieldofficer:</label><select name='fieldofficer' id='id_fieldofficer'>" +
+												"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
+										"</div>" +
+									"</div>" +
+									"<div class='form-row fieldofficer_startday  '>" +
+										"<div>" +
+											"<label for='id_fieldofficer_startday'>Fieldofficer startday:</label><input id='id_fieldofficer_startday' type='text' class='vDateField' name='fieldofficer_startday' size='10' />" +
+										"</div>" +
+									"</div>" +
+									"<div class='form-row partner  '>" +
+										"<div>" +
+											"<label for='id_partner' class='required'>Partner:</label><select name='partner' id='id_partner'>" +
+												"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
+										"</div>" +
+									"</div>" +
+								"</fieldset>" +
+								"<div class='submit-row' >" +
+									"<input id='save' value='Save' class='default' name='_save' />" +
+								"</div>" +
+								"<script type='text/javascript'>document.getElementById('id_district_name').focus();</script>" +
 							"</div>" +
+							"<br class='clear' />" +
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";

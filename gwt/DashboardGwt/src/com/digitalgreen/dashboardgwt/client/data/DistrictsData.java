@@ -15,10 +15,10 @@ public class DistrictsData extends BaseData {
 		protected Type() {}
 		public final native String getDistrictName() /*-{ return this.fields.district_name; }-*/;
 		public final native String getStartDtae() /*-{ return this.fields.start_date; }-*/ ;
-		public final native StatesData.Type getState() /*-{ return this.fileds.state; }-*/;
-		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fileds.fieldofficer; }-*/;
-		public final native String getFieldOfficerStartDay() /*-{ return this.fileds.fieldofficer_startday; }-*/;
-		public final native PartnersData.Type getPartner() /*-{ return this.fileds.partner; }-*/;
+		public final native StatesData.Type getState() /*-{ return this.fields.state; }-*/;
+		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.fieldofficer; }-*/;
+		public final native String getFieldOfficerStartDay() /*-{ return this.fields.fieldofficer_startday; }-*/;
+		public final native PartnersData.Type getPartner() /*-{ return this.fields.partner; }-*/;
 	}
 
 	public class Data extends BaseData.Data {
@@ -147,8 +147,8 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(state_id) REFERENCES state(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
+	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (name)";
 	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id AS state_id, state.state_name, field_officer.id AS fieldofficer_id, field_officer.name AS fieldofficer_name, district.fieldofficer_startday, partners.id AS partner_id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON district.partner_id = field_officer.id ORDER BY (-district.id);";
-	protected static String listAllDistricts = "SELECT id, district_name FROM district ORDER BY (name)";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
 	protected static String getDistrictOnlineURL = "/dashboard/getdistrictsonline/";
 	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";
@@ -201,29 +201,18 @@ public class DistrictsData extends BaseData {
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		PartnersData partner = new PartnersData();
 		for(int i = 0; i < districtObjects.length(); i++){
-			
-			StatesData.Data s = state. new Data(Integer.parseInt(districtObjects.get(i).getState().getPk()), districtObjects.get(i).getState().getStateName());
-			
+			StatesData.Data s = state.new Data(Integer.parseInt(districtObjects.get(i).getState().getPk()), districtObjects.get(i).getState().getStateName());
 			FieldOfficersData.Data f = fieldofficer. new Data(Integer.parseInt(districtObjects.get(i).getFieldOfficer().getPk()), 
-					districtObjects.get(i).getFieldOfficer().getFieldOfficerName(), districtObjects.get(i).getFieldOfficer().getAge(), 
-					districtObjects.get(i).getFieldOfficer().getGender(), districtObjects.get(i).getFieldOfficer().getHireDate(), 
-					districtObjects.get(i).getFieldOfficer().getSalary(), districtObjects.get(i).getFieldOfficer().getPhone(), 
-					districtObjects.get(i).getFieldOfficer().getAddress(), districtObjects.get(i).getFieldOfficer().getReviewerId(), 
-					districtObjects.get(i).getFieldOfficer().getEquipmentHolderId());
-			
-			PartnersData.Data p = partner. new Data(Integer.parseInt(districtObjects.get(i).getPartner().getPk()), 
-					districtObjects.get(i).getPartner().getPartnerName(), districtObjects.get(i).getPartner().getDateOfAssociation(), 
-					districtObjects.get(i).getPartner().getPhoneNo(), districtObjects.get(i).getPartner().getAddress(), 
-					districtObjects.get(i).getPartner().getReviewerId(), districtObjects.get(i).getPartner().getEquipmentHolderId());
-			
+					districtObjects.get(i).getFieldOfficer().getFieldOfficerName());
+			PartnersData.Data p = partner.new Data(Integer.parseInt(districtObjects.get(i).getPartner().getPk()), 
+					districtObjects.get(i).getPartner().getPartnerName());
 			Data district = new Data(Integer.parseInt(districtObjects.get(i).getPk()), districtObjects.get(i).getDistrictName(), districtObjects.get(i).getStartDtae(), s, f, districtObjects.get(i).getFieldOfficerStartDay(), p);
-			
 			districts.add(district);
 		}
 		return districts;
 	}
 	
-	public List getDistrictsOnline(String json){
+	public List getDistrictsListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
@@ -261,7 +250,7 @@ public class DistrictsData extends BaseData {
 	public List getAllDistrictsOffline(){
 		BaseData.dbOpen();
 		List districts = new ArrayList();
-		this.select(listAllDistricts);
+		this.select(selectDistricts);
 		if(this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {

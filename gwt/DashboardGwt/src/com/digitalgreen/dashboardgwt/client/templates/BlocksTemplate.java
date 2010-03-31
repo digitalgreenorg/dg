@@ -1,9 +1,14 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
-
+import java.util.List;
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.BlocksData;
+import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class BlocksTemplate extends BaseTemplate{
 	
@@ -19,21 +24,53 @@ public class BlocksTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		Blocks addBlocksServlet = new Blocks(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new BlocksData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		Blocks saveBlock = new Blocks(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, blocksListHtml, blocksAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
-		Blocks addBlocksServlet = new Blocks(requestContext);
-		Blocks saveBlock = new Blocks(new RequestContext(RequestContext.METHOD_POST));
+		//Now add listings
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveBlock);
 	}
 	
-	final private String addDataToElementID[] = null;
+	protected void fillListings(){
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		if(queryArg == null || queryArg != "add") {
+			List blocks = (List)queryArgs.get("listing");
+			if(blocks  != null){
+				String tableRows ="";
+				String style;
+				BlocksData.Data block;
+				for (int row = 0; row < blocks.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					block = (BlocksData.Data)blocks.get(row);
+					tableRows += "<tr class='" + style + "'>" +
+								"<td><input type='checkbox' class='action-select' value='" + block.getId() + "' name='_selected_action' /></td>" +
+								"<th><a href='/admin/dashboard/" + block.getId() + "/'>" + block.getBlockName() + "</a></th>" +
+								"<td>" + block.getDistrict().getDistrictName()  + "</td>" +
+								"</tr>";
+				}
+				blocksListFormHtml = blocksListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
 	
-	final static private String blocksListFormHtml = "<div class='actions'>" +
+	final private String addDataToElementID[] = {"id_district"};
+	
+	private String blocksListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected blocks</option>" +
@@ -59,13 +96,9 @@ public class BlocksTemplate extends BaseTemplate{
 												"</th>" +
 										"</tr>" +
 									"</thead>" +
-									"<tbody>"+
-										"<div id='data-rows'" +       // Insert data rows here
-										"</div>" +
-									"</tbody>" +
-								"</table>";
+									"<tbody>";
 	
-	final static private String blocksListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String blocksListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='flex'>" +
 								"<h1>Select Block to change</h1>" +
 								"<div id='content-main'>" +
@@ -82,44 +115,35 @@ public class BlocksTemplate extends BaseTemplate{
 								"</div>" +
 							"</div>";
 	
-	final static private String blocksAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String blocksAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='colM'>" +
 								"<h1>Add Block</h1>" +
 								"<div id='content-main'>" +
-									"<form enctype='multipart/form-data' action='' method='post' id='block_form'>" +
-										"<div>" +
-											"<fieldset class='module aligned '>" +
-												"<div class='form-row block_name  '>" +
-													"<div>" +
-														"<label for='id_block_name' class='required'>Block name:</label><input id='id_block_name' type='text' class='vTextField' name='block_name' maxlength='100' />" +
-													"</div>" +
-												"</div>" +
-												"<div class='form-row start_date  '>" +
-													"<div>" +
-														"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-														"<span>&nbsp;" +
-															"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-															"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-															"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-														"</span>" +
-													"</div>" +
-												"</div>" +
-												"<div class='form-row district  '>" +
-													"<div>" +
-														"<label for='id_district' class='required'>District:</label><select name='district' id='id_district'>" +
-															"<option value='' selected='selected'>---------</option>" +
-															"</select>" +
-													"</div>" +
-												"</div>" +
-											"</fieldset>" +
-											"<div class='submit-row' >" +
-												"<input type='submit' value='Save' class='default' name='_save' />" +
+									"<fieldset class='module aligned '>" +
+										"<div class='form-row block_name  '>" +
+											"<div>" +
+												"<label for='id_block_name' class='required'>Block name:</label><input id='id_block_name' type='text' class='vTextField' name='block_name' maxlength='100' />" +
 											"</div>" +
-											"<script type='text/javascript'>document.getElementById('id_block_name').focus();</script>" +
-											"<script type='text/javascript'>" +
-											"</script>" +
 										"</div>" +
-									"</form>" +
+										"<div class='form-row start_date  '>" +
+											"<div>" +
+												"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
+											"</div>" +
+										"</div>" +
+										"<div class='form-row district  '>" +
+											"<div>" +
+												"<label for='id_district' class='required'>District:</label><select name='district' id='id_district'>" +
+													"<option value='' selected='selected'>---------</option>" +
+													"</select>" +
+											"</div>" +
+										"</div>" +
+									"</fieldset>" +
+									"<div class='submit-row' >" +
+										"<input id='save' value='Save' class='default' name='_save' />" +
+									"</div>" +
+									"<script type='text/javascript'>document.getElementById('id_block_name').focus();</script>" +
 								"</div>" +
-							"</div>";
+							"</div>" +
+							"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+							"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

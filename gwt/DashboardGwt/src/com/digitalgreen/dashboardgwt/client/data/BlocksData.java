@@ -103,8 +103,8 @@ public class BlocksData extends BaseData {
 												"START_DATE DATE  NULL DEFAULT NULL," +
 												"district_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(district_id) REFERENCES district(id));";
+	protected static String selectBlocks = "SELECT id, BLOCK_NAME block ORDER BY (name);";
 	protected static String listBlocks = "SELECT block.id, block.BLOCK_NAME, block.START_DATE, district.id, district.DISTRICT_NAME FROM block JOIN district ON block.district_id = district.id ORDER BY (-block.id);";
-	protected static String listAllBlocks = "SELECT id, BLOCK_NAME block ORDER BY (name);";
 	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
 	protected static String getBlockOnlineURL = "/dashboard/getblocksonline/";
 	protected static String saveBlockOfflineURL = "/dashboard/saveblockoffline/";
@@ -190,13 +190,11 @@ public class BlocksData extends BaseData {
 	public List getAllBlocksOffline(){
 		BaseData.dbOpen();
 		List blocks = new ArrayList();
-		DistrictsData district = new DistrictsData();
-		this.select(listAllBlocks);
+		this.select(selectBlocks);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(4), this.getResultSet().getFieldAsString(5));
-					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
+					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
 					blocks.add(block);
 				}
 			} catch (DatabaseException e) {
