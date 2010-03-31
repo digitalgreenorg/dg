@@ -59,7 +59,8 @@ public class VideosTemplate extends BaseTemplate {
 					video = (VideosData.Data) videos.get(row);
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ video.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/video/"+ video.getId() +"/'>" + video.getTitle()+"</a></th>" +
+								  "<th><a href='"+ video.getId() + "/'>"+ video.getId() + "</a></th>"+ 
+									"<td>"+ video.getTitle()+"</td>" +
 									"<td>"+ video.getVillage().getVillageName() + "</td>"+
 									"<td>"+ video.getVideoProductionStartDate() + "</td>" +
 									"<td>"+ video.getVideoProductionEndDate() + "</td>" +
@@ -232,11 +233,12 @@ public class VideosTemplate extends BaseTemplate {
 													        "<a href='#' id='del_village'>" +
 													        	"<img src='/media/img/admin/icon_deletelink.gif' />" +
 													        "</a>" +
+													        "<script type='text/javascript' src='/media/js/jquery.autocomplete.js'></script>"+
 													        "<script type='text/javascript'>" +
 														        "if ($('#lookup_village').val()) {" +
 														            "$('#del_village').show()" +
 														        "}" +
-														        "$('#lookup_village').autocomplete('../search/', {" +
+														        "$('#lookup_village').autocomplete('/dashboard/search/', {" +
 														            "extraParams: {" +
 														                "search_fields: 'village_name'," +
 														                "app_label: 'dashboard'," +
@@ -246,7 +248,6 @@ public class VideosTemplate extends BaseTemplate {
 														            "if (data) {" +
 														                "$('#id_village').val(data[1]);" +
 														                "$('#del_village').show();" +
-															    "filter();" +
 														            "}" +
 														        "});" +
 														        "$('#del_village').click(function(ele, event) {" +
@@ -275,8 +276,8 @@ public class VideosTemplate extends BaseTemplate {
 												    	"<div>" +
 												    		"<label for='id_related_agricultural_practices' class='required'>Related agricultural practices:</label><select multiple='multiple' name='related_agricultural_practices' id='id_related_agricultural_practices'>" +
 												    		"</select>" +
-															"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
-															"<script type='text/javascript'>SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/');</script>"+
+															//"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
+															//"<script type='text/javascript'>SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/');</script>"+
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
@@ -284,8 +285,8 @@ public class VideosTemplate extends BaseTemplate {
 												    	"<div>" +
 												    		"<label for='id_farmers_shown' class='required'>Farmers shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
 												    		"</select>" +
-												    		"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
-												    		"<script type='text/javascript'>SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/');</script>"+
+												    		//"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
+												    		//"<script type='text/javascript'>SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/');</script>"+
 												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 												    	"</div>" +
 												    "</div>" +
@@ -372,7 +373,7 @@ public class VideosTemplate extends BaseTemplate {
 													"</div>" +
 												"</fieldset>" +
 												"<div class='submit-row' >" +
-													"<input type='submit' value='Save' class='default' name='_save' />" +
+													"<input id='save' value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_title').focus();</script>" +
 												"<script type='text/javascript'>" +
