@@ -198,6 +198,9 @@ def feeds_persons_village(request, village_id):
 	json_subcat = serializers.serialize("json", persons)
 	return HttpResponse(json_subcat, mimetype="application/javascript")
 
+# 
+#  Functions for online offline application
+#
 
 def login_view(request):
     if request.method == 'POST':
@@ -207,7 +210,8 @@ def login_view(request):
 	    if user is not None and user.is_active:
 	        # Correct password, and the user is marked "active"
 	        #auth.login(request, user)
-	        request.session['username'] = user
+	        request.session['username'] = user.username
+	        request.session['user_id'] = user.id
 	        return HttpResponse("1")
 	    else:
 	        # Show an error page
@@ -250,7 +254,7 @@ def set_key_for_user(request):
 		else:
 			return HttpResponse("0")
 		
-		
+		        		
 def save_region_online(request):
 	if request.method == 'POST':
 		form = RegionForm(request.POST)
@@ -276,7 +280,6 @@ def get_regions_online(request):
 def save_region_offline(request):
 	if request.method == 'POST':
 		form = RegionForm(request.POST)
-		print request.POST
 		if form.is_valid():
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
@@ -287,7 +290,6 @@ def save_region_offline(request):
 		
 def save_state_online(request):
 	if request.method == 'POST':
-		print request.POST
 		form = StateForm(request.POST)
 		if form.is_valid():	
 			# This should redirect to show region page
@@ -444,9 +446,66 @@ def save_partner_offline(request):
 		else:
 			return HttpResponse("0")
 		
+def get_user_villages(request):
+	print request.session.get('username')
+	print request.session.get('user_id')
+	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
+	villages = Village.objects.none()
+	for user_permission in user_permissions:
+		if(user_permission.role=='A'):
+			villages = villages | Village.objects.all()
+		if(user_permission.role=='D'):
+			states = State.objects.filter(region = user_permission.region_operated)
+			districts = District.objects.filter(state__in = states)
+			blocks = Block.objects.filter(district__in = districts)
+			villages = villages | Village.objects.filter(block__in = blocks)
+		if(user_permission.role=='F'):
+			blocks = Block.objects.filter(district = user_permission.district_operated)
+			villages = villages | Village.objects.filter(block__in = blocks)
+        		
+	return villages   
+
+def save_video_online(request):
+    if request.method == 'POST':
+        form = VideoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getvideosonline/')
+        else:
+        	print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = VideoForm()
+    	#villages = get_user_villages(request);
+        #form.fields['village'].queryset = villages.order_by('village_name')
+        #form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+    	#form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+    	#form.fields['related_agricultural_practices'].queryset = Practices.objects.distinct().order_by('practice_name')
+    	#form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+    	#form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+    	return HttpResponse(form);            
+        
+def get_videos_online(request):
+    if request.method == 'POST':
+        return redirect('video')
+    else:
+        videos = Video.objects.order_by("-id")
+        json_subcat = serializers.serialize("json", videos, relations=('village',))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_video_offline(request):
+	if request.method == 'POST':
+		form = VideoForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")    
+		
 def save_district_online(request):
 	if request.method == 'POST':
-		print request.POST
 		form = DistrictForm(request.POST)
 		if form.is_valid():	
 			# This should redirect to show region page
@@ -466,6 +525,8 @@ def get_districts_online(request):
 		districts = District.objects.select_related('state').order_by("-id")
 		json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
+		
+
 
 def save_district_offline(request):
 	if request.method == 'POST':
@@ -480,7 +541,6 @@ def save_district_offline(request):
 		
 def save_block_online(request):
     if request.method == 'POST':
-        print request.POST
         form = BlockForm(request.POST)
         if form.is_valid():    
             # This should redirect to show region page
@@ -514,7 +574,6 @@ def save_block_offline(request):
 
 def save_developmentmanager_online(request):
 	if request.method == 'POST':
-		print request.POST
 		form = DevelopmentManagerForm(request.POST)
 		if form.is_valid():	
 			# This should redirect to show region page
@@ -545,6 +604,8 @@ def save_developmentmanager_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")		
+		
+# Old functions, Will be deprecated once the online / offline functionality is created 		
         
 def add_language(request):
 	if request.method == 'POST':
@@ -574,7 +635,6 @@ def language(request,language):
 
 def add_region(request):
 	if request.method == 'POST':
-		#print request.POST
 		form = RegionForm(request.POST)
 		if form.is_valid():	
 			# This should redirect to show region page
@@ -991,13 +1051,16 @@ def village(request):
 def add_video(request):
         if request.method == 'POST':
                 form = VideoForm(request.POST)
+                print request.POST
                 if form.is_valid():
                         form.save()
+                        
                         return HttpResponseRedirect('/dashboard/videos/')
                 else:
                         return render_to_response('add_video.html',{'form':form})
         else:
                 form = VideoForm()
+                form.fields['farmers_shown'].queryset = Person.objects.filter(village=52)
                 return render_to_response('add_video.html',{'form':form})
 
 
