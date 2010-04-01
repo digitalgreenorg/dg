@@ -442,7 +442,109 @@ def save_partner_offline(request):
 			new_form.save()
 			return HttpResponse("1")
 		else:
-			return HttpResponse("0")        
+			return HttpResponse("0")
+
+def save_district_online(request):
+       if request.method == 'POST':
+               print request.POST
+               form = DistrictForm(request.POST)
+               if form.is_valid():        
+                       # This should redirect to show region page
+                       form.save()
+                       return HttpResponseRedirect('/dashboard/getdistrictsonline/')
+               else:
+                       return HttpResponse("0")
+       else:
+               form = DistrictForm()
+               return HttpResponse(form)
+
+def get_districts_online(request):
+    if request.method == 'POST':
+        return redirect('districts')
+    else:
+        districts = District.objects.select_related('state').order_by("-id")
+        json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_district_offline(request):
+    if request.method == 'POST':
+        form = DistrictForm(request.POST)
+        if form.is_valid():
+            new_form  = form.save(commit=False)
+            new_form.id = request.POST['id']
+            new_form.save()
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
+       
+def save_block_online(request):
+    if request.method == 'POST':
+        print request.POST
+        form = BlockForm(request.POST)
+        if form.is_valid():   
+            # This should redirect to show region page
+            form.save()
+            return HttpResponseRedirect('/dashboard/getblocksonline/')
+        else:
+            return HttpResponse("0")
+    else:
+        form = BlockForm()
+        return HttpResponse(form)
+   
+   
+def get_blocks_online(request):
+    if request.method == 'POST':
+        return redirect('blocks')
+    else:
+        blocks = Block.objects.select_related('district').order_by("-id")
+        json_subcat = serializers.serialize("json", blocks,  relations=('district'))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_block_offline(request):
+    if request.method == 'POST':
+        form = BlockForm(request.POST)
+        if form.is_valid():
+            new_form  = form.save(commit=False)
+            new_form.id = request.POST['id']
+            new_form.save()
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
+
+def save_developmentmanager_online(request):
+	if request.method == 'POST':
+		print request.POST
+		form = DevelopmentManagerForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getdevelopmentmanagersonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = DevelopmentManagerForm()
+		return HttpResponse(form)
+	
+	
+def get_developmentmanagers_online(request):
+	if request.method == 'POST':
+		return redirect('developmentmanagers')
+	else:
+		developmentmanagers = DevelopmentManager.objects.select_related('region').order_by("-id")
+		json_subcat = serializers.serialize("json", developmentmanagers,  relations=('region',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_developmentmanager_offline(request):
+	if request.method == 'POST':
+		form = DevelopmentManagerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")		
+        
 
 def add_language(request):
 	if request.method == 'POST':
