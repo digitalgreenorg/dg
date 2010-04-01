@@ -447,8 +447,8 @@ def save_partner_offline(request):
 			return HttpResponse("0")
 		
 def get_user_villages(request):
-	print request.session.get('username')
-	print request.session.get('user_id')
+	#print request.session.get('username')
+	#print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
 	villages = Village.objects.none()
 	for user_permission in user_permissions:
@@ -605,8 +605,45 @@ def save_developmentmanager_offline(request):
 		else:
 			return HttpResponse("0")		
 		
-# Old functions, Will be deprecated once the online / offline functionality is created 		
+ 		
         
+def save_equipment_online(request):
+	if request.method == 'POST':
+		form = EquipmentForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getequipmentsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = EquipmentForm()
+		return HttpResponse(form)
+	
+	
+def get_equipments_online(request):
+	if request.method == 'POST':
+		return redirect('equipments')
+	else:
+		equipments = Equipment.objects.select_related('region').order_by("-id")
+		json_subcat = serializers.serialize("json", equipments,  relations=('region',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_equipment_offline(request):
+	if request.method == 'POST':
+		form = EquipmentForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")		
+
+
+# Old functions, Will be deprecated once the online / offline functionality is created
+
+
 def add_language(request):
 	if request.method == 'POST':
 		if 'language_name' in request.POST:
@@ -1051,7 +1088,6 @@ def village(request):
 def add_video(request):
         if request.method == 'POST':
                 form = VideoForm(request.POST)
-                print request.POST
                 if form.is_valid():
                         form.save()
                         

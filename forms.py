@@ -28,6 +28,9 @@ class BlockForm(ModelForm):
 	class Meta:
 		model = Block
 
+class EquipmentForm(ModelForm):
+    class Meta:
+        model = Equipment
 
 class PersonGroupsForm(forms.ModelForm):
         #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
