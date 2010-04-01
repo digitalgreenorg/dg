@@ -69,6 +69,9 @@ class VillageForm(forms.ModelForm):
 		model = Village
 
 class VideoForm(forms.ModelForm):
+    #def __init__(self,*args,**kwargs):
+        #super(VideoForm, self).__init__(*args,**kwargs) # populates the post
+        
 	class Meta:
 		model = Video
 
