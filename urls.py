@@ -21,7 +21,7 @@ urlpatterns = patterns('',
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
 	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
+#    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     (r'^hello/$', hello),

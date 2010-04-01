@@ -67,6 +67,7 @@ class ScreeningAdmin(admin.ModelAdmin):
     inlines = [FarmerAttendanceInline]
     filter_horizontal = ('videoes_screened',)
     list_display = ('date', 'village', 'location')
+    search_fields = ['village__village_name']
     #form = ScreeningForm
     related_search_fields = {
        	'village': ('village_name',),
@@ -180,6 +181,7 @@ class VideoAdmin(admin.ModelAdmin):
     ]
     filter_horizontal = ('related_agricultural_practices','farmers_shown',)
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
+    search_fields = ['title', 'village__village_name']
     #raw_id_fields = ('village',)
     #form = VideoForm
     related_search_fields = {
@@ -264,7 +266,7 @@ class AnimatorAdmin(admin.ModelAdmin):
 	fields = ('name','age','gender','csp_flag','camera_operator_flag','facilitator_flag','phone_no','address','partner','home_village')
 	inlines = [AnimatorAssignedVillages]
 	list_display = ('name', 'partner', 'home_village',)
-
+	search_fields = ['name','home_village__village_name', 'partner__partner_name']
 
 
 
@@ -279,6 +281,7 @@ class AnimatorInline(admin.TabularInline):
 
 class VillageAdmin(admin.ModelAdmin):
 	list_display = ('village_name', 'block')
+	search_fields = ['village_name', 'block__block_name']
 	inlines = [PersonGroupsInline, AnimatorInline]
 	
 
@@ -310,12 +313,13 @@ class PersonGroupsForm(forms.ModelForm):
 class PersonGroupsAdmin(admin.ModelAdmin):
 	inlines = [PersonInline]
 	list_display = ('group_name','village')
+	search_fields = ['group_name','village__village_name']
 	form = PersonGroupsForm
 
 
 class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
 	list_display = ('animator','village')
-
+	search_fields = ['animator__name','village__village_name']
 
 class FieldOfficerAdmin(admin.ModelAdmin):
 	exclude = ('equipmentholder','reviewer','salary',)
@@ -345,7 +349,7 @@ class PersonAdmin(admin.ModelAdmin):
     inlines = [PersonAdoptPracticeInline]
     list_display = ('person_name','group','village')
     exclude = ('equipmentholder',)
-
+    search_fields = ['person_name','village__village_name','group__group_name']
     related_search_fields = {
        	'village': ('village_name',),
     }
@@ -513,8 +517,8 @@ class TrainingAdmin(admin.ModelAdmin):
 class EquipmentAdmin(admin.ModelAdmin):
         list_display = ('equipment_type', 'model_no', 'serial_no')
 
-
-
+class PracticesAdmin(admin.ModelAdmin):
+	search_fields = ['practice_name']
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
@@ -530,10 +534,11 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonGroups, PersonGroupsAdmin)
 admin.site.register(Animator, AnimatorAdmin)
 admin.site.register(Language)
-admin.site.register(Practices)
+admin.site.register(Practices, PracticesAdmin)
 admin.site.register(Screening, ScreeningAdmin)
 admin.site.register(Training, TrainingAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
+#admin.site.register(UserPermission)
 #admin.site.register(EquipmentHolder)
 #admin.site.register(Reviewer)
 #admin.site.register(Random)

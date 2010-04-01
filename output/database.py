@@ -161,9 +161,6 @@ def breadcrumbs_options_sql(geog,id, is_child):
     WHERE {{geog|first}}1.{{par_geog}}_id = {{geog|first}}2.{{par_geog}}_id
         and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
     
-        
-    
-
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)

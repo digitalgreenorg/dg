@@ -217,6 +217,7 @@ class Village(models.Model):
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True) 
     class Meta:
         db_table = u'VILLAGE'
+	unique_together = ("village_name","block")
 
     def __unicode__(self):
         return self.village_name
@@ -254,6 +255,7 @@ class PersonGroups(models.Model):
     class Meta:
         db_table = u'PERSON_GROUPS'
 	verbose_name = "Person group"
+	unique_together = ("group_name", "village")
 
     def __unicode__(self):
         return self.group_name
@@ -273,6 +275,7 @@ class Person(models.Model):
     adopted_agricultural_practices = models.ManyToManyField('Practices',through='PersonAdoptPractice',null=True, blank=True)
     class Meta:
         db_table = u'PERSON'
+	unique_together = ("person_name", "father_name", "group","village")
 
     def __unicode__(self):
         return  u'%s (%s)' % (self.person_name, self.village) 
@@ -300,7 +303,7 @@ class Animator(models.Model):
     assigned_villages = models.ManyToManyField(Village,through='AnimatorAssignedVillage',null=True, blank=True)
     class Meta:
         db_table = u'ANIMATOR'
-
+	unique_together = ("name", "gender", "partner","home_village")
     def __unicode__(self):
         return self.name
 
@@ -316,7 +319,7 @@ class Training(models.Model):
     animators_trained = models.ManyToManyField(Animator)
     class Meta:
         db_table = u'TRAINING'
-
+	unique_together = ("training_start_date", "training_end_date", "village")
 
 
 class AnimatorAssignedVillage(models.Model):
@@ -376,7 +379,7 @@ class Video(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     class Meta:
     	db_table = u'VIDEO'
-
+	unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
     def __unicode__(self):
         return self.title
 
@@ -409,6 +412,8 @@ class Screening(models.Model):
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
         db_table = u'SCREENING'
+        unique_together = ("date", "start_time", "end_time","location","village")
+
     def __unicode__(self):
 	       return u'%s %s' % (self.date, self.village)
 
@@ -451,5 +456,5 @@ class Equipment(models.Model):
 class UserPermission(models.Model):    
     username = models.ForeignKey(User)
     role = models.CharField(max_length=1,choices=ROLE)
-    region_operated = models.ForeignKey(Region)
-    district_operated = models.ForeignKey(District)
+    region_operated = models.ForeignKey(Region, null=True, blank=True)
+    district_operated = models.ForeignKey(District, null=True, blank=True)
