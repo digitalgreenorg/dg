@@ -476,13 +476,13 @@ def save_video_online(request):
         	return HttpResponse("0")
     else:
     	form = VideoForm()
-    	#villages = get_user_villages(request);
-        #form.fields['village'].queryset = villages.order_by('village_name')
-        #form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
-    	#form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
-    	#form.fields['related_agricultural_practices'].queryset = Practices.objects.distinct().order_by('practice_name')
-    	#form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-    	#form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+    	villages = get_user_villages(request);
+        form.fields['village'].queryset = villages.order_by('village_name')
+        form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+    	form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+    	form.fields['related_agricultural_practices'].queryset = Practices.objects.distinct().order_by('practice_name')
+    	form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+    	form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
     	return HttpResponse(form);            
         
 def get_videos_online(request):
