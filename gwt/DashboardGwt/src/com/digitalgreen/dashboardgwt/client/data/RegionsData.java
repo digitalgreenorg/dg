@@ -67,7 +67,7 @@ public class RegionsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, Object val) {
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);//((Integer)val).intValue();
+				this.id = Integer.parseInt((String)val);
 			} else if(key.equals("region_name")) {
 				this.region_name = (String)val;
 			} else if(key.equals("start_date")) {

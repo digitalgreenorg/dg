@@ -143,7 +143,7 @@ public class VideosData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, Object val) {		
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = Integer.parseInt((String)val);
 			} else if(key.equals("title")) {
 				this.title = (String)val;
 			} else if(key.equals("video_type")){

@@ -71,7 +71,7 @@ public class VideosTemplate extends BaseTemplate {
 		}
 	}
 	
-	final private String addDataToElementID[] = {"id_language", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
+	final private String addDataToElementID[] = {"id_language", "id_village", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
 	
 	private String videosListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
@@ -217,7 +217,12 @@ public class VideosTemplate extends BaseTemplate {
     											"<fieldset class='module aligned '>" +
     												"<div class='form-row village  '>" +
     													"<div>" +
-    														"<label for='id_village' class='required'>Village:</label><input type='hidden' name='village' id='id_village' />" +
+    														"<label for='id_village' class='required'>Village:</label>" +
+    														"<select name='village' id='id_village'>"+
+    														"<option value='' selected='selected'>---------</option>"+
+    														"</select>" + 
+    														/*Uncomment the below lines for enable auto complete feature in the village field*/
+    														/*"<input type='hidden' name='village' id='id_village' />" +
     														"<style type='text/css' media='screen'>" +
 													            "#lookup_village {" +
 													                "padding-right:16px;" +
@@ -255,7 +260,7 @@ public class VideosTemplate extends BaseTemplate {
 														            "$('#del_village').hide();" +
 														            "$('#lookup_village').val('');" +
 														        "});" +
-													        "</script>" +
+													        "</script>" +*/
 													    "</div>" +
 												    "</div>" +
 												    "<div class='form-row facilitator  '>" +
