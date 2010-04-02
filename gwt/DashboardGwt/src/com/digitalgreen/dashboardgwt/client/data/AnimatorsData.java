@@ -2,27 +2,40 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.digitalgreen.dashboardgwt.client.common.Form;
+import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
+import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 
 public class AnimatorsData extends BaseData {
-
-	public static class Type extends BaseData.Type{
+	
+	public static class Type extends BaseData.Type {
 		protected Type() {}
+		public final native String getAnimatorName() /*-{ return this.fields.name; }-*/;
+		public final native String getAge() /*-{ return this.fields.age; }-*/;
+		public final native String getGender() /*-{ return this.fields.gender; }-*/;
+		public final native String getCSPFlags() /*-{ return this.fields.csp_flags; }-*/;
+		public final native String getCameraOperatorFlag() /*-{ return this.fields.camera_operator_flag; }-*/;
+		public final native String getFacilitatorFlag() /*-{ return this.fields.facilitator_flag; }-*/;
+		public final native String getPhoneNo() /*-{ return this.fields.phone_no; }-*/;
+		public final native String getAddress() /*-{ return this.fields.address; }-*/;
+		public final native PartnersData.Data getPartner() /*-{ return this.fields.partner; }-*/;
+		public final native VillagesData.Data getVillage() /*-{ return this.fields.village; }-*/;
+		public final native EquipmentHoldersData.Data getEquipmentHolder() /*-{ return this.fields.equipment_holder; }-*/;
 	}
 	
-	public class Data extends BaseData.Data {		
+	public class Data extends BaseData.Data {
 		final private static String COLLECTION_PREFIX = "home_village";
 		
 		private String name;
-		private int age;
+		private String age;
 		private String gender;
-		private int csp_flag;
-		private int camera_operator_flag;
-		private int facilitator_flag;
+		private String csp_flag;
+		private String camera_operator_flag;
+		private String facilitator_flag;
 		private String phone_no;
 		private String address;
 		private PartnersData.Data partner;
@@ -39,8 +52,8 @@ public class AnimatorsData extends BaseData {
 			this.name = name;
 		}
 		
-		public Data(int id, String name, int age, String gender, int csp_flag, int camera_operator_flag,
-				int facilitator_flag, String phone_no, String address, PartnersData.Data partner,
+		public Data(int id, String name, String age, String gender, String csp_flag, String camera_operator_flag,
+				String facilitator_flag, String phone_no, String address, PartnersData.Data partner,
 				VillagesData.Data village, EquipmentHoldersData.Data equipment_holder){
 			super();
 			this.id = id;
@@ -59,6 +72,46 @@ public class AnimatorsData extends BaseData {
 
 		public String getAnimatorName(){
 			return this.name;
+		}
+		
+		public String getAge(){
+			return this.age;
+		}
+		
+		public String getGender(){
+			return this.gender;
+		}
+		
+		public String getCSPFlag(){
+			return this.csp_flag;
+		}
+		
+		public String getCameraOperatorFlag(){
+			return this.camera_operator_flag;
+		}
+		
+		public String getFacilitatorFlag() {
+			return this.facilitator_flag;
+		}
+		
+		public String getPhoneNo() {
+			return this.phone_no;
+		}
+		
+		public String getAddress() {
+			return this.address;
+		}
+		
+		public PartnersData.Data getPartner(){
+			return this.partner;
+		}
+		
+		public VillagesData.Data getVillage(){
+			return this.village;
+		}
+		
+		public EquipmentHoldersData.Data getEquipmentHolder(){
+			return this.equipment_holder;
 		}
 		
 		@Override
@@ -91,15 +144,15 @@ public class AnimatorsData extends BaseData {
 			} else if(key.equals("name")) {
 				this.name = (String)val;
 			} else if(key.equals("age")) {
-				this.age = ((Integer)val).intValue();
+				this.age = (String)val;
 			} else if(key.equals("gender")) {
 				this.gender = (String)val;
 			} else if(key.equals("csp_flag")) {
-				this.csp_flag = ((Integer)val).intValue();
+				this.csp_flag = (String)val;
 			} else if(key.equals("camera_operator_flag")) {
-				this.camera_operator_flag = ((Integer)val).intValue();
+				this.camera_operator_flag = (String)val;
 			} else if(key.equals("facilitator_flag")) {
-				this.facilitator_flag = ((Integer)val).intValue();
+				this.facilitator_flag = (String)val;
 			} else if(key.equals("phone_no")) {
 				this.phone_no = (String)val;
 			} else if(key.equals("address")) {
@@ -122,18 +175,11 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-			this.id = animatorsDataDbApis.autoInsert(this.name, 
-					Integer.valueOf(this.age).toString(), 
-					this.gender, Integer.valueOf(this.csp_flag).toString(),
-					Integer.valueOf(this.camera_operator_flag).toString(), 
-					Integer.valueOf(this.facilitator_flag).toString(), 
-					this.phone_no, this.address,
-					Integer.valueOf(this.partner.getId()).toString(), 
-					Integer.valueOf(this.village.getId()).toString(), 
-					Integer.valueOf(this.equipment_holder.getId()).toString());
+			this.id = animatorsDataDbApis.autoInsert(this.name, this.age, this.gender, this.csp_flag, this.camera_operator_flag, 
+					this.facilitator_flag, this.phone_no, this.address, Integer.valueOf(this.partner.getId()).toString(), 
+					Integer.valueOf(this.village.getId()).toString(), Integer.valueOf(this.equipment_holder.getId()).toString());
 		}
 	}
-
 	
 	protected static String tableID = "15";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
@@ -152,12 +198,24 @@ public class AnimatorsData extends BaseData {
 												"FOREIGN KEY(partner_id) REFERENCES partners(id), " +
 												"FOREIGN KEY(home_village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
-	
-	protected static String selectAllAnimators = "SELECT id, name FROM animator;";
+	protected static String selectAnimators = "SELECT id, name FROM animator;";
+	protected static String listAnimators = "SELECT animator.id, animator.name, animator.age, animator.gender, animator.csp_flag, animator.camera_operator_flag, animator.facilitator_flag, animator.phone_no, animator.address, partners.id, partners.partner_name, village.id, village.village_name, equipment_holder.id FROM animator JOIN partners ON animator.partner_id = partners.id JOIN village ON animator.home_village_id = village.id JOIN equipment_holder ON animator.equipmentholder_id = equipment_holder.id;";
+	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
 	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
+	protected static String getAnimatorsOnlineURL = "/dashboard/getanimatorsonline/";
+	protected String table_name = "animator";
+	protected String[] fields = {"id", "name", "age", "gender", "csp_flag", "camera_operator_flag", "facilitator_flag", "phone_no", "address", "partner_id", "home_village_id", "equipmentholder_id"};
 	
 	public AnimatorsData() {
 		super();
+	}
+	
+	public AnimatorsData(OnlineOfflineCallbacks callbacks) {
+		super(callbacks);
+	}
+	
+	public AnimatorsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+		super(callbacks, form, queryString);
 	}
 	
 	@Override
@@ -170,14 +228,89 @@ public class AnimatorsData extends BaseData {
 		return AnimatorsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
+	}
+	
+	@Override 
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
+	protected static String getSaveOfflineURL(){
+		return AnimatorsData.saveAnimatorOfflineURL;
+	}
+	
+	public final native JsArray<Type> asArrayOfData(String json) /*-{
+		return eval(json);
+	}-*/;
+	
+	public List serialize(JsArray<Type> animatorObjects) {
+		List animators = new ArrayList();
+		PartnersData partner = new PartnersData();
+		VillagesData village = new VillagesData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		for(int i = 0; i < animatorObjects.length(); i++) {
+			
+			PartnersData.Data p = partner. new Data(animatorObjects.get(i).getPartner().getId(), animatorObjects.get(i).getPartner().getPartnerName());
+			
+			VillagesData.Data v = village. new Data(animatorObjects.get(i).getVillage().getId(), animatorObjects.get(i).getVillage().getVillageName());
+			
+			EquipmentHoldersData.Data eq = equipmentholder. new Data(animatorObjects.get(i).getEquipmentHolder().getId());
+			
+			Data animator = new Data(Integer.parseInt(animatorObjects.get(i).getPk()), animatorObjects.get(i).getAnimatorName(),
+							animatorObjects.get(i).getAge(), animatorObjects.get(i).getGender(), animatorObjects.get(i).getCSPFlags(),
+							animatorObjects.get(i).getCameraOperatorFlag(), animatorObjects.get(i).getFacilitatorFlag(),
+							animatorObjects.get(i).getPhoneNo(), animatorObjects.get(i).getAddress(), p, v, eq);
+		}
+		
+		return animators;
+	}
+	
+	public List getListingOnline(String json){
+		return this.serialize(this.asArrayOfData(json));
+	}
+	
+	public List getAnimatorsListingOffline(){
+		BaseData.dbOpen();
+		List animators = new ArrayList();
+		PartnersData partner = new PartnersData();
+		VillagesData village = new VillagesData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		this.select(listAnimators);
+		if(this.getResultSet().isValidRow()){
+			try{
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					
+					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsInt(9), this.getResultSet().getFieldAsString(10));
+					
+					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsInt(11), this.getResultSet().getFieldAsString(12));
+					
+					EquipmentHoldersData.Data eq = equipmentholder. new Data(this.getResultSet().getFieldAsInt(13));
+					
+					Data animator = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1),
+							 this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
+							 this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5),
+							 this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
+							 this.getResultSet().getFieldAsString(8), p, v, eq);
+					
+					animators.add(animator);
+				}
+			}
+			catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return animators;
 	}
 	
 	public List getAllAnimatorsOffline(){
 		BaseData.dbOpen();
 		List animators = new ArrayList();
-		this.select(selectAllAnimators);
+		this.select(selectAnimators);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -186,12 +319,68 @@ public class AnimatorsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
-			
 		}
 		BaseData.dbClose();
 		return animators;
+	}
+	
+	public List getTemplateDataOnline(String json){
+		List relatedData = null;
+		return relatedData;
+	}
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + AnimatorsData.saveAnimatorOnlineURL, this.queryString);
+		}
+		else{
+			this.save();
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + AnimatorsData.getAnimatorsOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public String retrieveDataAndConvertResultIntoHtml() {
+		PartnersData partnerData = new PartnersData();
+		List partners = partnerData.getPartnersListingOffline();
+		PartnersData.Data partner;
+		String htmlPartner = "<select name=\"partner\" id=\"id_partner\"";
+		for(int i = 0; i < partners.size(); i++){
+			partner = (PartnersData.Data)partners.get(i);
+			htmlPartner = htmlPartner + "<option value=\"" + partner.getId() + "\">" + partner.getPartnerName() + "</option>";
+		}
+		
+		VillagesData villageData = new VillagesData();
+		List villages = villageData.getVillagesListingOffline();
+		VillagesData.Data village;
+		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
+		for(int i = 0; i < villages.size(); i++){
+			village = (VillagesData.Data)villages.get(i);
+			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";
+		}
+		
+		return htmlPartner + htmlVillage;
+	}
+	
+	public Object getAddPageData() {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + AnimatorsData.saveAnimatorOnlineURL);
+		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
 	}
 }
