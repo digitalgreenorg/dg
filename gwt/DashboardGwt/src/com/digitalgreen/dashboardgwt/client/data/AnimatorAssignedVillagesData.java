@@ -171,7 +171,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return animatorAssignedVillages;
 	}
 	
-	public List getAnimatorsAssignedVillagesListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
