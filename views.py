@@ -472,7 +472,7 @@ def save_video_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getvideosonline/')
         else:
-        	print form.errors
+        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = VideoForm()
@@ -489,7 +489,8 @@ def get_videos_online(request):
     if request.method == 'POST':
         return redirect('video')
     else:
-        videos = Video.objects.order_by("-id")
+    	villages = get_user_villages(request);
+        videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", videos, relations=('village',))
         return HttpResponse(json_subcat, mimetype="application/javascript")
        
@@ -1088,6 +1089,7 @@ def village(request):
 def add_video(request):
         if request.method == 'POST':
                 form = VideoForm(request.POST)
+                #print request.POST
                 if form.is_valid():
                         form.save()
                         
