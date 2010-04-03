@@ -231,7 +231,7 @@ public class PersonsData extends BaseData {
 	
 	@Override
 	protected String getTableId() {
-		return AnimatorsData.tableID;
+		return PersonsData.tableID;
 	}
 	
 	protected String getTableName() {
