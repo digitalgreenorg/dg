@@ -42,7 +42,7 @@ public class Partners extends BaseServlet{
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						PartnersData partnersData = new PartnersData();
-						List partners = partnersData.getPartnersListingOnline(results);
+						List partners = partnersData.getListingOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
@@ -88,7 +88,7 @@ public class Partners extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							PartnersData partnersData = new PartnersData();
-							List partners = partnersData.getPartnersListingOnline(results);
+							List partners = partnersData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", partners);
 							getServlet().redirectTo(new Partners(requestContext));						

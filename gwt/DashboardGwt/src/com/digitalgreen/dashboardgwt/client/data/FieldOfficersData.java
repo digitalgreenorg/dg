@@ -148,6 +148,7 @@ public class FieldOfficersData extends BaseData {
 												"equipmentholder_id INT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
+	
 	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
 	protected static String saveFieldOfficerOnlineURL = "/dashboard/savefieldofficeronline/";
@@ -209,7 +210,7 @@ public class FieldOfficersData extends BaseData {
 		return fieldOfficers;
 	}
 	
-	public List getFieldOfficersListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
@@ -239,6 +240,7 @@ public class FieldOfficersData extends BaseData {
 	
 	public List getAllFieldOfficersOffline(){
 		BaseData.dbOpen();
+
 		List fieldofficers = new ArrayList();
 		this.select(selectFieldOfficers);
 		if (this.getResultSet().isValidRow()){

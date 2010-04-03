@@ -41,7 +41,7 @@ public class Practices extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							PracticesData practicesdata = new PracticesData();
-							List practices = practicesdata.getPracticesListingOnline(results);
+							List practices = practicesdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Practice successfully saved");
 							requestContext.getArgs().put("listing", practices);
@@ -87,7 +87,7 @@ public class Practices extends BaseServlet{
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								PracticesData practicedata = new PracticesData();
-								List practices = practicedata.getPracticesListingOnline(results);
+								List practices = practicedata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", practices);
 								getServlet().redirectTo(new Practices(requestContext));

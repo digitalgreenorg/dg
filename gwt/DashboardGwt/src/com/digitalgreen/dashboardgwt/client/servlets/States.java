@@ -42,7 +42,7 @@ public class States extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							StatesData statedata = new StatesData();
-							List states = statedata.getStatesListingOnline(results);
+							List states = statedata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("State successfully saved");
 							requestContext.getArgs().put("listing", states);
@@ -91,7 +91,7 @@ public class States extends BaseServlet{
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								StatesData statedata = new StatesData();
-								List states = statedata.getStatesListingOnline(results);
+								List states = statedata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", states);
 								getServlet().fillTemplate(new StatesTemplate(requestContext));

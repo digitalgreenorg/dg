@@ -164,7 +164,7 @@ public class StatesData extends BaseData {
 		return states;
 	}
 	
-	public List getStatesListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

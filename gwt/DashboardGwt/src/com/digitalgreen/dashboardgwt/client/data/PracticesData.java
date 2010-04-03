@@ -162,7 +162,7 @@ public class PracticesData extends BaseData {
 		return practices;
 	}
 	
-	public List getPracticesListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	

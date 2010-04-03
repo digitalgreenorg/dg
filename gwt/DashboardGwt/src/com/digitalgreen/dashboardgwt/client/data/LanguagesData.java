@@ -126,7 +126,7 @@ public class LanguagesData extends BaseData {
 		return languages;
 	}
 	
-	public List getLanguagesListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

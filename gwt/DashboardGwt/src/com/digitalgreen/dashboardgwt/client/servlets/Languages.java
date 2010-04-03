@@ -45,7 +45,7 @@ public class Languages extends BaseServlet{
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						LanguagesData languagesData = new LanguagesData();
-						List languages = languagesData.getLanguagesListingOnline(results);
+						List languages = languagesData.getListingOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Language successfully saved");
 						requestContext.getArgs().put("listing", languages);
@@ -91,7 +91,7 @@ public class Languages extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							LanguagesData languagesData = new LanguagesData();
-							List languages = languagesData.getLanguagesListingOnline(results);
+							List languages = languagesData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", languages);
 							getServlet().redirectTo(new Languages(requestContext ));						

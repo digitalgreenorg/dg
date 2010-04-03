@@ -39,7 +39,7 @@ public class FieldOfficers extends BaseServlet{
 					public void onlineSuccessCallback(String results){
 						if(results != null){
 							FieldOfficersData fieldofficersData = new FieldOfficersData();
-							List fieldOfficers = fieldofficersData.getFieldOfficersListingOnline(results);
+							List fieldOfficers = fieldofficersData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Field Officer successfully saved.");
 							requestContext.getArgs().put("listing", fieldOfficers);
@@ -86,7 +86,7 @@ public class FieldOfficers extends BaseServlet{
 						public void onlineSuccessCallback(String results){
 							if(results != null){
 								FieldOfficersData fieldofficerdata = new FieldOfficersData();
-								List fieldOfficers = fieldofficerdata.getFieldOfficersListingOnline(results);
+								List fieldOfficers = fieldofficerdata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", fieldOfficers);
 								getServlet().redirectTo(new FieldOfficers(requestContext));

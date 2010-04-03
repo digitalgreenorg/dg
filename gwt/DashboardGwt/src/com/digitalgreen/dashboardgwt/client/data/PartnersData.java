@@ -181,7 +181,7 @@ public class PartnersData extends BaseData {
 		return partners;
 	}
 	
-	public List getPartnersListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

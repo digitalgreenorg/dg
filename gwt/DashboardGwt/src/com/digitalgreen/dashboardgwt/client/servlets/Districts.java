@@ -35,7 +35,7 @@ public class Districts extends BaseServlet{
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							DistrictsData districtdata = new DistrictsData();
-							List districts = districtdata.getDistrictsListingOnline(results);
+							List districts = districtdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("District successfully saved");
 							requestContext.getArgs().put("listing", districts);
@@ -84,7 +84,7 @@ public class Districts extends BaseServlet{
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								DistrictsData districtdata = new DistrictsData();
-								List districts = districtdata.getDistrictsListingOnline(results);
+								List districts = districtdata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", districts);
 								getServlet().fillTemplate(new DistrictTemplate(requestContext));

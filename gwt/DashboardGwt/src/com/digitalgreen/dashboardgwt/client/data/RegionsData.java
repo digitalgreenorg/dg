@@ -143,7 +143,7 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
-	public List getRegionsListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

@@ -150,7 +150,7 @@ public class DistrictsData extends BaseData {
 	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (district_name)";
 	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id);";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
-	protected static String getDistrictOnlineURL = "/dashboard/getdistrictsonline/";
+	protected static String getDistrictsOnlineURL = "/dashboard/getdistrictsonline/";
 	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";
 	protected String table_name = "district";
 	protected String[] fields = {"id", "district_name", "start_date", "state_id", "fieldofficer_id", "fieldofficer_startday", "partner_id"};
@@ -217,7 +217,7 @@ public class DistrictsData extends BaseData {
 		return districts;
 	}
 	
-	public List getDistrictsListingOnline(String json){
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
@@ -275,6 +275,7 @@ public class DistrictsData extends BaseData {
 				BaseData.dbClose();
 			}
 		}
+		BaseData.dbClose();
 		return districts;
 	}
 	
@@ -297,7 +298,7 @@ public class DistrictsData extends BaseData {
 	
 	public Object getListPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + DistrictsData.getDistrictOnlineURL);
+			this.get(RequestContext.SERVER_HOST + DistrictsData.getDistrictsOnlineURL);
 		}
 		else{
 			return true;
