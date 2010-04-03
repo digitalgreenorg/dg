@@ -51,13 +51,11 @@ public class TrainingsData extends BaseData {
 			this.fieldofficer = fieldofficer;
 		}
 		
-		public Data(int id, String training_purpose, String training_outcome, String training_start_date, String training_end_date){
+		public Data(int id, String training_purpose, String training_outcome){
 			super();
 			this.id = id;
 			this.training_purpose = training_purpose;
 			this.training_outcome = training_outcome;
-			this.training_start_date = training_start_date;
-			this.training_end_date = training_end_date;
 		}
 		
 		public String getTrainigPurpose() { 
@@ -279,7 +277,7 @@ public class TrainingsData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					Data training = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
-							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));
+							this.getResultSet().getFieldAsString(2));
 					trainings.add(training);
 				}
 			}
