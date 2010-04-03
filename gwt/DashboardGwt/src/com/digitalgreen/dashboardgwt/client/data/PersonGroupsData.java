@@ -4,6 +4,7 @@ public class PersonGroupsData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
+		public final native String getPersonGroupName() /*-{ return this.fields.group_name; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {		
