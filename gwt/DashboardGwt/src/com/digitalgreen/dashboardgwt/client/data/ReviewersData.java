@@ -1,14 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import com.digitalgreen.dashboardgwt.client.data.AnimatorsData.Data;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.AnimatorsData.Data;
-import com.digitalgreen.dashboardgwt.client.data.ReviewersData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
+import com.digitalgreen.dashboardgwt.client.data.ReviewersData.Type;
 
 public class ReviewersData extends BaseData {
 	
@@ -144,6 +145,5 @@ public class Data extends BaseData.Data {
 	
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
-	}			
-		
+	}		
 }
