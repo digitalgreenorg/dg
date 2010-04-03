@@ -1,10 +1,22 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
+import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
+import com.google.gwt.core.client.JsArray;
+
 public class PersonGroupsData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native String getPersonGroupName() /*-{ return this.fields.group_name; }-*/;
+		public final native String getDays() /*-{ return this.fields.days; }-*/;
+		public final native String getTimings() /*-{ return this.fields.timings; }-*/;
+		public final native String getTimeUpdated() /*-{ return this.fields.time_updated; }-*/;
+		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 	}
 	
 	public class Data extends BaseData.Data {		
@@ -89,12 +101,25 @@ public class PersonGroupsData extends BaseData {
 												"village_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id));"; 
 	
+	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
+	protected static String listPersonGroups = "SELECT * FROM person_groups pg JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
 	protected static String savePersonGroupOfflineURL = "/dashboard/savepersongroupoffline/";
-	
+	protected static String savePersonGroupOnlineURL = "/dashboard/savepersongrouponline/";
+	protected static String getPersonGroupOnlineURL = "/dashboard/getpersongroupsonline/";
+	protected String table_name = "persongroup";
+	protected String[] fields = {"id", "group_name","days", "timings", "time_updated", "village_id"};
+		
 	public PersonGroupsData() {
 		super();
 	}
 	
+	public PersonGroupsData(OnlineOfflineCallbacks callbacks) {
+		super(callbacks);
+	}
+	
+	public PersonGroupsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+		super(callbacks, form, queryString);
+	}
 	@Override
 	public Data getNewData() {
 		return new Data();
@@ -102,6 +127,46 @@ public class PersonGroupsData extends BaseData {
 	
 	@Override
 	protected String getTableId() {
-		return PersonGroupsData.tableID;
+		return AnimatorsData.tableID;
 	}
+	
+	protected String getTableName() {
+		return this.table_name;
+	}
+	
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
+	protected String getSaveOfflineURL(){
+		return PersonGroupsData.savePersonGroupOfflineURL;
+	}
+	
+	public final native JsArray<Type> asArrayOfData(String json) /*-{
+		return eval(json);
+	}-*/;
+	
+	public List serialize(JsArray<Type> personGroupObjects){
+		List personGroups = new ArrayList();
+		VillagesData village = new VillagesData();
+		for(int i = 0; i < personGroupObjects.length(); i++){
+			VillagesData.Data vil = village.new Data(Integer.parseInt(personGroupObjects.get(i).getVillage().getPk()),
+					personGroupObjects.get(i).getVillage().getVillageName());
+						
+			Data personGroup = new Data(Integer.parseInt(personGroupObjects.get(i).getPk()),
+						personGroupObjects.get(i).getPersonGroupName(),
+						personGroupObjects.get(i).getDays(),
+						personGroupObjects.get(i).getTimings(),
+						personGroupObjects.get(i).getTimeUpdated(),vil);
+			personGroups.add(personGroup);
+		}
+		
+		return personGroups;
+	}
+	
+	public List getListingOnline(String json){
+		return this.serialize(this.asArrayOfData(json));		
+	}
+	
+	
 }

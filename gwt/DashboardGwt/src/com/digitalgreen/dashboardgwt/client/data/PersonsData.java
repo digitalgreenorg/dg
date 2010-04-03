@@ -168,8 +168,8 @@ public class PersonsData extends BaseData {
 				this.relations.id = Integer.parseInt((String)val);
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("adopted_agricultural_practices")) {
-				PersonAdoptPracticeData group = new PersonAdoptPracticeData();
-				this.adopted_agricultural_practices = group.getNewData();
+				PersonAdoptPracticeData adopted_agricultural_practices = new PersonAdoptPracticeData();
+				this.adopted_agricultural_practices = adopted_agricultural_practices.getNewData();
 				this.adopted_agricultural_practices.id = Integer.parseInt((String)val);
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  	
