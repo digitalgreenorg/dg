@@ -475,13 +475,11 @@ def get_user_districts(request):
 			districts = districts | District.objects.all()
 		if(user_permission.role=='D'):
 			states = State.objects.filter(region = user_permission.region_operated)
-			districts = District.objects.filter(state__in = states)
-			
+			districts = districts | District.objects.filter(state__in = states)			
 		if(user_permission.role=='F'):
-			states = State.objects.filter(region = user_permission.region_operated)
-			districts = District.objects.filter(state__in = states)
+			districts = districts | District.objects.filter(district_name = user_permission.district_operated)
         		
-	return villages   
+	return districts   
 
 def save_video_online(request):
     if request.method == 'POST':
@@ -578,7 +576,8 @@ def get_blocks_online(request):
     if request.method == 'POST':
         return redirect('blocks')
     else:
-        blocks = Block.objects.select_related('district').order_by("-id")
+        districts = get_user_districts(request);
+        blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", blocks,  relations=('district'))
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
