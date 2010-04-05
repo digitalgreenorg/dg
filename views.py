@@ -539,9 +539,9 @@ def get_districts_online(request):
 	if request.method == 'POST':
 		return redirect('districts')
 	else:
-		districts = District.objects.select_related('state').order_by("-id")
-		json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
-		return HttpResponse(json_subcat, mimetype="application/javascript")
+		districts = get_user_districts(request);
+        json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 		
 
 
@@ -659,6 +659,91 @@ def save_equipment_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")		
+# function for animator with user specific feature.
+
+def save_animator_online(request):
+	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
+	if request.method == 'POST':
+		form = AnimatorForm(request.POST)
+		formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
+		if form.is_valid() and formset.is_valid():	
+			# This should redirect to show region page
+			saved_animator = form.save()
+			animator = Animator.objects.get(pk=saved_animator.id)
+			formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
+			formset.save()
+			return HttpResponseRedirect('/dashboard/getanimatorsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form1 = AnimatorForm()
+		f = list(form1)
+		villages = get_user_villages(request)
+		formset = AnimatorAssignedVillageInlineFormSet()
+		form1.fields['home_village'].queryset = villages.order_by('village_name')
+		for form in formset.forms:
+			form.fields['village'].queryset = villages.order_by('village_name')
+			f = f + list(form)
+		return HttpResponse(f)
+	
+	
+def get_animators_online(request):
+	if request.method == 'POST':
+		return redirect('animators')
+	else:
+		villages = get_user_villages(request);
+		animators = Animator.objects.filter(home_village__in = villages).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", animators,  relations=('region',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_animator_offline(request):
+	if request.method == 'POST':
+		form = AnimatorForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+# function for animator assigned village with user specific feature.
+def save_animatorassignedvillage_online(request):
+	if request.method == 'POST':
+		form = AnimatorAssignedVillageForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getanimatorassignedvillagesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = AnimatorAssignedVillageForm()
+		villages = get_user_villages(request);
+		form.fields['village'].queryset = villages.order_by('village_name')
+		form.fields['animator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+		return HttpResponse(form)
+	
+	
+def get_animatorassignedvillages_online(request):
+	if request.method == 'POST':
+		return redirect('animatorassignedvillages')
+	else:
+		villages = get_user_villages(request);
+		animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('region',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_animatorassignedvillage_offline(request):
+	if request.method == 'POST':
+		form = AnimatorAssignedVillageForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")	
 
 
 # Old functions, Will be deprecated once the online / offline functionality is created
@@ -942,21 +1027,20 @@ def add_animator(request):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
         if request.method == 'POST':
                 form = AnimatorForm(request.POST)
-		formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
-	
+                #formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
                 if form.is_valid() and formset.is_valid():
-                        saved_animator = form.save()
-			#formset.save_m2m()
-			animator = Animator.objects.get(pk=saved_animator.id)
-			formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
-			formset.save()
-                        return HttpResponseRedirect('/dashboard/animators/')
+                	saved_animator = form.save()
+                	#formset.save_m2m()
+                	animator = Animator.objects.get(pk=saved_animator.id)
+                	formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
+                	formset.save()
+                	return HttpResponseRedirect('/dashboard/animators/')
                 else:
-                        return render_to_response('add_animator.html',{'form':form, 'formset':formset})
+                	return render_to_response('add_animator.html',{'form':form, 'formset':formset})
         else:
-                form = AnimatorForm()
-		formset = AnimatorAssignedVillageInlineFormSet()
-                return render_to_response('add_animator.html',{'form':form, 'formset':formset})
+        	form = AnimatorForm()
+        	formset = AnimatorAssignedVillageInlineFormSet()
+        	#return render_to_response('add_animator.html',{'form':form, 'formset':formset})
 
 
 def animator(request):
