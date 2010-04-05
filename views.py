@@ -463,6 +463,24 @@ def get_user_villages(request):
 			blocks = Block.objects.filter(district = user_permission.district_operated)
 			villages = villages | Village.objects.filter(block__in = blocks)
         		
+	return villages
+
+def get_user_districts(request):
+	#print request.session.get('username')
+	#print request.session.get('user_id')
+	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
+	districts = District.objects.none()
+	for user_permission in user_permissions:
+		if(user_permission.role=='A'):
+			districts = districts | District.objects.all()
+		if(user_permission.role=='D'):
+			states = State.objects.filter(region = user_permission.region_operated)
+			districts = District.objects.filter(state__in = states)
+			
+		if(user_permission.role=='F'):
+			states = State.objects.filter(region = user_permission.region_operated)
+			districts = District.objects.filter(state__in = states)
+        		
 	return villages   
 
 def save_video_online(request):
@@ -551,6 +569,8 @@ def save_block_online(request):
             return HttpResponse("0")
     else:
         form = BlockForm()
+        districts = get_user_districts(request)
+        form.fields['district'].queryset = districts.order_by('district_name')
         return HttpResponse(form)
     
     
