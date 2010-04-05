@@ -19,6 +19,7 @@
     <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
     <script type="text/javascript" src="/media/Output/JS/sorter.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
+	
 
 	<script type="text/javascript">  	    
 	//Function to Apply Dates in Date picker when the page loads	    
@@ -39,7 +40,12 @@
 			
 			
 			//Calling code for tablesorter
-			$('#table2').tablesorter();
+			$('#table2').tablesorter({textExtraction: function(node) {  
+				if($(node).find("a").length)
+					return $(node).find("a").html();
+				return node.innerHTML;
+			  }  
+			});
 	}
 	
 	//Function for apply button in date picker
@@ -282,7 +288,7 @@
 							<div id='table2tdv3'>  
 							</div>					
 						</th>
-						<th id='table2td'>
+						<th id='table2td' >
 							<div id='table2tdv2'> Videos Produced 
 							    <div id='table2tdv2desc'>
 							        The total number of videos produced in a given location
@@ -336,21 +342,19 @@
 				 	{% for item in item_list %}
 				 	<tr>
 				 	    
-						<td id='table2td4'>
-							
-								{% ifnotequal item.id None %}
-							{% ifnotequal geog  'village' %}
-							<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
-							{{ item.name }} </a>
-							{% else %}
-							{{ item.name }}
-							{% endifnotequal  %}
+						<td id='table2td4'>						
+							{% ifnotequal item.id None %}
+									{% ifnotequal geog  'village' %}
+									<a href='/output/overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+									{{ item.name }} </a>
+									{% else %}
+									{{ item.name }}
+									{% endifnotequal  %}
 							{% else %}
 							{{ item.name }}
 							{% endifnotequal  %}
 						</td>
-						<td id='table2td1'> 
-							
+						<td id='table2td1'>						
 							<a href='/output/video/module/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}' target="_blank">
 							{{ item.tot_pro }} </a> 
 						</td>

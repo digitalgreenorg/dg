@@ -684,25 +684,25 @@ def video_tot_video(**args):
 
 def video_tot_scr(**args):
     sql = []
-    sql.append(r' SELECT COUNT(DISTINCT SC.video_id) AS count FROM SCREENING_videoes_screened SC, VIDEO VID')
+    sql.append(r' SELECT COUNT(DISTINCT SC.video_id) AS count FROM SCREENING_videoes_screened SC, SCREENING scr')
     if 'geog' in args:
         if args['geog'] == 'state':
-            sql.append(r',VILLAGE VIL,BLOCK B, DISTRICT D WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
+            sql.append(r',VILLAGE VIL,BLOCK B, DISTRICT D WHERE SC.screening_id = scr.id AND scr.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = D.id AND D.state_id = '+str(args['id']) )
        
         elif args['geog'] == 'district':
-            sql.append(r""",VILLAGE VIL,BLOCK B WHERE SC.video_id =VID.id AND VID.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
+            sql.append(r""",VILLAGE VIL,BLOCK B WHERE SC.screening_id = scr.id AND scr.village_id = VIL.id AND VIL.block_id = B.id AND B.district_id = """+str(args['id']) )
         
         elif args['geog'] == 'block':
-            sql.append(r""" ,VILLAGE VIL WHERE SC.video_id =VID.id AND VID.village_id  = VIL.id AND VIL.block_id  = """+str(args['id']) )
+            sql.append(r""" ,VILLAGE VIL WHERE SC.screening_id = scr.id AND scr.village_id  = VIL.id AND VIL.block_id  = """+str(args['id']) )
         
         elif args['geog'] == 'village':
-            sql.append(r""" WHERE SC.video_id =VID.id AND VID.village_id  = """+str(args['id']) )
+            sql.append(r""" WHERE SC.screening_id = scr.id AND scr.village_id  = """+str(args['id']) )
         
     if 'from_date' in args and 'to_date' in args:
         if args['geog'] == 'country':
-            sql.append(' WHERE SC.video_id = VID.id AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+            sql.append(' WHERE SC.screening_id = scr.id AND scr.DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
         else:
-            sql.append(' AND VID.VIDEO_PRODUCTION_END_DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
+            sql.append(' AND scr.DATE BETWEEN \''+args['from_date']+'\' AND \''+args['to_date']+ ' \'  ')
            
     return ''.join(sql)
 
