@@ -744,6 +744,41 @@ def save_animatorassignedvillage_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")	
+		
+		
+def save_persongroup_online(request):
+	PersonFormSet = inlineformset_factory(PersonGroups, Person,extra=3, exclude=('equipmentholder','relations','adopted_agricultural_practices',))
+	if request.method == 'POST':
+		form = PersonGroupsForm(request.POST)
+		formset = PersonFormSet(request.POST, request.FILES)
+		if form.is_valid() and formset.is_valid():	
+			# This should redirect to show region page
+			saved_persongroup = form.save()
+			persongroup = PersonGroups.objects.get(pk=saved_persongroup.id)
+			formset = PersonFormSet(request.POST, request.FILES, instance=persongroup)
+			formset.save()
+			return HttpResponseRedirect('/dashboard/getpersongroupsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form1 = PersonGroupsForm()
+		f = list(form1)
+		villages = get_user_villages(request)
+		formset = PersonFormSet()
+		form1.fields['village'].queryset = villages.order_by('village_name')
+		for form in formset.forms:
+			form.fields['village'].queryset = villages.order_by('village_name')
+			f = f + list(form)
+		return HttpResponse(f)
+	
+def get_persongroups_online(request):
+	if request.method == 'POST':
+		return redirect('persongroups')
+	else:
+		villages = get_user_villages(request)
+		persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", persongroups,  relations=('person','village'))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 
 # Old functions, Will be deprecated once the online / offline functionality is created
