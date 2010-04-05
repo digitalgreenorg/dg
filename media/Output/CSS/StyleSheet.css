@@ -35,9 +35,9 @@
 #mytable 			{ margin-left:10px; border-width:thin; border-style:solid; border-color:#339900; float:none; margin-top:5px; width:898px}
 
 #table3 			{ margin-left:0%; border-width:thin; border-style:solid; border-color:#339900; float:none; margin-top:0px}
-th.header  div#table2tdv3	{background-image: url(/media/Output/Images/table2tddefaultbg1.png); background-repeat:no-repeat; opacity:0.6;}
-th.headerSortDown  div#table2tdv3	{background-image: url(/media/Output/Images/table2tddescbg3.png); background-repeat:no-repeat;  opacity:1;}
-th.headerSortUp  div#table2tdv3	{background-image: url(/media/Output/Images/table2tdascenbg3.png); background-repeat:no-repeat; opacity:1;}
+th.header  div#table2tdv3	{background-image: url('/media/Output/Images/table2tddefaultbg1.png'); background-repeat:no-repeat; opacity:0.6;}
+th.headerSortDown  div#table2tdv3	{background-image: url('/media/Output/Images/table2tddescbg3.png'); background-repeat:no-repeat;  opacity:1;}
+th.headerSortUp  div#table2tdv3	{background-image: url('/media/Output/Images/table2tdascenbg3.png'); background-repeat:no-repeat; opacity:1;}
 #table2td			{ width:143px; height:30px; background-color:#e1fb9b; border-right-color:#339900; border-right-width:1px; border-right-style:solid; border-bottom-color:#339900; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; text-align:right}
 #table2tdf			{ width:143px; height:30px; background-color:#e1fb9b; border-bottom-color:#339900; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; text-align:right}
 #table2td7			{ width:182px; height:30px; background-color:#d4ec92; border-right-color:#339900; border-right-width:1px; border-right-style:solid; border-bottom-color:#6ed13c; border-bottom-width:1px; border-bottom-style:solid; color:#586835; font-family:Calibri; font-size:14px; font-weight:bold; text-align:center}
