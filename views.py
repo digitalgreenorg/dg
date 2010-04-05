@@ -660,6 +660,7 @@ def save_equipment_offline(request):
 		else:
 			return HttpResponse("0")		
 # function for animator with user specific feature.
+#save_online function, get_online and save_offline functions of animator with regionalization feature 
 
 def save_animator_online(request):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
@@ -695,6 +696,7 @@ def get_animators_online(request):
 		animators = Animator.objects.filter(home_village__in = villages).distinct().order_by("-id")
 		json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
+	
 
 def save_animator_offline(request):
 	if request.method == 'POST':
@@ -707,12 +709,13 @@ def save_animator_offline(request):
 		else:
 			return HttpResponse("0")
 
-# function for animator assigned village with user specific feature.
+# functions for animator assigned village with user specific feature.
+#save_online function, get_online and save_offline functions of animatorassignedvillage with regionalization feature 
+
 def save_animatorassignedvillage_online(request):
 	if request.method == 'POST':
 		form = AnimatorAssignedVillageForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('/dashboard/getanimatorassignedvillagesonline/')
 		else:
@@ -733,6 +736,7 @@ def get_animatorassignedvillages_online(request):
 		animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")
 		json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
+	
 
 def save_animatorassignedvillage_offline(request):
 	if request.method == 'POST':
@@ -746,6 +750,9 @@ def save_animatorassignedvillage_offline(request):
 			return HttpResponse("0")	
 		
 		
+#functions for persongroups with user specific feature.
+#save_online function, get_online and save_offline functions of persongroups with regionalization feature
+
 def save_persongroup_online(request):
 	PersonFormSet = inlineformset_factory(PersonGroups, Person,extra=3, exclude=('equipmentholder','relations','adopted_agricultural_practices',))
 	if request.method == 'POST':
@@ -779,6 +786,65 @@ def get_persongroups_online(request):
 		persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")
 		json_subcat = serializers.serialize("json", persongroups,  relations=('person','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
+	
+def save_persongroup_offline(request):
+	if request.method == 'POST':
+		form = PersonGroupsForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+
+#functions for person with user specific feature.
+#save_online function, get_online and save_offline functions of person with regionalization feature
+
+def save_person_online(request):
+	PersonAdoptPracticeFormSet = inlineformset_factory( Person,PersonAdoptPractice,extra=3)
+	if request.method == 'POST':
+		form = PersonForm(request.POST)
+		formset = PersonAdoptPracticeFormSet(request.POST, request.FILES)
+		if form.is_valid():	
+			# This should redirect to show region page
+			saved_person = form.save()
+			personadoptpractice = PersonAdoptPractice.objects.get(pk=saved_person.id)
+			formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance=personadoptpractice)
+			formset.save()
+			return HttpResponseRedirect('/dashboard/getpersonadoptpracticesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form1 = PersonForm()
+		f = list(form1)
+		villages = get_user_villages(request)
+		formset = PersonAdoptPracticeFormSet()
+		form1.fields['village'].queryset = villages.order_by('village_name')
+		for form in formset.forms:
+			f = f + list(form)
+		return HttpResponse(f)
+	
+def get_persons_online(request):
+	if request.method == 'POST':
+		return redirect('persons')
+	else:
+		villages = get_user_villages(request)
+		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", persongroups,  relations=('person','village'))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+	
+def save_person_offline(request):
+	if request.method == 'POST':
+		form = PersonForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
 
 
 # Old functions, Will be deprecated once the online / offline functionality is created

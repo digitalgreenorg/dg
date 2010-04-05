@@ -36,6 +36,10 @@ class PersonGroupsForm(forms.ModelForm):
         #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
         class Meta:
                 model = PersonGroups
+class PersonAdoptPracticeForm(forms.ModelForm):
+        #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
+        class Meta:
+                model = PersonAdoptPractice
 
 class PersonForm(forms.ModelForm):
 	class Meta:
