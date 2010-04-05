@@ -693,7 +693,7 @@ def get_animators_online(request):
 	else:
 		villages = get_user_villages(request);
 		animators = Animator.objects.filter(home_village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", animators,  relations=('region',))
+		json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_animator_offline(request):
@@ -731,7 +731,7 @@ def get_animatorassignedvillages_online(request):
 	else:
 		villages = get_user_villages(request);
 		animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('region',))
+		json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_animatorassignedvillage_offline(request):
