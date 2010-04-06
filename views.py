@@ -465,6 +465,24 @@ def get_user_villages(request):
         		
 	return villages
 
+def get_user_blocks(request):
+	#print request.session.get('username')
+	#print request.session.get('user_id')
+	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
+	blocks = Block.objects.none()
+	for user_permission in user_permissions:
+		if(user_permission.role=='A'):
+			blocks = blocks | Block.objects.all()
+		if(user_permission.role=='D'):
+			states = State.objects.filter(region = user_permission.region_operated)
+			districts = District.objects.filter(state__in = states)
+			blocks = blocks | Block.objects.filter(district__in = districts)
+		if(user_permission.role=='F'):
+			blocks = blocks | Block.objects.filter(district = user_permission.district_operated)
+	return blocks
+
+
+
 def get_user_districts(request):
 	#print request.session.get('username')
 	#print request.session.get('user_id')
@@ -659,9 +677,63 @@ def save_equipment_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")		
+		
+def save_village_online(request):
+	PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
+	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, extra=5)
+	if request.method == "POST":
+	   form = VillageForm(request.POST)
+	   formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
+	   formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
+	   if form.is_valid() and formset_person_group.is_valid() and formset_animator.is_valid():
+	   	saved_village = form.save()
+	   	village = Village.objects.get(pk=saved_village.id)
+	   	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance=village)
+	   	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance = village)
+	   	formset_person_group.save()
+	   	formset_animator.save()
+	   	return HttpResponseRedirect('/dashboard/getvillagesonline/')
+	   else:
+	   	return HttpResponse("0")
+	else:
+		form = VillageForm()
+		blocks = get_user_blocks(request);
+		form.fields['block'].queryset = blocks.order_by('block_name')
+		formset_person_group = PersonGroupInlineFormSet()
+		formset_animator = AnimatorInlineFormSet()
+		form_list = list(form)
+		for form_person_group in formset_person_group.forms:
+			form_list = form_list + list(form_person_group)
+		for form_animator in formset_animator.forms:
+			form_list = form_list + list(form_animator)
+		return HttpResponse(form_list)
+	
+def get_villages_online(request):
+	if request.method == 'POST':
+		return redirect('villages')
+	else:
+		village_objects = get_user_villages(request);
+		villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", villages,  relations=('block',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_village_offline(request):
+	#PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
+	#AnimatorInlineFormSet = inlineformset_factory(Village, Animator, extra=5)
+	if request.method == 'POST':
+		form = VillageForm(request.POST)
+		#formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
+		#formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
 # function for animator with user specific feature.
 #save_online function, get_online and save_offline functions of animator with regionalization feature 
-
 def save_animator_online(request):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
 	if request.method == 'POST':
@@ -697,7 +769,6 @@ def get_animators_online(request):
 		json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
-
 def save_animator_offline(request):
 	if request.method == 'POST':
 		form = AnimatorForm(request.POST)
