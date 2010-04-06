@@ -86,3 +86,6 @@ class ScreeningForm(forms.ModelForm):
 	class Meta:
 		model = Screening
 		exclude = ('farmers_attendance',)
+class TrainingForm(forms.ModelForm):
+	class Meta:
+		model = Training
