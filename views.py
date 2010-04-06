@@ -881,10 +881,10 @@ def save_person_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			saved_person = form.save()
-			personadoptpractice = PersonAdoptPractice.objects.get(pk=saved_person.id)
-			formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance=personadoptpractice)
+			person = Person.objects.get(pk=saved_person.id)
+			formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance=person)
 			formset.save()
-			return HttpResponseRedirect('/dashboard/getpersonadoptpracticesonline/')
+			return HttpResponseRedirect('/dashboard/getpersonsonline/')
 		else:
 			return HttpResponse("0")
 	else:
@@ -903,7 +903,7 @@ def get_persons_online(request):
 	else:
 		villages = get_user_villages(request)
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", persongroups,  relations=('person','village'))
+		json_subcat = serializers.serialize("json", persons,  relations=('persongroups','village','practice'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_person_offline(request):
@@ -916,8 +916,91 @@ def save_person_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
+		
+#functions for SCREENING with user specific feature.
+#save_online function, get_online and save_offline functions of SCREENING with regionalization feature
 
+def save_screening_online(request):
+	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=2)
+	if request.method == 'POST':
+		form = ScreeningForm(request.POST)
+		formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
+		if form.is_valid():	
+			# This should redirect to show region page
+			saved_screening = form.save()
+			screening = Screening.objects.get(pk=saved_screening.id)
+			formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance=screening)
+			formset.save()
+			return HttpResponseRedirect('/dashboard/getscreeningsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form1 = ScreeningForm()
+		f = list(form1)
+		villages = get_user_villages(request)
+		formset = PersonMeetingAttendanceInlineFormSet()
+		form1.fields['village'].queryset = villages.order_by('village_name')
+		for form in formset.forms:
+			f = f + list(form)
+		return HttpResponse(f)
+	
+def get_screenings_online(request):
+	if request.method == 'POST':
+		return redirect('screenings')
+	else:
+		villages = get_user_villages(request)
+		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", screenings,  relations=('animator','village','practice','persongroups'))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+	
+def save_screening_offline(request):
+	if request.method == 'POST':
+		form = ScreeningForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
 
+#functions for TRAINING with user specific feature.
+#save_online function, get_online and save_offline functions of TRAINING with regionalization feature
+def save_training_online(request):
+    if request.method == 'POST':
+        form = TrainingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/gettrainingsonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = TrainingForm()
+    	villages = get_user_villages(request);
+        form.fields['village'].queryset = villages.order_by('village_name')
+        return HttpResponse(form);            
+        
+def get_trainings_online(request):
+    if request.method == 'POST':
+        return redirect('video')
+    else:
+    	villages = get_user_villages(request);
+        trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", trainings, relations=('village',))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_training_offline(request):
+	if request.method == 'POST':
+		form = TrainingForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0") 
+		
 # Old functions, Will be deprecated once the online / offline functionality is created
 
 
