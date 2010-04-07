@@ -64,7 +64,6 @@ public class DistrictTemplate extends BaseTemplate{
 									"</td><td>" + district.getPartner().getPartnerName() + "</td>" +
 								"</tr>";
 				}
-				Window.alert("table rows = " + tableRows);
 				districtListFormHtml = districtListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
