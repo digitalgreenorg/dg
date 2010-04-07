@@ -93,8 +93,14 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();			
-			this.id = personRelationssDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
-					Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
+			if(this.id==0){
+				this.id = personRelationssDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
+			}else{
+				this.id = personRelationssDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
+			}
+			
 		}
 	}
 
@@ -140,16 +146,19 @@ public class Data extends BaseData.Data {
 		return PersonRelationsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return PersonRelationsData.savePersonRelationOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PersonRelationsData.getPersonRelationOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -171,6 +180,7 @@ public class Data extends BaseData.Data {
 		return personRelations;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

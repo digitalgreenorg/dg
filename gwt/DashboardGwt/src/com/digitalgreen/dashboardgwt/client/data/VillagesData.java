@@ -120,12 +120,12 @@ public class VillagesData extends BaseData {
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();
-			this.id = villagesDataDbApis.autoInsert(this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
-		}
-		
-		public void saveWithID() {
-			VillagesData villagesDataDbApis = new VillagesData();
-			this.id = villagesDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+			if(this.id==0){
+				this.id = villagesDataDbApis.autoInsert(this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+			}else{
+				this.id = villagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+			}
+			
 		}
 	}
 
@@ -173,24 +173,22 @@ public class VillagesData extends BaseData {
 		return VillagesData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
-	
-		
+			
 	@Override
 	public String getListingOnlineURL(){
-		return StatesData.getStateOnlineURL;
+		return VillagesData.getVillageOnlineURL;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return VillagesData.saveVillageOfflineURL;
-	}
-	
+
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

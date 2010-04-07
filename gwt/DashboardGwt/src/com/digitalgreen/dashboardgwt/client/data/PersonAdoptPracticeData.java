@@ -133,10 +133,17 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
-			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();			
-			this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
-					Integer.valueOf(this.practice.getId()).toString(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
-					this.quantity,this.quantity_unit);
+			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();		
+			if(this.id==0){
+				this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.practice.getId()).toString(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
+						this.quantity,this.quantity_unit);
+			}else{
+				this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.id).toString(), Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.practice.getId()).toString(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
+						this.quantity,this.quantity_unit);
+			}
+			
 		}
 	}
 
@@ -187,18 +194,22 @@ public class Data extends BaseData.Data {
 		return PersonAdoptPracticeData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return PersonAdoptPracticeData.savePersonAdoptPracticeOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL;
 	}
-	
+		
+		
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -223,6 +234,7 @@ public class Data extends BaseData.Data {
 		return personAdoptPractices;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

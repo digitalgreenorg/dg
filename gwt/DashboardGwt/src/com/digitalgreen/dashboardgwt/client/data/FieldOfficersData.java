@@ -127,9 +127,16 @@ public class FieldOfficersData extends BaseData {
 		@Override
 		public void save(){
 			FieldOfficersData fieldOfficersDataDbApis = new FieldOfficersData();
-			this.id = fieldOfficersDataDbApis.autoInsert(this.name, this.age, this.gender, this.hire_date, 
-					Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-					Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id==0){
+				this.id = fieldOfficersDataDbApis.autoInsert(this.name, this.age, this.gender, this.hire_date, 
+						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
+			}else{
+				this.id = fieldOfficersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.name, this.age, this.gender, this.hire_date, 
+						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
+			}
+			
 			
 		}
 	}
@@ -189,8 +196,9 @@ public class FieldOfficersData extends BaseData {
 		return FieldOfficersData.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return FieldOfficersData.saveFieldOfficerOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return FieldOfficersData.getFieldOfficersOnlineURL;
 	}
 	
 	
@@ -210,6 +218,7 @@ public class FieldOfficersData extends BaseData {
 		return fieldOfficers;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

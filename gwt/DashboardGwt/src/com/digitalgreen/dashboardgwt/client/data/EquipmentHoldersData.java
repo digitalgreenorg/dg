@@ -75,7 +75,10 @@ public class EquipmentHoldersData extends BaseData {
 		@Override
 		public void save() {
 			EquipmentHoldersData equipmentholdersDataDbApis = new EquipmentHoldersData();
-			this.id = equipmentholdersDataDbApis.autoInsert( this.content_type, this.object_id);
+			if(this.id == 0)
+				this.id = equipmentholdersDataDbApis.autoInsert( this.content_type, this.object_id);
+			else
+				this.id = equipmentholdersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.content_type, this.object_id);
 		}
 	}
 	
@@ -117,16 +120,19 @@ public class EquipmentHoldersData extends BaseData {
 		return EquipmentHoldersData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return EquipmentHoldersData.saveEquipmentHolderOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return EquipmentHoldersData.getEquipmentHolderOnlineURL;
 	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -144,6 +150,7 @@ public class EquipmentHoldersData extends BaseData {
 		return equipmentholders;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}	

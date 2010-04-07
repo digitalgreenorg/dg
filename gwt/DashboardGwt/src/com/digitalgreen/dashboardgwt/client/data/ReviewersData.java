@@ -18,7 +18,8 @@ public class ReviewersData extends BaseData {
 		public final native String getContentType() /*-{ return this.fields.content_type; }-*/;
 		public final native String getObjectId() /*-{ return this.fields.object_id; }-*/;
 	}
-public class Data extends BaseData.Data {
+	
+	public class Data extends BaseData.Data {
 		
 		final private static String COLLECTION_PREFIX = "reviewer";
 			
@@ -76,7 +77,13 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			ReviewersData reviewersDataDbApis = new ReviewersData();
-			this.id = reviewersDataDbApis.autoInsert( this.content_type, this.object_id);
+			if(this.id==0){
+				this.id = reviewersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.content_type, this.object_id);
+			}
+			else{
+				this.id = reviewersDataDbApis.autoInsert( this.content_type, this.object_id);
+			}
+			
 		}
 	}
 
@@ -116,16 +123,19 @@ public class Data extends BaseData.Data {
 		return ReviewersData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return ReviewersData.saveReviewerOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return ReviewersData.getReviewerOnlineURL;
 	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -143,6 +153,7 @@ public class Data extends BaseData.Data {
 		return reviewers;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}		

@@ -178,10 +178,17 @@ public class DevelopmentManagersData extends BaseData {
 		@Override
 		
 		public void save() {
-			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();			
-			this.id = developmentmanagersDataDbApis.autoInsert(this.name,this.age,this.gender,this.hire_date,
-					this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
-					Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
+			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
+			if(this.id == 0){
+				this.id = developmentmanagersDataDbApis.autoInsert(this.name,this.age,this.gender,this.hire_date,
+						this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
+						Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
+			}else{
+				this.id = developmentmanagersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.name,this.age,this.gender,this.hire_date,
+						this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
+						Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
+			}
+			
 			
 		}
 	}
@@ -234,16 +241,19 @@ public class DevelopmentManagersData extends BaseData {
 		return DevelopmentManagersData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return DevelopmentManagersData.saveDevelopmentManagerOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return DevelopmentManagersData.getDevelopmentManagerOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -272,7 +282,8 @@ public class DevelopmentManagersData extends BaseData {
 		return developmentmanagers;
 	}
 	
-	public List getDevelopmentManagersListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

@@ -132,8 +132,14 @@ public class EquipmentsData extends BaseData {
 		
 		public void save() {
 			EquipmentsData equipmentsDataDbApis = new EquipmentsData();			
-			this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,this.model_no,this.serial_no,this.cost,
-					this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id == 0){
+				this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,this.model_no,this.serial_no,this.cost,
+						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
+			}else{
+				this.id = equipmentsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.equipment_type,this.model_no,this.serial_no,this.cost,
+						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
+			}
+			
 			
 		}
 	}
@@ -182,16 +188,19 @@ public class EquipmentsData extends BaseData {
 		return EquipmentsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return EquipmentsData.saveEquipmentOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return EquipmentsData.getEquipmentOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -211,7 +220,8 @@ public class EquipmentsData extends BaseData {
 		return equipments;
 	}
 	
-	public List getEquipmentsListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

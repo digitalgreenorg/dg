@@ -151,11 +151,21 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override		
 		public void save() {
 			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();			
-			this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
-					Integer.valueOf(this.person.getId()).toString(),
-					Integer.valueOf(this.expressed_interest_practice.getId()).toString(),this.expressed_interest,
-					Integer.valueOf(this.expressed_adoption_practice.getId()).toString(),this.expressed_adoption,
-					Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
+			if(this.id==0){
+				this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.expressed_interest_practice.getId()).toString(),this.expressed_interest,
+						Integer.valueOf(this.expressed_adoption_practice.getId()).toString(),this.expressed_adoption,
+						Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
+			}else{
+				this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),
+						Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.person.getId()).toString(),
+						Integer.valueOf(this.expressed_interest_practice.getId()).toString(),this.expressed_interest,
+						Integer.valueOf(this.expressed_adoption_practice.getId()).toString(),this.expressed_adoption,
+						Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
+			}
+			
 			}	
 	}
 		
@@ -212,17 +222,21 @@ public class PersonMeetingAttendanceData extends BaseData {
 		return PersonMeetingAttendanceData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
-	
-	protected String getSaveOfflineURL(){
-		return PersonMeetingAttendanceData.savePersonMeetingAttendanceOfflineURL;
+
+	@Override
+	public String getListingOnlineURL(){
+		return PersonMeetingAttendanceData.getPersonMeetingAttendanceOnlineURL;
 	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -255,6 +269,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		return personMeetingAttendances;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

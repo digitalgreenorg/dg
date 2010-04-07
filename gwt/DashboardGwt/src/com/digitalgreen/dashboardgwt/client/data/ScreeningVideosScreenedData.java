@@ -82,10 +82,16 @@ public class ScreeningVideosScreenedData extends BaseData {
 
 		@Override		
 		public void save() {
-			ScreeningVideosScreenedData screeningVideosScreenedsDataDbApis = new ScreeningVideosScreenedData();			
-			this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
-					Integer.valueOf(this.video.getId()).toString());
-			}	
+			ScreeningVideosScreenedData screeningVideosScreenedsDataDbApis = new ScreeningVideosScreenedData();		
+			if(this.id==0){
+				this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.video.getId()).toString());
+			}else{
+				this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.video.getId()).toString());
+			}
+			
+		}	
 	}
 	
 		
@@ -126,18 +132,22 @@ public class ScreeningVideosScreenedData extends BaseData {
 	protected String getTableId(){
 		return ScreeningVideosScreenedData.tableID;
 	}
-		
+	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
-	
-	protected String getSaveOfflineURL(){
-		return ScreeningVideosScreenedData.saveScreeningVideosScreenedOfflineURL;
+
+	@Override
+	public String getListingOnlineURL(){
+		return ScreeningVideosScreenedData.getScreeningVideosScreenedOnlineURL;
 	}
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -161,6 +171,7 @@ public class ScreeningVideosScreenedData extends BaseData {
 		return screeningVideosScreeneds;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

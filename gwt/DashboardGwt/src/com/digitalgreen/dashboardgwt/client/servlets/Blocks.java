@@ -42,7 +42,7 @@ public class Blocks extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							BlocksData blockdata = new BlocksData();
-							List blocks = blockdata.getBlocksOnline(results);
+							List blocks = blockdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Block successfully saved");
 							requestContext.getArgs().put("listing", blocks);
@@ -67,7 +67,7 @@ public class Blocks extends BaseServlet {
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							BlocksData blockdata = new BlocksData();
-							List blocks = blockdata.getBlocksLsitingOffline();
+							List blocks = blockdata.getBlocksListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Block successfully saved");
 							requestContext.getArgs().put("listing", blocks);
@@ -91,7 +91,7 @@ public class Blocks extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								BlocksData blockdata = new BlocksData();
-								List blocks = blockdata.getBlocksOnline(results);
+								List blocks = blockdata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", blocks);
 								getServlet().fillTemplate(new BlocksTemplate(requestContext));
@@ -115,7 +115,7 @@ public class Blocks extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								BlocksData blockdata = new BlocksData();
-								List blocks = blockdata.getBlocksLsitingOffline();
+								List blocks = blockdata.getBlocksListingOffline();
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", blocks);
 								getServlet().fillTemplate(new BlocksTemplate(requestContext));

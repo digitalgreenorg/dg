@@ -36,7 +36,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		
 		protected int id;
 		
-		public Data() {}
+		public Data() {
+			this.id = 0;
+		}
 		
 		// Override this
 		public BaseData.Data clone() {
@@ -52,9 +54,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 		// Override this
 		public void save() {}
-		
-		//Override this
-		public void saveWithID() {}
 
 		// Override this
 		public void save(BaseData.Data withForeignKey) {}
@@ -108,11 +107,12 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return "";
 	}
 	
-	
+	// Override this
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	// Override this
 	protected String[] getFields() {
 		return this.fields;
 	}
@@ -242,53 +242,35 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 		}
 		insertSql += ");";
-		String newId = this.getNextRowId();
-		if(!newId.equals("ERROR")) {
-			ArrayList tempList = new ArrayList();
-			// Better ideas?
-			for(int i=0; i < args.length; i++) {
-				tempList.add(args[i]);
-			}
-			tempList.add(0, newId);
-			String[] tempListString = new String[] {};
-			// Better ideas?
-			for(int i=0; i < tempList.size(); i++) {
-				tempListString[i] = (String)tempList.get(i);
-			}
-			this.insert(insertSql, tempListString);
-			this.updateLastInsertedID(newId);
-			return Integer.parseInt(newId);
-		}
-		return -1;
-	}
-	
-	
-	public int autoInsertWithID(String ...args) {
-		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
-		for(int i=0; i < this.getFields().length; i++) {
-			if(i == this.getFields().length - 1) {
-				insertSql += "?";
-			} else {
-				insertSql += "?, ";
-			}
-		}
-		insertSql += ");";
-
+		
 		ArrayList tempList = new ArrayList();
-		// Better ideas?
 		for(int i=0; i < args.length; i++) {
 			tempList.add(args[i]);
 		}
 		String[] tempListString = new String[] {};
-		// Better ideas?
-		for(int i=0; i < tempList.size(); i++) {
-			tempListString[i] = (String)tempList.get(i);
+		
+		if(this.getFields().length == args.length){
+			for(int i=0; i < tempList.size(); i++) {
+				tempListString[i] = (String)tempList.get(i);
+			}
+			this.insert(insertSql, tempListString);
+			return Integer.parseInt(args[0]);
 		}
-		this.insert(insertSql, tempListString);
-
+		else{
+			String newId = this.getNextRowId();
+			if(!newId.equals("ERROR")) {
+				tempList.add(0, newId);
+				for(int i=0; i < tempList.size(); i++) {
+					tempListString[i] = (String)tempList.get(i);
+				}
+				this.insert(insertSql, tempListString);
+				this.updateLastInsertedID(newId);
+				return Integer.parseInt(newId);
+			}
+		}
+		
 		return -1;
 	}
-	
 	
 	public void update(String updateSql, String ...args) {
 		BaseData.dbOpen();

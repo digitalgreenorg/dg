@@ -104,10 +104,17 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		
 		@Override
 		public void save() {
-			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();			
-			this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(),
-					this.date,this.total_salary, this.pay_date);
+			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();		
+			if(this.id == 0){
+				this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(),
+						this.date,this.total_salary, this.pay_date);
+			}else{
+				this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.animator.getId()).toString(),
+						this.date,this.total_salary, this.pay_date);
+			}
+			
 		}
+		
 	}
 
 	protected static String tableID = "19";
@@ -152,16 +159,19 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		return AnimatorSalaryPerMonthData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return AnimatorSalaryPerMonthData.saveAnimatorSalaryPerMonthOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return AnimatorSalaryPerMonthData.getAnimatorSalaryPerMonthOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -184,7 +194,8 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		return animatorsalarypermonths;
 	}
 	
-	public List getAnimatorSalaryPerMonthListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 }

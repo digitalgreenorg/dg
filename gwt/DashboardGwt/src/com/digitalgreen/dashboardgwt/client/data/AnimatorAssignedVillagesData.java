@@ -95,10 +95,17 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		public void save(){
 
 			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
-			
-			this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(), 
-					Integer.valueOf(this.village.getId()).toString(), this.start_date);
+			if(this.id == 0){
+				this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(), 
+						Integer.valueOf(this.village.getId()).toString(), this.start_date);
+			}else{
+				this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.animator.getId()).toString(), 
+						Integer.valueOf(this.village.getId()).toString(), this.start_date);
+			}
+				
+				
 		}
+		
 	}
 	
 	protected static String tableID = "18";
@@ -149,6 +156,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return this.fields;
 	}
 	
+	@Override
+	public String getListingOnlineURL(){
+		return AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL;
+	}
+
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -171,6 +183,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return animatorAssignedVillages;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

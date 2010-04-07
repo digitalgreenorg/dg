@@ -177,11 +177,19 @@ public class PersonsData extends BaseData {
 		
 		@Override		
 		public void save() {
-			PersonsData personsDataDbApis = new PersonsData();			
-			this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
-					this.phone_no,this.address,this.land_holdings,Integer.valueOf(this.village.getId()).toString(),
-					Integer.valueOf(this.group.getId()).toString(), Integer.valueOf(this.equipmentholder_id).toString(),
-					Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
+			PersonsData personsDataDbApis = new PersonsData();		
+			if(this.id==0){
+				this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
+						this.phone_no,this.address,this.land_holdings,Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.group.getId()).toString(), Integer.valueOf(this.equipmentholder_id).toString(),
+						Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
+			}else{
+				this.id = personsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.person_name,this.father_name,this.age,this.gender,
+						this.phone_no,this.address,this.land_holdings,Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.group.getId()).toString(), Integer.valueOf(this.equipmentholder_id).toString(),
+						Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
+			}
+			
 			}		
 	}
 	
@@ -234,18 +242,21 @@ public class PersonsData extends BaseData {
 		return PersonsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return PersonsData.savePersonOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PersonsData.getPersonOnlineURL;
 	}
-	
+		
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -275,6 +286,7 @@ public class PersonsData extends BaseData {
 		return persons;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

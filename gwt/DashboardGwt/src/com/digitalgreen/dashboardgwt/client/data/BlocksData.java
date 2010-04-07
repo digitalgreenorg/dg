@@ -92,7 +92,12 @@ public class BlocksData extends BaseData {
 		@Override
 		public void save() {
 			BlocksData blocksDataDbApis = new BlocksData();
-			this.id = blocksDataDbApis.autoInsert(this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
+			if(this.id == 0){
+				this.id = blocksDataDbApis.autoInsert(this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
+			}else{
+				this.id = blocksDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -143,8 +148,9 @@ public class BlocksData extends BaseData {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return BlocksData.saveBlockOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return BlocksData.getBlockOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -166,11 +172,12 @@ public class BlocksData extends BaseData {
 		return blocks;
 	}
 	
-	public List getBlocksOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getBlocksLsitingOffline(){
+	public List getBlocksListingOffline(){
 		BaseData.dbOpen();
 		List blocks = new ArrayList();
 		DistrictsData district = new DistrictsData();

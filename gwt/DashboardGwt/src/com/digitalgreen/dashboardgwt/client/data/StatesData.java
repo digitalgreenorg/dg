@@ -93,13 +93,11 @@ public class StatesData extends BaseData {
 		
 		@Override
 		public void save() {
-			StatesData statesDataDbApis = new StatesData();			
-			this.id = statesDataDbApis.autoInsert(this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
-		}
-		
-		public void saveWithID() {
-			StatesData statesDataDbApis = new StatesData();			
-			this.id = statesDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+			StatesData statesDataDbApis = new StatesData();		
+			if(this.id == 0)
+				this.id = statesDataDbApis.autoInsert(this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+			else
+				this.id = statesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
 		}
 	}
 
@@ -141,17 +139,16 @@ public class StatesData extends BaseData {
 		return StatesData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return StatesData.saveStateOfflineURL;
-	}
 	
 	@Override
 	public String getListingOnlineURL(){

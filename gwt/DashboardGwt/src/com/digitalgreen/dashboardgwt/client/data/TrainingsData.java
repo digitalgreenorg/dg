@@ -142,9 +142,16 @@ public class TrainingsData extends BaseData {
 		@Override
 		public void save(){
 			TrainingsData trainingsDataDbApis = new TrainingsData();
-			this.id = trainingsDataDbApis.autoInsert(this.training_purpose, this.training_outcome, this.training_start_date, 
-					this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
-					Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
+			if(this.id==0){
+				this.id = trainingsDataDbApis.autoInsert(this.training_purpose, this.training_outcome, this.training_start_date, 
+						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
+			}else{
+				this.id = trainingsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.training_purpose, this.training_outcome, this.training_start_date, 
+						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
+			}
+			
 		}
 	}
 
@@ -201,9 +208,11 @@ public class TrainingsData extends BaseData {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return TrainingsData.saveTrainingOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return TrainingsData.getTrainingsOnlineURL;
 	}
+
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -232,6 +241,7 @@ public class TrainingsData extends BaseData {
 		return trainings;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

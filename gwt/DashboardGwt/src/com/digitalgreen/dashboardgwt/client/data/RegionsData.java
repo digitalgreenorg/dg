@@ -78,14 +78,12 @@ public class RegionsData extends BaseData {
 		@Override
 		public void save() {
 			RegionsData regionsDataDbApis = new RegionsData();
-			this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
+			if(this.id == 0)
+				this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
+			else
+				this.id = regionsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.region_name, this.start_date);
 		}
-		
-		@Override
-		public void saveWithID() {
-			RegionsData regionsDataDbApis = new RegionsData();
-			this.id = regionsDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.region_name, this.start_date);
-		}
+				
 	}
 
 	protected static String tableID = "1";
@@ -123,16 +121,14 @@ public class RegionsData extends BaseData {
 		return RegionsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
-	}
-	
-	protected static String getSaveOfflineURL(){
-		return RegionsData.saveRegionOfflineURL;
 	}
 	
 	@Override

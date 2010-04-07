@@ -161,10 +161,17 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
-			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();			
-			this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
-					this.equipment_cost,this.transportation_cost,this.miscellaneous_cost,this.total_cost,this.partners_cost,this.digitalgreen_cost,
-					this.community_cost);
+			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();	
+			if(this.id==0){
+				this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
+						this.equipment_cost,this.transportation_cost,this.miscellaneous_cost,this.total_cost,this.partners_cost,this.digitalgreen_cost,
+						this.community_cost);
+			}else{
+				this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
+						this.equipment_cost,this.transportation_cost,this.miscellaneous_cost,this.total_cost,this.partners_cost,this.digitalgreen_cost,
+						this.community_cost);
+			}
+			
 		}
 	}
 	
@@ -216,16 +223,19 @@ public class Data extends BaseData.Data {
 		return MonthlyCostPerVillageData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return MonthlyCostPerVillageData.saveMonthlyCostPerVillageOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return MonthlyCostPerVillageData.getMonthlyCostPerVillageOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -250,6 +260,7 @@ public class Data extends BaseData.Data {
 		return monthlycostpervillages;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

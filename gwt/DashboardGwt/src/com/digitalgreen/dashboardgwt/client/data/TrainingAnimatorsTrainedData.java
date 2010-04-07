@@ -82,8 +82,15 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public void save(){
 			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
-			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(Integer.valueOf(this.training.getId()).toString(), 
-					Integer.valueOf(this.animator.getId()).toString());
+			if(this.id==0){
+				this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(Integer.valueOf(this.training.getId()).toString(), 
+						Integer.valueOf(this.animator.getId()).toString());
+			}
+			else{
+				this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.training.getId()).toString(), 
+						Integer.valueOf(this.animator.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -133,9 +140,10 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	protected String[] getFields() {
 		return this.fields;
 	}
-	
-	protected static String getSaveOfflineURL(){
-		return TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOfflineURL;
+
+	@Override
+	public String getListingOnlineURL(){
+		return TrainingAnimatorsTrainedData.getTrainingAnimatorsTrainedOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -162,6 +170,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		return trainingAnimatorsTrained;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

@@ -34,7 +34,7 @@ public class Videos extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							VideosData videodata = new VideosData();
-							List videos = videodata.getVideosListingOnline(results);
+							List videos = videodata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Video successfully saved");
 							requestContext.getArgs().put("listing", videos);
@@ -83,7 +83,7 @@ public class Videos extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								VideosData videodata = new VideosData();
-								List videos = videodata.getVideosListingOnline(results);
+								List videos = videodata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", videos);
 								getServlet().fillTemplate(new VideosTemplate(requestContext));						

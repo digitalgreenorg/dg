@@ -82,10 +82,16 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 
 		@Override		
 		public void save() {
-			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();			
-			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
-					Integer.valueOf(this.group.getId()).toString());
-			}	
+			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
+			if(this.id==0){
+				this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.group.getId()).toString());
+			}else{
+				this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.screening.getId()).toString(),
+						Integer.valueOf(this.group.getId()).toString());
+			}
+			
+		}	
 	}
 	
 	
@@ -124,18 +130,22 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	protected String getTableId(){
 		return ScreeningFarmerGroupsTargetedData.tableID;
 	}
-		
+	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return ScreeningFarmerGroupsTargetedData.saveScreeningFarmerGroupsTargetedOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return ScreeningFarmerGroupsTargetedData.getScreeningFarmerGroupsTargetedOnlineURL;
 	}
+
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -158,6 +168,7 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		return screeningFarmerGroupsTargeteds;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

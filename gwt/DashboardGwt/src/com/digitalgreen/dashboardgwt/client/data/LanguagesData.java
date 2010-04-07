@@ -61,7 +61,11 @@ public class LanguagesData extends BaseData {
 		@Override
 		public void save() {
 			LanguagesData languagesDataDbApis = new LanguagesData();
-			this.id = languagesDataDbApis.autoInsert(this.language_name);
+			if(this.id==0)
+				this.id = languagesDataDbApis.autoInsert(this.language_name);
+			else
+				this.id = languagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.language_name);
+			
 		}
 	}
 	
@@ -99,18 +103,20 @@ public class LanguagesData extends BaseData {
 		return LanguagesData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return LanguagesData.saveLanguageOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return LanguagesData.getLanguageOnlineURL;
 	}
-	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -126,6 +132,7 @@ public class LanguagesData extends BaseData {
 		return languages;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

@@ -175,9 +175,16 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-			this.id = animatorsDataDbApis.autoInsert(this.name, this.age, this.gender, this.csp_flag, this.camera_operator_flag, 
-					this.facilitator_flag, this.phone_no, this.address, Integer.valueOf(this.partner.getId()).toString(), 
-					Integer.valueOf(this.village.getId()).toString(), Integer.valueOf(this.equipment_holder.getId()).toString());
+			if(this.id == 0){
+				this.id = animatorsDataDbApis.autoInsert(this.name, this.age, this.gender, this.csp_flag, this.camera_operator_flag, 
+						this.facilitator_flag, this.phone_no, this.address, Integer.valueOf(this.partner.getId()).toString(), 
+						Integer.valueOf(this.village.getId()).toString(), Integer.valueOf(this.equipment_holder.getId()).toString());
+			}else{
+				this.id = animatorsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.name, this.age, this.gender, this.csp_flag, this.camera_operator_flag, 
+						this.facilitator_flag, this.phone_no, this.address, Integer.valueOf(this.partner.getId()).toString(), 
+						Integer.valueOf(this.village.getId()).toString(), Integer.valueOf(this.equipment_holder.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -237,9 +244,10 @@ public class AnimatorsData extends BaseData {
 	protected String[] getFields() {
 		return this.fields;
 	}
-	
-	protected static String getSaveOfflineURL(){
-		return AnimatorsData.saveAnimatorOfflineURL;
+
+	@Override
+	public String getListingOnlineURL(){
+		return AnimatorsData.getAnimatorsOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -268,6 +276,7 @@ public class AnimatorsData extends BaseData {
 		return animators;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

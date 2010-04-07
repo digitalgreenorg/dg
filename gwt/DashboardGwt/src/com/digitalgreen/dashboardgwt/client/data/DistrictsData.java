@@ -129,9 +129,16 @@ public class DistrictsData extends BaseData {
 		@Override
 		public void save(){
 			DistrictsData districtsDataDbApis = new DistrictsData();
-			this.id = districtsDataDbApis.autoInsert(this.district_name, this.start_date, 
-					Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
-					this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
+			if(this.id == 0){
+				this.id = districtsDataDbApis.autoInsert(this.district_name, this.start_date, 
+						Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
+						this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
+			}else{
+				this.id = districtsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.district_name, this.start_date, 
+						Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
+						this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -187,8 +194,9 @@ public class DistrictsData extends BaseData {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return DistrictsData.saveDistrictOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return DistrictsData.getDistrictsOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -217,6 +225,7 @@ public class DistrictsData extends BaseData {
 		return districts;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

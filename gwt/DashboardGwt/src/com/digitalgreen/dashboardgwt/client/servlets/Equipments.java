@@ -43,7 +43,7 @@ public class Equipments extends BaseServlet {
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
 						EquipmentsData equipmentsData = new EquipmentsData();
-						List equipments = equipmentsData.getEquipmentsListingOnline(results);
+						List equipments = equipmentsData.getListingOnline(results);
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Equipment successfully saved");
 						requestContext.getArgs().put("listing", equipments);
@@ -89,7 +89,7 @@ public class Equipments extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							EquipmentsData equipmentsData = new EquipmentsData();
-							List equipments = equipmentsData.getEquipmentsListingOnline(results);
+							List equipments = equipmentsData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.getArgs().put("listing", equipments);
 							getServlet().redirectTo(new Equipments(requestContext));						

@@ -79,9 +79,16 @@ public class VideoFarmersShownData extends BaseData {
 	
 		@Override		
 		public void save() {
-			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();			
-			this.id = videoFarmersShownsDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
-					Integer.valueOf(this.person.getId()).toString());
+			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();		
+			if(this.id==0){
+				this.id = videoFarmersShownsDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
+						Integer.valueOf(this.person.getId()).toString());
+			}
+			else{
+				this.id = videoFarmersShownsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.video.getId()).toString(),
+						Integer.valueOf(this.person.getId()).toString());
+			}
+			
 			}	
 	}
 	
@@ -123,18 +130,22 @@ public class VideoFarmersShownData extends BaseData {
 	protected String getTableId(){
 		return VideoFarmersShownData.tableID;
 	}
-		
+	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return VideoFarmersShownData.saveVideoFarmerOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return VideoFarmersShownData.getVideoFarmerOnlineURL;
 	}
+
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -157,6 +168,7 @@ public class VideoFarmersShownData extends BaseData {
 		return videoFarmersShowns;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

@@ -41,7 +41,7 @@ public class DevelopmentManagers extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-							List developmentmanagers = developmentmanagerdata.getDevelopmentManagersListingOnline(results);
+							List developmentmanagers = developmentmanagerdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("DevelopmentManager successfully saved");
 							requestContext.getArgs().put("listing", developmentmanagers);
@@ -90,7 +90,7 @@ public class DevelopmentManagers extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-								List developmentmanagers = developmentmanagerdata.getDevelopmentManagersListingOnline(results);
+								List developmentmanagers = developmentmanagerdata.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", developmentmanagers);
 								getServlet().fillTemplate(new DevelopmentManagersTemplate(requestContext));

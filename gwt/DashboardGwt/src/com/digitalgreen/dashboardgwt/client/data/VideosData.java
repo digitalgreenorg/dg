@@ -215,22 +215,29 @@ public class VideosData extends BaseData {
 			//Calendar cal = Calendar.getInstance();
 		    //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
-		    //this.last_modified = cal.YEAR + "-" + cal.MONTH + "-" +  cal.DAY_OF_MONTH + " " + cal.HOUR_OF_DAY + ":" + cal.MINUTE + ":" + cal.SECOND;
 			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 		    Window.alert("Save =" + this.last_modified);
-		    //this.last_modified =  sdf.format(cal.getTime());
-			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			//Date date = new Date();
-			//this.last_modified = dateFormat.format(date);
-			VideosData videosDataDbApis = new VideosData();			
-			this.id = videosDataDbApis.autoInsert(this.title, Integer.valueOf(this.video_type).toString(), this.duration, 
-					Integer.valueOf(this.language.getId()).toString(), this.summary, this.picture_quality,this.audio_quality, 
-					this.editing_quality, this.edit_start_date, this.edit_finish_date,this.thematic_quality, this.video_production_start_date, 
-					this.video_production_end_date, Integer.valueOf(this.storybase).toString(), this.storyboard_filename, this.raw_filename, 
-					this.movie_maker_project_filename, this.final_edited_filename, Integer.valueOf(this.village.getId()).toString(),
-					Integer.valueOf(this.facilitator.getId()).toString(), Integer.valueOf(this.cameraoperator.getId()).toString(),
-					Integer.valueOf(this.reviewer.getId()).toString(), this.approval_date, Integer.valueOf(this.supplementary_video_produced.getId()).toString(),
-					Integer.valueOf(this.video_suitable_for).toString(), this.remarks, this.actors, this.last_modified);
+			VideosData videosDataDbApis = new VideosData();		
+			if(this.id==0){
+				this.id = videosDataDbApis.autoInsert(this.title, Integer.valueOf(this.video_type).toString(), this.duration, 
+						Integer.valueOf(this.language.getId()).toString(), this.summary, this.picture_quality,this.audio_quality, 
+						this.editing_quality, this.edit_start_date, this.edit_finish_date,this.thematic_quality, this.video_production_start_date, 
+						this.video_production_end_date, Integer.valueOf(this.storybase).toString(), this.storyboard_filename, this.raw_filename, 
+						this.movie_maker_project_filename, this.final_edited_filename, Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.facilitator.getId()).toString(), Integer.valueOf(this.cameraoperator.getId()).toString(),
+						Integer.valueOf(this.reviewer.getId()).toString(), this.approval_date, Integer.valueOf(this.supplementary_video_produced.getId()).toString(),
+						Integer.valueOf(this.video_suitable_for).toString(), this.remarks, this.actors, this.last_modified);
+			}else{
+				this.id = videosDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.title, Integer.valueOf(this.video_type).toString(), this.duration, 
+						Integer.valueOf(this.language.getId()).toString(), this.summary, this.picture_quality,this.audio_quality, 
+						this.editing_quality, this.edit_start_date, this.edit_finish_date,this.thematic_quality, this.video_production_start_date, 
+						this.video_production_end_date, Integer.valueOf(this.storybase).toString(), this.storyboard_filename, this.raw_filename, 
+						this.movie_maker_project_filename, this.final_edited_filename, Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.facilitator.getId()).toString(), Integer.valueOf(this.cameraoperator.getId()).toString(),
+						Integer.valueOf(this.reviewer.getId()).toString(), this.approval_date, Integer.valueOf(this.supplementary_video_produced.getId()).toString(),
+						Integer.valueOf(this.video_suitable_for).toString(), this.remarks, this.actors, this.last_modified);
+			}
+			
 		}
 	}
 	
@@ -308,17 +315,21 @@ public class VideosData extends BaseData {
 		return VideosData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return VideosData.saveVideoOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return VideosData.getVideoOnlineURL;
 	}
+
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -336,7 +347,8 @@ public class VideosData extends BaseData {
 		return videos;
 	}
 	
-	public List getVideosListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	

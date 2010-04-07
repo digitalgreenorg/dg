@@ -100,9 +100,16 @@ public class PartnersData extends BaseData {
 		@Override
 		public void save() {
 			PartnersData partnersDataDbApis = new PartnersData();
-			this.id = partnersDataDbApis.autoInsert(this.partner_name, this.date_of_association,
-					this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-					Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id==0){
+				this.id = partnersDataDbApis.autoInsert(this.partner_name, this.date_of_association,
+						this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
+			}else{
+				this.id = partnersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.partner_name, this.date_of_association,
+						this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
+			}
+			
 		}
 	}
 	
@@ -151,18 +158,21 @@ public class PartnersData extends BaseData {
 		return PartnersData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return PartnersData.savePartnerOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PartnersData.getPartnerOnlineURL;
 	}
-	
+		
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -181,6 +191,7 @@ public class PartnersData extends BaseData {
 		return partners;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

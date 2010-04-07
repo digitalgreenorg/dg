@@ -92,7 +92,12 @@ public class PracticesData extends BaseData {
 		@Override
 		public void save(){
 			PracticesData practicesDataDbApis = new PracticesData();
-			this.id = practicesDataDbApis.autoInsert(this.practice_name, this.seasonality, this.summary);
+			if(this.id==0){
+				this.id = practicesDataDbApis.autoInsert(this.practice_name, this.seasonality, this.summary);
+			}else{
+				this.id = practicesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.practice_name, this.seasonality, this.summary);
+			}
+			
 		}
 	}
 	
@@ -143,8 +148,9 @@ public class PracticesData extends BaseData {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return PracticesData.savePracticeOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PracticesData.getPracticeOnlineURL;
 	}
 	
 	
@@ -162,6 +168,7 @@ public class PracticesData extends BaseData {
 		return practices;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));
 	}

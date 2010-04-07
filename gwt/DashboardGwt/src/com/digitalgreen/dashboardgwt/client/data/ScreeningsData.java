@@ -175,11 +175,21 @@ public class ScreeningsData extends BaseData {
 		public void save() {
 			
 			ScreeningsData screeningsDataDbApis = new ScreeningsData();			
-			this.id = screeningsDataDbApis.autoInsert(this.date, this.start_time,this.end_time, this.location,this.target_person_attendance, 
-					this.target_audience_interest, this.target_adoptions,Integer.valueOf(this.village.getId()).toString(),
-					Integer.valueOf(this.fieldofficer.getId()).toString(), Integer.valueOf(this.animator.getId()).toString(),
-					Integer.valueOf(this.farmer_groups_targeted.getId()).toString(),Integer.valueOf(this.videoes_screened.getId()).toString(),
-					Integer.valueOf(this.farmers_attendance.getId()).toString());
+			if(this.id==0){
+				this.id = screeningsDataDbApis.autoInsert(this.date, this.start_time,this.end_time, this.location,this.target_person_attendance, 
+						this.target_audience_interest, this.target_adoptions,Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.fieldofficer.getId()).toString(), Integer.valueOf(this.animator.getId()).toString(),
+						Integer.valueOf(this.farmer_groups_targeted.getId()).toString(),Integer.valueOf(this.videoes_screened.getId()).toString(),
+						Integer.valueOf(this.farmers_attendance.getId()).toString());
+			}
+			else{
+				this.id = screeningsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.date, this.start_time,this.end_time, this.location,this.target_person_attendance, 
+						this.target_audience_interest, this.target_adoptions,Integer.valueOf(this.village.getId()).toString(),
+						Integer.valueOf(this.fieldofficer.getId()).toString(), Integer.valueOf(this.animator.getId()).toString(),
+						Integer.valueOf(this.farmer_groups_targeted.getId()).toString(),Integer.valueOf(this.videoes_screened.getId()).toString(),
+						Integer.valueOf(this.farmers_attendance.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -236,16 +246,19 @@ public class ScreeningsData extends BaseData {
 		return ScreeningsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected static String getSaveOfflineURL(){
-		return ScreeningsData.saveScreeningOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return ScreeningsData.getScreeningOnlineURL;
 	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -270,7 +283,8 @@ public class ScreeningsData extends BaseData {
 		return screenings;
 	}
 	
-	public List getScreeningsListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	public Object postPageData() {

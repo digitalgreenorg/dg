@@ -79,9 +79,15 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	
 		@Override		
 		public void save() {
-			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();			
-			this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
-					Integer.valueOf(this.practice.getId()).toString());
+			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();
+			if(this.id==0){
+				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
+						Integer.valueOf(this.practice.getId()).toString());
+			}else{
+				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.video.getId()).toString(),
+						Integer.valueOf(this.practice.getId()).toString());
+			}
+			
 			}	
 	}
 	
@@ -124,18 +130,22 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	protected String getTableId(){
 		return VideoRelatedAgriculturalPracticesData.tableID;
 	}
-		
+
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return VideoRelatedAgriculturalPracticesData.saveVideoRelatedAgriculturalPracticeOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return VideoRelatedAgriculturalPracticesData.getVideoRelatedAgriculturalPracticeOnlineURL;
 	}
+
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -158,6 +168,7 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		return videoFarmersShowns;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

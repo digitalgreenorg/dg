@@ -35,8 +35,6 @@ public class FormQueueData extends BaseData {
 		this.insert(saveQueryString, args);
 	}
 	
-	
-	
 	public Object postPageData() {	
 		return false;
 	}

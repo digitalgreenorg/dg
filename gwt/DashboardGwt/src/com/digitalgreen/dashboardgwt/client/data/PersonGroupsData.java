@@ -83,11 +83,21 @@ public class PersonGroupsData extends BaseData {
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-			this.id = animatorsDataDbApis.autoInsert(this.group_name, 
-					this.days, 
-					this.timings,
-					this.time_updated, 
-					Integer.valueOf(this.village.getId()).toString());
+			if(this.id==0){
+				this.id = animatorsDataDbApis.autoInsert(this.group_name, 
+						this.days, 
+						this.timings,
+						this.time_updated, 
+						Integer.valueOf(this.village.getId()).toString());
+			}else{
+				this.id = animatorsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),
+						this.group_name, 
+						this.days, 
+						this.timings,
+						this.time_updated, 
+						Integer.valueOf(this.village.getId()).toString());
+			}
+			
 		}
 	}
 	
@@ -130,17 +140,21 @@ public class PersonGroupsData extends BaseData {
 		return AnimatorsData.tableID;
 	}
 	
+	@Override
 	protected String getTableName() {
 		return this.table_name;
 	}
 	
+	@Override
 	protected String[] getFields() {
 		return this.fields;
 	}
 	
-	protected String getSaveOfflineURL(){
-		return PersonGroupsData.savePersonGroupOfflineURL;
+	@Override
+	public String getListingOnlineURL(){
+		return PersonGroupsData.getPersonGroupOnlineURL;
 	}
+		
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -164,6 +178,7 @@ public class PersonGroupsData extends BaseData {
 		return personGroups;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
