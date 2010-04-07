@@ -86,6 +86,31 @@ class ScreeningForm(forms.ModelForm):
 	class Meta:
 		model = Screening
 		exclude = ('farmers_attendance',)
+		
 class TrainingForm(forms.ModelForm):
 	class Meta:
 		model = Training
+
+class MonthlyCostPerVillageForm(forms.ModelForm):
+	class Meta:
+		model = MonthlyCostPerVillage
+		
+class PersonRelationsForm(forms.ModelForm):
+	class Meta:
+		model = PersonRelations
+
+class AnimatorSalaryPerMonthForm(forms.ModelForm):
+	class Meta:
+		model = AnimatorSalaryPerMonth
+		
+class PersonMeetingAttendanceForm(forms.ModelForm):
+	class Meta:
+		model = PersonMeetingAttendance
+		
+class EquipmentHolderForm(forms.ModelForm):
+	class Meta:
+		model = EquipmentHolder
+		
+class ReviewerForm(forms.ModelForm):
+	class Meta:
+		model = Reviewer

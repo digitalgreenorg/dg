@@ -825,7 +825,7 @@ def save_animatorassignedvillage_offline(request):
 #save_online function, get_online and save_offline functions of persongroups with regionalization feature
 
 def save_persongroup_online(request):
-	PersonFormSet = inlineformset_factory(PersonGroups, Person,extra=3, exclude=('equipmentholder','relations','adopted_agricultural_practices',))
+	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=3)
 	if request.method == 'POST':
 		form = PersonGroupsForm(request.POST)
 		formset = PersonFormSet(request.POST, request.FILES)
@@ -893,6 +893,7 @@ def save_person_online(request):
 		villages = get_user_villages(request)
 		formset = PersonAdoptPracticeFormSet()
 		form1.fields['village'].queryset = villages.order_by('village_name')
+		form1.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
 		for form in formset.forms:
 			f = f + list(form)
 		return HttpResponse(f)
@@ -940,6 +941,10 @@ def save_screening_online(request):
 		villages = get_user_villages(request)
 		formset = PersonMeetingAttendanceInlineFormSet()
 		form1.fields['village'].queryset = villages.order_by('village_name')
+		form1.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
+		form1.fields['animator'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
+		form1.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
+		form1.fields['videoes_screened'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
 		for form in formset.forms:
 			f = f + list(form)
 		return HttpResponse(f)
@@ -979,6 +984,7 @@ def save_training_online(request):
     	form = TrainingForm()
     	villages = get_user_villages(request);
         form.fields['village'].queryset = villages.order_by('village_name')
+        form.fields['animators_trained'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
         return HttpResponse(form);            
         
 def get_trainings_online(request):
@@ -987,7 +993,7 @@ def get_trainings_online(request):
     else:
     	villages = get_user_villages(request);
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", trainings, relations=('village',))
+        json_subcat = serializers.serialize("json", trainings, relations=('village','animator'))
         return HttpResponse(json_subcat, mimetype="application/javascript")
        
 def save_training_offline(request):
@@ -1000,7 +1006,274 @@ def save_training_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0") 
+
+#functions for MonthlyCostPerVillage with user specific feature.
+#save_online function, get_online and save_offline functions of MonthlyCostPerVillage with regionalization feature
 		
+def save_monthlycostpervillage_online(request):
+    if request.method == 'POST':
+        form = MonthlyCostPerVillageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getmonthlycostpervillagesonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = MonthlyCostPerVillageForm()
+    	villages = get_user_villages(request);
+        form.fields['village'].queryset = villages.order_by('village_name')
+        return HttpResponse(form);            
+        
+def get_monthlycostpervillages_online(request):
+    if request.method == 'POST':
+        return redirect('monthlycostpervillage')
+    else:
+    	villages = get_user_villages(request);
+        monthlycostpervillages = MonthlyCostPerVillage.objects.filter(village__in = villages).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", monthlycostpervillages, relations=('village',))
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_monthlycostpervillage_offline(request):
+	if request.method == 'POST':
+		form = MonthlyCostPerVillageForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+
+#functions for PersonRelations with user specific feature.
+#save_online function, get_online and save_offline functions of PersonRelations without regionalization feature
+
+def save_personrelation_online(request):
+	if request.method == 'POST':
+		form = PersonRelationsForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getpersonrelationsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = PersonRelationsForm()
+		villages = get_user_villages(request);
+		form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+		form.fields['relative'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+		return HttpResponse(form)
+	
+	
+def get_personrelations_online(request):
+	if request.method == 'POST':
+		return redirect('personrelations')
+	else:
+		personrelations = PersonRelations.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", personrelations,  relations=('person',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_personrelation_offline(request):
+	if request.method == 'POST':
+		form = PersonRelationsForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+#functions for AnimatorSalaryPerMonth with user specific feature.
+#save_online function, get_online and save_offline functions of AnimatorSalaryPerMonth with regionalization feature
+
+def save_animatorsalarypermonth_online(request):
+	if request.method == 'POST':
+		form = AnimatorSalaryPerMonthForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getanimatorsalarypermonthsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = AnimatorSalaryPerMonthForm()
+		villages = get_user_villages(request);
+		form.fields['animator'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
+		return HttpResponse(form)
+	
+	
+def get_animatorsalarypermonths_online(request):
+	if request.method == 'POST':
+		return redirect('animatorsalarypermonths')
+	else:
+		animatorsalarypermonths = AnimatorSalaryPerMonth.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", animatorsalarypermonths,  relations=('animator',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_animatorsalarypermonth_offline(request):
+	if request.method == 'POST':
+		form = AnimatorSalaryPerMonthForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+#functions for PersonMeetingAttendance with user specific feature.
+#save_online function, get_online and save_offline functions of PersonMeetingAttendance with regionalization feature
+
+def save_personmeetingattendance_online(request):
+	if request.method == 'POST':
+		form = PersonMeetingAttendanceForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getpersonmeetingattendancesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = PersonMeetingAttendanceForm()
+		villages = get_user_villages(request);
+		form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
+		form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+		return HttpResponse(form)
+	
+	
+def get_personmeetingattendances_online(request):
+	if request.method == 'POST':
+		return redirect('personmeetingattendances')
+	else:
+		personmeetingattendances = PersonMeetingAttendance.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", personmeetingattendances,  relations=('person','screening',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_personmeetingattendance_offline(request):
+	if request.method == 'POST':
+		form = PersonMeetingAttendanceForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+		
+#functions for PersonAdoptPractice with user specific feature.
+#save_online function, get_online and save_offline functions of PersonAdoptPractice with regionalization feature
+
+def save_personadoptpractice_online(request):
+	if request.method == 'POST':
+		form = PersonAdoptPracticeForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getpersonadoptpracticesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = PersonAdoptPracticeForm()
+		villages = get_user_villages(request);
+		form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+		return HttpResponse(form)
+	
+	
+def get_personadoptpractices_online(request):
+	if request.method == 'POST':
+		return redirect('personadoptpractices')
+	else:
+		personadoptpractices = PersonAdoptPractice.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", personadoptpractices,  relations=('person',))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_personadoptpractice_offline(request):
+	if request.method == 'POST':
+		form = PersonAdoptPracticeForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+#functions for EquipmentHolder with user specific feature.
+#save_online function, get_online and save_offline functions of EquipmentHolder with regionalization feature
+
+def save_equipmentholder_online(request):
+	if request.method == 'POST':
+		form = EquipmentHolderForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getequipmentholdersonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = EquipmentHolderForm()
+		return HttpResponse(form)
+	
+def get_equipmentholders_online(request):
+	if request.method == 'POST':
+		return redirect('equipmentholders')
+	else:
+		equipmentholders = EquipmentHolder.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", equipmentholders)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_equipmentholder_offline(request):
+	if request.method == 'POST':
+		form = EquipmentHolderForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+
+#functions for Reviewer with user specific feature.
+#save_online function, get_online and save_offline functions of Reviewer with regionalization feature
+
+def save_reviewer_online(request):
+	if request.method == 'POST':
+		form = ReviewerForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getreviewersonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = ReviewerForm()
+		return HttpResponse(form)
+	
+def get_reviewers_online(request):
+	if request.method == 'POST':
+		return redirect('reviewers')
+	else:
+		reviewers = Reviewer.objects.order_by("-id")
+		json_subcat = serializers.serialize("json", reviewers)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_reviewer_offline(request):
+	if request.method == 'POST':
+		form = ReviewerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+		
+
 # Old functions, Will be deprecated once the online / offline functionality is created
 
 
