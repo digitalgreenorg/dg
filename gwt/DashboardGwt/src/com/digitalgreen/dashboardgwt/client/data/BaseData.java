@@ -1,9 +1,13 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData.Data;
+import com.digitalgreen.dashboardgwt.client.data.RegionsData.Type;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -16,6 +20,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
@@ -47,6 +52,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 		// Override this
 		public void save() {}
+		
+		//Override this
+		public void saveWithID() {}
 
 		// Override this
 		public void save(BaseData.Data withForeignKey) {}
@@ -171,6 +179,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.request(RequestBuilder.POST, url, postData);
 	}
 	
+	public void post(String url) {
+		this.request(RequestBuilder.POST, url, null);
+	}
+	
 	public static boolean dbOpen() {
 		try{
 			if(BaseData.db == null) {
@@ -249,6 +261,34 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 		return -1;
 	}
+	
+	
+	public int autoInsertWithID(String ...args) {
+		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
+		for(int i=0; i < this.getFields().length; i++) {
+			if(i == this.getFields().length - 1) {
+				insertSql += "?";
+			} else {
+				insertSql += "?, ";
+			}
+		}
+		insertSql += ");";
+
+		ArrayList tempList = new ArrayList();
+		// Better ideas?
+		for(int i=0; i < args.length; i++) {
+			tempList.add(args[i]);
+		}
+		String[] tempListString = new String[] {};
+		// Better ideas?
+		for(int i=0; i < tempList.size(); i++) {
+			tempListString[i] = (String)tempList.get(i);
+		}
+		this.insert(insertSql, tempListString);
+
+		return -1;
+	}
+	
 	
 	public void update(String updateSql, String ...args) {
 		BaseData.dbOpen();
@@ -335,6 +375,16 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 	}
 	
+	//Override this
+	public List getListingOnline(String json){
+		return null;		
+	}
+	
+	//Override this
+	public  String getListingOnlineURL(){
+		return null;
+	}
+
 	// Basically a wrapper around a core data function to execute
 	// the offline callback.  The online callbacks get executed in request().
 	public void apply(Object methodResponse) {
@@ -343,4 +393,5 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 		//this.dataOnlineCallbacks.onlineSuccessCallback("1");
 	}
+
 }

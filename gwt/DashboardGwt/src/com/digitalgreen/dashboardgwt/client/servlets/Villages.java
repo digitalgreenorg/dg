@@ -7,10 +7,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
-import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.VillagesTemplate;
+import com.google.gwt.user.client.Window;
 
 public class Villages extends BaseServlet {
 	
@@ -35,7 +34,7 @@ public class Villages extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
 							VillagesData villageData = new VillagesData();
-							List villages = villageData.getVillagesListingOnline(results);
+							List villages = villageData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessageString("Village successfully saved");
 							requestContext.getArgs().put("listing", villages);
@@ -58,6 +57,7 @@ public class Villages extends BaseServlet {
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
+							Window.alert("inside offline callback ");
 							VillagesData villageData = new VillagesData();
 							List villages = villageData.getVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();
@@ -83,10 +83,11 @@ public class Villages extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(results != null) {
 								VillagesData villageData = new VillagesData();
-								List villages = villageData.getVillagesListingOnline(results);
+								List villages = villageData.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", villages);
-								getServlet().redirectTo(new Villages(requestContext));						
+								getServlet().fillTemplate(new VillagesTemplate(requestContext));
+								//getServlet().redirectTo(new Villages(requestContext));						
 							} else {
 								/*Error in saving the data*/			
 							}
@@ -117,7 +118,46 @@ public class Villages extends BaseServlet {
 							}	
 						}
 					});
-					villageData.apply(villageData.getPageData());
+					villageData.apply(villageData.getListPageData());
+				}
+				else if(queryArg == "add"){
+					VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String addData) {
+							if(addData != null) {
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "add");
+								requestContext.getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new VillagesTemplate(requestContext));
+							} else {
+								/*Error in saving the data*/			
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessageString("Problem in the connection with the server.");
+							else
+								requestContext.setMessageString("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Villages(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object addData) {
+							if((String)addData != null) {
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "add");
+								requestContext.getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new VillagesTemplate(requestContext));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessageString("Local Database error");
+								getServlet().redirectTo(new Villages(requestContext));				
+							}	
+						}
+					});
+					villageData.apply(villageData.getAddPageData());	
 				}
 				else {
 					this.fillTemplate(new VillagesTemplate(this.requestContext));

@@ -12,6 +12,7 @@ import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
+import com.google.gwt.user.client.Window;
 
 public class VillagesTemplate extends BaseTemplate {
 	public VillagesTemplate(RequestContext requestContext) {
@@ -63,21 +64,22 @@ public class VillagesTemplate extends BaseTemplate {
 					else
 						style = "row1";
 					village = (VillagesData.Data)villages.get(row);
-					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ village.getId() + "' name='_selected_action' /></td>" +
-							"<th><a href='/admin/dashboard/region/"+ village.getId() +"/'>" + village.getVillageName() +"</a></th>" +
-							"<th><a href='/admin/dashboard/block/"+ village.getBlock().getId() +"/'>" + village.getBlock().getBlockName() +"</a></th>" +
-							"</tr>";
+					tableRows += "<tr class='" +style+ "'>" +
+					  "<td><input type='checkbox' class='action-select' value='"+ village.getId() + "' name='_selected_action' /></td>" +
+						"<th><a href='/admin/dashboard/village/"+ village.getId() +"/'>" + village.getVillageName()+"</a></th>" +
+						"<td>"+ village.getBlock().getBlockName() + "</td>" + 
+					"</tr>";
 				}
 				villagesListFormHtml = villagesListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
 	}
 	
-	final private String addDataToElementID[] = null;
+	// A list of Element IDs that need to receive the data before the template is loaded.
+	final private String addDataToElementID[] = {"id_block", "id_home_village-0-partner", "id_home_village-1-partner", 
+			"id_home_village-2-partner", "id_home_village-3-partner", "id_home_village-4-partner"};
 	
-	private String villagesListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
-								"<script type='text/javascript' src='/media/js/calendar.js'></script>" +
-								"<div class='actions'>" +
+	private String villagesListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected villages</option>" +
@@ -105,9 +107,9 @@ public class VillagesTemplate extends BaseTemplate {
 								"</thead>" +
 								"<tbody>";
 	
-	final static private String villagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String villagesListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
-									"<h1>Select screening to change</h1>" +
+									"<h1>Select Village to change</h1>" +
 									"<div id='content-main'>" +
 										"<ul class='object-tools'>" +
 											"<li id='add-link'>" +                // Insert add link here
@@ -122,7 +124,7 @@ public class VillagesTemplate extends BaseTemplate {
 									"</div>" +
 								"</div>";
 	
-	final static private String villagesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String villagesAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add village</h1>" +
 										"<div id='content-main'>" +
@@ -167,11 +169,6 @@ public class VillagesTemplate extends BaseTemplate {
 														"<div class='form-row start_date  '>" +
 															"<div>" +
 																"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-																"<span>&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-																"</span>" +
 															"</div>" +
 														"</div>" +
 													"</fieldset>" +
@@ -603,7 +600,7 @@ public class VillagesTemplate extends BaseTemplate {
 													"</div>" +
 												"</div>" +	
 												"<div class='submit-row' >" +
-													"<input value='Save' class='default' name='_save' />" +
+													"<input id='save' value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_village_name').focus();</script>" +
 												"<script type='text/javascript'>" +

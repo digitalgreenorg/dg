@@ -223,16 +223,13 @@ public class DistrictsData extends BaseData {
 	
 	// for listing districts for district page
 	public List getDistrictsListingsOffline() {
-		//Window.alert("in listing offline");
 		BaseData.dbOpen();
 		List districts = new ArrayList();
 		StatesData state = new StatesData();
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		PartnersData partner = new PartnersData();
 		this.select(listDistricts);
-		//Window.alert("in listing b4 offline if...");
 		if(this.getResultSet().isValidRow()){
-			//Window.alert("in listing offline if...");
 			try{
 				
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {

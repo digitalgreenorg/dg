@@ -18,6 +18,11 @@ public class VillagesData extends BaseData {
 		protected Type() {}
 		public final native String getVillageName() /*-{ return this.fields.village_name; }-*/;
 		public final native BlocksData.Type getBlock() /*-{ return this.fields.block }-*/;
+		public final native int getNoOfHouseholds() /*-{ return this.fields.no_of_households }-*/;
+		public final native int getPopulation() /*-{ return this.fields.population }-*/;
+		public final native int getRoadConnectivity() /*-{ return this.fields.road_connectivity }-*/;
+		public final native String getControl() /*-{ return this.fields.control }-*/;
+		public final native String getStartDate() /*-{ return this.fields.start_date}-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -92,17 +97,17 @@ public class VillagesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, Object val) {
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = Integer.parseInt((String)val);
 			} else if(key.equals("village_name")) {
 				this.village_name = (String)val;
 			} else if(key.equals("block_id")) {
 				BlocksData block = new BlocksData();
 				this.block = block.getNewData();
-				this.block.id = ((Integer)val).intValue();
+				this.block.id = Integer.parseInt((String)val);;
 			} else if(key.equals("no_of_households")) {
-				this.no_of_households = ((Integer)val).intValue();
+				this.no_of_households = Integer.parseInt((String)val);
 			} else if(key.equals("population")) {
-				this.population = ((Integer)val).intValue();
+				this.population = Integer.parseInt((String)val);
 			} else if(key.equals("road_connectivity")) {
 				this.road_connectivity = (String)val;
 			} else if(key.equals("control")) {
@@ -115,7 +120,12 @@ public class VillagesData extends BaseData {
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();
-			this.id = villagesDataDbApis.autoInsert(this.village_name, this.start_date);
+			this.id = villagesDataDbApis.autoInsert(this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+		}
+		
+		public void saveWithID() {
+			VillagesData villagesDataDbApis = new VillagesData();
+			this.id = villagesDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
 		}
 	}
 
@@ -133,7 +143,7 @@ public class VillagesData extends BaseData {
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
 	
 	protected static String selectVillages = "SELECT id, village_name FROM village ORDER BY(village_name)";
-	protected static String listVillages = "SELECT * FROM village JOIN block ON village.block_id = block.id ORDER BY(-village.id)";
+	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name FROM village JOIN block ON village.block_id = block.id ORDER BY(-village.id)";
 	protected static String saveVillageOnlineURL = "/dashboard/savevillageonline/";
 	protected static String getVillageOnlineURL = "/dashboard/getvillagesonline/";
 	protected static String saveVillageOfflineURL = "/dashboard/savevillageoffline/";
@@ -167,6 +177,16 @@ public class VillagesData extends BaseData {
 		return this.table_name;
 	}
 	
+	protected String[] getFields() {
+		return this.fields;
+	}
+	
+		
+	@Override
+	public String getListingOnlineURL(){
+		return StatesData.getStateOnlineURL;
+	}
+	
 	protected static String getSaveOfflineURL(){
 		return VillagesData.saveVillageOfflineURL;
 	}
@@ -179,16 +199,17 @@ public class VillagesData extends BaseData {
 		List villages = new ArrayList();
 		BlocksData block = new BlocksData();
 		for(int i = 0; i < villageObjects.length(); i++){
-			BlocksData.Data b = block. new Data(Integer.parseInt(villageObjects.get(i).getBlock().getPk()), 
+			BlocksData.Data b = block.new Data(Integer.parseInt(villageObjects.get(i).getBlock().getPk()), 
 					villageObjects.get(i).getBlock().getBlockName()); 
-			Data village = new Data(Integer.parseInt(villageObjects.get(i).getPk()), 
+			VillagesData.Data village = new Data(Integer.parseInt(villageObjects.get(i).getPk()), 
 					villageObjects.get(i).getVillageName(), b);
-			villages.add(villages);
+			villages.add(village);
 		}
 		return villages;
 	}
 
-	public List getVillagesListingOnline(String json){
+	@Override
+	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
 
@@ -200,11 +221,8 @@ public class VillagesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					BlocksData.Data b = block.new Data(this.getResultSet().getFieldAsInt(8), this.getResultSet().getFieldAsString(9));
-					Data village = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
-							b, this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsInt(4), 
-							this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5),
-							this.getResultSet().getFieldAsString(6));
+					BlocksData.Data b = block.new Data(this.getResultSet().getFieldAsInt(2), this.getResultSet().getFieldAsString(3));
+					Data village = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), b);
 					villages.add(village);
 				}				
 			} catch (DatabaseException e) {
@@ -217,16 +235,6 @@ public class VillagesData extends BaseData {
 		return villages;
 	}
 	
-	public Object getListPageData(){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL);
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-
 	public List getAllVillagesOffline(){
 		BaseData.dbOpen();
 		List villages = new ArrayList();
@@ -257,23 +265,45 @@ public class VillagesData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
 
 	public String retrieveDataAndConvertResultIntoHtml(){
 		BlocksData blockData = new BlocksData();
 		List blocks = blockData.getAllBlocksOffline();
 		BlocksData.Data block;
-		String html = "<select name=\"region\" id=\"id_region\">";
+		String html = "<select name=\"block\" id=\"id_block\">";
 		for(int i=0; i< blocks.size(); i++){
 			block = (BlocksData.Data)blocks.get(i);
 			html = html + "<option value = \"" + block.getId() +"\">" + block.getBlockName() + "</option>";
 		}
 		html = html + "</select>";
+		
+		PartnersData partnerData = new PartnersData();
+		List partners = partnerData.getAllPartnersOffline();
+		PartnersData.Data partner;
+		for(int inline = 0; inline < 5; inline++){
+			html += "<select name=\"home_village-" + inline + "-partner\" id=\"id_home_village-" + inline +"-partner\">";
+			for(int i=0; i< partners.size(); i++){
+				partner = (PartnersData.Data)partners.get(i);
+				html = html + "<option value = \"" + partner.getId() +"\">" + partner.getPartnerName() + "</option>";
+			}
+			html = html + "</select>";
+		}
 		return html;
 	}
 	
-	public Object getPageData(){
+	public Object getAddPageData(){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL);
+			this.get(RequestContext.SERVER_HOST + this.saveVillageOnlineURL);
 		}
 		else{
 			return retrieveDataAndConvertResultIntoHtml();

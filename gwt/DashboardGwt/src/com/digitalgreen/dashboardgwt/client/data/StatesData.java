@@ -77,7 +77,7 @@ public class StatesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, Object val) {		
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = Integer.parseInt((String)val);
 			} else if(key.equals("state_name")) {
 				this.state_name = (String)val;
 			} else if(key.equals("region")) {
@@ -95,6 +95,11 @@ public class StatesData extends BaseData {
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();			
 			this.id = statesDataDbApis.autoInsert(this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+		}
+		
+		public void saveWithID() {
+			StatesData statesDataDbApis = new StatesData();			
+			this.id = statesDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
 		}
 	}
 
@@ -148,6 +153,12 @@ public class StatesData extends BaseData {
 		return StatesData.saveStateOfflineURL;
 	}
 	
+	@Override
+	public String getListingOnlineURL(){
+		return StatesData.getStateOnlineURL;
+	}
+
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -164,6 +175,7 @@ public class StatesData extends BaseData {
 		return states;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}

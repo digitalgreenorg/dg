@@ -80,6 +80,12 @@ public class RegionsData extends BaseData {
 			RegionsData regionsDataDbApis = new RegionsData();
 			this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
 		}
+		
+		@Override
+		public void saveWithID() {
+			RegionsData regionsDataDbApis = new RegionsData();
+			this.id = regionsDataDbApis.autoInsertWithID(Integer.valueOf(this.id).toString(), this.region_name, this.start_date);
+		}
 	}
 
 	protected static String tableID = "1";
@@ -128,10 +134,17 @@ public class RegionsData extends BaseData {
 	protected static String getSaveOfflineURL(){
 		return RegionsData.saveRegionOfflineURL;
 	}
+	
+	@Override
+	public String getListingOnlineURL(){
+		return RegionsData.getRegionOnlineURL;
+	}
+
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
+	
 	
 	public List serialize(JsArray<Type> regionObjects){
 		List regions = new ArrayList();
@@ -143,6 +156,7 @@ public class RegionsData extends BaseData {
 		return regions;
 	}
 	
+	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
@@ -191,7 +205,7 @@ public class RegionsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveRegionOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + RegionsData.saveRegionOnlineURL, this.queryString);
 		}
 		else{
 			this.save();
