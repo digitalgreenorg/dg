@@ -248,33 +248,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			tempList.add(args[i]);
 		}
 		String[] tempListString = new String[] {};
-		
 		if(this.getFields().length == args.length){
 			for(int i=0; i < tempList.size(); i++) {
 				tempListString[i] = (String)tempList.get(i);
 			}
 			this.insert(insertSql, tempListString);
-<<<<<<< .mine
-			this.updateLastInsertedID(newId);
-			return newId;
-=======
-			return Integer.parseInt(args[0]);
->>>>>>> .r278
-		}
-<<<<<<< .mine
-		return "-1";
-	}
-	
-	
-	public String autoInsertWithID(String ...args) {
-		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
-		for(int i=0; i < this.getFields().length; i++) {
-			if(i == this.getFields().length - 1) {
-				insertSql += "?";
-			} else {
-				insertSql += "?, ";
-=======
-		else{
+			return args[0];
+		} else{
 			String newId = this.getNextRowId();
 			if(!newId.equals("ERROR")) {
 				tempList.add(0, newId);
@@ -283,11 +263,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				}
 				this.insert(insertSql, tempListString);
 				this.updateLastInsertedID(newId);
-				return Integer.parseInt(newId);
->>>>>>> .r278
+				return newId;
 			}
 		}
-		
 		return "-1";
 	}
 	
