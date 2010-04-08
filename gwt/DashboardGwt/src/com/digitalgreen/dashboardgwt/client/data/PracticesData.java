@@ -93,12 +93,17 @@ public class PracticesData extends BaseData {
 		@Override
 		public void save(){
 			PracticesData practicesDataDbApis = new PracticesData();
-			if(this.id==0){
-				this.id = practicesDataDbApis.autoInsert(this.practice_name, this.seasonality, this.summary);
-			}else{
-				this.id = practicesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.practice_name, this.seasonality, this.summary);
+			if(this.id == null){
+				this.id = practicesDataDbApis.autoInsert(this.practice_name, 
+						this.seasonality, 
+						this.summary);
 			}
-			
+			else {
+				this.id = practicesDataDbApis.autoInsert(this.id, 
+						this.practice_name, 
+						this.seasonality, 
+						this.summary);
+			}
 		}
 	}
 	
@@ -162,7 +167,7 @@ public class PracticesData extends BaseData {
 	public List serialize(JsArray<Type> practiceObjects){
 		List practices = new ArrayList();
 		for(int i = 0; i < practiceObjects.length(); i++){
-			Data practice = new Data(Integer.parseInt(practiceObjects.get(i).getPk()), practiceObjects.get(i).getPracticeName(), 
+			Data practice = new Data(practiceObjects.get(i).getPk(), practiceObjects.get(i).getPracticeName(), 
 					practiceObjects.get(i).getSeasonality(), practiceObjects.get(i).getSummary());
 			practices.add(practice);
 		}
@@ -181,7 +186,7 @@ public class PracticesData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data practice = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
+					Data practice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
 					practices.add(practice);
 				}
@@ -202,7 +207,7 @@ public class PracticesData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data practice = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data practice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					practices.add(practice);
 				}
 			}
