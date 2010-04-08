@@ -84,7 +84,7 @@ public class ScreeningVideosScreenedData extends BaseData {
 		@Override		
 		public void save() {
 			ScreeningVideosScreenedData screeningVideosScreenedsDataDbApis = new ScreeningVideosScreenedData();		
-			if(this.id==0){
+			if(this.id == null){
 				this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
 						Integer.valueOf(this.video.getId()).toString());
 			}else{
@@ -160,12 +160,12 @@ public class ScreeningVideosScreenedData extends BaseData {
 		VideosData video = new VideosData();
 		PracticesData practice = new PracticesData();
 		for(int i = 0; i < screeningVideosScreenedObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(Integer.parseInt(screeningVideosScreenedObjects.get(i).getScreening().getPk()),
+			ScreeningsData.Data sc = screening.new Data(screeningVideosScreenedObjects.get(i).getScreening().getPk(),
 					screeningVideosScreenedObjects.get(i).getScreening().getDate());
-			VideosData.Data vid = video.new Data(Integer.parseInt(screeningVideosScreenedObjects.get(i).getVideo().getPk()),
+			VideosData.Data vid = video.new Data(screeningVideosScreenedObjects.get(i).getVideo().getPk(),
 					screeningVideosScreenedObjects.get(i).getVideo().getTitle());
 			
-			Data screeningVideosScreened = new Data(Integer.parseInt(screeningVideosScreenedObjects.get(i).getPk()),sc,vid);
+			Data screeningVideosScreened = new Data(screeningVideosScreenedObjects.get(i).getPk(),sc,vid);
 			screeningVideosScreeneds.add(screeningVideosScreened);
 		}
 		

@@ -176,7 +176,7 @@ public class ScreeningsData extends BaseData {
 		public void save() {
 			
 			ScreeningsData screeningsDataDbApis = new ScreeningsData();			
-			if(this.id==0){
+			if(this.id == null){
 				this.id = screeningsDataDbApis.autoInsert(this.date, this.start_time,this.end_time, this.location,this.target_person_attendance, 
 						this.target_audience_interest, this.target_adoptions,Integer.valueOf(this.village.getId()).toString(),
 						Integer.valueOf(this.fieldofficer.getId()).toString(), Integer.valueOf(this.animator.getId()).toString(),
@@ -270,8 +270,8 @@ public class ScreeningsData extends BaseData {
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < screeningObjects.length(); i++){
-			VillagesData.Data v = village.new Data(Integer.parseInt(screeningObjects.get(i).getVillage().getPk()), screeningObjects.get(i).getVillage().getVillageName()) ;
-			Data screening = new Data(Integer.parseInt(screeningObjects.get(i).getPk()),
+			VillagesData.Data v = village.new Data(screeningObjects.get(i).getVillage().getPk(), screeningObjects.get(i).getVillage().getVillageName()) ;
+			Data screening = new Data(screeningObjects.get(i).getPk(),
 					screeningObjects.get(i).getDate(),
 					screeningObjects.get(i).getStartTime(),
 					screeningObjects.get(i).getEndTime(),

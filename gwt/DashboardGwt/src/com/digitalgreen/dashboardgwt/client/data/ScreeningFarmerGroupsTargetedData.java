@@ -84,7 +84,7 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		@Override		
 		public void save() {
 			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
-			if(this.id==0){
+			if(this.id == null){
 				this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
 						Integer.valueOf(this.group.getId()).toString());
 			}else{
@@ -157,12 +157,12 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		ScreeningsData screening = new ScreeningsData();
 		PersonGroupsData group = new PersonGroupsData();
 		for(int i = 0; i < screeningFarmerGroupsTargetedObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(Integer.parseInt(screeningFarmerGroupsTargetedObjects.get(i).getScreening().getPk()),
+			ScreeningsData.Data sc = screening.new Data(screeningFarmerGroupsTargetedObjects.get(i).getScreening().getPk(),
 					screeningFarmerGroupsTargetedObjects.get(i).getScreening().getDate());
-			PersonGroupsData.Data pg = group.new Data(Integer.parseInt(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup().getPk()),
+			PersonGroupsData.Data pg = group.new Data(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup().getPk(),
 					screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup().getPersonGroupName());
 			
-			Data screeningFarmerGroupsTargeted = new Data(Integer.parseInt(screeningFarmerGroupsTargetedObjects.get(i).getPk()),sc,pg);
+			Data screeningFarmerGroupsTargeted = new Data(screeningFarmerGroupsTargetedObjects.get(i).getPk(),sc,pg);
 			screeningFarmerGroupsTargeteds.add(screeningFarmerGroupsTargeted);
 		}
 		
