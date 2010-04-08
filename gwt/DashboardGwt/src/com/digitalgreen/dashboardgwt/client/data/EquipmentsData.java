@@ -5,6 +5,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -20,7 +21,7 @@ public class EquipmentsData extends BaseData {
 		public final native String getCost() /*-{ return this.fields.cost; }-*/;
 		public final native String getProcurementDate() /*-{ return this.fields.procurement_date; }-*/;
 		public final native String getWarrantyExpirationDate() /*-{ return this.fields.warranty_expiration_date; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	
 	}
 	
@@ -135,25 +136,23 @@ public class EquipmentsData extends BaseData {
 		
 		public void save() {
 			EquipmentsData equipmentsDataDbApis = new EquipmentsData();			
-<<<<<<< .mine
-			this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,
-					this.model_no,
-					this.serial_no,
-					this.cost,
-					this.procurement_date,
-					this.warranty_expiration_date,
-					this.equipmentholder.getId());
-=======
-			if(this.id == 0){
-				this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,this.model_no,this.serial_no,this.cost,
-						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id == null){
+				this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,
+						this.model_no,
+						this.serial_no,
+						this.cost,
+						this.procurement_date,
+						this.warranty_expiration_date,
+						this.equipmentholder.getId());
 			}else{
-				this.id = equipmentsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.equipment_type,this.model_no,this.serial_no,this.cost,
-						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
+				this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,
+						this.model_no,
+						this.serial_no,
+						this.cost,
+						this.procurement_date,
+						this.warranty_expiration_date,
+						this.equipmentholder.getId());
 			}
->>>>>>> .r278
-			
-			
 		}
 	}
 	
@@ -222,11 +221,15 @@ public class EquipmentsData extends BaseData {
 	
 	public List serialize(JsArray<Type> equipmentObjects){
 		List equipments = new ArrayList();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		for(int i = 0; i < equipmentObjects.length(); i++){
-			Data equipment = new Data(Integer.parseInt(equipmentObjects.get(i).getPk()), equipmentObjects.get(i).getEquipmentType(), 
+			
+			EquipmentHoldersData.Data eq = equipmentholder.new Data(equipmentObjects.get(i).getEquipmentHolder().getPk());
+			
+			Data equipment = new Data(equipmentObjects.get(i).getPk(), equipmentObjects.get(i).getEquipmentType(), 
 					equipmentObjects.get(i).getModelNo(),equipmentObjects.get(i).getSerialNo(), 
 					equipmentObjects.get(i).getCost(),equipmentObjects.get(i).getProcurementDate(),
-					equipmentObjects.get(i).getWarrantyExpirationDate(),equipmentObjects.get(i).getEquipmentHolderId());
+					equipmentObjects.get(i).getWarrantyExpirationDate(), eq);
 			equipments.add(equipment);
 		}
 		
@@ -240,19 +243,21 @@ public class EquipmentsData extends BaseData {
 	
 	public List getEquipmentsListingOffline(){
 		BaseData.dbOpen();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List equipments = new ArrayList();
 		this.select(listEquipments);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data equipment = new Data(this.getResultSet().getFieldAsInt(0), 
+					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(7));
+					
+					Data equipment = new Data(this.getResultSet().getFieldAsString(0), 
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
 							this.getResultSet().getFieldAsString(4),
 							this.getResultSet().getFieldAsString(5),
-							this.getResultSet().getFieldAsString(6),
-							this.getResultSet().getFieldAsInt(7) );
+							this.getResultSet().getFieldAsString(6), eq);
 					equipments.add(equipment);
 				}				
 			} catch (DatabaseException e) {
@@ -271,12 +276,11 @@ public class EquipmentsData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data equipment = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data equipment = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					equipments.add(equipment);
 				}				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 		}

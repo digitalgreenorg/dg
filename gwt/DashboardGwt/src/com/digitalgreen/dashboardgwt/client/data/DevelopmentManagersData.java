@@ -5,6 +5,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -23,8 +24,8 @@ public class DevelopmentManagersData extends BaseData {
 		public final native String getSpeciality() /*-{ return this.fields.speciality; }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
 		public final native String getStartDay() /*-{ return this.fields.start_day; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
-		public final native float getSalary() /*-{ return this.fields.salary; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
+		public final native String getSalary() /*-{ return this.fields.salary; }-*/;
 				
 	}
 	
@@ -181,33 +182,34 @@ public class DevelopmentManagersData extends BaseData {
 		@Override
 		
 		public void save() {
-<<<<<<< .mine
-			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();			
-			this.id = developmentmanagersDataDbApis.autoInsert(this.name,
-					this.age,
-					this.gender,
-					this.hire_date,
-					this.phone_no,
-					this.address,
-					this.speciality,
-					this.region.getId(),
-					this.start_day,
-					this.equipmentholder.getId(),
-					this.salary);
-=======
 			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
-			if(this.id == 0){
-				this.id = developmentmanagersDataDbApis.autoInsert(this.name,this.age,this.gender,this.hire_date,
-						this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
-						Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
-			}else{
-				this.id = developmentmanagersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.name,this.age,this.gender,this.hire_date,
-						this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
-						Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
+			if(this.id == null){
+				this.id = developmentmanagersDataDbApis.autoInsert(this.name,
+						this.age,
+						this.gender,
+						this.hire_date,
+						this.phone_no,
+						this.address,
+						this.speciality,
+						this.region.getId(),
+						this.start_day,
+						this.equipmentholder.getId(),
+						this.salary);
 			}
->>>>>>> .r278
-			
-			
+			else {
+				this.id = developmentmanagersDataDbApis.autoInsert(this.id, 
+						this.name,
+						this.age,
+						this.gender,
+						this.hire_date,
+						this.phone_no,
+						this.address,
+						this.speciality,
+						this.region.getId(),
+						this.start_day,
+						this.equipmentholder.getId(),
+						this.salary);
+			}
 		}
 	}
 	
@@ -281,9 +283,15 @@ public class DevelopmentManagersData extends BaseData {
 	public List serialize(JsArray<Type> developmentmanagerObjects){
 		List developmentmanagers = new ArrayList();
 		RegionsData region = new RegionsData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		
 		for(int i = 0; i < developmentmanagerObjects.length(); i++){
-			RegionsData.Data r = region.new Data(Integer.parseInt(developmentmanagerObjects.get(i).getRegion().getPk()), developmentmanagerObjects.get(i).getRegion().getRegionName(), developmentmanagerObjects.get(i).getRegion().getStartDate());
-			Data developmentmanager = new Data(Integer.parseInt(developmentmanagerObjects.get(i).getPk()),
+			
+			RegionsData.Data r = region.new Data(developmentmanagerObjects.get(i).getRegion().getPk(), developmentmanagerObjects.get(i).getRegion().getRegionName(), developmentmanagerObjects.get(i).getRegion().getStartDate());
+			
+			EquipmentHoldersData.Data eq = equipmentholder.new Data(developmentmanagerObjects.get(i).getEquipmentHolder().getPk());
+			
+			Data developmentmanager = new Data(developmentmanagerObjects.get(i).getPk(),
 						developmentmanagerObjects.get(i).getName(),
 						developmentmanagerObjects.get(i).getAge(),
 						developmentmanagerObjects.get(i).getGender(),
@@ -291,8 +299,7 @@ public class DevelopmentManagersData extends BaseData {
 						developmentmanagerObjects.get(i).getPhoneNo(),
 						developmentmanagerObjects.get(i).getAddress(),
 						developmentmanagerObjects.get(i).getSpeciality(),r,
-						developmentmanagerObjects.get(i).getStartDay(),
-						developmentmanagerObjects.get(i).getEquipmentHolderId(),
+						developmentmanagerObjects.get(i).getStartDay(), eq,
 						developmentmanagerObjects.get(i).getSalary());
 			developmentmanagers.add(developmentmanager);
 		}
@@ -309,12 +316,18 @@ public class DevelopmentManagersData extends BaseData {
 		BaseData.dbOpen();
 		List developmentmanagers = new ArrayList();
 		RegionsData region = new RegionsData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		this.select(listDevelopmentManagers);
+		
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsInt(8),  this.getResultSet().getFieldAsString(9)) ;
-					Data developmentmanager = new Data(this.getResultSet().getFieldAsInt(0), 
+					
+					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(8),  this.getResultSet().getFieldAsString(9)) ;
+					
+					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(11));
+					
+					Data developmentmanager = new Data(this.getResultSet().getFieldAsString(0), 
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
@@ -322,9 +335,8 @@ public class DevelopmentManagersData extends BaseData {
 							this.getResultSet().getFieldAsString(5),
 							this.getResultSet().getFieldAsString(6),
 							this.getResultSet().getFieldAsString(7),r,
-							this.getResultSet().getFieldAsString(10),
-							this.getResultSet().getFieldAsInt(11),
-							this.getResultSet().getFieldAsFloat(12));
+							this.getResultSet().getFieldAsString(10), eq,
+							this.getResultSet().getFieldAsString(12));
 					developmentmanagers.add(developmentmanager);
 				}				
 			} catch (DatabaseException e) {
@@ -343,7 +355,7 @@ public class DevelopmentManagersData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data developmentmanager = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data developmentmanager = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					developmentmanagers.add(developmentmanager);
 				}				
 			} catch (DatabaseException e) {

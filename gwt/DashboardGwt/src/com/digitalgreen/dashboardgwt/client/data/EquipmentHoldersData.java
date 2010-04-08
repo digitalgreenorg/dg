@@ -76,14 +76,10 @@ public class EquipmentHoldersData extends BaseData {
 		@Override
 		public void save() {
 			EquipmentHoldersData equipmentholdersDataDbApis = new EquipmentHoldersData();
-<<<<<<< .mine
-			this.id = equipmentholdersDataDbApis.autoInsert(this.content_type, this.object_id);
-=======
-			if(this.id == 0)
-				this.id = equipmentholdersDataDbApis.autoInsert( this.content_type, this.object_id);
+			if(this.id == null)
+				this.id = equipmentholdersDataDbApis.autoInsert(this.content_type, this.object_id);
 			else
-				this.id = equipmentholdersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.content_type, this.object_id);
->>>>>>> .r278
+				this.id = equipmentholdersDataDbApis.autoInsert(this.id, this.content_type, this.object_id);
 		}
 	}
 	
@@ -147,7 +143,7 @@ public class EquipmentHoldersData extends BaseData {
 	public List serialize(JsArray<Type> equipmentholderObjects){
 		List equipmentholders = new ArrayList();
 		for(int i = 0; i < equipmentholderObjects.length(); i++){
-			Data equipmentholder = new Data(Integer.parseInt(equipmentholderObjects.get(i).getPk()), 
+			Data equipmentholder = new Data(equipmentholderObjects.get(i).getPk(), 
 					equipmentholderObjects.get(i).getContentType(), 
 					equipmentholderObjects.get(i).getObjectId());
 			equipmentholders.add(equipmentholder);
