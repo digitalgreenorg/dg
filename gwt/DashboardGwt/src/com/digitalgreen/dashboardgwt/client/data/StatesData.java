@@ -95,10 +95,10 @@ public class StatesData extends BaseData {
 		@Override
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();		
-			if(this.id == 0)
+			if(this.id == null)
 				this.id = statesDataDbApis.autoInsert(this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
 			else
-				this.id = statesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+				this.id = statesDataDbApis.autoInsert(this.id, this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
 		}
 	}
 
@@ -165,8 +165,8 @@ public class StatesData extends BaseData {
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
 		for(int i = 0; i < stateObjects.length(); i++){
-			RegionsData.Data r = region.new Data(Integer.parseInt(stateObjects.get(i).getRegion().getPk()), stateObjects.get(i).getRegion().getRegionName(), stateObjects.get(i).getRegion().getStartDate());
-			Data state = new Data(Integer.parseInt(stateObjects.get(i).getPk()), stateObjects.get(i).getStateName(), stateObjects.get(i).getStartDate(), r );
+			RegionsData.Data r = region.new Data(stateObjects.get(i).getRegion().getPk(), stateObjects.get(i).getRegion().getRegionName(), stateObjects.get(i).getRegion().getStartDate());
+			Data state = new Data(stateObjects.get(i).getPk(), stateObjects.get(i).getStateName(), stateObjects.get(i).getStartDate(), r );
 			states.add(state);
 		}
 		
@@ -186,8 +186,8 @@ public class StatesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
-					Data state = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r);
+					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
+					Data state = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r);
 					states.add(state);
 				}				
 			} catch (DatabaseException e) {
@@ -206,7 +206,7 @@ public class StatesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data state = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data state = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					states.add(state);
 				}				
 			} catch (DatabaseException e) {

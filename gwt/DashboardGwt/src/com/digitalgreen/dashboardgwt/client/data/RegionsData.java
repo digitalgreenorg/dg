@@ -79,7 +79,7 @@ public class RegionsData extends BaseData {
 		@Override
 		public void save() {
 			RegionsData regionsDataDbApis = new RegionsData();
-			if(this.id == 0)
+			if(this.id == null)
 				this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
 			else
 				this.id = regionsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.region_name, this.start_date);
@@ -146,7 +146,7 @@ public class RegionsData extends BaseData {
 	public List serialize(JsArray<Type> regionObjects){
 		List regions = new ArrayList();
 		for(int i = 0; i < regionObjects.length(); i++){
-			Data region = new Data(Integer.parseInt(regionObjects.get(i).getPk()), regionObjects.get(i).getRegionName(), regionObjects.get(i).getStartDate());
+			Data region = new Data(regionObjects.get(i).getPk(), regionObjects.get(i).getRegionName(), regionObjects.get(i).getStartDate());
 			regions.add(region);
 		}
 		
@@ -165,7 +165,7 @@ public class RegionsData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data region = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));
+					Data region = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));
 					regions.add(region);
 	    	      }				
 			} catch (DatabaseException e) {
@@ -186,7 +186,7 @@ public class RegionsData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data region = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data region = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					regions.add(region);
 	    	      }				
 			} catch (DatabaseException e) {
