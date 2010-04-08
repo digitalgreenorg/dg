@@ -83,7 +83,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public void save(){
 			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
-			if(this.id==0){
+			if(this.id == null){
 				this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(Integer.valueOf(this.training.getId()).toString(), 
 						Integer.valueOf(this.animator.getId()).toString());
 			}
@@ -156,14 +156,14 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		TrainingsData training = new TrainingsData();
 		AnimatorsData animator = new AnimatorsData();
 		for(int i = 0; i < trainingAnimatorsTrainedObjects.length(); i++) {
-			TrainingsData.Data t = training. new Data(Integer.parseInt(trainingAnimatorsTrainedObjects.get(i).getPk()), 
+			TrainingsData.Data t = training. new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), 
 					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainigPurpose(), 
 					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainingOutcome());
 			
-			AnimatorsData.Data a = animator. new Data(Integer.parseInt(trainingAnimatorsTrainedObjects.get(i).getAnimator().getPk()),
+			AnimatorsData.Data a = animator. new Data(trainingAnimatorsTrainedObjects.get(i).getAnimator().getPk(),
 									trainingAnimatorsTrainedObjects.get(i).getAnimator().getAnimatorName());
 			
-			Data traininganimatorstrained = new Data(Integer.parseInt(trainingAnimatorsTrainedObjects.get(i).getPk()), t, a);
+			Data traininganimatorstrained = new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), t, a);
 			
 			trainingAnimatorsTrained.add(traininganimatorstrained);			
 		}
@@ -186,12 +186,12 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
-					TrainingsData.Data t = training. new Data(this.getResultSet().getFieldAsInt(1), this.getResultSet().getFieldAsString(2), 
+					TrainingsData.Data t = training. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), 
 												this.getResultSet().getFieldAsString(1));
 					
-					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsInt(4), this.getResultSet().getFieldAsString(5));
+					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5));
 					
-					Data traininganimatorstrained = new Data(this.getResultSet().getFieldAsInt(0), t, a);
+					Data traininganimatorstrained = new Data(this.getResultSet().getFieldAsString(0), t, a);
 					
 					trainingAnimatorsTrained.add(traininganimatorstrained);
 				}
@@ -213,7 +213,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data traininganimatorstrained = new Data(this.getResultSet().getFieldAsInt(0));
+					Data traininganimatorstrained = new Data(this.getResultSet().getFieldAsString(0));
 					trainingAnimatorsTrained.add(traininganimatorstrained);
 				}
 			}

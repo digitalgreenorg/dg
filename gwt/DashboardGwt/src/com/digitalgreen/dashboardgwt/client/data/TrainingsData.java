@@ -143,7 +143,7 @@ public class TrainingsData extends BaseData {
 		@Override
 		public void save(){
 			TrainingsData trainingsDataDbApis = new TrainingsData();
-			if(this.id==0){
+			if(this.id == null){
 				this.id = trainingsDataDbApis.autoInsert(this.training_purpose, this.training_outcome, this.training_start_date, 
 						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
 						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
@@ -226,14 +226,14 @@ public class TrainingsData extends BaseData {
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		for(int i = 0; i < trainingObjects.length(); i++){
 			
-			VillagesData.Data v = village. new Data(Integer.parseInt(trainingObjects.get(i).getVillage().getPk()), trainingObjects.get(i).getVillage().getVillageName());
+			VillagesData.Data v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
 			
-			DevelopmentManagersData.Data dm = developmentmanager. new Data(Integer.parseInt(trainingObjects.get(i).getDevelopmentManager().getPk()), trainingObjects.get(i).getDevelopmentManager().getName());
+			DevelopmentManagersData.Data dm = developmentmanager. new Data(trainingObjects.get(i).getDevelopmentManager().getPk(), trainingObjects.get(i).getDevelopmentManager().getName());
 			
-			FieldOfficersData.Data f = fieldofficer. new Data(Integer.parseInt(trainingObjects.get(i).getFieldOfficer().getPk()), 
+			FieldOfficersData.Data f = fieldofficer. new Data(trainingObjects.get(i).getFieldOfficer().getPk(), 
 					trainingObjects.get(i).getFieldOfficer().getFieldOfficerName());
 			
-			Data training = new Data(Integer.parseInt(trainingObjects.get(i).getPk()), trainingObjects.get(i).getTrainigPurpose(), 
+			Data training = new Data(trainingObjects.get(i).getPk(), trainingObjects.get(i).getTrainigPurpose(), 
 					trainingObjects.get(i).getTrainingOutcome(), trainingObjects.get(i).getTrainingStartDate(), 
 					trainingObjects.get(i).getTrainingEndDate(), v, dm, f);
 			
@@ -258,13 +258,13 @@ public class TrainingsData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
-					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsInt(5), this.getResultSet().getFieldAsString(6));
+					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6));
 					
-					DevelopmentManagersData.Data dm = developmentmanager. new Data(this.getResultSet().getFieldAsInt(7), this.getResultSet().getFieldAsString(8));
+					DevelopmentManagersData.Data dm = developmentmanager. new Data(this.getResultSet().getFieldAsString(7), this.getResultSet().getFieldAsString(8));
 					
-					FieldOfficersData.Data f = fieldofficer. new Data(this.getResultSet().getFieldAsInt(9), this.getResultSet().getFieldAsString(10));
+					FieldOfficersData.Data f = fieldofficer. new Data(this.getResultSet().getFieldAsString(9), this.getResultSet().getFieldAsString(10));
 					
-					Data training = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
+					Data training = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
 							this.getResultSet().getFieldAsString(4), v, dm, f);
 					
@@ -287,7 +287,7 @@ public class TrainingsData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data training = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
+					Data training = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2));
 					trainings.add(training);
 				}
