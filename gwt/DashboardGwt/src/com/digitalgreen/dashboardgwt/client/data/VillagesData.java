@@ -120,38 +120,27 @@ public class VillagesData extends BaseData {
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();
-<<<<<<< .mine
-			this.id = villagesDataDbApis.autoInsert(this.village_name, 
-					this.block.getId(),  
-					this.no_of_households,  
-					this.population, 
-					this.road_connectivity, 
-					this.control, 
-					this.start_date);
-=======
-			if(this.id==0){
-				this.id = villagesDataDbApis.autoInsert(this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+			if(this.id == null){
+				this.id = villagesDataDbApis.autoInsert(this.village_name, 
+						this.block.getId(),  
+						this.no_of_households,  
+						this.population, 
+						this.road_connectivity, 
+						this.control, 
+						this.start_date);
+
 			}else{
-				this.id = villagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
+				this.id = villagesDataDbApis.autoInsert(this.id,
+						this.village_name, 
+						this.block.getId(),  
+						this.no_of_households,  
+						this.population, 
+						this.road_connectivity, 
+						this.control, 
+						this.start_date);
 			}
-			
->>>>>>> .r278
 		}
-<<<<<<< .mine
-		
-		public void saveWithID() {
-			VillagesData villagesDataDbApis = new VillagesData();
-			this.id = villagesDataDbApis.autoInsertWithID(this.id, this.village_name, 
-					this.block.getId(),  
-					this.no_of_households, 
-					this.population, 
-					this.road_connectivity, 
-					this.control, 
-					this.start_date);
-		}
-=======
->>>>>>> .r278
-	}
+}
 
 	
 	protected static String tableID = "10";
@@ -221,9 +210,9 @@ public class VillagesData extends BaseData {
 		List villages = new ArrayList();
 		BlocksData block = new BlocksData();
 		for(int i = 0; i < villageObjects.length(); i++){
-			BlocksData.Data b = block.new Data(Integer.parseInt(villageObjects.get(i).getBlock().getPk()), 
+			BlocksData.Data b = block.new Data(villageObjects.get(i).getBlock().getPk(), 
 					villageObjects.get(i).getBlock().getBlockName()); 
-			VillagesData.Data village = new Data(Integer.parseInt(villageObjects.get(i).getPk()), 
+			VillagesData.Data village = new Data(villageObjects.get(i).getPk(), 
 					villageObjects.get(i).getVillageName(), b);
 			villages.add(village);
 		}
@@ -243,8 +232,8 @@ public class VillagesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					BlocksData.Data b = block.new Data(this.getResultSet().getFieldAsInt(2), this.getResultSet().getFieldAsString(3));
-					Data village = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), b);
+					BlocksData.Data b = block.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					Data village = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), b);
 					villages.add(village);
 				}				
 			} catch (DatabaseException e) {
@@ -264,7 +253,7 @@ public class VillagesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data village = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data village = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					villages.add(village);
 				}				
 			} catch (DatabaseException e) {
