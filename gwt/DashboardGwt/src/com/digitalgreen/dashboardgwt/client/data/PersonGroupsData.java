@@ -118,7 +118,7 @@ public class PersonGroupsData extends BaseData {
 		@Override
 		public void save() {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
-			if(this.id==null){
+			if(this.id == null){
 				this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
 						this.days, 
 						this.timings,
