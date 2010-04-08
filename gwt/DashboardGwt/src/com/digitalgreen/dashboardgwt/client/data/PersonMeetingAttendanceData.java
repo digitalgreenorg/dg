@@ -152,32 +152,21 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override		
 		public void save() {
 			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();			
-<<<<<<< .mine
-			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.screening.getId(),
-					this.person.getId(),
-					this.expressed_interest_practice.getId(),
-					this.expressed_interest,
-					this.expressed_adoption_practice.getId(),
-					this.expressed_adoption,
-					this.expressed_question_practice.getId(),
-					this.expressed_question);
-=======
-			if(this.id==0){
-				this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
-						Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.expressed_interest_practice.getId()).toString(),this.expressed_interest,
-						Integer.valueOf(this.expressed_adoption_practice.getId()).toString(),this.expressed_adoption,
-						Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
+
+			if(this.id == null){
+				this.id = personMeetingAttendancesDataDbApis.autoInsert(this.screening.getId(),
+						this.person.getId(),
+						this.expressed_interest_practice.getId(),this.expressed_interest,
+						this.expressed_adoption_practice.getId(),this.expressed_adoption,
+						this.expressed_question_practice.getId(),this.expressed_question);
 			}else{
-				this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),
-						Integer.valueOf(this.screening.getId()).toString(),
-						Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.expressed_interest_practice.getId()).toString(),this.expressed_interest,
-						Integer.valueOf(this.expressed_adoption_practice.getId()).toString(),this.expressed_adoption,
-						Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
+				this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
+						this.screening.getId(),
+						this.person.getId(),
+						this.expressed_interest_practice.getId(),this.expressed_interest,
+						this.expressed_adoption_practice.getId(),this.expressed_adoption,
+						this.expressed_question_practice.getId(),this.expressed_question);
 			}
-			
->>>>>>> .r278
 			}	
 	}
 		
@@ -260,18 +249,18 @@ public class PersonMeetingAttendanceData extends BaseData {
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
 		for(int i = 0; i < personMeetingAttendanceObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getScreening().getPk()),
+			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening().getPk(),
 					personMeetingAttendanceObjects.get(i).getScreening().getDate());
-			PersonsData.Data p = person.new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getPerson().getPk()),
+			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson().getPk(),
 					personMeetingAttendanceObjects.get(i).getPerson().getPersonName());
-			PracticesData.Data interest_pr = practice.new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice().getPk()),
+			PracticesData.Data interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice().getPk(),
 					personMeetingAttendanceObjects.get(i).getExpressedInterestPractice().getPracticeName());
-			PracticesData.Data adoption_pr = practice.new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice().getPk()),
+			PracticesData.Data adoption_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice().getPk(),
 					personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice().getPracticeName());
-			PracticesData.Data question_pr = practice.new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice().getPk()),
+			PracticesData.Data question_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice().getPk(),
 					personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice().getPracticeName());
 			
-			Data personMeetingAttendance = new Data(Integer.parseInt(personMeetingAttendanceObjects.get(i).getPk()),sc,p,
+			Data personMeetingAttendance = new Data(personMeetingAttendanceObjects.get(i).getPk(),sc,p,
 					interest_pr,personMeetingAttendanceObjects.get(i).getExpressedInterest(),
 					adoption_pr,personMeetingAttendanceObjects.get(i).getExpressedAdoption(),
 					question_pr,personMeetingAttendanceObjects.get(i).getExpressedQuestion());
