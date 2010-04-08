@@ -62,10 +62,10 @@ public class LanguagesData extends BaseData {
 		@Override
 		public void save() {
 			LanguagesData languagesDataDbApis = new LanguagesData();
-			if(this.id==0)
+			if(this.id == null)
 				this.id = languagesDataDbApis.autoInsert(this.language_name);
 			else
-				this.id = languagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.language_name);
+				this.id = languagesDataDbApis.autoInsert(this.id, this.language_name);
 			
 		}
 	}
@@ -126,7 +126,7 @@ public class LanguagesData extends BaseData {
 	public List serialize(JsArray<Type> languageObjects){
 		List languages = new ArrayList();
 		for(int i = 0; i < languageObjects.length(); i++){
-			Data language = new Data(Integer.parseInt(languageObjects.get(i).getPk()), languageObjects.get(i).getLanguageName());
+			Data language = new Data(languageObjects.get(i).getPk(), languageObjects.get(i).getLanguageName());
 			languages.add(language);
 		}
 		
@@ -145,7 +145,7 @@ public class LanguagesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data language = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data language = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					languages.add(language);
 	    	      }				
 			} catch (DatabaseException e) {
@@ -166,7 +166,7 @@ public class LanguagesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data language = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data language = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					languages.add(language);
 	    	      }				
 			} catch (DatabaseException e) {
