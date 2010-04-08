@@ -162,34 +162,34 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
-<<<<<<< .mine
-			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();			
-			this.id = monthlycostpervillagesDataDbApis.autoInsert(this.village.getId(),
-					this.date,
-					this.labor_cost,
-					this.equipment_cost,
-					this.transportation_cost,
-					this.miscellaneous_cost,
-					this.total_cost,
-					this.partners_cost,
-					this.digitalgreen_cost,
-					this.community_cost);
-=======
 			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();	
-			if(this.id==0){
-				this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
-						this.equipment_cost,this.transportation_cost,this.miscellaneous_cost,this.total_cost,this.partners_cost,this.digitalgreen_cost,
-						this.community_cost);
-			}else{
-				this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
-						this.equipment_cost,this.transportation_cost,this.miscellaneous_cost,this.total_cost,this.partners_cost,this.digitalgreen_cost,
+			if(this.id == null){
+				this.id = monthlycostpervillagesDataDbApis.autoInsert(this.village.getId(),
+						this.date,
+						this.labor_cost,
+						this.equipment_cost,
+						this.transportation_cost,
+						this.miscellaneous_cost,
+						this.total_cost,
+						this.partners_cost,
+						this.digitalgreen_cost,
 						this.community_cost);
 			}
-			
->>>>>>> .r278
+			else {
+				this.id = monthlycostpervillagesDataDbApis.autoInsert(this.id,
+						this.village.getId(),
+						this.date,
+						this.labor_cost,
+						this.equipment_cost,
+						this.transportation_cost,
+						this.miscellaneous_cost,
+						this.total_cost,
+						this.partners_cost,
+						this.digitalgreen_cost,
+						this.community_cost);
+			}
 		}
 	}
-	
 	
 	protected static String tableID = "11";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `monthly_cost_per_village` " +
@@ -261,9 +261,10 @@ public class Data extends BaseData.Data {
 		List monthlycostpervillages = new ArrayList();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < monthlycostpervillageObjects.length(); i++){
-			VillagesData.Data vil = village.new Data(Integer.parseInt(monthlycostpervillageObjects.get(i).getVillage().getPk()), 
+			VillagesData.Data vil = village.new Data(monthlycostpervillageObjects.get(i).getVillage().getPk(), 
 					monthlycostpervillageObjects.get(i).getVillage().getVillageName());
-			Data monthlycostpervillage = new Data(Integer.parseInt(monthlycostpervillageObjects.get(i).getPk()),vil,
+			
+			Data monthlycostpervillage = new Data(monthlycostpervillageObjects.get(i).getPk(), vil,
 					monthlycostpervillageObjects.get(i).getDate(), monthlycostpervillageObjects.get(i).getLaborCost(),
 					 monthlycostpervillageObjects.get(i).getEquipmentCost(), monthlycostpervillageObjects.get(i).getTransportationCost(),
 					 monthlycostpervillageObjects.get(i).getMiscellaneousCost(), monthlycostpervillageObjects.get(i).getTotalCost(),
