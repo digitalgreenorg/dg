@@ -5,10 +5,13 @@ import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
+
 
 public class PersonGroupsData extends BaseData {
 
@@ -22,7 +25,7 @@ public class PersonGroupsData extends BaseData {
 	}
 	
 	public class Data extends BaseData.Data {		
-		final private static String COLLECTION_PREFIX = "persongroups";
+		final private static String COLLECTION_PREFIX = "persongroup";
 		
 		private String group_name;
 		private String days;
@@ -40,8 +43,14 @@ public class PersonGroupsData extends BaseData {
 			this.group_name = group_name;
 		}
 		
-		public Data(String id, String group_name, String days, String timings,
-				String time_updated, VillagesData.Data village){
+		public Data(String id, String group_name, VillagesData.Data village){
+			super();
+			this.id = id;
+			this.group_name = group_name;
+			this.village = village;
+		}
+		
+		public Data(String id, String group_name, String days, String timings,String time_updated, VillagesData.Data village){
 			super();
 			this.id = id;
 			this.group_name = group_name;
@@ -50,6 +59,23 @@ public class PersonGroupsData extends BaseData {
 			this.time_updated = time_updated;
 			this.village = village;
 		}
+		
+		public String getPersonGroupName(){
+			return this.group_name;
+		}
+		
+		public String getTimings(){
+			return this.timings;
+		}
+		
+		public String getTimeUpdated(){
+			return this.time_updated;
+		}
+		
+		public VillagesData.Data getVillage(){
+			return this.village;
+		}
+				
 		
 		@Override
 		public BaseData.Data clone() {
@@ -62,15 +88,16 @@ public class PersonGroupsData extends BaseData {
 			obj.village = this.village;
 			return obj;
 		}
-		
+	
 		@Override
 		public String getPrefixName() {
 			return Data.COLLECTION_PREFIX;
 		}
 		
 		@Override
+
 		public void setObjValueFromString(String key, String val) {
-			super.setObjValueFromString(key, val);
+
 			if(key.equals("id")) {
 				this.id = val;
 			} else if(key.equals("group_name")) {
@@ -90,30 +117,23 @@ public class PersonGroupsData extends BaseData {
 		
 		@Override
 		public void save() {
-			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-<<<<<<< .mine
-			this.id = animatorsDataDbApis.autoInsert(this.group_name, 
-					this.days, 
-					this.timings,
-					this.time_updated, 
-					this.village.getId());
-=======
-			if(this.id==0){
-				this.id = animatorsDataDbApis.autoInsert(this.group_name, 
+			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
+			if(this.id==null){
+				this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
 						this.days, 
 						this.timings,
 						this.time_updated, 
-						Integer.valueOf(this.village.getId()).toString());
+						this.village.getId());
 			}else{
-				this.id = animatorsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),
+				this.id = personGroupsDataDbApis.autoInsert(this.id,
 						this.group_name, 
 						this.days, 
 						this.timings,
 						this.time_updated, 
-						Integer.valueOf(this.village.getId()).toString());
+						this.village.getId());
 			}
-			
->>>>>>> .r278
+		
+
 		}
 	}
 	
@@ -128,11 +148,12 @@ public class PersonGroupsData extends BaseData {
 												"FOREIGN KEY(village_id) REFERENCES village(id));"; 
 	
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
-	protected static String listPersonGroups = "SELECT * FROM person_groups pg JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
+	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg " +
+			"JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
 	protected static String savePersonGroupOfflineURL = "/dashboard/savepersongroupoffline/";
 	protected static String savePersonGroupOnlineURL = "/dashboard/savepersongrouponline/";
 	protected static String getPersonGroupOnlineURL = "/dashboard/getpersongroupsonline/";
-	protected String table_name = "persongroup";
+	protected String table_name = "person_groups";
 	protected String[] fields = {"id", "group_name","days", "timings", "time_updated", "village_id"};
 		
 	public PersonGroupsData() {
@@ -153,7 +174,7 @@ public class PersonGroupsData extends BaseData {
 	
 	@Override
 	protected String getTableId() {
-		return AnimatorsData.tableID;
+		return PersonGroupsData.tableID;
 	}
 	
 	@Override
@@ -180,10 +201,10 @@ public class PersonGroupsData extends BaseData {
 		List personGroups = new ArrayList();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < personGroupObjects.length(); i++){
-			VillagesData.Data vil = village.new Data(Integer.parseInt(personGroupObjects.get(i).getVillage().getPk()),
+			VillagesData.Data vil = village.new Data(personGroupObjects.get(i).getVillage().getPk(),
 					personGroupObjects.get(i).getVillage().getVillageName());
 						
-			Data personGroup = new Data(Integer.parseInt(personGroupObjects.get(i).getPk()),
+			Data personGroup = new Data(personGroupObjects.get(i).getPk(),
 						personGroupObjects.get(i).getPersonGroupName(),
 						personGroupObjects.get(i).getDays(),
 						personGroupObjects.get(i).getTimings(),
@@ -199,5 +220,98 @@ public class PersonGroupsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
+	
+	public List getPersonGroupsListingOffline(){
+		BaseData.dbOpen();
+		List personGroups = new ArrayList();
+		VillagesData village = new VillagesData();
+		this.select(listPersonGroups);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(2),  this.getResultSet().getFieldAsString(3)) ;
+					Data personGroup = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1),v);
+					personGroups.add(personGroup);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personGroups;
+	}
+	
+	public List getAllPersonGroupsOffline(){
+		BaseData.dbOpen();
+		List personGroups = new ArrayList();
+		this.select(selectPersonGroups);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data personGroup = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					personGroups.add(personGroup);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personGroups;
+	}
+	
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			Window.alert("Query String = " + this.queryString);
+			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.queryString);
+		}
+		else{
+			this.save();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonGroupsData.getPersonGroupOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}	
+	
+	public String retrieveDataAndConvertResultIntoHtml(){
+		VillagesData villageData = new VillagesData();
+		List villages = villageData.getAllVillagesOffline();
+		VillagesData.Data village;
+		String html = "<select name=\"village\" id=\"id_village\">";
+		for(int i=0; i< villages.size(); i++){
+			village = (VillagesData.Data)villages.get(i);
+			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		
+		return html;
+	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL);
+		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
 	
 }
