@@ -65,12 +65,21 @@ public class Form {
 	}
 	
 	private String getCollectionNameFromArray(ArrayList dependentList) {
-		BaseData.Data data = (BaseData.Data)dependentList.get(0);
-		return data.getPrefixName();
+		BaseData.Data dependentType = (BaseData.Data)dependentList.get(0);
+		return dependentType.getPrefixName();
 	}
 	
 	private void setDataObjectField(BaseData.Data dataObj, String key, Object val) {
-			dataObj.setObjValueFromString(key, val);
+			dataObj.setObjValueFromString(key, (String)val);
+	}
+	
+	private static boolean isInteger(String integer) {
+		try {
+			int i = Integer.parseInt(integer);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 	
 	// This method collects name/value pairs from a flattened source hashmap into
@@ -82,7 +91,13 @@ public class Form {
 		Object[] sourceKeys = sourceDict.keySet().toArray();
 		for(int i=0; i < sourceKeys.length; i++) {
 			String[] splitSourceKey = ((String)sourceKeys[i]).split("-");
-			if(splitSourceKey[0].equalsIgnoreCase(prefixName + "_set")) {
+			// Case 1:  persongroups_set
+			// Case 2:  home_village (no set included for whatever reason
+			// And check if persongroups_set-1 (that 1 is an integer.  Sometimes
+			// there's junk there.
+			if((splitSourceKey[0].equalsIgnoreCase(prefixName + "_set") ||
+					splitSourceKey[0].equalsIgnoreCase(prefixName)) &&
+					Form.isInteger(splitSourceKey[1])) {
 				String dataObjKey = splitSourceKey[0] + "-" + splitSourceKey[1];
 				BaseData.Data dataObj = (BaseData.Data)firstPassDict.get(dataObjKey);
 				if(dataObj == null) {
@@ -94,7 +109,6 @@ public class Form {
 				}
 			}
 		}
-	
 		// Finally add the collected list of objects as an array in our output hashmap.  
 		dataFormat.put(prefixName, new ArrayList(firstPassDict.values()));
 	}
