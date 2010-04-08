@@ -81,16 +81,16 @@ public class VideoFarmersShownData extends BaseData {
 		@Override		
 		public void save() {
 			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();		
-			if(this.id==0){
-				this.id = videoFarmersShownsDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
-						Integer.valueOf(this.person.getId()).toString());
+			if(this.id == null){
+				this.id = videoFarmersShownsDataDbApis.autoInsert(this.video.getId(),
+						this.person.getId());
 			}
 			else{
-				this.id = videoFarmersShownsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.video.getId()).toString(),
-						Integer.valueOf(this.person.getId()).toString());
+				this.id = videoFarmersShownsDataDbApis.autoInsert(this.id,
+						this.video.getId(),
+						this.person.getId());
 			}
-			
-			}	
+		}	
 	}
 	
 
@@ -157,12 +157,12 @@ public class VideoFarmersShownData extends BaseData {
 		PersonsData person = new PersonsData();
 		VideosData video = new VideosData();
 		for(int i = 0; i < videoFarmersShownObjects.length(); i++){
-			PersonsData.Data p = person.new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getPerson().getPk()),
+			PersonsData.Data p = person.new Data(videoFarmersShownObjects.get(i).getPerson().getPk(),
 					videoFarmersShownObjects.get(i).getPerson().getPersonName());
-			VideosData.Data vid = video.new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getVideo().getPk()),
+			VideosData.Data vid = video.new Data(videoFarmersShownObjects.get(i).getVideo().getPk(),
 					videoFarmersShownObjects.get(i).getVideo().getTitle());
 			
-			Data videoFarmersShown = new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getPk()),vid,p);
+			Data videoFarmersShown = new Data(videoFarmersShownObjects.get(i).getPk(),vid,p);
 			videoFarmersShowns.add(videoFarmersShown);
 		}
 		
