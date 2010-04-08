@@ -105,23 +105,20 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		
 		@Override
 		public void save() {
-<<<<<<< .mine
-			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();			
-			this.id = animatorsalarypermonthsDataDbApis.autoInsert(this.animator.getId(),
-					this.date,
-					this.total_salary, 
-					this.pay_date);
-=======
 			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();		
-			if(this.id == 0){
-				this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(),
-						this.date,this.total_salary, this.pay_date);
+			if(this.id == null){
+				this.id = animatorsalarypermonthsDataDbApis.autoInsert(this.animator.getId(),
+						this.date,
+						this.total_salary, 
+						this.pay_date);
 			}else{
-				this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.animator.getId()).toString(),
-						this.date,this.total_salary, this.pay_date);
+				this.id = animatorsalarypermonthsDataDbApis.autoInsert(this.id,
+						this.animator.getId(),
+						this.date,
+						this.total_salary, 
+						this.pay_date);
 			}
-			
->>>>>>> .r278
+
 		}
 		
 	}
