@@ -81,12 +81,13 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		@Override		
 		public void save() {
 			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();
-			if(this.id==0){
-				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(Integer.valueOf(this.video.getId()).toString(),
-						Integer.valueOf(this.practice.getId()).toString());
+			if(this.id == null){
+				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.video.getId(),
+						this.practice.getId());
 			}else{
-				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.video.getId()).toString(),
-						Integer.valueOf(this.practice.getId()).toString());
+				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.id,
+						this.video.getId(),
+						this.practice.getId());
 			}
 			
 			}	
@@ -157,12 +158,12 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		PracticesData practice = new PracticesData();
 		VideosData video = new VideosData();
 		for(int i = 0; i < videoFarmersShownObjects.length(); i++){
-			PracticesData.Data p = practice.new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getPractice().getPk()),
+			PracticesData.Data p = practice.new Data(videoFarmersShownObjects.get(i).getPractice().getPk(),
 					videoFarmersShownObjects.get(i).getPractice().getPracticeName());
-			VideosData.Data vid = video.new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getVideo().getPk()),
+			VideosData.Data vid = video.new Data(videoFarmersShownObjects.get(i).getVideo().getPk(),
 					videoFarmersShownObjects.get(i).getVideo().getTitle());
 			
-			Data videoFarmersShown = new Data(Integer.parseInt(videoFarmersShownObjects.get(i).getPk()),vid,p);
+			Data videoFarmersShown = new Data(videoFarmersShownObjects.get(i).getPk(),vid,p);
 			videoFarmersShowns.add(videoFarmersShown);
 		}
 		
