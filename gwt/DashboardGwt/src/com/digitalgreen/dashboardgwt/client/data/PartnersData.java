@@ -6,6 +6,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.ReviewersData.Data;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -19,8 +20,8 @@ public class PartnersData extends BaseData {
 		public final native String getDateOfAssociation() /*-{ return this.fields.date_of_association; }-*/;
 		public final native String getPhoneNo() /*-{ return this.fields.phone_no; }-*/;
 		public final native String getAddress() /*-{ return this.fields.address; }-*/;
-		public final native int getReviewerId() /*-{ return this.fields.reviewer_id; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native ReviewersData.Type getReviewer() /*-{ return this.fields.reviewer; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -31,8 +32,8 @@ public class PartnersData extends BaseData {
 		private String date_of_association;
 		private String phone_no;
 		private String address;
-		private String reviewer_id;
-		private String equipmentholder_id;
+		private ReviewersData.Data reviewer;
+		private EquipmentHoldersData.Data equipmentholder;
 		
 		public Data() {
 			super();
@@ -45,15 +46,15 @@ public class PartnersData extends BaseData {
 		}
 		
 		public Data(String id, String partner_name, String date_of_association, String phone_no,
-				String address, String reviewer_id, String equipmentholder_id) {
+				String address, ReviewersData.Data reviewer, EquipmentHoldersData.Data equipmentholder) {
 			super();
 			this.id = id;
 			this.partner_name = partner_name;
 			this.date_of_association = date_of_association;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer_id = reviewer_id;
-			this.equipmentholder_id = equipmentholder_id;
+			this.reviewer = reviewer;
+			this.equipmentholder = equipmentholder;
 		}
 
 		
@@ -68,8 +69,8 @@ public class PartnersData extends BaseData {
 			obj.date_of_association = this.date_of_association;
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
-			obj.reviewer_id = this.reviewer_id;
-			obj.equipmentholder_id = this.equipmentholder_id;
+			obj.reviewer = this.reviewer;
+			obj.equipmentholder = this.equipmentholder;
 			return obj;
 		}
 
@@ -83,43 +84,50 @@ public class PartnersData extends BaseData {
 			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
 				this.id = val;
-			} else if(key.equals("partner_name")) {
+			} 
+			else if(key.equals("partner_name")) {
 				this.partner_name = (String)val;
-			} else if(key.equals("date_of_association")) {
+			} 
+			else if(key.equals("date_of_association")) {
 				 this.date_of_association = (String)val;
-			} else if(key.equals("phone_no")) {
+			} 
+			else if(key.equals("phone_no")) {
 				 this.phone_no = (String)val;
-			} else if(key.equals("address")) {
+			} 
+			else if(key.equals("address")) {
 				 this.address = (String)val;
-			} else if(key.equals("reviewer_id")) {
-				 this.reviewer_id = val;
-			} else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = val;
+			} 
+			else if(key.equals("reviewer")) {
+				ReviewersData reviewer = new ReviewersData();
+				this.reviewer = reviewer.getNewData();
+				 this.reviewer.id = val;
+			}
+			else if(key.equals("equipmentholder")) {
+				EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+				this.equipmentholder = equipmentholder.getNewData();
+				this.equipmentholder.id = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			PartnersData partnersDataDbApis = new PartnersData();
-<<<<<<< .mine
-			this.id = partnersDataDbApis.autoInsert(this.partner_name, 
-					this.date_of_association,
-					this.phone_no, 
-					this.address, 
-					this.reviewer_id, 
-					this.equipmentholder_id);
-=======
-			if(this.id==0){
-				this.id = partnersDataDbApis.autoInsert(this.partner_name, this.date_of_association,
-						this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id == null){
+				this.id = partnersDataDbApis.autoInsert(this.partner_name, 
+						this.date_of_association,
+						this.phone_no, 
+						this.address, 
+						this.reviewer.id, 
+						this.equipmentholder.id);
 			}else{
-				this.id = partnersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.partner_name, this.date_of_association,
-						this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
+				this.id = partnersDataDbApis.autoInsert(this.id, 
+						this.partner_name, 
+						this.date_of_association,
+						this.phone_no, 
+						this.address, 
+						this.reviewer.id, 
+						this.equipmentholder.id);
 			}
-			
->>>>>>> .r278
 		}
 	}
 	
@@ -190,14 +198,20 @@ public class PartnersData extends BaseData {
 	
 	public List serialize(JsArray<Type> partnerObjects){
 		List partners = new ArrayList();
+		ReviewersData reviewer = new ReviewersData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		
 		for(int i = 0; i < partnerObjects.length(); i++){
-			Data partner = new Data(Integer.parseInt(partnerObjects.get(i).getPk()), partnerObjects.get(i).getPartnerName(),
+			
+			ReviewersData.Data r = reviewer.new Data(partnerObjects.get(i).getReviewer().getPk());
+			
+			EquipmentHoldersData.Data eq = equipmentholder.new Data(partnerObjects.get(i).getEquipmentHolder().getPk());
+			
+			Data partner = new Data(partnerObjects.get(i).getPk(), partnerObjects.get(i).getPartnerName(),
 					partnerObjects.get(i).getDateOfAssociation(), partnerObjects.get(i).getPhoneNo(),
-					partnerObjects.get(i).getAddress(), partnerObjects.get(i).getReviewerId(),
-					partnerObjects.get(i).getEquipmentHolderId());
+					partnerObjects.get(i).getAddress(), r, eq);
 			partners.add(partner);
 		}
-		
 		return partners;
 	}
 	
@@ -208,23 +222,28 @@ public class PartnersData extends BaseData {
 	
 	public List getPartnersListingOffline(){
 		BaseData.dbOpen();
+		ReviewersData reviewer = new ReviewersData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List partners = new ArrayList();
 		this.select(listPartners);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data partner = new Data(this.getResultSet().getFieldAsInt(0), 
+
+					ReviewersData.Data r = reviewer.new Data(this.getResultSet().getFieldAsString(5));
+					
+					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(6));
+					
+					Data partner = new Data(this.getResultSet().getFieldAsString(0), 
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
 							this.getResultSet().getFieldAsString(4),
-							this.getResultSet().getFieldAsInt(5),
-							this.getResultSet().getFieldAsInt(6));
+							r, eq);
 					partners.add(partner);
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 		}
@@ -239,12 +258,11 @@ public class PartnersData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data partner = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data partner = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					partners.add(partner);
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			

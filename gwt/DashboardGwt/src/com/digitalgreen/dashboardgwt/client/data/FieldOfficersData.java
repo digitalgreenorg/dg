@@ -227,6 +227,7 @@ public class FieldOfficersData extends BaseData {
 		List fieldOfficers = new ArrayList();
 		ReviewersData reviewer = new ReviewersData();
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		
 		for(int i = 0; i < fieldOfficerObjects.length(); i++){
 			ReviewersData.Data r = reviewer.new Data(fieldOfficerObjects.get(i).getReviewer().getPk());
 			
