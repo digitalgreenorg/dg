@@ -32,7 +32,7 @@ public class VideosData extends BaseData {
 		final private static String COLLECTION_PREFIX = "video";
 		
 		private String title;   		
-		private int video_type;
+		private String video_type;
 	    private String duration; 
 	    private LanguagesData.Data language; 
 	    private String summary; 
@@ -44,7 +44,7 @@ public class VideosData extends BaseData {
 	    private String thematic_quality; 
 	    private String video_production_start_date; 
 		private String video_production_end_date; 
-	    private int storybase;
+	    private String storybase;
 	    private String storyboard_filename;
 	    private String raw_filename; 
 	    private String movie_maker_project_filename;
@@ -55,7 +55,7 @@ public class VideosData extends BaseData {
 	    private ReviewersData.Data reviewer; 
 	    private String approval_date;
 	    private VideosData.Data supplementary_video_produced;
-	    private int video_suitable_for;
+	    private String video_suitable_for;
 	    private String remarks;
 	    private PracticesData.Data related_agricultural_practices;    
 	    private PersonsData.Data farmers_shown;
@@ -66,14 +66,14 @@ public class VideosData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String title) {
+		public Data(String id, String title) {
 			super();
 			this.id = id;
 			this.title = title;
 		}
 		
 
-		public Data(int id, String title ,String video_production_start_date, String video_production_end_date,  VillagesData.Data village) {
+		public Data(String id, String title ,String video_production_start_date, String video_production_end_date,  VillagesData.Data village) {
 			super();
 			this.id = id;
 			this.title = title;
@@ -141,13 +141,14 @@ public class VideosData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("title")) {
 				this.title = (String)val;
 			} else if(key.equals("video_type")){
-				this.video_type = Integer.parseInt((String)val);
+				this.video_type = val;
 			} else if(key.equals("video_production_start_date")) {
 				this.video_production_start_date = (String)val;
 			} else if (key.equals("video_production_end_date")) {
@@ -155,31 +156,31 @@ public class VideosData extends BaseData {
 			} else if (key.equals("language")) {
 				LanguagesData language = new LanguagesData();
 				this.language = language.getNewData();
-				this.language.id = Integer.parseInt((String)val);
+				this.language.id = val;
 			} else if (key.equals("storybase")){
-				this.storybase = Integer.parseInt((String)val);
+				this.storybase = val;
 			} else if (key.equals("summary")){
 				this.summary = (String)val;
 			} else if(key.equals("village")) {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 			} else if(key.equals("facilitator")){
 				AnimatorsData facilitator = new AnimatorsData();
 				this.facilitator = facilitator.getNewData();
-				this.facilitator.id = Integer.parseInt((String)val);
+				this.facilitator.id = val;
 			} else if(key.equals("cameraoperator")){
 				AnimatorsData cameraoperator = new AnimatorsData();
 				this.cameraoperator = cameraoperator.getNewData();
-				this.cameraoperator.id = Integer.parseInt((String)val);
+				this.cameraoperator.id = val;
 			} else if(key.equals("related_agricultural_practices")){
 				PracticesData practices = new PracticesData();
 				this.related_agricultural_practices = practices.getNewData();
-				this.related_agricultural_practices.id = Integer.parseInt((String)val);
+				this.related_agricultural_practices.id = val;
 			} else if(key.equals("farmers_shown")) {
 				PersonsData person = new PersonsData();
 				this.farmers_shown = person.getNewData();
-				this.farmers_shown.id = Integer.parseInt((String)val);
+				this.farmers_shown.id = val;
 			} else if(key.equals("actors")) {
 				this.actors = (String)val;
 			} else if(key.equals("picture_quality")){
@@ -197,13 +198,13 @@ public class VideosData extends BaseData {
 			} else if(key.equals("reviewer")){
 				ReviewersData reviewer = new ReviewersData();
 				this.reviewer = reviewer.getNewData();
-				this.reviewer.id = Integer.parseInt((String)val);
+				this.reviewer.id = val;
 			} else if(key.equals("approval_date")){
 				this.approval_date = (String)val;
 			} else if(key.equals("supplementary_video_produced")){
 				VideosData video = new VideosData();
 				this.supplementary_video_produced = video.getNewData();
-				this.supplementary_video_produced.id = Integer.parseInt((String)val);
+				this.supplementary_video_produced.id = val;
 			}
 			
 			
@@ -218,25 +219,66 @@ public class VideosData extends BaseData {
 			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 		    Window.alert("Save =" + this.last_modified);
 			VideosData videosDataDbApis = new VideosData();		
-			if(this.id==0){
-				this.id = videosDataDbApis.autoInsert(this.title, Integer.valueOf(this.video_type).toString(), this.duration, 
-						Integer.valueOf(this.language.getId()).toString(), this.summary, this.picture_quality,this.audio_quality, 
-						this.editing_quality, this.edit_start_date, this.edit_finish_date,this.thematic_quality, this.video_production_start_date, 
-						this.video_production_end_date, Integer.valueOf(this.storybase).toString(), this.storyboard_filename, this.raw_filename, 
-						this.movie_maker_project_filename, this.final_edited_filename, Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.facilitator.getId()).toString(), Integer.valueOf(this.cameraoperator.getId()).toString(),
-						Integer.valueOf(this.reviewer.getId()).toString(), this.approval_date, Integer.valueOf(this.supplementary_video_produced.getId()).toString(),
-						Integer.valueOf(this.video_suitable_for).toString(), this.remarks, this.actors, this.last_modified);
+			if(this.id == null){
+				this.id = videosDataDbApis.autoInsert(this.title, 
+						this.video_type, 
+						this.duration, 
+						this.language.getId(), 
+						this.summary, 
+						this.picture_quality,
+						this.audio_quality, 
+						this.editing_quality, 
+						this.edit_start_date, 
+						this.edit_finish_date,
+						this.thematic_quality, 
+						this.video_production_start_date, 
+						this.video_production_end_date, 
+						this.storybase, 
+						this.storyboard_filename, 
+						this.raw_filename, 
+						this.movie_maker_project_filename, 
+						this.final_edited_filename, 
+						this.village.getId(),
+						this.facilitator.getId(), 
+						this.cameraoperator.getId(),
+						this.reviewer.getId(), 
+						this.approval_date, 
+						this.supplementary_video_produced.getId(),
+						this.video_suitable_for, 
+						this.remarks, 
+						this.actors, 
+						this.last_modified);
 			}else{
-				this.id = videosDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.title, Integer.valueOf(this.video_type).toString(), this.duration, 
-						Integer.valueOf(this.language.getId()).toString(), this.summary, this.picture_quality,this.audio_quality, 
-						this.editing_quality, this.edit_start_date, this.edit_finish_date,this.thematic_quality, this.video_production_start_date, 
-						this.video_production_end_date, Integer.valueOf(this.storybase).toString(), this.storyboard_filename, this.raw_filename, 
-						this.movie_maker_project_filename, this.final_edited_filename, Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.facilitator.getId()).toString(), Integer.valueOf(this.cameraoperator.getId()).toString(),
-						Integer.valueOf(this.reviewer.getId()).toString(), this.approval_date, Integer.valueOf(this.supplementary_video_produced.getId()).toString(),
-						Integer.valueOf(this.video_suitable_for).toString(), this.remarks, this.actors, this.last_modified);
-			}
+				this.id = videosDataDbApis.autoInsert(this.id,
+						this.title, 
+						this.video_type, 
+						this.duration, 
+						this.language.getId(), 
+						this.summary, 
+						this.picture_quality,
+						this.audio_quality, 
+						this.editing_quality, 
+						this.edit_start_date, 
+						this.edit_finish_date,
+						this.thematic_quality, 
+						this.video_production_start_date, 
+						this.video_production_end_date, 
+						this.storybase, 
+						this.storyboard_filename, 
+						this.raw_filename, 
+						this.movie_maker_project_filename, 
+						this.final_edited_filename, 
+						this.village.getId(),
+						this.facilitator.getId(), 
+						this.cameraoperator.getId(),
+						this.reviewer.getId(), 
+						this.approval_date, 
+						this.supplementary_video_produced.getId(),
+						this.video_suitable_for, 
+						this.remarks, 
+						this.actors, 
+						this.last_modified);
+				}
 			
 		}
 	}
@@ -339,8 +381,8 @@ public class VideosData extends BaseData {
 		List videos = new ArrayList();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < videoObjects.length(); i++){
-			VillagesData.Data v = village.new Data(Integer.parseInt(videoObjects.get(i).getVillage().getPk()), videoObjects.get(i).getVillage().getVillageName()) ;
-			Data video = new Data(Integer.parseInt(videoObjects.get(i).getPk()), videoObjects.get(i).getTitle(), videoObjects.get(i).getVideoProductionStartDate(), videoObjects.get(i).getVideoProductionEndDate(), v);
+			VillagesData.Data v = village.new Data(videoObjects.get(i).getVillage().getPk(), videoObjects.get(i).getVillage().getVillageName()) ;
+			Data video = new Data(videoObjects.get(i).getPk(), videoObjects.get(i).getTitle(), videoObjects.get(i).getVideoProductionStartDate(), videoObjects.get(i).getVideoProductionEndDate(), v);
 			videos.add(video);
 		}
 		
@@ -360,8 +402,8 @@ public class VideosData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsInt(4),  this.getResultSet().getFieldAsString(5)) ;
-					Data video = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), v);
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5)) ;
+					Data video = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), v);
 					videos.add(video);
 	    	      }				
 			} catch (DatabaseException e) {
@@ -382,7 +424,7 @@ public class VideosData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data video = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data video = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					videos.add(video);
 	    	      }				
 			} catch (DatabaseException e) {
