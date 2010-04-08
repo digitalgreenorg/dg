@@ -40,7 +40,7 @@ public class PersonsData extends BaseData {
 		private String land_holdings;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private int equipmentholder_id;
+		private String equipmentholder_id;
 		private PersonRelationsData.Data relations;
 		private PersonAdoptPracticeData.Data adopted_agricultural_practices;
 		
@@ -49,8 +49,8 @@ public class PersonsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String person_name,String father_name,String age,String gender,String phone_no,String address,String land_holdings,
-				VillagesData.Data village,PersonGroupsData.Data group,int equipmentholder_id) {
+		public Data(String id, String person_name,String father_name,String age,String gender,String phone_no,String address,String land_holdings,
+				VillagesData.Data village,PersonGroupsData.Data group, String equipmentholder_id) {
 			super();
 			this.id = id;
 			this.person_name = person_name;
@@ -65,7 +65,7 @@ public class PersonsData extends BaseData {
 			this.equipmentholder_id = equipmentholder_id;
 		}
 		
-		public Data(int id, String person_name){
+		public Data(String id, String person_name){
 			super();
 			this.id = id;
 			this.person_name = person_name;
@@ -103,7 +103,7 @@ public class PersonsData extends BaseData {
 			return this.group;
 		}
 						
-		public int getEquipmentHolderId(){
+		public String getEquipmentHolderId(){
 			return this.equipmentholder_id;
 		}
 		
@@ -117,8 +117,8 @@ public class PersonsData extends BaseData {
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
 			obj.land_holdings = this.land_holdings;
-			obj.village = (VillagesData.Data)this.village.clone();
-			obj.group= (PersonGroupsData.Data)this.group.clone();
+			obj.village = this.village;
+			obj.group= this.group;
 			obj.equipmentholder_id = this.equipmentholder_id;
 			obj.relations = this.relations;
 			obj.adopted_agricultural_practices = this.adopted_agricultural_practices;			
@@ -132,9 +132,10 @@ public class PersonsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("person_name")) {
 				this.person_name = (String)val;
 			} else if(key.equals("father_name")) {
@@ -153,30 +154,45 @@ public class PersonsData extends BaseData {
 				// Have to Create an instance of VillagesData to create an instance of VillagesData.Data -- any better way of doing this??
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 				//Never ever use this -- this.village.id = ((Integer)val).intValue();
 			}  else if(key.equals("group")) {
 				PersonGroupsData group = new PersonGroupsData();
 				this.group = group.getNewData();
-				this.group.id = Integer.parseInt((String)val);
+				this.group.id = val;
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+				this.equipmentholder_id = val;
 			}  else if(key.equals("relations")) {
 				PersonRelationsData relations = new PersonRelationsData();
 				this.relations = relations.getNewData();
-				this.relations.id = Integer.parseInt((String)val);
+				this.relations.id = val;
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("adopted_agricultural_practices")) {
 				PersonAdoptPracticeData adopted_agricultural_practices = new PersonAdoptPracticeData();
 				this.adopted_agricultural_practices = adopted_agricultural_practices.getNewData();
-				this.adopted_agricultural_practices.id = Integer.parseInt((String)val);
+				this.adopted_agricultural_practices.id = val;
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  	
 		}
 		
 		@Override		
 		public void save() {
+<<<<<<< .mine
+			PersonsData personsDataDbApis = new PersonsData();			
+			this.id = personsDataDbApis.autoInsert(this.person_name,
+					this.father_name,
+					this.age,
+					this.gender,
+					this.phone_no,
+					this.address,
+					this.land_holdings,
+					this.village.getId(),
+					this.group.getId(), 
+					this.equipmentholder_id,
+					this.relations.getId(),
+					this.adopted_agricultural_practices.getId();
+=======
 			PersonsData personsDataDbApis = new PersonsData();		
 			if(this.id==0){
 				this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
@@ -190,6 +206,7 @@ public class PersonsData extends BaseData {
 						Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
 			}
 			
+>>>>>>> .r278
 			}		
 	}
 	

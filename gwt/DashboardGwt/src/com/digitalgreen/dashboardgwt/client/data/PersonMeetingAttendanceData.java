@@ -43,7 +43,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, ScreeningsData.Data screening, PersonsData.Data person, PracticesData.Data expressed_interest_practice,
+		public Data(String id, ScreeningsData.Data screening, PersonsData.Data person, PracticesData.Data expressed_interest_practice,
 				String expressed_interest, PracticesData.Data expressed_adoption_practice,String expressed_adoption,
 				PracticesData.Data expressed_question_practice, String expressed_question) {
 			this.id = id;
@@ -57,7 +57,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.expressed_question = expressed_question;
 		}
 		
-		public Data(int id, PersonsData.Data person){
+		public Data(String id, PersonsData.Data person){
 			super();
 			this.id = id;
 			this.person = person;
@@ -110,37 +110,38 @@ public class PersonMeetingAttendanceData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
-				this.screening.id = Integer.parseInt((String)val);
+				this.screening.id = val;
 				
 			} else if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
-				this.person.id = Integer.parseInt((String)val);
+				this.person.id = val;
 				
 			}  else if(key.equals("expressed_interest_practice")) {
 				PracticesData expressed_interest_practice = new PracticesData();
 				this.expressed_interest_practice = expressed_interest_practice.getNewData();
-				this.expressed_interest_practice.id = Integer.parseInt((String)val);
+				this.expressed_interest_practice.id = val;
 				
 			}  else if(key.equals("expressed_interest")) {
 				this.expressed_interest = (String)val;
 			} else if(key.equals("expressed_adoption_practice")) {
 				PracticesData expressed_adoption_practice = new PracticesData();
 				this.expressed_adoption_practice = expressed_adoption_practice.getNewData();
-				this.expressed_adoption_practice.id = Integer.parseInt((String)val);
+				this.expressed_adoption_practice.id = val;
 				
 			}  else if(key.equals("expressed_adoption")) {
 				this.expressed_adoption= (String)val;
 			} else if(key.equals("expressed_question_practice")) {
 				PracticesData expressed_question_practice = new PracticesData();
 				this.expressed_question_practice = expressed_question_practice.getNewData();
-				this.expressed_question_practice.id = Integer.parseInt((String)val);
+				this.expressed_question_practice.id = val;
 				
 			}  else if(key.equals("expressed_question")) {
 				this.expressed_question = (String)val;
@@ -151,6 +152,16 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override		
 		public void save() {
 			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();			
+<<<<<<< .mine
+			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.screening.getId(),
+					this.person.getId(),
+					this.expressed_interest_practice.getId(),
+					this.expressed_interest,
+					this.expressed_adoption_practice.getId(),
+					this.expressed_adoption,
+					this.expressed_question_practice.getId(),
+					this.expressed_question);
+=======
 			if(this.id==0){
 				this.id = personMeetingAttendancesDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
 						Integer.valueOf(this.person.getId()).toString(),
@@ -166,6 +177,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 						Integer.valueOf(this.expressed_question_practice.getId()).toString(),this.expressed_question);
 			}
 			
+>>>>>>> .r278
 			}	
 	}
 		

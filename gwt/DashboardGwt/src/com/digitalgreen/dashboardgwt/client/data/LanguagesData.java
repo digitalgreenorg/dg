@@ -27,7 +27,7 @@ public class LanguagesData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String language_name) {
+		public Data(String id, String language_name) {
 			super();
 			this.id = id;
 			this.language_name = language_name;
@@ -50,9 +50,10 @@ public class LanguagesData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			} else if(key.equals("language_name")) {
 				this.language_name = (String)val;
 			}			

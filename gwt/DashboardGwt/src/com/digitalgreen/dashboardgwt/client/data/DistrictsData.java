@@ -36,7 +36,7 @@ public class DistrictsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String district_name, String start_date, StatesData.Data state, FieldOfficersData.Data fieldofficer, String fieldofficer_startday, PartnersData.Data partner){
+		public Data(String id, String district_name, String start_date, StatesData.Data state, FieldOfficersData.Data fieldofficer, String fieldofficer_startday, PartnersData.Data partner){
 			super();
 			this.id = id;
 			this.district_name = district_name;
@@ -47,7 +47,7 @@ public class DistrictsData extends BaseData {
 			this.partner = partner;
 		}
 		
-		public Data(int id, String district_name){
+		public Data(String id, String district_name){
 			super();
 			this.id = id;
 			this.district_name = district_name;
@@ -83,10 +83,10 @@ public class DistrictsData extends BaseData {
 			obj.id = this.id;
 			obj.district_name = this.district_name;
 			obj.start_date = this.start_date;
-			obj.state = (StatesData.Data)this.state.clone();
-			obj.fieldofficer = (FieldOfficersData.Data)this.fieldofficer.clone();
+			obj.state = this.state;
+			obj.fieldofficer = this.fieldofficer;
 			obj.fieldofficer_startday = this.fieldofficer_startday;
-			obj.partner = (PartnersData.Data)this.partner.clone();
+			obj.partner = this.partner;
 			return obj;
 		}
 		
@@ -96,39 +96,42 @@ public class DistrictsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
-			}
-			else if(key.equals("district_name")) {
+				this.id = val;
+			} else if(key.equals("district_name")) {
 				this.district_name = (String)val;
-			}
-			else if(key.equals("start_date")){
+			} else if(key.equals("start_date")){
 				this.start_date = (String)val;
-			}
-			else if(key.equals("state")){
+			} else if(key.equals("state")){
 				StatesData state1 = new StatesData();
 				this.state = state1.getNewData();
-				this.state.id = Integer.parseInt((String)val);				
-			}
-			else if(key.equals("fieldofficer")){
+				this.state.id = val;				
+			} else if(key.equals("fieldofficer")){
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
 				this.fieldofficer = fieldofficer1.getNewData();
-				this.fieldofficer.id = Integer.parseInt((String)val);
-			}
-			else if(key.equals("fieldofficer_startday")){
+				this.fieldofficer.id = val;
+			} else if(key.equals("fieldofficer_startday")){
 				this.fieldofficer_startday = (String)val;
-			}
-			else if(key.equals("partner")){
+			} else if(key.equals("partner")){
 				PartnersData partner1 = new PartnersData();
 				this.partner = partner1.getNewData();
-				this.partner.id = Integer.parseInt((String)val);
+				this.partner.id = val;
 			}
 		}
 		
 		@Override
 		public void save(){
 			DistrictsData districtsDataDbApis = new DistrictsData();
+<<<<<<< .mine
+			this.id = districtsDataDbApis.autoInsert(this.district_name, 
+					this.start_date, 
+					this.state.getId(), 
+					this.fieldofficer.getId(), 
+					this.fieldofficer_startday, 
+					this.partner.getId());
+=======
 			if(this.id == 0){
 				this.id = districtsDataDbApis.autoInsert(this.district_name, this.start_date, 
 						Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
@@ -139,6 +142,7 @@ public class DistrictsData extends BaseData {
 						this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

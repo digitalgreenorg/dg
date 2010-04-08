@@ -46,13 +46,13 @@ public class AnimatorsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String name){
+		public Data(String id, String name){
 			super();
 			this.id = id;
 			this.name = name;
 		}
 		
-		public Data(int id, String name, String age, String gender, String csp_flag, String camera_operator_flag,
+		public Data(String id, String name, String age, String gender, String csp_flag, String camera_operator_flag,
 				String facilitator_flag, String phone_no, String address, PartnersData.Data partner,
 				VillagesData.Data village, EquipmentHoldersData.Data equipment_holder){
 			super();
@@ -131,16 +131,17 @@ public class AnimatorsData extends BaseData {
 			obj.facilitator_flag = this.facilitator_flag;
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
-			obj.partner = (PartnersData.Data)this.partner.clone();
-			obj.village = (VillagesData.Data)this.village.clone();
-			obj.equipment_holder = (EquipmentHoldersData.Data)this.equipment_holder.clone();
+			obj.partner = this.partner;
+			obj.village = this.village;
+			obj.equipment_holder = this.equipment_holder;
 			return obj;
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			} else if(key.equals("name")) {
 				this.name = (String)val;
 			} else if(key.equals("age")) {
@@ -157,24 +158,37 @@ public class AnimatorsData extends BaseData {
 				this.phone_no = (String)val;
 			} else if(key.equals("address")) {
 				this.address = (String)val;
-			} else if(key.equals("partner_id")) {
+			} else if(key.equals("partner")) {
 				PartnersData partner = new PartnersData();
 				this.partner = partner.getNewData();
-				this.partner.id = ((Integer)val).intValue();
-			} else if(key.equals("home_village_id")) {
+				this.partner.id = val;
+			} else if(key.equals("home_village")) {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = ((Integer)val).intValue();
-			} else if(key.equals("equipmentholder_id")) {
+				this.village.id = val;
+			} else if(key.equals("equipmentholder")) {
 				EquipmentHoldersData equipmentHolders = new EquipmentHoldersData();
 				this.equipment_holder = equipmentHolders.getNewData();
-				this.equipment_holder.id = ((Integer)val).intValue();;
+				this.equipment_holder.id = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
+<<<<<<< .mine
+			this.id = animatorsDataDbApis.autoInsert(this.name, 
+					this.age, 
+					this.gender, 
+					this.csp_flag, 
+					this.camera_operator_flag, 
+					this.facilitator_flag, 
+					this.phone_no, 
+					this.address, 
+					this.partner.getId(), 
+					this.village.getId(), 
+					this.equipment_holder.getId());
+=======
 			if(this.id == 0){
 				this.id = animatorsDataDbApis.autoInsert(this.name, this.age, this.gender, this.csp_flag, this.camera_operator_flag, 
 						this.facilitator_flag, this.phone_no, this.address, Integer.valueOf(this.partner.getId()).toString(), 
@@ -185,6 +199,7 @@ public class AnimatorsData extends BaseData {
 						Integer.valueOf(this.village.getId()).toString(), Integer.valueOf(this.equipment_holder.getId()).toString());
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

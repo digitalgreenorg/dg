@@ -32,13 +32,13 @@ public class PracticesData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String practice_name){
+		public Data(String id, String practice_name){
 			super();
 			this.id = id;
 			this.practice_name = practice_name;
 		}
 		
-		public Data(int id, String practice_name, String seasonality, String summary){
+		public Data(String id, String practice_name, String seasonality, String summary){
 			super();
 			this.id = id;
 			this.practice_name = practice_name;
@@ -74,9 +74,10 @@ public class PracticesData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val){
+		public void setObjValueFromString(String key, String val){
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")){
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			}
 			else if(key.equals("practice_name")){
 				this.practice_name = (String)val;

@@ -6,8 +6,6 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData.Data;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData.Type;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -31,8 +29,8 @@ public class VillagesData extends BaseData {
 		
 		private String village_name;
 	    private BlocksData.Data block; 
-	    private int no_of_households;
-	    private int population;
+	    private String no_of_households;
+	    private String population;
 	    private String road_connectivity;
 	    private String control; 
 	    private String start_date; 
@@ -41,21 +39,22 @@ public class VillagesData extends BaseData {
 			super();
 		}
 
-		public Data(int id, String village_name) {
+		public Data(String id, String village_name) {
 			super();
 			this.id = id;
 			this.village_name = village_name;
 		}
 
-		public Data(int id, String village_name, BlocksData.Data block) {
+		public Data(String id, String village_name, BlocksData.Data block) {
 			super();
 			this.id = id;
 			this.village_name = village_name;
 			this.block = block;
 		}
 		
-		public Data(int id, String village_name , BlocksData.Data block, int no_of_households,
-				int population, String road_connectivity, String control, String start_date) {
+		public Data(String id, String village_name , BlocksData.Data block, 
+				String no_of_households, String population, String road_connectivity, 
+				String control, String start_date) {
 			super();
 			this.id = id;
 			this.village_name = village_name;
@@ -80,7 +79,7 @@ public class VillagesData extends BaseData {
 			Data obj = new Data();
 			obj.id = this.id;
 			obj.village_name = this.village_name;
-			obj.block = (BlocksData.Data)this.block.clone();
+			obj.block = this.block;
 			obj.no_of_households = this.no_of_households;
 			obj.population = this.population;
 			obj.road_connectivity = this.road_connectivity;
@@ -95,38 +94,63 @@ public class VillagesData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("village_name")) {
-				this.village_name = (String)val;
-			} else if(key.equals("block_id")) {
+				this.village_name = val;
+			} else if(key.equals("block")) {
 				BlocksData block = new BlocksData();
 				this.block = block.getNewData();
-				this.block.id = Integer.parseInt((String)val);;
+				this.block.id = val;
 			} else if(key.equals("no_of_households")) {
-				this.no_of_households = Integer.parseInt((String)val);
+				this.no_of_households = val;
 			} else if(key.equals("population")) {
-				this.population = Integer.parseInt((String)val);
+				this.population = val;
 			} else if(key.equals("road_connectivity")) {
-				this.road_connectivity = (String)val;
+				this.road_connectivity = val;
 			} else if(key.equals("control")) {
-				this.control = (String)val;
+				this.control = val;
 			} else if(key.equals("start_date")) {
-				this.start_date = (String)val;
+				this.start_date = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();
+<<<<<<< .mine
+			this.id = villagesDataDbApis.autoInsert(this.village_name, 
+					this.block.getId(),  
+					this.no_of_households,  
+					this.population, 
+					this.road_connectivity, 
+					this.control, 
+					this.start_date);
+=======
 			if(this.id==0){
 				this.id = villagesDataDbApis.autoInsert(this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
 			}else{
 				this.id = villagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.village_name, Integer.valueOf(this.block.getId()).toString(),  Integer.valueOf(this.no_of_households).toString(),  Integer.valueOf(this.population).toString(), this.road_connectivity, this.control, this.start_date);
 			}
 			
+>>>>>>> .r278
 		}
+<<<<<<< .mine
+		
+		public void saveWithID() {
+			VillagesData villagesDataDbApis = new VillagesData();
+			this.id = villagesDataDbApis.autoInsertWithID(this.id, this.village_name, 
+					this.block.getId(),  
+					this.no_of_households, 
+					this.population, 
+					this.road_connectivity, 
+					this.control, 
+					this.start_date);
+		}
+=======
+>>>>>>> .r278
 	}
 
 	

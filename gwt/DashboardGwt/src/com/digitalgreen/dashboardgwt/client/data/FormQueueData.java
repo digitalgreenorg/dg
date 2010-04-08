@@ -1,11 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
-import java.util.HashMap;
-
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.google.gwt.gears.client.database.DatabaseException;
-import com.google.gwt.user.client.Window;
 
 public class FormQueueData extends BaseData {
 

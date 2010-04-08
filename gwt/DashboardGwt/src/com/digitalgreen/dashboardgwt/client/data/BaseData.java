@@ -34,11 +34,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public class Data implements Cloneable {
 		
-		protected int id;
+		protected String id = null;
 		
-		public Data() {
-			this.id = 0;
-		}
+		public Data() {}
 		
 		// Override this
 		public BaseData.Data clone() {
@@ -50,7 +48,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return null;
 		}
 		// Override this
-		public void setObjValueFromString(String key, Object val) {}
+		public void setObjValueFromString(String key, String val) {
+			//Window.alert("The incoming key= " + key);
+		}
 
 		// Override this
 		public void save() {}
@@ -58,7 +58,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// Override this
 		public void save(BaseData.Data withForeignKey) {}
 		
-		public int getId() {
+		public String getId() {
 			return this.id;
 		}
 	}
@@ -232,7 +232,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		BaseData.dbClose();
 	}
 
-	public int autoInsert(String ...args) {
+	public String autoInsert(String ...args) {
 		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
 		for(int i=0; i < this.getFields().length; i++) {
 			if(i == this.getFields().length - 1) {
@@ -254,8 +254,26 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				tempListString[i] = (String)tempList.get(i);
 			}
 			this.insert(insertSql, tempListString);
+<<<<<<< .mine
+			this.updateLastInsertedID(newId);
+			return newId;
+=======
 			return Integer.parseInt(args[0]);
+>>>>>>> .r278
 		}
+<<<<<<< .mine
+		return "-1";
+	}
+	
+	
+	public String autoInsertWithID(String ...args) {
+		String insertSql = "INSERT INTO " + this.getTableName() + " VALUES (";
+		for(int i=0; i < this.getFields().length; i++) {
+			if(i == this.getFields().length - 1) {
+				insertSql += "?";
+			} else {
+				insertSql += "?, ";
+=======
 		else{
 			String newId = this.getNextRowId();
 			if(!newId.equals("ERROR")) {
@@ -266,10 +284,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				this.insert(insertSql, tempListString);
 				this.updateLastInsertedID(newId);
 				return Integer.parseInt(newId);
+>>>>>>> .r278
 			}
 		}
 		
-		return -1;
+		return "-1";
 	}
 	
 	public void update(String updateSql, String ...args) {

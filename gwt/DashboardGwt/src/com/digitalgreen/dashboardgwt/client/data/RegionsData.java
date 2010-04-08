@@ -30,13 +30,13 @@ public class RegionsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String region_name){
+		public Data(String id, String region_name){
 			super();
 			this.id = id;
 			this.region_name = region_name;
 		}
 		
-		public Data(int id, String region_name, String start_date) {
+		public Data(String id, String region_name, String start_date) {
 			super();
 			this.id = id;
 			this.region_name = region_name;
@@ -65,9 +65,10 @@ public class RegionsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("region_name")) {
 				this.region_name = (String)val;
 			} else if(key.equals("start_date")) {

@@ -31,7 +31,7 @@ public class BlocksData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String block_name, String start_date, DistrictsData.Data district){
+		public Data(String id, String block_name, String start_date, DistrictsData.Data district){
 			super();
 			this.id = id;
 			this.block_name = block_name;
@@ -39,7 +39,7 @@ public class BlocksData extends BaseData {
 			this.district = district;
 		}
 		
-		public Data(int id, String block_name){
+		public Data(String id, String block_name){
 			super();
 			this.id = id;
 			this.block_name = block_name;
@@ -62,7 +62,7 @@ public class BlocksData extends BaseData {
 			obj.id = this.id;
 			obj.block_name = this.block_name;
 			obj.start_date = this.start_date;
-			obj.district = (DistrictsData.Data)this.district.clone();
+			obj.district = this.district;
 			return obj;
 		}
 		
@@ -72,9 +72,10 @@ public class BlocksData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			}
 			else if(key.equals("block_name")){
 				this.block_name = (String)val;
@@ -85,19 +86,25 @@ public class BlocksData extends BaseData {
 			else if(key.equals("district")){
 				DistrictsData district1 = new DistrictsData();
 				this.district = district1.getNewData();
-				this.district.id = Integer.parseInt((String)val);
+				this.district.id = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			BlocksData blocksDataDbApis = new BlocksData();
+<<<<<<< .mine
+			this.id = blocksDataDbApis.autoInsert(this.block_name, 
+					this.start_date, 
+					this.district.getId());
+=======
 			if(this.id == 0){
 				this.id = blocksDataDbApis.autoInsert(this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
 			}else{
 				this.id = blocksDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

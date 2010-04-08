@@ -28,12 +28,12 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 			super();
 		}
 		
-		public Data(int id){
+		public Data(String id){
 			super();
 			this.id = id;
 		}
 		
-		public Data(int id, TrainingsData.Data training, AnimatorsData.Data animator){
+		public Data(String id, TrainingsData.Data training, AnimatorsData.Data animator){
 			super();
 			this.id = id;
 			this.training = training;
@@ -63,19 +63,20 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			}
 			else if(key.equals("training")){
 				TrainingsData training1 = new TrainingsData();
 				this.training = training1.getNewData();
-				this.training.id = Integer.parseInt((String)val);
+				this.training.id = val;
 			}
 			else if(key.equals("animator")){
 				AnimatorsData animator1 = new AnimatorsData();
 				this.animator = animator1.getNewData();
-				this.animator.id = Integer.parseInt((String)val);
+				this.animator.id = val;
 			}
 		}
 		

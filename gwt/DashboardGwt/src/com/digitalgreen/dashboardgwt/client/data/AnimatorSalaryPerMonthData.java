@@ -34,14 +34,14 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 			super();
 		}
 		
-		public Data(int id, AnimatorsData.Data animator) {
+		public Data(String id, AnimatorsData.Data animator) {
 			super();
 			this.id = id;
 			this.animator = animator;
 		}
 		
 
-		public Data(int id, AnimatorsData.Data animator,String date, String total_salary, String pay_date) {
+		public Data(String id, AnimatorsData.Data animator,String date, String total_salary, String pay_date) {
 			super();
 			this.id = id;
 			this.animator = animator;
@@ -71,7 +71,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
-			obj.animator = (AnimatorsData.Data)this.animator.clone();
+			obj.animator = this.animator;
 			obj.date = this.date;
 			obj.total_salary = this.total_salary;
 			obj.pay_date = this.pay_date;
@@ -84,14 +84,15 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("animator")) {
 				// Have to Create an instance of AnimatorsData to create an instance of AnimatorsData.Data -- any better way of doing this??
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
-				this.animator.id = Integer.parseInt((String)val);
+				this.animator.id = val;
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("date")) {
 				this.date = (String)val;
@@ -104,6 +105,13 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		
 		@Override
 		public void save() {
+<<<<<<< .mine
+			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();			
+			this.id = animatorsalarypermonthsDataDbApis.autoInsert(this.animator.getId(),
+					this.date,
+					this.total_salary, 
+					this.pay_date);
+=======
 			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();		
 			if(this.id == 0){
 				this.id = animatorsalarypermonthsDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(),
@@ -113,6 +121,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 						this.date,this.total_salary, this.pay_date);
 			}
 			
+>>>>>>> .r278
 		}
 		
 	}

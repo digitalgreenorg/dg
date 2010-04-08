@@ -38,7 +38,7 @@ public class TrainingsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
+		public Data(String id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
 				VillagesData.Data village, DevelopmentManagersData.Data developmentmanager, FieldOfficersData.Data fieldofficer ){
 			super();
 			this.id = id;
@@ -51,7 +51,7 @@ public class TrainingsData extends BaseData {
 			this.fieldofficer = fieldofficer;
 		}
 		
-		public Data(int id, String training_purpose, String training_outcome){
+		public Data(String id, String training_purpose, String training_outcome){
 			super();
 			this.id = id;
 			this.training_purpose = training_purpose;
@@ -106,9 +106,10 @@ public class TrainingsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			}
 			else if(key.equals("training_purpose")){
 				this.training_purpose = (String)val;
@@ -125,17 +126,17 @@ public class TrainingsData extends BaseData {
 			else if(key.equals("village")){
 				VillagesData village1 = new VillagesData();
 				this.village = village1.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 			}
 			else if(key.equals("developmentmanager")){
 				DevelopmentManagersData developmentmanager1 = new DevelopmentManagersData();
 				this.developmentmanager = developmentmanager1.getNewData();
-				this.developmentmanager.id = Integer.parseInt((String)val);
+				this.developmentmanager.id = val;
 			}
 			else if(key.equals("fieldofficer")){
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
 				this.fieldofficer = fieldofficer1.getNewData();
-				this.fieldofficer.id = Integer.parseInt((String)val);
+				this.fieldofficer.id = val;
 			}
 		}
 		

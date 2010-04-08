@@ -41,8 +41,8 @@ public class DevelopmentManagersData extends BaseData {
 		private String speciality;
 		private RegionsData.Data region;
 		private String start_day;
-		private int equipmentholder_id;
-		private float salary;
+		private EquipmentHoldersData.Data equipmentholder;
+		private String salary;
 		
 		
 		
@@ -50,8 +50,8 @@ public class DevelopmentManagersData extends BaseData {
 			super();
 		}
 
-		public Data(int id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
-				RegionsData.Data region, String start_day,int equipmentholder_id,float salary ) {
+		public Data(String id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
+				RegionsData.Data region, String start_day,EquipmentHoldersData.Data equipmentholder, String salary ) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -63,11 +63,11 @@ public class DevelopmentManagersData extends BaseData {
 			this.speciality = speciality;
 			this.region = region;
 			this.start_day = start_day;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipmentholder = equipmentholder;
 			this.salary = salary;
 		}
 		
-		public Data(int id, String name){
+		public Data(String id, String name){
 			super();
 			this.id = id;
 			this.name = name;
@@ -109,11 +109,11 @@ public class DevelopmentManagersData extends BaseData {
 			return this.start_day;
 		}
 				
-		public int getEquipmentHolderId(){
-			return this.equipmentholder_id;
+		public EquipmentHoldersData.Data getEquipmentHolderId(){
+			return this.equipmentholder;
 		}
 		
-		public float getSalary(){
+		public String getSalary(){
 			return this.salary;
 		}
 				
@@ -129,9 +129,9 @@ public class DevelopmentManagersData extends BaseData {
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
 			obj.speciality = this.speciality;
-			obj.region = (RegionsData.Data)this.region.clone();
+			obj.region = this.region;
 			obj.start_day = this.start_day;
-			obj.equipmentholder_id = this.equipmentholder_id;
+			obj.equipmentholder = this.equipmentholder;
 			obj.salary = this.salary;
 				
 			return obj;
@@ -143,9 +143,10 @@ public class DevelopmentManagersData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("name")) {
 				this.name = (String)val;
 			} else if(key.equals("age")) {
@@ -164,20 +165,36 @@ public class DevelopmentManagersData extends BaseData {
 				// Have to Create an instance of RegionsData to create an instance of RegionsData.Data -- any better way of doing this??
 				RegionsData region = new RegionsData();
 				this.region = region.getNewData();
-				this.region.id = Integer.parseInt((String)val);
+				this.region.id = val;
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_day")) {
 				this.start_day = (String)val;
 			}  else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+				EquipmentHoldersData equipmentHolderData = new EquipmentHoldersData();
+				this.equipmentholder = equipmentHolderData.getNewData();
+				this.equipmentholder.id = val;
 			} else if(key.equals("salary")) {
-				this.salary = Float.parseFloat((String)val);
-				}		
+				this.salary = val;
+			}		
 		}
 		
 		@Override
 		
 		public void save() {
+<<<<<<< .mine
+			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();			
+			this.id = developmentmanagersDataDbApis.autoInsert(this.name,
+					this.age,
+					this.gender,
+					this.hire_date,
+					this.phone_no,
+					this.address,
+					this.speciality,
+					this.region.getId(),
+					this.start_day,
+					this.equipmentholder.getId(),
+					this.salary);
+=======
 			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
 			if(this.id == 0){
 				this.id = developmentmanagersDataDbApis.autoInsert(this.name,this.age,this.gender,this.hire_date,
@@ -188,6 +205,7 @@ public class DevelopmentManagersData extends BaseData {
 						this.phone_no,this.address,this.speciality,Integer.valueOf(this.region.getId()).toString(),this.start_day,
 						Integer.valueOf(this.equipmentholder_id).toString(),Float.valueOf(this.salary).toString());
 			}
+>>>>>>> .r278
 			
 			
 		}

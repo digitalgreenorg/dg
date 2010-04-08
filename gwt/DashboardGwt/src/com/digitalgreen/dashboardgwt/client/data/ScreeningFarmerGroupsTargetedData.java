@@ -29,13 +29,13 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, ScreeningsData.Data screening, PersonGroupsData.Data group) {
+		public Data(String id, ScreeningsData.Data screening, PersonGroupsData.Data group) {
 			this.id = id;
 			this.screening = screening;
 			this.group = group;
 			}
 		
-		public Data(int id, PersonGroupsData.Data group){
+		public Data(String id, PersonGroupsData.Data group){
 			super();
 			this.id = id;
 			this.group = group;
@@ -64,18 +64,19 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
-				this.screening.id = Integer.parseInt((String)val);
+				this.screening.id = val;
 				
 			} else if(key.equals("group")) {
 				PersonGroupsData group = new PersonGroupsData();
 				this.group = group.getNewData();
-				this.group.id = Integer.parseInt((String)val);
+				this.group.id = val;
 			}
 		}
 	

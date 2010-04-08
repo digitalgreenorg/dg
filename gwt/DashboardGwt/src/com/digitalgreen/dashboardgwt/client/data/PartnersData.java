@@ -31,21 +31,21 @@ public class PartnersData extends BaseData {
 		private String date_of_association;
 		private String phone_no;
 		private String address;
-		private int reviewer_id;
-		private int equipmentholder_id;
+		private String reviewer_id;
+		private String equipmentholder_id;
 		
 		public Data() {
 			super();
 		}
 		
-		public Data(int id, String partner_name) {
+		public Data(String id, String partner_name) {
 			super();
 			this.id = id;
 			this.partner_name = partner_name;
 		}
 		
-		public Data(int id, String partner_name, String date_of_association, String phone_no,
-				String address, int reviewer_id, int equipmentholder_id) {
+		public Data(String id, String partner_name, String date_of_association, String phone_no,
+				String address, String reviewer_id, String equipmentholder_id) {
 			super();
 			this.id = id;
 			this.partner_name = partner_name;
@@ -79,9 +79,10 @@ public class PartnersData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			} else if(key.equals("partner_name")) {
 				this.partner_name = (String)val;
 			} else if(key.equals("date_of_association")) {
@@ -91,15 +92,23 @@ public class PartnersData extends BaseData {
 			} else if(key.equals("address")) {
 				 this.address = (String)val;
 			} else if(key.equals("reviewer_id")) {
-				 this.reviewer_id = ((Integer)val).intValue();
+				 this.reviewer_id = val;
 			} else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = ((Integer)val).intValue();
+				this.equipmentholder_id = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			PartnersData partnersDataDbApis = new PartnersData();
+<<<<<<< .mine
+			this.id = partnersDataDbApis.autoInsert(this.partner_name, 
+					this.date_of_association,
+					this.phone_no, 
+					this.address, 
+					this.reviewer_id, 
+					this.equipmentholder_id);
+=======
 			if(this.id==0){
 				this.id = partnersDataDbApis.autoInsert(this.partner_name, this.date_of_association,
 						this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
@@ -110,6 +119,7 @@ public class PartnersData extends BaseData {
 						Integer.valueOf(this.equipmentholder_id).toString());
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

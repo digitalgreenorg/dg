@@ -34,15 +34,15 @@ public class EquipmentsData extends BaseData {
 		private String cost;
 		private String procurement_date;
 		private String warranty_expiration_date;
-		private int equipmentholder_id;
+		private EquipmentHoldersData.Data equipmentholder;
 		
 		
 		public Data() {
 			super();
 		}
 
-		public Data(int id, String equipment_type,String model_no,String serial_no,String cost,String procurement_date,
-				String warranty_expiration_date,int equipmentholder_id) {
+		public Data(String id, String equipment_type,String model_no,String serial_no,String cost,String procurement_date,
+				String warranty_expiration_date, EquipmentHoldersData.Data equipmentholder) {
 			super();
 			this.id = id;
 			this.equipment_type = equipment_type;
@@ -51,10 +51,10 @@ public class EquipmentsData extends BaseData {
 			this.cost = cost;
 			this.procurement_date = procurement_date;
 			this.warranty_expiration_date = warranty_expiration_date;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipmentholder = equipmentholder;
 		}
 		
-		public Data(int id, String equipment_type){
+		public Data(String id, String equipment_type){
 			super();
 			this.id = id;
 			this.equipment_type = equipment_type;
@@ -84,8 +84,8 @@ public class EquipmentsData extends BaseData {
 			return this.warranty_expiration_date;
 		}
 		
-		public int getEquipmentHolderId(){
-			return this.equipmentholder_id;
+		public EquipmentHoldersData.Data getEquipmentHolderId(){
+			return this.equipmentholder;
 		}
 		
 		public BaseData.Data clone() {
@@ -97,7 +97,7 @@ public class EquipmentsData extends BaseData {
 			obj.cost = this.cost;
 			obj.procurement_date = this.procurement_date;
 			obj.warranty_expiration_date = this.warranty_expiration_date;
-			obj.equipmentholder_id = this.equipmentholder_id;
+			obj.equipmentholder = this.equipmentholder;
 							
 			return obj;
 		}
@@ -108,9 +108,10 @@ public class EquipmentsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("equipment_type")) {
 				this.equipment_type = (String)val;
 			} else if(key.equals("model_no")) {
@@ -123,8 +124,10 @@ public class EquipmentsData extends BaseData {
 				this.procurement_date = (String)val;
 			} else if(key.equals("warranty_expiration_date")) {
 				this.warranty_expiration_date = (String)val;
-			} else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+			} else if(key.equals("equipmentholder")) {
+				EquipmentHoldersData equipmentHolderData = new EquipmentHoldersData();
+				this.equipmentholder = equipmentHolderData.getNewData();
+				this.equipmentholder.id = val;
 			} 	
 		}
 		
@@ -132,6 +135,15 @@ public class EquipmentsData extends BaseData {
 		
 		public void save() {
 			EquipmentsData equipmentsDataDbApis = new EquipmentsData();			
+<<<<<<< .mine
+			this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,
+					this.model_no,
+					this.serial_no,
+					this.cost,
+					this.procurement_date,
+					this.warranty_expiration_date,
+					this.equipmentholder.getId());
+=======
 			if(this.id == 0){
 				this.id = equipmentsDataDbApis.autoInsert(this.equipment_type,this.model_no,this.serial_no,this.cost,
 						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
@@ -139,6 +151,7 @@ public class EquipmentsData extends BaseData {
 				this.id = equipmentsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.equipment_type,this.model_no,this.serial_no,this.cost,
 						this.procurement_date,this.warranty_expiration_date,Integer.valueOf(this.equipmentholder_id).toString());
 			}
+>>>>>>> .r278
 			
 			
 		}

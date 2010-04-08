@@ -29,13 +29,13 @@ public class VideoFarmersShownData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, VideosData.Data video,PersonsData.Data person) {
+		public Data(String id, VideosData.Data video,PersonsData.Data person) {
 			this.id = id;
 			this.video = video;
 			this.person = person;
 			}
 		
-		public Data(int id, VideosData.Data video){
+		public Data(String id, VideosData.Data video){
 			super();
 			this.id = id;
 			this.video = video;
@@ -63,17 +63,18 @@ public class VideoFarmersShownData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("video")) {
 				VideosData video = new VideosData();
 				this.video = video.getNewData();
-				this.video.id = Integer.parseInt((String)val);
+				this.video.id = val;
 			} else if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
-				this.person.id = Integer.parseInt((String)val);				
+				this.person.id = val;				
 			} 
 		}
 	

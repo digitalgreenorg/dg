@@ -35,24 +35,24 @@ public class FieldOfficersData extends BaseData {
 		private String age;
 		private String gender;
 		private String hire_date;
-		private float salary;
+		private String salary;
 		private String phone_no;
 		private String address;
-		private int reviewer_id;
-		private int equipmentholder_id;
+		private String reviewer_id;
+		private String equipmentholder_id;
 		
 		public Data(){
 			super();
 		}
 		
-		public Data(int id, String name){
+		public Data(String id, String name){
 			super();
 			this.id = id;
 			this.name = name;
 		}
 		
-		public Data(int id, String name, String age, String gender, String hire_date, 
-				float salary, String phone_no, String address, int reviewer_id, int equipmentholder_id){
+		public Data(String id, String name, String age, String gender, String hire_date, 
+				String salary, String phone_no, String address, String reviewer_id, String equipmentholder_id){
 			super();
 			this.id = id;
 			this.name = name;
@@ -92,9 +92,10 @@ public class FieldOfficersData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val){
+		public void setObjValueFromString(String key, String val){
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")){
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			} else if(key.equals("name")){
 				this.name = (String)val;
 			}
@@ -108,7 +109,7 @@ public class FieldOfficersData extends BaseData {
 				this.hire_date = (String)val;
 			}
 			else if(key.equals("salary")){
-				this.salary = ((Float)val).floatValue();
+				this.salary = val;
 			}
 			else if(key.equals("phone_no")){
 				this.phone_no = (String)val;
@@ -117,16 +118,27 @@ public class FieldOfficersData extends BaseData {
 				this.address = (String)val;
 			}
 			else if(key.equals("reviewer_id")) {
-				 this.reviewer_id = ((Integer)val).intValue();
+				 this.reviewer_id = val;
 			}
 			else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = ((Integer)val).intValue();
+				this.equipmentholder_id = val;
 			}
 		}
 
 		@Override
 		public void save(){
 			FieldOfficersData fieldOfficersDataDbApis = new FieldOfficersData();
+<<<<<<< .mine
+			this.id = fieldOfficersDataDbApis.autoInsert(this.name, 
+					this.age, 
+					this.gender, 
+					this.hire_date, 
+					this.salary, 
+					this.phone_no, 
+					this.address, 
+					this.reviewer_id, 
+					this.equipmentholder_id);
+=======
 			if(this.id==0){
 				this.id = fieldOfficersDataDbApis.autoInsert(this.name, this.age, this.gender, this.hire_date, 
 						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
@@ -136,6 +148,7 @@ public class FieldOfficersData extends BaseData {
 						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
 						Integer.valueOf(this.equipmentholder_id).toString());
 			}
+>>>>>>> .r278
 			
 			
 		}

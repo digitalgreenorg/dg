@@ -28,14 +28,14 @@ public class EquipmentHoldersData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String content_type, String object_id){
+		public Data(String id, String content_type, String object_id){
 			super();
 			this.id = id;
 			this.content_type = content_type;
 			this.object_id = object_id;
 		}
 		
-		public Data(int id ) {
+		public Data(String id) {
 			super();
 			this.id = id;
 		}
@@ -62,9 +62,10 @@ public class EquipmentHoldersData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("content_type")) {
 				this.content_type = (String)val;
 			} else if(key.equals("object_id")) {
@@ -75,10 +76,14 @@ public class EquipmentHoldersData extends BaseData {
 		@Override
 		public void save() {
 			EquipmentHoldersData equipmentholdersDataDbApis = new EquipmentHoldersData();
+<<<<<<< .mine
+			this.id = equipmentholdersDataDbApis.autoInsert(this.content_type, this.object_id);
+=======
 			if(this.id == 0)
 				this.id = equipmentholdersDataDbApis.autoInsert( this.content_type, this.object_id);
 			else
 				this.id = equipmentholdersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.content_type, this.object_id);
+>>>>>>> .r278
 		}
 	}
 	

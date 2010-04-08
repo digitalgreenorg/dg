@@ -32,14 +32,14 @@ public class StatesData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String state_name) {
+		public Data(String id, String state_name) {
 			super();
 			this.id = id;
 			this.state_name = state_name;
 		}
 		
 
-		public Data(int id, String state_name,String start_date, RegionsData.Data region) {
+		public Data(String id, String state_name,String start_date, RegionsData.Data region) {
 			super();
 			this.id = id;
 			this.state_name = state_name;
@@ -75,19 +75,20 @@ public class StatesData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {		
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("state_name")) {
-				this.state_name = (String)val;
+				this.state_name = val;
 			} else if(key.equals("region")) {
 				// Have to Create an instance of RegionsData to create an instance of RegionsData.Data -- any better way of doing this??
 				RegionsData region = new RegionsData();
 				this.region = region.getNewData();
-				this.region.id = Integer.parseInt((String)val);
+				this.region.id = val;
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_date")) {
-				this.start_date = (String)val;
+				this.start_date = val;
 			}		
 		}
 		

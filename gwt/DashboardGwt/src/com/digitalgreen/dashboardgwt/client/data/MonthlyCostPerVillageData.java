@@ -47,14 +47,14 @@ public class Data extends BaseData.Data {
 			super();
 		}
 		
-		public Data(int id, VillagesData.Data village) {
+		public Data(String id, VillagesData.Data village) {
 			super();
 			this.id = id;
 			this.village = village;
 		}
 		
 
-		public Data(int id, VillagesData.Data village, String date, String labor_cost,String equipment_cost,String transportation_cost,
+		public Data(String id, VillagesData.Data village, String date, String labor_cost,String equipment_cost,String transportation_cost,
 				String miscellaneous_cost,String total_cost,String partners_cost,String digitalgreen_cost,String community_cost) {
 			super();
 			this.id = id;
@@ -129,14 +129,15 @@ public class Data extends BaseData.Data {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {		
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			}  else if(key.equals("village")) {
 				// Have to Create an instance of VillagesData to create an instance of VillagesData.Data -- any better way of doing this??
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 				//Never ever use this -- this.village.id = ((Integer)val).intValue();
 			}  else if(key.equals("date")) {
 				this.date = (String)val;
@@ -161,6 +162,19 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
+<<<<<<< .mine
+			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();			
+			this.id = monthlycostpervillagesDataDbApis.autoInsert(this.village.getId(),
+					this.date,
+					this.labor_cost,
+					this.equipment_cost,
+					this.transportation_cost,
+					this.miscellaneous_cost,
+					this.total_cost,
+					this.partners_cost,
+					this.digitalgreen_cost,
+					this.community_cost);
+=======
 			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();	
 			if(this.id==0){
 				this.id = monthlycostpervillagesDataDbApis.autoInsert(Integer.valueOf(this.village.getId()).toString(),this.date,this.labor_cost,
@@ -172,6 +186,7 @@ public class Data extends BaseData.Data {
 						this.community_cost);
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

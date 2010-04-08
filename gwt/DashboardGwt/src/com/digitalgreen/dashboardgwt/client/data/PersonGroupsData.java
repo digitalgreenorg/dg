@@ -6,7 +6,9 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
+import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class PersonGroupsData extends BaseData {
 
@@ -32,13 +34,13 @@ public class PersonGroupsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String group_name){
+		public Data(String id, String group_name){
 			super();
 			this.id = id;
 			this.group_name = group_name;
 		}
 		
-		public Data(int id, String group_name, String days, String timings,
+		public Data(String id, String group_name, String days, String timings,
 				String time_updated, VillagesData.Data village){
 			super();
 			this.id = id;
@@ -57,14 +59,20 @@ public class PersonGroupsData extends BaseData {
 			obj.days = this.days;
 			obj.timings = this.timings;
 			obj.time_updated = this.time_updated;
-			obj.village = (VillagesData.Data)this.village.clone();
+			obj.village = this.village;
 			return obj;
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {
+		public String getPrefixName() {
+			return Data.COLLECTION_PREFIX;
+		}
+		
+		@Override
+		public void setObjValueFromString(String key, String val) {
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			} else if(key.equals("group_name")) {
 				this.group_name = (String)val;
 			} else if(key.equals("days")) {
@@ -73,16 +81,23 @@ public class PersonGroupsData extends BaseData {
 				this.timings = (String)val;
 			} else if(key.equals("time_updated")) {
 				this.time_updated = (String)val;
-			} else if(key.equals("village_id")) {
+			} else if(key.equals("village")) {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = ((Integer)val).intValue();
+				this.village.id = val;
 			}
 		}
 		
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
+<<<<<<< .mine
+			this.id = animatorsDataDbApis.autoInsert(this.group_name, 
+					this.days, 
+					this.timings,
+					this.time_updated, 
+					this.village.getId());
+=======
 			if(this.id==0){
 				this.id = animatorsDataDbApis.autoInsert(this.group_name, 
 						this.days, 
@@ -98,6 +113,7 @@ public class PersonGroupsData extends BaseData {
 						Integer.valueOf(this.village.getId()).toString());
 			}
 			
+>>>>>>> .r278
 		}
 	}
 	

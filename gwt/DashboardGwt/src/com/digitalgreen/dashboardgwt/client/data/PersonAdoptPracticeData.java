@@ -40,14 +40,14 @@ public class Data extends BaseData.Data {
 			super();
 		}
 		
-		public Data(int id, String date_of_adoption) {
+		public Data(String id, String date_of_adoption) {
 			super();
 			this.id = id;
 			this.date_of_adoption = date_of_adoption;
 		}
 		
 
-		public Data(int id,PersonsData.Data person, PracticesData.Data practice, String prior_adoption_flag,String date_of_adoption,
+		public Data(String id,PersonsData.Data person, PracticesData.Data practice, String prior_adoption_flag,String date_of_adoption,
 				String quality,String quantity,String quantity_unit) {
 			super();
 			this.id = id;
@@ -107,17 +107,18 @@ public class Data extends BaseData.Data {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {		
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
-				this.person.id = Integer.parseInt((String)val);
+				this.person.id = val;
 			} else if(key.equals("practice")) {
 				PracticesData practice = new PracticesData();
 				this.practice = practice.getNewData();
-				this.practice.id = Integer.parseInt((String)val);
+				this.practice.id = val;
 			}  else if(key.equals("prior_adoption_flag")) {
 				this.prior_adoption_flag = (String)val;
 			}	else if(key.equals("date_of_adoption")) {
@@ -133,6 +134,16 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
+<<<<<<< .mine
+			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();			
+			this.id = personAdoptPracticesDataDbApis.autoInsert(this.person.getId(),
+					this.practice.getId(), 
+					this.prior_adoption_flag,
+					this.date_of_adoption,
+					this.quality,
+					this.quantity,
+					this.quantity_unit);
+=======
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();		
 			if(this.id==0){
 				this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
@@ -144,6 +155,7 @@ public class Data extends BaseData.Data {
 						this.quantity,this.quantity_unit);
 			}
 			
+>>>>>>> .r278
 		}
 	}
 

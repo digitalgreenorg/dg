@@ -31,14 +31,14 @@ public class Data extends BaseData.Data {
 			super();
 		}
 		
-		public Data(int id, String type_of_relationship) {
+		public Data(String id, String type_of_relationship) {
 			super();
 			this.id = id;
 			this.type_of_relationship = type_of_relationship;
 		}
 		
 
-		public Data(int id,PersonsData.Data person, PersonsData.Data relative, String type_of_relationship) {
+		public Data(String id,PersonsData.Data person, PersonsData.Data relative, String type_of_relationship) {
 			super();
 			this.id = id;
 			this.person = person;
@@ -74,17 +74,18 @@ public class Data extends BaseData.Data {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {		
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
-				this.person.id = Integer.parseInt((String)val);
+				this.person.id = val;
 			} else if(key.equals("relative")) {
 				PersonsData relative = new PersonsData();
 				this.relative = relative.getNewData();
-				this.relative.id = Integer.parseInt((String)val);
+				this.relative.id = val;
 			} else if(key.equals("type_of_relationship")) {
 				this.type_of_relationship = (String)val;
 			}
@@ -93,6 +94,11 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();			
+<<<<<<< .mine
+			this.id = personRelationssDataDbApis.autoInsert(this.person.getId(),
+					this.relative.getId(), 
+					this.type_of_relationship);
+=======
 			if(this.id==0){
 				this.id = personRelationssDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
 						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
@@ -101,6 +107,7 @@ public class Data extends BaseData.Data {
 						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
 			}
 			
+>>>>>>> .r278
 		}
 	}
 

@@ -55,14 +55,14 @@ public class ScreeningsData extends BaseData {
 			super();
 		}
 		
-		public Data(int id, String date) {
+		public Data(String id, String date) {
 			super();
 			this.id = id;
 			this.date = date;
 		}
 		
 
-		public Data(int id, String date ,String start_time, String end_time, String location,String target_person_attendance,
+		public Data(String id, String date ,String start_time, String end_time, String location,String target_person_attendance,
 				String target_audience_interest,VillagesData.Data village) {
 			super();
 			this.id = id;
@@ -124,9 +124,10 @@ public class ScreeningsData extends BaseData {
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val) {		
+		public void setObjValueFromString(String key, String val) {		
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = Integer.parseInt((String)val);
+				this.id = val;
 			} else if(key.equals("date")) {
 				this.date = (String)val;
 			} else if(key.equals("start_time")){
@@ -144,27 +145,27 @@ public class ScreeningsData extends BaseData {
 			} else if(key.equals("village")) {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 			} else if(key.equals("fieldofficer")){
 				FieldOfficersData fieldofficer = new FieldOfficersData();
 				this.fieldofficer = fieldofficer.getNewData();
-				this.fieldofficer.id = Integer.parseInt((String)val);
+				this.fieldofficer.id = val;
 			} else if(key.equals("animator")){
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
-				this.animator.id = Integer.parseInt((String)val);
+				this.animator.id = val;
 			} else if(key.equals("farmer_groups_targeted")){
 				PersonGroupsData farmer_groups_targeted = new PersonGroupsData();
 				this.farmer_groups_targeted = farmer_groups_targeted.getNewData();
-				this.farmer_groups_targeted.id = Integer.parseInt((String)val);
+				this.farmer_groups_targeted.id = val;
 			} else if(key.equals("videoes_screened")){
 				VideosData videoes_screened = new VideosData();
 				this.videoes_screened = videoes_screened.getNewData();
-				this.videoes_screened.id = Integer.parseInt((String)val);
+				this.videoes_screened.id = val;
 			} else if(key.equals("farmers_attendance")) {
 				PersonMeetingAttendanceData farmers_attendance = new PersonMeetingAttendanceData();
 				this.farmers_attendance = farmers_attendance.getNewData();
-				this.farmers_attendance.id = Integer.parseInt((String)val);
+				this.farmers_attendance.id = val;
 			} 
 			
 			

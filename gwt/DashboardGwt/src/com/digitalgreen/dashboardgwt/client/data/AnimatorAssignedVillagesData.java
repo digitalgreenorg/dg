@@ -30,13 +30,13 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			super();
 		}
 		
-		public Data(int id, String start_date){
+		public Data(String id, String start_date){
 			super();
 			this.id = id;
 			this.start_date = start_date;
 		}
 		
-		public Data(int id, AnimatorsData.Data animator, VillagesData.Data village, String start_date){
+		public Data(String id, AnimatorsData.Data animator, VillagesData.Data village, String start_date){
 			super();
 			this.id = id;
 			this.animator = animator;
@@ -60,8 +60,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		public BaseData.Data clone(){
 			Data obj = new Data();
 			obj.id = this.id;
-			obj.animator = (AnimatorsData.Data)this.animator.clone();
-			obj.village = (VillagesData.Data)this.village.clone();
+			obj.animator = this.animator;
+			obj.village = this.village;
 			obj.start_date = this.start_date;
 			return obj;
 		}
@@ -72,19 +72,20 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 		
 		@Override
-		public void setObjValueFromString(String key, Object val){
+		public void setObjValueFromString(String key, String val){
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
-				this.id = ((Integer)val).intValue();
+				this.id = val;
 			}
 			else if(key.equals("animator")) {
 				AnimatorsData animator1 = new AnimatorsData();
 				this.animator = animator1.getNewData();
-				this.animator.id = Integer.parseInt((String)val);
+				this.animator.id = val;
 			}
 			else if(key.equals("village")){
 				VillagesData village1 = new VillagesData();
 				this.village = village1.getNewData();
-				this.village.id = Integer.parseInt((String)val);
+				this.village.id = val;
 			}
 			else if(key.equals("start_date")) {
 				this.start_date = (String)val;
@@ -95,6 +96,12 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		public void save(){
 
 			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
+<<<<<<< .mine
+			
+			this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.animator.getId(), 
+					this.village.getId(), 
+					this.start_date);
+=======
 			if(this.id == 0){
 				this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(), 
 						Integer.valueOf(this.village.getId()).toString(), this.start_date);
@@ -104,6 +111,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			}
 				
 				
+>>>>>>> .r278
 		}
 		
 	}
