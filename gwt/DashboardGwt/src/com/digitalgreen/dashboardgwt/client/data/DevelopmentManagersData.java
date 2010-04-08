@@ -24,7 +24,7 @@ public class DevelopmentManagersData extends BaseData {
 		public final native String getSpeciality() /*-{ return this.fields.speciality; }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
 		public final native String getStartDay() /*-{ return this.fields.start_day; }-*/;
-		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
+		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 		public final native String getSalary() /*-{ return this.fields.salary; }-*/;
 				
 	}
@@ -42,7 +42,7 @@ public class DevelopmentManagersData extends BaseData {
 		private String speciality;
 		private RegionsData.Data region;
 		private String start_day;
-		private EquipmentHoldersData.Data equipmentholder;
+		private int equipmentholder_id;
 		private String salary;
 		
 		
@@ -52,7 +52,7 @@ public class DevelopmentManagersData extends BaseData {
 		}
 
 		public Data(String id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
-				RegionsData.Data region, String start_day,EquipmentHoldersData.Data equipmentholder, String salary ) {
+				RegionsData.Data region, String start_day,int equipmentholder_id, String salary ) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -64,7 +64,7 @@ public class DevelopmentManagersData extends BaseData {
 			this.speciality = speciality;
 			this.region = region;
 			this.start_day = start_day;
-			this.equipmentholder = equipmentholder;
+			this.equipmentholder_id = equipmentholder_id;
 			this.salary = salary;
 		}
 		
@@ -110,8 +110,8 @@ public class DevelopmentManagersData extends BaseData {
 			return this.start_day;
 		}
 				
-		public EquipmentHoldersData.Data getEquipmentHolderId(){
-			return this.equipmentholder;
+		public int getEquipmentHolderId(){
+			return this.equipmentholder_id;
 		}
 		
 		public String getSalary(){
@@ -132,7 +132,7 @@ public class DevelopmentManagersData extends BaseData {
 			obj.speciality = this.speciality;
 			obj.region = this.region;
 			obj.start_day = this.start_day;
-			obj.equipmentholder = this.equipmentholder;
+			obj.equipmentholder_id = this.equipmentholder_id;
 			obj.salary = this.salary;
 				
 			return obj;
@@ -171,9 +171,7 @@ public class DevelopmentManagersData extends BaseData {
 			}  else if(key.equals("start_day")) {
 				this.start_day = (String)val;
 			}  else if(key.equals("equipmentholder_id")) {
-				EquipmentHoldersData equipmentHolderData = new EquipmentHoldersData();
-				this.equipmentholder = equipmentHolderData.getNewData();
-				this.equipmentholder.id = val;
+				this.equipmentholder_id = Integer.parseInt((String)val);
 			} else if(key.equals("salary")) {
 				this.salary = val;
 			}		
@@ -193,7 +191,7 @@ public class DevelopmentManagersData extends BaseData {
 						this.speciality,
 						this.region.getId(),
 						this.start_day,
-						this.equipmentholder.getId(),
+						Integer.valueOf(this.equipmentholder_id).toString(),
 						this.salary);
 			}
 			else {
@@ -207,7 +205,7 @@ public class DevelopmentManagersData extends BaseData {
 						this.speciality,
 						this.region.getId(),
 						this.start_day,
-						this.equipmentholder.getId(),
+						Integer.valueOf(this.equipmentholder_id).toString(),
 						this.salary);
 			}
 		}
@@ -286,11 +284,7 @@ public class DevelopmentManagersData extends BaseData {
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		
 		for(int i = 0; i < developmentmanagerObjects.length(); i++){
-			
 			RegionsData.Data r = region.new Data(developmentmanagerObjects.get(i).getRegion().getPk(), developmentmanagerObjects.get(i).getRegion().getRegionName(), developmentmanagerObjects.get(i).getRegion().getStartDate());
-			
-			EquipmentHoldersData.Data eq = equipmentholder.new Data(developmentmanagerObjects.get(i).getEquipmentHolder().getPk());
-			
 			Data developmentmanager = new Data(developmentmanagerObjects.get(i).getPk(),
 						developmentmanagerObjects.get(i).getName(),
 						developmentmanagerObjects.get(i).getAge(),
@@ -299,7 +293,8 @@ public class DevelopmentManagersData extends BaseData {
 						developmentmanagerObjects.get(i).getPhoneNo(),
 						developmentmanagerObjects.get(i).getAddress(),
 						developmentmanagerObjects.get(i).getSpeciality(),r,
-						developmentmanagerObjects.get(i).getStartDay(), eq,
+						developmentmanagerObjects.get(i).getStartDay(), 
+						developmentmanagerObjects.get(i).getEquipmentHolderId() ,
 						developmentmanagerObjects.get(i).getSalary());
 			developmentmanagers.add(developmentmanager);
 		}
@@ -324,9 +319,6 @@ public class DevelopmentManagersData extends BaseData {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
 					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(8),  this.getResultSet().getFieldAsString(9)) ;
-					
-					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(11));
-					
 					Data developmentmanager = new Data(this.getResultSet().getFieldAsString(0), 
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
@@ -335,7 +327,8 @@ public class DevelopmentManagersData extends BaseData {
 							this.getResultSet().getFieldAsString(5),
 							this.getResultSet().getFieldAsString(6),
 							this.getResultSet().getFieldAsString(7),r,
-							this.getResultSet().getFieldAsString(10), eq,
+							this.getResultSet().getFieldAsString(10), 
+							this.getResultSet().getFieldAsInt(11),
 							this.getResultSet().getFieldAsString(12));
 					developmentmanagers.add(developmentmanager);
 				}				
