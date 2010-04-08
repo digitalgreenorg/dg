@@ -7,8 +7,10 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Type;
-import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
+import com.digitalgreen.dashboardgwt.client.data.PersonsData.Data;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
 
 public class PersonsData extends BaseData {
 	
@@ -23,7 +25,7 @@ public class PersonsData extends BaseData {
 		public final native String getLandHoldings() /*-{ return this.fields.land_holdings; }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 		public final native PersonGroupsData.Type getPersonGroup() /*-{ return this.fields.group;}-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 		
 	}
 	
@@ -40,7 +42,7 @@ public class PersonsData extends BaseData {
 		private String land_holdings;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private String equipmentholder_id;
+		private EquipmentHoldersData.Data equipmentholder;
 		private PersonRelationsData.Data relations;
 		private PersonAdoptPracticeData.Data adopted_agricultural_practices;
 		
@@ -50,7 +52,7 @@ public class PersonsData extends BaseData {
 		}
 		
 		public Data(String id, String person_name,String father_name,String age,String gender,String phone_no,String address,String land_holdings,
-				VillagesData.Data village,PersonGroupsData.Data group, String equipmentholder_id) {
+				VillagesData.Data village,PersonGroupsData.Data group, EquipmentHoldersData.Data equipmentholder) {
 			super();
 			this.id = id;
 			this.person_name = person_name;
@@ -62,8 +64,17 @@ public class PersonsData extends BaseData {
 			this.land_holdings = land_holdings;
 			this.village = village;
 			this.group = group;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipmentholder = equipmentholder;
 		}
+		
+
+		public Data(String id, String person_name,VillagesData.Data village,PersonGroupsData.Data group) {
+			super();
+			this.id = id;
+			this.person_name = person_name;
+			this.village = village;
+			this.group = group;
+			}
 		
 		public Data(String id, String person_name){
 			super();
@@ -103,8 +114,8 @@ public class PersonsData extends BaseData {
 			return this.group;
 		}
 						
-		public String getEquipmentHolderId(){
-			return this.equipmentholder_id;
+		public EquipmentHoldersData.Data getEquipmentHolder(){
+			return this.equipmentholder;
 		}
 		
 		public BaseData.Data clone() {
@@ -119,7 +130,7 @@ public class PersonsData extends BaseData {
 			obj.land_holdings = this.land_holdings;
 			obj.village = this.village;
 			obj.group= this.group;
-			obj.equipmentholder_id = this.equipmentholder_id;
+			obj.equipmentholder = this.equipmentholder;
 			obj.relations = this.relations;
 			obj.adopted_agricultural_practices = this.adopted_agricultural_practices;			
 				
@@ -162,7 +173,9 @@ public class PersonsData extends BaseData {
 				this.group.id = val;
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = val;
+				EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+				this.equipmentholder = equipmentholder.getNewData();
+				this.equipmentholder.id = val;
 			}  else if(key.equals("relations")) {
 				PersonRelationsData relations = new PersonRelationsData();
 				this.relations = relations.getNewData();
@@ -178,35 +191,21 @@ public class PersonsData extends BaseData {
 		
 		@Override		
 		public void save() {
-<<<<<<< .mine
-			PersonsData personsDataDbApis = new PersonsData();			
-			this.id = personsDataDbApis.autoInsert(this.person_name,
-					this.father_name,
-					this.age,
-					this.gender,
-					this.phone_no,
-					this.address,
-					this.land_holdings,
-					this.village.getId(),
-					this.group.getId(), 
-					this.equipmentholder_id,
-					this.relations.getId(),
-					this.adopted_agricultural_practices.getId();
-=======
+
 			PersonsData personsDataDbApis = new PersonsData();		
-			if(this.id==0){
+			if(this.id==null){
 				this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
-						this.phone_no,this.address,this.land_holdings,Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.group.getId()).toString(), Integer.valueOf(this.equipmentholder_id).toString(),
-						Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
+						this.phone_no,this.address,this.land_holdings,this.village.getId(),
+						this.group.getId(), this.equipmentholder.getId(),
+						this.relations.getId(),this.adopted_agricultural_practices.getId());
 			}else{
-				this.id = personsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.person_name,this.father_name,this.age,this.gender,
-						this.phone_no,this.address,this.land_holdings,Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.group.getId()).toString(), Integer.valueOf(this.equipmentholder_id).toString(),
-						Integer.valueOf(this.relations.getId()).toString(),Integer.valueOf(this.adopted_agricultural_practices.getId()).toString());
+				this.id = personsDataDbApis.autoInsert(this.id,this.person_name,this.father_name,this.age,this.gender,
+						this.phone_no,this.address,this.land_holdings,this.village.getId(),
+						this.group.getId(), this.equipmentholder.getId(),
+						this.relations.getId(),this.adopted_agricultural_practices.getId());
 			}
-			
->>>>>>> .r278
+
+
 			}		
 	}
 	
@@ -229,7 +228,7 @@ public class PersonsData extends BaseData {
 	
 	protected static String selectPersons = "SELECT id, PERSON_NAME FROM person  ORDER BY (PERSON_NAME);";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME,p.FATHER_NAME,p.AGE, p.GENDER,p.PHONE_NO,p.ADDRESS," +
-			"vil.id, vil.village_name ,pg.id,pg.group_name FROM person p, village vil, person_group pg WHERE p.village_id = vil.id " +
+			"vil.id, vil.village_name ,pg.id,pg.group_name,p.equipmentholder_id FROM person p, village vil, person_groups pg WHERE p.village_id = vil.id " +
 			"and p.group_id = pg.id ORDER BY (-p.id);";
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	protected static String savePersonOnlineURL = "/dashboard/savepersononline/";
@@ -282,21 +281,24 @@ public class PersonsData extends BaseData {
 		List persons = new ArrayList();
 		VillagesData village = new VillagesData();
 		PersonGroupsData group = new PersonGroupsData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		for(int i = 0; i < personObjects.length(); i++){
-			VillagesData.Data vil = village.new Data(Integer.parseInt(personObjects.get(i).getVillage().getPk()),
+			VillagesData.Data vil = village.new Data(personObjects.get(i).getVillage().getPk(),
 					personObjects.get(i).getVillage().getVillageName());
-			PersonGroupsData.Data pg = group.new Data(Integer.parseInt(personObjects.get(i).getPersonGroup().getPk()),
+			PersonGroupsData.Data pg = group.new Data(personObjects.get(i).getPersonGroup().getPk(),
 					personObjects.get(i).getPersonGroup().getPersonGroupName());
 			
-			Data person = new Data(Integer.parseInt(personObjects.get(i).getPk()),
+			EquipmentHoldersData.Data e = equipmentholder.new Data(personObjects.get(i).getPersonGroup().getPk());
+			
+			Data person = new Data(personObjects.get(i).getPk(),
 						personObjects.get(i).getPersonName(),
 						personObjects.get(i).getFatherName(),
 						personObjects.get(i).getAge(),
 						personObjects.get(i).getGender(),
 						personObjects.get(i).getPhoneNo(),
 						personObjects.get(i).getAddress(),
-						personObjects.get(i).getLandHoldings(),vil,pg,
-						personObjects.get(i).getEquipmentHolderId());
+						personObjects.get(i).getLandHoldings(),vil,pg,e
+						);
 			persons.add(person);
 		}
 		
@@ -305,7 +307,113 @@ public class PersonsData extends BaseData {
 	
 	@Override
 	public List getListingOnline(String json){
+		Window.alert("In getListingOnline");
 		return this.serialize(this.asArrayOfData(json));		
+	}
+	
+	public List getPersonsListingOffline(){
+		BaseData.dbOpen();
+		List persons = new ArrayList();
+		VillagesData village = new VillagesData();
+		PersonGroupsData group = new PersonGroupsData();
+		this.select(listPersons);
+		if (this.getResultSet().isValidRow()){
+			try {
+				Window.alert("In try block of getListingOffline");
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					PersonGroupsData.Data pg = group.new Data(this.getResultSet().getFieldAsString(9),  this.getResultSet().getFieldAsString(10));
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(7),  this.getResultSet().getFieldAsString(8)) ;
+					
+					Data person = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1),v,pg);
+					persons.add(person);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return persons;
+	}
+	
+	public List getAllPersonsOffline(){
+		BaseData.dbOpen();
+		List persons = new ArrayList();
+		this.select(selectPersons);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data person = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					persons.add(person);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return persons;
+	}
+	
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + PersonsData.savePersonOnlineURL, this.queryString);
+		}
+		else{
+			this.save();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonsData.getPersonOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}	
+	
+	public String retrieveDataAndConvertResultIntoHtml(){
+		VillagesData villageData = new VillagesData();
+		List villages = villageData.getAllVillagesOffline();
+		VillagesData.Data village;
+		String html = "<select name=\"village\" id=\"id_village\">";
+		for(int i=0; i< villages.size(); i++){
+			village = (VillagesData.Data)villages.get(i);
+			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		PersonGroupsData personGroupData = new PersonGroupsData();
+		List groups = personGroupData.getAllPersonGroupsOffline();
+		PersonGroupsData.Data group;
+		html = html + "<select name=\"group\" id=\"id_group\">";
+		for(int i=0; i< groups.size(); i++){
+			group = (PersonGroupsData.Data)groups.get(i);
+			html = html + "<option value = \"" + group.getId() +"\">" + group.getPersonGroupName() + "</option>";
+		}
+		html = html + "</select>";
+				
+		return html;
+	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonsData.savePersonOnlineURL);
+		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
 	}
 		
 }
