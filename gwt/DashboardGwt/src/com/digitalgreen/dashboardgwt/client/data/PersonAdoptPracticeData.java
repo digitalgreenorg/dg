@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Data;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
 
 public class PersonAdoptPracticeData extends BaseData{
 	
@@ -134,28 +136,16 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
-<<<<<<< .mine
-			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();			
-			this.id = personAdoptPracticesDataDbApis.autoInsert(this.person.getId(),
-					this.practice.getId(), 
-					this.prior_adoption_flag,
-					this.date_of_adoption,
-					this.quality,
-					this.quantity,
-					this.quantity_unit);
-=======
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();		
-			if(this.id==0){
-				this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.practice.getId()).toString(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
+			if(this.id == null){
+				this.id = personAdoptPracticesDataDbApis.autoInsert( this.person.getId(),
+						this.practice.getId(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
 						this.quantity,this.quantity_unit);
 			}else{
-				this.id = personAdoptPracticesDataDbApis.autoInsert( Integer.valueOf(this.id).toString(), Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.practice.getId()).toString(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
+				this.id = personAdoptPracticesDataDbApis.autoInsert(this.id, this.person.getId(),
+						this.practice.getId(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
 						this.quantity,this.quantity_unit);
 			}
-			
->>>>>>> .r278
 		}
 	}
 
@@ -174,8 +164,9 @@ public class Data extends BaseData.Data {
 												"FOREIGN KEY(practice_id) REFERENCES practices(id));";
 
 	protected static String selectPersonAdoptPractices = "SELECT id, date_of_adoption FROM person_adopt_practice ORDER BY (date_of_adoption);";
-	protected static String listPersonAdoptPractices = "SELECT * FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id" +
-			"JOIN practice pr ON pr.id = pap.practice_id ORDER BY (-pap.id);";
+	protected static String listPersonAdoptPractices = "SELECT pap.id,p.id,p.person_name,pr.id,pr.practice_name, pap.DATE_OF_ADOPTION," +
+			"pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit FROM " +
+			"person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN practices pr ON pr.id = pap.practice_id ORDER BY (-pap.id);";
 	protected static String savePersonAdoptPracticeOnlineURL = "/dashboard/savepersonadoptpracticeonline/";
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
@@ -231,12 +222,12 @@ public class Data extends BaseData.Data {
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
 		for(int i = 0; i < personAdoptPracticeObjects.length(); i++){
-			PersonsData.Data p = person.new Data(Integer.parseInt(personAdoptPracticeObjects.get(i).getPerson().getPk()),
+			PersonsData.Data p = person.new Data(personAdoptPracticeObjects.get(i).getPerson().getPk(),
 					personAdoptPracticeObjects.get(i).getPerson().getPersonName());
-			PracticesData.Data pr = practice.new Data(Integer.parseInt(personAdoptPracticeObjects.get(i).getPractice().getPk()),
+			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice().getPk(),
 					personAdoptPracticeObjects.get(i).getPractice().getPracticeName());
 			
-			Data personAdoptPractice = new Data(Integer.parseInt(personAdoptPracticeObjects.get(i).getPk()),p,pr, 
+			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p,pr, 
 					personAdoptPracticeObjects.get(i).getPriorAdoptionFlag(), personAdoptPracticeObjects.get(i).getDateOfAdoption(),
 					personAdoptPracticeObjects.get(i).getQuantity(),personAdoptPracticeObjects.get(i).getQuality(),
 					personAdoptPracticeObjects.get(i).getQuantityUnit());
@@ -245,9 +236,87 @@ public class Data extends BaseData.Data {
 		
 		return personAdoptPractices;
 	}
-	
+		
+	public List getPersonAdoptPracticesListingOffline(){
+		BaseData.dbOpen();
+		List personAdoptPractices = new ArrayList();
+		PersonsData person = new PersonsData();
+		PracticesData practice = new PracticesData();
+		this.select(listPersonAdoptPractices);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					PersonsData.Data p = person.new Data(this.getResultSet().getFieldAsString(1),  this.getResultSet().getFieldAsString(2));
+					PracticesData.Data pr = practice.new Data(this.getResultSet().getFieldAsString(3),  this.getResultSet().getFieldAsString(4));
+					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), p,pr,this.getResultSet().getFieldAsString(5),
+							this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7),this.getResultSet().getFieldAsString(8),
+							this.getResultSet().getFieldAsString(9));
+					personAdoptPractices.add(personAdoptPractice);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personAdoptPractices;
+	}
+
 	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
+	}
+	
+	public List getAllPersonAdoptPracticesOffline(){
+		BaseData.dbOpen();
+		List personAdoptPractices = new ArrayList();
+		this.select(selectPersonAdoptPractices);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					personAdoptPractices.add(personAdoptPractice);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				// TODO Auto-generated catch block
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personAdoptPractices;
+	}
+	
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL, this.queryString);
+		}
+		else{
+			this.save();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}	
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL);
+		}
+		return false;
 	}
 }
