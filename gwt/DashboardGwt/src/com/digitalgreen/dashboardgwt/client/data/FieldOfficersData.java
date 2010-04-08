@@ -20,11 +20,11 @@ public class FieldOfficersData extends BaseData {
 		public final native String getAge() /*-{ return this.fields.age; }-*/;
 		public final native String getGender() /*-{ return this.fields.gender; }-*/;
 		public final native String getHireDate() /*-{ return this.fields.hire_date; }-*/;
-		public final native float getSalary() /*-{ return this.fields.salary; }-*/;
+		public final native String getSalary() /*-{ return this.fields.salary; }-*/;
 		public final native String getPhone() /*-{ return this.fields.phone_no; }-*/;
 		public final native String getAddress() /*-{ return this.fields.address; }-*/;
-		public final native int getReviewerId() /*-{ return this.fields.reviewer_id; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native ReviewersData.Type getReviewer() /*-{ return this.fields.reviewer; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	}
 	
 	public class Data extends BaseData.Data{
@@ -38,8 +38,8 @@ public class FieldOfficersData extends BaseData {
 		private String salary;
 		private String phone_no;
 		private String address;
-		private String reviewer_id;
-		private String equipmentholder_id;
+		private ReviewersData.Data reviewer;
+		private EquipmentHoldersData.Data equipmentholder;
 		
 		public Data(){
 			super();
@@ -52,7 +52,7 @@ public class FieldOfficersData extends BaseData {
 		}
 		
 		public Data(String id, String name, String age, String gender, String hire_date, 
-				String salary, String phone_no, String address, String reviewer_id, String equipmentholder_id){
+				String salary, String phone_no, String address, ReviewersData.Data reviewer, EquipmentHoldersData.Data equipmentholder){
 			super();
 			this.id = id;
 			this.name = name;
@@ -62,8 +62,8 @@ public class FieldOfficersData extends BaseData {
 			this.salary = salary;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer_id = reviewer_id;
-			this.equipmentholder_id = equipmentholder_id;
+			this.reviewer = reviewer;
+			this.equipmentholder = equipmentholder;
 		}
 		
 
@@ -81,8 +81,8 @@ public class FieldOfficersData extends BaseData {
 			obj.salary = this.salary;
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
-			obj.reviewer_id  = this.reviewer_id;
-			obj.equipmentholder_id = this.equipmentholder_id;
+			obj.reviewer = this.reviewer;
+			obj.equipmentholder = this.equipmentholder;
 			return obj;
 		}
 
@@ -117,40 +117,44 @@ public class FieldOfficersData extends BaseData {
 			else if(key.equals("address")){
 				this.address = (String)val;
 			}
-			else if(key.equals("reviewer_id")) {
-				 this.reviewer_id = val;
+			else if(key.equals("reviewer")) {
+				ReviewersData reviewer = new ReviewersData();
+				this.reviewer = reviewer.getNewData();
+				 this.reviewer.id = val;
 			}
-			else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = val;
+			else if(key.equals("equipmentholder")) {
+				EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+				this.equipmentholder = equipmentholder.getNewData();
+				this.equipmentholder.id = val;
 			}
 		}
 
 		@Override
 		public void save(){
 			FieldOfficersData fieldOfficersDataDbApis = new FieldOfficersData();
-<<<<<<< .mine
-			this.id = fieldOfficersDataDbApis.autoInsert(this.name, 
-					this.age, 
-					this.gender, 
-					this.hire_date, 
-					this.salary, 
-					this.phone_no, 
-					this.address, 
-					this.reviewer_id, 
-					this.equipmentholder_id);
-=======
-			if(this.id==0){
-				this.id = fieldOfficersDataDbApis.autoInsert(this.name, this.age, this.gender, this.hire_date, 
-						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
-			}else{
-				this.id = fieldOfficersDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.name, this.age, this.gender, this.hire_date, 
-						Float.valueOf(this.salary).toString(), this.phone_no, this.address, Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
+			if(this.id == null){
+				this.id = fieldOfficersDataDbApis.autoInsert(this.name, 
+						this.age, 
+						this.gender, 
+						this.hire_date, 
+						this.salary, 
+						this.phone_no, 
+						this.address, 
+						this.reviewer.id, 
+						this.equipmentholder.id);
 			}
->>>>>>> .r278
-			
-			
+			else {
+				this.id = fieldOfficersDataDbApis.autoInsert(this.id,
+						this.name, 
+						this.age, 
+						this.gender, 
+						this.hire_date, 
+						this.salary, 
+						this.phone_no, 
+						this.address, 
+						this.reviewer.getId(),
+						this.equipmentholder.getId());
+			}	
 		}
 	}
 	
@@ -221,11 +225,22 @@ public class FieldOfficersData extends BaseData {
 	
 	public List serialize(JsArray<Type> fieldOfficerObjects){
 		List fieldOfficers = new ArrayList();
+		ReviewersData reviewer = new ReviewersData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		for(int i = 0; i < fieldOfficerObjects.length(); i++){
-			Data fieldOfficer = new Data(Integer.parseInt(fieldOfficerObjects.get(i).getPk()), fieldOfficerObjects.get(i).getFieldOfficerName(), 
-					fieldOfficerObjects.get(i).getAge(), fieldOfficerObjects.get(i).getGender(), fieldOfficerObjects.get(i).getHireDate(), 
-					fieldOfficerObjects.get(i).getSalary() ,fieldOfficerObjects.get(i).getPhone(), fieldOfficerObjects.get(i).getAddress(), 
-					fieldOfficerObjects.get(i).getReviewerId(), fieldOfficerObjects.get(i).getEquipmentHolderId());
+			ReviewersData.Data r = reviewer.new Data(fieldOfficerObjects.get(i).getReviewer().getPk());
+			
+			EquipmentHoldersData.Data eq = equipmentholder.new Data(fieldOfficerObjects.get(i).getEquipmentHolder().getPk());
+			
+			Data fieldOfficer = new Data(fieldOfficerObjects.get(i).getPk(), 
+					fieldOfficerObjects.get(i).getFieldOfficerName(), 
+					fieldOfficerObjects.get(i).getAge(), 
+					fieldOfficerObjects.get(i).getGender(), 
+					fieldOfficerObjects.get(i).getHireDate(), 
+					fieldOfficerObjects.get(i).getSalary(), 
+					fieldOfficerObjects.get(i).getPhone(), 
+					fieldOfficerObjects.get(i).getAddress(), 
+					r, eq);
 			fieldOfficers.add(fieldOfficer);
 		}
 		return fieldOfficers;
@@ -238,16 +253,23 @@ public class FieldOfficersData extends BaseData {
 	
 	public List getFieldOfficersListingOffline(){
 		BaseData.dbOpen();
+		ReviewersData reviewer = new ReviewersData();
+		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List fieldOfficers = new ArrayList();
 		this.select(listFieldOfficers);
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data fieldOfficer = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
+					
+					ReviewersData.Data r = reviewer.new Data(this.getResultSet().getFieldAsString(8));
+					
+					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(9));
+					
+					Data fieldOfficer = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
-							this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsFloat(5), 
+							this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5), 
 							this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
-							this.getResultSet().getFieldAsInt(8), this.getResultSet().getFieldAsInt(9));
+							r, eq);
 					fieldOfficers.add(fieldOfficer);
 				}
 			} catch (DatabaseException e){
@@ -268,7 +290,7 @@ public class FieldOfficersData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data fieldofficer = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data fieldofficer = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					fieldofficers.add(fieldofficer);
 	    	      }				
 			} catch (DatabaseException e) {

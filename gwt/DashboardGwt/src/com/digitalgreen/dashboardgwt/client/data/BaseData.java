@@ -127,7 +127,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			BaseData.dbCommit();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 		BaseData.dbClose();
 	}
 	

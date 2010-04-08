@@ -124,25 +124,23 @@ public class DistrictsData extends BaseData {
 		@Override
 		public void save(){
 			DistrictsData districtsDataDbApis = new DistrictsData();
-<<<<<<< .mine
-			this.id = districtsDataDbApis.autoInsert(this.district_name, 
-					this.start_date, 
-					this.state.getId(), 
-					this.fieldofficer.getId(), 
-					this.fieldofficer_startday, 
-					this.partner.getId());
-=======
-			if(this.id == 0){
-				this.id = districtsDataDbApis.autoInsert(this.district_name, this.start_date, 
-						Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
-						this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
-			}else{
-				this.id = districtsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.district_name, this.start_date, 
-						Integer.valueOf(this.state.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString(), 
-						this.fieldofficer_startday, Integer.valueOf(this.partner.getId()).toString());
+			if(this.id == null){
+				this.id = districtsDataDbApis.autoInsert(this.district_name, 
+						this.start_date, 
+						this.state.getId(), 
+						this.fieldofficer.getId(), 
+						this.fieldofficer_startday, 
+						this.partner.getId());
 			}
-			
->>>>>>> .r278
+			else {
+				this.id = districtsDataDbApis.autoInsert(this.id,
+						this.district_name, 
+						this.start_date, 
+						this.state.getId(), 
+						this.fieldofficer.getId(), 
+						this.fieldofficer_startday, 
+						this.partner.getId());
+			}
 		}
 	}
 	
@@ -214,15 +212,15 @@ public class DistrictsData extends BaseData {
 		PartnersData partner = new PartnersData();
 		for(int i = 0; i < districtObjects.length(); i++){
 			
-			StatesData.Data s = state.new Data(Integer.parseInt(districtObjects.get(i).getState().getPk()), districtObjects.get(i).getState().getStateName());
+			StatesData.Data s = state.new Data(districtObjects.get(i).getState().getPk(), districtObjects.get(i).getState().getStateName());
 			
-			FieldOfficersData.Data f = fieldofficer. new Data(Integer.parseInt(districtObjects.get(i).getFieldOfficer().getPk()), 
+			FieldOfficersData.Data f = fieldofficer. new Data(districtObjects.get(i).getFieldOfficer().getPk(), 
 					districtObjects.get(i).getFieldOfficer().getFieldOfficerName());
 			
-			PartnersData.Data p = partner.new Data(Integer.parseInt(districtObjects.get(i).getPartner().getPk()), 
+			PartnersData.Data p = partner.new Data(districtObjects.get(i).getPartner().getPk(), 
 					districtObjects.get(i).getPartner().getPartnerName());
 			
-			Data district = new Data(Integer.parseInt(districtObjects.get(i).getPk()), districtObjects.get(i).getDistrictName(), districtObjects.get(i).getStartDtae(), s, f, districtObjects.get(i).getFieldOfficerStartDay(), p);
+			Data district = new Data(districtObjects.get(i).getPk(), districtObjects.get(i).getDistrictName(), districtObjects.get(i).getStartDtae(), s, f, districtObjects.get(i).getFieldOfficerStartDay(), p);
 			
 			districts.add(district);
 		}
@@ -247,13 +245,13 @@ public class DistrictsData extends BaseData {
 				
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 
-					StatesData.Data s = state. new Data(this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsString(4));
+					StatesData.Data s = state. new Data(this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));
 
-					FieldOfficersData.Data f = fieldofficer. new Data(this.getResultSet().getFieldAsInt(5), this.getResultSet().getFieldAsString(6));
+					FieldOfficersData.Data f = fieldofficer. new Data(this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6));
 					
-					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsInt(8), this.getResultSet().getFieldAsString(9));
+					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9));
 					
-					Data district = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), 
+					Data district = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), s, f, this.getResultSet().getFieldAsString(7), p);
 
 					districts.add(district);
@@ -276,7 +274,7 @@ public class DistrictsData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data district = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data district = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					districts.add(district);
 				}
 			}

@@ -94,26 +94,18 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		@Override
 		public void save(){
-
 			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
-<<<<<<< .mine
-			
-			this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.animator.getId(), 
-					this.village.getId(), 
-					this.start_date);
-=======
-			if(this.id == 0){
-				this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.animator.getId()).toString(), 
-						Integer.valueOf(this.village.getId()).toString(), this.start_date);
-			}else{
-				this.id = animatorAssignedVillagesDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.animator.getId()).toString(), 
-						Integer.valueOf(this.village.getId()).toString(), this.start_date);
+			if(this.id == null){
+				this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.animator.getId(), 
+						this.village.getId(), 
+						this.start_date);
 			}
-				
-				
->>>>>>> .r278
+			else {
+				this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.id, this.animator.getId(), 
+						this.village.getId(), 
+						this.start_date);
+			}
 		}
-		
 	}
 	
 	protected static String tableID = "18";
@@ -164,6 +156,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return this.fields;
 	}
 	
+	
 	@Override
 	public String getListingOnlineURL(){
 		return AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL;
@@ -179,12 +172,12 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		VillagesData village = new VillagesData();
 		for ( int i = 0; i < animatorAssignedVillageObjects.length(); i++ ) {
 			
-			AnimatorsData.Data a = animator. new Data(Integer.parseInt(animatorAssignedVillageObjects.get(i).getAnimator().getPk()), 
+			AnimatorsData.Data a = animator. new Data(animatorAssignedVillageObjects.get(i).getAnimator().getPk(), 
 					animatorAssignedVillageObjects.get(i).getAnimator().getAnimatorName());
 			
-			VillagesData.Data v = village. new Data(Integer.parseInt(animatorAssignedVillageObjects.get(i).getVillage().getPk()), animatorAssignedVillageObjects.get(i).getVillage().getVillageName());
+			VillagesData.Data v = village. new Data(animatorAssignedVillageObjects.get(i).getVillage().getPk(), animatorAssignedVillageObjects.get(i).getVillage().getVillageName());
 			
-			Data animatorassignedvillage = new Data(Integer.parseInt(animatorAssignedVillageObjects.get(i).getPk()), a, v, animatorAssignedVillageObjects.get(i).getStartDate());
+			Data animatorassignedvillage = new Data(animatorAssignedVillageObjects.get(i).getPk(), a, v, animatorAssignedVillageObjects.get(i).getStartDate());
 			
 			animatorAssignedVillages.add(animatorassignedvillage);
 		}
@@ -207,11 +200,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 				
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
-					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsInt(1), this.getResultSet().getFieldAsString(2));
+					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));
 					
-					VillagesData.Data s = village. new Data(this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsString(4));
+					VillagesData.Data s = village. new Data(this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));
 					
-					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(5));
+					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(5));
 					
 					animatorsAssignedVillages.add(animatorassignedvillage);					
 				}
@@ -233,7 +226,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 				
-					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					
 					animatorsAssignedVillages.add(animatorassignedvillage);
 				}
@@ -246,11 +239,6 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		BaseData.dbClose();
 		return animatorsAssignedVillages;
-	}
-	
-	public List getTemplateDataOnline(String json){
-		List relatedData = null;
-		return relatedData;
 	}
 	
 	public Object postPageData() {

@@ -8,7 +8,6 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
-import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 
 public class BlocksData extends BaseData {
 
@@ -57,6 +56,7 @@ public class BlocksData extends BaseData {
 			return this.district;
 		}
 		
+		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.id = this.id;
@@ -93,18 +93,16 @@ public class BlocksData extends BaseData {
 		@Override
 		public void save() {
 			BlocksData blocksDataDbApis = new BlocksData();
-<<<<<<< .mine
-			this.id = blocksDataDbApis.autoInsert(this.block_name, 
-					this.start_date, 
-					this.district.getId());
-=======
-			if(this.id == 0){
-				this.id = blocksDataDbApis.autoInsert(this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
+			if(this.id == null){
+				this.id = blocksDataDbApis.autoInsert(this.block_name, 
+						this.start_date, 
+						this.district.getId());
 			}else{
-				this.id = blocksDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.block_name, this.start_date, Integer.valueOf(this.district.getId()).toString());
+				this.id = blocksDataDbApis.autoInsert(this.id,
+						this.block_name, 
+						this.start_date, 
+						this.district.getId());
 			}
-			
->>>>>>> .r278
 		}
 	}
 	
@@ -170,16 +168,15 @@ public class BlocksData extends BaseData {
 		
 		for (int i = 0; i < blockObjects.length(); i++) {
 
-			DistrictsData.Data d = district. new Data(Integer.parseInt(blockObjects.get(i).getDistrict().getPk()), blockObjects.get(i).getDistrict().getDistrictName());
+			DistrictsData.Data d = district. new Data(blockObjects.get(i).getDistrict().getPk(), blockObjects.get(i).getDistrict().getDistrictName());
 			
-			Data block = new Data(Integer.parseInt(blockObjects.get(i).getPk()), blockObjects.get(i).getBlockName(), blockObjects.get(i).getStartDate(), d);
+			Data block = new Data(blockObjects.get(i).getPk(), blockObjects.get(i).getBlockName(), blockObjects.get(i).getStartDate(), d);
 			
 			blocks.add(block);
 		}
 		return blocks;
 	}
 	
-	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
@@ -193,9 +190,9 @@ public class BlocksData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 		
-					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsInt(3), this.getResultSet().getFieldAsString(4));
+					DistrictsData.Data d = district. new Data(this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));
 					
-					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
+					Data block = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), d);
 					
 					blocks.add(block);
 				}
@@ -216,7 +213,7 @@ public class BlocksData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data block = new Data(this.getResultSet().getFieldAsInt(0), this.getResultSet().getFieldAsString(1));
+					Data block = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					blocks.add(block);
 				}
 			} catch (DatabaseException e) {
@@ -226,11 +223,6 @@ public class BlocksData extends BaseData {
 		}
 		BaseData.dbClose();
 		return blocks;
-	}
-	
-	public List getTemplateDataOnline(String json){
-		List relatedData = null;
-		return relatedData;
 	}
 	
 	public Object postPageData() {
