@@ -188,9 +188,9 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		List animatorsalarypermonths = new ArrayList();
 		AnimatorsData animator = new AnimatorsData();
 		for(int i = 0; i < animatorsalarypermonthObjects.length(); i++){
-			AnimatorsData.Data a = animator.new Data(Integer.parseInt(animatorsalarypermonthObjects.get(i).getAnimator().getPk()), 
+			AnimatorsData.Data a = animator.new Data(animatorsalarypermonthObjects.get(i).getAnimator().getPk(), 
 					animatorsalarypermonthObjects.get(i).getAnimator().getAnimatorName());
-			Data animatorsalarypermonth = new Data(Integer.parseInt(animatorsalarypermonthObjects.get(i).getPk()),
+			Data animatorsalarypermonth = new Data(animatorsalarypermonthObjects.get(i).getPk(),
 					 a,animatorsalarypermonthObjects.get(i).getDate(),
 					 animatorsalarypermonthObjects.get(i).getTotalSalary(),
 					 animatorsalarypermonthObjects.get(i).getPayDate());
