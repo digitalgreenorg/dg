@@ -94,20 +94,14 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();			
-<<<<<<< .mine
-			this.id = personRelationssDataDbApis.autoInsert(this.person.getId(),
-					this.relative.getId(), 
-					this.type_of_relationship);
-=======
-			if(this.id==0){
-				this.id = personRelationssDataDbApis.autoInsert( Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
+			if(this.id==null){
+				this.id = personRelationssDataDbApis.autoInsert( this.person.getId(),
+						this.relative.getId(), this.type_of_relationship);
 			}else{
-				this.id = personRelationssDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), Integer.valueOf(this.person.getId()).toString(),
-						Integer.valueOf(this.relative.getId()).toString(), this.type_of_relationship);
+				this.id = personRelationssDataDbApis.autoInsert(this.id, this.person.getId(),
+						this.relative.getId(), this.type_of_relationship);
 			}
 			
->>>>>>> .r278
 		}
 	}
 
@@ -176,10 +170,10 @@ public class Data extends BaseData.Data {
 		List personRelations = new ArrayList();
 		PersonsData person = new PersonsData();
 		for(int i = 0; i < personRelationObjects.length(); i++){
-			PersonsData.Data p = person.new Data(Integer.parseInt(personRelationObjects.get(i).getPerson().getPk()),
+			PersonsData.Data p = person.new Data(personRelationObjects.get(i).getPerson().getPk(),
 					personRelationObjects.get(i).getPerson().getPersonName());
 						
-			Data personRelation = new Data(Integer.parseInt(personRelationObjects.get(i).getPk()),p,p, 
+			Data personRelation = new Data(personRelationObjects.get(i).getPk(),p,p, 
 					personRelationObjects.get(i).getTypeOfRelationShip());
 			personRelations.add(personRelation);
 		}
