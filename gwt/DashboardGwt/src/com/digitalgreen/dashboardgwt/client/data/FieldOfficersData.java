@@ -23,8 +23,8 @@ public class FieldOfficersData extends BaseData {
 		public final native String getSalary() /*-{ return this.fields.salary; }-*/;
 		public final native String getPhone() /*-{ return this.fields.phone_no; }-*/;
 		public final native String getAddress() /*-{ return this.fields.address; }-*/;
-		public final native ReviewersData.Type getReviewer() /*-{ return this.fields.reviewer; }-*/;
-		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
+		public final native int getReviewerId() /*-{ return this.fields.reviewer_id; }-*/;
+		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 	}
 	
 	public class Data extends BaseData.Data{
@@ -38,8 +38,8 @@ public class FieldOfficersData extends BaseData {
 		private String salary;
 		private String phone_no;
 		private String address;
-		private ReviewersData.Data reviewer;
-		private EquipmentHoldersData.Data equipmentholder;
+		private int reviewer_id;
+		private int equipmentholder_id;
 		
 		public Data(){
 			super();
@@ -52,7 +52,7 @@ public class FieldOfficersData extends BaseData {
 		}
 		
 		public Data(String id, String name, String age, String gender, String hire_date, 
-				String salary, String phone_no, String address, ReviewersData.Data reviewer, EquipmentHoldersData.Data equipmentholder){
+				String salary, String phone_no, String address, int reviewer_id, int equipmentholder_id){
 			super();
 			this.id = id;
 			this.name = name;
@@ -62,8 +62,8 @@ public class FieldOfficersData extends BaseData {
 			this.salary = salary;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer = reviewer;
-			this.equipmentholder = equipmentholder;
+			this.reviewer_id = reviewer_id;
+			this.equipmentholder_id = equipmentholder_id;
 		}
 		
 
@@ -81,8 +81,8 @@ public class FieldOfficersData extends BaseData {
 			obj.salary = this.salary;
 			obj.phone_no = this.phone_no;
 			obj.address = this.address;
-			obj.reviewer = this.reviewer;
-			obj.equipmentholder = this.equipmentholder;
+			obj.reviewer_id  = this.reviewer_id;
+			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
 
@@ -117,15 +117,11 @@ public class FieldOfficersData extends BaseData {
 			else if(key.equals("address")){
 				this.address = (String)val;
 			}
-			else if(key.equals("reviewer")) {
-				ReviewersData reviewer = new ReviewersData();
-				this.reviewer = reviewer.getNewData();
-				 this.reviewer.id = val;
+			else if(key.equals("reviewer_id")) {
+				 this.reviewer_id = Integer.parseInt((String)val);
 			}
-			else if(key.equals("equipmentholder")) {
-				EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
-				this.equipmentholder = equipmentholder.getNewData();
-				this.equipmentholder.id = val;
+			else if(key.equals("equipmentholder_id")) {
+				this.equipmentholder_id = Integer.parseInt((String)val);
 			}
 		}
 
@@ -140,8 +136,8 @@ public class FieldOfficersData extends BaseData {
 						this.salary, 
 						this.phone_no, 
 						this.address, 
-						this.reviewer.id, 
-						this.equipmentholder.id);
+						Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
 			}
 			else {
 				this.id = fieldOfficersDataDbApis.autoInsert(this.id,
@@ -152,8 +148,8 @@ public class FieldOfficersData extends BaseData {
 						this.salary, 
 						this.phone_no, 
 						this.address, 
-						this.reviewer.getId(),
-						this.equipmentholder.getId());
+						Integer.valueOf(this.reviewer_id).toString(), 
+						Integer.valueOf(this.equipmentholder_id).toString());
 			}	
 		}
 	}
@@ -229,10 +225,6 @@ public class FieldOfficersData extends BaseData {
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		
 		for(int i = 0; i < fieldOfficerObjects.length(); i++){
-			ReviewersData.Data r = reviewer.new Data(fieldOfficerObjects.get(i).getReviewer().getPk());
-			
-			EquipmentHoldersData.Data eq = equipmentholder.new Data(fieldOfficerObjects.get(i).getEquipmentHolder().getPk());
-			
 			Data fieldOfficer = new Data(fieldOfficerObjects.get(i).getPk(), 
 					fieldOfficerObjects.get(i).getFieldOfficerName(), 
 					fieldOfficerObjects.get(i).getAge(), 
@@ -241,7 +233,8 @@ public class FieldOfficersData extends BaseData {
 					fieldOfficerObjects.get(i).getSalary(), 
 					fieldOfficerObjects.get(i).getPhone(), 
 					fieldOfficerObjects.get(i).getAddress(), 
-					r, eq);
+					fieldOfficerObjects.get(i).getReviewerId(), 
+					fieldOfficerObjects.get(i).getEquipmentHolderId());
 			fieldOfficers.add(fieldOfficer);
 		}
 		return fieldOfficers;
@@ -254,23 +247,17 @@ public class FieldOfficersData extends BaseData {
 	
 	public List getFieldOfficersListingOffline(){
 		BaseData.dbOpen();
-		ReviewersData reviewer = new ReviewersData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List fieldOfficers = new ArrayList();
 		this.select(listFieldOfficers);
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
 					
-					ReviewersData.Data r = reviewer.new Data(this.getResultSet().getFieldAsString(8));
-					
-					EquipmentHoldersData.Data eq = equipmentholder.new Data(this.getResultSet().getFieldAsString(9));
-					
 					Data fieldOfficer = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
 							this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5), 
 							this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
-							r, eq);
+							this.getResultSet().getFieldAsInt(8), this.getResultSet().getFieldAsInt(9));
 					fieldOfficers.add(fieldOfficer);
 				}
 			} catch (DatabaseException e){

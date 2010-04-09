@@ -25,7 +25,7 @@ public class PersonsData extends BaseData {
 		public final native String getLandHoldings() /*-{ return this.fields.land_holdings; }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 		public final native PersonGroupsData.Type getPersonGroup() /*-{ return this.fields.group;}-*/;
-		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
+		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 		
 	}
 	
@@ -42,7 +42,7 @@ public class PersonsData extends BaseData {
 		private String land_holdings;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private EquipmentHoldersData.Data equipmentholder;
+		private int equipmentholder_id;
 		private PersonRelationsData.Data relations;
 		private PersonAdoptPracticeData.Data adopted_agricultural_practices;
 		
@@ -52,7 +52,7 @@ public class PersonsData extends BaseData {
 		}
 		
 		public Data(String id, String person_name,String father_name,String age,String gender,String phone_no,String address,String land_holdings,
-				VillagesData.Data village,PersonGroupsData.Data group, EquipmentHoldersData.Data equipmentholder) {
+				VillagesData.Data village,PersonGroupsData.Data group, int equipmentholder_id) {
 			super();
 			this.id = id;
 			this.person_name = person_name;
@@ -64,7 +64,7 @@ public class PersonsData extends BaseData {
 			this.land_holdings = land_holdings;
 			this.village = village;
 			this.group = group;
-			this.equipmentholder = equipmentholder;
+			this.equipmentholder_id = equipmentholder_id;
 		}
 		
 
@@ -114,8 +114,8 @@ public class PersonsData extends BaseData {
 			return this.group;
 		}
 						
-		public EquipmentHoldersData.Data getEquipmentHolder(){
-			return this.equipmentholder;
+		public int getEquipmentHolderId(){
+			return this.equipmentholder_id;
 		}
 		
 		public BaseData.Data clone() {
@@ -130,7 +130,7 @@ public class PersonsData extends BaseData {
 			obj.land_holdings = this.land_holdings;
 			obj.village = this.village;
 			obj.group= this.group;
-			obj.equipmentholder = this.equipmentholder;
+			obj.equipmentholder_id = this.equipmentholder_id;
 			obj.relations = this.relations;
 			obj.adopted_agricultural_practices = this.adopted_agricultural_practices;			
 				
@@ -173,10 +173,8 @@ public class PersonsData extends BaseData {
 				this.group.id = val;
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("equipmentholder_id")) {
-				EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
-				this.equipmentholder = equipmentholder.getNewData();
-				this.equipmentholder.id = val;
-			}  else if(key.equals("relations")) {
+				this.equipmentholder_id = Integer.parseInt((String)val);
+			}   else if(key.equals("relations")) {
 				PersonRelationsData relations = new PersonRelationsData();
 				this.relations = relations.getNewData();
 				this.relations.id = val;
@@ -196,12 +194,12 @@ public class PersonsData extends BaseData {
 			if(this.id==null){
 				this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
 						this.phone_no,this.address,this.land_holdings,this.village.getId(),
-						this.group.getId(), this.equipmentholder.getId(),
+						this.group.getId(), Integer.valueOf(this.equipmentholder_id).toString(),
 						this.relations.getId(),this.adopted_agricultural_practices.getId());
 			}else{
 				this.id = personsDataDbApis.autoInsert(this.id,this.person_name,this.father_name,this.age,this.gender,
 						this.phone_no,this.address,this.land_holdings,this.village.getId(),
-						this.group.getId(), this.equipmentholder.getId(),
+						this.group.getId(), Integer.valueOf(this.equipmentholder_id).toString(),
 						this.relations.getId(),this.adopted_agricultural_practices.getId());
 			}
 
@@ -288,8 +286,6 @@ public class PersonsData extends BaseData {
 			PersonGroupsData.Data pg = group.new Data(personObjects.get(i).getPersonGroup().getPk(),
 					personObjects.get(i).getPersonGroup().getPersonGroupName());
 			
-			EquipmentHoldersData.Data e = equipmentholder.new Data(personObjects.get(i).getPersonGroup().getPk());
-			
 			Data person = new Data(personObjects.get(i).getPk(),
 						personObjects.get(i).getPersonName(),
 						personObjects.get(i).getFatherName(),
@@ -297,8 +293,8 @@ public class PersonsData extends BaseData {
 						personObjects.get(i).getGender(),
 						personObjects.get(i).getPhoneNo(),
 						personObjects.get(i).getAddress(),
-						personObjects.get(i).getLandHoldings(),vil,pg,e
-						);
+						personObjects.get(i).getLandHoldings(),vil,pg,
+						personObjects.get(i).getEquipmentHolderId());
 			persons.add(person);
 		}
 		

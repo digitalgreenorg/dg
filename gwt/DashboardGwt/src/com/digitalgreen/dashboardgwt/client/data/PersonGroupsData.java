@@ -2,7 +2,7 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -118,6 +118,8 @@ public class PersonGroupsData extends BaseData {
 		@Override
 		public void save() {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
+			Date date = new Date();
+			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 			if(this.id == null){
 				this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
 						this.days, 
@@ -234,7 +236,7 @@ public class PersonGroupsData extends BaseData {
 					personGroups.add(personGroup);
 	    	      }				
 			} catch (DatabaseException e) {
-				Window.alert("Database Exception : " + e.toString());
+				Window.alert("Database Exception  : " + e.toString());
 				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
@@ -268,7 +270,7 @@ public class PersonGroupsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			Window.alert("Query String = " + this.queryString);
+			//Window.alert("Query String = " + this.queryString);
 			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.queryString);
 		}
 		else{
@@ -299,7 +301,17 @@ public class PersonGroupsData extends BaseData {
 			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
 		}
 		html = html + "</select>";
-		
+		VillagesData villageData1 = new VillagesData();
+		List villages1 = villageData.getAllVillagesOffline();
+		VillagesData.Data village1;
+		for(int inline = 0; inline < 30; inline++){
+			html += "<select name=\"person_set-" + inline + "-village\" id=\"id_person_set-" + inline +"-village\">";
+			for(int i=0; i< villages1.size(); i++){
+				village1 = (VillagesData.Data)villages1.get(i);
+				html = html + "<option value = \"" + village1.getId() +"\">" + village1.getVillageName() + "</option>";
+			}
+			html = html + "</select>";
+		}
 		
 		return html;
 	}
