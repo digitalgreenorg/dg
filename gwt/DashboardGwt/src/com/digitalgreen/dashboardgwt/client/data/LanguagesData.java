@@ -14,7 +14,7 @@ public class LanguagesData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getLanguageName() /*-{ return this.fields.language_name + ""; }-*/;
+		public final native String getLanguageName() /*-{ return $wnd.checkForNullValues(this.fields.language_name); }-*/;
 	}
 
 	public class Data extends BaseData.Data {

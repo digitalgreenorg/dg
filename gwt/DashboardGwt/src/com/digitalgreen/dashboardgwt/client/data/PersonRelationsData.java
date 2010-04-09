@@ -16,7 +16,7 @@ public class PersonRelationsData extends BaseData {
 		protected Type() {}
 		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
 		public final native PersonsData.Type getRelative() /*-{ return this.fields.relative }-*/;
-		public final native String getTypeOfRelationShip() /*-{ return this.fields.type_of_relationship + ""; }-*/;
+		public final native String getTypeOfRelationShip() /*-{ return $wnd.checkForNullValues(this.fields.type_of_relationship); }-*/;
 	}
 	
 public class Data extends BaseData.Data {

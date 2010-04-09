@@ -15,8 +15,8 @@ public class RegionsData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getRegionName() /*-{ return this.fields.region_name + ""; }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
+		public final native String getRegionName() /*-{ return $wnd.checkForNullValues(this.fields.region_name); }-*/;
+		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date);  }-*/;
 	}
 
 	public class Data extends BaseData.Data {
@@ -146,6 +146,8 @@ public class RegionsData extends BaseData {
 	public List serialize(JsArray<Type> regionObjects){
 		List regions = new ArrayList();
 		for(int i = 0; i < regionObjects.length(); i++){
+			if(regionObjects.get(i).getStartDate() == null)
+				Window.alert("Date is null");
 			Data region = new Data(regionObjects.get(i).getPk(), regionObjects.get(i).getRegionName(), regionObjects.get(i).getStartDate());
 			regions.add(region);
 		}

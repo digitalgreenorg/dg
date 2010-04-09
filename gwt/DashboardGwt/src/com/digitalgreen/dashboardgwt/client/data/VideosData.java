@@ -16,19 +16,19 @@ public class VideosData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getTitle() /*-{ return this.fields.title + ""; }-*/;
-		public final native String getVideoType() /*-{ return this.fields.video_type + "";}-*/;
-		public final native String getDuration() /*-{ return this.fields.duration + ""; }-*/;
-		public final native String getSummary() /*-{ return this.fields.summary + ""; }-*/;
-		public final native String getVideoProductionStartDate() /*-{ return this.fields.video_production_start_date + ""; }-*/;
-		public final native String getVideoProductionEndDate() /*-{ return this.fields.video_production_end_date + ""; }-*/;
+		public final native String getTitle() /*-{ return $wnd.checkForNullValues(this.fields.title); }-*/;
+		public final native String getVideoType() /*-{ return $wnd.checkForNullValues(this.fields.video_type);}-*/;
+		public final native String getDuration() /*-{ return $wnd.checkForNullValues(this.fields.duration); }-*/;
+		public final native String getSummary() /*-{ return $wnd.checkForNullValues(this.fields.summary); }-*/;
+		public final native String getVideoProductionStartDate() /*-{ return $wnd.checkForNullValues(this.fields.video_production_start_date); }-*/;
+		public final native String getVideoProductionEndDate() /*-{ return $wnd.checkForNullValues(this.fields.video_production_end_date); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
 		public final native AnimatorsData.Type getFacilitator() /*-{ return this.fields.facilitator }-*/;
 		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.cameraoperator }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
-		
+				
 		final private static String COLLECTION_PREFIX = "video";
 		
 		private String title;   		
@@ -213,11 +213,8 @@ public class VideosData extends BaseData {
 		
 		@Override
 		public void save() {
-			//Calendar cal = Calendar.getInstance();
-		    //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-		    Window.alert("Save =" + this.last_modified);
 			VideosData videosDataDbApis = new VideosData();		
 			if(this.id == null){
 				this.id = videosDataDbApis.autoInsert(this.title, 

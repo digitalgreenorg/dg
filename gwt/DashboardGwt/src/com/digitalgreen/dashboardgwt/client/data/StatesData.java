@@ -14,9 +14,9 @@ public class StatesData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getStateName() /*-{ return this.fields.state_name + ""; }-*/;
+		public final native String getStateName() /*-{ return $wnd.checkForNullValues(this.fields.state_name); }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
+		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -62,10 +62,6 @@ public class StatesData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.state_name = this.state_name;
-			obj.region = (RegionsData.Data)this.region.clone();
-			obj.start_date = this.start_date;
 			return obj;
 		}
 		
@@ -96,9 +92,9 @@ public class StatesData extends BaseData {
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();		
 			if(this.id == null)
-				this.id = statesDataDbApis.autoInsert(this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+				this.id = statesDataDbApis.autoInsert(this.state_name, this.region.getId(), this.start_date);
 			else
-				this.id = statesDataDbApis.autoInsert(this.id, this.state_name, Integer.valueOf(this.region.getId()).toString(), this.start_date);
+				this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
 		}
 	}
 

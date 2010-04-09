@@ -18,11 +18,11 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public final native ScreeningsData.Type getScreening() /*-{ return this.fields.screening;}-*/;
 		public final native PersonsData.Type getPerson() /*-{ return this.fields.person;}-*/;
 		public final native PracticesData.Type getExpressedInterestPractice() /*-{ return this.fields.expressed_interest_practice; }-*/;
-		public final native String getExpressedInterest() /*-{ return this.fields.expressed_interest + ""; }-*/;
+		public final native String getExpressedInterest() /*-{ return $wnd.checkForNullValues(this.fields.expressed_interest); }-*/;
 		public final native PracticesData.Type getExpressedAdoptionPractice() /*-{ return this.fields.expressed_adoption_practice; }-*/;
-		public final native String getExpressedAdoption() /*-{ return this.fields.expressed_adoption + ""; }-*/;
+		public final native String getExpressedAdoption() /*-{ return $wnd.checkForNullValues(this.fields.expressed_adoption); }-*/;
 		public final native PracticesData.Type getExpressedQuestionPractice() /*-{ return this.fields.expressed_question_practice; }-*/;
-		public final native String getExpressedQuestion() /*-{ return this.fields.expressed_question + ""; }-*/;
+		public final native String getExpressedQuestion() /*-{ return $wnd.checkForNullValues(this.fields.expressed_question); }-*/;
 		
 	}
 	

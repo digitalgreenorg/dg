@@ -13,8 +13,8 @@ public class BlocksData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getBlockName() /*-{ return this.fields.block_name + ""; }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
+		public final native String getBlockName() /*-{ return $wnd.checkForNullValues(this.fields.block_name); }-*/;
+		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date); }-*/;
 		public final native DistrictsData.Type getDistrict() /*-{ return this.fields.district; }-*/;
 	}
 	

@@ -15,9 +15,9 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native AnimatorsData.Type getAnimator() /*-{ return this.fields.animator; }-*/;
-		public final native String getDate() /*-{ return this.fields.date + ""; }-*/;
-		public final native String getTotalSalary() /*-{ return this.fields.total_salary + ""; }-*/;
-		public final native String getPayDate() /*-{ return this.fields.pay_date + ""; }-*/;
+		public final native String getDate() /*-{ return $wnd.checkForNullValues(this.fields.date); }-*/;
+		public final native String getTotalSalary() /*-{ return $wnd.checkForNullValues(this.fields.total_salary); }-*/;
+		public final native String getPayDate() /*-{ return $wnd.checkForNullValues(this.fields.pay_date); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {

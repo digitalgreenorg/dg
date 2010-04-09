@@ -18,10 +18,10 @@ public class PersonGroupsData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getPersonGroupName() /*-{ return this.fields.group_name + ""; }-*/;
-		public final native String getDays() /*-{ return this.fields.days + ""; }-*/;
-		public final native String getTimings() /*-{ return this.fields.timings + ""; }-*/;
-		public final native String getTimeUpdated() /*-{ return this.fields.time_updated + ""; }-*/;
+		public final native String getPersonGroupName() /*-{ return $wnd.checkForNullValues(this.fields.group_name); }-*/;
+		public final native String getDays() /*-{ return $wnd.checkForNullValues(this.fields.days); }-*/;
+		public final native String getTimings() /*-{ return $wnd.checkForNullValues(this.fields.timings); }-*/;
+		public final native String getTimeUpdated() /*-{ return $wnd.checkForNullValues(this.fields.time_updated); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 	}
 	

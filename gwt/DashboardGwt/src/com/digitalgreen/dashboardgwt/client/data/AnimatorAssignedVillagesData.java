@@ -15,7 +15,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		protected Type() {}
 		public final native AnimatorsData.Type getAnimator() /*-{ return this.fields.animator; }-*/ ;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/ ;
-		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
+		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {

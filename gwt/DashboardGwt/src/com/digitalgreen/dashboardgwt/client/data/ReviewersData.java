@@ -15,8 +15,8 @@ public class ReviewersData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getContentType() /*-{ return this.fields.content_type + ""; }-*/;
-		public final native String getObjectId() /*-{ return this.fields.object_id + ""; }-*/;
+		public final native String getContentType() /*-{ return $wnd.checkForNullValues(this.fields.content_type); }-*/;
+		public final native String getObjectId() /*-{ return $wnd.checkForNullValues(this.fields.object_id); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -97,7 +97,7 @@ public class ReviewersData extends BaseData {
 	protected static String saveReviewerOnlineURL = "/dashboard/saverevieweronline/";
 	protected static String getReviewerOnlineURL = "/dashboard/getreviewersonline/";
 	protected static String saveReviewerOfflineURL = "/dashboard/saverevieweroffline/";
-	protected String table_name = "equipment_holder";
+	protected String table_name = "reviewer";
 	protected String[] fields = {"id", "content_type", "object_id"};
 	
 	

@@ -8,13 +8,14 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class EquipmentHoldersData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getContentType() /*-{ return this.fields.content_type + ""; }-*/;
-		public final native String getObjectId() /*-{ return this.fields.object_id + ""; }-*/;
+		public final native String getContentType() /*-{ return $wnd.checkForNullValues(this.fields.content_type); }-*/;
+		public final native String getObjectId() /*-{ return $wnd.checkForNullValues(this.fields.object_id); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -77,9 +78,10 @@ public class EquipmentHoldersData extends BaseData {
 		public void save() {
 			EquipmentHoldersData equipmentholdersDataDbApis = new EquipmentHoldersData();
 			if(this.id == null)
-				this.id = equipmentholdersDataDbApis.autoInsert(this.content_type, this.object_id);
-			else
+				this.id = equipmentholdersDataDbApis.autoInsert( this.content_type, this.object_id);
+			else{
 				this.id = equipmentholdersDataDbApis.autoInsert(this.id, this.content_type, this.object_id);
+			}
 		}
 	}
 	
@@ -97,6 +99,7 @@ public class EquipmentHoldersData extends BaseData {
 	protected static String saveEquipmentHolderOfflineURL = "/dashboard/saveequipmentholderoffline/";
 	protected String table_name = "equipment_holder";
 	protected String[] fields = {"id", "content_type", "object_id"};
+
 	
 	
 	public EquipmentHoldersData() {

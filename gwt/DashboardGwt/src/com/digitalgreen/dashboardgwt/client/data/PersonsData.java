@@ -16,13 +16,13 @@ public class PersonsData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getPersonName() /*-{ return this.fields.person_name + ""; }-*/;
-		public final native String getFatherName() /*-{ return this.fields.father_name + ""; }-*/;
-		public final native String getAge() /*-{ return this.fields.age + ""; }-*/;
-		public final native String getGender() /*-{ return this.fields.gender + ""; }-*/;
-		public final native String getPhoneNo() /*-{ return this.fields.phone_no + ""; }-*/;
-		public final native String getAddress() /*-{ return this.fields.address + ""; }-*/;
-		public final native String getLandHoldings() /*-{ return this.fields.land_holdings + ""; }-*/;
+		public final native String getPersonName() /*-{ return $wnd.checkForNullValues(this.fields.person_name); }-*/;
+		public final native String getFatherName() /*-{ return $wnd.checkForNullValues(this.fields.father_name); }-*/;
+		public final native String getAge() /*-{ return $wnd.checkForNullValues(this.fields.age); }-*/;
+		public final native String getGender() /*-{ return $wnd.checkForNullValues(this.fields.gender); }-*/;
+		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
+		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
+		public final native String getLandHoldings() /*-{ return $wnd.checkForNullValues(this.fields.land_holdings); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 		public final native PersonGroupsData.Type getPersonGroup() /*-{ return this.fields.group;}-*/;
 		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;

@@ -15,17 +15,17 @@ public class DevelopmentManagersData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getName() /*-{ return this.fields.name + ""; }-*/;
-		public final native String getAge() /*-{ return this.fields.age + ""; }-*/;
-		public final native String getGender() /*-{ return this.fields.gender + ""; }-*/;
-		public final native String getHireDate() /*-{ return this.fields.hire_date + ""; }-*/;
-		public final native String getPhoneNo() /*-{ return this.fields.phone_no + ""; }-*/;
-		public final native String getAddress() /*-{ return this.fields.address + ""; }-*/;
-		public final native String getSpeciality() /*-{ return this.fields.speciality + ""; }-*/;
+		public final native String getName() /*-{ return $wnd.checkForNullValues(this.fields.name); }-*/;
+		public final native String getAge() /*-{ return $wnd.checkForNullValues(this.fields.age); }-*/;
+		public final native String getGender() /*-{ return $wnd.checkForNullValues(this.fields.gender); }-*/;
+		public final native String getHireDate() /*-{ return $wnd.checkForNullValues(this.fields.hire_date); }-*/;
+		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
+		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
+		public final native String getSpeciality() /*-{ return $wnd.checkForNullValues(this.fields.speciality); }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
-		public final native String getStartDay() /*-{ return this.fields.start_day + ""; }-*/;
+		public final native String getStartDay() /*-{ return $wnd.checkForNullValues(this.fields.start_day); }-*/;
 		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
-		public final native String getSalary() /*-{ return this.fields.salary + ""; }-*/;
+		public final native String getSalary() /*-{ return $wnd.checkForNullValues(this.fields.salary); }-*/;
 				
 	}
 	

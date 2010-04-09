@@ -14,13 +14,13 @@ public class VillagesData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getVillageName() /*-{ return this.fields.village_name + ""; }-*/;
+		public final native String getVillageName() /*-{ return $wnd.checkForNullValues(this.fields.village_name); }-*/;
 		public final native BlocksData.Type getBlock() /*-{ return this.fields.block }-*/;
 		public final native int getNoOfHouseholds() /*-{ return this.fields.no_of_households }-*/;
 		public final native int getPopulation() /*-{ return this.fields.population }-*/;
 		public final native int getRoadConnectivity() /*-{ return this.fields.road_connectivity }-*/;
-		public final native String getControl() /*-{ return this.fields.control + ""; }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date + "";}-*/;
+		public final native String getControl() /*-{ return $wnd.checkForNullValues(this.fields.control); }-*/;
+		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date);}-*/;
 	}
 	
 	public class Data extends BaseData.Data {

@@ -27,8 +27,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public static class Type extends JavaScriptObject {
 		protected Type() {}
-		public final native String getPk() /*-{ return this.pk; }-*/; 
-		public final native String getModel() /*-{ return this.model; }-*/;
+		public final native String getPk() /*-{ return $wnd.checkForNullValues(this.pk); }-*/; 
+		public final native String getModel() /*-{ return $wnd.checkForNullValues(this.model); }-*/;
 		public final native Object getFields() /*-{ return this.fields ; }-*/;
 	}
 	
@@ -248,6 +248,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			tempList.add(args[i]);
 		}
 		String[] tempListString = new String[] {};
+		
 		if(this.getFields().length == args.length){
 			for(int i=0; i < tempList.size(); i++) {
 				tempListString[i] = (String)tempList.get(i);

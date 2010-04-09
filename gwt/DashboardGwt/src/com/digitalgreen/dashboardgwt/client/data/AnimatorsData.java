@@ -13,14 +13,14 @@ public class AnimatorsData extends BaseData {
 	
 	public static class Type extends BaseData.Type {
 		protected Type() {}
-		public final native String getAnimatorName() /*-{ return this.fields.name + ""; }-*/;
-		public final native String getAge() /*-{ return this.fields.age + ""; }-*/;
-		public final native String getGender() /*-{ return this.fields.gender + ""; }-*/;
-		public final native String getCSPFlags() /*-{ return this.fields.csp_flags + ""; }-*/;
-		public final native String getCameraOperatorFlag() /*-{ return this.fields.camera_operator_flag + ""; }-*/;
-		public final native String getFacilitatorFlag() /*-{ return this.fields.facilitator_flag + ""; }-*/;
-		public final native String getPhoneNo() /*-{ return this.fields.phone_no + ""; }-*/;
-		public final native String getAddress() /*-{ return this.fields.address + ""; }-*/;
+		public final native String getAnimatorName() /*-{ return $wnd.checkForNullValues(this.fields.name); }-*/;
+		public final native String getAge() /*-{ return $wnd.checkForNullValues(this.fields.age); }-*/;
+		public final native String getGender() /*-{ return $wnd.checkForNullValues(this.fields.gender); }-*/;
+		public final native String getCSPFlags() /*-{ return $wnd.checkForNullValues(this.fields.csp_flags); }-*/;
+		public final native String getCameraOperatorFlag() /*-{ return $wnd.checkForNullValues(this.fields.camera_operator_flag); }-*/;
+		public final native String getFacilitatorFlag() /*-{ return $wnd.checkForNullValues(this.fields.facilitator_flag); }-*/;
+		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
+		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
 		public final native PartnersData.Data getPartner() /*-{ return this.fields.partner; }-*/;
 		public final native VillagesData.Data getVillage() /*-{ return this.fields.village; }-*/;
 		public final native String getEquipmentHolder() /*-{ return this.fields.equipment_holder; }-*/;
