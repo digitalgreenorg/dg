@@ -122,8 +122,8 @@ public class ScreeningVideosScreenedData extends BaseData {
 		super(callbacks);
 	}
 	
-	public ScreeningVideosScreenedData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public ScreeningVideosScreenedData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {

@@ -210,8 +210,8 @@ public class PersonMeetingAttendanceData extends BaseData {
 		super(callbacks);
 	}
 	
-	public PersonMeetingAttendanceData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public PersonMeetingAttendanceData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {

@@ -12,6 +12,9 @@ public class Form {
 	private BaseData.Data parent;
 	private Object[] dependents = null;
 	private HashMap dataFormat = null;
+	private String queryString = null;
+	
+	public Form() {}
 	
 	public Form(BaseData.Data parent) {
 		this.parent = parent;
@@ -32,11 +35,19 @@ public class Form {
 	public HashMap getDataFormat() {
 		return this.dataFormat;
 	}
+	
+	public String getQueryString() {
+		return this.queryString;
+	}
 
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
+	}
+	
 	// Save the dataFormat representation of the Form.  Transaction details
 	// are left up to the caller.
-	public void save(String queryString) {
-		this.parseQueryString(queryString);
+	public void save() {
+		this.parseQueryString(this.queryString);
 		// Save the parent first to get a FK for its dependents
 		this.parent.save();
 		Object[] dataFormatKeys = dataFormat.keySet().toArray();

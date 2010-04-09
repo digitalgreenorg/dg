@@ -6,8 +6,6 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData.Data;
-import com.digitalgreen.dashboardgwt.client.data.RegionsData.Type;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -20,7 +18,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 
 
 public class BaseData implements OfflineDataInterface, OnlineDataInterface {
@@ -65,11 +62,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	private static Database db = null;
 	private static String databaseName = ApplicationConstants.getDatabaseName();
-
-	private int requestError = 0;
 	
 	protected Form form = null;
-	protected String queryString = null;
 	protected ResultSet lastResultSet;
 	protected String table_name = "";
 	protected String[] fields = {};
@@ -91,10 +85,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.dataOnlineCallbacks = callbacks;
 	}
 	
-	public BaseData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
+	public BaseData(OnlineOfflineCallbacks callbacks, Form form) {
 		this.dataOnlineCallbacks = callbacks;
 		this.form = form;
-		this.queryString = queryString;
 	}
 	
 	// Override this
@@ -121,9 +114,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		BaseData.dbOpen();
 		try {
 			BaseData.dbStartTransaction();
-			this.form.save(this.queryString);
+			this.form.save();
 			FormQueueData formQueue = new FormQueueData();			 
-			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.queryString, "0", "A");
+			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.form.getQueryString(), "0", "A");
 			BaseData.dbCommit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,13 +132,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return ApplicationConstants.getCurrentOnlineStatus();
 	}
 	
-	protected boolean isRequestError() {
-		return this.requestError == BaseData.ERROR_RESPONSE || this.requestError == BaseData.ERROR_SERVER;
-	}
 	
-	private void setRequestError(int errorCode) {
-		this.requestError = errorCode;
-	}
+	
 	
 	private void request(RequestBuilder.Method method, String url, String postData) {
 		RequestBuilder builder = new RequestBuilder(method, URL.encode(url));
@@ -160,13 +148,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				}
 			}
 			public void onError(Request request, Throwable exception) {
-				setRequestError(BaseData.ERROR_RESPONSE);
 				dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
 			}		           
 		});
 		} catch (RequestException e) {
 			// Couldn't connect to server
-			setRequestError(BaseData.ERROR_SERVER);
 			dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_SERVER);
 		}
 	}

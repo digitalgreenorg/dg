@@ -241,8 +241,8 @@ public class AnimatorsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public AnimatorsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public AnimatorsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -355,7 +355,7 @@ public class AnimatorsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + AnimatorsData.saveAnimatorOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + AnimatorsData.saveAnimatorOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

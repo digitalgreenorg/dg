@@ -120,8 +120,8 @@ public class VideoFarmersShownData extends BaseData {
 		super(callbacks);
 	}
 	
-	public VideoFarmersShownData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public VideoFarmersShownData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {

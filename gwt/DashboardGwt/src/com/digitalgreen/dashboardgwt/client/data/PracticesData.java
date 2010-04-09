@@ -130,8 +130,8 @@ public class PracticesData extends BaseData {
 		super(callbacks);
 	}
 	
-	public PracticesData(OnlineOfflineCallbacks callbacks, Form form, String queryString){
-		super(callbacks, form, queryString);
+	public PracticesData(OnlineOfflineCallbacks callbacks, Form form){
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -223,7 +223,7 @@ public class PracticesData extends BaseData {
 	
 	public Object postPageData(){
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.savePracticeOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + this.savePracticeOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

@@ -25,7 +25,7 @@ public class VideosTemplate extends BaseTemplate {
 		Videos addVideosServlet = new Videos(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new VideosData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Videos saveVideo = new Videos(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)

@@ -119,7 +119,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	}
 	
 	public TrainingAnimatorsTrainedData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+		super(callbacks, form);
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

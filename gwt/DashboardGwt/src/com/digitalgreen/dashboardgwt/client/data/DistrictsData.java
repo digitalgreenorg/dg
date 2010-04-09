@@ -172,8 +172,8 @@ public class DistrictsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public DistrictsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public DistrictsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override
@@ -294,7 +294,7 @@ public class DistrictsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + DistrictsData.saveDistrictOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + DistrictsData.saveDistrictOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

@@ -26,7 +26,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		Equipments addEquipmentsServlet = new Equipments(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new EquipmentsData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Equipments saveEquipment = new Equipments(saveRequestContext);
 				
 		// Draw the content of the template depending on the request type (GET/POST)

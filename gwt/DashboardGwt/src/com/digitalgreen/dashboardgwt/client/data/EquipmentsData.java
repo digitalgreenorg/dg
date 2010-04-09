@@ -184,8 +184,8 @@ public class EquipmentsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public EquipmentsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public EquipmentsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -285,7 +285,7 @@ public class EquipmentsData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + EquipmentsData.saveEquipmentOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + EquipmentsData.saveEquipmentOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

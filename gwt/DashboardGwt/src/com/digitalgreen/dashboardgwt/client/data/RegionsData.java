@@ -108,8 +108,8 @@ public class RegionsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public RegionsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public RegionsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class RegionsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + RegionsData.saveRegionOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + RegionsData.saveRegionOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

@@ -240,8 +240,8 @@ public class PersonsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public PersonsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public PersonsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {
@@ -351,10 +351,9 @@ public class PersonsData extends BaseData {
 		return persons;
 	}
 	
-	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + PersonsData.savePersonOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + PersonsData.savePersonOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

@@ -185,8 +185,8 @@ public class FieldOfficersData extends BaseData {
 		super(callbacks);
 	}
 	
-	public FieldOfficersData(OnlineOfflineCallbacks callbacks, Form form, String queryString){
-		super(callbacks, form, queryString);
+	public FieldOfficersData(OnlineOfflineCallbacks callbacks, Form form){
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -296,7 +296,7 @@ public class FieldOfficersData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL, this.form.getQueryString());
 		}
 		else {
 			this.save();

@@ -20,6 +20,7 @@ public class Villages extends BaseServlet {
 	public Villages(RequestContext requestContext) {
 		super(requestContext);
 	}
+	
 	@Override
 	public void response() {
 		super.response();
@@ -29,7 +30,7 @@ public class Villages extends BaseServlet {
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
@@ -70,7 +71,7 @@ public class Villages extends BaseServlet {
 						}
 						
 					}
-				}, form, this.requestContext.getQueryString());
+				}, form);
 				
 				villageData.apply(villageData.postPageData());
 			}
@@ -85,8 +86,7 @@ public class Villages extends BaseServlet {
 								List villages = villageData.getListingOnline(results);
 								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", villages);
-								getServlet().fillTemplate(new VillagesTemplate(requestContext));
-								//getServlet().redirectTo(new Villages(requestContext));						
+								getServlet().redirectTo(new Villages(requestContext));						
 							} else {
 								/*Error in saving the data*/			
 							}

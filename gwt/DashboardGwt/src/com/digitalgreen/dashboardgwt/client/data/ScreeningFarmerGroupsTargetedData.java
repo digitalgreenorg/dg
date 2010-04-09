@@ -120,8 +120,8 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		super(callbacks);
 	}
 	
-	public ScreeningFarmerGroupsTargetedData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public ScreeningFarmerGroupsTargetedData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {

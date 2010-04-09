@@ -1,6 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,10 +26,7 @@ public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
 	protected FormPanel postForm = null;
 	protected HTMLPanel displayHtml = null;
-	protected Label usrStr = new Label();
-	protected Label errMsg = new Label();
-	String historyToken = "";	
-	
+
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
 		initUI();
@@ -47,30 +43,6 @@ public class BaseTemplate extends Template {
 	
 	public void setContentClassName(String className) {
 		RootPanel.get("content").setStyleName(className);
-	}
-	
-	public void setUserLable(String usr){
-		this.usrStr.setText(usr);
-	}
-	
-	public String getUserLabel(){
-		return this.usrStr.getText();
-	}
-	
-	public void setErrMsg(String msg){
-		this.errMsg.setText(msg);
-	}
-	
-	public String getErrMsg(){
-		return this.errMsg.getText();
-	}
-	
-	public void setHistoryToken(String token){
-		this.historyToken = token;
-	}
-	
-	public String getHistoryToken(){
-		return this.historyToken;
 	}
 	
 	@Override
@@ -141,8 +113,6 @@ public class BaseTemplate extends Template {
 		}	
 	}
 	
-	
-	
 	protected void fillDGSubmitControls(final BaseServlet servlet) {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
@@ -152,7 +122,7 @@ public class BaseTemplate extends Template {
 					// The query string can only be formed if we're on the page with 
 					// the add-form id, set when we got a GET request on the page
 					String formQueryString = BaseTemplate.getFormString("add-form");
-					servlet.getRequestContext().setQueryString(formQueryString);
+					servlet.getRequestContext().getForm().setQueryString(formQueryString);
 					servlet.response();
 				}
 		    });

@@ -110,8 +110,8 @@ public class EquipmentHoldersData extends BaseData {
 		super(callbacks);
 	}
 	
-	public EquipmentHoldersData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public EquipmentHoldersData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override

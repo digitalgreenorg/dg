@@ -25,7 +25,7 @@ public class StatesTemplate extends BaseTemplate{
 		States addStatesServlet = new States(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new StatesData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		States saveState = new States(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)

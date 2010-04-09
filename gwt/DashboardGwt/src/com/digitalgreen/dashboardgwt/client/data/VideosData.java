@@ -339,8 +339,8 @@ public class VideosData extends BaseData {
 		super(callbacks);
 	}
 	
-	public VideosData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public VideosData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 
@@ -438,7 +438,7 @@ public class VideosData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

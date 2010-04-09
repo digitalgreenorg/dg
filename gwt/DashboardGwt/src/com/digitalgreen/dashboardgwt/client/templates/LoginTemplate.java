@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class LoginTemplate extends Template {
 	private FormPanel postForm = null;
 	private HTMLPanel baseHtml = null;
-	private Form loginAddForm = null;
 	
 	public LoginTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -23,11 +22,6 @@ public class LoginTemplate extends Template {
 		// this.loginAddForm = new Form((new LoginData()).getData());
 	}
 
-	private Form getLoginAddForm() {
-		// TODO Auto-generated method stub
-		return this.loginAddForm; 
-	}
-	
 	@Override
 	public void fill() {
 		super.setBodyStyle("login");
@@ -41,7 +35,7 @@ public class LoginTemplate extends Template {
 	    super.fill();
 	    this.fillSubmitControls();
 	}
-	
+
 	public void fillSubmitControls() {
 		Button b = Button.wrap(RootPanel.get("submit-button").getElement());
 		final String id = this.postForm.getElement().getId();
@@ -50,11 +44,12 @@ public class LoginTemplate extends Template {
 				RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 				String formQueryString = BaseTemplate.getFormString("login-form");
 				// TODO:  Finish the form implementation before doing this
-				requestContext.setQueryString(formQueryString);
+				Form form = new Form();
+				form.setQueryString(formQueryString);
+				requestContext.setForm(form);
 				Login login = new Login(requestContext);
 				login.response();
 			}
-
 	    });
 	}
 

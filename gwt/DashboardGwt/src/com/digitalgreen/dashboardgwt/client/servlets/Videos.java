@@ -29,7 +29,7 @@ public class Videos extends BaseServlet {
 		}else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				VideosData videoData = new VideosData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(results != null) {
@@ -70,7 +70,7 @@ public class Videos extends BaseServlet {
 						}
 						
 					}
-				}, form, this.requestContext.getQueryString());
+				}, form);
 				
 				videoData.apply(videoData.postPageData());
 

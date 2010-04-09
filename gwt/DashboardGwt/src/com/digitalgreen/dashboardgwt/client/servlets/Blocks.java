@@ -36,7 +36,7 @@ public class Blocks extends BaseServlet {
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				BlocksData blockData = new BlocksData(new OnlineOfflineCallbacks(this){
 					
 					public void onlineSuccessCallback(String results) {
@@ -79,7 +79,7 @@ public class Blocks extends BaseServlet {
 							getServlet().redirectTo(new Blocks(requestContext));
 						}
 					}
-				}, form, this.requestContext.getQueryString());
+				}, form);
 				
 				blockData.apply(blockData.postPageData());
 			}

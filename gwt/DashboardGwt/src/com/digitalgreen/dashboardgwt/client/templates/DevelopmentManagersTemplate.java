@@ -28,7 +28,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new DevelopmentManagersData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		DevelopmentManagers saveDevelopmentManager = new DevelopmentManagers(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)

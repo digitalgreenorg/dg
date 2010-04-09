@@ -40,7 +40,7 @@ public class Languages extends BaseServlet{
 
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				LanguagesData languageData = new LanguagesData(new OnlineOfflineCallbacks(this) {
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
@@ -80,7 +80,7 @@ public class Languages extends BaseServlet{
 						getServlet().redirectTo(new Languages(requestContext));				
 					}		
 				}
-			}, form, this.requestContext.getQueryString());
+			}, form);
 				languageData.apply(languageData.postPageData());
 			}
 			else {

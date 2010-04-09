@@ -23,7 +23,7 @@ public class PartnersTemplate extends BaseTemplate {
 		requestContext.setArgs(args);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new PartnersData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Partners addPartnersServlet = new Partners(requestContext);
 		Partners savePartner = new Partners(saveRequestContext);
 		

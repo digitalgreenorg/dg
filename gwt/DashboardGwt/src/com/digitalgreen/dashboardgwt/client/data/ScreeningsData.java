@@ -232,8 +232,8 @@ public class ScreeningsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public ScreeningsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public ScreeningsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 

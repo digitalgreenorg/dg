@@ -25,7 +25,7 @@ public class DistrictTemplate extends BaseTemplate{
 		Districts addDistrictsServlet = new Districts(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new DistrictsData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Districts saveDistrict = new Districts(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)

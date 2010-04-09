@@ -132,8 +132,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		super(callbacks);
 	}
 	
-	public AnimatorAssignedVillagesData(OnlineOfflineCallbacks callbacks, Form form, String queryString){
-		super(callbacks, form, queryString);
+	public AnimatorAssignedVillagesData(OnlineOfflineCallbacks callbacks, Form form){
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -243,7 +243,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

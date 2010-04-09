@@ -172,8 +172,8 @@ public class PersonGroupsData extends BaseData {
 		super(callbacks);
 	}
 	
-	public PersonGroupsData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public PersonGroupsData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	@Override
 	public Data getNewData() {
@@ -277,7 +277,7 @@ public class PersonGroupsData extends BaseData {
 	public Object postPageData() {
 		if(BaseData.isOnline()){
 			//Window.alert("Query String = " + this.queryString);
-			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

@@ -23,7 +23,7 @@ public class RegionsTemplate extends BaseTemplate {
 		Regions addRegionServlet = new Regions(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new RegionsData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Regions saveRegion = new Regions(saveRequestContext);
 
 		// Draw the content of the template depending on the request type (GET/POST)

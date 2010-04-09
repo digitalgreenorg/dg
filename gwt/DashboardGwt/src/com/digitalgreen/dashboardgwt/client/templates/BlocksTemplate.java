@@ -27,7 +27,7 @@ public class BlocksTemplate extends BaseTemplate{
 		Blocks addBlocksServlet = new Blocks(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new BlocksData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Blocks saveBlock = new Blocks(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)

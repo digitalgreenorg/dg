@@ -26,7 +26,7 @@ public class LanguagesTemplate extends BaseTemplate{
 		requestContext.setArgs(args);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new LanguagesData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Languages addLanguagesServlet = new Languages(requestContext);
 		Languages saveLanguage = new Languages(saveRequestContext);
 		

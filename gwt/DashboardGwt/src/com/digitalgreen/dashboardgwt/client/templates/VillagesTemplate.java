@@ -35,9 +35,8 @@ public class VillagesTemplate extends BaseTemplate {
 		animatorsData.add((new AnimatorsData()).getNewData());
 		Form saveForm = new Form((new VillagesData()).getNewData(), 
 				new Object[] {personGroupData, animatorsData});
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Villages saveVillage = new Villages(saveRequestContext);
-		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml, addDataToElementID);
 		// Add it to the rootpanel

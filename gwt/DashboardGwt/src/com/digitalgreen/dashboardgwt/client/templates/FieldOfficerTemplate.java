@@ -24,7 +24,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		requestContext.setArgs(args);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new FieldOfficersData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		FieldOfficers addFieldOfficersServlet = new FieldOfficers(requestContext);
 		FieldOfficers saveFieldOfficer = new FieldOfficers(saveRequestContext);
 		

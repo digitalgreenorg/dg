@@ -129,8 +129,8 @@ public class BlocksData extends BaseData {
 		super(callbacks);
 	}
 	
-	public BlocksData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public BlocksData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -227,7 +227,7 @@ public class BlocksData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + BlocksData.saveBlockOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + BlocksData.saveBlockOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

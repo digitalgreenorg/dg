@@ -26,11 +26,12 @@ public class BaseServlet implements ServletInterface {
 	public BaseServlet(RequestContext requestContext) {
 		this.requestContext = requestContext;
 		// Most likely a POST request that has a queryString/formTemplate
-		if(this.requestContext.hasQueryString()) {
+		if(this.requestContext.getForm() != null &&
+				this.requestContext.getForm().getQueryString() != null) {
 			// TODO:  Enable this once the Form class is implemented.
 			// Form formTemplate = this.requestContext.getFormTemplate();
 			// formTemplate.parseQueryString(this.requestContext.getQueryString());
-			this.form = Form.flatten(this.requestContext.getQueryString());
+			this.form = Form.flatten(this.requestContext.getForm().getQueryString());
 		}
 	}
 

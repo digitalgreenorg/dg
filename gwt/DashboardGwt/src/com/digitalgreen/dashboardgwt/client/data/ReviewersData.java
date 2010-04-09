@@ -109,8 +109,8 @@ public class ReviewersData extends BaseData {
 		super(callbacks);
 	}
 	
-	public ReviewersData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public ReviewersData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override

@@ -122,8 +122,8 @@ public class StatesData extends BaseData {
 		super(callbacks);
 	}
 	
-	public StatesData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public StatesData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class StatesData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

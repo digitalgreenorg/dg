@@ -25,7 +25,7 @@ public class PracticeTemplate  extends BaseTemplate{
 		requestContext.setArgs(args);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new PracticesData()).getNewData());
-		saveRequestContext.getArgs().put("form", saveForm);
+		saveRequestContext.setForm(saveForm);
 		Practices addPracticesServlet = new Practices(requestContext);
 		Practices savePractice = new Practices(saveRequestContext);
 		

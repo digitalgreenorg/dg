@@ -14,8 +14,7 @@ public class RequestContext {
 	private String formAction = null;
 	private HashMap args = null;
 	private String messageString = null;
-	private String queryString = null;
-	private Form formTemplate = null;
+	private Form form = null;
 	
 	public RequestContext() {
 		this.methodTypeCtx = METHOD_GET;
@@ -26,18 +25,13 @@ public class RequestContext {
 		this.methodTypeCtx = method;
 		this.args = new HashMap();
 	}
-
-	public void setQueryString(String queryString) {
-		this.queryString = queryString;
+	
+	public Form getForm() {
+		return this.form;
 	}
 	
-	// TODO:  check for a form template after Form class in common is implemented
-	public boolean hasQueryString() {
-		return (queryString != null);
-	}
-	
-	public String getQueryString() {
-		return this.queryString;
+	public void setForm(Form form) {
+		this.form = form;
 	}
 
 	public boolean hasMessages() {

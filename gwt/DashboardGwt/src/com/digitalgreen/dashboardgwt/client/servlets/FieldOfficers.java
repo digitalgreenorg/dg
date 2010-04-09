@@ -34,7 +34,7 @@ public class FieldOfficers extends BaseServlet{
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)){
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				FieldOfficersData fieldOfficerData = new FieldOfficersData(new OnlineOfflineCallbacks(this){
 					public void onlineSuccessCallback(String results){
 						if(results != null){
@@ -75,7 +75,7 @@ public class FieldOfficers extends BaseServlet{
 							getServlet().redirectTo(new FieldOfficers(requestContext));				
 						}
 					}
-				}, form, this.requestContext.getQueryString());
+				}, form);
 				fieldOfficerData.apply(fieldOfficerData.postPageData());
 			}
 			else {

@@ -37,7 +37,7 @@ public class Partners extends BaseServlet{
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				PartnersData partnerData = new PartnersData(new OnlineOfflineCallbacks(this) {
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
@@ -77,7 +77,7 @@ public class Partners extends BaseServlet{
 						getServlet().redirectTo(new Partners(requestContext));				
 					}		
 				}
-			}, form, this.requestContext.getQueryString());
+			}, form);
 				partnerData.apply(partnerData.postPageData());
 			}
 			else {

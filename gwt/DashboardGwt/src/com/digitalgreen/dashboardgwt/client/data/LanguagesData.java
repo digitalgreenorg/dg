@@ -90,8 +90,8 @@ public class LanguagesData extends BaseData {
 		super(callbacks);
 	}
 	
-	public LanguagesData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public LanguagesData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public class LanguagesData extends BaseData {
 
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + LanguagesData.saveLanguageOnlineURL, this.queryString);
+			this.post(RequestContext.SERVER_HOST + LanguagesData.saveLanguageOnlineURL, this.form.getQueryString());
 		}
 		else{
 			this.save();

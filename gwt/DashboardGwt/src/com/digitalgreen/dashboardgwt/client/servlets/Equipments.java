@@ -38,7 +38,7 @@ public class Equipments extends BaseServlet {
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
-				Form form = (Form)this.requestContext.getArgs().get("form");
+				Form form = this.requestContext.getForm();
 				EquipmentsData equipmentData = new EquipmentsData(new OnlineOfflineCallbacks(this) {
 				public void onlineSuccessCallback(String results) {
 					if(results != null) {
@@ -47,7 +47,7 @@ public class Equipments extends BaseServlet {
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Equipment successfully saved");
 						requestContext.getArgs().put("listing", equipments);
-						getServlet().redirectTo(new Equipments(requestContext ));						
+						getServlet().redirectTo(new Equipments(requestContext));						
 					} else {
 						/*Error in saving the data*/			
 					}
@@ -78,7 +78,7 @@ public class Equipments extends BaseServlet {
 						getServlet().redirectTo(new Equipments(requestContext));				
 					}		
 				}
-			}, form, this.requestContext.getQueryString());
+			}, form);
 				equipmentData.apply(equipmentData.postPageData());
 			}
 			else {

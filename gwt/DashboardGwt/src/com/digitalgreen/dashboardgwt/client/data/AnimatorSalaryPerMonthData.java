@@ -151,8 +151,8 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		super(callbacks);
 	}
 	
-	public AnimatorSalaryPerMonthData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public AnimatorSalaryPerMonthData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override

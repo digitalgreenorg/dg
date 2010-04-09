@@ -225,8 +225,8 @@ public class Data extends BaseData.Data {
 		super(callbacks);
 	}
 	
-	public MonthlyCostPerVillageData(OnlineOfflineCallbacks callbacks, Form form, String queryString) {
-		super(callbacks, form, queryString);
+	public MonthlyCostPerVillageData(OnlineOfflineCallbacks callbacks, Form form) {
+		super(callbacks, form);
 	}
 
 	@Override
