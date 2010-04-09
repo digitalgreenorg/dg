@@ -16,13 +16,13 @@ public class ScreeningsData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getDate() /*-{ return this.fields.date }-*/;
-		public final native String getStartTime() /*-{ return this.fields.start_time}-*/;
-		public final native String getEndTime() /*-{ return this.fields.end_time }-*/;
-		public final native String getLocation() /*-{ return this.fields.location }-*/;
-		public final native String getTargetPersonAttendance() /*-{ return this.fields.target_person_attendance }-*/;
-		public final native String getTargetAudienceInterest() /*-{ return this.fields.target_audience_interest }-*/;
-		public final native String getTargetAdoptions() /*-{ return this.fields.target_adoptions }-*/;
+		public final native String getDate() /*-{ return this.fields.date + ""; }-*/;
+		public final native String getStartTime() /*-{ return this.fields.start_time + "";}-*/;
+		public final native String getEndTime() /*-{ return this.fields.end_time + ""; }-*/;
+		public final native String getLocation() /*-{ return this.fields.location + ""; }-*/;
+		public final native String getTargetPersonAttendance() /*-{ return this.fields.target_person_attendance + ""; }-*/;
+		public final native String getTargetAudienceInterest() /*-{ return this.fields.target_audience_interest + "" }-*/;
+		public final native String getTargetAdoptions() /*-{ return this.fields.target_adoptions + "" }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
 		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.fieldofficer }-*/;
 		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.animator}-*/;

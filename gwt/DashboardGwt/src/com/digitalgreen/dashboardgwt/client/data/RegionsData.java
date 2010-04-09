@@ -15,8 +15,8 @@ public class RegionsData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getRegionName() /*-{ return this.fields.region_name; }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date; }-*/;
+		public final native String getRegionName() /*-{ return this.fields.region_name + ""; }-*/;
+		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
 	}
 
 	public class Data extends BaseData.Data {

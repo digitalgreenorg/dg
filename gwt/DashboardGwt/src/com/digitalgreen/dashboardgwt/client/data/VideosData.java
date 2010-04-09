@@ -16,12 +16,12 @@ public class VideosData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getTitle() /*-{ return this.fields.title }-*/;
-		public final native String getVideoType() /*-{ return this.fields.video_type}-*/;
-		public final native String getDuration() /*-{ return this.fields.duration }-*/;
-		public final native String getSummary() /*-{ return this.fields.summary }-*/;
-		public final native String getVideoProductionStartDate() /*-{ return this.fields.video_production_start_date }-*/;
-		public final native String getVideoProductionEndDate() /*-{ return this.fields.video_production_end_date }-*/;
+		public final native String getTitle() /*-{ return this.fields.title + ""; }-*/;
+		public final native String getVideoType() /*-{ return this.fields.video_type + "";}-*/;
+		public final native String getDuration() /*-{ return this.fields.duration + ""; }-*/;
+		public final native String getSummary() /*-{ return this.fields.summary + ""; }-*/;
+		public final native String getVideoProductionStartDate() /*-{ return this.fields.video_production_start_date + ""; }-*/;
+		public final native String getVideoProductionEndDate() /*-{ return this.fields.video_production_end_date + ""; }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
 		public final native AnimatorsData.Type getFacilitator() /*-{ return this.fields.facilitator }-*/;
 		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.cameraoperator }-*/;

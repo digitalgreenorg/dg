@@ -14,9 +14,9 @@ public class StatesData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getStateName() /*-{ return this.fields.state_name; }-*/;
+		public final native String getStateName() /*-{ return this.fields.state_name + ""; }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
-		public final native String getStartDate() /*-{ return this.fields.start_date; }-*/;
+		public final native String getStartDate() /*-{ return this.fields.start_date + ""; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {

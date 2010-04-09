@@ -16,10 +16,10 @@ public class PartnersData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getPartnerName() /*-{ return this.fields.partner_name; }-*/;
-		public final native String getDateOfAssociation() /*-{ return this.fields.date_of_association; }-*/;
-		public final native String getPhoneNo() /*-{ return this.fields.phone_no; }-*/;
-		public final native String getAddress() /*-{ return this.fields.address; }-*/;
+		public final native String getPartnerName() /*-{ return this.fields.partner_name + ""; }-*/;
+		public final native String getDateOfAssociation() /*-{ return this.fields.date_of_association + ""; }-*/;
+		public final native String getPhoneNo() /*-{ return this.fields.phone_no + ""; }-*/;
+		public final native String getAddress() /*-{ return this.fields.address + ""; }-*/;
 		public final native int getReviewerId() /*-{ return this.fields.reviewer_id; }-*/;
 		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 	}

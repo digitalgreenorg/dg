@@ -15,8 +15,8 @@ public class ReviewersData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getContentType() /*-{ return this.fields.content_type; }-*/;
-		public final native String getObjectId() /*-{ return this.fields.object_id; }-*/;
+		public final native String getContentType() /*-{ return this.fields.content_type + ""; }-*/;
+		public final native String getObjectId() /*-{ return this.fields.object_id + ""; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {

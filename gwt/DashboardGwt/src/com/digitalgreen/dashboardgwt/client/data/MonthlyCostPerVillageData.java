@@ -15,15 +15,15 @@ public class MonthlyCostPerVillageData extends BaseData {
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
-		public final native String getDate() /*-{ return this.fields.date; }-*/;
-		public final native String getLaborCost() /*-{ return this.fields.labor_cost; }-*/;
-		public final native String getEquipmentCost() /*-{ return this.fields.equipment_cost; }-*/;
-		public final native String getTransportationCost() /*-{ return this.fields.transportation_cost; }-*/;
-		public final native String getMiscellaneousCost() /*-{ return this.fields.miscellaneous_cost; }-*/;
-		public final native String getTotalCost() /*-{ return this.fields.total_cost; }-*/;
-		public final native String getPartnersCost() /*-{ return this.fields.partners_cost; }-*/;
-		public final native String getDigitalGreenCost() /*-{ return this.fields.digitalgreen_cost; }-*/;
-		public final native String getCommunityCost() /*-{ return this.fields.community_cost; }-*/;
+		public final native String getDate() /*-{ return this.fields.date + ""; }-*/;
+		public final native String getLaborCost() /*-{ return this.fields.labor_cost + ""; }-*/;
+		public final native String getEquipmentCost() /*-{ return this.fields.equipment_cost + ""; }-*/;
+		public final native String getTransportationCost() /*-{ return this.fields.transportation_cost + ""; }-*/;
+		public final native String getMiscellaneousCost() /*-{ return this.fields.miscellaneous_cost + ""; }-*/;
+		public final native String getTotalCost() /*-{ return this.fields.total_cost + ""; }-*/;
+		public final native String getPartnersCost() /*-{ return this.fields.partners_cost + ""; }-*/;
+		public final native String getDigitalGreenCost() /*-{ return this.fields.digitalgreen_cost + ""; }-*/;
+		public final native String getCommunityCost() /*-{ return this.fields.community_cost + ""; }-*/;
 		
 	}
 	

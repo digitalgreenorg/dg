@@ -15,9 +15,9 @@ public class PracticesData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type(){}
-		public final native String getPracticeName() /*-{ return this.fields.practice_name; }-*/;
-		public final native String getSeasonality()/*-{ return this.fields.seasonality; }-*/;
-		public final native String getSummary() /*-{ return this.fields.summary; }-*/;
+		public final native String getPracticeName() /*-{ return this.fields.practice_name + ""; }-*/;
+		public final native String getSeasonality()/*-{ return this.fields.seasonality + ""; }-*/;
+		public final native String getSummary() /*-{ return this.fields.summary + ""; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {

@@ -15,12 +15,12 @@ public class EquipmentsData extends BaseData {
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getEquipmentType() /*-{ return this.fields.equipment_type; }-*/;
-		public final native String getModelNo() /*-{ return this.fields.model_no; }-*/;
-		public final native String getSerialNo() /*-{ return this.fields.serial_no; }-*/;
-		public final native String getCost() /*-{ return this.fields.cost; }-*/;
-		public final native String getProcurementDate() /*-{ return this.fields.procurement_date; }-*/;
-		public final native String getWarrantyExpirationDate() /*-{ return this.fields.warranty_expiration_date; }-*/;
+		public final native String getEquipmentType() /*-{ return this.fields.equipment_type + ""; }-*/;
+		public final native String getModelNo() /*-{ return this.fields.model_no + ""; }-*/;
+		public final native String getSerialNo() /*-{ return this.fields.serial_no + ""; }-*/;
+		public final native String getCost() /*-{ return this.fields.cost + ""; }-*/;
+		public final native String getProcurementDate() /*-{ return this.fields.procurement_date + ""; }-*/;
+		public final native String getWarrantyExpirationDate() /*-{ return this.fields.warranty_expiration_date + ""; }-*/;
 		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
 	
 	}

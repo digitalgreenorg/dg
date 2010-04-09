@@ -13,11 +13,11 @@ public class DistrictsData extends BaseData {
 	
 	public static class Type extends BaseData.Type {
 		protected Type() {}
-		public final native String getDistrictName() /*-{ return this.fields.district_name; }-*/;
-		public final native String getStartDtae() /*-{ return this.fields.start_date; }-*/ ;
+		public final native String getDistrictName() /*-{ return this.fields.district_name + ""; }-*/;
+		public final native String getStartDtae() /*-{ return this.fields.start_date + ""; }-*/ ;
 		public final native StatesData.Type getState() /*-{ return this.fields.state; }-*/;
 		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.fieldofficer; }-*/;
-		public final native String getFieldOfficerStartDay() /*-{ return this.fields.fieldofficer_startday; }-*/;
+		public final native String getFieldOfficerStartDay() /*-{ return this.fields.fieldofficer_startday + ""; }-*/;
 		public final native PartnersData.Type getPartner() /*-{ return this.fields.partner; }-*/;
 	}
 

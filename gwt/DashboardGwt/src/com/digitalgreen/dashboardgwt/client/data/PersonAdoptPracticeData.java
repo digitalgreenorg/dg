@@ -18,11 +18,11 @@ public class PersonAdoptPracticeData extends BaseData{
 		protected Type() {}
 		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
 		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice }-*/;
-		public final native String getPriorAdoptionFlag() /*-{ return this.fields.prior_adoption_flag; }-*/;
-		public final native String getDateOfAdoption() /*-{ return this.fields.date_of_adoption; }-*/;
-		public final native String getQuality() /*-{ return this.fields.quality; }-*/;
-		public final native String getQuantity() /*-{ return this.fields.quantity; }-*/;
-		public final native String getQuantityUnit() /*-{ return this.fields.quantity_unit; }-*/;
+		public final native String getPriorAdoptionFlag() /*-{ return this.fields.prior_adoption_flag + ""; }-*/;
+		public final native String getDateOfAdoption() /*-{ return this.fields.date_of_adoption + ""; }-*/;
+		public final native String getQuality() /*-{ return this.fields.quality + ""; }-*/;
+		public final native String getQuantity() /*-{ return this.fields.quantity + ""; }-*/;
+		public final native String getQuantityUnit() /*-{ return this.fields.quantity_unit + ""; }-*/;
 	}
 	
 public class Data extends BaseData.Data {
