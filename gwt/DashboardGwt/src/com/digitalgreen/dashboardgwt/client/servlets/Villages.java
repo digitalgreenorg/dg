@@ -57,7 +57,6 @@ public class Villages extends BaseServlet {
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							Window.alert("inside offline callback ");
 							VillagesData villageData = new VillagesData();
 							List villages = villageData.getVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();

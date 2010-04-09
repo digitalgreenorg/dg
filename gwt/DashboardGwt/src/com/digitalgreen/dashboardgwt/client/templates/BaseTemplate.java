@@ -146,9 +146,7 @@ public class BaseTemplate extends Template {
 	protected void fillDGSubmitControls(final BaseServlet servlet) {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
-			
-			//b.addStyleName(".button.default, input.default[type=\"submit\"], .submit-row input.default ");
-		    b.addClickHandler(new ClickHandler() {
+			b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					Template.addLoadingMessage();
 					// The query string can only be formed if we're on the page with 
@@ -176,18 +174,10 @@ public class BaseTemplate extends Template {
 		return link;
 	}
 	
-	public static native String getForm(String formId) /*-{
-		return $wnd.getFormHtml(formId);
-	}-*/;
-
 	public static native String getFormString(String formId) /*-{
 		return $wnd.getFormString(formId);
 	}-*/;
 		
-	public static native String populateForm(String formId, String queryString) /*-{
-		return $wnd.populateForm(formId, queryString);
-	}-*/;
-	
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
 		"<!-- Header -->" +

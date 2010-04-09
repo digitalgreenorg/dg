@@ -259,7 +259,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			if(!newId.equals("ERROR")) {
 				tempList.add(0, newId);
 				for(int i=0; i < tempList.size(); i++) {
-					tempListString[i] = (String)tempList.get(i);
+					if(tempList.get(i) == null) 
+						tempListString[i] = (String)tempList.get(i);
+					else
+						tempListString[i] = "" + tempList.get(i);
 				}
 				this.insert(insertSql, tempListString);
 				this.updateLastInsertedID(newId);
@@ -268,7 +271,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 		return "-1";
 	}
-	
+
 	public void update(String updateSql, String ...args) {
 		BaseData.dbOpen();
 		this.execute(updateSql, args);

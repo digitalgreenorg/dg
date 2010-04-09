@@ -75,14 +75,6 @@
  		function getFormString(formId) {
  			return $('#' + formId).serialize();
  		}
- 
- 		// TODO:  selectors/radio buttons are still broken
- 		function populateForm(formId, queryString) {
- 			var queryObject = $.parseQuery(queryString);
- 			for (i in queryObject) {
- 				$("'[name=" + i + "]'").val(queryObject[i]);
- 			}
- 		}
   	</script>
   	
     <!-- OPTIONAL: include this if you want history support -->

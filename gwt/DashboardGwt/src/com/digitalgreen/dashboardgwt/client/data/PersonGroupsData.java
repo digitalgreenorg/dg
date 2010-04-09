@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.Form;
@@ -25,7 +26,7 @@ public class PersonGroupsData extends BaseData {
 	}
 	
 	public class Data extends BaseData.Data {		
-		final private static String COLLECTION_PREFIX = "persongroup";
+		final private static String COLLECTION_PREFIX = "persongroups";
 		
 		private String group_name;
 		private String days;
@@ -74,18 +75,11 @@ public class PersonGroupsData extends BaseData {
 		
 		public VillagesData.Data getVillage(){
 			return this.village;
-		}
-				
+		}		
 		
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.group_name = this.group_name;
-			obj.days = this.days;
-			obj.timings = this.timings;
-			obj.time_updated = this.time_updated;
-			obj.village = this.village;
 			return obj;
 		}
 	
@@ -95,17 +89,16 @@ public class PersonGroupsData extends BaseData {
 		}
 		
 		@Override
-
 		public void setObjValueFromString(String key, String val) {
-
+			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
 				this.id = val;
 			} else if(key.equals("group_name")) {
-				this.group_name = (String)val;
+				this.group_name = val;
 			} else if(key.equals("days")) {
-				this.days = (String)val;
+				this.days = val;
 			} else if(key.equals("timings")) {
-				this.timings = (String)val;
+				this.timings = val;
 			} else if(key.equals("time_updated")) {
 				this.time_updated = (String)val;
 			} else if(key.equals("village")) {
@@ -119,7 +112,9 @@ public class PersonGroupsData extends BaseData {
 		public void save() {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
 			Date date = new Date();
-			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
+								date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
 			if(this.id == null){
 				this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
 						this.days, 
@@ -134,8 +129,19 @@ public class PersonGroupsData extends BaseData {
 						this.time_updated, 
 						this.village.getId());
 			}
+		}
 		
-
+		@Override
+		public void save(BaseData.Data withForeignKey) {
+			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
+			Date date = new Date();
+			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
+								date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+			this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
+					this.days, 
+					this.timings,
+					this.time_updated, 
+					withForeignKey.getId());
 		}
 	}
 	

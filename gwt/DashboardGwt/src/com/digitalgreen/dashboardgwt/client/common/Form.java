@@ -41,10 +41,13 @@ public class Form {
 		this.parent.save();
 		Object[] dataFormatKeys = dataFormat.keySet().toArray();
 		for(int i=0; i < dataFormatKeys.length; i++) {
+			if(dataFormatKeys[i].equals(this.parent.getPrefixName())) {
+				continue;
+			}
 			Object value = dataFormat.get(dataFormatKeys[i]);
 			if(value instanceof ArrayList) {
 				for(int j=0; j < ((ArrayList)value).size(); j++) {
-					((BaseData.Data)((ArrayList)value).get(i)).save(this.parent);
+					((BaseData.Data)((ArrayList)value).get(j)).save(this.parent);
 				}
 			} else {
 				((BaseData.Data)value).save(this.parent);
@@ -52,14 +55,15 @@ public class Form {
 		}
 	}
 
-	public void fetch() {}
-
 	public static HashMap flatten(String queryString) {
 		HashMap formHashMap = new HashMap();
 		String[] queryStringList = queryString.split("&");
 		for(int i=0; i < queryStringList.length; i++) {
 			String[] nameValueList = queryStringList[i].split("=");
-			formHashMap.put(nameValueList[0], nameValueList[1]);
+			// Discard null query params.  No value inputted by user.
+			if(nameValueList[1] != null) {
+				formHashMap.put(nameValueList[0], nameValueList[1]);
+			}
 		}
 		return formHashMap;
 	}
@@ -70,7 +74,9 @@ public class Form {
 	}
 	
 	private void setDataObjectField(BaseData.Data dataObj, String key, Object val) {
+		if(val != null) {	
 			dataObj.setObjValueFromString(key, (String)val);
+		}
 	}
 	
 	private static boolean isInteger(String integer) {

@@ -77,14 +77,6 @@ public class VillagesData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.village_name = this.village_name;
-			obj.block = this.block;
-			obj.no_of_households = this.no_of_households;
-			obj.population = this.population;
-			obj.road_connectivity = this.road_connectivity;
-			obj.control = this.control;
-			obj.start_date = this.start_date;
 			return obj;
 		}
 		
@@ -303,6 +295,7 @@ public class VillagesData extends BaseData {
 		PartnersData.Data partner;
 		for(int inline = 0; inline < 5; inline++){
 			html += "<select name=\"home_village-" + inline + "-partner\" id=\"id_home_village-" + inline +"-partner\">";
+			html += "<option value = \"\">" + "---------" + "</option>";
 			for(int i=0; i< partners.size(); i++){
 				partner = (PartnersData.Data)partners.get(i);
 				html = html + "<option value = \"" + partner.getId() +"\">" + partner.getPartnerName() + "</option>";

@@ -29,9 +29,12 @@ public class VillagesTemplate extends BaseTemplate {
 		requestContext.setArgs(args);
 		Villages addVillagesServlet = new Villages(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		ArrayList personGroupData = new ArrayList();
+		personGroupData.add((new PersonGroupsData()).getNewData());
+		ArrayList animatorsData = new ArrayList();
+		animatorsData.add((new AnimatorsData()).getNewData());
 		Form saveForm = new Form((new VillagesData()).getNewData(), 
-				new Object[] {new ArrayList().add((new PersonGroupsData()).getNewData()),
-							  new ArrayList().add((new AnimatorsData()).getNewData())});
+				new Object[] {personGroupData, animatorsData});
 		saveRequestContext.getArgs().put("form", saveForm);
 		Villages saveVillage = new Villages(saveRequestContext);
 		
@@ -355,21 +358,24 @@ public class VillagesTemplate extends BaseTemplate {
 																			"</td>" +
 																			"<td class='csp_flag'>" +
 																				"<select name='home_village-0-csp_flag' id='id_home_village-0-csp_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='camera_operator_flag'>" +
 																				"<select name='home_village-0-camera_operator_flag' id='id_home_village-0-camera_operator_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='facilitator_flag'>" +
 																				"<select name='home_village-0-facilitator_flag' id='id_home_village-0-facilitator_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
@@ -407,21 +413,24 @@ public class VillagesTemplate extends BaseTemplate {
 																			"</td>" +
 																			"<td class='csp_flag'>" +
 																				"<select name='home_village-1-csp_flag' id='id_home_village-1-csp_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='camera_operator_flag'>" +
 																				"<select name='home_village-1-camera_operator_flag' id='id_home_village-1-camera_operator_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='facilitator_flag'>" +
 																				"<select name='home_village-1-facilitator_flag' id='id_home_village-1-facilitator_flag'>" +
-																					"<option value='1' selected='selected'>Unknown</option>" +
+																					"<option value='' selected='selected'>---------</option>" +
+																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
 																					"<option value='3'>No</option>" +
 																				"</select>" +
@@ -459,21 +468,24 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</td>" +
 																		"<td class='csp_flag'>" +
 																			"<select name='home_village-2-csp_flag' id='id_home_village-2-csp_flag'>" +
-																				"<option value='1' selected='selected'>Unknown</option>" +
+																				"<option value='' selected='selected'>---------</option>" +
+																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
 																				"<option value='3'>No</option>" +
 																			"</select>" +
 																		"</td>" +
 																		"<td class='camera_operator_flag'>" +
 																			"<select name='home_village-2-camera_operator_flag' id='id_home_village-2-camera_operator_flag'>" +
-																				"<option value='1' selected='selected'>Unknown</option>" +
+																				"<option value='' selected='selected'>---------</option>" +
+																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
 																				"<option value='3'>No</option>" +
 																			"</select>" +
 																		"</td>" +
 																		"<td class='facilitator_flag'>" +
 																			"<select name='home_village-2-facilitator_flag' id='id_home_village-2-facilitator_flag'>" +
-																				"<option value='1' selected='selected'>Unknown</option>" +
+																				"<option value='' selected='selected'>---------</option>" +
+																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
 																				"<option value='3'>No</option>" +
 																			"</select>" +
@@ -511,21 +523,24 @@ public class VillagesTemplate extends BaseTemplate {
 																	"</td>" +
 																	"<td class='csp_flag'>" +
 																		"<select name='home_village-3-csp_flag' id='id_home_village-3-csp_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='camera_operator_flag'>" +
 																		"<select name='home_village-3-camera_operator_flag' id='id_home_village-3-camera_operator_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='facilitator_flag'>" +
 																		"<select name='home_village-3-facilitator_flag' id='id_home_village-3-facilitator_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +
@@ -563,21 +578,24 @@ public class VillagesTemplate extends BaseTemplate {
 																	"</td>" +
 																	"<td class='csp_flag'>" +
 																		"<select name='home_village-4-csp_flag' id='id_home_village-4-csp_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='camera_operator_flag'>" +
 																		"<select name='home_village-4-camera_operator_flag' id='id_home_village-4-camera_operator_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='facilitator_flag'>" +
 																		"<select name='home_village-4-facilitator_flag' id='id_home_village-4-facilitator_flag'>" +
-																			"<option value='1' selected='selected'>Unknown</option>" +
+																			"<option value='' selected='selected'>---------</option>" +
+																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
 																			"<option value='3'>No</option>" +
 																		"</select>" +

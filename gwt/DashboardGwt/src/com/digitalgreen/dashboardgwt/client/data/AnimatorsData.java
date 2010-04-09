@@ -23,7 +23,8 @@ public class AnimatorsData extends BaseData {
 		public final native String getAddress() /*-{ return this.fields.address + ""; }-*/;
 		public final native PartnersData.Data getPartner() /*-{ return this.fields.partner; }-*/;
 		public final native VillagesData.Data getVillage() /*-{ return this.fields.village; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native String getEquipmentHolder() /*-{ return this.fields.equipment_holder; }-*/;
+
 	}
 	
 	public class Data extends BaseData.Data {
@@ -40,7 +41,7 @@ public class AnimatorsData extends BaseData {
 		private String address;
 		private PartnersData.Data partner;
 		private VillagesData.Data village;
-		private int equipmentholder_id;
+		private String equipment_holder_id;
 
 		public Data() {
 			super();
@@ -54,7 +55,7 @@ public class AnimatorsData extends BaseData {
 		
 		public Data(String id, String name, String age, String gender, String csp_flag, String camera_operator_flag,
 				String facilitator_flag, String phone_no, String address, PartnersData.Data partner,
-				VillagesData.Data village, int equipmentholder_id){
+				VillagesData.Data village, String equipment_holder_id){
 			super();
 			this.id = id;
 			this.name = name;
@@ -67,7 +68,7 @@ public class AnimatorsData extends BaseData {
 			this.address = address;
 			this.partner = partner;
 			this.village = village;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipment_holder_id = equipment_holder_id;
 		}
 
 		public String getAnimatorName(){
@@ -110,8 +111,8 @@ public class AnimatorsData extends BaseData {
 			return this.village;
 		}
 		
-		public int getEquipmentHolder(){
-			return this.equipmentholder_id;
+		public String getEquipmentHolder(){
+			return this.equipment_holder_id;
 		}
 		
 		@Override
@@ -122,18 +123,6 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.name = this.name;
-			obj.age = this.age;
-			obj.gender = this.gender;
-			obj.csp_flag = this.csp_flag;
-			obj.camera_operator_flag = this.camera_operator_flag;
-			obj.facilitator_flag = this.facilitator_flag;
-			obj.phone_no = this.phone_no;
-			obj.address = this.address;
-			obj.partner = this.partner;
-			obj.village = this.village;
-			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
 		
@@ -143,21 +132,21 @@ public class AnimatorsData extends BaseData {
 			if(key.equals("id")) {
 				this.id = val;
 			} else if(key.equals("name")) {
-				this.name = (String)val;
+				this.name = val;
 			} else if(key.equals("age")) {
-				this.age = (String)val;
+				this.age = val;
 			} else if(key.equals("gender")) {
-				this.gender = (String)val;
+				this.gender = val;
 			} else if(key.equals("csp_flag")) {
-				this.csp_flag = (String)val;
+				this.csp_flag = val;
 			} else if(key.equals("camera_operator_flag")) {
-				this.camera_operator_flag = (String)val;
+				this.camera_operator_flag = val;
 			} else if(key.equals("facilitator_flag")) {
-				this.facilitator_flag = (String)val;
+				this.facilitator_flag = val;
 			} else if(key.equals("phone_no")) {
-				this.phone_no = (String)val;
+				this.phone_no = val;
 			} else if(key.equals("address")) {
-				this.address = (String)val;
+				this.address = val;
 			} else if(key.equals("partner")) {
 				PartnersData partner = new PartnersData();
 				this.partner = partner.getNewData();
@@ -166,8 +155,8 @@ public class AnimatorsData extends BaseData {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
 				this.village.id = val;
-			} else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+			} else if(key.equals("equipmentholder")) {
+				this.equipment_holder_id = val;
 			}
 		}
 		
@@ -185,9 +174,8 @@ public class AnimatorsData extends BaseData {
 						this.address, 
 						this.partner.getId(), 
 						this.village.getId(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
-			}
-			else {
+						this.equipment_holder_id);
+			} else {
 				this.id = animatorsDataDbApis.autoInsert(this.id, 
 						this.name, 
 						this.age, 
@@ -199,8 +187,24 @@ public class AnimatorsData extends BaseData {
 						this.address, 
 						this.partner.getId(), 
 						this.village.getId(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
+						this.equipment_holder_id);
 			}
+		}
+		
+		@Override
+		public void save(BaseData.Data foreignKey) {
+			AnimatorsData animatorsDataDbApis = new AnimatorsData();
+			this.id = animatorsDataDbApis.autoInsert(this.name, 
+					this.age, 
+					this.gender, 
+					this.csp_flag, 
+					this.camera_operator_flag, 
+					this.facilitator_flag, 
+					this.phone_no, 
+					this.address, 
+					this.partner.getId(), 
+					foreignKey.getId(), 
+					this.equipment_holder_id);
 		}
 	}
 	
@@ -280,16 +284,11 @@ public class AnimatorsData extends BaseData {
 			
 			VillagesData.Data v = village. new Data(animatorObjects.get(i).getVillage().getId(), animatorObjects.get(i).getVillage().getVillageName());
 			
-			Data animator = new Data(animatorObjects.get(i).getPk(), 
-									animatorObjects.get(i).getAnimatorName(),
-									animatorObjects.get(i).getAge(), 
-									animatorObjects.get(i).getGender(), 
-									animatorObjects.get(i).getCSPFlags(),
-									animatorObjects.get(i).getCameraOperatorFlag(), 
-									animatorObjects.get(i).getFacilitatorFlag(),
-									animatorObjects.get(i).getPhoneNo(), 
-									animatorObjects.get(i).getAddress(), p, v, 
-									animatorObjects.get(i).getEquipmentHolderId());
+			Data animator = new Data(animatorObjects.get(i).getPk(), animatorObjects.get(i).getAnimatorName(),
+							animatorObjects.get(i).getAge(), animatorObjects.get(i).getGender(), animatorObjects.get(i).getCSPFlags(),
+							animatorObjects.get(i).getCameraOperatorFlag(), animatorObjects.get(i).getFacilitatorFlag(),
+							animatorObjects.get(i).getPhoneNo(), animatorObjects.get(i).getAddress(), p, v, 
+							animatorObjects.get(i).getEquipmentHolder());
 		}
 		
 		return animators;
@@ -305,7 +304,6 @@ public class AnimatorsData extends BaseData {
 		List animators = new ArrayList();
 		PartnersData partner = new PartnersData();
 		VillagesData village = new VillagesData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		this.select(listAnimators);
 		if(this.getResultSet().isValidRow()){
 			try{
@@ -316,18 +314,12 @@ public class AnimatorsData extends BaseData {
 					
 					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsString(11), this.getResultSet().getFieldAsString(12));
 					
-					EquipmentHoldersData.Data eq = equipmentholder. new Data(this.getResultSet().getFieldAsString(13));
-					
-					Data animator = new Data(this.getResultSet().getFieldAsString(0), 
-											this.getResultSet().getFieldAsString(1),
-											this.getResultSet().getFieldAsString(2), 
-											this.getResultSet().getFieldAsString(3), 
-											this.getResultSet().getFieldAsString(4), 
-											this.getResultSet().getFieldAsString(5),
-											this.getResultSet().getFieldAsString(6), 
-											this.getResultSet().getFieldAsString(7), 
-											this.getResultSet().getFieldAsString(8), p, 
-											v, this.getResultSet().getFieldAsInt(13));
+					Data animator = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1),
+							 this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
+							 this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5),
+							 this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
+							 this.getResultSet().getFieldAsString(8), p, v, 
+							 this.getResultSet().getFieldAsString(13));
 					
 					animators.add(animator);
 				}

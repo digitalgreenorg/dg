@@ -189,7 +189,6 @@ public class PersonsData extends BaseData {
 		
 		@Override		
 		public void save() {
-
 			PersonsData personsDataDbApis = new PersonsData();		
 			if(this.id==null){
 				this.id = personsDataDbApis.autoInsert(this.person_name,this.father_name,this.age,this.gender,
@@ -202,9 +201,7 @@ public class PersonsData extends BaseData {
 						this.group.getId(), Integer.valueOf(this.equipmentholder_id).toString(),
 						this.relations.getId(),this.adopted_agricultural_practices.getId());
 			}
-
-
-			}		
+		}		
 	}
 	
 	protected static String tableID = "13";
@@ -285,7 +282,6 @@ public class PersonsData extends BaseData {
 					personObjects.get(i).getVillage().getVillageName());
 			PersonGroupsData.Data pg = group.new Data(personObjects.get(i).getPersonGroup().getPk(),
 					personObjects.get(i).getPersonGroup().getPersonGroupName());
-			
 			Data person = new Data(personObjects.get(i).getPk(),
 						personObjects.get(i).getPersonName(),
 						personObjects.get(i).getFatherName(),
