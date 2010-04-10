@@ -163,20 +163,7 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-			if(this.id == null){
-				this.id = animatorsDataDbApis.autoInsert(this.name, 
-						this.age, 
-						this.gender, 
-						this.csp_flag, 
-						this.camera_operator_flag, 
-						this.facilitator_flag, 
-						this.phone_no, 
-						this.address, 
-						this.partner.getId(), 
-						this.village.getId(), 
-						this.equipment_holder_id);
-			} else {
-				this.id = animatorsDataDbApis.autoInsert(this.id, 
+			this.id = animatorsDataDbApis.autoInsert(this.id, 
 						this.name, 
 						this.age, 
 						this.gender, 
@@ -188,13 +175,13 @@ public class AnimatorsData extends BaseData {
 						this.partner.getId(), 
 						this.village.getId(), 
 						this.equipment_holder_id);
-			}
 		}
 		
 		@Override
 		public void save(BaseData.Data foreignKey) {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
-			this.id = animatorsDataDbApis.autoInsert(this.name, 
+			this.id = animatorsDataDbApis.autoInsert(this.id,
+					this.name, 
 					this.age, 
 					this.gender, 
 					this.csp_flag, 

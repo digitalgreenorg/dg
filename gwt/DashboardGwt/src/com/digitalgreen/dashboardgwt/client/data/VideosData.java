@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Window;
 
 public class VideosData extends BaseData {
 
-	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native String getTitle() /*-{ return $wnd.checkForNullValues(this.fields.title); }-*/;

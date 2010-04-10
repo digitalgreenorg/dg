@@ -103,7 +103,6 @@ public class BaseTemplate extends Template {
 						this.displayHtml.getElementById(addDataToElementID[i]).setInnerHTML(h.getElementById(addDataToElementID[i]).getInnerHTML());
 					}
 				}
-				
 				this.postForm.add(this.displayHtml);
 				super.setContentPanel(this.postForm);
 			}else{

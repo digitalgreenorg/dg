@@ -114,21 +114,12 @@ public class PersonGroupsData extends BaseData {
 			Date date = new Date();
 			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
 								date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-			if(this.id == null){
-				this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
-						this.days, 
-						this.timings,
-						this.time_updated, 
-						this.village.getId());
-			}else{
-				this.id = personGroupsDataDbApis.autoInsert(this.id,
+			this.id = personGroupsDataDbApis.autoInsert(this.id,
 						this.group_name, 
 						this.days, 
 						this.timings,
 						this.time_updated, 
 						this.village.getId());
-			}
 		}
 		
 		@Override
@@ -137,7 +128,8 @@ public class PersonGroupsData extends BaseData {
 			Date date = new Date();
 			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
 								date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-			this.id = personGroupsDataDbApis.autoInsert(this.group_name, 
+			this.id = personGroupsDataDbApis.autoInsert(this.id, 
+					this.group_name, 
 					this.days, 
 					this.timings,
 					this.time_updated, 

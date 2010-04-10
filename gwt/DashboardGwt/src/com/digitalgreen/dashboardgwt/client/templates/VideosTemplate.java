@@ -7,6 +7,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.VideosData;
 import com.digitalgreen.dashboardgwt.client.servlets.Videos;
+import com.google.gwt.user.client.Window;
 
 public class VideosTemplate extends BaseTemplate {
 	
@@ -27,7 +28,6 @@ public class VideosTemplate extends BaseTemplate {
 		Form saveForm = new Form((new VideosData()).getNewData());
 		saveRequestContext.setForm(saveForm);
 		Videos saveVideo = new Videos(saveRequestContext);
-		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml, addDataToElementID);
 		// Add it to the rootpanel

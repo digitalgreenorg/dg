@@ -45,9 +45,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return null;
 		}
 		// Override this
-		public void setObjValueFromString(String key, String val) {
-			//Window.alert("The incoming key= " + key);
-		}
+		public void setObjValueFromString(String key, String val) {}
 
 		// Override this
 		public void save() {}
@@ -228,20 +226,25 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 		}
 		insertSql += ");";
-		
 		ArrayList tempList = new ArrayList();
-		for(int i=0; i < args.length; i++) {
+		for(int i=0; i < this.getFields().length; i++) {
+			if(i == 0 && args[i] == null) {
+				continue;
+			}
 			tempList.add(args[i]);
 		}
-		String[] tempListString = new String[] {};
 		
-		if(this.getFields().length == args.length){
+		String[] tempListString = new String[] {};
+		// This client passed in a value for id
+		if(args[0] != null){
 			for(int i=0; i < tempList.size(); i++) {
 				tempListString[i] = (String)tempList.get(i);
 			}
 			this.insert(insertSql, tempListString);
 			return args[0];
-		} else{
+		}
+		// Get an autoincremented id
+		else{
 			String newId = this.getNextRowId();
 			if(!newId.equals("ERROR")) {
 				tempList.add(0, newId);

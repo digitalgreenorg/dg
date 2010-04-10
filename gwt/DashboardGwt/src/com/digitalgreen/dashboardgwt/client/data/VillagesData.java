@@ -112,28 +112,16 @@ public class VillagesData extends BaseData {
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();
-			if(this.id == null){
-				this.id = villagesDataDbApis.autoInsert(this.village_name, 
-						this.block.getId(),  
-						this.no_of_households,  
-						this.population, 
-						this.road_connectivity, 
-						this.control, 
-						this.start_date);
-
-			}else{
-				this.id = villagesDataDbApis.autoInsert(this.id,
-						this.village_name, 
-						this.block.getId(),  
-						this.no_of_households,  
-						this.population, 
-						this.road_connectivity, 
-						this.control, 
-						this.start_date);
-			}
+			this.id = villagesDataDbApis.autoInsert(this.id,
+					this.village_name, 
+					this.block.getId(),  
+					this.no_of_households,  
+					this.population, 
+					this.road_connectivity, 
+					this.control, 
+					this.start_date);
 		}
-}
-
+	}
 	
 	protected static String tableID = "10";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `village` " +
