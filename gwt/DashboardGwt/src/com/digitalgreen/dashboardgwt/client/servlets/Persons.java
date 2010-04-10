@@ -1,7 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
+import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
+import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.BaseData;
+import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.templates.PersonsTemplate;
+
 
 public class Persons extends BaseServlet {
 	
@@ -20,8 +28,140 @@ public class Persons extends BaseServlet {
 		if (!this.isLoggedIn()) {
 			super.redirectTo(new Login());
 		} else {
-			this.fillTemplate(new PersonsTemplate(this.requestContext));
+			String method = this.getMethodTypeCtx();
+			if(method.equals(RequestContext.METHOD_POST)) {
+				Form form = this.requestContext.getForm();
+				PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
+					public void onlineSuccessCallback(String results) {
+						if(results != null) {
+							PersonsData persondata = new PersonsData();
+							List persons = persondata.getListingOnline(results);
+							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Person successfully saved");
+							requestContext.getArgs().put("listing", persons);
+							getServlet().redirectTo(new Persons(requestContext ));						
+						} else {
+							/*Error in saving the data*/			
+						}
+					}
+					
+					public void onlineErrorCallback(int errorCode) {
+						RequestContext requestContext = new RequestContext();
+						if (errorCode == BaseData.ERROR_RESPONSE)
+							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+						else if (errorCode == BaseData.ERROR_SERVER)
+							requestContext.setMessageString("Problem in the connection with the server.");
+						else
+							requestContext.setMessageString("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Persons(requestContext));	
+					}
+					
+					public void offlineSuccessCallback(Object results) {
+						if((Boolean)results) {
+							PersonsData persondata = new PersonsData();
+							List persons = persondata.getPersonsListingOffline();
+							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Person successfully saved");
+							requestContext.getArgs().put("listing", persons);
+							getServlet().redirectTo(new Persons(requestContext ));
+						} else {
+							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Invalid data, please try again");
+							getServlet().redirectTo(new Persons(requestContext));				
+						}
+						
+					}
+				}, form);
+				
+				personData.apply(personData.postPageData());
+
+			}
+			else{
+				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
+				String queryArg = (String)queryArgs.get("action");
+				if(queryArg == "list"){
+					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String results) {
+							if(results != null) {
+								PersonsData persondata = new PersonsData();
+								List persons = persondata.getListingOnline(results);
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("listing", persons);
+								getServlet().fillTemplate(new PersonsTemplate(requestContext));						
+							} else {
+								/*Error in saving the data*/			
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessageString("Problem in the connection with the server.");
+							else
+								requestContext.setMessageString("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Persons(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object results) {
+							if((Boolean)results) {
+								PersonsData persondata = new PersonsData();
+								List persons = persondata.getPersonsListingOffline();
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("listing", persons);
+								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessageString("Local Database error");
+								getServlet().redirectTo(new Persons(requestContext));				
+							}	
+						}
+					});
+					personData.apply(personData.getListPageData());	
+				}
+				else if(queryArg == "add"){
+					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String addData) {
+							if(addData != null) {
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "add");
+								requestContext.getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+							} else {
+								/*Error in saving the data*/			
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessageString("Problem in the connection with the server.");
+							else
+								requestContext.setMessageString("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Persons(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object addData) {
+							if((String)addData != null) {
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "add");
+								requestContext.getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessageString("Local Database error");
+								getServlet().redirectTo(new Persons(requestContext));				
+							}	
+						}
+					});
+					personData.apply(personData.getAddPageData());	
+				} else {
+					this.fillTemplate(new PersonsTemplate(this.requestContext));
+				}
+			}
 		}
 	}
-
 }

@@ -1,8 +1,17 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.PersonsData;
+import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData;
+import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
+import com.digitalgreen.dashboardgwt.client.servlets.Villages;
+import com.google.gwt.user.client.Window;
 
 public class PersonGroupsTemplate extends BaseTemplate{
 	
@@ -12,27 +21,75 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
-		String templatePlainType = "Person Groups";
+		
+		Window.alert("In fill method of template");
+		//String templatePlainType = "Person Groups";
 		String templateType = "person_groups";
+		//String templateType = "PersonGroup";
+		String templatePlainType = "dashboard/persongroup/add/";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		PersonGroups addPersonsGroupsServlet = new PersonGroups(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		ArrayList personData = new ArrayList();
+		personData.add((new PersonsData()).getNewData());
+		Form saveForm = new Form((new PersonGroupsData()).getNewData(), 
+				new Object[] {personData});
+		saveRequestContext.setForm(saveForm);
+		PersonGroups savePersonGroup = new PersonGroups(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, persongroupsListHtml, persongroupsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
-		PersonGroups addPersonsGroupsServlet = new PersonGroups(requestContext);
-		PersonGroups savePersonGroup = new PersonGroups(new RequestContext(RequestContext.METHOD_POST));
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(savePersonGroup);
 	}
 	
-	final private String addDataToElementID[] = null;
+	protected void fillListings() {
+		
+		Window.alert("In fill listings method of template");
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List personGroups = (List)queryArgs.get("listing");			
+			if(personGroups != null){
+				String tableRows ="";
+				String style;
+				PersonGroupsData.Data personGroup;
+				for (int row = 0; row < personGroups.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					personGroup = (PersonGroupsData.Data)personGroups.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+					  "<td><input type='checkbox' class='action-select' value='"+ personGroup.getId() + "' name='_selected_action' /></td>" +
+						"<th><a href='/admin/dashboard/personGroup/"+ personGroup.getId() +"/'>" + personGroup.getPersonGroupName()+"</a></th>" +
+						"<td>"+ personGroup.getVillage().getVillageName() + "</td>" + 
+					"</tr>";
+				}
+				persongroupsListFormHtml = persongroupsListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
 	
-	final static private String persongroupsListFormHtml = "<div class='actions'>" +
+	final private String addDataToElementID[] = {"id_village","id_person_set-0-village","id_person_set-1-village","id_person_set-2-village",
+			"id_person_set-3-village","id_person_set-4-village","id_person_set-5-village","id_person_set-6-village","id_person_set-7-village",
+			"id_person_set-8-village","id_person_set-9-village","id_person_set-10-village","id_person_set-11-village","id_person_set-12-village",
+			"id_person_set-13-village","id_person_set-14-village","id_person_set-15-village","id_person_set-16-village","id_person_set-17-village",
+			"id_person_set-18-village","id_person_set-19-village","id_person_set-20-village","id_person_set-21-village","id_person_set-22-village",
+			"id_person_set-23-village","id_person_set-24-village","id_person_set-25-village","id_person_set-26-village","id_person_set-27-village",
+			"id_person_set-28-village","id_person_set-29-village"};
+	
+	private String persongroupsListFormHtml = "<div class='actions'>" +
 									"<label>Action: <select name='action'>" +
 										"<option value='' selected='selected'>---------</option>" +
 										"<option value='delete_selected'>Delete selected Person groups</option>" +
@@ -58,13 +115,9 @@ public class PersonGroupsTemplate extends BaseTemplate{
 											"</th>" +
 										"</tr>" +
 									"</thead>" +
-									"<tbody>" +
-										"<div id='data-rows'" +       // Insert data rows here
-										"</div>" +
-									"</tbody>" +
-								"</table>";
+									"<tbody>";
 	
-	final static private String persongroupsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String persongroupsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 									"<div id='content' class='flex'>" +
 										"<h1>Select Person Group to change</h1>" +
 										"<div id='content-main'>" +
@@ -81,11 +134,11 @@ public class PersonGroupsTemplate extends BaseTemplate{
 										"</div>" +
 									"</div>";
 	
-	final static private String persongroupsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String persongroupsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add Person group</h1>" +
 									"<div id='content-main'>" +
-										"<form enctype='multipart/form-data' action='' method='post' id='persongroups_form'>" +
+										//"<form enctype='multipart/form-data' action='' method='post' id='persongroups_form'>" +
 											"<div>" +
 												"<fieldset class='module aligned '>" +
 													"<div class='form-row group_name  '>" +
@@ -110,11 +163,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 													"<div class='form-row timings  '>" +
 														"<div>" +
 															"<label for='id_timings'>Timings:</label><input id='id_timings' type='text' class='vTimeField' name='timings' size='8' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleClockQuicklink(0, new Date().getHourMinuteSecond());'>Now</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openClock(0);' id='clocklink0'>" +
-																"<img src='/media/img/admin/icon_clock.gif' alt='Clock'></a>" +
-															"</span>" +
+															
 														"</div>" +
 													"</div>" +
 													"<div class='form-row village  '>" +
@@ -1290,14 +1339,17 @@ public class PersonGroupsTemplate extends BaseTemplate{
 												"</div>" +
 											"</div>" +
 											"<div class='submit-row' >" +
-												"<input type='submit' value='Save' class='default' name='_save' />" +
+												"<input id='save' value='Save' class='default' name='_save' />" +
+												
 											"</div>" +
 											"<script type='text/javascript'>document.getElementById('id_group_name').focus();</script>" +
 											"<script type='text/javascript'>" +
 											"</script>" +
 										"</div>" +
-									"</form>" +
+									//"</form>" +
 								"</div>" +
 								"<br class='clear' />" +
-							"</div>";
+							"</div>"+
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+							"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

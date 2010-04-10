@@ -189,6 +189,7 @@ public class PersonGroupsData extends BaseData {
 	
 	@Override
 	public String getListingOnlineURL(){
+		Window.alert("In getlisting Online 2");
 		return PersonGroupsData.getPersonGroupOnlineURL;
 	}
 		
@@ -200,6 +201,8 @@ public class PersonGroupsData extends BaseData {
 	public List serialize(JsArray<Type> personGroupObjects){
 		List personGroups = new ArrayList();
 		VillagesData village = new VillagesData();
+		Window.alert("Going to for loop");
+		Window.alert(Integer.toString((personGroupObjects.length())));
 		for(int i = 0; i < personGroupObjects.length(); i++){
 			VillagesData.Data vil = village.new Data(personGroupObjects.get(i).getVillage().getPk(),
 					personGroupObjects.get(i).getVillage().getVillageName());
@@ -211,12 +214,13 @@ public class PersonGroupsData extends BaseData {
 						personGroupObjects.get(i).getTimeUpdated(),vil);
 			personGroups.add(personGroup);
 		}
-		
+		Window.alert("After for loop");
 		return personGroups;
 	}
 	
 	@Override
 	public List getListingOnline(String json){
+		Window.alert("In getlisting Online 1");
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
@@ -293,17 +297,20 @@ public class PersonGroupsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
-		String html = "<select name=\"village\" id=\"id_village\">";
+		String html = "<select name=\"village\" id=\"id_village\">" 
+			+ "<option selected='selected' value=''>---------</option>";
 		for(int i=0; i< villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
 		}
 		html = html + "</select>";
+		
 		VillagesData villageData1 = new VillagesData();
 		List villages1 = villageData.getAllVillagesOffline();
 		VillagesData.Data village1;
 		for(int inline = 0; inline < 30; inline++){
-			html += "<select name=\"person_set-" + inline + "-village\" id=\"id_person_set-" + inline +"-village\">";
+			html += "<select name=\"person_set-" + inline + "-village\" id=\"id_person_set-" + inline +"-village\">"+
+			"<option selected='selected' value=''>---------</option>";
 			for(int i=0; i< villages1.size(); i++){
 				village1 = (VillagesData.Data)villages1.get(i);
 				html = html + "<option value = \"" + village1.getId() +"\">" + village1.getVillageName() + "</option>";

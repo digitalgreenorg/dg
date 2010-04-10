@@ -27,7 +27,7 @@ public class PersonAdoptPracticeData extends BaseData{
 	
 public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "personAdoptPractice";
+		final private static String COLLECTION_PREFIX = "personadoptpractice";
 			
 		private PersonsData.Data person;
 		private PracticesData.Data practice;
@@ -37,7 +37,6 @@ public class Data extends BaseData.Data {
 		private String quantity;
 		private String quantity_unit;		
 		
-		
 		public Data() {
 			super();
 		}
@@ -46,8 +45,7 @@ public class Data extends BaseData.Data {
 			super();
 			this.id = id;
 			this.date_of_adoption = date_of_adoption;
-		}
-		
+		}		
 
 		public Data(String id,PersonsData.Data person, PracticesData.Data practice, String prior_adoption_flag,String date_of_adoption,
 				String quality,String quantity,String quantity_unit) {
@@ -136,19 +134,32 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public void save() {
-			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();		
-			if(this.id == null){
-				this.id = personAdoptPracticesDataDbApis.autoInsert( this.person.getId(),
-						this.practice.getId(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
-						this.quantity,this.quantity_unit);
-			}else{
-				this.id = personAdoptPracticesDataDbApis.autoInsert(this.id, this.person.getId(),
-						this.practice.getId(), this.prior_adoption_flag,this.date_of_adoption,this.quality,
-						this.quantity,this.quantity_unit);
-			}
+			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
+			Window.alert("In sav method of personadoppr");
+			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
+					this.person.getId(),
+					this.practice.getId(),
+					this.prior_adoption_flag,
+					this.date_of_adoption,
+					this.quality,
+					this.quantity,
+					this.quantity_unit);
+		}
+		
+		@Override
+		public void save(BaseData.Data withForeignKey) {
+			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
+			Window.alert("In sav method of foreign key of person adopt practice");
+			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
+					withForeignKey.getId(),
+					this.practice.getId(),
+					this.prior_adoption_flag,
+					this.date_of_adoption,
+					this.quality,
+					this.quantity,
+					this.quantity_unit);
 		}
 	}
-
 
 	protected static String tableID = "29";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_adopt_practice` " +
