@@ -89,14 +89,8 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();			
-			if(this.id==null){
-				this.id = personRelationssDataDbApis.autoInsert( this.person.getId(),
+			this.id = personRelationssDataDbApis.autoInsert(this.id, this.person.getId(),
 						this.relative.getId(), this.type_of_relationship);
-			}else{
-				this.id = personRelationssDataDbApis.autoInsert(this.id, this.person.getId(),
-						this.relative.getId(), this.type_of_relationship);
-			}
-			
 		}
 	}
 

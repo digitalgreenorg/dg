@@ -77,15 +77,9 @@ public class VideoFarmersShownData extends BaseData {
 		@Override		
 		public void save() {
 			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();		
-			if(this.id == null){
-				this.id = videoFarmersShownsDataDbApis.autoInsert(this.video.getId(),
-						this.person.getId());
-			}
-			else{
-				this.id = videoFarmersShownsDataDbApis.autoInsert(this.id,
+			this.id = videoFarmersShownsDataDbApis.autoInsert(this.id,
 						this.video.getId(),
 						this.person.getId());
-			}
 		}	
 	}
 	

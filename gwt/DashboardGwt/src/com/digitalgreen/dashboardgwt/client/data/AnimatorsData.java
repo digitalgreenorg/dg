@@ -53,6 +53,14 @@ public class AnimatorsData extends BaseData {
 			this.name = name;
 		}
 		
+		public Data(String id, String name, PartnersData.Data partner,VillagesData.Data village){
+			super();
+			this.id = id;
+			this.name = name;
+			this.partner = partner;
+			this.village = village;
+		}
+		
 		public Data(String id, String name, String age, String gender, String csp_flag, String camera_operator_flag,
 				String facilitator_flag, String phone_no, String address, PartnersData.Data partner,
 				VillagesData.Data village, String equipment_holder_id){
@@ -213,7 +221,8 @@ public class AnimatorsData extends BaseData {
 												"FOREIGN KEY(home_village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
-	protected static String listAnimators = "SELECT animator.id, animator.name, animator.age, animator.gender, animator.csp_flag, animator.camera_operator_flag, animator.facilitator_flag, animator.phone_no, animator.address, partners.id, partners.partner_name, village.id, village.village_name, equipment_holder.id FROM animator JOIN partners ON animator.partner_id = partners.id JOIN village ON animator.home_village_id = village.id JOIN equipment_holder ON animator.equipmentholder_id = equipment_holder.id;";
+	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name " +
+			"FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.home_village_id = vil.id ORDER BY a.name";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
 	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
 	protected static String getAnimatorsOnlineURL = "/dashboard/getanimatorsonline/";
@@ -294,19 +303,14 @@ public class AnimatorsData extends BaseData {
 		this.select(listAnimators);
 		if(this.getResultSet().isValidRow()){
 			try{
-				Window.alert("resultse count: " + this.getResultSet().getFieldCount());
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
-					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsString(9), this.getResultSet().getFieldAsString(10));
+					PartnersData.Data  p = partner. new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
 					
-					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsString(11), this.getResultSet().getFieldAsString(12));
+					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5));
 					
 					Data animator = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1),
-							 this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
-							 this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5),
-							 this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
-							 this.getResultSet().getFieldAsString(8), p, v, 
-							 this.getResultSet().getFieldAsString(13));
+							  p, v);
 					
 					animators.add(animator);
 				}
@@ -365,7 +369,8 @@ public class AnimatorsData extends BaseData {
 		PartnersData partnerData = new PartnersData();
 		List partners = partnerData.getPartnersListingOffline();
 		PartnersData.Data partner;
-		String htmlPartner = "<select name=\"partner\" id=\"id_partner\"";
+		String htmlPartner = "<select name=\"partner\" id=\"id_partner\""
+			+ "<option selected='selected' value=''>---------</option>";
 		for(int i = 0; i < partners.size(); i++){
 			partner = (PartnersData.Data)partners.get(i);
 			htmlPartner = htmlPartner + "<option value=\"" + partner.getId() + "\">" + partner.getPartnerName() + "</option>";
@@ -374,7 +379,8 @@ public class AnimatorsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getVillagesListingOffline();
 		VillagesData.Data village;
-		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
+		String htmlVillage = "<select name=\"home_village\" id=\"id_home_village\""
+			+ "<option selected='selected' value=''>---------</option>";
 		for(int i = 0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";
@@ -385,11 +391,11 @@ public class AnimatorsData extends BaseData {
 		VillagesData.Data village1;
 		String html = "";
 		for(int inline = 0; inline < 3; inline++){
-			html += "<select name=\"animatorassignedvillage_set-" + inline + "-village\" id=\"id_animatorassignedvillage_set-" + inline + "-village\">";
+			html += "<select name=\"animatorassignedvillage_set-" + inline + "-village\" id=\"id_animatorassignedvillage_set-" + inline + "-village\">"
+			+ "<option selected='selected' value=''>---------</option>";
 			for ( int i = 0; i < villages1.size(); i++ ) {
 				village1 = (VillagesData.Data)villages1.get(i);
 				html = html + "<option value = \"" + village1.getId() + "\">" + village1.getVillageName() + "</option>";
-				Window.alert(html);
 			}
 			html = html + "</select>";
 		}

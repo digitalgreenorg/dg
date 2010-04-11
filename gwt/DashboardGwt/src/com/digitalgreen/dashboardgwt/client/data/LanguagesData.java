@@ -60,11 +60,7 @@ public class LanguagesData extends BaseData {
 		@Override
 		public void save() {
 			LanguagesData languagesDataDbApis = new LanguagesData();
-			if(this.id == null)
-				this.id = languagesDataDbApis.autoInsert(this.language_name);
-			else
-				this.id = languagesDataDbApis.autoInsert(this.id, this.language_name);
-			
+			this.id = languagesDataDbApis.autoInsert(this.id, this.language_name);
 		}
 	}
 	

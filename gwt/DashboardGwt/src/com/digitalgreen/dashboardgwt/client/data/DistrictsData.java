@@ -117,23 +117,13 @@ public class DistrictsData extends BaseData {
 		@Override
 		public void save(){
 			DistrictsData districtsDataDbApis = new DistrictsData();
-			if(this.id == null){
-				this.id = districtsDataDbApis.autoInsert(this.district_name, 
-						this.start_date, 
-						this.state.getId(), 
-						this.fieldofficer.getId(), 
-						this.fieldofficer_startday, 
-						this.partner.getId());
-			}
-			else {
-				this.id = districtsDataDbApis.autoInsert(this.id,
+			this.id = districtsDataDbApis.autoInsert(this.id,
 						this.district_name, 
 						this.start_date, 
 						this.state.getId(), 
 						this.fieldofficer.getId(), 
 						this.fieldofficer_startday, 
 						this.partner.getId());
-			}
 		}
 	}
 	

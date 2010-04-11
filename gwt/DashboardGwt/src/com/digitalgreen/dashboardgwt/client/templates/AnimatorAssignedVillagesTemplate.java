@@ -1,7 +1,13 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
+import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -13,29 +19,64 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
-		String templateType = "Animator Assigned Village";
+	
+		String templateType = "AnimatorAssignedVillage";
 		String templatePlainType = "dashboard/animatorassignedvillage/add";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet1 = new AnimatorAssignedVillages(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new AnimatorAssignedVillagesData()).getNewData());
+		saveRequestContext.setForm(saveForm);
+		AnimatorAssignedVillages saveAnimatorAssignedVillage = new AnimatorAssignedVillages(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml, addDataToElementID);
 
 		// Add it to the rootpanel
-		super.fill();
-		
-		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet1 = new AnimatorAssignedVillages(requestContext);
-		AnimatorAssignedVillages saveAnimatorAssignedVillage = new AnimatorAssignedVillages(new RequestContext(RequestContext.METHOD_POST));
+		super.fill();		
+		this.fillListings();		
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveAnimatorAssignedVillage);
 	}
 	
-	final private String addDataToElementID[] = null;
 	
-	final static private String animatorassignedvillageListFormHtml = "<div class='actions'>" +
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List animatorAssignedVillages = (List)queryArgs.get("listing");			
+			if(animatorAssignedVillages  != null){
+				String tableRows ="";
+				String style;
+				AnimatorAssignedVillagesData.Data animatorAssignedVillage;
+				for (int row = 0; row < animatorAssignedVillages.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					animatorAssignedVillage = (AnimatorAssignedVillagesData.Data) animatorAssignedVillages.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+								  "<td><input type='checkbox' class='action-select' value='"+ animatorAssignedVillage.getId() + "' name='_selected_action' /></td>" +
+									"<th><a href='/admin/dashboard/animatorAssignedVillage/"+ animatorAssignedVillage.getId() +"/'>" + animatorAssignedVillage.getAnimator().getAnimatorName()+"</a></th>" +
+									"<td>"+ animatorAssignedVillage.getVillage().getVillageName() + "</td>" +
+								"</tr>";
+				}
+				animatorassignedvillageListFormHtml = animatorassignedvillageListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
+	
+	
+	final private String addDataToElementID[] = {"id_animator","id_village"};
+	
+	private String animatorassignedvillageListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected animator assigned villages</option>" +
@@ -61,14 +102,11 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 										"</th>" +
 									"</tr>" +
 								"</thead>" +
-								"<tbody>" +
-									"<div id='data-rows'" +
-									"</div>" +
-								"</tbody>" +
-							"</table>";
+								"<tbody>";
+								
 	
 	// Fill ids:  listing-form-body, add-link
-	final static private String animatorassignedvillageListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	private String animatorassignedvillageListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='flex'>" +
 							"<h1>Select Animator Assigned Village to change</h1>" +
 								"<div id='content-main'>" +
@@ -85,12 +123,12 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 								"</div>" +
 							"</div>";
 	
-	final static private String animatorassignedvillageAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	private String animatorassignedvillageAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 						"<div id='content' class='colM'>" +
 							"<h1>Add Animator Assigned Village</h1>" +
 							"<div id='content-main'>" +
-								"<form enctype='multipart/form-data' action='' method='post' id='animatorassignedvillage_form'>" +
-								"<div>" +
+								//"<form enctype='multipart/form-data' action='' method='post' id='animatorassignedvillage_form'>" +
+								//"<div>" +
 									"<fieldset class='module aligned '>" +
 										"<div class='form-row animator  '>" +
 											"<div>" +
@@ -109,22 +147,19 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 										"<div class='form-row start_date  '>" +
 											"<div>" +
 												"<label for='id_start_date'>Start date:</label><input id='id_start_date' type='text' class='vDateField' name='start_date' size='10' />" +
-												"<span>&nbsp;" +
-													"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-													"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-													"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-												"</span>" +
 											"</div>" +
 										"</div>" +
 									"</fieldset>" +
 									"<div class='submit-row' >" +
-										"<input type='submit' value='Save' class='default' name='_save' />" +
+										"<input id='save' value='Save' class='default' name='_save' />" +
 									"</div>" +
 									"<script type='text/javascript'>document.getElementById('id_animator').focus();</script>" +
 									"<script type='text/javascript'>" +
 									"</script>" +
 								"</div>" +
-								"</form>" +
-							"</div>" +
-						"</div>";
+								//"</form>" +
+							//"</div>" +
+						"</div>"+
+						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

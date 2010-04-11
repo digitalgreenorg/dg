@@ -90,10 +90,7 @@ public class StatesData extends BaseData {
 		@Override
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();		
-			if(this.id == null)
-				this.id = statesDataDbApis.autoInsert(this.state_name, this.region.getId(), this.start_date);
-			else
-				this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
+			this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
 		}
 	}
 

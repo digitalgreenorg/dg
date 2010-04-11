@@ -135,16 +135,9 @@ public class TrainingsData extends BaseData {
 		@Override
 		public void save(){
 			TrainingsData trainingsDataDbApis = new TrainingsData();
-			if(this.id == null){
-				this.id = trainingsDataDbApis.autoInsert(this.training_purpose, this.training_outcome, this.training_start_date, 
+			this.id = trainingsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.training_purpose, this.training_outcome, this.training_start_date, 
 						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
 						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
-			}else{
-				this.id = trainingsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.training_purpose, this.training_outcome, this.training_start_date, 
-						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
-			}
-			
 		}
 	}
 

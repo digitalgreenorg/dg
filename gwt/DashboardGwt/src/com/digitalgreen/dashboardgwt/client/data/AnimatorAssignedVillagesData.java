@@ -20,7 +20,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 	
 	public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "animatorAssignedVillages";
+		final private static String COLLECTION_PREFIX = "animatorassignedvillage";
 		
 		private AnimatorsData.Data animator;
 		private VillagesData.Data village;
@@ -91,16 +91,19 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		@Override
 		public void save(){
 			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
-			if(this.id == null){
-				this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.animator.getId(), 
-						this.village.getId(), 
-						this.start_date);
-			}
-			else {
-				this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.id, this.animator.getId(), 
-						this.village.getId(), 
-						this.start_date);
-			}
+			this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.id, 
+					this.animator.getId(), 
+					this.village.getId(), 
+					this.start_date);
+		}
+		
+		@Override
+		public void save(BaseData.Data foreignKey) {
+			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
+			this.id = animatorAssignedVillagesDataDbApis.autoInsert(this.id,
+					foreignKey.getId(), 
+					this.village.getId(), 
+					this.start_date);
 		}
 	}
 	
@@ -113,7 +116,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 												"FOREIGN KEY(animator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String selectAnimatorsAssignedVillages = "SELECT id, start_date from animator_assigned_village ORDER BY(id);";
-	protected static String listAnimatorsAssignedVillages = "SELECT animator_assigned_village.id, animator.id, animator.name, village.id, village.VILLAGE_NAME, animator_assigned_village.START_DATE FROM animator_assigned_village JOIN animator ON animator_assigned_village.animator_id = animator.id JOIN village ON animator_assigned_village.village_id = village.id ORDER BY(-animator_assigned_village.id);";
+	protected static String listAnimatorsAssignedVillages = "SELECT aav.id, a.id, a.name, vil.id,vil.VILLAGE_NAME,aav.start_date" +
+			" FROM animator_assigned_village aav,animator a,village vil WHERE aav.animator_id = a.id and aav.village_id = vil.id ORDER BY(-aav.id)";
 	protected static String saveAnimatorAssignedVillageOnlineURL = "/dashboard/saveanimatorassignedvillageonline/";
 	protected static String getAnimatorAssignedVillageOnlineURL = "/dashboard/getanimatorassignedvillagesonline/";
 	protected static String saveAnimatorAssignedVillageOfflineURL = "/dashboard/saveanimatorassignedvillageoffline/";
@@ -192,16 +196,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		VillagesData village = new VillagesData();
 		this.select(listAnimatorsAssignedVillages);
 		if(this.getResultSet().isValidRow()){
-			try{
-				
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					
-					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));
-					
-					VillagesData.Data s = village. new Data(this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));
-					
-					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(5));
-					
+			try{				
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {					
+					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));					
+					VillagesData.Data v = village. new Data(this.getResultSet().getFieldAsString(3), this.getResultSet().getFieldAsString(4));					
+					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0),a,v, this.getResultSet().getFieldAsString(5));					
 					animatorsAssignedVillages.add(animatorassignedvillage);					
 				}
 			}
@@ -275,7 +274,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
 		for(int i = 0; i < villages.size(); i++ ) {
 			village = (VillagesData.Data)villages.get(i);
-			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "/>" + village.getVillageName() + "</option>";
+			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";
 		}
 		htmlVillage = htmlVillage + "</select>";
 		

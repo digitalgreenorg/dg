@@ -142,22 +142,13 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override		
 		public void save() {
 			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();			
-
-			if(this.id == null){
-				this.id = personMeetingAttendancesDataDbApis.autoInsert(this.screening.getId(),
-						this.person.getId(),
-						this.expressed_interest_practice.getId(),this.expressed_interest,
-						this.expressed_adoption_practice.getId(),this.expressed_adoption,
-						this.expressed_question_practice.getId(),this.expressed_question);
-			}else{
-				this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
+			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
 						this.screening.getId(),
 						this.person.getId(),
 						this.expressed_interest_practice.getId(),this.expressed_interest,
 						this.expressed_adoption_practice.getId(),this.expressed_adoption,
 						this.expressed_question_practice.getId(),this.expressed_question);
-			}
-			}	
+		}	
 	}
 		
 		

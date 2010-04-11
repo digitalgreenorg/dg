@@ -89,16 +89,10 @@ public class BlocksData extends BaseData {
 		@Override
 		public void save() {
 			BlocksData blocksDataDbApis = new BlocksData();
-			if(this.id == null){
-				this.id = blocksDataDbApis.autoInsert(this.block_name, 
-						this.start_date, 
-						this.district.getId());
-			}else{
-				this.id = blocksDataDbApis.autoInsert(this.id,
+			this.id = blocksDataDbApis.autoInsert(this.id,
 						this.block_name, 
 						this.start_date, 
 						this.district.getId());
-			}
 		}
 	}
 	

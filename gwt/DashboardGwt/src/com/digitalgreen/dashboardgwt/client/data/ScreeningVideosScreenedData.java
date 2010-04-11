@@ -80,14 +80,8 @@ public class ScreeningVideosScreenedData extends BaseData {
 		@Override		
 		public void save() {
 			ScreeningVideosScreenedData screeningVideosScreenedsDataDbApis = new ScreeningVideosScreenedData();		
-			if(this.id == null){
-				this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.screening.getId()).toString(),
+			this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.screening.getId()).toString(),
 						Integer.valueOf(this.video.getId()).toString());
-			}else{
-				this.id = screeningVideosScreenedsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.screening.getId()).toString(),
-						Integer.valueOf(this.video.getId()).toString());
-			}
-			
 		}	
 	}
 	

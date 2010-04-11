@@ -77,16 +77,10 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		@Override		
 		public void save() {
 			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();
-			if(this.id == null){
-				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.video.getId(),
-						this.practice.getId());
-			}else{
-				this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.id,
+			this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.id,
 						this.video.getId(),
 						this.practice.getId());
-			}
-			
-			}	
+		}	
 	}
 	
 	

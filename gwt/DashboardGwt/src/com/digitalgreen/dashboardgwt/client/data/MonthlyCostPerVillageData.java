@@ -151,20 +151,7 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();	
-			if(this.id == null){
-				this.id = monthlycostpervillagesDataDbApis.autoInsert(this.village.getId(),
-						this.date,
-						this.labor_cost,
-						this.equipment_cost,
-						this.transportation_cost,
-						this.miscellaneous_cost,
-						this.total_cost,
-						this.partners_cost,
-						this.digitalgreen_cost,
-						this.community_cost);
-			}
-			else {
-				this.id = monthlycostpervillagesDataDbApis.autoInsert(this.id,
+			this.id = monthlycostpervillagesDataDbApis.autoInsert(this.id,
 						this.village.getId(),
 						this.date,
 						this.labor_cost,
@@ -175,7 +162,6 @@ public class Data extends BaseData.Data {
 						this.partners_cost,
 						this.digitalgreen_cost,
 						this.community_cost);
-			}
 		}
 	}
 	

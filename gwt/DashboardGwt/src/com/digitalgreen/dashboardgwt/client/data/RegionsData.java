@@ -76,12 +76,10 @@ public class RegionsData extends BaseData {
 		@Override
 		public void save() {
 			RegionsData regionsDataDbApis = new RegionsData();
-			if(this.id == null)
-				this.id = regionsDataDbApis.autoInsert(this.region_name, this.start_date);
-			else
-				this.id = regionsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),this.region_name, this.start_date);
-		}
-				
+			this.id = regionsDataDbApis.autoInsert(this.id,
+					this.region_name, 
+					this.start_date);
+		}				
 	}
 
 	protected static String tableID = "1";

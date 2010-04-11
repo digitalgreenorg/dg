@@ -168,21 +168,7 @@ public class DevelopmentManagersData extends BaseData {
 		
 		public void save() {
 			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
-			if(this.id == null){
-				this.id = developmentmanagersDataDbApis.autoInsert(this.name,
-						this.age,
-						this.gender,
-						this.hire_date,
-						this.phone_no,
-						this.address,
-						this.speciality,
-						this.region.getId(),
-						this.start_day,
-						Integer.valueOf(this.equipmentholder_id).toString(),
-						this.salary);
-			}
-			else {
-				this.id = developmentmanagersDataDbApis.autoInsert(this.id, 
+			this.id = developmentmanagersDataDbApis.autoInsert(this.id, 
 						this.name,
 						this.age,
 						this.gender,
@@ -195,7 +181,6 @@ public class DevelopmentManagersData extends BaseData {
 						Integer.valueOf(this.equipmentholder_id).toString(),
 						this.salary);
 			}
-		}
 	}
 	
 	protected static String tableID = "4";

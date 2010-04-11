@@ -118,19 +118,7 @@ public class FieldOfficersData extends BaseData {
 		@Override
 		public void save(){
 			FieldOfficersData fieldOfficersDataDbApis = new FieldOfficersData();
-			if(this.id == null){
-				this.id = fieldOfficersDataDbApis.autoInsert(this.name, 
-						this.age, 
-						this.gender, 
-						this.hire_date, 
-						this.salary, 
-						this.phone_no, 
-						this.address, 
-						Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
-			}
-			else {
-				this.id = fieldOfficersDataDbApis.autoInsert(this.id,
+			this.id = fieldOfficersDataDbApis.autoInsert(this.id,
 						this.name, 
 						this.age, 
 						this.gender, 
@@ -140,7 +128,6 @@ public class FieldOfficersData extends BaseData {
 						this.address, 
 						Integer.valueOf(this.reviewer_id).toString(), 
 						Integer.valueOf(this.equipmentholder_id).toString());
-			}	
 		}
 	}
 	

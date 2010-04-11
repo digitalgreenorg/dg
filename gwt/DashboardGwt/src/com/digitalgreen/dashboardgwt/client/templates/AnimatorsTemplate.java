@@ -1,9 +1,15 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorsData;
+import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AnimatorsTemplate extends BaseTemplate {
 	
@@ -13,27 +19,66 @@ public class AnimatorsTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill(){
+		
 		String templateType = "Animator";
 		String templatePlainType = "dashboard/animators/add";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		Animators addAnimatorsServlet = new Animators(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		ArrayList animatorAssignedVillageData = new ArrayList();
+		animatorAssignedVillageData.add((new AnimatorAssignedVillagesData()).getNewData());
+		Form saveForm = new Form((new AnimatorsData()).getNewData(), 
+				new Object[] {animatorAssignedVillageData});
+		saveRequestContext.setForm(saveForm);
+		Animators saveAnimator = new Animators(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
-		super.fill();
-		Animators addAnimatorsServlet = new Animators(requestContext);
-		Animators saveAnimator = new Animators(new RequestContext(RequestContext.METHOD_POST));
+		super.fill();		
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveAnimator);
 	}
 	
-	final private String addDataToElementID [] = null;
+	protected void fillListings() {
+		
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List animators = (List)queryArgs.get("listing");			
+			if(animators != null){
+				String tableRows ="";
+				String style;
+				AnimatorsData.Data animator;
+				for (int row = 0; row < animators.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					animator = (AnimatorsData.Data)animators.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+					  "<td><input type='checkbox' class='action-select' value='"+ animator.getId() + "' name='_selected_action' /></td>" +
+						"<th><a href='/admin/dashboard/animator/"+ animator.getId() +"/'>" + animator.getAnimatorName()+"</a></th>" +
+						"<td>"+ animator.getPartner().getPartnerName() + "</td>" + 
+						"<td>"+ animator.getVillage().getVillageName() + "</td>" + 
+					"</tr>";
+				}
+				animatorsListFormHtml = animatorsListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
+	
+	final private String addDataToElementID [] = {"id_partner","id_home_village","id_animatorassignedvillage_set-0-village",
+			"id_animatorassignedvillage_set-1-village","id_animatorassignedvillage_set-2-village"};
 
-	final static private String animatorsListFormHtml = "<div class='actions'>" +
+	private String animatorsListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected animators</option>" +
@@ -63,14 +108,9 @@ public class AnimatorsTemplate extends BaseTemplate {
 											"</a>" +
 										"</th>" +
 									"</tr>" +
-								"</thead>" +
-								"<tbody>" +
-									"<div id='data-rows'" +       // Insert data rows here
-									"</div>" +
-								"</tbody>" +
-							"</table>";	
-
-	final static private String animatorsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+								"</thead>";
+								
+	private String animatorsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select Animators to change</h1>" +
 									"<div id='content-main'>" +
@@ -91,7 +131,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 							"<div id='content' class='colM'>" +
 								"<h1>Add Animator</h1>" +
 								"<div id='content-main'>" +
-									"<form enctype='multipart/form-data' action='' method='post' id='animator_form'>" +
+									//"<form enctype='multipart/form-data' action='' method='post' id='animator_form'>" +
 										"<div>" +
 											"<fieldset class='module aligned '>" +
 												"<div class='form-row name  '>" +
@@ -182,11 +222,6 @@ public class AnimatorsTemplate extends BaseTemplate {
 														"<div class='form-row start_date  '>" +
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-0-start_date'>Start date:</label><input id='id_animatorassignedvillage_set-0-start_date' type='text' class='vDateField' name='animatorassignedvillage_set-0-start_date' size='10' />" +
-																"<span>&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-																"</span>" +
 															"</div>" +
 														"</div>" +
 													"</fieldset>" +
@@ -207,11 +242,6 @@ public class AnimatorsTemplate extends BaseTemplate {
 														"<div class='form-row start_date  '>" +
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-1-start_date'>Start date:</label><input id='id_animatorassignedvillage_set-1-start_date' type='text' class='vDateField' name='animatorassignedvillage_set-1-start_date' size='10' />" +
-																"<span>&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-																"</span>" +
 															"</div>" +      
 														"</div>" +
 													"</fieldset>" +  
@@ -232,11 +262,6 @@ public class AnimatorsTemplate extends BaseTemplate {
 														"<div class='form-row start_date  '>" +
 															"<div>" +
 																"<label for='id_animatorassignedvillage_set-2-start_date'>Start date:</label><input id='id_animatorassignedvillage_set-2-start_date' type='text' class='vDateField' name='animatorassignedvillage_set-2-start_date' size='10' />" +
-																"<span>&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																	"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																	"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-																"</span>" +
 															"</div>" +
 														"</div>" +
 													"</fieldset>" +
@@ -245,13 +270,15 @@ public class AnimatorsTemplate extends BaseTemplate {
 												"</div>" +
 											"</div>" +
 											"<div class='submit-row' >" +
-												"<input type='submit' value='Save' class='default' name='_save' />" +
+											"<input id='save' value='Save' class='default' name='_save' />" +
 											"</div>" +
 											"<script type='text/javascript'>document.getElementById('id_name').focus();</script>" +
 											"<script type='text/javascript'>" +
 											"</script>" +
 										"</div>" +
-									"</form>" +
+									//"</form>" +
 								"</div>" +
-							"</div>";
+							"</div>"+
+							"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+							"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

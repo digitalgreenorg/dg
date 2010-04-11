@@ -100,22 +100,13 @@ public class PartnersData extends BaseData {
 		@Override
 		public void save() {
 			PartnersData partnersDataDbApis = new PartnersData();
-			if(this.id == null){
-				this.id = partnersDataDbApis.autoInsert(this.partner_name, 
-						this.date_of_association,
-						this.phone_no, 
-						this.address, 
-						Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
-			}else{
-				this.id = partnersDataDbApis.autoInsert(this.id, 
+			this.id = partnersDataDbApis.autoInsert(this.id, 
 						this.partner_name, 
 						this.date_of_association,
 						this.phone_no, 
 						this.address, 
 						Integer.valueOf(this.reviewer_id).toString(), 
 						Integer.valueOf(this.equipmentholder_id).toString());
-			}
 		}
 	}
 	

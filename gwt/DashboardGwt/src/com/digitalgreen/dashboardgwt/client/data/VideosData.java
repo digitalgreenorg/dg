@@ -184,37 +184,7 @@ public class VideosData extends BaseData {
 			Date date = new Date();
 			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 			VideosData videosDataDbApis = new VideosData();		
-			if(this.id == null){
-				this.id = videosDataDbApis.autoInsert(this.title, 
-						this.video_type, 
-						this.duration, 
-						this.language.getId(), 
-						this.summary, 
-						this.picture_quality,
-						this.audio_quality, 
-						this.editing_quality, 
-						this.edit_start_date, 
-						this.edit_finish_date,
-						this.thematic_quality, 
-						this.video_production_start_date, 
-						this.video_production_end_date, 
-						this.storybase, 
-						this.storyboard_filename, 
-						this.raw_filename, 
-						this.movie_maker_project_filename, 
-						this.final_edited_filename, 
-						this.village.getId(),
-						this.facilitator.getId(), 
-						this.cameraoperator.getId(),
-						this.reviewer.getId(), 
-						this.approval_date, 
-						this.supplementary_video_produced.getId(),
-						this.video_suitable_for, 
-						this.remarks, 
-						this.actors, 
-						this.last_modified);
-			}else{
-				this.id = videosDataDbApis.autoInsert(this.id,
+			this.id = videosDataDbApis.autoInsert(this.id,
 						this.title, 
 						this.video_type, 
 						this.duration, 
@@ -243,8 +213,6 @@ public class VideosData extends BaseData {
 						this.remarks, 
 						this.actors, 
 						this.last_modified);
-				}
-			
 		}
 	}
 	
