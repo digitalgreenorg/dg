@@ -60,11 +60,6 @@ public class Data extends BaseData.Data {
 	
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.person = (PersonsData.Data)this.person.clone();
-			obj.relative = (PersonsData.Data)this.relative.clone();
-			obj.type_of_relationship = this.type_of_relationship;
-			
 			return obj;
 		}
 		

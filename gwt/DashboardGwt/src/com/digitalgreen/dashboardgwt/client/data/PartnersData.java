@@ -64,13 +64,6 @@ public class PartnersData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.partner_name = this.partner_name;
-			obj.date_of_association = this.date_of_association;
-			obj.phone_no = this.phone_no;
-			obj.address = this.address;
-			obj.reviewer_id = this.reviewer_id;
-			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
 

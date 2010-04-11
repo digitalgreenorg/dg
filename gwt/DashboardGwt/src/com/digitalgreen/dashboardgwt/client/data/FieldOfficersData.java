@@ -73,16 +73,6 @@ public class FieldOfficersData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.name = this.name;
-			obj.age = this.age;
-			obj.gender = this.gender;
-			obj.hire_date = this.hire_date;
-			obj.salary = this.salary;
-			obj.phone_no = this.phone_no;
-			obj.address = this.address;
-			obj.reviewer_id  = this.reviewer_id;
-			obj.equipmentholder_id = this.equipmentholder_id;
 			return obj;
 		}
 

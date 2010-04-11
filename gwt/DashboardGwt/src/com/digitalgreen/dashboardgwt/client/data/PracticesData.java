@@ -61,10 +61,6 @@ public class PracticesData extends BaseData {
 		@Override
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.practice_name = this.practice_name;
-			obj.seasonality = this.seasonality;
-			obj.summary = this.summary;
 			return obj;
 		}
 		

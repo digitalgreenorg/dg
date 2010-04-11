@@ -59,10 +59,6 @@ public class BlocksData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.block_name = this.block_name;
-			obj.start_date = this.start_date;
-			obj.district = this.district;
 			return obj;
 		}
 		

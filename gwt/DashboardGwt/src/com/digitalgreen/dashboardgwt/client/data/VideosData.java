@@ -100,37 +100,6 @@ public class VideosData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.title = this.title;
-			obj.video_type = this.video_type;
-			obj.duration = this.duration;
-			obj.language = this.language;
-			obj.summary = this.summary;
-			obj.picture_quality = this.picture_quality;
-			obj.audio_quality = this.audio_quality;
-			obj.editing_quality = this.editing_quality;
-			obj.edit_start_date = this.edit_start_date;
-			obj.edit_finish_date = this.edit_finish_date;
-			obj.thematic_quality = this.thematic_quality;
-			obj.video_production_start_date = this.video_production_start_date;
-			obj.video_production_end_date = this.video_production_end_date;
-			obj.storybase = this.storybase;
-			obj.storyboard_filename = this.storyboard_filename;
-			obj.raw_filename = this.raw_filename;
-			obj.movie_maker_project_filename = this.movie_maker_project_filename;
-			obj.final_edited_filename = this.final_edited_filename;
-			obj.village = this.village;
-			obj.facilitator = this.facilitator;
-			obj.cameraoperator = this.cameraoperator;
-			obj.reviewer = this.reviewer;
-			obj.approval_date = this.approval_date;
-			obj.supplementary_video_produced = this.supplementary_video_produced;
-			obj.video_suitable_for = this.video_suitable_for;
-			obj.remarks = this.remarks;
-			obj.related_agricultural_practices = this.related_agricultural_practices;
-			obj.farmers_shown = this.farmers_shown;
-			obj.actors = this.actors;
-			obj.last_modified = this.last_modified;
 			return obj;
 		}
 		

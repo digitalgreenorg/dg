@@ -89,14 +89,6 @@ public class TrainingsData extends BaseData {
 		@Override
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.training_purpose = this.training_purpose;
-			obj.training_outcome = this.training_outcome;
-			obj.training_start_date = this.training_start_date;
-			obj.training_end_date = this.training_end_date;
-			obj.village = (VillagesData.Data)this.village.clone();
-			obj.developmentmanager = (DevelopmentManagersData.Data)this.developmentmanager.clone();
-			obj.fieldofficer = (FieldOfficersData.Data)this.fieldofficer.clone();
 			return obj;
 		}
 		

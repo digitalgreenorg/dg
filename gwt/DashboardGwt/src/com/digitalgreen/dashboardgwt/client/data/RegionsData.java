@@ -53,9 +53,6 @@ public class RegionsData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.region_name = this.region_name;
-			obj.start_date = this.start_date;
 			return obj;
 		}
 		

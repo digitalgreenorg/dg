@@ -91,15 +91,6 @@ public class EquipmentsData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.equipment_type = this.equipment_type;
-			obj.model_no = this.model_no;
-			obj.serial_no = this.serial_no;
-			obj.cost = this.cost;
-			obj.procurement_date = this.procurement_date;
-			obj.warranty_expiration_date = this.warranty_expiration_date;
-			obj.equipmentholder_id = this.equipmentholder_id;
-							
 			return obj;
 		}
 		

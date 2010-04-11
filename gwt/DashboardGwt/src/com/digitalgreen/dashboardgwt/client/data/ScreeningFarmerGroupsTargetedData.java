@@ -51,10 +51,6 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.screening = (ScreeningsData.Data)this.screening.clone();
-			obj.group = (PersonGroupsData.Data)this.group.clone();
-						
 			return obj;
 		}
 		

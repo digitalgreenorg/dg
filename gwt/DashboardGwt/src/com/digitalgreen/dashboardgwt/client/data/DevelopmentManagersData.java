@@ -122,19 +122,6 @@ public class DevelopmentManagersData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.name = this.name;
-			obj.age = this.age;
-			obj.gender = this.gender;
-			obj.hire_date = this.hire_date;
-			obj.phone_no = this.phone_no;
-			obj.address = this.address;
-			obj.speciality = this.speciality;
-			obj.region = this.region;
-			obj.start_day = this.start_day;
-			obj.equipmentholder_id = this.equipmentholder_id;
-			obj.salary = this.salary;
-				
 			return obj;
 		}
 		

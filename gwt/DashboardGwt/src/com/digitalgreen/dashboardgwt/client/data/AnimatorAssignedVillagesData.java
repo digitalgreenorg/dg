@@ -59,10 +59,6 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		@Override
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.animator = this.animator;
-			obj.village = this.village;
-			obj.start_date = this.start_date;
 			return obj;
 		}
 		

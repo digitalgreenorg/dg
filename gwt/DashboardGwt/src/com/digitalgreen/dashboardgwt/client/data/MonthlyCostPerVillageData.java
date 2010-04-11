@@ -108,18 +108,6 @@ public class Data extends BaseData.Data {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.village = (VillagesData.Data)this.village.clone();
-			obj.date = this.date;
-			obj.labor_cost = this.labor_cost;
-			obj.equipment_cost = this.equipment_cost;
-			obj.transportation_cost = this.transportation_cost;
-			obj.miscellaneous_cost  = this.miscellaneous_cost ;
-			obj.total_cost  = this.total_cost ;
-			obj.partners_cost  = this.partners_cost ;
-			obj.digitalgreen_cost  = this.digitalgreen_cost ;
-			obj.community_cost  = this.community_cost ;
-						
 			return obj;
 		}
 		

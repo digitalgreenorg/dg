@@ -91,16 +91,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.screening = (ScreeningsData.Data)this.screening.clone();
-			obj.person = (PersonsData.Data)this.person.clone();
-			obj.expressed_interest_practice = (PracticesData.Data)this.expressed_interest_practice.clone();
-			obj.expressed_interest = this.expressed_interest;
-			obj.expressed_adoption_practice = (PracticesData.Data)this.expressed_adoption_practice.clone();
-			obj.expressed_adoption = this.expressed_adoption;
-			obj.expressed_question_practice = (PracticesData.Data)this.expressed_question_practice.clone();
-			obj.expressed_question  = this.expressed_question;
-			
 			return obj;
 		}
 		

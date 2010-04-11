@@ -100,21 +100,6 @@ public class ScreeningsData extends BaseData {
 	
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.date = this.date;
-			obj.start_time = this.start_time;
-			obj.end_time = this.end_time;
-			obj.location = this.location;
-			obj.target_person_attendance = this.target_person_attendance;
-			obj.target_audience_interest = this.target_audience_interest;
-			obj.target_adoptions = this.target_adoptions;
-			obj.village = this.village;
-			obj.fieldofficer = this.fieldofficer;
-			obj.animator = this.animator;
-			obj.farmer_groups_targeted = this.farmer_groups_targeted;
-			obj.videoes_screened = this.videoes_screened;
-			obj.farmers_attendance = this.farmers_attendance;
-			
 			return obj;
 		}
 		

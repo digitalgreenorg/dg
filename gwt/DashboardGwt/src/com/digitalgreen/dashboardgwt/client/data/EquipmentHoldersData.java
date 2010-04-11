@@ -51,9 +51,6 @@ public class EquipmentHoldersData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.content_type = this.content_type;
-			obj.object_id = this.object_id;
 			return obj;
 		}
 		

@@ -39,8 +39,6 @@ public class LanguagesData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.language_name = this.language_name;
 			return obj;
 		}
 		

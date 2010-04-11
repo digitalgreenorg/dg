@@ -51,9 +51,6 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.training = (TrainingsData.Data)this.training.clone();
-			obj.animator = (AnimatorsData.Data)this.animator.clone();
 			return obj;
 		}
 		
