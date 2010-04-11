@@ -1,11 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
-import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.ScreeningsData;
-import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
-import com.google.gwt.user.client.Window;
 
 public class Screenings extends BaseServlet {
 	public Screenings() {

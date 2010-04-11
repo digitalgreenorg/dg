@@ -89,17 +89,10 @@ public class PracticesData extends BaseData {
 		@Override
 		public void save(){
 			PracticesData practicesDataDbApis = new PracticesData();
-			if(this.id == null){
-				this.id = practicesDataDbApis.autoInsert(this.practice_name, 
-						this.seasonality, 
-						this.summary);
-			}
-			else {
-				this.id = practicesDataDbApis.autoInsert(this.id, 
-						this.practice_name, 
-						this.seasonality, 
-						this.summary);
-			}
+			this.id = practicesDataDbApis.autoInsert(this.id, 
+					this.practice_name, 
+					this.seasonality, 
+					this.summary);
 		}
 	}
 	

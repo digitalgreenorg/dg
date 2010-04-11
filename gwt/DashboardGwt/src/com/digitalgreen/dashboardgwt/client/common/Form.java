@@ -159,7 +159,6 @@ public class Form {
 		HashMap sourceDict = Form.flatten(queryString);
 		collectParent(this.parent, sourceDict);
 		for(int j=0; j < this.dependents.length; j++) {
-			Object dataFormatted = null;
 			if(this.dependents[j] instanceof ArrayList) {
 				collectDependencies((ArrayList)this.dependents[j], sourceDict);
 			} else if (this.dependents[j] instanceof BaseData.Data) {
