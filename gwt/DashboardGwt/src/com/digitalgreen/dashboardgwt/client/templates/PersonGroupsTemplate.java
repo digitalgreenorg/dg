@@ -22,10 +22,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	@Override
 	public void fill() {
 		
-		Window.alert("In fill method of template");
-		//String templatePlainType = "Person Groups";
 		String templateType = "person_groups";
-		//String templateType = "PersonGroup";
 		String templatePlainType = "dashboard/persongroup/add/";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
@@ -53,7 +50,6 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	
 	protected void fillListings() {
 		
-		Window.alert("In fill listings method of template");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		// If we're unsure, just default to list view

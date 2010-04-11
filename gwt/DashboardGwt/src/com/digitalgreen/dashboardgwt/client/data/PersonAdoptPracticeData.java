@@ -89,15 +89,6 @@ public class Data extends BaseData.Data {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			obj.id = this.id;
-			obj.person = (PersonsData.Data)this.person.clone();
-			obj.practice = (PracticesData.Data)this.practice.clone();
-			obj.prior_adoption_flag = this.prior_adoption_flag;
-			obj.date_of_adoption = this.date_of_adoption;
-			obj.quality = this.quality;
-			obj.quantity = this.quantity;
-			obj.quantity_unit = this.quantity_unit;
-			
 			return obj;
 		}
 		
@@ -135,7 +126,6 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save() {
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
-			Window.alert("In sav method of personadoppr");
 			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
 					this.person.getId(),
 					this.practice.getId(),
@@ -149,7 +139,6 @@ public class Data extends BaseData.Data {
 		@Override
 		public void save(BaseData.Data withForeignKey) {
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
-			Window.alert("In sav method of foreign key of person adopt practice");
 			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
 					withForeignKey.getId(),
 					this.practice.getId(),

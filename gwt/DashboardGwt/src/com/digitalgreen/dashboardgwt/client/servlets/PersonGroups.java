@@ -59,7 +59,6 @@ public class PersonGroups extends BaseServlet{
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							Window.alert("inside offline callback ");
 							PersonGroupsData personGroupData = new PersonGroupsData();
 							List personGroups = personGroupData.getPersonGroupsListingOffline();
 							RequestContext requestContext = new RequestContext();

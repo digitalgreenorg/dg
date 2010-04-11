@@ -189,7 +189,6 @@ public class PersonGroupsData extends BaseData {
 	
 	@Override
 	public String getListingOnlineURL(){
-		Window.alert("In getlisting Online 2");
 		return PersonGroupsData.getPersonGroupOnlineURL;
 	}
 		
@@ -201,8 +200,6 @@ public class PersonGroupsData extends BaseData {
 	public List serialize(JsArray<Type> personGroupObjects){
 		List personGroups = new ArrayList();
 		VillagesData village = new VillagesData();
-		Window.alert("Going to for loop");
-		Window.alert(Integer.toString((personGroupObjects.length())));
 		for(int i = 0; i < personGroupObjects.length(); i++){
 			VillagesData.Data vil = village.new Data(personGroupObjects.get(i).getVillage().getPk(),
 					personGroupObjects.get(i).getVillage().getVillageName());
@@ -214,13 +211,11 @@ public class PersonGroupsData extends BaseData {
 						personGroupObjects.get(i).getTimeUpdated(),vil);
 			personGroups.add(personGroup);
 		}
-		Window.alert("After for loop");
 		return personGroups;
 	}
 	
 	@Override
 	public List getListingOnline(String json){
-		Window.alert("In getlisting Online 1");
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
@@ -272,7 +267,6 @@ public class PersonGroupsData extends BaseData {
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
-			//Window.alert("Query String = " + this.queryString);
 			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.form.getQueryString());
 		}
 		else{

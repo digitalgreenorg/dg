@@ -42,9 +42,7 @@ public class PersonsData extends BaseData {
 		private String land_holdings;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private String equipmentholder_id;
-		
-		
+		private String equipmentholder_id;		
 		
 		public Data() {
 			super();
@@ -73,7 +71,7 @@ public class PersonsData extends BaseData {
 			this.person_name = person_name;
 			this.village = village;
 			this.group = group;
-			}
+		}
 		
 		public Data(String id, String person_name){
 			super();

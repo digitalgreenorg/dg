@@ -14,7 +14,6 @@ import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
-import com.google.gwt.user.client.Window;
 
 public class PersonsTemplate extends BaseTemplate{
 	
@@ -262,7 +261,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-0-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-0-prior_adoption_flag' id='id_personadoptpractice_set-0-prior_adoption_flag'>" +
 																	"<option value='' selected='selected'>---------</option>" +	
-																	"<option value='1' selected='selected'>Unknown</option>" +
+																	"<option value='1'>Unknown</option>" +
 																	"<option value='2'>Yes</option>" +
 																	"<option value='3'>No</option>" +
 																"</select>" +
@@ -307,7 +306,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-1-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-1-prior_adoption_flag' id='id_personadoptpractice_set-1-prior_adoption_flag'>" +
 																	"<option value='' selected='selected'>---------</option>" +		
-																	"<option value='1' selected='selected'>Unknown</option>" +
+																	"<option value='1'>Unknown</option>" +
 																	"<option value='2'>Yes</option>" +
 																	"<option value='3'>No</option>" +
 																"</select>" +
@@ -352,7 +351,7 @@ public class PersonsTemplate extends BaseTemplate{
 															"<div>" +
 																"<label for='id_personadoptpractice_set-2-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-2-prior_adoption_flag' id='id_personadoptpractice_set-2-prior_adoption_flag'>" +
 																	"<option value='' selected='selected'>---------</option>" +		
-																	"<option value='1' selected='selected'>Unknown</option>" +
+																	"<option value='1'>Unknown</option>" +
 																	"<option value='2'>Yes</option>" +
 																	"<option value='3'>No</option>" +
 																"</select>" +
