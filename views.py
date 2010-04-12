@@ -117,12 +117,8 @@ def test_gwt(request, region_id):
 def feed_animators(request, village_id):
         village = Village.objects.get(pk=int(village_id))
         animators = Animator.objects.filter(assigned_villages=village)
-		#str = "test" + "\t" + "Model" + "\n" + "test1" + "\t" + "Model1";	
-		#temp = cjson.encode(str)
-		#return HttpResponse(temp, mimetype="text/plain")
-        return render_to_response('feeds/animators.txt', {'animators':animators}, mimetype="text/plain")
-
-
+	json_subcat = serializers.serialize("json", animators)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def feeds_persons(request, group_id):
 	group = PersonGroups.objects.get(pk=int(group_id))

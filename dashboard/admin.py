@@ -434,7 +434,7 @@ class StateAdmin(admin.ModelAdmin):
 	list_display = ('state_name', 'region')
 
 class TrainingForm(forms.ModelForm):
-    animators_trained = forms.ModelMultipleChoiceField(Animator.objects, widget=forms.SelectMultiple(attrs={'disabled': 'true'}))
+    animators_trained = forms.ModelMultipleChoiceField(Animator.objects, widget=forms.SelectMultiple())
     class Meta:
             model = Training
 
@@ -511,7 +511,6 @@ class TrainingAdmin(admin.ModelAdmin):
     class Media:
         js = (
                 settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/animator_filter.js",
         )
 
 class EquipmentAdmin(admin.ModelAdmin):
