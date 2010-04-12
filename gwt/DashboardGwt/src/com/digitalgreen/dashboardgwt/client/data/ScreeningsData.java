@@ -161,11 +161,20 @@ public class ScreeningsData extends BaseData {
 		public void save() {
 			
 			ScreeningsData screeningsDataDbApis = new ScreeningsData();			
-			this.id = screeningsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.date, this.start_time,this.end_time, this.location,this.target_person_attendance, 
-						this.target_audience_interest, this.target_adoptions,Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.fieldofficer.getId()).toString(), Integer.valueOf(this.animator.getId()).toString(),
-						Integer.valueOf(this.farmer_groups_targeted.getId()).toString(),Integer.valueOf(this.videoes_screened.getId()).toString(),
-						Integer.valueOf(this.farmers_attendance.getId()).toString());
+			this.id = screeningsDataDbApis.autoInsert(this.id, 
+					this.date, 
+					this.start_time,
+					this.end_time, 
+					this.location,
+					this.target_person_attendance, 
+					this.target_audience_interest, 
+					this.target_adoptions,
+					this.village.getId(),
+					this.fieldofficer.getId(),
+					this.animator.getId(),
+					this.farmer_groups_targeted.getId(),
+					this.videoes_screened.getId(),
+					this.farmers_attendance.getId());
 		}
 	}
 	

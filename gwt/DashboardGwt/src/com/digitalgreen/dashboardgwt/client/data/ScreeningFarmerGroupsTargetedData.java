@@ -80,8 +80,9 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		@Override		
 		public void save() {
 			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
-			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),Integer.valueOf(this.screening.getId()).toString(),
-						Integer.valueOf(this.group.getId()).toString());
+			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(this.id,
+					this.screening.getId(),
+					this.group.getId());
 		}	
 	}
 	

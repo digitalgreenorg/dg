@@ -75,7 +75,9 @@ public class ReviewersData extends BaseData {
 		@Override
 		public void save() {
 			ReviewersData reviewersDataDbApis = new ReviewersData();
-			this.id = reviewersDataDbApis.autoInsert(this.id, this.content_type, this.object_id);
+			this.id = reviewersDataDbApis.autoInsert(this.id, 
+					this.content_type, 
+					this.object_id);
 		}
 	}
 

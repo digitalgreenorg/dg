@@ -74,7 +74,9 @@ public class EquipmentHoldersData extends BaseData {
 		@Override
 		public void save() {
 			EquipmentHoldersData equipmentholdersDataDbApis = new EquipmentHoldersData();
-			this.id = equipmentholdersDataDbApis.autoInsert(this.id, this.content_type, this.object_id);
+			this.id = equipmentholdersDataDbApis.autoInsert(this.id,
+					this.content_type,
+					this.object_id);
 		}
 	}
 	
