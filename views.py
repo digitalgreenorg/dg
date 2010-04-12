@@ -753,7 +753,7 @@ def save_animator_online(request):
 		f = list(form1)
 		villages = get_user_villages(request)
 		formset = AnimatorAssignedVillageInlineFormSet()
-		form1.fields['home_village'].queryset = villages.order_by('village_name')
+		form1.fields['village'].queryset = villages.order_by('village_name')
 		for form in formset.forms:
 			form.fields['village'].queryset = villages.order_by('village_name')
 			f = f + list(form)
@@ -765,7 +765,7 @@ def get_animators_online(request):
 		return redirect('animators')
 	else:
 		villages = get_user_villages(request);
-		animators = Animator.objects.filter(home_village__in = villages).distinct().order_by("-id")
+		animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")
 		json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
@@ -825,7 +825,7 @@ def save_animatorassignedvillage_offline(request):
 #save_online function, get_online and save_offline functions of persongroups with regionalization feature
 
 def save_persongroup_online(request):
-	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=3)
+	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=30)
 	if request.method == 'POST':
 		form = PersonGroupsForm(request.POST)
 		formset = PersonFormSet(request.POST, request.FILES)
@@ -878,7 +878,7 @@ def save_person_online(request):
 	if request.method == 'POST':
 		form = PersonForm(request.POST)
 		formset = PersonAdoptPracticeFormSet(request.POST, request.FILES)
-		if form.is_valid():	
+		if form.is_valid() and formset.is_valid():	
 			# This should redirect to show region page
 			saved_person = form.save()
 			person = Person.objects.get(pk=saved_person.id)
@@ -904,7 +904,8 @@ def get_persons_online(request):
 	else:
 		villages = get_user_villages(request)
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", persons,  relations=('persongroups','village','practice'))
+		#persons = Person.objects.filter(id__in = [1097,1109]);
+		json_subcat = serializers.serialize("json", persons,  relations=('group','village','practice'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_person_offline(request):
@@ -942,7 +943,7 @@ def save_screening_online(request):
 		formset = PersonMeetingAttendanceInlineFormSet()
 		form1.fields['village'].queryset = villages.order_by('village_name')
 		form1.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
-		form1.fields['animator'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
+		form1.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
 		form1.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
 		form1.fields['videoes_screened'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
 		for form in formset.forms:
@@ -984,7 +985,7 @@ def save_training_online(request):
     	form = TrainingForm()
     	villages = get_user_villages(request);
         form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['animators_trained'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
+        form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         return HttpResponse(form);            
         
 def get_trainings_online(request):
@@ -1100,7 +1101,7 @@ def save_animatorsalarypermonth_online(request):
 	else:
 		form = AnimatorSalaryPerMonthForm()
 		villages = get_user_villages(request);
-		form.fields['animator'].queryset = Animator.objects.filter(home_village__in = villages).distinct().order_by('name')
+		form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
 		return HttpResponse(form)
 	
 	
