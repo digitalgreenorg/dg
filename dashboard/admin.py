@@ -263,10 +263,10 @@ class AnimatorAssignedVillages(admin.StackedInline):
 	model = AnimatorAssignedVillage
 	
 class AnimatorAdmin(admin.ModelAdmin):
-	fields = ('name','age','gender','csp_flag','camera_operator_flag','facilitator_flag','phone_no','address','partner','home_village')
+	fields = ('name','age','gender','csp_flag','camera_operator_flag','facilitator_flag','phone_no','address','partner','village')
 	inlines = [AnimatorAssignedVillages]
-	list_display = ('name', 'partner', 'home_village',)
-	search_fields = ['name','home_village__village_name', 'partner__partner_name']
+	list_display = ('name', 'partner', 'village',)
+	search_fields = ['name','village__village_name', 'partner__partner_name']
 
 
 
@@ -277,7 +277,7 @@ class PersonGroupsInline(admin.TabularInline):
 class AnimatorInline(admin.TabularInline):
 	model = Animator
 	extra = 5
-	exclude = ('equipmentholder',)
+	exclude = ('equipmentholder','assigned_villages')
 
 class VillageAdmin(admin.ModelAdmin):
 	list_display = ('village_name', 'block')

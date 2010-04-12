@@ -297,13 +297,13 @@ class Animator(models.Model):
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
     partner = models.ForeignKey(Partners)
-    home_village = models.ForeignKey(Village,related_name='home_village')
+    village = models.ForeignKey(Village, db_column = 'home_village_id')
     #equipmentholder = models.ForeignKey(EquipmentHolder, null=True, blank=True) 
     equipmentholder =  generic.GenericRelation(EquipmentHolder)
-    assigned_villages = models.ManyToManyField(Village,through='AnimatorAssignedVillage',null=True, blank=True)
+    assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     class Meta:
         db_table = u'ANIMATOR'
-	unique_together = ("name", "gender", "partner","home_village")
+	unique_together = ("name", "gender", "partner","village")
     def __unicode__(self):
         return self.name
 
@@ -381,7 +381,7 @@ class Video(models.Model):
     	db_table = u'VIDEO'
 	unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
     def __unicode__(self):
-        return self.title
+	return  u'%s (%s)' % (self.title, self.village)
 
 class Practices(models.Model):
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
