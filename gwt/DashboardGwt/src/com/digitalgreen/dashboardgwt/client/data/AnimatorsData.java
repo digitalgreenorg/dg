@@ -21,8 +21,8 @@ public class AnimatorsData extends BaseData {
 		public final native String getFacilitatorFlag() /*-{ return $wnd.checkForNullValues(this.fields.facilitator_flag); }-*/;
 		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
 		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
-		public final native PartnersData.Data getPartner() /*-{ return this.fields.partner; }-*/;
-		public final native VillagesData.Data getVillage() /*-{ return this.fields.village; }-*/;
+		public final native PartnersData.Type getPartner() /*-{ return this.fields.partner; }-*/;
+		public final native VillagesData.Type getVillage() /*-{ return this.fields.home_village; }-*/;
 		public final native String getEquipmentHolder() /*-{ return this.fields.equipment_holder; }-*/;
 
 	}
@@ -222,7 +222,7 @@ public class AnimatorsData extends BaseData {
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name " +
-			"FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.home_village_id = vil.id ORDER BY a.name";
+			"FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.home_village_id = vil.id ORDER BY (-a.id)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
 	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
 	protected static String getAnimatorsOnlineURL = "/dashboard/getanimatorsonline/";
@@ -271,24 +271,42 @@ public class AnimatorsData extends BaseData {
 	}-*/;
 	
 	public List serialize(JsArray<Type> animatorObjects) {
+		Window.alert("serialize");
 		List animators = new ArrayList();
 		PartnersData partner = new PartnersData();
 		VillagesData village = new VillagesData();
+		Window.alert("size: " + animatorObjects.length());
 		for(int i = 0; i < animatorObjects.length(); i++) {
+//			Window.alert("in for..");
 			
-			PartnersData.Data p = partner. new Data(animatorObjects.get(i).getPartner().getId(), animatorObjects.get(i).getPartner().getPartnerName());
+			PartnersData.Data p = partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());
+//			Window.alert("in for..after partner..");
+			VillagesData.Data v = null;
+			try{
+			 v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
+			}
+			catch(Exception e)
+			{
+				Window.alert(e.toString());
+			}
+//			Window.alert("in for.. after village");
+			Data animator = new Data(animatorObjects.get(i).getPk(), 
+								animatorObjects.get(i).getAnimatorName(),
+								animatorObjects.get(i).getAge(), 
+								animatorObjects.get(i).getGender(), 
+								animatorObjects.get(i).getCSPFlags(),
+								animatorObjects.get(i).getCameraOperatorFlag(), 
+								animatorObjects.get(i).getFacilitatorFlag(),
+								animatorObjects.get(i).getPhoneNo(), 
+								animatorObjects.get(i).getAddress(), p, v, 
+								animatorObjects.get(i).getEquipmentHolder());
 			
-			VillagesData.Data v = village. new Data(animatorObjects.get(i).getVillage().getId(), animatorObjects.get(i).getVillage().getVillageName());
-			
-			Data animator = new Data(animatorObjects.get(i).getPk(), animatorObjects.get(i).getAnimatorName(),
-							animatorObjects.get(i).getAge(), animatorObjects.get(i).getGender(), animatorObjects.get(i).getCSPFlags(),
-							animatorObjects.get(i).getCameraOperatorFlag(), animatorObjects.get(i).getFacilitatorFlag(),
-							animatorObjects.get(i).getPhoneNo(), animatorObjects.get(i).getAddress(), p, v, 
-							animatorObjects.get(i).getEquipmentHolder());
+			animators.add(animator);
 		}
-		
+		Window.alert("after for" );
 		return animators;
 	}
+	
 	
 	@Override
 	public List getListingOnline(String json){
