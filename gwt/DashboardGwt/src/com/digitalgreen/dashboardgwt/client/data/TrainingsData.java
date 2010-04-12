@@ -313,7 +313,8 @@ public class TrainingsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getVillagesListingOffline();
 		VillagesData.Data village;
-		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
+		String htmlVillage = "<select name=\"village\" id=\"id_village\""+ 
+		"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";
@@ -323,7 +324,8 @@ public class TrainingsData extends BaseData {
 		DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData();
 		List developmentmanagers = developmentmanagerData.getDevelopmentManagersListingOffline();
 		DevelopmentManagersData.Data developmentmanager;
-		String htmlDevelopmentManager = "<select name=\"development_manager_present\" id=\"id_development_manager_present\"";
+		String htmlDevelopmentManager = "<select name=\"development_manager_present\" id=\"id_development_manager_present\""+ 
+		"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < developmentmanagers.size(); i++){
 			developmentmanager = (DevelopmentManagersData.Data)developmentmanagers.get(i);
 			htmlDevelopmentManager = htmlDevelopmentManager + "<option value=\"" + developmentmanager.getId() + "\">" + developmentmanager.getName() + "</option>";
@@ -332,7 +334,8 @@ public class TrainingsData extends BaseData {
 		FieldOfficersData fieldofficerData = new FieldOfficersData();
 		List fieldofficers = fieldofficerData.getFieldOfficersListingOffline();
 		FieldOfficersData.Data fieldofficer;
-		String htmlFO = "<select name=\"field_officer_present\" id=\"id_field_officer_present\"";
+		String htmlFO = "<select name=\"field_officer_present\" id=\"id_field_officer_present\""+ 
+		"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i < fieldofficers.size(); i++){
 			fieldofficer = (FieldOfficersData.Data)fieldofficers.get(i);
 			htmlFO = htmlFO + "<option value=\"" + fieldofficer.getId() + "\">" + fieldofficer.getFieldOfficerName() + "</option>";
@@ -342,7 +345,8 @@ public class TrainingsData extends BaseData {
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAnimatorsListingOffline();
 		AnimatorsData.Data animator;
-		String htmlAnimator = "<select name=\"animators_trained\" id=\"id_animators_trained\"";
+		String htmlAnimator = "<select name=\"animators_trained\" id=\"id_animators_trained\""+ 
+		"<option value='' selected='selected'>---------</option>";
 		for ( int i = 0; i < animators.size(); i++ ) {
 			animator = (AnimatorsData.Data)animators.get(i);
 			htmlAnimator = htmlAnimator + "<option value=\"" + animator.getId() + "\">" + animator.getAnimatorName() + "</option>";
