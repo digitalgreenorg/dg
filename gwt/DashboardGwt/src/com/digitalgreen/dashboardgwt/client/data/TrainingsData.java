@@ -13,10 +13,10 @@ public class TrainingsData extends BaseData {
 	
 	public static class Type extends BaseData.Type {
 		protected Type() {}
-		public final native String getTrainigPurpose() /*-{ return $wnd.checkForNullValues(this.fields.trainig_purpose); }-*/;
+		public final native String getTrainigPurpose() /*-{ return $wnd.checkForNullValues(this.fields.training_purpose); }-*/;
 		public final native String getTrainingOutcome() /*-{ return $wnd.checkForNullValues(this.fields.training_outcome); }-*/;
-		public final native String getTrainingStartDate() /*-{ return $wnd.checkForNullValues(this.fields.trainig_start_date); }-*/;
-		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.trainig_end_date); }-*/;
+		public final native String getTrainingStartDate() /*-{ return $wnd.checkForNullValues(this.fields.training_start_date); }-*/;
+		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.training_end_date); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
 		public final native DevelopmentManagersData.Type getDevelopmentManager() /*-{ return this.fields.development_manager_present }-*/;
 		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.field_officer_present; }-*/;
