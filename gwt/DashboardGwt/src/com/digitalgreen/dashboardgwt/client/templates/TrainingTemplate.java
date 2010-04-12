@@ -1,7 +1,11 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.HashMap;
+import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 
 public class TrainingTemplate extends BaseTemplate{
@@ -12,6 +16,7 @@ public class TrainingTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
+
 		String templateType = "Training";
 		String templatePlainType = "dashboard/training/add/";
 		RequestContext requestContext = new RequestContext();
@@ -19,20 +24,52 @@ public class TrainingTemplate extends BaseTemplate{
 		args.put("action", "add");
 		requestContext.setArgs(args);
 		Trainings addTrainingsServlet = new Trainings(requestContext);
-		Trainings saveTraining = new Trainings(new RequestContext(RequestContext.METHOD_POST));
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		Form saveForm = new Form((new TrainingsData()).getNewData());
+		saveRequestContext.setForm(saveForm);
+		Trainings saveTraining = new Trainings(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
+		this.fillListings();
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
 		// Now add any submit control buttons
 		super.fillDGSubmitControls(saveTraining);
 	}
 	
-	final private String addDataToElementID[] = null;
+	protected void fillListings() {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		// If we're unsure, just default to list view
+		if(queryArg == null || queryArg != "add") {
+			// 	Add Listings
+			List trainings = (List)queryArgs.get("listing");			
+			if(trainings  != null){
+				String tableRows ="";
+				String style;
+				TrainingsData.Data training;
+				for (int row = 0; row < trainings.size(); ++row) {
+					if(row%2==0)
+						style= "row2";
+					else
+						style = "row1";
+					training = (TrainingsData.Data) trainings.get(row);
+					tableRows += "<tr class='" +style+ "'>" +
+								  "<td><input type='checkbox' class='action-select' value='"+ training.getId() + "' name='_selected_action' /></td>" +
+									"<th><a href='/admin/dashboard/training/"+ training.getId() +"/'>" + training.getTrainingStartDate()+"</a></th>" +
+									"<td>"+ training.getVillage().getVillageName() + "</td>" +
+								"</tr>";
+				}
+				trainingListFormHtml = trainingListFormHtml + tableRows + "</tbody></table>";
+			}
+		}
+	}
 	
-	final static private String trainingListFormHtml = "<div class='actions'>" +
+	final private String addDataToElementID[] = {"id_village","id_development_manager_present","id_field_officer_present","id_animators_trained"};
+	
+	private String trainingListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected trainings</option>" +
@@ -63,11 +100,7 @@ public class TrainingTemplate extends BaseTemplate{
 									"</th>" +
 								"</tr>" +
 							"</thead>" +
-							"<tbody>" +
-								"<div id='data-rows'" +       // Insert data rows here
-								"</div>" +
-							"</tbody>" +
-							"</table>";
+							"<tbody>";							
 	
 	final static private String trainingListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
@@ -90,7 +123,7 @@ public class TrainingTemplate extends BaseTemplate{
 								"<div id='content' class='colM'>" +
 									"<h1>Add Training</h1>" +
 									"<div id='content-main'>" +
-										"<form enctype='multipart/form-data' action='' method='post' id='training_form'>" +
+										//"<form enctype='multipart/form-data' action='' method='post' id='training_form'>" +
 											"<div>" +
 												"<fieldset class='module aligned '>" +
 													"<div class='form-row training_purpose  '>" +
@@ -106,64 +139,59 @@ public class TrainingTemplate extends BaseTemplate{
 													"<div class='form-row training_start_date  '>" +
 														"<div>" +
 															"<label for='id_training_start_date' class='required'>Training start date:</label><input id='id_training_start_date' type='text' class='vDateField' name='training_start_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row training_end_date  '>" +
 														"<div>" +
 															"<label for='id_training_end_date' class='required'>Training end date:</label><input id='id_training_end_date' type='text' class='vDateField' name='training_end_date' size='10' />" +
-															"<span>&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.handleCalendarQuickLink(0, 0);'>Today</a>&nbsp;|&nbsp;" +
-																"<a href='javascript:DateTimeShortcuts.openCalendar(0);' id='calendarlink0'>" +
-																"<img src='/media/img/admin/icon_calendar.gif' alt='Calendar'></a>" +
-															"</span>" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row village  '>" +
-														"<div>" +
-															"<label for='id_village' class='required'>Village:</label><input type='hidden' name='village' id='id_village' />" +
-															"<style type='text/css' media='screen'>" +
-													            "#lookup_village {" +
-													                "padding-right:16px;" +
-													                "background: url(" +
-													                    "/media/img/admin/selector-search.gif" +
-													                ") no-repeat right;" +
+													"<div>" +
+														"<label for='id_village' class='required'>Village:</label>" +
+														"<select name='village' id='id_village'>"+
+														"<option value='' selected='selected'>---------</option>"+
+														"</select>" + 
+														/*Uncomment the below lines for enable auto complete feature in the village field*/
+														/*"<input type='hidden' name='village' id='id_village' />" +
+														"<style type='text/css' media='screen'>" +
+												            "#lookup_village {" +
+												                "padding-right:16px;" +
+												                "background: url(" +
+												                    "/media/img/admin/selector-search.gif" +
+												                ") no-repeat right;" +
+												            "}" +
+												            "#del_village {" +
+												                "display: none;" +
+												            "}" +
+												        "</style>" +
+												        "<input type='text' id='lookup_village' value='' />" +
+												        "<a href='#' id='del_village'>" +
+												        	"<img src='/media/img/admin/icon_deletelink.gif' />" +
+												        "</a>" +
+												        "<script type='text/javascript' src='/media/js/jquery.autocomplete.js'></script>"+
+												        "<script type='text/javascript'>" +
+													        "if ($('#lookup_village').val()) {" +
+													            "$('#del_village').show()" +
+													        "}" +
+													        "$('#lookup_village').autocomplete('/dashboard/search/', {" +
+													            "extraParams: {" +
+													                "search_fields: 'village_name'," +
+													                "app_label: 'dashboard'," +
+													                "model_name: 'village'," +
+													            "}," +
+													        "}).result(function(event, data, formatted) {" +
+													            "if (data) {" +
+													                "$('#id_village').val(data[1]);" +
+													                "$('#del_village').show();" +
 													            "}" +
-													            "#del_village {" +
-													                "display: none;" +
-													            "}" +
-            												"</style>" +
-            												"<input type='text' id='lookup_village' value='' />" +
-            												"<a href='#' id='del_village'>" +
-            													"<img src='/media/img/admin/icon_deletelink.gif' />" +
-            												"</a>" +
-            												"<script type='text/javascript'>" +
-														        "if ($('#lookup_village').val()) {" +
-														            "$('#del_village').show()" +
-														        "}" +
-														        "$('#lookup_village').autocomplete('../search/', {" +
-														            "extraParams: {" +
-														                "search_fields: 'village_name'," +
-														                "app_label: 'dashboard'," +
-														                "model_name: 'village'," +
-														            "}," +
-														        "}).result(function(event, data, formatted) {" +
-														            "if (data) {" +
-														                "$('#id_village').val(data[1]);" +
-														                "$('#del_village').show();" +
-															    "filter();" +
-														            "}" +
-														        "});" +
-														        "$('#del_village').click(function(ele, event) {" +
-														            "$('#id_village').val('');" +
-														            "$('#del_village').hide();" +
-														            "$('#lookup_village').val('');" +
-														        "});" +
-        													"</script>" +
+													        "});" +
+													        "$('#del_village').click(function(ele, event) {" +
+													            "$('#id_village').val('');" +
+													            "$('#del_village').hide();" +
+													            "$('#lookup_village').val('');" +
+													        "});" +
+												        "</script>" +*/
         												"</div>" +
         											"</div>" +
         											"<div class='form-row development_manager_present  '>" +
@@ -182,21 +210,23 @@ public class TrainingTemplate extends BaseTemplate{
         											"</div>" +
         											"<div class='form-row animators_trained  '>" +
         												"<div>" +
-        													"<label for='id_animators_trained' class='required'>Animators trained:</label><select multiple='multiple' disabled='true' name='animators_trained' id='id_animators_trained'>" +
+        													"<label for='id_animators_trained' class='required'>Animators trained:</label><select multiple='multiple' name='animators_trained' id='id_animators_trained'>" +
         													"</select>" +
         												"</div>" +
         											"</div>" +
         										"</fieldset>" +
         										"<div class='submit-row' >" +
-        											"<input type='submit' value='Save' class='default' name='_save' />" +
+        										"<input id='save' value='Save' class='default' name='_save' />" +
         										"</div>" +
         										"<script type='text/javascript'>document.getElementById('id_training_purpose').focus();</script>" +
         										"<script type='text/javascript'>" +
         										"</script>" +
         									"</div>" +
-        								"</form>" +
+        								//"</form>" +
         							"</div>" +
         							"<br class='clear' />" +
-        						"</div>";
+        						"</div>"+
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 
 }

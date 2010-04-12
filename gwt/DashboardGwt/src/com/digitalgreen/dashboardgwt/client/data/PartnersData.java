@@ -20,8 +20,8 @@ public class PartnersData extends BaseData {
 		public final native String getDateOfAssociation() /*-{ return $wnd.checkForNullValues(this.fields.date_of_association); }-*/;
 		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
 		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
-		public final native int getReviewerId() /*-{ return this.fields.reviewer_id; }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native String getReviewer() /*-{ return this.fields.reviewer; }-*/;
+		public final native String getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -32,8 +32,8 @@ public class PartnersData extends BaseData {
 		private String date_of_association;
 		private String phone_no;
 		private String address;
-		private int reviewer_id;
-		private int equipmentholder_id;
+		private String reviewer;
+		private String equipmentholder;
 		
 		public Data() {
 			super();
@@ -46,15 +46,15 @@ public class PartnersData extends BaseData {
 		}
 		
 		public Data(String id, String partner_name, String date_of_association, String phone_no,
-				String address,int reviewer_id, int equipmentholder_id) {
+				String address,String reviewer, String equipmentholder) {
 			super();
 			this.id = id;
 			this.partner_name = partner_name;
 			this.date_of_association = date_of_association;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer_id = reviewer_id;
-			this.equipmentholder_id = equipmentholder_id;
+			this.reviewer = reviewer;
+			this.equipmentholder = equipmentholder;
 		}
 
 		
@@ -90,10 +90,10 @@ public class PartnersData extends BaseData {
 			else if(key.equals("address")) {
 				 this.address = (String)val;
 			} 
-			else if(key.equals("reviewer_id")) {
-				 this.reviewer_id = Integer.parseInt((String)val);
-			} else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+			else if(key.equals("reviewer")) {
+				 this.reviewer = val;
+			} else if(key.equals("equipmentholder")) {
+				this.equipmentholder = (String)val;
 			}
 		}
 		
@@ -105,8 +105,8 @@ public class PartnersData extends BaseData {
 						this.date_of_association,
 						this.phone_no, 
 						this.address, 
-						Integer.valueOf(this.reviewer_id).toString(), 
-						Integer.valueOf(this.equipmentholder_id).toString());
+						this.reviewer, 
+						this.equipmentholder);
 		}
 	}
 	
@@ -184,8 +184,8 @@ public class PartnersData extends BaseData {
 			
 			Data partner = new Data(partnerObjects.get(i).getPk(), partnerObjects.get(i).getPartnerName(),
 					partnerObjects.get(i).getDateOfAssociation(), partnerObjects.get(i).getPhoneNo(),
-					partnerObjects.get(i).getAddress(), partnerObjects.get(i).getReviewerId(),
-					partnerObjects.get(i).getEquipmentHolderId());
+					partnerObjects.get(i).getAddress(), partnerObjects.get(i).getReviewer(),
+					partnerObjects.get(i).getEquipmentHolder());
 			partners.add(partner);
 		}
 		return partners;
@@ -211,8 +211,8 @@ public class PartnersData extends BaseData {
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
 							this.getResultSet().getFieldAsString(4),
-							this.getResultSet().getFieldAsInt(5),
-							this.getResultSet().getFieldAsInt(6));
+							this.getResultSet().getFieldAsString(5),
+							this.getResultSet().getFieldAsString(6));
 					partners.add(partner);
 	    	      }				
 			} catch (DatabaseException e) {

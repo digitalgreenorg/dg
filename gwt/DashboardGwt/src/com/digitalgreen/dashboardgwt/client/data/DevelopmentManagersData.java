@@ -24,7 +24,7 @@ public class DevelopmentManagersData extends BaseData {
 		public final native String getSpeciality() /*-{ return $wnd.checkForNullValues(this.fields.speciality); }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
 		public final native String getStartDay() /*-{ return $wnd.checkForNullValues(this.fields.start_day); }-*/;
-		public final native int getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native String getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 		public final native String getSalary() /*-{ return $wnd.checkForNullValues(this.fields.salary); }-*/;
 				
 	}
@@ -42,7 +42,7 @@ public class DevelopmentManagersData extends BaseData {
 		private String speciality;
 		private RegionsData.Data region;
 		private String start_day;
-		private int equipmentholder_id;
+		private String equipmentholder;
 		private String salary;
 		
 		
@@ -52,7 +52,7 @@ public class DevelopmentManagersData extends BaseData {
 		}
 
 		public Data(String id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
-				RegionsData.Data region, String start_day,int equipmentholder_id, String salary ) {
+				RegionsData.Data region, String start_day,String equipmentholder, String salary ) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -64,7 +64,7 @@ public class DevelopmentManagersData extends BaseData {
 			this.speciality = speciality;
 			this.region = region;
 			this.start_day = start_day;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipmentholder = equipmentholder;
 			this.salary = salary;
 		}
 		
@@ -110,8 +110,8 @@ public class DevelopmentManagersData extends BaseData {
 			return this.start_day;
 		}
 				
-		public int getEquipmentHolderId(){
-			return this.equipmentholder_id;
+		public String getEquipmentHolderId(){
+			return this.equipmentholder;
 		}
 		
 		public String getSalary(){
@@ -157,8 +157,8 @@ public class DevelopmentManagersData extends BaseData {
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_day")) {
 				this.start_day = (String)val;
-			}  else if(key.equals("equipmentholder_id")) {
-				this.equipmentholder_id = Integer.parseInt((String)val);
+			}  else if(key.equals("equipmentholder")) {
+				this.equipmentholder = val;
 			} else if(key.equals("salary")) {
 				this.salary = val;
 			}		
@@ -178,7 +178,7 @@ public class DevelopmentManagersData extends BaseData {
 						this.speciality,
 						this.region.getId(),
 						this.start_day,
-						Integer.valueOf(this.equipmentholder_id).toString(),
+						this.equipmentholder,
 						this.salary);
 			}
 	}
@@ -266,7 +266,7 @@ public class DevelopmentManagersData extends BaseData {
 						developmentmanagerObjects.get(i).getAddress(),
 						developmentmanagerObjects.get(i).getSpeciality(),r,
 						developmentmanagerObjects.get(i).getStartDay(), 
-						developmentmanagerObjects.get(i).getEquipmentHolderId() ,
+						developmentmanagerObjects.get(i).getEquipmentHolder() ,
 						developmentmanagerObjects.get(i).getSalary());
 			developmentmanagers.add(developmentmanager);
 		}
@@ -300,7 +300,7 @@ public class DevelopmentManagersData extends BaseData {
 							this.getResultSet().getFieldAsString(6),
 							this.getResultSet().getFieldAsString(7),r,
 							this.getResultSet().getFieldAsString(10), 
-							this.getResultSet().getFieldAsInt(11),
+							this.getResultSet().getFieldAsString(11),
 							this.getResultSet().getFieldAsString(12));
 					developmentmanagers.add(developmentmanager);
 				}				

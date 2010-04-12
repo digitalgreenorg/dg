@@ -18,8 +18,8 @@ public class TrainingsData extends BaseData {
 		public final native String getTrainingStartDate() /*-{ return $wnd.checkForNullValues(this.fields.trainig_start_date); }-*/;
 		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.trainig_end_date); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
-		public final native DevelopmentManagersData.Type getDevelopmentManager() /*-{ return this.fields.developmentmanager }-*/;
-		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.fieldofficer; }-*/;
+		public final native DevelopmentManagersData.Type getDevelopmentManager() /*-{ return this.fields.development_manager_present }-*/;
+		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.field_officer_present; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -31,15 +31,15 @@ public class TrainingsData extends BaseData {
 		private String training_start_date;
 		private String training_end_date;
 		private VillagesData.Data village;
-		private DevelopmentManagersData.Data developmentmanager;
-		private FieldOfficersData.Data fieldofficer;
+		private DevelopmentManagersData.Data development_manager_present;
+		private FieldOfficersData.Data field_officer_present;
 		
 		public Data(){
 			super();
 		}
 		
 		public Data(String id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
-				VillagesData.Data village, DevelopmentManagersData.Data developmentmanager, FieldOfficersData.Data fieldofficer ){
+				VillagesData.Data village, DevelopmentManagersData.Data development_manager_present, FieldOfficersData.Data field_officer_present ){
 			super();
 			this.id = id;
 			this.training_purpose = training_purpose;
@@ -47,8 +47,8 @@ public class TrainingsData extends BaseData {
 			this.training_start_date = training_start_date;
 			this.training_end_date = training_end_date;
 			this.village = village;
-			this.developmentmanager = developmentmanager;
-			this.fieldofficer = fieldofficer;
+			this.development_manager_present = development_manager_present;
+			this.field_officer_present = field_officer_present;
 		}
 		
 		public Data(String id, String training_purpose, String training_outcome){
@@ -79,11 +79,11 @@ public class TrainingsData extends BaseData {
 		}
 		
 		public DevelopmentManagersData.Data getDevelopmentManager(){
-			return this.developmentmanager;
+			return this.development_manager_present;
 		}
 		
 		public FieldOfficersData.Data getFieldOfficer(){
-			return this.fieldofficer;
+			return this.field_officer_present;
 		}
 		
 		@Override
@@ -120,24 +120,29 @@ public class TrainingsData extends BaseData {
 				this.village = village1.getNewData();
 				this.village.id = val;
 			}
-			else if(key.equals("developmentmanager")){
+			else if(key.equals("development_manager_present")){
 				DevelopmentManagersData developmentmanager1 = new DevelopmentManagersData();
-				this.developmentmanager = developmentmanager1.getNewData();
-				this.developmentmanager.id = val;
+				this.development_manager_present = developmentmanager1.getNewData();
+				this.development_manager_present.id = val;
 			}
-			else if(key.equals("fieldofficer")){
+			else if(key.equals("field_officer_present")){
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
-				this.fieldofficer = fieldofficer1.getNewData();
-				this.fieldofficer.id = val;
+				this.field_officer_present = fieldofficer1.getNewData();
+				this.field_officer_present.id = val;
 			}
 		}
 		
 		@Override
 		public void save(){
 			TrainingsData trainingsDataDbApis = new TrainingsData();
-			this.id = trainingsDataDbApis.autoInsert(Integer.valueOf(this.id).toString(), this.training_purpose, this.training_outcome, this.training_start_date, 
-						this.training_end_date, Integer.valueOf(this.village.getId()).toString(),
-						Integer.valueOf(this.developmentmanager.getId()).toString(), Integer.valueOf(this.fieldofficer.getId()).toString());
+			this.id = trainingsDataDbApis.autoInsert(this.id, 
+					this.training_purpose, 
+					this.training_outcome, 
+					this.training_start_date, 
+					this.training_end_date, 
+					this.village.getId(),
+					this.development_manager_present.getId(),
+					this.field_officer_present.getId());
 		}
 	}
 
@@ -316,7 +321,7 @@ public class TrainingsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getVillagesListingOffline();
 		VillagesData.Data village;
-		String htmlVillage = "<select name=\"state\" id=\"id_state\"";
+		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
 		for(int i=0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";
@@ -326,7 +331,7 @@ public class TrainingsData extends BaseData {
 		DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData();
 		List developmentmanagers = developmentmanagerData.getDevelopmentManagersListingOffline();
 		DevelopmentManagersData.Data developmentmanager;
-		String htmlDevelopmentManager = "<select name=\"partner\" id=\"id_partner\"";
+		String htmlDevelopmentManager = "<select name=\"development_manager_present\" id=\"id_development_manager_present\"";
 		for(int i = 0; i < developmentmanagers.size(); i++){
 			developmentmanager = (DevelopmentManagersData.Data)developmentmanagers.get(i);
 			htmlDevelopmentManager = htmlDevelopmentManager + "<option value=\"" + developmentmanager.getId() + "\">" + developmentmanager.getName() + "</option>";
@@ -335,14 +340,24 @@ public class TrainingsData extends BaseData {
 		FieldOfficersData fieldofficerData = new FieldOfficersData();
 		List fieldofficers = fieldofficerData.getFieldOfficersListingOffline();
 		FieldOfficersData.Data fieldofficer;
-		String htmlFO = "<select name=\"fieldofficer\" id=\"id_fieldofficer\"";
+		String htmlFO = "<select name=\"field_officer_present\" id=\"id_field_officer_present\"";
 		for(int i=0; i < fieldofficers.size(); i++){
 			fieldofficer = (FieldOfficersData.Data)fieldofficers.get(i);
 			htmlFO = htmlFO + "<option value=\"" + fieldofficer.getId() + "\">" + fieldofficer.getFieldOfficerName() + "</option>";
 		}
 		htmlFO = htmlFO + "</select>";
-
-		return htmlVillage + htmlDevelopmentManager + htmlFO;
+		
+		AnimatorsData animatorData = new AnimatorsData();
+		List animators = animatorData.getAnimatorsListingOffline();
+		AnimatorsData.Data animator;
+		String htmlAnimator = "<select name=\"animators_trained\" id=\"id_animators_trained\"";
+		for ( int i = 0; i < animators.size(); i++ ) {
+			animator = (AnimatorsData.Data)animators.get(i);
+			htmlAnimator = htmlAnimator + "<option value=\"" + animator.getId() + "\">" + animator.getAnimatorName() + "</option>";
+		}
+		htmlAnimator = htmlAnimator + "</select>";
+		
+		return htmlVillage + htmlDevelopmentManager + htmlFO + htmlAnimator;
 	}
 	
 	public Object getAddPageData() {
