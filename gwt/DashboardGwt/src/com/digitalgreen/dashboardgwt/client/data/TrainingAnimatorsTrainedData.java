@@ -148,8 +148,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		AnimatorsData animator = new AnimatorsData();
 		for(int i = 0; i < trainingAnimatorsTrainedObjects.length(); i++) {
 			TrainingsData.Data t = training. new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), 
-					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainigPurpose(), 
-					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainingOutcome());
+					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainigPurpose());
 			
 			AnimatorsData.Data a = animator. new Data(trainingAnimatorsTrainedObjects.get(i).getAnimator().getPk(),
 									trainingAnimatorsTrainedObjects.get(i).getAnimator().getAnimatorName());
@@ -177,8 +176,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					
-					TrainingsData.Data t = training. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2), 
-												this.getResultSet().getFieldAsString(1));
+					TrainingsData.Data t = training. new Data(this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(2));
 					
 					AnimatorsData.Data a = animator. new Data(this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5));
 					

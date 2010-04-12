@@ -51,11 +51,16 @@ public class TrainingsData extends BaseData {
 			this.field_officer_present = field_officer_present;
 		}
 		
-		public Data(String id, String training_purpose, String training_outcome){
+		public Data(String id, String training_start_date, VillagesData.Data village){
 			super();
 			this.id = id;
-			this.training_purpose = training_purpose;
-			this.training_outcome = training_outcome;
+			this.training_start_date = training_start_date;
+			this.village = village;
+		}
+		public Data(String id, String training_start_date){
+			super();
+			this.id = id;
+			this.training_start_date = training_start_date;
 		}
 		
 		public String getTrainigPurpose() { 
@@ -212,21 +217,9 @@ public class TrainingsData extends BaseData {
 	public List serialize(JsArray<Type> trainingObjects) {
 		List trainings = new ArrayList();
 		VillagesData village = new VillagesData();
-		DevelopmentManagersData developmentmanager = new DevelopmentManagersData();
-		FieldOfficersData fieldofficer = new FieldOfficersData();
 		for(int i = 0; i < trainingObjects.length(); i++){
-			
-			VillagesData.Data v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
-			
-			DevelopmentManagersData.Data dm = developmentmanager. new Data(trainingObjects.get(i).getDevelopmentManager().getPk(), trainingObjects.get(i).getDevelopmentManager().getName());
-			
-			FieldOfficersData.Data f = fieldofficer. new Data(trainingObjects.get(i).getFieldOfficer().getPk(), 
-					trainingObjects.get(i).getFieldOfficer().getFieldOfficerName());
-			
-			Data training = new Data(trainingObjects.get(i).getPk(), trainingObjects.get(i).getTrainigPurpose(), 
-					trainingObjects.get(i).getTrainingOutcome(), trainingObjects.get(i).getTrainingStartDate(), 
-					trainingObjects.get(i).getTrainingEndDate(), v, dm, f);
-			
+			VillagesData.Data	v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
+			Data training = new Data(trainingObjects.get(i).getPk(),trainingObjects.get(i).getTrainingStartDate(), v);
 			trainings.add(training);
 		}
 		return trainings;
@@ -277,8 +270,7 @@ public class TrainingsData extends BaseData {
 		if(this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data training = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
-							this.getResultSet().getFieldAsString(2));
+					Data training = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					trainings.add(training);
 				}
 			}
