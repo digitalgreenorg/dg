@@ -18,12 +18,33 @@ public class VideosData extends BaseData {
 		public final native String getTitle() /*-{ return $wnd.checkForNullValues(this.fields.title); }-*/;
 		public final native String getVideoType() /*-{ return $wnd.checkForNullValues(this.fields.video_type);}-*/;
 		public final native String getDuration() /*-{ return $wnd.checkForNullValues(this.fields.duration); }-*/;
+		public final native LanguagesData.Type getLanguage() /*-{ return this.fields.language; }-*/;
 		public final native String getSummary() /*-{ return $wnd.checkForNullValues(this.fields.summary); }-*/;
+		public final native String getPictureQuality()/*-{ return  $wnd.checkForNullValues(this.fields.picture_quality); }-*/;
+		public final native String getAudioQuality()/*-{ return  $wnd.checkForNullValues(this.fields.audio_quality); }-*/;
+		public final native String getEditingQuality()/*-{ return  $wnd.checkForNullValues(this.fields.editing_quality); }-*/;
+		public final native String getEditStartDate()/*-{ return  $wnd.checkForNullValues(this.fields.edit_start_date); }-*/;
+		public final native String getEditFinishDate()/*-{ return  $wnd.checkForNullValues(this.fields.edit_finish_date); }-*/;
+		public final native String getThematicQuality()/*-{ return  $wnd.checkForNullValues(this.fields.thematic_quality); }-*/;
 		public final native String getVideoProductionStartDate() /*-{ return $wnd.checkForNullValues(this.fields.video_production_start_date); }-*/;
 		public final native String getVideoProductionEndDate() /*-{ return $wnd.checkForNullValues(this.fields.video_production_end_date); }-*/;
+		public final native String getStorybase()/*-{ return  $wnd.checkForNullValues(this.fields.storybase); }-*/;
+		public final native String getStoryboardFilename()/*-{ return  $wnd.checkForNullValues(this.fields.storyboard_filename); }-*/;
+		public final native String getRawFilename()/*-{ return  $wnd.checkForNullValues(this.fields.raw_filename); }-*/;
+		public final native String getMovieMakerProjectFilename()/*-{ return  $wnd.checkForNullValues(this.fields.movie_maker_project_filename); }-*/;
+		public final native String getFinalEditedFilename()/*-{ return  $wnd.checkForNullValues(this.fields.final_edited_filename); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
 		public final native AnimatorsData.Type getFacilitator() /*-{ return this.fields.facilitator }-*/;
 		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.cameraoperator }-*/;
+		public final native ReviewersData.Type getReviewer() /*-{ return this.fields.reviewer; }-*/;
+		public final native String getApprovalDate()/*-{ return  $wnd.checkForNullValues(this.fields.approval_date); }-*/;
+		public final native VideosData.Type getSupplementaryVideoProduced()/*-{ return  this.fields.supplementary_video_produced; }-*/;
+		public final native String getVideoSuitableFor()/*-{ return  $wnd.checkForNullValues(this.fields.video_suitable_for); }-*/;
+		public final native String getRemarks()/*-{ return  $wnd.checkForNullValues(this.fields.remarks); }-*/;
+		public final native PracticesData.Type getRelatedAgriculturalPractices() /*-{ return this.fields.related_agricultural_practices }-*/ ;
+		public final native PersonsData.Type getFarmersShown()/*-{ return this.fields.farmers_shown}-*/;
+		public final native String getActors()/*-{ return  $wnd.checkForNullValues(this.fields.actors); }-*/;
+		public final native String getLastModified()/*-{ return  $wnd.checkForNullValues(this.fields.last_modified); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -81,6 +102,47 @@ public class VideosData extends BaseData {
 			this.village = village;
 		}
 		
+		public Data(String id,String title, String video_type, String duration, LanguagesData.Data language, String summary, 
+				String picture_quality, String audio_quality, String editing_quality, String edit_start_date, String edit_finish_date, 
+				String thematic_quality, String video_production_start_date, String video_production_end_date, String storybase, 
+				String storyboard_filename, String raw_filename, String movie_maker_project_filename, String final_edited_filename, 
+				VillagesData.Data village, AnimatorsData.Data facilitator, AnimatorsData.Data cameraoperator, ReviewersData.Data reviewer, 
+				String approval_date, VideosData.Data supplementary_video_produced, String video_suitable_for, String remarks, 
+				PracticesData.Data related_agricultural_practices, PersonsData.Data farmers_shown, String actors, String last_modified){
+			
+			super();
+			this.id = id;
+			this.title = title;
+			this.video_type = video_type;
+			this.duration = duration;
+			this.language = language;
+			this.summary = summary;
+			this.picture_quality = picture_quality;
+			this.audio_quality = audio_quality;
+			this.editing_quality = editing_quality;
+			this.edit_start_date = edit_start_date;
+			this.edit_finish_date = edit_finish_date;
+			this.thematic_quality = thematic_quality;
+			this.video_production_start_date = video_production_start_date;
+			this.video_production_end_date = video_production_end_date;
+			this.storybase = storybase;
+			this.storyboard_filename = storyboard_filename;
+			this.raw_filename = raw_filename;
+			this.movie_maker_project_filename = movie_maker_project_filename;
+			this.final_edited_filename = final_edited_filename;
+			this.village = village;
+			this.facilitator = facilitator;
+			this.cameraoperator = cameraoperator;
+			this.reviewer = reviewer;
+			this.approval_date = approval_date;
+			this.supplementary_video_produced = supplementary_video_produced;
+			this.video_suitable_for = video_suitable_for;
+			this.remarks = remarks;
+			this.related_agricultural_practices = related_agricultural_practices;
+			this.farmers_shown = farmers_shown;
+			this.actors = actors;
+			this.last_modified = last_modified;
+		}
 		
 		public String getTitle(){
 			return this.title;
@@ -312,10 +374,64 @@ public class VideosData extends BaseData {
 	
 	public List serialize(JsArray<Type> videoObjects){
 		List videos = new ArrayList();
+		LanguagesData language = new LanguagesData();
 		VillagesData village = new VillagesData();
+		AnimatorsData facilitator = new AnimatorsData();
+		AnimatorsData cameraoperator = new AnimatorsData();
+		ReviewersData reviewer = new ReviewersData();
+		VideosData video1 = new VideosData();
+		PracticesData practice = new PracticesData();
+		PersonsData person = new PersonsData();
+		
 		for(int i = 0; i < videoObjects.length(); i++){
-			VillagesData.Data v = village.new Data(videoObjects.get(i).getVillage().getPk(), videoObjects.get(i).getVillage().getVillageName()) ;
-			Data video = new Data(videoObjects.get(i).getPk(), videoObjects.get(i).getTitle(), videoObjects.get(i).getVideoProductionStartDate(), videoObjects.get(i).getVideoProductionEndDate(), v);
+			
+			LanguagesData.Data l = language.new Data(videoObjects.get(i).getLanguage().getPk(), 
+													videoObjects.get(i).getLanguage().getLanguageName());
+			
+			VillagesData.Data vl = village.new Data(videoObjects.get(i).getVillage().getPk(), 
+													videoObjects.get(i).getVillage().getVillageName()) ;
+			
+			AnimatorsData.Data f = facilitator.new Data(videoObjects.get(i).getFacilitator().getPk(), 
+													videoObjects.get(i).getFacilitator().getAnimatorName());
+			
+			AnimatorsData.Data c = cameraoperator.new Data(videoObjects.get(i).getCameraOperator().getPk(), 
+													videoObjects.get(i).getFacilitator().getAnimatorName());
+			
+			ReviewersData.Data r = reviewer.new Data(videoObjects.get(i).getReviewer().getPk());
+			
+			VideosData.Data vd1 = video1.new Data(videoObjects.get(i).getSupplementaryVideoProduced().getPk(), 
+												videoObjects.get(i).getSupplementaryVideoProduced().getTitle());
+			
+			PracticesData.Data pr = practice.new Data(videoObjects.get(i).getRelatedAgriculturalPractices().getPk(),
+												videoObjects.get(i).getRelatedAgriculturalPractices().getPracticeName());
+			
+			PersonsData.Data ps = person.new Data(videoObjects.get(i).getFarmersShown().getPk(),
+												videoObjects.get(i).getFarmersShown().getPersonName());
+			
+			Data video = new Data(videoObjects.get(i).getPk(), 
+									videoObjects.get(i).getTitle(),
+									videoObjects.get(i).getVideoType(),
+									videoObjects.get(i).getDuration(), l,
+									videoObjects.get(i).getSummary(),
+									videoObjects.get(i).getPictureQuality(),
+									videoObjects.get(i).getAudioQuality(),
+									videoObjects.get(i).getEditingQuality(),
+									videoObjects.get(i).getEditStartDate(),
+									videoObjects.get(i).getEditFinishDate(),
+									videoObjects.get(i).getThematicQuality(),
+									videoObjects.get(i).getVideoProductionStartDate(), 
+									videoObjects.get(i).getVideoProductionEndDate(), 
+									videoObjects.get(i).getStorybase(),
+									videoObjects.get(i).getStoryboardFilename(),
+									videoObjects.get(i).getRawFilename(),
+									videoObjects.get(i).getMovieMakerProjectFilename(),
+									videoObjects.get(i).getFinalEditedFilename(), vl, f, c, r,
+									videoObjects.get(i).getApprovalDate(), vd1,
+									videoObjects.get(i).getVideoSuitableFor(),
+									videoObjects.get(i).getRemarks(), pr, ps,
+									videoObjects.get(i).getActors(),
+									videoObjects.get(i).getLastModified());
+			
 			videos.add(video);
 		}
 		
