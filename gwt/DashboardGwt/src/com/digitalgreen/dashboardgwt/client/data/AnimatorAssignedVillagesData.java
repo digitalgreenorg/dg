@@ -261,7 +261,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAnimatorsListingOffline();
 		AnimatorsData.Data animator;
-		String htmlAnimator = "<select name=\"animator\" id=\"id_animator\"";
+		String htmlAnimator = "<select name=\"animator\" id=\"id_animator\"" + 
+							"<option value='' selected='selected'>---------</option>";
 		for ( int i = 0; i < animators.size(); i++ ) {
 			animator = (AnimatorsData.Data)animators.get(i);
 			htmlAnimator = htmlAnimator + "<option value=\"" + animator.getId() + "\">" + animator.getAnimatorName() + "</option>";
@@ -271,7 +272,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getVillagesListingOffline();
 		VillagesData.Data village;
-		String htmlVillage = "<select name=\"village\" id=\"id_village\"";
+		String htmlVillage = "<select name=\"village\" id=\"id_village\""  + 
+							"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < villages.size(); i++ ) {
 			village = (VillagesData.Data)villages.get(i);
 			htmlVillage = htmlVillage + "<option value=\"" + village.getId() + "\">" + village.getVillageName() + "</option>";

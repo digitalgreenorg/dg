@@ -358,7 +358,9 @@ public class DevelopmentManagersData extends BaseData {
 		RegionsData regionData = new RegionsData();
 		List regions = regionData.getAllRegionsOffline();
 		RegionsData.Data region;
-		String html = "<select name=\"region\" id=\"id_region\">";
+		String html = "<select name=\"region\" id=\"id_region\">" + 
+					"<option value='' selected='selected'>---------</option>";
+		
 		for(int i=0; i< regions.size(); i++){
 			region = (RegionsData.Data)regions.get(i);
 			html = html + "<option value = \"" + region.getId() +"\">" + region.getRegionName() + "</option>";

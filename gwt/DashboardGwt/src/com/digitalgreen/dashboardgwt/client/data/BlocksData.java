@@ -240,7 +240,8 @@ public class BlocksData extends BaseData {
 		DistrictsData districtData = new DistrictsData();
 		List districts = districtData.getAllDistrictsOffline();
 		DistrictsData.Data district;
-		String html = "<select name=\"district\" id=\"id_district\">";
+		String html = "<select name=\"district\" id=\"id_district\">" + 
+					"<option value='' selected='selected'>---------</option>";
 		for (int i=0; i < districts.size(); i++){
 			district = (DistrictsData.Data)districts.get(i);
 			html = html + "<option value = \"" + district.getId() + "\">" + district.getDistrictName() + "</option>";

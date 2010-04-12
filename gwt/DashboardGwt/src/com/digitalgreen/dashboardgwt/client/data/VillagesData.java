@@ -16,9 +16,9 @@ public class VillagesData extends BaseData {
 		protected Type() {}
 		public final native String getVillageName() /*-{ return $wnd.checkForNullValues(this.fields.village_name); }-*/;
 		public final native BlocksData.Type getBlock() /*-{ return this.fields.block }-*/;
-		public final native int getNoOfHouseholds() /*-{ return this.fields.no_of_households }-*/;
-		public final native int getPopulation() /*-{ return this.fields.population }-*/;
-		public final native int getRoadConnectivity() /*-{ return this.fields.road_connectivity }-*/;
+		public final native String getNoOfHouseholds() /*-{ return this.fields.no_of_households }-*/;
+		public final native String getPopulation() /*-{ return this.fields.population }-*/;
+		public final native String getRoadConnectivity() /*-{ return this.fields.road_connectivity }-*/;
 		public final native String getControl() /*-{ return $wnd.checkForNullValues(this.fields.control); }-*/;
 		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date);}-*/;
 	}
@@ -193,7 +193,12 @@ public class VillagesData extends BaseData {
 			BlocksData.Data b = block.new Data(villageObjects.get(i).getBlock().getPk(), 
 					villageObjects.get(i).getBlock().getBlockName()); 
 			VillagesData.Data village = new Data(villageObjects.get(i).getPk(), 
-					villageObjects.get(i).getVillageName(), b);
+					villageObjects.get(i).getVillageName(), b,
+					villageObjects.get(i).getNoOfHouseholds(),
+					villageObjects.get(i).getPopulation(),
+					villageObjects.get(i).getRoadConnectivity(),
+					villageObjects.get(i).getControl(),
+					villageObjects.get(i).getStartDate());
 			villages.add(village);
 		}
 		return villages;
@@ -271,7 +276,8 @@ public class VillagesData extends BaseData {
 		BlocksData blockData = new BlocksData();
 		List blocks = blockData.getAllBlocksOffline();
 		BlocksData.Data block;
-		String html = "<select name=\"block\" id=\"id_block\">";
+		String html = "<select name=\"block\" id=\"id_block\">" + 
+					"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< blocks.size(); i++){
 			block = (BlocksData.Data)blocks.get(i);
 			html = html + "<option value = \"" + block.getId() +"\">" + block.getBlockName() + "</option>";

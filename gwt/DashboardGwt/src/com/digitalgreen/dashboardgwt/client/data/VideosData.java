@@ -398,7 +398,8 @@ public class VideosData extends BaseData {
 		LanguagesData languageData = new LanguagesData();
 		List languages = languageData.getAllLanguagesOffline();
 		LanguagesData.Data language;
-		String html = "<select name=\"language\" id=\"id_language\">";
+		String html = "<select name=\"language\" id=\"id_language\">" + 
+					"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< languages.size(); i++){
 			language = (LanguagesData.Data)languages.get(i);
 			html = html + "<option value = \"" + language.getId() +"\">" + language.getLanguageName() + "</option>";
@@ -408,7 +409,8 @@ public class VideosData extends BaseData {
 		AnimatorsData animatorData = new AnimatorsData();
 		List facilitators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data facilitator;
-		html = html + "<select name=\"facilitator\" id=\"id_facilitator\">";
+		html = html + "<select name=\"facilitator\" id=\"id_facilitator\">" + 
+				"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< facilitators.size(); i++){
 			facilitator = (AnimatorsData.Data)facilitators.get(i);
 			html = html + "<option value = \"" + facilitator.getId() +"\">" + facilitator.getAnimatorName() + "</option>";
@@ -417,7 +419,8 @@ public class VideosData extends BaseData {
 		
 		List cameraoperators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data cameraoperator;
-		html = html + "<select name=\"cameraoperator\" id=\"id_cameraoperator\">";
+		html = html + "<select name=\"cameraoperator\" id=\"id_cameraoperator\">" + 
+					"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< cameraoperators.size(); i++){
 			cameraoperator = (AnimatorsData.Data)cameraoperators.get(i);
 			html = html + "<option value = \"" + cameraoperator.getId() +"\">" + cameraoperator.getAnimatorName() + "</option>";
