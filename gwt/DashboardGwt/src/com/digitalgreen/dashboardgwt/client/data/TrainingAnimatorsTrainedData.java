@@ -80,7 +80,8 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public void save(){
 			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
-			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(Integer.valueOf(this.id).toString(),
+			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(
+					this.id,
 					this.training.getId(), 
 					this.animator.getId());
 		}
