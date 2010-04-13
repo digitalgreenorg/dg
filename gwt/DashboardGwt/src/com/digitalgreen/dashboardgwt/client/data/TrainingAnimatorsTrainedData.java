@@ -148,7 +148,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		AnimatorsData animator = new AnimatorsData();
 		for(int i = 0; i < trainingAnimatorsTrainedObjects.length(); i++) {
 			TrainingsData.Data t = training. new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), 
-					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainigPurpose());
+					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainingPurpose());
 			
 			AnimatorsData.Data a = animator. new Data(trainingAnimatorsTrainedObjects.get(i).getAnimator().getPk(),
 									trainingAnimatorsTrainedObjects.get(i).getAnimator().getAnimatorName());

@@ -13,7 +13,7 @@ public class TrainingsData extends BaseData {
 	
 	public static class Type extends BaseData.Type {
 		protected Type() {}
-		public final native String getTrainigPurpose() /*-{ return $wnd.checkForNullValues(this.fields.training_purpose); }-*/;
+		public final native String getTrainingPurpose() /*-{ return $wnd.checkForNullValues(this.fields.training_purpose); }-*/;
 		public final native String getTrainingOutcome() /*-{ return $wnd.checkForNullValues(this.fields.training_outcome); }-*/;
 		public final native String getTrainingStartDate() /*-{ return $wnd.checkForNullValues(this.fields.training_start_date); }-*/;
 		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.training_end_date); }-*/;
@@ -214,16 +214,30 @@ public class TrainingsData extends BaseData {
 		return eval(json);
 	}-*/;
 	
-	public List serialize(JsArray<Type> trainingObjects) {
+public List serialize(JsArray<Type> trainingObjects) {
 		List trainings = new ArrayList();
 		VillagesData village = new VillagesData();
+		DevelopmentManagersData developmentmanager = new DevelopmentManagersData();
+		FieldOfficersData fieldofficer = new FieldOfficersData();
 		for(int i = 0; i < trainingObjects.length(); i++){
-			VillagesData.Data	v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
-			Data training = new Data(trainingObjects.get(i).getPk(),trainingObjects.get(i).getTrainingStartDate(), v);
+			
+			VillagesData.Data v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
+			
+			DevelopmentManagersData.Data dm = developmentmanager. new Data(trainingObjects.get(i).getDevelopmentManager().getPk(), trainingObjects.get(i).getDevelopmentManager().getName());
+			
+			FieldOfficersData.Data f = fieldofficer. new Data(trainingObjects.get(i).getFieldOfficer().getPk(), 
+					trainingObjects.get(i).getFieldOfficer().getFieldOfficerName());
+			
+			Data training = new Data(trainingObjects.get(i).getPk(), trainingObjects.get(i).getTrainingPurpose(), 
+					trainingObjects.get(i).getTrainingOutcome(), trainingObjects.get(i).getTrainingStartDate(), 
+					trainingObjects.get(i).getTrainingEndDate(), v, dm, f);
+			
 			trainings.add(training);
 		}
 		return trainings;
 	}
+			
+		
 	
 	@Override
 	public List getListingOnline(String json){
