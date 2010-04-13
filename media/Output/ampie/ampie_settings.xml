@@ -157,7 +157,7 @@
   </error_messages>    
   
   <strings>
-    <no_data>No Data for selected Geography</no_data>                                       <!-- [No data for selected period] (text) if data is missing, this message will be displayed -->
+    <no_data>No Data for selected Geography/Period</no_data>  <!-- [No data for selected period] (text) if data is missing, this message will be displayed -->
     <export_as_image></export_as_image>                       <!-- [Export as image] (text) text for right click menu -->
     <collecting_data></collecting_data>                       <!-- [Collecting data] (text) this text is displayed while exporting chart to an image -->
   </strings>  

@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from dg.views import *
 from django.contrib.auth.views import login, logout
-from dg.output.views import *
+from dg.output.views import common, overviewAnalytics, videoAnalytics
 from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
@@ -21,7 +21,7 @@ urlpatterns = patterns('',
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
 	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
+ #   (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     (r'^hello/$', hello),
@@ -140,18 +140,18 @@ urlpatterns = patterns('',
 	(r'^dashboard/screenings/$', screening),
 	(r'^dashboard/login/$', login),
 	(r'^dashboard/logout/$', logout),    
-    (r'^output/test1/(country|state|district|block|village)/(\d+)$',test_output),
-    (r'^output/dropdownval/$',overview_drop_down),
-    (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overview),
-    (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',overview_line_graph),
-    (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',video_module),
-    (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',video_pie_graph_mf_ratio),
-    (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',video_actor_wise_pie),
-    (r'^output/video/typepie/(country|state|district|block|village)/(\d+)/$',video_type_wise_pie),
-    (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',video_geog_pie_data),
-    (r'^output/video/practicescatter/(country|state|district|block|village)/(\d+)/$',video_practice_wise_scatter),
-    (r'^output/video/languagescatter/data/(country|state|district|block|village)/(\d+)/$',video_language_wise_scatter_data),
-    (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_data),
-    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',video_monthwise_bar_settings),
+    (r'^output/test1/(country|state|district|block|village)/(\d+)$',common.test_output),
+    (r'^output/dropdownval/$',common.overview_drop_down),
+    (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overviewAnalytics.overview),
+    (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',common.overview_line_graph),
+    (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_module),
+    (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_pie_graph_mf_ratio),
+    (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_actor_wise_pie),
+    (r'^output/video/typepie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_type_wise_pie),
+    (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_geog_pie_data),
+    (r'^output/video/practicescatter/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_practice_wise_scatter),
+    (r'^output/video/languagescatter/data/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_language_wise_scatter_data),
+    (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_monthwise_bar_data),
+    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_monthwise_bar_settings),
         
 )

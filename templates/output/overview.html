@@ -17,8 +17,8 @@
 	<script type="text/javascript" src="/media/Output/JS/Jcorner.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.gradient.js"></script>
     <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
-    <script type="text/javascript" src="/media/Output/JS/sorter.js"></script>
 	<script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>
+	<script type="text/javascript" src="/media/Output/JS/jquery.metadata.js"></script>
 	
 
 	<script type="text/javascript">  	    
@@ -51,16 +51,22 @@
 	//Function for apply button in date picker
 	function Apply(){	
 		var date1 = document.getElementById('inlinedatepicker1').innerHTML;
-		var date2 = document.getElementById('inlinedatepicker2').innerHTML;			        
-		if(date1.length==40 || date2.length==40){	 
-		   document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";          
-										
+		var date2 = document.getElementById('inlinedatepicker2').innerHTML;
+		if(date1.length!=10 || date2.length!=10) {	 
+		   document.getElementById('inlinedatepickererrormsg').innerHTML = "You have not chosen the dates";							
 		}
-		else{
-			
-			window.location.href = '/output/overview/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
-		} // end else
-
+		else {
+			date1_obj = date1.split('-');
+			date2_obj = date2.split('-');
+			var date1_obj = new Date(parseInt(date1_obj[0],10),parseInt(date1_obj[1],10)-1,parseInt(date1_obj[2],10));
+			var date2_obj = new Date(parseInt(date2_obj[0],10),parseInt(date2_obj[1],10)-1,parseInt(date2_obj[2],10));
+			if(date1_obj > date2_obj) {
+				document.getElementById('inlinedatepickererrormsg').innerHTML = "From-date is greater than To-date";
+			}
+			else {		
+				window.location.href = '/output/overview/{{geog}}/{{id}}/?from_date='+date1+'&to_date='+date2;
+			} 
+		}
 	}
 	
 	//Function for Reset button in datepicker
@@ -68,7 +74,7 @@
 	        var date1 = document.getElementById('inlinedatepicker1').innerHTML;
 	        var date2 = document.getElementById('inlinedatepicker1').innerHTML;
 	        if(date1.length!=null || date2.length!=null){	
-	           //alert("hi"); 
+	           document.getElementById('inlinedatepickererrormsg').innerHTML = "";
 	           document.getElementById('inlinedatepicker1').innerHTML = "";
 	           document.getElementById('inlinedatepicker2').innerHTML = "";               	                        
 	        }
@@ -154,16 +160,14 @@
 						    <div id='inlinedatepicker1desc'>
 						        from: 
 						    </div>						
-						    <div id='inlinedatepicker1'>						       												    				  							
-						    </div>
+						    <div id='inlinedatepicker1'></div>
 						    <div id='inlinedatepicker1format'>
 						        (yyyy-mm-dd) 
 						    </div>						
 						    <div id='inlinedatepicker2desc'>
 						        to:
 						    </div>													
-						    <div id='inlinedatepicker2'>												    				  							
-						    </div>
+						    <div id='inlinedatepicker2'></div>
 						    <div id='inlinedatepicker2format'>
 						        (yyyy-mm-dd) 
 						    </div>
@@ -288,7 +292,7 @@
 							<div id='table2tdv3'>  
 							</div>					
 						</th>
-						<th id='table2td' >
+						<th class="{sorter: 'digit'}" id='table2td' >
 							<div id='table2tdv2'> Videos Produced 
 							    <div id='table2tdv2desc'>
 							        The total number of videos produced in a given location
@@ -297,7 +301,7 @@
 							<div id='table2tdv3'></div>
 						</th>
 						
-						<th id='table2td'>
+						<th class="{sorter: 'digit'}"  id='table2td'>
 						    <div id='table2tdv2'> Disseminations
 							    <div id='table2tdv2desc'>
 							        The total number of unique videos that have been screened 
@@ -307,7 +311,7 @@
 														
 						</th>
 						
-						<th id='table2td'>
+						<th class="{sorter: 'digit'}" id='table2td'>
 						    <div id='table2tdv2'> Farmer Adoptions
 							    <div id='table2tdv2desc'>
 							    	Total number of farmers following or taking up practice as shown in DG video
@@ -316,7 +320,7 @@
 							<div id='table2tdv3'> </div>							
 						</th>
 						
-						<th id='table2td'>
+						<th class="{sorter: 'digit'}" id='table2td'>
 							<div id='table2tdv2'> Agricultural Practices
 							    <div id='table2tdv2desc'>
 							        The total number of agricultural practices followed 
@@ -326,7 +330,7 @@
 							
 							</div>
 						</th>
-						<th id='table2tdf'>
+						<th class="{sorter: 'digit'}" id='table2tdf'>
 							<div id='table2tdv2'> Farmers 
 							    <div id='table2tdv2desc'>
 							        The total number of farmers associated 

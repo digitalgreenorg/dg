@@ -79,4 +79,7 @@
 		<text_size>12</text_size>
 		<margins>5</margins>
 	</legend>
+	<strings>
+    	<no_data>No Data for selected Geography/Period</no_data>
+    </strings>
 </settings>

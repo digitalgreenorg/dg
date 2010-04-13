@@ -73,4 +73,7 @@
        <align>right</align>
     </label>
   </labels>
+  <strings>
+    <no_data>No Data for selected Geography/Period</no_data>
+  </strings>
 </settings>
