@@ -991,7 +991,7 @@ def get_trainings_online(request):
     else:
     	villages = get_user_villages(request);
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", trainings, relations=('village','animator'))
+        json_subcat = serializers.serialize("json", trainings, relations=('village','development_manager_present','field_officer_present'))
         return HttpResponse(json_subcat, mimetype="application/javascript")
              
        
