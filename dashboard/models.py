@@ -322,6 +322,12 @@ class Training(models.Model):
 	unique_together = ("training_start_date", "training_end_date", "village")
 
 
+class TrainingAnimatorsTrained(models.Model):
+    training = models.ForeignKey(Training, db_column='training_id')
+    animator = models.ForeignKey(Animator, db_column='animator_id')
+    class Meta:
+        db_table = u'TRAINING_animators_trained'
+
 class AnimatorAssignedVillage(models.Model):
     animator = models.ForeignKey(Animator) 
     village = models.ForeignKey(Village)

@@ -90,6 +90,10 @@ class ScreeningForm(forms.ModelForm):
 class TrainingForm(forms.ModelForm):
 	class Meta:
 		model = Training
+        
+class TrainingAnimatorsTrainedForm(forms.ModelForm):
+    class Meta:
+        model = TrainingAnimatorsTrained    
 
 class MonthlyCostPerVillageForm(forms.ModelForm):
 	class Meta:

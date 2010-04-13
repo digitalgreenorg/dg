@@ -553,9 +553,10 @@ def get_districts_online(request):
 	if request.method == 'POST':
 		return redirect('districts')
 	else:
-		districts = get_user_districts(request);
-        json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+		district_objects = get_user_districts(request);
+		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")
+		json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 		
 
 
@@ -675,8 +676,8 @@ def save_equipment_offline(request):
 			return HttpResponse("0")		
 		
 def save_village_online(request):
-	PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
-	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, extra=5)
+	PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
+	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
 	if request.method == "POST":
 	   form = VillageForm(request.POST)
 	   formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
@@ -685,7 +686,7 @@ def save_village_online(request):
 	   	saved_village = form.save()
 	   	village = Village.objects.get(pk=saved_village.id)
 	   	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance=village)
-	   	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance = village)
+	   	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance=village)
 	   	formset_person_group.save()
 	   	formset_animator.save()
 	   	return HttpResponseRedirect('/dashboard/getvillagesonline/')
@@ -992,6 +993,7 @@ def get_trainings_online(request):
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", trainings, relations=('village','animator'))
         return HttpResponse(json_subcat, mimetype="application/javascript")
+             
        
 def save_training_offline(request):
 	if request.method == 'POST':
@@ -1002,7 +1004,19 @@ def save_training_offline(request):
 			new_form.save()
 			return HttpResponse("1")
 		else:
-			return HttpResponse("0") 
+			return HttpResponse("0")
+		
+#functions for Many to Many relation table TrainingAnimatorsTrained with user specific feature.
+#get_online function of TrainingAnimatorsTrained with regionalization feature        
+def get_traininganimatorstrained_online(request):
+    if request.method == 'POST':
+        return redirect('TrainingAnimatorsTrained')
+    else:
+    	villages = get_user_villages(request);
+    	trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
+        traininganimatorstrained = TrainingAnimatorsTrained.objects.filter(training__in = trainings).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", traininganimatorstrained)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 #functions for MonthlyCostPerVillage with user specific feature.
 #save_online function, get_online and save_offline functions of MonthlyCostPerVillage with regionalization feature
@@ -1679,7 +1693,7 @@ def practice(request):
 
 def add_village(request):
         PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
-	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, extra=5)
+	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
         if request.method == 'POST':
                 form = VillageForm(request.POST)
                 formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
