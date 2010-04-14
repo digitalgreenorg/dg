@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
@@ -32,8 +33,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public class Data implements Cloneable {
 		
 		protected String id = null;
+		protected String queryString = null;
+		protected HashMap manyToManyRelationshipMap = null;
+		protected boolean hasManyToManyRelationships = false;
 		
-		public Data() {}
+		public Data() {
+			this.manyToManyRelationshipMap = new HashMap();
+		}
 		
 		// Override this
 		public BaseData.Data clone() {
@@ -44,6 +50,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		public String getPrefixName() {
 			return null;
 		}
+		
 		// Override this
 		public void setObjValueFromString(String key, String val) {}
 
@@ -55,6 +62,67 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		
 		public String getId() {
 			return this.id;
+		}
+		
+		public void addManyToManyRelationship(BaseData.Data fieldBaseData,
+				BaseData.Data toTableBaseData,
+				String attributeCollectionName) {
+			ManyToManyRelationship manyToManyRelationships = new ManyToManyRelationship(fieldBaseData,
+					toTableBaseData, attributeCollectionName);
+			this.manyToManyRelationshipMap.put((String)attributeCollectionName, manyToManyRelationships);
+			this.hasManyToManyRelationships = true;
+		}
+		
+		public HashMap getManyToManyRelationships() {
+			return this.manyToManyRelationshipMap;
+		}
+		
+		public boolean hasManyToManyRelationships() {
+			return this.hasManyToManyRelationships;
+		}
+		
+		public void addNameValueToQueryString(String name, String value) {
+			String nameValuePair = name + "=" + value;
+			if(this.queryString == null) {
+				this.queryString = nameValuePair;
+			} else {
+				this.queryString += "&" + nameValuePair;
+			}
+		}
+		
+		public String getQueryString() {
+			return this.queryString;
+		}
+		
+		// Override this
+		public String getTableId() {
+			return "";
+		}
+	}
+	
+	public class ManyToManyRelationship {
+		
+		private BaseData.Data field;
+		private BaseData.Data toTable;
+		private String attributeCollectionName;
+	
+		public ManyToManyRelationship(BaseData.Data field, BaseData.Data toTable,
+				String attributeCollectionName) {
+			this.field = field;
+			this.toTable = toTable;
+			this.attributeCollectionName = attributeCollectionName;
+		}
+		
+		public String getAttributeCollectionName() {
+			return this.attributeCollectionName;
+		}
+		
+		public BaseData.Data getToTable() {
+			return this.toTable;
+		}
+		
+		public BaseData.Data getField() {
+			return this.field;
 		}
 	}
 	
@@ -113,8 +181,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		try {
 			BaseData.dbStartTransaction();
 			this.form.save();
-			FormQueueData formQueue = new FormQueueData();			 
-			formQueue.saveQueryString(this.getTableId(), String.valueOf(this.form.getParent().getId()), this.form.getQueryString(), "0", "A");
+			this.form.getFormQueue().save();
 			BaseData.dbCommit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,9 +196,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected static boolean isOnline() {
 		return ApplicationConstants.getCurrentOnlineStatus();
 	}
-	
-	
-	
 	
 	private void request(RequestBuilder.Method method, String url, String postData) {
 		RequestBuilder builder = new RequestBuilder(method, URL.encode(url));
@@ -236,7 +300,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		
 		String[] tempListString = new String[] {};
 		// This client passed in a value for id
-		if(args[0] != null){
+		if(args[0] != null || !this.getFields()[0].equals("id")){
 			for(int i=0; i < tempList.size(); i++) {
 				tempListString[i] = (String)tempList.get(i);
 			}

@@ -25,7 +25,7 @@ public class TrainingsData extends BaseData {
 	public class Data extends BaseData.Data {
 		
 		final private String COLLECTION_PREFIX = "training";
-		
+
 		private String training_purpose;
 		private String training_outcome;
 		private String training_start_date;
@@ -33,9 +33,32 @@ public class TrainingsData extends BaseData {
 		private VillagesData.Data village;
 		private DevelopmentManagersData.Data development_manager_present;
 		private FieldOfficersData.Data field_officer_present;
-		
+	
 		public Data(){
 			super();
+			this.addManyToManyRelationship((new AnimatorsData()).new Data(), 
+					(new TrainingAnimatorsTrainedData()).new Data(), 
+					"animators_trained");
+		}
+
+		public Data(String id, String training_start_date){
+			super();
+			this.id = id;
+			this.training_start_date = training_start_date;
+		}
+		
+		public Data(String id, String training_start_date, VillagesData.Data village){
+			super();
+			this.id = id;
+			this.training_start_date = training_start_date;
+			this.village = village;	
+		}
+
+		public Data(String id, String training_purpose, String training_outcome){
+			super();
+			this.id = id;
+			this.training_purpose = training_purpose;
+			this.training_outcome = training_outcome;
 		}
 		
 		public Data(String id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
@@ -51,74 +74,42 @@ public class TrainingsData extends BaseData {
 			this.field_officer_present = field_officer_present;
 		}
 		
-		public Data(String id, String training_start_date, VillagesData.Data village){
-			super();
-			this.id = id;
-			this.training_start_date = training_start_date;
-			this.village = village;
-		}
-		public Data(String id, String training_start_date){
-			super();
-			this.id = id;
-			this.training_start_date = training_start_date;
+		public String getTrainingStartDate() {
+			return this.training_start_date;
 		}
 		
-		public String getTrainigPurpose() { 
-			return this.training_purpose; 
-		}
-		
-		public String getTrainingOutcome() { 
-			return this.training_outcome; 
-		}
-		
-		public String getTrainingStartDate() { 
-			return this.training_start_date; 
-		}
-		
-		public String getTrainingEndDate() { 
-			return this.training_end_date; 
-		}
-		
-		public VillagesData.Data getVillage(){
+		public VillagesData.Data getVillage() {
 			return this.village;
 		}
 		
-		public DevelopmentManagersData.Data getDevelopmentManager(){
-			return this.development_manager_present;
-		}
-		
-		public FieldOfficersData.Data getFieldOfficer(){
-			return this.field_officer_present;
-		}
-		
 		@Override
-		public BaseData.Data clone(){
+		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.village = (new VillagesData()).new Data();
+			obj.development_manager_present = (new DevelopmentManagersData()).new Data();
+			obj.field_officer_present = (new FieldOfficersData()).new Data();	
 			return obj;
 		}
 		
 		@Override
-		public String getPrefixName(){
+		public String getPrefixName() {
 			return this.COLLECTION_PREFIX;
 		}
 		
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			}
-			else if(key.equals("training_purpose")){
-				this.training_purpose = (String)val;
+			if(key.equals("training_purpose")){
+				this.training_purpose = val;
 			}
 			else if(key.equals("training_outcome")){
-				this.training_outcome = (String)val;
+				this.training_outcome = val;
 			}
 			else if(key.equals("training_start_date")){
-				this.training_start_date = (String)val;
+				this.training_start_date = val;
 			}
 			else if(key.equals("training_end_date")){
-				this.training_end_date = (String)val;
+				this.training_end_date = val;
 			}
 			else if(key.equals("village")){
 				VillagesData village1 = new VillagesData();
@@ -134,11 +125,14 @@ public class TrainingsData extends BaseData {
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
 				this.field_officer_present = fieldofficer1.getNewData();
 				this.field_officer_present.id = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
-		public void save(){
+		public void save() {
 			TrainingsData trainingsDataDbApis = new TrainingsData();
 			this.id = trainingsDataDbApis.autoInsert(this.id, 
 					this.training_purpose, 
@@ -148,6 +142,13 @@ public class TrainingsData extends BaseData {
 					this.village.getId(),
 					this.development_manager_present.getId(),
 					this.field_officer_present.getId());
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			TrainingsData trainingsDataDbApis = new TrainingsData();
+			return trainingsDataDbApis.tableID;
 		}
 	}
 
@@ -158,14 +159,14 @@ public class TrainingsData extends BaseData {
 												"TRAINING_OUTCOME TEXT  NOT NULL ," +
 												"TRAINING_START_DATE DATE  NULL DEFAULT NULL," +
 												"TRAINING_END_DATE DATE  NULL DEFAULT NULL," +
-												"village_id INT  NOT NULL DEFAULT 0," +
-												"dm_id INT  NOT NULL DEFAULT 0," +
-												"fieldofficer_id INT  NOT NULL DEFAULT 0, " +
+												"village_id INT NOT NULL DEFAULT 0," +
+												"dm_id INT NULL DEFAULT 0," +
+												"fieldofficer_id INT NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(dm_id) REFERENCES development_manager(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id));" ;  
-	protected static String selectTrainings = "SELECT id, TRAINING_PURPOSE, TRAINING_OUTCOME, TRAINING_START_DATE, TRAINING_END_DATE FROM training ORDER BY (id)";
-	protected static String listTrainings = "SELECT training.id, training.training_purpose, training.training_outcome, training.training_start_date, training.training_end_date, village.id, village.village_name, development_manager.id, development_manager.name, field_officer.id, field_officer.name FROM training JOIN village ON training.village_id = village.id JOIN development_manager ON training.dm_id = development_manager.id JOIN field_officer ON training.fieldofficer_id = field_officer.id ORDER BY (training.id);";
+	protected static String selectTrainings = "SELECT id, TRAINING_PURPOSE, TRAINING_OUTCOME, TRAINING_START_DATE, TRAINING_END_DATE FROM training ORDER BY (-id)";
+	protected static String listTrainings = "SELECT training.id, training.training_purpose, training.training_outcome, training.training_start_date, training.training_end_date, village.id, village.village_name, development_manager.id, development_manager.name, field_officer.id, field_officer.name FROM training LEFT JOIN village ON training.village_id = village.id LEFT JOIN development_manager ON training.dm_id = development_manager.id JOIN field_officer ON training.fieldofficer_id = field_officer.id ORDER BY (training.id);";
 	protected static String saveTrainingOnlineURL = "/dashboard/savetrainingonline/";
 	protected static String getTrainingsOnlineURL = "/dashboard/gettrainingsonline/";
 	protected static String saveTrainingOfflineURL = "/dashboard/savetrainingoffline/";
@@ -193,7 +194,7 @@ public class TrainingsData extends BaseData {
 	protected String getTableId() {
 		return TrainingsData.tableID;
 	}
-	
+
 	@Override
 	protected String getTableName() {
 		return this.table_name;
@@ -208,7 +209,6 @@ public class TrainingsData extends BaseData {
 	public String getListingOnlineURL(){
 		return TrainingsData.getTrainingsOnlineURL;
 	}
-
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

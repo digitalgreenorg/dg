@@ -29,7 +29,7 @@ public class AnimatorsData extends BaseData {
 	
 	public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "home_village";
+		final private static String COLLECTION_PREFIX = "animator";
 		
 		private String name;
 		private String age;

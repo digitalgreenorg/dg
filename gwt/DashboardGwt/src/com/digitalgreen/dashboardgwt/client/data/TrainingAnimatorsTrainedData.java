@@ -19,21 +19,21 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	
 	public class Data extends BaseData.Data {
 		
-		final private String COLLECTION_PREFIX = "trainingAnimatorsTrained";
+		final private String COLLECTION_PREFIX = "traininganimatorstrained";
 		
 		private TrainingsData.Data training;
 		private AnimatorsData.Data animator;
 		
-		public Data(){
+		public Data() {
 			super();
 		}
 		
-		public Data(String id){
+		public Data(String id) {
 			super();
 			this.id = id;
 		}
 		
-		public Data(String id, TrainingsData.Data training, AnimatorsData.Data animator){
+		public Data(String id, TrainingsData.Data training, AnimatorsData.Data animator) {
 			super();
 			this.id = id;
 			this.training = training;
@@ -51,9 +51,11 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.animator = ((new AnimatorsData()).new Data());
+			obj.training = ((new TrainingsData()).new Data());
 			return obj;
 		}
-		
+
 		@Override
 		public String getPrefixName(){
 			return this.COLLECTION_PREFIX;
@@ -62,10 +64,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			}
-			else if(key.equals("training")){
+			if(key.equals("training")){
 				TrainingsData training1 = new TrainingsData();
 				this.training = training1.getNewData();
 				this.training.id = val;
@@ -74,16 +73,35 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 				AnimatorsData animator1 = new AnimatorsData();
 				this.animator = animator1.getNewData();
 				this.animator.id = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
 		public void save(){
 			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
-			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(
-					this.id,
+			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(this.id,
 					this.training.getId(), 
 					this.animator.getId());
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public void save(BaseData.Data foreignKey){
+			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
+			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(this.id,
+					foreignKey.getId(), 
+					this.animator.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("training", foreignKey.getId());
+		}
+		
+		@Override
+		public String getTableId() {
+			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
+			return trainingAnimatorsTrainedDataDbApis.tableID;
 		}
 	}
 	
@@ -250,7 +268,5 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 			return true;
 		}
 		return false;
-	}
-	
-	
+	}	
 }

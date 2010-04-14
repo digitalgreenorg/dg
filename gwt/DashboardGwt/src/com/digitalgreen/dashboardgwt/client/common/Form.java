@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
+import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
 import com.digitalgreen.dashboardgwt.client.data.BaseData.Data;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 public class Form {
@@ -13,6 +15,7 @@ public class Form {
 	private Object[] dependents = null;
 	private HashMap dataFormat = null;
 	private String queryString = null;
+	private FormQueueData formQueue = null;
 	
 	public Form() {}
 	
@@ -20,12 +23,14 @@ public class Form {
 		this.parent = parent;
 		this.dependents = new Object[] {};
 		this.dataFormat = new HashMap();
+		this.formQueue = new FormQueueData();
 	}
 	
 	public Form(BaseData.Data parent, Object[] dependents) {
 		this.parent = parent;
 		this.dependents = dependents;
 		this.dataFormat = new HashMap();
+		this.formQueue = new FormQueueData();
 	}
 	
 	public BaseData.Data getParent() {
@@ -40,8 +45,12 @@ public class Form {
 		return this.queryString;
 	}
 
+	public FormQueueData getFormQueue() {
+		return this.formQueue;
+	}
+	
 	public void setQueryString(String queryString) {
-		this.queryString = queryString;
+		this.queryString = URL.decodeComponent(queryString, true);
 	}
 	
 	// Save the dataFormat representation of the Form.  Transaction details
@@ -50,18 +59,30 @@ public class Form {
 		this.parseQueryString(this.queryString);
 		// Save the parent first to get a FK for its dependents
 		this.parent.save();
+		FormQueueData.Data formQueueAdd = this.formQueue.initFormQueueAdd(this.parent.getTableId(), 
+				this.parent.getId(), this.parent.getQueryString());
+		this.formQueue.addFormQueueData(formQueueAdd);
 		Object[] dataFormatKeys = dataFormat.keySet().toArray();
 		for(int i=0; i < dataFormatKeys.length; i++) {
-			if(dataFormatKeys[i].equals(this.parent.getPrefixName())) {
+			// We already saved the parent so don't bother going over it again
+			if(dataFormatKeys[i].equals(this.parent.getPrefixName()) ||
+					dataFormatKeys[i].equals(this.parent.getPrefixName() + "_set")) {
 				continue;
 			}
 			Object value = dataFormat.get(dataFormatKeys[i]);
 			if(value instanceof ArrayList) {
 				for(int j=0; j < ((ArrayList)value).size(); j++) {
-					((BaseData.Data)((ArrayList)value).get(j)).save(this.parent);
+					BaseData.Data dependentData = (BaseData.Data)((ArrayList)value).get(j);
+					dependentData.save(this.parent);
+					formQueueAdd = this.formQueue.initFormQueueAdd(dependentData.getTableId(), 
+							dependentData.getId(), dependentData.getQueryString()); 
+					this.formQueue.addFormQueueData(formQueueAdd);
 				}
 			} else {
 				((BaseData.Data)value).save(this.parent);
+				formQueueAdd = this.formQueue.initFormQueueAdd(((BaseData.Data)value).getTableId(), 
+						((BaseData.Data)value).getId(), ((BaseData.Data)value).getQueryString());
+				this.formQueue.addFormQueueData(formQueueAdd);
 			}
 		}
 	}
@@ -73,7 +94,18 @@ public class Form {
 			String[] nameValueList = queryStringList[i].split("=");
 			// Discard null query params.  No value inputted by user.
 			if(nameValueList[1] != null) {
-				formHashMap.put(nameValueList[0], nameValueList[1]);
+				Object value = formHashMap.get(nameValueList[0]);
+				if (value == null) {
+					formHashMap.put(nameValueList[0], nameValueList[1]);
+				} else if (value instanceof ArrayList) {
+					((ArrayList)value).add(nameValueList[1]);
+				} else {
+					ArrayList arrayValue = new ArrayList();
+					arrayValue.add(value);
+					arrayValue.add(nameValueList[1]);
+					formHashMap.remove(nameValueList[0]);
+					formHashMap.put(nameValueList[0], arrayValue);
+				}
 			}
 		}
 		return formHashMap;
@@ -85,7 +117,7 @@ public class Form {
 	}
 	
 	private void setDataObjectField(BaseData.Data dataObj, String key, Object val) {
-		if(val != null) {	
+		if(val != null && val instanceof String) {	
 			dataObj.setObjValueFromString(key, (String)val);
 		}
 	}
@@ -106,8 +138,9 @@ public class Form {
 		HashMap firstPassDict = new HashMap();
 		String prefixName = getCollectionNameFromArray(dependentList);
 		Object[] sourceKeys = sourceDict.keySet().toArray();
+		String[] splitSourceKey = null;
 		for(int i=0; i < sourceKeys.length; i++) {
-			String[] splitSourceKey = ((String)sourceKeys[i]).split("-");
+			splitSourceKey = ((String)sourceKeys[i]).split("-");
 			// Case 1:  persongroups_set
 			// Case 2:  home_village (no set included for whatever reason
 			// And check if persongroups_set-1 (that 1 is an integer.  Sometimes
@@ -146,14 +179,45 @@ public class Form {
 		dataFormat.put(prefixName, newDataObj);
 	}
 	
+	private void createManyToManyRelationships(BaseData.Data parent, HashMap sourceDict) {
+		if(!parent.hasManyToManyRelationships()) {
+			return;
+		}
+		Object[] sourceKeys = sourceDict.keySet().toArray();
+		for(int i=0; i < sourceKeys.length; i++) {
+			Object value = sourceDict.get(sourceKeys[i]);
+			if(!(value instanceof ArrayList)) {
+				continue;
+			}
+			HashMap manyToManyRelationshipMap = parent.getManyToManyRelationships();
+			BaseData.ManyToManyRelationship manyToManyRelationship = (BaseData.ManyToManyRelationship)manyToManyRelationshipMap.get((String)sourceKeys[i]);
+			if(manyToManyRelationship != null) {
+				ArrayList listBaseData = new ArrayList();
+				ArrayList srcValue = (ArrayList)value;
+				for(int j=0; j < srcValue.size(); j++) {
+					BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+					setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), srcValue.get(j));
+					listBaseData.add(baseData);
+				}
+				dataFormat.put(manyToManyRelationship.getAttributeCollectionName(), listBaseData);
+			}
+		}
+	}
+	
 	private void collectParent(BaseData.Data parent, HashMap sourceDict) {
 		Object[] sourceKeys = sourceDict.keySet().toArray();
+		this.parent = parent.clone();
 		for(int i=0; i < sourceKeys.length; i++) {
 			setDataObjectField(this.parent, (String)sourceKeys[i], sourceDict.get(sourceKeys[i]));
 		}
 		dataFormat.put((String)parent.getPrefixName(), this.parent);
+		try {
+			this.createManyToManyRelationships(this.parent, sourceDict);
+		} catch (Exception e) {
+			Window.alert("Exception : " + e.toString());
+		}
 	}
-	
+
 	// Return a tree data representation of a parsed query string.
 	public void parseQueryString(String queryString) {
 		HashMap sourceDict = Form.flatten(queryString);

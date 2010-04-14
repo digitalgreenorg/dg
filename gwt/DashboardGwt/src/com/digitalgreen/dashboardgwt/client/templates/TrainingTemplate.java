@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 
@@ -25,7 +26,7 @@ public class TrainingTemplate extends BaseTemplate{
 		requestContext.setArgs(args);
 		Trainings addTrainingsServlet = new Trainings(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new TrainingsData()).getNewData());
+		Form saveForm = new Form((new TrainingsData()).new Data());
 		saveRequestContext.setForm(saveForm);
 		Trainings saveTraining = new Trainings(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)

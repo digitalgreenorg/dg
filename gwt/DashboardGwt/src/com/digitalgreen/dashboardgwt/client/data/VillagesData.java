@@ -77,6 +77,7 @@ public class VillagesData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			BlocksData.Data blocks = ((new BlocksData()).new Data());
 			return obj;
 		}
 		
