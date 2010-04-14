@@ -186,18 +186,21 @@ public class Form {
 		Object[] sourceKeys = sourceDict.keySet().toArray();
 		for(int i=0; i < sourceKeys.length; i++) {
 			Object value = sourceDict.get(sourceKeys[i]);
-			if(!(value instanceof ArrayList)) {
-				continue;
-			}
 			HashMap manyToManyRelationshipMap = parent.getManyToManyRelationships();
 			BaseData.ManyToManyRelationship manyToManyRelationship = (BaseData.ManyToManyRelationship)manyToManyRelationshipMap.get((String)sourceKeys[i]);
 			if(manyToManyRelationship != null) {
 				ArrayList listBaseData = new ArrayList();
-				ArrayList srcValue = (ArrayList)value;
-				for(int j=0; j < srcValue.size(); j++) {
+				if(!(value instanceof ArrayList)) {
 					BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
-					setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), srcValue.get(j));
+					setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), value);
 					listBaseData.add(baseData);
+				} else {
+					ArrayList srcValue = (ArrayList)value;
+					for(int j=0; j < srcValue.size(); j++) {
+						BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+						setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), srcValue.get(j));
+						listBaseData.add(baseData);
+					}
 				}
 				dataFormat.put(manyToManyRelationship.getAttributeCollectionName(), listBaseData);
 			}
