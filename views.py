@@ -34,7 +34,7 @@ def search(request):
         app_label = request.GET.get('app_label', None)
         model_name = request.GET.get('model_name', None)
         search_fields = request.GET.get('search_fields', None)
-
+        
         if search_fields and app_label and model_name and query:
             def construct_search(field_name):
                 # use different lookup methods depending on the notation
@@ -534,6 +534,23 @@ def save_video_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")    
+
+
+def save_videoagriculturalpractices_online(request):
+    if request.method == 'POST':
+        form = VideoAgriculturalPracticesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getvideoagriculturalpracticesonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = VideoAgriculturalPracticesForm()
+    	villages = get_user_villages(request);
+        form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+        form.fields['practice'].queryset = Practices.objects.distinct().order_by('practice_name')
+    	return HttpResponse(form); 
 		
 def get_videoagriculturalpractices_online(request):
 	if request.method == 'POST':
@@ -544,6 +561,35 @@ def get_videoagriculturalpractices_online(request):
         videoagriculturalpractices = VideoAgriculturalPractices.objects.filter(video__in = videos).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", videoagriculturalpractices)
         return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_videoagriculturalpractices_offline(request):
+	if request.method == 'POST':
+		form = VideoAgriculturalPracticesForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")    
+
+
+def save_personshowninvideo_online(request):
+    if request.method == 'POST':
+        form = PersonShownInVideoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getpersonshowninvideoonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = PersonShownInVideoForm()
+    	villages = get_user_villages(request);
+        form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+        form.fields['person'].queryset = Person.objects.distinct().order_by('person_name')
+    	return HttpResponse(form);
+
 			
 def get_personshowninvideo_online(request):
 	if request.method == 'POST':
@@ -554,6 +600,17 @@ def get_personshowninvideo_online(request):
         personshowninvideo = PersonShownInVideo.objects.filter(video__in = videos).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", personshowninvideo)
         return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_personshowninvideo_offline(request):
+	if request.method == 'POST':
+		form = PersonShownInVideoForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")    
 			
 		
 def save_district_online(request):
@@ -988,6 +1045,27 @@ def save_screening_offline(request):
 		else:
 			return HttpResponse("0")
 
+
+#functions for GROUPSTARGETEDINSCREENING with user specific feature.
+#save_online function, get_online and save_offline functions of GROUPSTARGETEDINSCREENING with regionalization feature
+
+def save_groupstargetedinscreening_online(request):
+    if request.method == 'POST':
+        form = GroupsTargetedInScreeningForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getgroupstargetedinscreeningonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = GroupsTargetedInScreeningForm()
+    	villages = get_user_villages(request);
+        form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
+        form.fields['persongroups'].queryset = PersonGroup.objects.filter(village__in = villages).distinct().order_by('group_name')
+        return HttpResponse(form);
+	
+
 def get_groupstargetedinscreening_online(request):
 	if request.method == 'POST':
 		return redirect('groupstargetedinscreening')
@@ -997,7 +1075,36 @@ def get_groupstargetedinscreening_online(request):
         groupstargetedinscreening = GroupsTargetedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", groupstargetedinscreening)
         return HttpResponse(json_subcat, mimetype="application/javascript")
-       
+
+
+def save_groupstargetedinscreening_offline(request):
+	if request.method == 'POST':
+		form = GroupsTargetedInScreeningForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+#functions for VIDEOSSCREENEDINSCREENING with user specific feature.
+#save_online function, get_online and save_offline functions of VIDEOSSCREENEDINSCREENING with regionalization feature
+def save_videosscreenedinscreening_online(request):
+    if request.method == 'POST':
+        form = VideosScreenedInScreeningForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getvideosscreenedinscreeningonline/')
+        else:
+        	#print form.errors
+        	return HttpResponse("0")
+    else:
+    	form = VideosScreenedInScreeningForm()
+    	villages = get_user_villages(request);
+        form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
+        form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+        return HttpResponse(form);
+      
 
 def get_videosscreenedinscreening_online(request):
 	if request.method == 'POST':
@@ -1008,7 +1115,17 @@ def get_videosscreenedinscreening_online(request):
         videosscreenedinscreening = VideosScreenedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
         json_subcat = serializers.serialize("json", videosscreenedinscreening)
         return HttpResponse(json_subcat, mimetype="application/javascript")
-       
+
+def save_videosscreenedinscreening_offline(request):
+	if request.method == 'POST':
+		form = VideosScreenedInScreeningForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")       
 #functions for TRAINING with user specific feature.
 #save_online function, get_online and save_offline functions of TRAINING with regionalization feature
 def save_training_online(request):
