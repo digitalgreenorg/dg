@@ -50,17 +50,26 @@ public class LanguagesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("language_name")) {
+			if(key.equals("language_name")) {
 				this.language_name = (String)val;
-			}			
+			}
+			else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
 		public void save() {
 			LanguagesData languagesDataDbApis = new LanguagesData();
 			this.id = languagesDataDbApis.autoInsert(this.id, this.language_name);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			LanguagesData languagesDataDbApis = new LanguagesData();
+			return languagesDataDbApis.tableID;
 		}
 	}
 	

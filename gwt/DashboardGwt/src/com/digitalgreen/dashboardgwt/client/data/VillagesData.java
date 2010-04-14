@@ -289,7 +289,7 @@ public class VillagesData extends BaseData {
 		List partners = partnerData.getAllPartnersOffline();
 		PartnersData.Data partner;
 		for(int inline = 0; inline < 5; inline++){
-			html += "<select name=\"home_village-" + inline + "-partner\" id=\"id_home_village-" + inline +"-partner\">";
+			html += "<select name=\"animator-" + inline + "-partner\" id=\"id_animator-" + inline +"-partner\">";
 			html += "<option value = \"\">" + "---------" + "</option>";
 			for(int i=0; i< partners.size(); i++){
 				partner = (PartnersData.Data)partners.get(i);
