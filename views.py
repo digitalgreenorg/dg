@@ -535,6 +535,27 @@ def save_video_offline(request):
 		else:
 			return HttpResponse("0")    
 		
+def get_videoagriculturalpractices_online(request):
+	if request.method == 'POST':
+		return redirect('videoagriculturalpractices')
+	else:
+		villages = get_user_villages(request)
+		videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
+        videoagriculturalpractices = VideoAgriculturalPractices.objects.filter(video__in = videos).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", videoagriculturalpractices)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+			
+def get_personshowninvideo_online(request):
+	if request.method == 'POST':
+		return redirect('personshowninvideo')
+	else:
+		villages = get_user_villages(request)
+		videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
+        personshowninvideo = PersonShownInVideo.objects.filter(video__in = videos).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", personshowninvideo)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+			
+		
 def save_district_online(request):
 	if request.method == 'POST':
 		form = DistrictForm(request.POST)
@@ -661,7 +682,7 @@ def get_equipments_online(request):
 		return redirect('equipments')
 	else:
 		equipments = Equipment.objects.select_related('region').order_by("-id")
-		json_subcat = serializers.serialize("json", equipments,  relations=('region',))
+		json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_equipment_offline(request):
@@ -852,7 +873,7 @@ def get_persongroups_online(request):
 	else:
 		villages = get_user_villages(request)
 		persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", persongroups,  relations=('person','village'))
+		json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_persongroup_offline(request):
@@ -902,7 +923,7 @@ def get_persons_online(request):
 		villages = get_user_villages(request)
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
 		#persons = Person.objects.filter(id__in = [1097,1109]);
-		json_subcat = serializers.serialize("json", persons,  relations=('group','village','practice'))
+		json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_person_offline(request):
@@ -953,7 +974,7 @@ def get_screenings_online(request):
 	else:
 		villages = get_user_villages(request)
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", screenings,  relations=('village','fieldofficer','animator'))
+		json_subcat = serializers.serialize("json", screenings,  relations=('village',))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_screening_offline(request):
@@ -967,6 +988,27 @@ def save_screening_offline(request):
 		else:
 			return HttpResponse("0")
 
+def get_groupstargetedinscreening_online(request):
+	if request.method == 'POST':
+		return redirect('groupstargetedinscreening')
+	else:
+		villages = get_user_villages(request)
+		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
+        groupstargetedinscreening = GroupsTargetedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", groupstargetedinscreening)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+
+def get_videosscreenedinscreening_online(request):
+	if request.method == 'POST':
+		return redirect('videosscreenedinscreening')
+	else:
+		villages = get_user_villages(request)
+		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
+        videosscreenedinscreening = VideosScreenedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
+        json_subcat = serializers.serialize("json", videosscreenedinscreening)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
 #functions for TRAINING with user specific feature.
 #save_online function, get_online and save_offline functions of TRAINING with regionalization feature
 def save_training_online(request):
@@ -991,7 +1033,7 @@ def get_trainings_online(request):
     else:
     	villages = get_user_villages(request);
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", trainings, relations=('village','development_manager_present','field_officer_present'))
+        json_subcat = serializers.serialize("json", trainings, relations=('village',))
         return HttpResponse(json_subcat, mimetype="application/javascript")
              
        
@@ -1084,7 +1126,7 @@ def get_personrelations_online(request):
 		villages = get_user_villages(request);
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
 		personrelations = PersonRelations.objects.filter(person__in = persons).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personrelations,  relations=('person',))
+		json_subcat = serializers.serialize("json", personrelations)
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personrelation_offline(request):
@@ -1164,7 +1206,7 @@ def get_personmeetingattendances_online(request):
 		villages = get_user_villages(request);
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
 		personmeetingattendances = PersonMeetingAttendance.objects.filter(screening__in = screenings).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personmeetingattendances,  relations=('person','screening',))
+		json_subcat = serializers.serialize("json", personmeetingattendances)
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personmeetingattendance_offline(request):
@@ -1205,7 +1247,7 @@ def get_personadoptpractices_online(request):
 		villages = get_user_villages(request);
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
 		personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personadoptpractices,  relations=('person','practice'))
+		json_subcat = serializers.serialize("json", personadoptpractices)
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personadoptpractice_offline(request):

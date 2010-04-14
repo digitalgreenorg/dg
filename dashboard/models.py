@@ -388,7 +388,7 @@ class Video(models.Model):
 	unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
     def __unicode__(self):
 	return  u'%s (%s)' % (self.title, self.village)
-
+    
 class Practices(models.Model):
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
     seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
@@ -400,7 +400,17 @@ class Practices(models.Model):
     def __unicode__(self):
         return self.practice_name
 
+class VideoAgriculturalPractices(models.Model):
+    video = models.ForeignKey(Video, db_column='video_id')
+    practice = models.ForeignKey(Practices, db_column='practices_id')
+    class Meta:
+        db_table = u'VIDEO_related_agricultural_practices'
 
+class PersonShownInVideo(models.Model):
+    video = models.ForeignKey(Video, db_column='video_id')
+    person = models.ForeignKey(Person, db_column='person_id')
+    class Meta:
+        db_table = u'VIDEO_farmers_shown'
 
 class Screening(models.Model):
     date = models.DateField(db_column='DATE') 
@@ -413,7 +423,7 @@ class Screening(models.Model):
     village = models.ForeignKey(Village)
     fieldofficer = models.ForeignKey(FieldOfficer, null=True, blank=True)
     animator = models.ForeignKey(Animator)
-    farmer_groups_targeted = models.ManyToManyField(PersonGroups,null=True,blank=True)
+    farmer_groups_targeted = models.ManyToManyField(PersonGroups)
     videoes_screened = models.ManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
@@ -423,7 +433,17 @@ class Screening(models.Model):
     def __unicode__(self):
 	       return u'%s %s' % (self.date, self.village)
 
+class GroupsTargetedInScreening(models.Model):
+    screening = models.ForeignKey(Screening, db_column='screening_id')
+    persongroups = models.ForeignKey(PersonGroups, db_column='persongroups_id')
+    class Meta:
+        db_table = u'SCREENING_farmer_groups_targeted'
 
+class VideosScreenedInScreening(models.Model):
+    screening = models.ForeignKey(Screening, db_column='screening_id')
+    video = models.ForeignKey(Video, db_column='video_id')
+    class Meta:
+        db_table = u'SCREENING_videoes_screened'
 
 class PersonMeetingAttendance(models.Model):
     screening = models.ForeignKey(Screening)

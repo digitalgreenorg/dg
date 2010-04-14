@@ -75,17 +75,30 @@ class VillageForm(forms.ModelForm):
 	class Meta:
 		model = Village
 
-class VideoForm(forms.ModelForm):
-    #def __init__(self,*args,**kwargs):
-        #super(VideoForm, self).__init__(*args,**kwargs) # populates the post
-        
+class VideoForm(forms.ModelForm):       
 	class Meta:
 		model = Video
+
+class VideoAgriculturalPracticesForm(forms.ModelForm):       
+    class Meta:
+        model = VideoAgriculturalPractices
+
+class PersonShownInVideoForm(forms.ModelForm):
+    class Meta:
+        model = PersonShownInVideo
 
 class ScreeningForm(forms.ModelForm):
 	class Meta:
 		model = Screening
 		exclude = ('farmers_attendance',)
+
+class GroupsTargetedInScreeningForm(forms.ModelForm):
+    class Meta:
+        model = GroupsTargetedInScreening        
+        
+class VideosScreenedInScreeningForm(forms.ModelForm):
+    class Meta:
+        model = VideosScreenedInScreening        
 		
 class TrainingForm(forms.ModelForm):
 	class Meta:
