@@ -11,6 +11,7 @@ import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Type;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.gears.client.database.DatabaseException;
 
 public class ScreeningsData extends BaseData {
 
@@ -47,10 +48,7 @@ public class ScreeningsData extends BaseData {
 	    private VillagesData.Data village;
 	    private FieldOfficersData.Data fieldofficer; 
 	    private AnimatorsData.Data animator;
-	    private PersonGroupsData.Data farmer_groups_targeted; 
-	    private VideosData.Data videoes_screened;
-	    private PersonMeetingAttendanceData.Data farmers_attendance;    
-	    
+	   	    
 	    public Data() {
 			super();
 		}
@@ -59,11 +57,13 @@ public class ScreeningsData extends BaseData {
 			super();
 			this.id = id;
 			this.date = date;
+			this.location = location;
 		}
 		
-
-		public Data(String id, String date ,String start_time, String end_time, String location,String target_person_attendance,
-				String target_audience_interest,VillagesData.Data village) {
+		public Data(String id, String date ,String start_time, String end_time, String location, String target_person_attendance,
+				String target_audience_interest, String target_adoptions, VillagesData.Data village, FieldOfficersData.Data fieldofficer,
+				AnimatorsData.Data animator) {
+			
 			super();
 			this.id = id;
 			this.date = date;
@@ -72,6 +72,24 @@ public class ScreeningsData extends BaseData {
 			this.location = location;
 			this.target_person_attendance = target_person_attendance;
 			this.target_audience_interest = target_audience_interest;
+			this.target_adoptions = target_adoptions;
+			this.village = village;
+			this.fieldofficer = fieldofficer;
+			this.animator = animator;
+		}
+		
+		public Data(String id, String date ,String start_time, String end_time, String location, String target_person_attendance,
+				String target_audience_interest, String target_adoptions, VillagesData.Data village ) {
+			
+			super();
+			this.id = id;
+			this.date = date;
+			this.start_time = start_time;
+			this.end_time = end_time;
+			this.location = location;
+			this.target_person_attendance = target_person_attendance;
+			this.target_audience_interest = target_audience_interest;
+			this.target_adoptions = target_adoptions;
 			this.village = village;
 		}
 		
@@ -93,11 +111,20 @@ public class ScreeningsData extends BaseData {
 		public String getTargetAudienceInterest(){
 			return this.target_audience_interest;
 		}
+		public String getTargetAdoptions(){
+			return this.target_adoptions;
+		}
 		public VillagesData.Data getVillage(){
 			return this.village;
 		}
+		public FieldOfficersData.Data getFieldOfficer(){
+			return this.fieldofficer;
+		}
+		public AnimatorsData.Data getCameraOperator() { 
+			return this.animator;
+		}
 		
-	
+		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			return obj;
@@ -139,23 +166,8 @@ public class ScreeningsData extends BaseData {
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
 				this.animator.id = val;
-			} else if(key.equals("farmer_groups_targeted")){
-				PersonGroupsData farmer_groups_targeted = new PersonGroupsData();
-				this.farmer_groups_targeted = farmer_groups_targeted.getNewData();
-				this.farmer_groups_targeted.id = val;
-			} else if(key.equals("videoes_screened")){
-				VideosData videoes_screened = new VideosData();
-				this.videoes_screened = videoes_screened.getNewData();
-				this.videoes_screened.id = val;
-			} else if(key.equals("farmers_attendance")) {
-				PersonMeetingAttendanceData farmers_attendance = new PersonMeetingAttendanceData();
-				this.farmers_attendance = farmers_attendance.getNewData();
-				this.farmers_attendance.id = val;
-			} 
-			
-			
+			}
 		}
-		
 		
 		@Override
 		public void save() {
@@ -171,13 +183,9 @@ public class ScreeningsData extends BaseData {
 					this.target_adoptions,
 					this.village.getId(),
 					this.fieldofficer.getId(),
-					this.animator.getId(),
-					this.farmer_groups_targeted.getId(),
-					this.videoes_screened.getId(),
-					this.farmers_attendance.getId());
+					this.animator.getId());
 		}
 	}
-	
 	
 	protected static String tableID = "25";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening` " +
@@ -204,10 +212,9 @@ public class ScreeningsData extends BaseData {
 	protected static String getScreeningOnlineURL = "/dashboard/getscreeningsonline/";
 	protected static String saveScreeningOfflineURL = "/dashboard/savescreeningoffline/";
 	protected String table_name = "screening";
-	protected String[] fields = {"id", "date", "START_TIME", "END_TIME", "LOCATION", "TARGET_PERSON_ATTENDANCE", "TARGET_AUDIENCE_INTEREST"
-			,"TARGET_ADOPTIONS","village_id", "fieldofficer_id", "animator_id"}; 
+	protected String[] fields = {"id", "date", "START_TIME", "END_TIME", "LOCATION", "TARGET_PERSON_ATTENDANCE", "TARGET_AUDIENCE_INTEREST",
+									"TARGET_ADOPTIONS","village_id", "fieldofficer_id", "animator_id"}; 
 	
-			
 	public ScreeningsData() {
 		super();
 	}
@@ -220,7 +227,6 @@ public class ScreeningsData extends BaseData {
 		super(callbacks, form);
 	}
 	
-
 	@Override
 	public Data getNewData() {
 		return new Data();
@@ -253,15 +259,36 @@ public class ScreeningsData extends BaseData {
 	public List serialize(JsArray<Type> screeningObjects){
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
+		FieldOfficersData fieldofficer = new FieldOfficersData();
+	    AnimatorsData animator = new AnimatorsData();
+	    PersonGroupsData farmer_groups_targeted = new PersonGroupsData();
 		for(int i = 0; i < screeningObjects.length(); i++){
-			VillagesData.Data v = village.new Data(screeningObjects.get(i).getVillage().getPk(), screeningObjects.get(i).getVillage().getVillageName()) ;
+			
+			VillagesData.Data v = village.new Data(screeningObjects.get(i).getVillage().getPk(), 
+										screeningObjects.get(i).getVillage().getVillageName());
+			
+			FieldOfficersData.Data f = null;
+			
+			if(screeningObjects.get(i).getFieldOfficer() != null) {
+				
+				f = fieldofficer.new Data(screeningObjects.get(i).getFieldOfficer().getPk(),
+													screeningObjects.get(i).getFieldOfficer().getFieldOfficerName());
+			} else {
+				f = null;
+			}
+			
+			AnimatorsData.Data a = animator.new Data(screeningObjects.get(i).getCameraOperator().getPk(),
+													screeningObjects.get(i).getCameraOperator().getAnimatorName());
+			
 			Data screening = new Data(screeningObjects.get(i).getPk(),
-					screeningObjects.get(i).getDate(),
-					screeningObjects.get(i).getStartTime(),
-					screeningObjects.get(i).getEndTime(),
-					screeningObjects.get(i).getLocation(),
-					screeningObjects.get(i).getTargetPersonAttendance(),
-					screeningObjects.get(i).getTargetAudienceInterest(),v);
+									screeningObjects.get(i).getDate(),
+									screeningObjects.get(i).getStartTime(),
+									screeningObjects.get(i).getEndTime(),
+									screeningObjects.get(i).getLocation(),
+									screeningObjects.get(i).getTargetPersonAttendance(),
+									screeningObjects.get(i).getTargetAudienceInterest(),
+									screeningObjects.get(i).getTargetAdoptions(), v, f, a);
+			
 			screenings.add(screening);
 		}
 		
@@ -272,27 +299,144 @@ public class ScreeningsData extends BaseData {
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
-	public Object postPageData() {
-		return null;
+	
+	public List getScreeningsListingOffline(){
+		BaseData.dbOpen();
+		List screenings = new ArrayList();
+		VillagesData village = new VillagesData();
+		this.select(listScreenings);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(8),  this.getResultSet().getFieldAsString(9));
+					
+					Data screening = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
+											this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), 
+											this.getResultSet().getFieldAsString(4),this.getResultSet().getFieldAsString(5),
+											this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7), v);
+					
+					screenings.add(screening);
+				}
+			}
+			catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return screenings;
 	}
 	
-	// Get all information to display the screening add page.
-	public Object getAddPageData() {
-		if(this.isOnline()) {
-			this.get("");
-		} else {
-			this.select("", null);
+	public List getAllScreeningsOffline(){
+		BaseData.dbOpen();
+		List screenings = new ArrayList();
+		this.select(selectScreenings);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data screening = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					screenings.add(screening);
+				}
+			}
+			catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return screenings;
+	}
+	
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + ScreeningsData.saveScreeningOnlineURL, this.form.getQueryString());
+		}
+		else{
+			this.save();
+			return true;
 		}
 		return null;
 	}
 	
 	// Get all information/data to displayt he screening list page.
 	public Object getListPageData() {
-		if(this.isOnline()) {
-			this.get("");
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL);
 		} else {
-			this.select("", null);
+			return true;
 		}
-		return null;		
+		return false;	
+	}
+	
+	public String retrieveDataAndConvertResultIntoHtml(){
+		
+		VillagesData villageData = new VillagesData();
+		List villages = villageData.getAllVillagesOffline();
+		VillagesData.Data village;
+		String html = "<select name=\"village\" id=\"id_village\">" + 
+						"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < villages.size(); i++){
+			village = (VillagesData.Data)villages.get(i);
+			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		AnimatorsData animatorData = new AnimatorsData();
+		List animators = animatorData.getAllAnimatorsOffline();
+		AnimatorsData.Data animator;
+		html = "<select name=\"animator\" id=\"id_animator\">" + 
+				"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < animators.size(); i++){
+			animator = (AnimatorsData.Data)animators.get(i);
+			html = html + "<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		VideosData videoData = new VideosData();
+		List videos = videoData.getAllVideosOffline();
+		VideosData.Data video;
+		html = "<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
+				"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < videos.size(); i++){
+			video = (VideosData.Data)videos.get(i);
+			html = html + "<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>";
+		}
+		html = html + "</select>";
+		
+		FieldOfficersData fieldOfficerData = new FieldOfficersData();
+		List fieldOfficers = fieldOfficerData.getAllFieldOfficersOffline();
+		FieldOfficersData.Data fieldOfficer;
+		html = "<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
+				"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < fieldOfficers.size(); i++){
+			fieldOfficer = (FieldOfficersData.Data)fieldOfficers.get(i);
+			html = html + "<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		PersonGroupsData personGroupData = new PersonGroupsData();
+		List personGroups = personGroupData.getAllPersonGroupsOffline();
+		PersonGroupsData.Data personGroup;
+		html = "<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
+				"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < personGroups.size(); i++){
+			personGroup = (PersonGroupsData.Data)personGroups.get(i);
+			html = html + "<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		return html;
+	}
+	
+	// Get all information to display the screening add page.
+	public Object getAddPageData() {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + ScreeningsData.saveScreeningOnlineURL);
+		} else {
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
 	}
 }
