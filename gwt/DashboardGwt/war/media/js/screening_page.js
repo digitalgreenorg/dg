@@ -68,7 +68,7 @@ jQuery(function($) {
 	});
 	showStatus("Intializing the page. Please wait.");
 	
-	vil_id = $("#id_village_hidden").val()
+	vil_id = $("#id_village").val()
 	if(vil_id>0) {
 	
 	//Case when village is already entered on page load
@@ -307,13 +307,12 @@ function update_id_fields(row, new_position)
 //Function called when village is selected
 function filter()
 {
-	alert("Hi..!!!")
-	if($("#id_village_hidden").val()>0){
+	if($("#id_village").val()>0){
 		showStatus("Loading Person Groups & Animators.");
 		$.ajax({ type: "GET", 
 				dataType: 'json',
 				url: "/feeds/person_pract/", 
-				data:{vil_id:$("#id_village_hidden").val(),mode:1},
+				data:{vil_id:$("#id_village").val(),mode:1},
 				success: function(obj) {
 					update_farmer_groups(eval('('+obj.pg+')'));
 					update_animators(eval('('+obj.anim+')'));
