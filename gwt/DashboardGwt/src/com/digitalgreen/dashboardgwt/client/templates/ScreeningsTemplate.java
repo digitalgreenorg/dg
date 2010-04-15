@@ -23,9 +23,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	public ScreeningsTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
-	
-	public String villageDiv = "";
-	
+		
 	@Override
 	public void fill() {
 		String templateType = "Screening";
@@ -39,9 +37,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		Form saveForm = new Form((new ScreeningsData()).getNewData());
 		saveRequestContext.setForm(saveForm);
 		Screenings saveScreening = new Screenings(saveRequestContext);
-		
-		// creates village div based on online/offline
-		this.createVillage();
+				
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		//Now add listings
@@ -81,60 +77,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 				screeningsListFormHtml = screeningsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
-	}
-	
-	public void createVillage(){
-		Window.alert("online status: " + ApplicationConstants.getCurrentOnlineStatus());
-		
-		if(ApplicationConstants.getCurrentOnlineStatus()){
-			villageDiv = "<input type='hidden' name='village' id='id_village' />" +
-							"<style type='text/css' media='screen'>" +
-							"#lookup_village {" +
-								"padding-right:16px;" +
-								"background: url(" +
-									"/media/img/admin/selector-search.gif" +
-								") no-repeat right;" +
-							"}" +
-							"#del_village {" +
-								"display: none;" +
-							"}" +
-						"</style>" +
-						"<input type='text' id='lookup_village' value='' />" +
-						"<a href='#' id='del_village'>" +
-							"<img src='/media/img/admin/icon_deletelink.gif' />" +
-						"</a>" +
-						"<script type='text/javascript' src='/media/js/jquery.autocomplete.js'></script>"+
-						"<script type='text/javascript'>" +
-							"if ($('#lookup_village').val()) {" +
-								"$('#del_village').show()" +
-							"}" +
-							"$('#lookup_village').autocomplete('/dashboard/search/', {" +
-								"extraParams: {" +
-									"search_fields: 'village_name'," +
-									"app_label: 'dashboard'," +
-									"model_name: 'village'," +
-								"}," +
-							"}).result(function(event, data, formatted) {" +
-								"if (data) {" +
-									"$('#id_village').val(data[1]);" +
-									"$('#del_village').show();" +
-							"filter();" +
-								"}" +
-							"});" +
-							"$('#del_village').click(function(ele, event) {" +
-								"$('#id_village').val('');" +
-								"$('#del_village').hide();" +
-								"$('#lookup_village').val('');" +
-							"});" +
-						"</script>";
-		}
-		else {
-			villageDiv = "<select name='village' id='id_village'>" +
-							"<option value='' selected='selected'>---------</option>" +
-						"</select>";		
-		}
-		
-		Window.alert(villageDiv);
 	}
 	
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};
@@ -196,7 +138,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 //	}-*/;
 //
 	
-	
 	final private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='colM'>" +
 							"<h1>Add screening</h1>" +
@@ -228,48 +169,52 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"</div>" +
 									"<div class='form-row village  '>" +
 										"<div>" +
-											"<label for='id_village' class='required'>Village:</label>" +
-											//villageDiv +
+											"<label for='id_village' class='required'>Village:</label>"+
+											"<select name='village' id='id_village' onchange='filter()'>" +
+												"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
+/*											
 											"<input type='hidden' name='village' id='id_village' />" +
 											"<style type='text/css' media='screen'>" +
-												"#lookup_village {" +
-													"padding-right:16px;" +
-													"background: url(" +
-														"/media/img/admin/selector-search.gif" +
-													") no-repeat right;" +
+											"#lookup_village {" +
+												"padding-right:16px;" +
+												"background: url(" +
+													"/media/img/admin/selector-search.gif" +
+												") no-repeat right;" +
+											"}" +
+											"#del_village {" +
+												"display: none;" +
+											"}" +
+										"</style>" +
+										"<input type='text' id='lookup_village' value='' />" +
+										"<a href='#' id='del_village'>" +
+											"<img src='/media/img/admin/icon_deletelink.gif' />" +
+										"</a>" +
+										"<script type='text/javascript' src='/media/js/jquery.autocomplete.js'></script>"+
+										"<script type='text/javascript'>" +
+											"if ($('#lookup_village').val()) {" +
+												"$('#del_village').show()" +
+											"}" +
+											"$('#lookup_village').autocomplete('/dashboard/search/', {" +
+												"extraParams: {" +
+													"search_fields: 'village_name'," +
+													"app_label: 'dashboard'," +
+													"model_name: 'village'," +
+												"}," +
+											"}).result(function(event, data, formatted) {" +
+												"if (data) {" +
+													"$('#id_village').val(data[1]);" +
+													"$('#del_village').show();" +
+											"filter();" +
 												"}" +
-												"#del_village {" +
-													"display: none;" +
-												"}" +
-											"</style>" +
-											"<input type='text' id='lookup_village' value='' />" +
-											"<a href='#' id='del_village'>" +
-												"<img src='/media/img/admin/icon_deletelink.gif' />" +
-											"</a>" +
-											"<script type='text/javascript' src='/media/js/jquery.autocomplete.js'></script>"+
-											"<script type='text/javascript'>" +
-												"if ($('#lookup_village').val()) {" +
-													"$('#del_village').show()" +
-												"}" +
-												"$('#lookup_village').autocomplete('/dashboard/search/', {" +
-													"extraParams: {" +
-														"search_fields: 'village_name'," +
-														"app_label: 'dashboard'," +
-														"model_name: 'village'," +
-													"}," +
-												"}).result(function(event, data, formatted) {" +
-													"if (data) {" +
-														"$('#id_village').val(data[1]);" +
-														"$('#del_village').show();" +
-												"filter();" +
-													"}" +
-												"});" +
-												"$('#del_village').click(function(ele, event) {" +
-													"$('#id_village').val('');" +
-													"$('#del_village').hide();" +
-													"$('#lookup_village').val('');" +
-												"});" +
-											"</script>" +
+											"});" +
+											"$('#del_village').click(function(ele, event) {" +
+												"$('#id_village').val('');" +
+												"$('#del_village').hide();" +
+												"$('#lookup_village').val('');" +
+											"});" +
+										"</script>" +
+*/											
 										"</div>" +
 									"</div>" +
 									"<div class='form-row animator  '>" +
@@ -359,7 +304,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 							"<br class='clear' />" +
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-						"<script type='text/javascript'>DateTimeShortcuts.init()</script>" +
-						"<script src='/media/js/screening_page.js' type='text/javascript'></script>" +
-						"<script type='text/javascript'>ScreeningPage.filter()</script>";
+						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";// +
+//						"<script src='/DashboardGwt/war/media/js/screening_page_offline.js' type='text/javascript'></script>";
 }
