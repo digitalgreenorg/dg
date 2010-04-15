@@ -64,10 +64,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return this.id;
 		}
 		
-		public void addManyToManyRelationship(BaseData.Data fieldBaseData,
+		public void addManyToManyRelationship(String fieldName,
 				BaseData.Data toTableBaseData,
 				String attributeCollectionName) {
-			ManyToManyRelationship manyToManyRelationships = new ManyToManyRelationship(fieldBaseData,
+			ManyToManyRelationship manyToManyRelationships = new ManyToManyRelationship(fieldName,
 					toTableBaseData, attributeCollectionName);
 			this.manyToManyRelationshipMap.put((String)attributeCollectionName, manyToManyRelationships);
 			this.hasManyToManyRelationships = true;
@@ -102,11 +102,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public class ManyToManyRelationship {
 		
-		private BaseData.Data field;
+		private String field;
 		private BaseData.Data toTable;
 		private String attributeCollectionName;
 	
-		public ManyToManyRelationship(BaseData.Data field, BaseData.Data toTable,
+		public ManyToManyRelationship(String field, BaseData.Data toTable,
 				String attributeCollectionName) {
 			this.field = field;
 			this.toTable = toTable;
@@ -121,7 +121,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return this.toTable;
 		}
 		
-		public BaseData.Data getField() {
+		public String getField() {
 			return this.field;
 		}
 	}

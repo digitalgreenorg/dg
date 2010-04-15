@@ -192,13 +192,13 @@ public class Form {
 				ArrayList listBaseData = new ArrayList();
 				if(!(value instanceof ArrayList)) {
 					BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
-					setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), value);
+					setDataObjectField(baseData, manyToManyRelationship.getField(), value);
 					listBaseData.add(baseData);
 				} else {
 					ArrayList srcValue = (ArrayList)value;
 					for(int j=0; j < srcValue.size(); j++) {
 						BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
-						setDataObjectField(baseData, manyToManyRelationship.getField().getPrefixName(), srcValue.get(j));
+						setDataObjectField(baseData, manyToManyRelationship.getField(), srcValue.get(j));
 						listBaseData.add(baseData);
 					}
 				}

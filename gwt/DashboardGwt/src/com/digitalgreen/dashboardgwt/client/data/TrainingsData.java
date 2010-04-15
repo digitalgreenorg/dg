@@ -36,7 +36,7 @@ public class TrainingsData extends BaseData {
 	
 		public Data(){
 			super();
-			this.addManyToManyRelationship((new AnimatorsData()).new Data(), 
+			this.addManyToManyRelationship("animator", 
 					(new TrainingAnimatorsTrainedData()).new Data(), 
 					"animators_trained");
 		}
