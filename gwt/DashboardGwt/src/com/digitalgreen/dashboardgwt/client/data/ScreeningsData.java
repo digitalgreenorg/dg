@@ -1,14 +1,12 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.lang.StringBuilder;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Data;
-import com.digitalgreen.dashboardgwt.client.data.ScreeningsData.Type;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -58,7 +56,6 @@ public class ScreeningsData extends BaseData {
 			super();
 			this.id = id;
 			this.date = date;
-			this.location = location;
 		}
 		
 
@@ -382,69 +379,87 @@ public class ScreeningsData extends BaseData {
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		
+		StringBuilder sbHtml = new StringBuilder();
 		Window.alert("In retrieveDataAndConvertResultIntoHtml");
 		
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
-		String html = "<select name=\"village\" id=\"id_village\">" + 
-						"<option value='' selected='selected'>---------</option>";
+//		String html = "<select name=\"village\" id=\"id_village\">" + 
+//						"<option value='' selected='selected'>---------</option>";
+		sbHtml.append("<select name=\"village\" id=\"id_village\">" + 
+						"<option value='' selected='selected'>---------</option>");
 		for(int i = 0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
-			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
+			sbHtml.append("<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>");
+//			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
 		}
-		html = html + "</select>";
-		Window.alert("Village html:"+html);
+		sbHtml.append("</select>");		
+//		html = html + "</select>";
 		
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data animator;
-		html = html+"<select name=\"animator\" id=\"id_animator\">" + 
-				"<option value='' selected='selected'>---------</option>";
+//		html = html + "<select name=\"animator\" id=\"id_animator\">" + 
+//				"<option value='' selected='selected'>---------</option>";
+		sbHtml.append("<select name=\"animator\" id=\"id_animator\">" + 
+						"<option value='' selected='selected'>---------</option>");
 		for(int i = 0; i < animators.size(); i++){
 			animator = (AnimatorsData.Data)animators.get(i);
-			html = html + "<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>";
+			sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>");
+//			html = html + "<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>";
 		}
-		html = html + "</select>";
-		Window.alert("Village html,Animator html:"+html);
+//		html = html + "</select>";
+		sbHtml.append("</select>");
 		
 		VideosData videoData = new VideosData();
 		List videos = videoData.getAllVideosOffline();
 		VideosData.Data video;
-		html = html+"<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
-				"<option value='' selected='selected'>---------</option>";
+//		html = html + "<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
+//				"<option value='' selected='selected'>---------</option>";
+		sbHtml.append("<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
+						"<option value='' selected='selected'>---------</option>");
 		for(int i = 0; i < videos.size(); i++){
 			video = (VideosData.Data)videos.get(i);
-			html = html + "<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>";
+//			html = html + "<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>";
+			sbHtml.append("<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>");
 		}
-		html = html + "</select>";
-		Window.alert("Village html,Animator html,videos:"+html);
+//		html = html + "</select>";
+		sbHtml.append("</select>");
 		
 		FieldOfficersData fieldOfficerData = new FieldOfficersData();
 		List fieldOfficers = fieldOfficerData.getAllFieldOfficersOffline();
 		FieldOfficersData.Data fieldOfficer;
-		html = html+"<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
-				"<option value='' selected='selected'>---------</option>";
+//		html = html + "<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
+//				"<option value='' selected='selected'>---------</option>";
+		sbHtml.append("<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
+						"<option value='' selected='selected'>---------</option>");
 		for(int i = 0; i < fieldOfficers.size(); i++){
 			fieldOfficer = (FieldOfficersData.Data)fieldOfficers.get(i);
-			html = html + "<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>";
+//			html = html + "<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>";
+			sbHtml.append("<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>");
 		}
-		html = html + "</select>";
-		Window.alert("Village html,Animator html,videos,fieldofficers:"+html);
+//		html = html + "</select>";
+		sbHtml.append("</select>");
 		
 		PersonGroupsData personGroupData = new PersonGroupsData();
 		List personGroups = personGroupData.getAllPersonGroupsOffline();
 		PersonGroupsData.Data personGroup;
-		html = html + "<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
-				"<option value='' selected='selected'>---------</option>";
+//		html = html + "<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
+//				"<option value='' selected='selected'>---------</option>";
+		sbHtml.append("<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
+						"<option value='' selected='selected'>---------</option>");
 		for(int i = 0; i < personGroups.size(); i++){
 			personGroup = (PersonGroupsData.Data)personGroups.get(i);
-			html = html + "<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>";
+//			html = html + "<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>";
+			sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>");
 		}
-		html = html + "</select>";
+//		html = html + "</select>";
+		sbHtml.append("</select>");
 		
-		Window.alert("all html is: "+html);
-		return html;
+		Window.alert(sbHtml.toString());
+		
+		return sbHtml.toString();
 	}
 	
 	// Get all information to display the screening add page.
