@@ -41,11 +41,14 @@ public class IndexTemplate extends BaseTemplate {
 	private void goOfflineOnline(){
 		final Button offlineButton = new Button("GO OFFLINE");
 		final Button onlineButton = new Button("GO ONLINE");
-		final Button syncButton = new Button("SYNC");
+		final Button syncButton1 = new Button("Sync from local to main");
+		final Button syncButton2 = new Button("Sync from main to local");
+		
 		VerticalPanel vpanel = new VerticalPanel();
 		HorizontalPanel hpanel = new HorizontalPanel();
 		hpanel.add(offlineButton);
-		hpanel.add(syncButton);
+		hpanel.add(syncButton1);
+		hpanel.add(syncButton2);
 		vpanel.add(hpanel);
 		vpanel.add(onlineButton);
 		RootPanel.get("goOffline").add(vpanel);
@@ -68,19 +71,29 @@ public class IndexTemplate extends BaseTemplate {
 		      }		      
 	    });
 		
-		syncButton.addClickHandler(new ClickHandler() {
+		syncButton1.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "sync");
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
-		    	   //Window.alert("Functionality yet to be implemented");
+		      }		      
+	    });
+		
+		syncButton2.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	   Template.addLoadingMessage("Syncing...");
+		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	   requestContext.getArgs().put("action", "resync");
+		    	   Index index = new Index(requestContext);
+		    	   index.response();
 		      }		      
 	    });
 		
 		if (!ApplicationConstants.getCurrentOnlineStatus()){
 			offlineButton.setEnabled(false);
-			syncButton.setEnabled(false);
+			syncButton1.setEnabled(false);
+			syncButton2.setEnabled(false);
 		}
 		else{
 			onlineButton.setEnabled(false);

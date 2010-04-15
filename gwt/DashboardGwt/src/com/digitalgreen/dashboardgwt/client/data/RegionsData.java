@@ -139,6 +139,11 @@ public class RegionsData extends BaseData {
 	public String getListingOnlineURL(){
 		return RegionsData.getRegionOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return RegionsData.saveRegionOfflineURL;
+	}
 
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -149,8 +154,6 @@ public class RegionsData extends BaseData {
 	public List serialize(JsArray<Type> regionObjects){
 		List regions = new ArrayList();
 		for(int i = 0; i < regionObjects.length(); i++){
-			if(regionObjects.get(i).getStartDate() == null)
-				Window.alert("Date is null");
 			Data region = new Data(regionObjects.get(i).getPk(), regionObjects.get(i).getRegionName(), regionObjects.get(i).getStartDate());
 			regions.add(region);
 		}

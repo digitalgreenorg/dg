@@ -155,6 +155,11 @@ public class BlocksData extends BaseData {
 		return BlocksData.getBlockOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return BlocksData.saveBlockOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

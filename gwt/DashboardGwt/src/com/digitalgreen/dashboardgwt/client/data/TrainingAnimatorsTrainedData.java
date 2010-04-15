@@ -13,8 +13,8 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	
 	public static class Type extends BaseData.Type {
 		protected Type() {}
-		public final native TrainingsData.Type getTraining() /*-{ return this.fields.training; }-*/;
-		public final native AnimatorsData.Type getAnimator() /*-{ return this.fields.animator; }-*/;
+		public final native String getTraining() /*-{ return this.fields.training; }-*/;
+		public final native String getAnimator() /*-{ return this.fields.animator; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -157,6 +157,11 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		return TrainingAnimatorsTrainedData.getTrainingAnimatorsTrainedOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -166,11 +171,9 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		TrainingsData training = new TrainingsData();
 		AnimatorsData animator = new AnimatorsData();
 		for(int i = 0; i < trainingAnimatorsTrainedObjects.length(); i++) {
-			TrainingsData.Data t = training. new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), 
-					trainingAnimatorsTrainedObjects.get(i).getTraining().getTrainingPurpose());
+			TrainingsData.Data t = training. new Data(trainingAnimatorsTrainedObjects.get(i).getTraining());
 			
-			AnimatorsData.Data a = animator. new Data(trainingAnimatorsTrainedObjects.get(i).getAnimator().getPk(),
-									trainingAnimatorsTrainedObjects.get(i).getAnimator().getAnimatorName());
+			AnimatorsData.Data a = animator. new Data(trainingAnimatorsTrainedObjects.get(i).getAnimator());
 			
 			Data traininganimatorstrained = new Data(trainingAnimatorsTrainedObjects.get(i).getPk(), t, a);
 			

@@ -27,6 +27,11 @@ public class LanguagesData extends BaseData {
 			super();
 		}
 		
+		public Data(String id) {
+			super();
+			this.id = id;
+		}
+		
 		public Data(String id, String language_name) {
 			super();
 			this.id = id;
@@ -122,6 +127,11 @@ public class LanguagesData extends BaseData {
 		return LanguagesData.getLanguageOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return LanguagesData.saveLanguageOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -140,6 +150,8 @@ public class LanguagesData extends BaseData {
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
+	
+	
 	
 	public List getLanguagesListingOffline(){
 		BaseData.dbOpen();

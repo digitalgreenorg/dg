@@ -235,6 +235,11 @@ public class Data extends BaseData.Data {
 		return MonthlyCostPerVillageData.getMonthlyCostPerVillageOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return MonthlyCostPerVillageData.saveMonthlyCostPerVillageOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

@@ -18,8 +18,8 @@ public class TrainingsData extends BaseData {
 		public final native String getTrainingStartDate() /*-{ return $wnd.checkForNullValues(this.fields.training_start_date); }-*/;
 		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.training_end_date); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
-		public final native DevelopmentManagersData.Type getDevelopmentManager() /*-{ return this.fields.development_manager_present }-*/;
-		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.field_officer_present; }-*/;
+		public final native String getDevelopmentManager() /*-{ return this.fields.development_manager_present }-*/;
+		public final native String getFieldOfficer() /*-{ return this.fields.field_officer_present; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -40,25 +40,10 @@ public class TrainingsData extends BaseData {
 					(new TrainingAnimatorsTrainedData()).new Data(), 
 					"animators_trained");
 		}
-
-		public Data(String id, String training_start_date){
-			super();
-			this.id = id;
-			this.training_start_date = training_start_date;
-		}
 		
-		public Data(String id, String training_start_date, VillagesData.Data village){
+		public Data(String id){
 			super();
 			this.id = id;
-			this.training_start_date = training_start_date;
-			this.village = village;	
-		}
-
-		public Data(String id, String training_purpose, String training_outcome){
-			super();
-			this.id = id;
-			this.training_purpose = training_purpose;
-			this.training_outcome = training_outcome;
 		}
 		
 		public Data(String id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
@@ -73,6 +58,29 @@ public class TrainingsData extends BaseData {
 			this.development_manager_present = development_manager_present;
 			this.field_officer_present = field_officer_present;
 		}
+
+		public Data(String id, String training_start_date){
+			super();
+			this.id = id;
+			this.training_start_date = training_start_date;
+		}
+		
+
+		public Data(String id, String training_start_date, VillagesData.Data village){
+			super();
+			this.id = id;
+			this.training_start_date = training_start_date;
+			this.village = village;	
+		}
+
+
+		public Data(String id, String training_purpose, String training_outcome){
+			super();
+			this.id = id;
+			this.training_purpose = training_purpose;
+			this.training_outcome = training_outcome;
+		}
+		
 		
 		public String getTrainingStartDate() {
 			return this.training_start_date;
@@ -210,6 +218,11 @@ public class TrainingsData extends BaseData {
 		return TrainingsData.getTrainingsOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return TrainingsData.saveTrainingOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -217,21 +230,26 @@ public class TrainingsData extends BaseData {
 public List serialize(JsArray<Type> trainingObjects) {
 		List trainings = new ArrayList();
 		VillagesData village = new VillagesData();
-		DevelopmentManagersData developmentmanager = new DevelopmentManagersData();
-		FieldOfficersData fieldofficer = new FieldOfficersData();
+
+		DevelopmentManagersData developmentManager = new DevelopmentManagersData();
+		DevelopmentManagersData.Data dm = developmentManager.new Data();
+		FieldOfficersData fieldOfficer = new FieldOfficersData();
+
 		for(int i = 0; i < trainingObjects.length(); i++){
-			
-			VillagesData.Data v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
-			
-			DevelopmentManagersData.Data dm = developmentmanager. new Data(trainingObjects.get(i).getDevelopmentManager().getPk(), trainingObjects.get(i).getDevelopmentManager().getName());
-			
-			FieldOfficersData.Data f = fieldofficer. new Data(trainingObjects.get(i).getFieldOfficer().getPk(), 
-					trainingObjects.get(i).getFieldOfficer().getFieldOfficerName());
-			
-			Data training = new Data(trainingObjects.get(i).getPk(), trainingObjects.get(i).getTrainingPurpose(), 
-					trainingObjects.get(i).getTrainingOutcome(), trainingObjects.get(i).getTrainingStartDate(), 
-					trainingObjects.get(i).getTrainingEndDate(), v, dm, f);
-			
+			VillagesData.Data	v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
+			if(trainingObjects.get(i).getDevelopmentManager()!=null){
+				dm = developmentManager.new Data(trainingObjects.get(i).getDevelopmentManager());
+			}
+			FieldOfficersData.Data fo = fieldOfficer.new Data(trainingObjects.get(i).getFieldOfficer());
+			Data training = new Data(trainingObjects.get(i).getPk(),
+					trainingObjects.get(i).getTrainingPurpose(),
+					trainingObjects.get(i).getTrainingOutcome(),
+					trainingObjects.get(i).getTrainingStartDate(),
+					trainingObjects.get(i).getTrainingEndDate(),
+					v,
+					dm,
+					fo);
+
 			trainings.add(training);
 		}
 		return trainings;

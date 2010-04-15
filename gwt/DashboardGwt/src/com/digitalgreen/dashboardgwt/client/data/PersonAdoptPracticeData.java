@@ -16,8 +16,8 @@ public class PersonAdoptPracticeData extends BaseData{
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
-		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice }-*/;
+		public final native String getPerson() /*-{ return this.fields.person }-*/;
+		public final native String getPractice() /*-{ return this.fields.practice }-*/;
 		public final native String getPriorAdoptionFlag() /*-{ return $wnd.checkForNullValues(this.fields.prior_adoption_flag); }-*/;
 		public final native String getDateOfAdoption() /*-{ return $wnd.checkForNullValues(this.fields.date_of_adoption); }-*/;
 		public final native String getQuality() /*-{ return $wnd.checkForNullValues(this.fields.quality); }-*/;
@@ -166,10 +166,10 @@ public class Data extends BaseData.Data {
 												"person_id INT  NOT NULL DEFAULT 0," +
 												"practice_id INT  NOT NULL DEFAULT 0," +
 												"PRIOR_ADOPTION_FLAG SMALLINT  NULL DEFAULT NULL," +
-												"DATE_OF_ADOPTION DATE  NULL DEFAULT NULL," +
-												"QUALITY VARCHAR(200)  NOT NULL ," +
+												"DATE_OF_ADOPTION DATE NOT NULL," +
+												"QUALITY VARCHAR(200)  NULL DEFAULT NULL ," +
 												"QUANTITY INT  NULL DEFAULT NULL," +
-												"QUANTITY_UNIT VARCHAR(150)  NOT NULL, " +
+												"QUANTITY_UNIT VARCHAR(150)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(practice_id) REFERENCES practices(id));";
 
@@ -221,6 +221,11 @@ public class Data extends BaseData.Data {
 	public String getListingOnlineURL(){
 		return PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return PersonAdoptPracticeData.savePersonAdoptPracticeOfflineURL;
+	}
 		
 		
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -232,10 +237,8 @@ public class Data extends BaseData.Data {
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
 		for(int i = 0; i < personAdoptPracticeObjects.length(); i++){
-			PersonsData.Data p = person.new Data(personAdoptPracticeObjects.get(i).getPerson().getPk(),
-					personAdoptPracticeObjects.get(i).getPerson().getPersonName());
-			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice().getPk(),
-					personAdoptPracticeObjects.get(i).getPractice().getPracticeName());
+			PersonsData.Data p = person.new Data(personAdoptPracticeObjects.get(i).getPerson());
+			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice());
 			
 			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p,pr, 
 					personAdoptPracticeObjects.get(i).getPriorAdoptionFlag(), personAdoptPracticeObjects.get(i).getDateOfAdoption(),

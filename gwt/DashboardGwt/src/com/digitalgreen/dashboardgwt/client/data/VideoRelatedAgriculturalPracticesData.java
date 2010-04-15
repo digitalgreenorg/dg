@@ -15,8 +15,8 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	public static class Type extends BaseData.Type{
 		protected Type(){}
 		
-		public final native VideosData.Type getVideo() /*-{ return this.fields.video;}-*/;
-		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice;}-*/;
+		public final native String getVideo() /*-{ return this.fields.video;}-*/;
+		public final native String getPractice() /*-{ return this.fields.practice;}-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -145,6 +145,11 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	public String getListingOnlineURL(){
 		return VideoRelatedAgriculturalPracticesData.getVideoRelatedAgriculturalPracticeOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return VideoRelatedAgriculturalPracticesData.saveVideoRelatedAgriculturalPracticeOfflineURL;
+	}
 
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
@@ -156,10 +161,8 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		PracticesData practice = new PracticesData();
 		VideosData video = new VideosData();
 		for(int i = 0; i < videoFarmersShownObjects.length(); i++){
-			PracticesData.Data p = practice.new Data(videoFarmersShownObjects.get(i).getPractice().getPk(),
-					videoFarmersShownObjects.get(i).getPractice().getPracticeName());
-			VideosData.Data vid = video.new Data(videoFarmersShownObjects.get(i).getVideo().getPk(),
-					videoFarmersShownObjects.get(i).getVideo().getTitle());
+			PracticesData.Data p = practice.new Data(videoFarmersShownObjects.get(i).getPractice());
+			VideosData.Data vid = video.new Data(videoFarmersShownObjects.get(i).getVideo());
 			
 			Data videoFarmersShown = new Data(videoFarmersShownObjects.get(i).getPk(),vid,p);
 			videoFarmersShowns.add(videoFarmersShown);

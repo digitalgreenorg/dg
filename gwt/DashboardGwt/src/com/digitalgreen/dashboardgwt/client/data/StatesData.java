@@ -155,6 +155,11 @@ public class StatesData extends BaseData {
 	public String getListingOnlineURL(){
 		return StatesData.getStateOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return StatesData.saveStateOfflineURL;
+	}
 
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

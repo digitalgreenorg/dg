@@ -15,13 +15,13 @@ public class PersonMeetingAttendanceData extends BaseData {
 	public static class Type extends BaseData.Type{
 		protected Type(){}
 		
-		public final native ScreeningsData.Type getScreening() /*-{ return this.fields.screening;}-*/;
-		public final native PersonsData.Type getPerson() /*-{ return this.fields.person;}-*/;
-		public final native PracticesData.Type getExpressedInterestPractice() /*-{ return this.fields.expressed_interest_practice; }-*/;
+		public final native String getScreening() /*-{ return this.fields.screening;}-*/;
+		public final native String getPerson() /*-{ return this.fields.person;}-*/;
+		public final native String getExpressedInterestPractice() /*-{ return this.fields.expressed_interest_practice; }-*/;
 		public final native String getExpressedInterest() /*-{ return $wnd.checkForNullValues(this.fields.expressed_interest); }-*/;
-		public final native PracticesData.Type getExpressedAdoptionPractice() /*-{ return this.fields.expressed_adoption_practice; }-*/;
+		public final native String getExpressedAdoptionPractice() /*-{ return this.fields.expressed_adoption_practice; }-*/;
 		public final native String getExpressedAdoption() /*-{ return $wnd.checkForNullValues(this.fields.expressed_adoption); }-*/;
-		public final native PracticesData.Type getExpressedQuestionPractice() /*-{ return this.fields.expressed_question_practice; }-*/;
+		public final native String getExpressedQuestionPractice() /*-{ return this.fields.expressed_question_practice; }-*/;
 		public final native String getExpressedQuestion() /*-{ return $wnd.checkForNullValues(this.fields.expressed_question); }-*/;
 		
 	}
@@ -227,6 +227,10 @@ public class PersonMeetingAttendanceData extends BaseData {
 		return PersonMeetingAttendanceData.getPersonMeetingAttendanceOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return PersonMeetingAttendanceData.savePersonMeetingAttendanceOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -237,17 +241,24 @@ public class PersonMeetingAttendanceData extends BaseData {
 		ScreeningsData screening = new ScreeningsData();
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
+		PracticesData.Data interest_pr = practice.new Data();
+		PracticesData.Data adoption_pr = practice.new Data();
+		PracticesData.Data question_pr = practice.new Data();
+		
 		for(int i = 0; i < personMeetingAttendanceObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening().getPk(),
-					personMeetingAttendanceObjects.get(i).getScreening().getDate());
-			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson().getPk(),
-					personMeetingAttendanceObjects.get(i).getPerson().getPersonName());
-			PracticesData.Data interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice().getPk(),
-					personMeetingAttendanceObjects.get(i).getExpressedInterestPractice().getPracticeName());
-			PracticesData.Data adoption_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice().getPk(),
-					personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice().getPracticeName());
-			PracticesData.Data question_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice().getPk(),
-					personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice().getPracticeName());
+			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening());
+			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson());
+			if(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice()!=null){
+				interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice());
+			}
+			if(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice()!=null){
+				adoption_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice());
+			}
+			
+			if(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice()!=null){
+				question_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice());
+			}
+			
 			
 			Data personMeetingAttendance = new Data(personMeetingAttendanceObjects.get(i).getPk(),sc,p,
 					interest_pr,personMeetingAttendanceObjects.get(i).getExpressedInterest(),

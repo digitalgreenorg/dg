@@ -38,6 +38,11 @@ public class PersonGroupsData extends BaseData {
 			super();
 		}
 		
+		public Data(String id){
+			super();
+			this.id = id;
+		}
+		
 		public Data(String id, String group_name){
 			super();
 			this.id = id;
@@ -202,6 +207,10 @@ public class PersonGroupsData extends BaseData {
 		return PersonGroupsData.getPersonGroupOnlineURL;
 	}
 		
+	@Override
+	public String getSaveOfflineURL(){
+		return PersonGroupsData.savePersonGroupOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

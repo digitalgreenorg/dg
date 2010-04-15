@@ -50,6 +50,11 @@ public class DevelopmentManagersData extends BaseData {
 		public Data() {
 			super();
 		}
+		
+		public Data(String id) {
+			super();
+			this.id = id;
+		}
 
 		public Data(String id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
 				RegionsData.Data region, String start_day,String equipmentholder, String salary ) {
@@ -254,6 +259,11 @@ public class DevelopmentManagersData extends BaseData {
 		return DevelopmentManagersData.getDevelopmentManagerOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return DevelopmentManagersData.saveDevelopmentManagerOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -261,8 +271,6 @@ public class DevelopmentManagersData extends BaseData {
 	public List serialize(JsArray<Type> developmentmanagerObjects){
 		List developmentmanagers = new ArrayList();
 		RegionsData region = new RegionsData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
-		
 		for(int i = 0; i < developmentmanagerObjects.length(); i++){
 			RegionsData.Data r = region.new Data(developmentmanagerObjects.get(i).getRegion().getPk(), developmentmanagerObjects.get(i).getRegion().getRegionName(), developmentmanagerObjects.get(i).getRegion().getStartDate());
 			Data developmentmanager = new Data(developmentmanagerObjects.get(i).getPk(),

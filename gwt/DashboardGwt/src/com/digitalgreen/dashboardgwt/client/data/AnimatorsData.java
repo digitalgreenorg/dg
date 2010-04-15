@@ -22,7 +22,7 @@ public class AnimatorsData extends BaseData {
 		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
 		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
 		public final native PartnersData.Type getPartner() /*-{ return this.fields.partner; }-*/;
-		public final native VillagesData.Type getVillage() /*-{ return this.fields.home_village; }-*/;
+		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
 		public final native String getEquipmentHolder() /*-{ return this.fields.equipment_holder; }-*/;
 
 	}
@@ -45,6 +45,11 @@ public class AnimatorsData extends BaseData {
 
 		public Data() {
 			super();
+		}
+		
+		public Data(String id){
+			super();
+			this.id = id;
 		}
 		
 		public Data(String id, String name){
@@ -275,31 +280,30 @@ public class AnimatorsData extends BaseData {
 	public String getListingOnlineURL(){
 		return AnimatorsData.getAnimatorsOnlineURL;
 	}
+
+	@Override
+	public String getSaveOfflineURL(){
+		return AnimatorsData.saveAnimatorOfflineURL;
+	}
+	
+	
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
 	
 	public List serialize(JsArray<Type> animatorObjects) {
-		Window.alert("serialize");
 		List animators = new ArrayList();
 		PartnersData partner = new PartnersData();
 		VillagesData village = new VillagesData();
-		Window.alert("size: " + animatorObjects.length());
 		for(int i = 0; i < animatorObjects.length(); i++) {
-//			Window.alert("in for..");
-			
+
 			PartnersData.Data p = partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());
-//			Window.alert("in for..after partner..");
+			
 			VillagesData.Data v = null;
-			try{
 			 v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
-			}
-			catch(Exception e)
-			{
-				Window.alert(e.toString());
-			}
-//			Window.alert("in for.. after village");
+			
+
 			Data animator = new Data(animatorObjects.get(i).getPk(), 
 								animatorObjects.get(i).getAnimatorName(),
 								animatorObjects.get(i).getAge(), 
@@ -313,7 +317,6 @@ public class AnimatorsData extends BaseData {
 			
 			animators.add(animator);
 		}
-		Window.alert("after for" );
 		return animators;
 	}
 	

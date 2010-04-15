@@ -15,8 +15,8 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	public static class Type extends BaseData.Type{
 		protected Type(){}
 		
-		public final native ScreeningsData.Type getScreening() /*-{ return this.fields.screening;}-*/;
-		public final native PersonGroupsData.Type getPersonGroup() /*-{ return this.fields.group;}-*/;		
+		public final native String getScreening() /*-{ return this.fields.screening;}-*/;
+		public final native String getPersonGroup() /*-{ return this.fields.persongroups;}-*/;		
 	}
 	
 	public class Data extends BaseData.Data {
@@ -146,6 +146,10 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		return ScreeningFarmerGroupsTargetedData.getScreeningFarmerGroupsTargetedOnlineURL;
 	}
 
+	@Override
+	public String getSaveOfflineURL(){
+		return ScreeningFarmerGroupsTargetedData.saveScreeningFarmerGroupsTargetedOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -156,10 +160,8 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		ScreeningsData screening = new ScreeningsData();
 		PersonGroupsData group = new PersonGroupsData();
 		for(int i = 0; i < screeningFarmerGroupsTargetedObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(screeningFarmerGroupsTargetedObjects.get(i).getScreening().getPk(),
-					screeningFarmerGroupsTargetedObjects.get(i).getScreening().getDate());
-			PersonGroupsData.Data pg = group.new Data(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup().getPk(),
-					screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup().getPersonGroupName());
+			ScreeningsData.Data sc = screening.new Data(screeningFarmerGroupsTargetedObjects.get(i).getScreening());
+			PersonGroupsData.Data pg = group.new Data(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup());
 			
 			Data screeningFarmerGroupsTargeted = new Data(screeningFarmerGroupsTargetedObjects.get(i).getPk(),sc,pg);
 			screeningFarmerGroupsTargeteds.add(screeningFarmerGroupsTargeted);

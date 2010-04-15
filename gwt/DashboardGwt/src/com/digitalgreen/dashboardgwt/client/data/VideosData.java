@@ -18,7 +18,7 @@ public class VideosData extends BaseData {
 		public final native String getTitle() /*-{ return $wnd.checkForNullValues(this.fields.title); }-*/;
 		public final native String getVideoType() /*-{ return $wnd.checkForNullValues(this.fields.video_type);}-*/;
 		public final native String getDuration() /*-{ return $wnd.checkForNullValues(this.fields.duration); }-*/;
-		public final native LanguagesData.Type getLanguage() /*-{ return this.fields.language; }-*/;
+		public final native String getLanguage() /*-{ return this.fields.language; }-*/;
 		public final native String getSummary() /*-{ return $wnd.checkForNullValues(this.fields.summary); }-*/;
 		public final native String getPictureQuality()/*-{ return  $wnd.checkForNullValues(this.fields.picture_quality); }-*/;
 		public final native String getAudioQuality()/*-{ return  $wnd.checkForNullValues(this.fields.audio_quality); }-*/;
@@ -34,15 +34,13 @@ public class VideosData extends BaseData {
 		public final native String getMovieMakerProjectFilename()/*-{ return  $wnd.checkForNullValues(this.fields.movie_maker_project_filename); }-*/;
 		public final native String getFinalEditedFilename()/*-{ return  $wnd.checkForNullValues(this.fields.final_edited_filename); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
-		public final native AnimatorsData.Type getFacilitator() /*-{ return this.fields.facilitator }-*/;
-		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.cameraoperator }-*/;
-		public final native ReviewersData.Type getReviewer() /*-{ return this.fields.reviewer; }-*/;
+		public final native String getFacilitator() /*-{ return this.fields.facilitator }-*/;
+		public final native String getCameraOperator() /*-{ return this.fields.cameraoperator }-*/;
+		public final native String getReviewer() /*-{ return this.fields.reviewer; }-*/;
 		public final native String getApprovalDate()/*-{ return  $wnd.checkForNullValues(this.fields.approval_date); }-*/;
-		public final native VideosData.Type getSupplementaryVideoProduced()/*-{ return  this.fields.supplementary_video_produced; }-*/;
+		public final native String getSupplementaryVideoProduced()/*-{ return  this.fields.supplementary_video_produced; }-*/;
 		public final native String getVideoSuitableFor()/*-{ return  $wnd.checkForNullValues(this.fields.video_suitable_for); }-*/;
 		public final native String getRemarks()/*-{ return  $wnd.checkForNullValues(this.fields.remarks); }-*/;
-		public final native PracticesData.Type getRelatedAgriculturalPractices() /*-{ return this.fields.related_agricultural_practices }-*/ ;
-		public final native PersonsData.Type getFarmersShown()/*-{ return this.fields.farmers_shown}-*/;
 		public final native String getActors()/*-{ return  $wnd.checkForNullValues(this.fields.actors); }-*/;
 		public final native String getLastModified()/*-{ return  $wnd.checkForNullValues(this.fields.last_modified); }-*/;
 	}
@@ -77,13 +75,16 @@ public class VideosData extends BaseData {
 	    private VideosData.Data supplementary_video_produced;
 	    private String video_suitable_for;
 	    private String remarks;
-	    private PracticesData.Data related_agricultural_practices;    
-	    private PersonsData.Data farmers_shown;
 	    private String actors;
 	    private String last_modified; 
 		
 		public Data() {
 			super();
+		}
+		
+		public Data(String id) {
+			super();
+			this.id = id;
 		}
 		
 		public Data(String id, String title) {
@@ -108,7 +109,7 @@ public class VideosData extends BaseData {
 				String storyboard_filename, String raw_filename, String movie_maker_project_filename, String final_edited_filename, 
 				VillagesData.Data village, AnimatorsData.Data facilitator, AnimatorsData.Data cameraoperator, ReviewersData.Data reviewer, 
 				String approval_date, VideosData.Data supplementary_video_produced, String video_suitable_for, String remarks, 
-				PracticesData.Data related_agricultural_practices, PersonsData.Data farmers_shown, String actors, String last_modified){
+				String actors, String last_modified){
 			
 			super();
 			this.id = id;
@@ -138,8 +139,6 @@ public class VideosData extends BaseData {
 			this.supplementary_video_produced = supplementary_video_produced;
 			this.video_suitable_for = video_suitable_for;
 			this.remarks = remarks;
-			this.related_agricultural_practices = related_agricultural_practices;
-			this.farmers_shown = farmers_shown;
 			this.actors = actors;
 			this.last_modified = last_modified;
 		}
@@ -201,15 +200,7 @@ public class VideosData extends BaseData {
 				AnimatorsData cameraoperator = new AnimatorsData();
 				this.cameraoperator = cameraoperator.getNewData();
 				this.cameraoperator.id = val;
-			} else if(key.equals("related_agricultural_practices")){
-				PracticesData practices = new PracticesData();
-				this.related_agricultural_practices = practices.getNewData();
-				this.related_agricultural_practices.id = val;
-			} else if(key.equals("farmers_shown")) {
-				PersonsData person = new PersonsData();
-				this.farmers_shown = person.getNewData();
-				this.farmers_shown.id = val;
-			} else if(key.equals("actors")) {
+			}  else if(key.equals("actors")) {
 				this.actors = (String)val;
 			} else if(key.equals("picture_quality")){
 				this.picture_quality = (String)val;
@@ -244,7 +235,8 @@ public class VideosData extends BaseData {
 		@Override
 		public void save() {
 			Date date = new Date();
-			this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+			if(this.id==null)
+				this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 			VideosData videosDataDbApis = new VideosData();		
 			this.id = videosDataDbApis.autoInsert(this.id,
 						this.title, 
@@ -334,7 +326,7 @@ public class VideosData extends BaseData {
 								"editing_quality", "edit_start_date", "edit_finish_date", "thematic_quality", "video_production_start_date", 
 								"video_production_end_date", "storybase","storyboard_filename", "raw_filename", "movie_maker_project_filename",
 								"final_edited_filename", "village", "facilitator", "cameraoperator", "reviewer", "approval_date", "supplementary_video_produced",
-								"video_suitable_for", "remarks", "related_agricultural_practices","farmers_shown","actors", "last_modified"}; 		
+								"video_suitable_for", "remarks","actors", "last_modified"}; 		
 	
 	public VideosData() {
 		super();
@@ -373,7 +365,11 @@ public class VideosData extends BaseData {
 	public String getListingOnlineURL(){
 		return VideosData.getVideoOnlineURL;
 	}
-
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return VideosData.saveVideoOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -386,35 +382,30 @@ public class VideosData extends BaseData {
 		AnimatorsData facilitator = new AnimatorsData();
 		AnimatorsData cameraoperator = new AnimatorsData();
 		ReviewersData reviewer = new ReviewersData();
+		ReviewersData.Data r = reviewer.new Data();
 		VideosData video1 = new VideosData();
+		VideosData.Data vd1 = video1.new Data();
 		PracticesData practice = new PracticesData();
 		PersonsData person = new PersonsData();
 		
 		for(int i = 0; i < videoObjects.length(); i++){
-			
-			LanguagesData.Data l = language.new Data(videoObjects.get(i).getLanguage().getPk(), 
-													videoObjects.get(i).getLanguage().getLanguageName());
+			LanguagesData.Data l = language.new Data(videoObjects.get(i).getLanguage());
 			
 			VillagesData.Data vl = village.new Data(videoObjects.get(i).getVillage().getPk(), 
 													videoObjects.get(i).getVillage().getVillageName()) ;
 			
-			AnimatorsData.Data f = facilitator.new Data(videoObjects.get(i).getFacilitator().getPk(), 
-													videoObjects.get(i).getFacilitator().getAnimatorName());
+			AnimatorsData.Data f = facilitator.new Data(videoObjects.get(i).getFacilitator());
 			
-			AnimatorsData.Data c = cameraoperator.new Data(videoObjects.get(i).getCameraOperator().getPk(), 
-													videoObjects.get(i).getFacilitator().getAnimatorName());
+			AnimatorsData.Data c = cameraoperator.new Data(videoObjects.get(i).getCameraOperator());
 			
-			ReviewersData.Data r = reviewer.new Data(videoObjects.get(i).getReviewer().getPk());
+			if(videoObjects.get(i).getReviewer() != null){
+				r = reviewer.new Data(videoObjects.get(i).getReviewer());
+			}
 			
-			VideosData.Data vd1 = video1.new Data(videoObjects.get(i).getSupplementaryVideoProduced().getPk(), 
-												videoObjects.get(i).getSupplementaryVideoProduced().getTitle());
-			
-			PracticesData.Data pr = practice.new Data(videoObjects.get(i).getRelatedAgriculturalPractices().getPk(),
-												videoObjects.get(i).getRelatedAgriculturalPractices().getPracticeName());
-			
-			PersonsData.Data ps = person.new Data(videoObjects.get(i).getFarmersShown().getPk(),
-												videoObjects.get(i).getFarmersShown().getPersonName());
-			
+			if(videoObjects.get(i).getSupplementaryVideoProduced() != null){
+				vd1 = video1.new Data(videoObjects.get(i).getSupplementaryVideoProduced());
+			}
+					
 			Data video = new Data(videoObjects.get(i).getPk(), 
 									videoObjects.get(i).getTitle(),
 									videoObjects.get(i).getVideoType(),
@@ -435,13 +426,12 @@ public class VideosData extends BaseData {
 									videoObjects.get(i).getFinalEditedFilename(), vl, f, c, r,
 									videoObjects.get(i).getApprovalDate(), vd1,
 									videoObjects.get(i).getVideoSuitableFor(),
-									videoObjects.get(i).getRemarks(), pr, ps,
+									videoObjects.get(i).getRemarks(),
 									videoObjects.get(i).getActors(),
 									videoObjects.get(i).getLastModified());
 			
 			videos.add(video);
 		}
-		
 		return videos;
 	}
 	

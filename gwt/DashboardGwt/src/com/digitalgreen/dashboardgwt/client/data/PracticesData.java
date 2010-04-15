@@ -32,6 +32,11 @@ public class PracticesData extends BaseData {
 			super();
 		}
 		
+		public Data(String id){
+			super();
+			this.id = id;
+		}
+		
 		public Data(String id, String practice_name){
 			super();
 			this.id = id;
@@ -156,6 +161,10 @@ public class PracticesData extends BaseData {
 		return PracticesData.getPracticeOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return PracticesData.savePracticeOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

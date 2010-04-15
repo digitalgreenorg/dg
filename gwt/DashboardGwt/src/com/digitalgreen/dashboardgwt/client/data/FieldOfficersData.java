@@ -45,6 +45,11 @@ public class FieldOfficersData extends BaseData {
 			super();
 		}
 		
+		public Data(String id){
+			super();
+			this.id = id;
+		}
+		
 		public Data(String id, String name){
 			super();
 			this.id = id;
@@ -160,7 +165,7 @@ public class FieldOfficersData extends BaseData {
 	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";
 	protected static String saveFieldOfficerOfflineURL = "/dashboard/savefieldofficeroffline/";
 	protected static String table_name = "field_officer";
-	protected static String[] fields = {"id", "name", "age", "gender", "hire_date", "salary",  "phone_no", "reviewer_id", "equipmentholder_id"};
+	protected static String[] fields = {"id", "name", "age", "gender", "hire_date", "salary",  "phone_no", "address", "reviewer_id", "equipmentholder_id"};
 	
 	public FieldOfficersData(){
 		super();
@@ -199,6 +204,10 @@ public class FieldOfficersData extends BaseData {
 		return FieldOfficersData.getFieldOfficersOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return FieldOfficersData.saveFieldOfficerOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

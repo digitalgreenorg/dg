@@ -169,6 +169,11 @@ public class PartnersData extends BaseData {
 	public String getListingOnlineURL(){
 		return PartnersData.getPartnerOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return PartnersData.savePartnerOfflineURL;
+	}
 		
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

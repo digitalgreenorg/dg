@@ -302,7 +302,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// This client passed in a value for id
 		if(args[0] != null || !this.getFields()[0].equals("id")){
 			for(int i=0; i < tempList.size(); i++) {
-				tempListString[i] = (String)tempList.get(i);
+				if(tempList.get(i) == null) 
+					tempListString[i] = (String)tempList.get(i);
+				else
+					tempListString[i] = "" + tempList.get(i);
 			}
 			this.insert(insertSql, tempListString);
 			return args[0];
@@ -418,6 +421,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	//Override this
 	public  String getListingOnlineURL(){
+		return null;
+	}
+	
+	// Override this
+	public String getSaveOfflineURL(){
 		return null;
 	}
 

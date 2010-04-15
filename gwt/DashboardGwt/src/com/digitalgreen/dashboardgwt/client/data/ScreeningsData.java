@@ -25,13 +25,8 @@ public class ScreeningsData extends BaseData {
 		public final native String getTargetAudienceInterest() /*-{ return $wnd.checkForNullValues(this.fields.target_audience_interest); }-*/;
 		public final native String getTargetAdoptions() /*-{ return $wnd.checkForNullValues(this.fields.target_adoptions); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village }-*/;
-		public final native FieldOfficersData.Type getFieldOfficer() /*-{ return this.fields.fieldofficer }-*/;
-		public final native AnimatorsData.Type getCameraOperator() /*-{ return this.fields.animator}-*/;
-		public final native PersonGroupsData.Type getFarmerGroupsTargeted () /*-{ return this.fields.farmer_groups_targeted  }-*/;
-		public final native VideosData.Type getVideosScreened() /*-{ return this.fields.videoes_screened }-*/;
-		public final native PersonMeetingAttendanceData.Type getFarmersAttendance () /*-{ return this.fields.farmers_attendance  }-*/;
-
-		
+		public final native String getFieldOfficer() /*-{ return this.fields.fieldofficer }-*/;
+		public final native String getAnimator() /*-{ return this.fields.animator}-*/;	
 	}
 	
 	public class Data extends BaseData.Data {
@@ -48,11 +43,17 @@ public class ScreeningsData extends BaseData {
 	    private VillagesData.Data village;
 	    private FieldOfficersData.Data fieldofficer; 
 	    private AnimatorsData.Data animator;
-	   	    
+
 	    public Data() {
 			super();
 		}
 		
+	    public Data(String id) {
+			super();
+			this.id = id;
+		}
+		
+	    
 		public Data(String id, String date) {
 			super();
 			this.id = id;
@@ -60,10 +61,10 @@ public class ScreeningsData extends BaseData {
 			this.location = location;
 		}
 		
-		public Data(String id, String date ,String start_time, String end_time, String location, String target_person_attendance,
-				String target_audience_interest, String target_adoptions, VillagesData.Data village, FieldOfficersData.Data fieldofficer,
-				AnimatorsData.Data animator) {
-			
+
+		public Data(String id, String date ,String start_time, String end_time, String location,String target_person_attendance,
+				String target_audience_interest,VillagesData.Data village,FieldOfficersData.Data fieldofficer, AnimatorsData.Data animator) {
+
 			super();
 			this.id = id;
 			this.date = date;
@@ -186,6 +187,7 @@ public class ScreeningsData extends BaseData {
 					this.fieldofficer.getId(),
 					this.animator.getId());
 			this.addNameValueToQueryString("id", this.id);
+
 		}
 		
 		@Override
@@ -260,6 +262,11 @@ public class ScreeningsData extends BaseData {
 		return ScreeningsData.getScreeningOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return ScreeningsData.saveScreeningOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -267,36 +274,31 @@ public class ScreeningsData extends BaseData {
 	public List serialize(JsArray<Type> screeningObjects){
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
-		FieldOfficersData fieldofficer = new FieldOfficersData();
-	    AnimatorsData animator = new AnimatorsData();
-	    PersonGroupsData farmer_groups_targeted = new PersonGroupsData();
+		FieldOfficersData fieldOfficer = new FieldOfficersData();
+		FieldOfficersData.Data fo = fieldOfficer.new Data();
+		AnimatorsData animator = new AnimatorsData();
+
 		for(int i = 0; i < screeningObjects.length(); i++){
 			
 			VillagesData.Data v = village.new Data(screeningObjects.get(i).getVillage().getPk(), 
 										screeningObjects.get(i).getVillage().getVillageName());
-			
-			FieldOfficersData.Data f = null;
-			
-			if(screeningObjects.get(i).getFieldOfficer() != null) {
-				
-				f = fieldofficer.new Data(screeningObjects.get(i).getFieldOfficer().getPk(),
-													screeningObjects.get(i).getFieldOfficer().getFieldOfficerName());
-			} else {
-				f = null;
+						
+			if(screeningObjects.get(i).getFieldOfficer()!=null){
+				fo = fieldOfficer.new Data(screeningObjects.get(i).getFieldOfficer());
 			}
 			
-			AnimatorsData.Data a = animator.new Data(screeningObjects.get(i).getCameraOperator().getPk(),
-													screeningObjects.get(i).getCameraOperator().getAnimatorName());
-			
+			AnimatorsData.Data a = animator.new Data(screeningObjects.get(i).getAnimator());
 			Data screening = new Data(screeningObjects.get(i).getPk(),
-									screeningObjects.get(i).getDate(),
-									screeningObjects.get(i).getStartTime(),
-									screeningObjects.get(i).getEndTime(),
-									screeningObjects.get(i).getLocation(),
-									screeningObjects.get(i).getTargetPersonAttendance(),
-									screeningObjects.get(i).getTargetAudienceInterest(),
-									screeningObjects.get(i).getTargetAdoptions(), v, f, a);
-			
+					screeningObjects.get(i).getDate(),
+					screeningObjects.get(i).getStartTime(),
+					screeningObjects.get(i).getEndTime(),
+					screeningObjects.get(i).getLocation(),
+					screeningObjects.get(i).getTargetPersonAttendance(),
+					screeningObjects.get(i).getTargetAudienceInterest(),
+					v,
+					fo,
+					a);
+
 			screenings.add(screening);
 		}
 		

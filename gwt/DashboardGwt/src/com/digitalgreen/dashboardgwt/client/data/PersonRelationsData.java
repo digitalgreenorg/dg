@@ -14,8 +14,8 @@ public class PersonRelationsData extends BaseData {
 
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
-		public final native PersonsData.Type getRelative() /*-{ return this.fields.relative }-*/;
+		public final native String getPerson() /*-{ return this.fields.person }-*/;
+		public final native String getRelative() /*-{ return this.fields.relative }-*/;
 		public final native String getTypeOfRelationShip() /*-{ return $wnd.checkForNullValues(this.fields.type_of_relationship); }-*/;
 	}
 	
@@ -115,9 +115,9 @@ public class Data extends BaseData.Data {
 	protected static String selectPersonRelations = "SELECT id, type_of_relationship FROM person_relations ORDER BY (type_of_relationship);";
 	protected static String listPersonRelations = "SELECT * FROM person_relations pr JOIN person p ON p.id = pr.person_id" +
 			"ORDER BY (-pr.id);";
-	protected static String savePersonRelationOnlineURL = "/dashboard/savePersonrelationonline/";
-	protected static String getPersonRelationOnlineURL = "/dashboard/getPersonrelationsonline/";
-	protected static String savePersonRelationOfflineURL = "/dashboard/savePersonrelationoffline/";
+	protected static String savePersonRelationOnlineURL = "/dashboard/savepersonrelationonline/";
+	protected static String getPersonRelationOnlineURL = "/dashboard/getpersonrelationsonline/";
+	protected static String savePersonRelationOfflineURL = "/dashboard/savepersonrelationoffline/";
 	protected String table_name = "person_relations";
 	protected String[] fields = {"id", "person_id", "relative_id", "type_of_relationship"};
 	
@@ -159,6 +159,11 @@ public class Data extends BaseData.Data {
 		return PersonRelationsData.getPersonRelationOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return PersonRelationsData.savePersonRelationOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -167,10 +172,9 @@ public class Data extends BaseData.Data {
 		List personRelations = new ArrayList();
 		PersonsData person = new PersonsData();
 		for(int i = 0; i < personRelationObjects.length(); i++){
-			PersonsData.Data p = person.new Data(personRelationObjects.get(i).getPerson().getPk(),
-					personRelationObjects.get(i).getPerson().getPersonName());
-						
-			Data personRelation = new Data(personRelationObjects.get(i).getPk(),p,p, 
+			PersonsData.Data p = person.new Data(personRelationObjects.get(i).getPerson());
+			PersonsData.Data relative = person.new Data(personRelationObjects.get(i).getRelative());
+			Data personRelation = new Data(personRelationObjects.get(i).getPk(),p,relative, 
 					personRelationObjects.get(i).getTypeOfRelationShip());
 			personRelations.add(personRelation);
 		}

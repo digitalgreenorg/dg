@@ -14,6 +14,7 @@ import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
+import com.google.gwt.user.client.Window;
 
 public class PersonsTemplate extends BaseTemplate{
 	
@@ -69,7 +70,8 @@ public class PersonsTemplate extends BaseTemplate{
 					
 					if(person.getGroup() == null)
 					{
-						group = null;
+						Window.alert("person.getGroup() is null");
+						group = "null";
 					}
 					else
 					{

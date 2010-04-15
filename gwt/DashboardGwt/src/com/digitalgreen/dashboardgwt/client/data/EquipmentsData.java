@@ -21,7 +21,7 @@ public class EquipmentsData extends BaseData {
 		public final native String getCost() /*-{ return $wnd.checkForNullValues(this.fields.cost); }-*/;
 		public final native String getProcurementDate() /*-{ return $wnd.checkForNullValues(this.fields.procurement_date); }-*/;
 		public final native String getWarrantyExpirationDate() /*-{ return $wnd.checkForNullValues(this.fields.warranty_expiration_date); }-*/;
-		public final native String getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id; }-*/;
+		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	
 	}
 	
@@ -35,7 +35,7 @@ public class EquipmentsData extends BaseData {
 		private String cost;
 		private String procurement_date;
 		private String warranty_expiration_date;
-		private String equipmentholder_id;
+		private EquipmentHoldersData.Data equipmentholder;
 		
 		
 		public Data() {
@@ -43,7 +43,7 @@ public class EquipmentsData extends BaseData {
 		}
 
 		public Data(String id, String equipment_type,String model_no,String serial_no,String cost,String procurement_date,
-				String warranty_expiration_date, String equipmentholder_id) {
+				String warranty_expiration_date, EquipmentHoldersData.Data equipmentholder) {
 			super();
 			this.id = id;
 			this.equipment_type = equipment_type;
@@ -52,7 +52,7 @@ public class EquipmentsData extends BaseData {
 			this.cost = cost;
 			this.procurement_date = procurement_date;
 			this.warranty_expiration_date = warranty_expiration_date;
-			this.equipmentholder_id = equipmentholder_id;
+			this.equipmentholder = equipmentholder;
 		}
 		
 		public Data(String id, String equipment_type){
@@ -85,8 +85,8 @@ public class EquipmentsData extends BaseData {
 			return this.warranty_expiration_date;
 		}
 		
-		public String getEquipmentHolderId(){
-			return this.equipmentholder_id;
+		public EquipmentHoldersData.Data getEquipmentHolder(){
+			return this.equipmentholder;
 		}
 		
 		public BaseData.Data clone() {
@@ -115,7 +115,9 @@ public class EquipmentsData extends BaseData {
 			} else if(key.equals("warranty_expiration_date")) {
 				this.warranty_expiration_date = (String)val;
 			} else if(key.equals("equipmentholder")) {
-				this.equipmentholder_id = val;
+				EquipmentHoldersData equipmentHolderData = new EquipmentHoldersData();
+				this.equipmentholder = equipmentHolderData.getNewData();
+				this.equipmentholder.id = val;
 			} else {
 				return;
 			}
@@ -133,7 +135,7 @@ public class EquipmentsData extends BaseData {
 						this.cost,
 						this.procurement_date,
 						this.warranty_expiration_date,
-						this.equipmentholder_id);
+						this.equipmentholder.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
 		
@@ -203,6 +205,11 @@ public class EquipmentsData extends BaseData {
 		return EquipmentsData.getEquipmentOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return EquipmentsData.saveEquipmentOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
@@ -210,12 +217,15 @@ public class EquipmentsData extends BaseData {
 	public List serialize(JsArray<Type> equipmentObjects){
 		List equipments = new ArrayList();
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
+		EquipmentHoldersData.Data e = equipmentholder.new Data();
 		for(int i = 0; i < equipmentObjects.length(); i++){
-			
+			if(equipmentObjects.get(i).getEquipmentHolder() != null){
+				e = equipmentholder.new Data(equipmentObjects.get(i).getEquipmentHolder().getPk());
+			}
 			Data equipment = new Data(equipmentObjects.get(i).getPk(), equipmentObjects.get(i).getEquipmentType(), 
 					equipmentObjects.get(i).getModelNo(),equipmentObjects.get(i).getSerialNo(), 
 					equipmentObjects.get(i).getCost(),equipmentObjects.get(i).getProcurementDate(),
-					equipmentObjects.get(i).getWarrantyExpirationDate(),equipmentObjects.get(i).getEquipmentHolderId());
+					equipmentObjects.get(i).getWarrantyExpirationDate(),e);
 			equipments.add(equipment);
 		}
 		
@@ -234,6 +244,7 @@ public class EquipmentsData extends BaseData {
 		this.select(listEquipments);
 		if (this.getResultSet().isValidRow()){
 			try {
+				EquipmentHoldersData.Data e = equipmentholder.new Data(this.getResultSet().getFieldAsString(7));
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					Data equipment = new Data(this.getResultSet().getFieldAsString(0), 
 							this.getResultSet().getFieldAsString(1),
@@ -242,7 +253,7 @@ public class EquipmentsData extends BaseData {
 							this.getResultSet().getFieldAsString(4),
 							this.getResultSet().getFieldAsString(5),
 							this.getResultSet().getFieldAsString(6),
-							this.getResultSet().getFieldAsString(7));
+							e);
 					equipments.add(equipment);
 				}				
 			} catch (DatabaseException e) {

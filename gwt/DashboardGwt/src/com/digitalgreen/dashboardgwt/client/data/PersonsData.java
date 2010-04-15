@@ -25,7 +25,7 @@ public class PersonsData extends BaseData {
 		public final native String getLandHoldings() /*-{ return $wnd.checkForNullValues(this.fields.land_holdings); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village;}-*/;
 		public final native PersonGroupsData.Type getPersonGroup() /*-{ return this.fields.group;}-*/;
-		public final native String getEquipmentHolderId() /*-{ return this.fields.equipmentholder_id+ ""; }-*/;
+		public final native String getEquipmentHolderId() /*-{ return $wnd.checkForNullValues(this.fields.equipmentholder_id); }-*/;
 		
 	}
 	
@@ -46,6 +46,11 @@ public class PersonsData extends BaseData {
 		
 		public Data() {
 			super();
+		}
+		
+		public Data(String id) {
+			super();
+			this.id = id;
 		}
 		
 		public Data(String id, String person_name,String father_name,String age,String gender,String phone_no,String address,String land_holdings,
@@ -143,16 +148,13 @@ public class PersonsData extends BaseData {
 			} else if(key.equals("land_holdings")) {
 				this.land_holdings = (String)val;
 			} else if(key.equals("village")) {
-				// Have to Create an instance of VillagesData to create an instance of VillagesData.Data -- any better way of doing this??
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
 				this.village.id = val;
-				//Never ever use this -- this.village.id = ((Integer)val).intValue();
 			}  else if(key.equals("group")) {
 				PersonGroupsData group = new PersonGroupsData();
 				this.group = group.getNewData();
 				this.group.id = val;
-				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("equipmentholder")) {
 				this.equipmentholder_id = val;
 			}  else {
@@ -208,13 +210,13 @@ public class PersonsData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PERSON_NAME VARCHAR(100)  NOT NULL ," +
-												"FATHER_NAME VARCHAR(100)  NOT NULL ," +
+												"FATHER_NAME VARCHAR(100)  NULL DEFAULT NULL ," +
 												"AGE INT  NULL DEFAULT NULL," +
-												"GENDER VARCHAR(1)  NOT NULL ," +
-												"PHONE_NO VARCHAR(100)  NOT NULL ," +
-												"ADDRESS VARCHAR(500)  NOT NULL ," +
+												"GENDER VARCHAR(1) NOT NULL," +
+												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
+												"ADDRESS VARCHAR(500) NULL DEFAULT NULL," +
 												"LAND_HOLDINGS INT  NULL DEFAULT NULL," +
-												"village_id INT  NOT NULL DEFAULT 0," +
+												"village_id INT NOT NULL DEFAULT 0," +
 												"group_id INT  NULL DEFAULT NULL," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
@@ -222,8 +224,9 @@ public class PersonsData extends BaseData {
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ; 
 	
 	protected static String selectPersons = "SELECT id, PERSON_NAME FROM person  ORDER BY (PERSON_NAME);";
-	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, vil.id, vil.village_name ,pg.id,pg.group_name  " +
-			"FROM person p, village vil, person_groups pg WHERE p.village_id = vil.id and p.group_id = pg.id ORDER BY (-p.id);";
+	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
+			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
+			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id);";
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	protected static String savePersonOnlineURL = "/dashboard/savepersononline/";
 	protected static String getPersonOnlineURL = "/dashboard/getpersonsonline/";
@@ -266,6 +269,11 @@ public class PersonsData extends BaseData {
 	public String getListingOnlineURL(){
 		return PersonsData.getPersonOnlineURL;
 	}
+	
+	@Override
+	public String getSaveOfflineURL(){
+		return PersonsData.savePersonOfflineURL;
+	}
 		
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -275,19 +283,29 @@ public class PersonsData extends BaseData {
 		List persons = new ArrayList();
 		VillagesData village = new VillagesData();
 		PersonGroupsData group = new PersonGroupsData();
+		VillagesData.Data vil = null;
+		PersonGroupsData.Data pg = group.new Data();
 		for(int i = 0; i < personObjects.length(); i++){
-			VillagesData.Data vil = village.new Data(personObjects.get(i).getVillage().getPk(),
+			vil = village.new Data(personObjects.get(i).getVillage().getPk(),
 					personObjects.get(i).getVillage().getVillageName());
-			PersonGroupsData.Data pg = null;
+			
 			if(personObjects.get(i).getPersonGroup() != null){
 				pg = group.new Data(personObjects.get(i).getPersonGroup().getPk(),
 					personObjects.get(i).getPersonGroup().getPersonGroupName());
 			}
-			else{
-				pg = null; 
-			}
+			
 			Data person = new Data(personObjects.get(i).getPk(),
-						personObjects.get(i).getPersonName(),vil,pg);
+						personObjects.get(i).getPersonName(),
+						personObjects.get(i).getFatherName(),
+						personObjects.get(i).getAge(),
+						personObjects.get(i).getGender(),
+						personObjects.get(i).getPhoneNo(),
+						personObjects.get(i).getAddress(),
+						personObjects.get(i).getLandHoldings(),
+						vil,
+						pg,
+						personObjects.get(i).getEquipmentHolderId());
+			
 			persons.add(person);
 		}
 		return persons;
@@ -305,14 +323,24 @@ public class PersonsData extends BaseData {
 		PersonGroupsData group = new PersonGroupsData();
 		this.select(listPersons);
 		if (this.getResultSet().isValidRow()){
+			
 			try {
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					PersonGroupsData.Data pg = group.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5));
+				int i;
+				for (i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					PersonGroupsData.Data pg;
+					if(this.getResultSet().getFieldAsString(4) == null){
+						pg = null;
+					}
+					else{
+						pg = group.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5));
+					}
+					
 					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(2),  this.getResultSet().getFieldAsString(3)) ;
 					
 					Data person = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1),v,pg);
 					persons.add(person);
-	    	      }				
+	    	      }
+				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
 				// TODO Auto-generated catch block

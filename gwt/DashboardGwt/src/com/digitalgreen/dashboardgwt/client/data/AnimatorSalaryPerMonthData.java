@@ -176,6 +176,12 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		return AnimatorSalaryPerMonthData.getAnimatorSalaryPerMonthOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return AnimatorSalaryPerMonthData.saveAnimatorSalaryPerMonthOfflineURL;
+	}
+	
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

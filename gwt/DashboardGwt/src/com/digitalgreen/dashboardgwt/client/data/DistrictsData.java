@@ -192,6 +192,11 @@ public class DistrictsData extends BaseData {
 		return DistrictsData.getDistrictsOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return DistrictsData.saveDistrictOfflineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

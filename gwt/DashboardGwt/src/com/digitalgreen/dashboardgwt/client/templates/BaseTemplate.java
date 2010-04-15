@@ -159,10 +159,10 @@ public class BaseTemplate extends Template {
 			"</div>" +
 		"</div>" +
 		"<div id='error-space'></div>" +
+		"<div id='loading-space'></div>" +
 		"<!-- END Header -->" +
 		"<!-- Content -->" +                 // Content gets added by subclasses
 		"<!-- Submit Button -->" +           // For now gets added by subclasses
-		"</div>" +
 		"<!-- END Content -->" +
 		"<div id='footer'></div>" +
 	"</div>" +

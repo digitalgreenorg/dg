@@ -104,6 +104,10 @@ public class Index extends BaseServlet {
 					Syncronisation syncronisation = new Syncronisation();
 					syncronisation.syncFromLocalToMain(this);
 				}
+				else if (queryArg == "resync"){
+					Syncronisation syncronisation = new Syncronisation();
+					syncronisation.syncFromMainToLocal(this);
+				}
 			}
 			else{
 				this.fillTemplate(new IndexTemplate(this.requestContext));

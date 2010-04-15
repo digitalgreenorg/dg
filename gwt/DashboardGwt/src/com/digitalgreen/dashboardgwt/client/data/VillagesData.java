@@ -139,7 +139,7 @@ public class VillagesData extends BaseData {
 												"block_id INT  NOT NULL DEFAULT 0," +
 												"NO_OF_HOUSEHOLDS INT  NULL DEFAULT NULL," +
 												"POPULATION INT  NULL DEFAULT NULL," +
-												"ROAD_CONNECTIVITY VARCHAR(100)  NOT NULL ," +
+												"ROAD_CONNECTIVITY VARCHAR(100)  NULL ," +
 												"CONTROL SMALLINT  NULL DEFAULT NULL," +
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
@@ -190,28 +190,34 @@ public class VillagesData extends BaseData {
 		return VillagesData.getVillageOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return VillagesData.saveVillageOfflineURL;
+	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;
 
+	
 	public List serialize(JsArray<Type> villageObjects){
-		List villages = new ArrayList();
-		BlocksData block = new BlocksData();
-		for(int i = 0; i < villageObjects.length(); i++){
-			BlocksData.Data b = block.new Data(villageObjects.get(i).getBlock().getPk(), 
-					villageObjects.get(i).getBlock().getBlockName()); 
-			VillagesData.Data village = new Data(villageObjects.get(i).getPk(), 
-					villageObjects.get(i).getVillageName(), b,
-					villageObjects.get(i).getNoOfHouseholds(),
-					villageObjects.get(i).getPopulation(),
-					villageObjects.get(i).getRoadConnectivity(),
-					villageObjects.get(i).getControl(),
-					villageObjects.get(i).getStartDate());
-			villages.add(village);
-		}
-		return villages;
+        List villages = new ArrayList();
+        BlocksData block = new BlocksData();
+        for(int i = 0; i < villageObjects.length(); i++){
+                BlocksData.Data b = block.new Data(villageObjects.get(i).getBlock().getPk(),
+                                villageObjects.get(i).getBlock().getBlockName());
+                VillagesData.Data village = new Data(villageObjects.get(i).getPk(),
+                                villageObjects.get(i).getVillageName(), b,
+                                villageObjects.get(i).getNoOfHouseholds(),
+                                villageObjects.get(i).getPopulation(),
+                                villageObjects.get(i).getRoadConnectivity(),
+                                villageObjects.get(i).getControl(),
+                                villageObjects.get(i).getStartDate());
+                villages.add(village);
+        }
+        return villages;
 	}
+
 
 	@Override
 	public List getListingOnline(String json){

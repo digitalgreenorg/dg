@@ -15,8 +15,8 @@ public class ScreeningVideosScreenedData extends BaseData {
 	public static class Type extends BaseData.Type{
 		protected Type(){}
 		
-		public final native ScreeningsData.Type getScreening() /*-{ return this.fields.screening;}-*/;
-		public final native VideosData.Type getVideo() /*-{ return this.fields.video;}-*/;		
+		public final native String getScreening() /*-{ return this.fields.screening;}-*/;
+		public final native String getVideo() /*-{ return this.fields.video;}-*/;		
 	}
 	
 	public class Data extends BaseData.Data {
@@ -148,6 +148,10 @@ public class ScreeningVideosScreenedData extends BaseData {
 		return ScreeningVideosScreenedData.getScreeningVideosScreenedOnlineURL;
 	}
 	
+	@Override
+	public String getSaveOfflineURL(){
+		return ScreeningVideosScreenedData.saveScreeningVideosScreenedOfflineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
@@ -157,12 +161,9 @@ public class ScreeningVideosScreenedData extends BaseData {
 		List screeningVideosScreeneds = new ArrayList();
 		ScreeningsData screening = new ScreeningsData();
 		VideosData video = new VideosData();
-		PracticesData practice = new PracticesData();
 		for(int i = 0; i < screeningVideosScreenedObjects.length(); i++){
-			ScreeningsData.Data sc = screening.new Data(screeningVideosScreenedObjects.get(i).getScreening().getPk(),
-					screeningVideosScreenedObjects.get(i).getScreening().getDate());
-			VideosData.Data vid = video.new Data(screeningVideosScreenedObjects.get(i).getVideo().getPk(),
-					screeningVideosScreenedObjects.get(i).getVideo().getTitle());
+			ScreeningsData.Data sc = screening.new Data(screeningVideosScreenedObjects.get(i).getScreening());
+			VideosData.Data vid = video.new Data(screeningVideosScreenedObjects.get(i).getVideo());
 			
 			Data screeningVideosScreened = new Data(screeningVideosScreenedObjects.get(i).getPk(),sc,vid);
 			screeningVideosScreeneds.add(screeningVideosScreened);
