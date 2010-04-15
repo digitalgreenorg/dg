@@ -59,6 +59,7 @@ public class BlocksData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.district = (new DistrictsData()).new Data();
 			return obj;
 		}
 		

@@ -70,6 +70,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.animator = (new AnimatorsData()).new Data();
 			return obj;
 		}
 		

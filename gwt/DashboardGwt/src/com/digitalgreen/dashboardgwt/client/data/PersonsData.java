@@ -122,6 +122,8 @@ public class PersonsData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.village = (new VillagesData()).new Data();
+			obj.group = (new PersonGroupsData()).new Data();
 			return obj;
 		}
 		
@@ -399,8 +401,8 @@ public class PersonsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
-		String html = "<select name=\"village\" id=\"id_village\">"+ 
-		"<option value='' selected='selected'>---------</option>";
+		String html = "<select name=\"village\" id=\"id_village\">" + 
+					"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
@@ -410,8 +412,8 @@ public class PersonsData extends BaseData {
 		PersonGroupsData personGroupData = new PersonGroupsData();
 		List groups = personGroupData.getAllPersonGroupsOffline();
 		PersonGroupsData.Data group;
-		html = html + "<select name=\"group\" id=\"id_group\">"+ 
-		"<option value='' selected='selected'>---------</option>";
+		html = html + "<select name=\"group\" id=\"id_group\">" + 
+			"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i< groups.size(); i++){
 			group = (PersonGroupsData.Data)groups.get(i);
 			html = html + "<option value = \"" + group.getId() +"\">" + group.getPersonGroupName() + "</option>";

@@ -91,6 +91,7 @@ public class EquipmentsData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.equipmentholder = (new EquipmentHoldersData()).new Data();
 			return obj;
 		}
 		

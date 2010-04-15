@@ -5,6 +5,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -59,6 +60,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		@Override
 		public BaseData.Data clone(){
 			Data obj = new Data();
+			obj.animator = (new AnimatorsData()).new Data();
+			obj.village = (new VillagesData()).new Data();
 			return obj;
 		}
 		

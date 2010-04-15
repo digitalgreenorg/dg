@@ -108,6 +108,7 @@ public class Data extends BaseData.Data {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.village = (new VillagesData()).new Data();
 			return obj;
 		}
 		
@@ -252,11 +253,15 @@ public class Data extends BaseData.Data {
 					monthlycostpervillageObjects.get(i).getVillage().getVillageName());
 			
 			Data monthlycostpervillage = new Data(monthlycostpervillageObjects.get(i).getPk(), vil,
-					monthlycostpervillageObjects.get(i).getDate(), monthlycostpervillageObjects.get(i).getLaborCost(),
-					 monthlycostpervillageObjects.get(i).getEquipmentCost(), monthlycostpervillageObjects.get(i).getTransportationCost(),
-					 monthlycostpervillageObjects.get(i).getMiscellaneousCost(), monthlycostpervillageObjects.get(i).getTotalCost(),
-					 monthlycostpervillageObjects.get(i).getPartnersCost(), monthlycostpervillageObjects.get(i).getDigitalGreenCost(),
-					 monthlycostpervillageObjects.get(i).getCommunityCost());
+											monthlycostpervillageObjects.get(i).getDate(), 
+											monthlycostpervillageObjects.get(i).getLaborCost(),
+											monthlycostpervillageObjects.get(i).getEquipmentCost(), 
+											monthlycostpervillageObjects.get(i).getTransportationCost(),
+											monthlycostpervillageObjects.get(i).getMiscellaneousCost(), 
+											monthlycostpervillageObjects.get(i).getTotalCost(),
+											monthlycostpervillageObjects.get(i).getPartnersCost(), 
+											monthlycostpervillageObjects.get(i).getDigitalGreenCost(),
+											monthlycostpervillageObjects.get(i).getCommunityCost());
 			monthlycostpervillages.add(monthlycostpervillage);
 		}
 		

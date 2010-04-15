@@ -127,6 +127,7 @@ public class DevelopmentManagersData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.region = (new RegionsData()).new Data();
 			return obj;
 		}
 		
