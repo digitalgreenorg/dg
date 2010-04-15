@@ -80,6 +80,7 @@ public class DistrictsData extends BaseData {
 		@Override
 		public BaseData.Data clone(){
 			Data obj = new Data();
+			obj.state = (new StatesData()).new Data();
 			obj.fieldofficer = (new FieldOfficersData()).new Data();
 			obj.partner = (new PartnersData()).new Data();
 			return obj;
