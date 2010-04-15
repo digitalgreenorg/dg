@@ -205,6 +205,12 @@ public class AnimatorsData extends BaseData {
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("village", foreignKey.getId());
 		}
+		
+		@Override
+		public String getTableId() {
+			AnimatorsData animatorsDataDbApis = new AnimatorsData();
+			return animatorsDataDbApis.tableID;
+		}
 	}
 	
 	protected static String tableID = "15";
