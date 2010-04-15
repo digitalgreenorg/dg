@@ -7,6 +7,7 @@ import java.lang.StringBuilder;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.DevelopmentManagersData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -125,6 +126,9 @@ public class ScreeningsData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.village = (new VillagesData()).new Data();
+			obj.fieldofficer = (new FieldOfficersData()).new Data();
+			obj.animator = (new AnimatorsData()).new Data();	
 			return obj;
 		}
 		

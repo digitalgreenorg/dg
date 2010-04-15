@@ -51,6 +51,8 @@ public class ScreeningVideosScreenedData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
+			obj.screening = (new ScreeningsData()).new Data();
+			obj.video = (new VideosData()).new Data();
 			return obj;
 		}
 		

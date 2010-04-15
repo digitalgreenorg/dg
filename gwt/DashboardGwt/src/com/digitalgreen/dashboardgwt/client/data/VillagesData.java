@@ -6,6 +6,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.VideosData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -77,7 +78,7 @@ public class VillagesData extends BaseData {
 		@Override
 		public BaseData.Data clone() {
 			Data obj = new Data();
-			BlocksData.Data blocks = ((new BlocksData()).new Data());
+			obj.block = (new BlocksData()).new Data();
 			return obj;
 		}
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -61,6 +62,7 @@ public class StatesData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.region = (new RegionsData()).new Data();
 			return obj;
 		}
 		

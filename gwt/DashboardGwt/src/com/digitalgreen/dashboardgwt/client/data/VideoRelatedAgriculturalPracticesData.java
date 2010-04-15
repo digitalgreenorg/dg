@@ -50,6 +50,8 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
+			obj.video = (new VideosData()).new Data();
+			obj.practice = (new PracticesData()).new Data();
 			return obj;
 		}
 		
