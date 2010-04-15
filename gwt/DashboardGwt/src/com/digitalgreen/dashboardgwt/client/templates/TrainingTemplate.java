@@ -103,7 +103,7 @@ public class TrainingTemplate extends BaseTemplate{
 							"</thead>" +
 							"<tbody>";							
 	
-	final static private String trainingListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String trainingListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
 									"<h1>Select Training to change</h1>" +
 									"<div id='content-main'>" +
@@ -120,7 +120,7 @@ public class TrainingTemplate extends BaseTemplate{
 									"</div>" +
 								"</div>";
 	
-	final static private String trainingAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String trainingAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='colM'>" +
 									"<h1>Add Training</h1>" +
 									"<div id='content-main'>" +
