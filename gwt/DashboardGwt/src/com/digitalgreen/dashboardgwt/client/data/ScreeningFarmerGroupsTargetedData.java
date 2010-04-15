@@ -62,9 +62,7 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("screening")) {
+			if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
 				this.screening.id = val;
@@ -73,7 +71,10 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 				PersonGroupsData group = new PersonGroupsData();
 				this.group = group.getNewData();
 				this.group.id = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 	
 
@@ -83,7 +84,14 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(this.id,
 					this.screening.getId(),
 					this.group.getId());
-		}	
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
+			return screeningFarmerGroupsTargetedsDataDbApis.tableID;
+		}
 	}
 	
 	

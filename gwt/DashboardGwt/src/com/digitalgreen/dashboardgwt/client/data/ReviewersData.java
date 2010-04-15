@@ -63,13 +63,14 @@ public class ReviewersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("content_type")) {
+			if(key.equals("content_type")) {
 				this.content_type = (String)val;
 			} else if(key.equals("object_id")) {
 				this.object_id = (String)val;
-			}			
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);			
 		}
 		
 		@Override
@@ -78,6 +79,13 @@ public class ReviewersData extends BaseData {
 			this.id = reviewersDataDbApis.autoInsert(this.id, 
 					this.content_type, 
 					this.object_id);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			ReviewersData reviewersDataDbApis = new ReviewersData();
+			return reviewersDataDbApis.tableID;
 		}
 	}
 

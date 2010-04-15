@@ -70,10 +70,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			}
-			else if(key.equals("animator")) {
+			if(key.equals("animator")) {
 				AnimatorsData animator1 = new AnimatorsData();
 				this.animator = animator1.getNewData();
 				this.animator.id = val;
@@ -85,7 +82,10 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			}
 			else if(key.equals("start_date")) {
 				this.start_date = (String)val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -95,6 +95,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 					this.animator.getId(), 
 					this.village.getId(), 
 					this.start_date);
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
@@ -104,6 +105,14 @@ public class AnimatorAssignedVillagesData extends BaseData{
 					foreignKey.getId(), 
 					this.village.getId(), 
 					this.start_date);
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("animator", foreignKey.getId());
+		}
+		
+		@Override
+		public String getTableId() {
+			AnimatorAssignedVillagesData animatorAssignedVillagesDataDbApis = new AnimatorAssignedVillagesData();
+			return animatorAssignedVillagesDataDbApis.tableID;
 		}
 	}
 	

@@ -61,9 +61,7 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("video")) {
+			if(key.equals("video")) {
 				VideosData video = new VideosData();
 				this.video = video.getNewData();
 				this.video.id = val;
@@ -71,7 +69,10 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 				PracticesData practice = new PracticesData();
 				this.practice = practice.getNewData();
 				this.practice.id = val;				
-			} 
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
 	
 		@Override		
@@ -80,7 +81,14 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 			this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.id,
 						this.video.getId(),
 						this.practice.getId());
+			this.addNameValueToQueryString("id", this.id);
 		}	
+		
+		@Override
+		public String getTableId() {
+			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();
+			return videoRelatedAgriculturalPracticessDataDbApis.tableID;
+		}
 	}
 	
 	

@@ -138,9 +138,7 @@ public class ScreeningsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("date")) {
+			if(key.equals("date")) {
 				this.date = (String)val;
 			} else if(key.equals("start_time")){
 				this.start_time = (String)val;
@@ -166,7 +164,10 @@ public class ScreeningsData extends BaseData {
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
 				this.animator.id = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -184,6 +185,13 @@ public class ScreeningsData extends BaseData {
 					this.village.getId(),
 					this.fieldofficer.getId(),
 					this.animator.getId());
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			ScreeningsData screeningsDataDbApis = new ScreeningsData();
+			return screeningsDataDbApis.tableID;
 		}
 	}
 	
@@ -372,6 +380,8 @@ public class ScreeningsData extends BaseData {
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		
+		Window.alert("In retrieveDataAndConvertResultIntoHtml");
+		
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
@@ -382,44 +392,48 @@ public class ScreeningsData extends BaseData {
 			html = html + "<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>";
 		}
 		html = html + "</select>";
+		Window.alert("Village html:"+html);
 		
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data animator;
-		html = "<select name=\"animator\" id=\"id_animator\">" + 
+		html = html+"<select name=\"animator\" id=\"id_animator\">" + 
 				"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < animators.size(); i++){
 			animator = (AnimatorsData.Data)animators.get(i);
 			html = html + "<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>";
 		}
 		html = html + "</select>";
+		Window.alert("Village html,Animator html:"+html);
 		
 		VideosData videoData = new VideosData();
 		List videos = videoData.getAllVideosOffline();
 		VideosData.Data video;
-		html = "<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
+		html = html+"<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
 				"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < videos.size(); i++){
 			video = (VideosData.Data)videos.get(i);
 			html = html + "<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>";
 		}
 		html = html + "</select>";
+		Window.alert("Village html,Animator html,videos:"+html);
 		
 		FieldOfficersData fieldOfficerData = new FieldOfficersData();
 		List fieldOfficers = fieldOfficerData.getAllFieldOfficersOffline();
 		FieldOfficersData.Data fieldOfficer;
-		html = "<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
+		html = html+"<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
 				"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < fieldOfficers.size(); i++){
 			fieldOfficer = (FieldOfficersData.Data)fieldOfficers.get(i);
 			html = html + "<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>";
 		}
 		html = html + "</select>";
+		Window.alert("Village html,Animator html,videos,fieldofficers:"+html);
 		
 		PersonGroupsData personGroupData = new PersonGroupsData();
 		List personGroups = personGroupData.getAllPersonGroupsOffline();
 		PersonGroupsData.Data personGroup;
-		html = "<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
+		html = html + "<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
 				"<option value='' selected='selected'>---------</option>";
 		for(int i = 0; i < personGroups.size(); i++){
 			personGroup = (PersonGroupsData.Data)personGroups.get(i);
@@ -427,6 +441,7 @@ public class ScreeningsData extends BaseData {
 		}
 		html = html + "</select>";
 		
+		Window.alert("all html is: "+html);
 		return html;
 	}
 	

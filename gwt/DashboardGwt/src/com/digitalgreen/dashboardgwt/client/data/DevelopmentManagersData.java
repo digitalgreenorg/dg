@@ -133,9 +133,7 @@ public class DevelopmentManagersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("name")) {
+			if(key.equals("name")) {
 				this.name = (String)val;
 			} else if(key.equals("age")) {
 				this.age = (String)val;
@@ -161,7 +159,10 @@ public class DevelopmentManagersData extends BaseData {
 				this.equipmentholder = val;
 			} else if(key.equals("salary")) {
 				this.salary = val;
-			}		
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);		
 		}
 		
 		@Override
@@ -180,7 +181,14 @@ public class DevelopmentManagersData extends BaseData {
 						this.start_day,
 						this.equipmentholder,
 						this.salary);
+			this.addNameValueToQueryString("id", this.id);
 			}
+		
+		@Override
+		public String getTableId() {
+			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
+			return developmentmanagersDataDbApis.tableID;
+		}
 	}
 	
 	protected static String tableID = "4";

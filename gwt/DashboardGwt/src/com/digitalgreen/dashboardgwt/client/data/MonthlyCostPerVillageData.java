@@ -119,9 +119,7 @@ public class Data extends BaseData.Data {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			}  else if(key.equals("village")) {
+			if(key.equals("village")) {
 				// Have to Create an instance of VillagesData to create an instance of VillagesData.Data -- any better way of doing this??
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
@@ -145,7 +143,10 @@ public class Data extends BaseData.Data {
 				this.digitalgreen_cost = (String)val;
 			}	else if(key.equals("community_cost")) {
 				this.community_cost = (String)val;
-			}		
+			}	else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);	
 		}
 		
 		@Override
@@ -162,6 +163,13 @@ public class Data extends BaseData.Data {
 						this.partners_cost,
 						this.digitalgreen_cost,
 						this.community_cost);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			MonthlyCostPerVillageData monthlycostpervillagesDataDbApis = new MonthlyCostPerVillageData();
+			return monthlycostpervillagesDataDbApis.tableID;
 		}
 	}
 	

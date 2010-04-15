@@ -173,9 +173,7 @@ public class VideosData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("title")) {
+			if(key.equals("title")) {
 				this.title = (String)val;
 			} else if(key.equals("video_type")){
 				this.video_type = val;
@@ -235,8 +233,10 @@ public class VideosData extends BaseData {
 				VideosData video = new VideosData();
 				this.supplementary_video_produced = video.getNewData();
 				this.supplementary_video_produced.id = val;
+			} else {
+				return;
 			}
-			
+			this.addNameValueToQueryString(key, val);			
 			
 		}
 		
@@ -275,6 +275,13 @@ public class VideosData extends BaseData {
 						this.remarks, 
 						this.actors, 
 						this.last_modified);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			VideosData videosDataDbApis = new VideosData();
+			return videosDataDbApis.tableID;
 		}
 	}
 	

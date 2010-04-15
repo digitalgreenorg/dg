@@ -72,9 +72,7 @@ public class StatesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("state_name")) {
+			if(key.equals("state_name")) {
 				this.state_name = val;
 			} else if(key.equals("region")) {
 				// Have to Create an instance of RegionsData to create an instance of RegionsData.Data -- any better way of doing this??
@@ -84,13 +82,23 @@ public class StatesData extends BaseData {
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_date")) {
 				this.start_date = val;
-			}		
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);	
 		}
 		
 		@Override
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();		
 			this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			StatesData statesDataDbApis = new StatesData();
+			return statesDataDbApis.tableID;
 		}
 	}
 

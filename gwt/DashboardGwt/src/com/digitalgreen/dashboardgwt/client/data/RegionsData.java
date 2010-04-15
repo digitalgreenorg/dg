@@ -64,13 +64,14 @@ public class RegionsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("region_name")) {
+			if(key.equals("region_name")) {
 				this.region_name = (String)val;
 			} else if(key.equals("start_date")) {
 				this.start_date = (String)val;
-			}			
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);			
 		}
 		
 		@Override
@@ -79,7 +80,14 @@ public class RegionsData extends BaseData {
 			this.id = regionsDataDbApis.autoInsert(this.id,
 					this.region_name, 
 					this.start_date);
-		}				
+			this.addNameValueToQueryString("id", this.id);
+		}		
+		
+		@Override
+		public String getTableId() {
+			RegionsData regionsDataDbApis = new RegionsData();
+			return regionsDataDbApis.tableID;
+		}
 	}
 
 	protected static String tableID = "1";

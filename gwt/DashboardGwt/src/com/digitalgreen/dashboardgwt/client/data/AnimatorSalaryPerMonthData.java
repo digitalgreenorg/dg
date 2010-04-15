@@ -81,9 +81,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("animator")) {
+			if(key.equals("animator")) {
 				// Have to Create an instance of AnimatorsData to create an instance of AnimatorsData.Data -- any better way of doing this??
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
@@ -95,7 +93,10 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 				this.total_salary = (String)val;
 			}	 else if(key.equals("pay_date")) {
 				this.pay_date = (String)val;
-			}		
+			}	else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);	
 		}
 		
 		@Override
@@ -106,6 +107,14 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 						this.date,
 						this.total_salary, 
 						this.pay_date);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+
+		@Override
+		public String getTableId() {
+			AnimatorSalaryPerMonthData animatorsalarypermonthsDataDbApis = new AnimatorSalaryPerMonthData();
+			return animatorsalarypermonthsDataDbApis.tableID;
 		}
 		
 	}

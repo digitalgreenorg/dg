@@ -102,9 +102,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("screening")) {
+			if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
 				this.screening.id = val;
@@ -135,7 +133,10 @@ public class PersonMeetingAttendanceData extends BaseData {
 				
 			}  else if(key.equals("expressed_question")) {
 				this.expressed_question = (String)val;
-			} 
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
 	
 
@@ -148,7 +149,14 @@ public class PersonMeetingAttendanceData extends BaseData {
 						this.expressed_interest_practice.getId(),this.expressed_interest,
 						this.expressed_adoption_practice.getId(),this.expressed_adoption,
 						this.expressed_question_practice.getId(),this.expressed_question);
-		}	
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();
+			return personMeetingAttendancesDataDbApis.tableID;
+		}
 	}
 		
 		

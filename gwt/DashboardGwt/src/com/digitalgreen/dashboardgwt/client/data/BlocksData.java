@@ -70,10 +70,7 @@ public class BlocksData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			}
-			else if(key.equals("block_name")){
+			if(key.equals("block_name")){
 				this.block_name = (String)val;
 			}
 			else if(key.equals("start_date")){
@@ -83,7 +80,10 @@ public class BlocksData extends BaseData {
 				DistrictsData district1 = new DistrictsData();
 				this.district = district1.getNewData();
 				this.district.id = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -93,6 +93,13 @@ public class BlocksData extends BaseData {
 						this.block_name, 
 						this.start_date, 
 						this.district.getId());
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			BlocksData blocksDataDbApis = new BlocksData();
+			return blocksDataDbApis.tableID;
 		}
 	}
 	

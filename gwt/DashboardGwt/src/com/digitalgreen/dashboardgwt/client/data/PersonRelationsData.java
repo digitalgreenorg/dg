@@ -71,9 +71,7 @@ public class Data extends BaseData.Data {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("person")) {
+			if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
 				this.person.id = val;
@@ -83,7 +81,10 @@ public class Data extends BaseData.Data {
 				this.relative.id = val;
 			} else if(key.equals("type_of_relationship")) {
 				this.type_of_relationship = (String)val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -91,6 +92,13 @@ public class Data extends BaseData.Data {
 			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();			
 			this.id = personRelationssDataDbApis.autoInsert(this.id, this.person.getId(),
 						this.relative.getId(), this.type_of_relationship);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			PersonRelationsData personRelationssDataDbApis = new PersonRelationsData();
+			return personRelationssDataDbApis.tableID;
 		}
 	}
 

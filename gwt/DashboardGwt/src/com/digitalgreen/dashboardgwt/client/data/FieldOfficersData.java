@@ -84,9 +84,7 @@ public class FieldOfficersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")){
-				this.id = val;
-			} else if(key.equals("name")){
+			if(key.equals("name")){
 				this.name = (String)val;
 			}
 			else if(key.equals("age")){
@@ -112,7 +110,10 @@ public class FieldOfficersData extends BaseData {
 			}
 			else if(key.equals("equipmentholder")) {
 				this.equipmentholder = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 
 		@Override
@@ -128,6 +129,13 @@ public class FieldOfficersData extends BaseData {
 						this.address, 
 						this.reviewer, 
 						this.equipmentholder);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			FieldOfficersData fieldOfficersDataDbApis = new FieldOfficersData();
+			return fieldOfficersDataDbApis.tableID;
 		}
 	}
 	

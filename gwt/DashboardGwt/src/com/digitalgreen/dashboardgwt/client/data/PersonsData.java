@@ -128,9 +128,7 @@ public class PersonsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("person_name")) {
+			if(key.equals("person_name")) {
 				this.person_name = (String)val;
 			} else if(key.equals("father_name")) {
 				this.father_name = (String)val;
@@ -157,7 +155,10 @@ public class PersonsData extends BaseData {
 				//Never ever use this -- this.group.id = ((Integer)val).intValue();
 			}  else if(key.equals("equipmentholder")) {
 				this.equipmentholder_id = val;
-			}  
+			}  else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override		
@@ -173,11 +174,12 @@ public class PersonsData extends BaseData {
 						this.land_holdings,
 						this.village.getId(),
 						this.group.getId(),
-						this.equipmentholder_id);			
+						this.equipmentholder_id);
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
-		public void save(BaseData.Data withForeignKey) {
+		public void save(BaseData.Data foreignKey) {
 			PersonsData personsDataDbApis = new PersonsData();
 			this.id = personsDataDbApis.autoInsert(this.id,
 					this.person_name,
@@ -188,9 +190,18 @@ public class PersonsData extends BaseData {
 					this.address,
 					this.land_holdings,
 					this.village.getId(),
-					withForeignKey.getId(),
-					this.equipmentholder_id);			
-		}			
+					foreignKey.getId(),
+					this.equipmentholder_id);
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("persongroup", foreignKey.getId());
+		}
+		
+
+		@Override
+		public String getTableId() {
+			PersonsData personsDataDbApis = new PersonsData();
+			return personsDataDbApis.tableID;
+		}
 	}
 	
 	protected static String tableID = "13";

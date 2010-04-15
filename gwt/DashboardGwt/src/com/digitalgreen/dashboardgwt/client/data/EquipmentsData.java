@@ -102,9 +102,7 @@ public class EquipmentsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("equipment_type")) {
+			if(key.equals("equipment_type")) {
 				this.equipment_type = (String)val;
 			} else if(key.equals("model_no")) {
 				this.model_no = (String)val;
@@ -118,7 +116,10 @@ public class EquipmentsData extends BaseData {
 				this.warranty_expiration_date = (String)val;
 			} else if(key.equals("equipmentholder")) {
 				this.equipmentholder_id = val;
-			} 	 	
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);	 	
 		}
 		
 		@Override
@@ -133,6 +134,13 @@ public class EquipmentsData extends BaseData {
 						this.procurement_date,
 						this.warranty_expiration_date,
 						this.equipmentholder_id);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			EquipmentsData equipmentsDataDbApis = new EquipmentsData();
+			return equipmentsDataDbApis.tableID;
 		}
 	}
 	
