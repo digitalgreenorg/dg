@@ -142,8 +142,8 @@ public class PersonGroupsData extends BaseData {
 		
 		@Override
 		public String getTableId() {
-			VillagesData villagesDataDbApis = new VillagesData();
-			return villagesDataDbApis.tableID;
+			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
+			return personGroupsDataDbApis.tableID;
 		}
 	}
 	
