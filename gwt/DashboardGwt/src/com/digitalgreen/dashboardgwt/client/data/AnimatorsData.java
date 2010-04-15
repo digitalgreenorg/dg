@@ -137,9 +137,7 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("name")) {
+			if(key.equals("name")) {
 				this.name = val;
 			} else if(key.equals("age")) {
 				this.age = val;
@@ -165,7 +163,10 @@ public class AnimatorsData extends BaseData {
 				this.village.id = val;
 			} else if(key.equals("equipmentholder")) {
 				this.equipment_holder_id = val;
+			}else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -183,6 +184,7 @@ public class AnimatorsData extends BaseData {
 						this.partner.getId(), 
 						this.village.getId(), 
 						this.equipment_holder_id);
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
@@ -200,6 +202,8 @@ public class AnimatorsData extends BaseData {
 					this.partner.getId(), 
 					foreignKey.getId(), 
 					this.equipment_holder_id);
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("village", foreignKey.getId());
 		}
 	}
 	

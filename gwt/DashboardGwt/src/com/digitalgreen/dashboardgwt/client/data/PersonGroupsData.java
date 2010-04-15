@@ -91,9 +91,7 @@ public class PersonGroupsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("group_name")) {
+			if(key.equals("group_name")) {
 				this.group_name = val;
 			} else if(key.equals("days")) {
 				this.days = val;
@@ -105,7 +103,10 @@ public class PersonGroupsData extends BaseData {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
 				this.village.id = val;
+			}else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -120,10 +121,11 @@ public class PersonGroupsData extends BaseData {
 						this.timings,
 						this.time_updated, 
 						this.village.getId());
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
-		public void save(BaseData.Data withForeignKey) {
+		public void save(BaseData.Data foreignKey) {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
 			Date date = new Date();
 			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
@@ -133,7 +135,15 @@ public class PersonGroupsData extends BaseData {
 					this.days, 
 					this.timings,
 					this.time_updated, 
-					withForeignKey.getId());
+					foreignKey.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("village", foreignKey.getId());
+		}
+		
+		@Override
+		public String getTableId() {
+			VillagesData villagesDataDbApis = new VillagesData();
+			return villagesDataDbApis.tableID;
 		}
 	}
 	

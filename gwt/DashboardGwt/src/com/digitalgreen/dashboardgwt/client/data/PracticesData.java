@@ -72,10 +72,7 @@ public class PracticesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")){
-				this.id = val;
-			}
-			else if(key.equals("practice_name")){
+			if(key.equals("practice_name")){
 				this.practice_name = (String)val;
 			}
 			else if(key.equals("seasonality")){
@@ -84,6 +81,10 @@ public class PracticesData extends BaseData {
 			else if(key.equals("summary")){
 				this.summary = (String)val;
 			}
+			else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -93,6 +94,13 @@ public class PracticesData extends BaseData {
 					this.practice_name, 
 					this.seasonality, 
 					this.summary);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			PracticesData practicesDataDbApis = new PracticesData();
+			return practicesDataDbApis.tableID;
 		}
 	}
 	

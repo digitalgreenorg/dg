@@ -89,9 +89,7 @@ public class VillagesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("id")) {
-				this.id = val;
-			} else if(key.equals("village_name")) {
+			if(key.equals("village_name")) {
 				this.village_name = val;
 			} else if(key.equals("block")) {
 				BlocksData block = new BlocksData();
@@ -107,7 +105,10 @@ public class VillagesData extends BaseData {
 				this.control = val;
 			} else if(key.equals("start_date")) {
 				this.start_date = val;
+			} else {
+				return;
 			}
+			this.addNameValueToQueryString(key, val);
 		}
 		
 		@Override
@@ -121,6 +122,13 @@ public class VillagesData extends BaseData {
 					this.road_connectivity, 
 					this.control, 
 					this.start_date);
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String getTableId() {
+			VillagesData villagesDataDbApis = new VillagesData();
+			return villagesDataDbApis.tableID;
 		}
 	}
 	
