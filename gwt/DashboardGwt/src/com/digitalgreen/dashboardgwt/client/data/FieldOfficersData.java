@@ -152,8 +152,8 @@ public class FieldOfficersData extends BaseData {
 												"GENDER VARCHAR(1) NOT NULL ," +
 												"HIRE_DATE DATE NULL DEFAULT NULL," +
 												"SALARY FLOAT(0,0) NULL DEFAULT NULL," +
-												"PHONE_NO VARCHAR(100) NOT NULL ," +
-												"ADDRESS VARCHAR(500) NOT NULL ," +
+												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL ," +
+												"ADDRESS VARCHAR(500) NULL DEFAULT NULL ," +
 												"reviewer_id INT NULL DEFAULT NULL," +
 												"equipmentholder_id INT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +

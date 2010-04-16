@@ -204,9 +204,9 @@ public class DevelopmentManagersData extends BaseData {
 												"AGE INT  NULL DEFAULT NULL," +
 												"GENDER VARCHAR(1)  NOT NULL ," +
 												"HIRE_DATE DATE  NULL DEFAULT NULL," +
-												"PHONE_NO VARCHAR(100)  NOT NULL, " +
-												"ADDRESS VARCHAR(500)  NOT NULL ," +
-												"SPECIALITY TEXT  NOT NULL ," +
+												"PHONE_NO VARCHAR(100)  NULL DEFAULT NULL, " +
+												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL ," +
+												"SPECIALITY TEXT  NULL DEFAULT NULL ," +
 												"region_id INT  NOT NULL DEFAULT 0," +
 												"START_DAY DATE  NULL DEFAULT NULL," +
 												"equipmentholder_id INT  NULL DEFAULT NULL," +

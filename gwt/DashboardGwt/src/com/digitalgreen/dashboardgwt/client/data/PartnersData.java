@@ -116,8 +116,8 @@ public class PartnersData extends BaseData {
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PARTNER_NAME VARCHAR(100)  NOT NULL ," +
 												"DATE_OF_ASSOCIATION DATE  NULL DEFAULT NULL," +
-												"PHONE_NO VARCHAR(100)  NOT NULL ," +
-												"ADDRESS VARCHAR(500)  NOT NULL ," +
+												"PHONE_NO VARCHAR(100)  NULL DEFAULT NULL ," +
+												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL ," +
 												"reviewer_id INT  NULL DEFAULT NULL," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +

@@ -151,8 +151,8 @@ public class EquipmentsData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_id` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"EQUIPMENT_TYPE VARCHAR(300)  NOT NULL ," +
-												"MODEL_NO VARCHAR(300)  NOT NULL ," +
-												"SERIAL_NO VARCHAR(300)  NOT NULL ," +
+												"MODEL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
+												"SERIAL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
 												"COST FLOAT(0,0)  NULL DEFAULT NULL," +
 												"PROCUREMENT_DATE DATE NULL DEFAULT NULL," +
 												"WARRANTY_EXPIRATION_DATE DATE  NULL DEFAULT NULL," +
