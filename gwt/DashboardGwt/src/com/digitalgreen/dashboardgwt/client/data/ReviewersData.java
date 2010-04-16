@@ -94,8 +94,8 @@ public class ReviewersData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
-	protected static String selectReviewers = "SELECT id FROM equipment_holder ORDER BY(-id)";
-	protected static String listReviewers = "SELECT * FROM equipment_holder ORDER BY(-id)";
+	protected static String selectReviewers = "SELECT id FROM reviewer ORDER BY(-id)";
+	protected static String listReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String saveReviewerOnlineURL = "/dashboard/saverevieweronline/";
 	protected static String getReviewerOnlineURL = "/dashboard/getreviewersonline/";
 	protected static String saveReviewerOfflineURL = "/dashboard/saverevieweroffline/";
@@ -164,4 +164,24 @@ public class ReviewersData extends BaseData {
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}		
+	
+	public List getAllReviewersOffline(){
+		BaseData.dbOpen();
+		List reviewers = new ArrayList();
+		this.select(selectReviewers);
+		if(this.getResultSet().isValidRow()){
+			try {
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					Data reviewer = new Data(this.getResultSet().getFieldAsString(0));
+					reviewers.add(reviewer);
+				}
+			}
+			catch(DatabaseException e){
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return reviewers;
+	}
 }

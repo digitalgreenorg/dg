@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
@@ -427,6 +428,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	// Override this
 	public String getSaveOfflineURL(){
 		return null;
+	}
+	
+	public static String getCurrentDateAndTime(){
+		Date date = new Date();
+		return date.getYear() + 1900 + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 	}
 
 	// Basically a wrapper around a core data function to execute

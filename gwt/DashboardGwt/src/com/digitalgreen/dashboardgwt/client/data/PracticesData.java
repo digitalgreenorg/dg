@@ -22,7 +22,7 @@ public class PracticesData extends BaseData {
 	
 	public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "practices";
+		final private static String COLLECTION_PREFIX = "practice";
 		
 		private String practice_name;
 		private String seasonality;

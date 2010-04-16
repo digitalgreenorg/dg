@@ -87,6 +87,16 @@ public class VideoFarmersShownData extends BaseData {
 		}	
 		
 		@Override
+		public void save(BaseData.Data foreignKey){
+			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();		
+			this.id = videoFarmersShownsDataDbApis.autoInsert(this.id,
+						foreignKey.getId(),
+						this.person.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("video", foreignKey.getId());
+		}
+		
+		@Override
 		public String getTableId() {
 			VideoFarmersShownData videoFarmersShownsDataDbApis = new VideoFarmersShownData();
 			return videoFarmersShownsDataDbApis.tableID;

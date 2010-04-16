@@ -70,6 +70,13 @@ public class PersonsData extends BaseData {
 		}
 		
 
+		public Data(String id, String person_name, VillagesData.Data village) {
+			super();
+			this.id = id;
+			this.person_name = person_name;
+			this.village = village;
+		}
+		
 		public Data(String id, String person_name,VillagesData.Data village,PersonGroupsData.Data group) {
 			super();
 			this.id = id;
@@ -225,7 +232,8 @@ public class PersonsData extends BaseData {
 												"FOREIGN KEY(group_id) REFERENCES person_groups(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ; 
 	
-	protected static String selectPersons = "SELECT id, PERSON_NAME FROM person  ORDER BY (PERSON_NAME);";
+	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
 			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
 			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id);";
@@ -360,8 +368,11 @@ public class PersonsData extends BaseData {
 		this.select(selectPersons);
 		if (this.getResultSet().isValidRow()){
 			try {
+				VillagesData villagesData = new VillagesData();
+				VillagesData.Data village;
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data person = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					village = villagesData.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					Data person = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), village);
 					persons.add(person);
 	    	      }				
 			} catch (DatabaseException e) {

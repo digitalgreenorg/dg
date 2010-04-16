@@ -7,6 +7,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData.Data;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -80,6 +81,12 @@ public class VideosData extends BaseData {
 		
 		public Data() {
 			super();
+			this.addManyToManyRelationship("practice", 
+					(new VideoRelatedAgriculturalPracticesData()).new Data(), 
+					"related_agricultural_practices");
+			this.addManyToManyRelationship("person", 
+					(new VideoFarmersShownData()).new Data(), 
+					"farmers_shown");
 		}
 		
 		public Data(String id) {
@@ -91,6 +98,13 @@ public class VideosData extends BaseData {
 			super();
 			this.id = id;
 			this.title = title;
+		}
+		
+		public Data(String id, String title, VillagesData.Data village) {
+			super();
+			this.id = id;
+			this.title = title;
+			this.village = village;
 		}
 		
 
@@ -161,6 +175,12 @@ public class VideosData extends BaseData {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.language = (new LanguagesData()).new Data();
+			obj.village = (new VillagesData()).new Data();
+			obj.cameraoperator = (new AnimatorsData()).new Data();
+			obj.facilitator = (new AnimatorsData()).new Data();
+			obj.reviewer = (new ReviewersData()).new Data();
+			obj.supplementary_video_produced = (new VideosData()).new Data();
 			return obj;
 		}
 		
@@ -176,32 +196,14 @@ public class VideosData extends BaseData {
 				this.title = (String)val;
 			} else if(key.equals("video_type")){
 				this.video_type = val;
-			} else if(key.equals("video_production_start_date")) {
-				this.video_production_start_date = (String)val;
-			} else if (key.equals("video_production_end_date")) {
-				this.video_production_end_date = (String)val;
+			} else if(key.equals("duration")){
+				this.duration = val;	
 			} else if (key.equals("language")) {
 				LanguagesData language = new LanguagesData();
 				this.language = language.getNewData();
 				this.language.id = val;
-			} else if (key.equals("storybase")){
-				this.storybase = val;
 			} else if (key.equals("summary")){
 				this.summary = (String)val;
-			} else if(key.equals("village")) {
-				VillagesData village = new VillagesData();
-				this.village = village.getNewData();
-				this.village.id = val;
-			} else if(key.equals("facilitator")){
-				AnimatorsData facilitator = new AnimatorsData();
-				this.facilitator = facilitator.getNewData();
-				this.facilitator.id = val;
-			} else if(key.equals("cameraoperator")){
-				AnimatorsData cameraoperator = new AnimatorsData();
-				this.cameraoperator = cameraoperator.getNewData();
-				this.cameraoperator.id = val;
-			}  else if(key.equals("actors")) {
-				this.actors = (String)val;
 			} else if(key.equals("picture_quality")){
 				this.picture_quality = (String)val;
 			} else if(key.equals("audio_quality")){
@@ -214,6 +216,24 @@ public class VideosData extends BaseData {
 				this.edit_finish_date = (String)val;
 			} else if(key.equals("thematic_quality")){
 				this.thematic_quality = (String)val;
+			} else if(key.equals("video_production_start_date")) {
+				this.video_production_start_date = (String)val;
+			} else if (key.equals("video_production_end_date")) {
+				this.video_production_end_date = (String)val;
+			} else if (key.equals("storybase")){
+				this.storybase = val;
+			} else if(key.equals("village")) {
+				VillagesData village = new VillagesData();
+				this.village = village.getNewData();
+				this.village.id = val;
+			} else if(key.equals("facilitator")){
+				AnimatorsData facilitator = new AnimatorsData();
+				this.facilitator = facilitator.getNewData();
+				this.facilitator.id = val;
+			} else if(key.equals("cameraoperator")){
+				AnimatorsData cameraoperator = new AnimatorsData();
+				this.cameraoperator = cameraoperator.getNewData();
+				this.cameraoperator.id = val;
 			} else if(key.equals("reviewer")){
 				ReviewersData reviewer = new ReviewersData();
 				this.reviewer = reviewer.getNewData();
@@ -224,6 +244,12 @@ public class VideosData extends BaseData {
 				VideosData video = new VideosData();
 				this.supplementary_video_produced = video.getNewData();
 				this.supplementary_video_produced.id = val;
+			} else if(key.equals("video_suitable_for")) {
+				this.video_suitable_for = (String)val;
+			} else if(key.equals("remarks")) {
+				this.remarks = (String)val;
+			} else if(key.equals("actors")) {
+				this.actors = (String)val;
 			} else {
 				return;
 			}
@@ -234,9 +260,11 @@ public class VideosData extends BaseData {
 		
 		@Override
 		public void save() {
-			Date date = new Date();
-			if(this.id==null)
-				this.last_modified = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+			
+			if(this.id==null){
+				this.last_modified = BaseData.getCurrentDateAndTime();
+			}
+				
 			VideosData videosDataDbApis = new VideosData();		
 			this.id = videosDataDbApis.autoInsert(this.id,
 						this.title, 
@@ -284,28 +312,28 @@ public class VideosData extends BaseData {
 												"VIDEO_TYPE INT  NOT NULL DEFAULT 0," +
 												"DURATION TIME  NULL DEFAULT NULL," +
 												"language_id INT  NOT NULL DEFAULT 0," +
-												"SUMMARY TEXT  NOT NULL ," +
-												"PICTURE_QUALITY VARCHAR(200)  NOT NULL ," +
-												"AUDIO_QUALITY VARCHAR(200)  NOT NULL ," +
-												"EDITING_QUALITY VARCHAR(200)  NOT NULL ," +
+												"SUMMARY TEXT  NULL ," +
+												"PICTURE_QUALITY VARCHAR(200) NULL DEFAULT NULL," +
+												"AUDIO_QUALITY VARCHAR(200)  NULL DEFAULT NULL," +
+												"EDITING_QUALITY VARCHAR(200)  NULL DEFAULT NULL," +
 												"EDIT_START_DATE DATE  NULL DEFAULT NULL," +
 												"EDIT_FINISH_DATE DATE  NULL DEFAULT NULL," +
-												"THEMATIC_QUALITY VARCHAR(200)  NOT NULL ," +
+												"THEMATIC_QUALITY VARCHAR(200)  NULL DEFAULT NULL ," +
 												"VIDEO_PRODUCTION_START_DATE DATE  NOT NULL ," +
 												"VIDEO_PRODUCTION_END_DATE DATE  NOT NULL ," +
 												"STORYBASE INT  NOT NULL DEFAULT 0," +
-												"STORYBOARD_FILENAME VARCHAR(100)  NOT NULL ," +
-												"RAW_FILENAME VARCHAR(100)  NOT NULL ," +
-												"MOVIE_MAKER_PROJECT_FILENAME VARCHAR(100)  NOT NULL ," +
-												"FINAL_EDITED_FILENAME VARCHAR(100)  NOT NULL ," +
+												"STORYBOARD_FILENAME VARCHAR(100)  NULL DEFAULT NULL ," +
+												"RAW_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
+												"MOVIE_MAKER_PROJECT_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
+												"FINAL_EDITED_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
 												"village_id INT NOT NULL DEFAULT 0," +
 												"facilitator_id INT  NOT NULL DEFAULT 0," +
 												"cameraoperator_id INT  NOT NULL DEFAULT 0," +
 												"reviewer_id INT  NULL DEFAULT NULL," +
 												"APPROVAL_DATE DATE  NULL DEFAULT NULL," +
 												"supplementary_video_produced_id INT  NULL DEFAULT NULL," +
-												"VIDEO_SUITABLE_FOR INT  NOT NULL DEFAULT 0," +
-												"REMARKS TEXT  NOT NULL ," +
+												"VIDEO_SUITABLE_FOR INT NOT NULL DEFAULT 0," +
+												"REMARKS TEXT  NULL DEFAULT NULL," +
 												"ACTORS VARCHAR(1)  NOT NULL ," +
 												"last_modified DATETIME  NOT NULL, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
@@ -314,7 +342,9 @@ public class VideosData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(language_id) REFERENCES language(id) );";  
 
-	protected static String selectVideos = "SELECT video.id, video.title FROM video ORDER BY (video.title);";
+	protected static String selectVideos = "SELECT video.id, video.title, village.id, village.village_name " +
+										   "FROM video JOIN village ON video.village_id = village.id" +
+										   " ORDER BY (video.title);";
 	protected static String listVideos = "SELECT video.id, video.title, video.video_production_start_date, " +
 										 "video.video_production_end_date, video.village_id, village.village_name " +
 										 "FROM video JOIN village ON video.village_id = village.id ORDER BY (-video.id);";
@@ -469,8 +499,11 @@ public class VideosData extends BaseData {
 		this.select(selectVideos);
 		if (this.getResultSet().isValidRow()){
 			try {
+				VillagesData villagesData = new VillagesData();
+				VillagesData.Data village;
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					Data video = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					village = villagesData.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					Data video = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), village);
 					videos.add(video);
 	    	      }				
 			} catch (DatabaseException e) {
@@ -519,6 +552,18 @@ public class VideosData extends BaseData {
 		}
 		html = html + "</select>";
 		
+		
+		VillagesData villageData = new VillagesData();
+		List villages = villageData.getAllVillagesOffline();
+		VillagesData.Data village;
+		html = html + "<select name=\"village\" id=\"id_village\">" + 
+			"<option value='' selected='selected'>---------</option>";
+		for(int i =0; i< villages.size(); i++){
+			village = (VillagesData.Data)villages.get(i);
+			html = html + "<option value = \"" + village.getId() + "\">" + village.getVillageName() + "</option>";
+		}
+		html = html + "</select>";
+		
 		AnimatorsData animatorData = new AnimatorsData();
 		List facilitators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data facilitator;
@@ -530,6 +575,7 @@ public class VideosData extends BaseData {
 		}
 		html = html + "</select>";
 		
+		
 		List cameraoperators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data cameraoperator;
 		html = html + "<select name=\"cameraoperator\" id=\"id_cameraoperator\">" + 
@@ -540,6 +586,49 @@ public class VideosData extends BaseData {
 		}
 		html = html + "</select>";
 		
+		
+		PracticesData practicesData = new PracticesData();
+		List practices = practicesData.getAllPracticesOffline();
+		PracticesData.Data practice;
+		html = html+ "<select id='id_related_agricultural_practices' name='related_agricultural_practices' multiple='multiple'>";
+		for(int i=0; i<practices.size(); i++){
+			practice = (PracticesData.Data)practices.get(i);
+			html = html+ "<option value = \"" + practice.getId() + "\">" + practice.getPracticeName() + "</option>";
+		}
+		html = html + "</select>";
+		
+		PersonsData personsData = new PersonsData();
+		List persons = personsData.getAllPersonsOffline();
+		PersonsData.Data person;
+		html = html + "<select id='id_farmers_shown' name='farmers_shown' multiple='multiple'>";
+		for(int i=0; i<persons.size(); i++ ){
+			person = (PersonsData.Data)persons.get(i);
+			html = html + "<option value = \"" + person.getId() + "\">" + person.getPersonName() + "(" + person.getVillage().getVillageName() +")" + "</option>";
+		}
+		html = html + "</select>";
+
+		ReviewersData reviewersData = new ReviewersData();
+		List reviewers = reviewersData.getAllReviewersOffline();
+		ReviewersData.Data reviewer;
+		html = html + "<select id='id_reviewer' name='reviewer'>" +
+				" <option selected='selected' value=''>---------</option>";
+		
+		for(int i =0; i< reviewers.size(); i++){
+			reviewer = (ReviewersData.Data) reviewers.get(i);
+			html = html + "<option value = \"" + reviewer.getId() + "\">" + i +  "</option>";
+		}
+		html = html + "</select>";
+		
+		VideosData videosData = new VideosData();
+		List videos = videosData.getAllVideosOffline();
+		VideosData.Data video;
+		html = html + "<select id='id_supplementary_video_produced' name='supplementary_video_produced'>" +
+		" <option selected='selected' value=''>---------</option>";
+		for(int i= 0; i< videos.size(); i++){
+			video = (VideosData.Data) videos.get(i);
+			html = html + "<option value = \"" + video.getId() + "\">" + video.getTitle() + "(" + video.getVillage().getVillageName() + ")" + "</option>";
+		}
+		html = html + "</select>";
 		return html;
 	}
 	

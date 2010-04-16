@@ -119,8 +119,9 @@ public class PersonGroupsData extends BaseData {
 		public void save() {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();
 			Date date = new Date();
-			this.time_updated = date.getYear() + "-" + date.getMonth() +"-" + date.getDate() + " " + 
-								date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+			if(this.id==null){
+				this.time_updated  = BaseData.getCurrentDateAndTime();
+			}
 			this.id = personGroupsDataDbApis.autoInsert(this.id,
 						this.group_name, 
 						this.days, 

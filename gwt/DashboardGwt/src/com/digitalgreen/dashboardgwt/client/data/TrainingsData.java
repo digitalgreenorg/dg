@@ -163,10 +163,10 @@ public class TrainingsData extends BaseData {
 	protected static String tableID = "23";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `training` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"TRAINING_PURPOSE TEXT  NOT NULL ," +
-												"TRAINING_OUTCOME TEXT  NOT NULL ," +
-												"TRAINING_START_DATE DATE  NULL DEFAULT NULL," +
-												"TRAINING_END_DATE DATE  NULL DEFAULT NULL," +
+												"TRAINING_PURPOSE TEXT NULL ," +
+												"TRAINING_OUTCOME TEXT NULL ," +
+												"TRAINING_START_DATE DATE  NOT NULL," +
+												"TRAINING_END_DATE DATE  NOT NULL," +
 												"village_id INT NOT NULL DEFAULT 0," +
 												"dm_id INT NULL DEFAULT 0," +
 												"fieldofficer_id INT NOT NULL DEFAULT 0, " +

@@ -85,6 +85,16 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 						this.practice.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}	
+
+		@Override
+		public void save(BaseData.Data foreignKey){
+			VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticessDataDbApis = new VideoRelatedAgriculturalPracticesData();
+			this.id = videoRelatedAgriculturalPracticessDataDbApis.autoInsert(this.id,
+						foreignKey.getId(),
+						this.practice.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("video", foreignKey.getId());
+		}
 		
 		@Override
 		public String getTableId() {
