@@ -615,7 +615,7 @@ public class VideosData extends BaseData {
 		
 		for(int i =0; i< reviewers.size(); i++){
 			reviewer = (ReviewersData.Data) reviewers.get(i);
-			html = html + "<option value = \"" + reviewer.getId() + "\">" + i +  "</option>";
+			html = html + "<option value = \"" + reviewer.getId() + "\">" + reviewer.getReviewerName() +  "</option>";
 		}
 		html = html + "</select>";
 		

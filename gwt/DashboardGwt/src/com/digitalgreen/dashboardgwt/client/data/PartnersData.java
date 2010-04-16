@@ -124,6 +124,7 @@ public class PartnersData extends BaseData {
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
 	
 	protected static String selectPartners = "SELECT id, partner_name FROM partners ORDER BY(partner_name)";
+	protected static String getPartnerByID = "SELECT id, partner_name FROM partners WHERE id = ?";
 	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
 	protected static String savePartnerOnlineURL = "/dashboard/savepartneronline/";
 	protected static String getPartnerOnlineURL = "/dashboard/getpartnersonline/";

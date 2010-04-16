@@ -160,6 +160,7 @@ public class FieldOfficersData extends BaseData {
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
 	
 	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
+	protected static String getFieldOfficerByID = "SELECT id, name FROM field_officer WHERE id = ?";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
 	protected static String saveFieldOfficerOnlineURL = "/dashboard/savefieldofficeronline/";
 	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorsData.Data;
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.core.client.JsArray;
@@ -25,6 +26,7 @@ public class ReviewersData extends BaseData {
 			
 		private String content_type;
 		private String object_id;
+		private String reviewer_name; //This field doesn't exist in the Django Model. Made to take care of generic foreign key references.
 		
 		public Data() {
 			super();
@@ -42,12 +44,22 @@ public class ReviewersData extends BaseData {
 			this.id = id;
 		}
 		
+		public Data(String id, String reviewer_name ) {
+			super();
+			this.id = id;
+			this.reviewer_name = reviewer_name;
+		}
+		
 		public String getContentType(){
 			return this.content_type;
 		}
 		
 		public String getObjectId(){
 			return this.object_id;
+		}
+		
+		public String getReviewerName(){
+			return this.reviewer_name;
 		}
 		
 		public BaseData.Data clone() {
@@ -94,7 +106,7 @@ public class ReviewersData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
-	protected static String selectReviewers = "SELECT id FROM reviewer ORDER BY(-id)";
+	protected static String selectReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String listReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String saveReviewerOnlineURL = "/dashboard/saverevieweronline/";
 	protected static String getReviewerOnlineURL = "/dashboard/getreviewersonline/";
@@ -171,8 +183,25 @@ public class ReviewersData extends BaseData {
 		this.select(selectReviewers);
 		if(this.getResultSet().isValidRow()){
 			try {
+				String reviewerName = "";
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data reviewer = new Data(this.getResultSet().getFieldAsString(0));
+					
+					// Get the name of the reviewer (Generic Foreign Key to Development Manager, Field Officer and Partner)
+					if(this.getResultSet().getFieldAsString(1) == DevelopmentManagersData.tableID){
+						DevelopmentManagersData dm = (DevelopmentManagersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						dm.select(dm.getDevelopmentManagerByID, this.getResultSet().getFieldAsString(2));
+						reviewerName = dm.getResultSet().getFieldAsString(1);
+					} else if(this.getResultSet().getFieldAsString(1) == FieldOfficersData.tableID){
+						FieldOfficersData fo = (FieldOfficersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						fo.select(fo.getFieldOfficerByID, this.getResultSet().getFieldAsString(2));
+						reviewerName = fo.getResultSet().getFieldAsString(1);
+					} else if(this.getResultSet().getFieldAsString(1) == PartnersData.tableID){
+						PartnersData p = (PartnersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						p.select(p.getPartnerByID, this.getResultSet().getFieldAsString(2));
+						reviewerName = p.getResultSet().getFieldAsString(1);
+					} 
+					
+					Data reviewer = new Data(this.getResultSet().getFieldAsString(0), reviewerName);
 					reviewers.add(reviewer);
 				}
 			}

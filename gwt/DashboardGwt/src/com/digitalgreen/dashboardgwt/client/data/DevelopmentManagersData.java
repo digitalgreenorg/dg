@@ -214,6 +214,7 @@ public class DevelopmentManagersData extends BaseData {
 												"FOREIGN KEY(region_id) REFERENCES region(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
 	protected static String selectDevelopmentManagers = "SELECT id, NAME FROM development_manager  ORDER BY (NAME);";
+	protected static String getDevelopmentManagerByID = "SELECT id, NAME FROM development_manager WHERE id = ?;";
 	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.equipmentholder_id,d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id);";
 	protected static String saveDevelopmentManagerOfflineURL = "/dashboard/savedevelopmentmanageroffline/";
 	protected static String saveDevelopmentManagerOnlineURL = "/dashboard/savedevelopmentmanageronline/";
