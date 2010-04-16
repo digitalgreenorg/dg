@@ -626,7 +626,6 @@ def save_district_online(request):
 		form = DistrictForm()
 		return HttpResponse(form)
 	
-	
 def get_districts_online(request):
 	if request.method == 'POST':
 		return redirect('districts')
@@ -635,8 +634,6 @@ def get_districts_online(request):
 		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")
 		json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
-		
-
 
 def save_district_offline(request):
 	if request.method == 'POST':
@@ -809,6 +806,7 @@ def save_village_offline(request):
 		
 # function for animator with user specific feature.
 #save_online function, get_online and save_offline functions of animator with regionalization feature 
+# function for animator with user specific feature.
 def save_animator_online(request):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
 	if request.method == 'POST':
@@ -872,7 +870,6 @@ def save_animatorassignedvillage_online(request):
 		form.fields['village'].queryset = villages.order_by('village_name')
 		form.fields['animator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
 		return HttpResponse(form)
-	
 	
 def get_animatorassignedvillages_online(request):
 	if request.method == 'POST':
@@ -1031,7 +1028,7 @@ def get_screenings_online(request):
 	else:
 		villages = get_user_villages(request)
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", screenings,  relations=('village',))
+		json_subcat = serializers.serialize("json", screenings,  relations=('fieldofficer','animator','village'))
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_screening_offline(request):
@@ -1452,8 +1449,6 @@ def save_reviewer_offline(request):
 		
 
 # Old functions, Will be deprecated once the online / offline functionality is created
-
-
 def add_language(request):
 	if request.method == 'POST':
 		if 'language_name' in request.POST:
