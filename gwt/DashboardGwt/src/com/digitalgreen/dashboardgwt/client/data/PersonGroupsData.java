@@ -153,7 +153,7 @@ public class PersonGroupsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "12";
+	protected static String tableID = "19";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_groups` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"GROUP_NAME VARCHAR(100)  NOT NULL ," +

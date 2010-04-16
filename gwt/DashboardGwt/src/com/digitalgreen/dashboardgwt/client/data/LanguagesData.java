@@ -78,7 +78,7 @@ public class LanguagesData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "20";
+	protected static String tableID = "26";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `language` " +
 											"(id INTEGER PRIMARY KEY  NOT NULL ," +
 											"language_name VARCHAR(100)  NOT NULL );";  

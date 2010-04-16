@@ -160,7 +160,7 @@ public class Data extends BaseData.Data {
 		}
 	}
 
-	protected static String tableID = "29";
+	protected static String tableID = "31";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_adopt_practice` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"person_id INT  NOT NULL DEFAULT 0," +

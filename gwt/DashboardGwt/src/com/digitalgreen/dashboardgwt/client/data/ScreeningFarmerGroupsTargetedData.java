@@ -98,7 +98,7 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	}
 	
 	
-	protected static String tableID = "26";
+	protected static String tableID = "40";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening_farmer_groups_targeted` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"screening_id INT  NOT NULL DEFAULT 0," +

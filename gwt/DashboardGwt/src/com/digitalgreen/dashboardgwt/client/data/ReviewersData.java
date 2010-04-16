@@ -89,7 +89,7 @@ public class ReviewersData extends BaseData {
 		}
 	}
 
-	protected static String tableID = "3";
+	protected static String tableID = "10";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `reviewer` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +

@@ -133,7 +133,7 @@ public class VillagesData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "10";
+	protected static String tableID = "17";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `village` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"VILLAGE_NAME VARCHAR(100)  NOT NULL ," +

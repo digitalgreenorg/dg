@@ -220,7 +220,7 @@ public class AnimatorsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "15";
+	protected static String tableID = "22";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"NAME VARCHAR(100)  NOT NULL ," +

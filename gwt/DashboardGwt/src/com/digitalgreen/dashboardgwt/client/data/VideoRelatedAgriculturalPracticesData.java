@@ -94,7 +94,7 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	}
 	
 	
-	protected static String tableID = "23";
+	protected static String tableID = "38";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `video_related_agricultural_practices` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"video_id INT  NOT NULL DEFAULT 0," +

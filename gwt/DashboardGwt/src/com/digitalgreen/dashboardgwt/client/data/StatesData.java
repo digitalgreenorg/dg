@@ -104,7 +104,7 @@ public class StatesData extends BaseData {
 		}
 	}
 
-	protected static String tableID = "5";
+	protected static String tableID = "12";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `state` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"STATE_NAME VARCHAR(100)  NOT NULL ," +

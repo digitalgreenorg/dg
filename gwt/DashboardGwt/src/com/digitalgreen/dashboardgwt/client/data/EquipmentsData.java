@@ -147,7 +147,7 @@ public class EquipmentsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "30";
+	protected static String tableID = "34";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_id` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"EQUIPMENT_TYPE VARCHAR(300)  NOT NULL ," +

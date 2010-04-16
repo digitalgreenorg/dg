@@ -89,7 +89,7 @@ public class EquipmentHoldersData extends BaseData {
 	}
 	
 	
-	protected static String tableID = "2";
+	protected static String tableID = "9";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_holder` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +

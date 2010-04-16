@@ -160,7 +160,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 	}
 		
 		
-	protected static String tableID = "28";
+	protected static String tableID = "30";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_meeting_attendance` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"screening_id INT  NOT NULL DEFAULT 0," +
