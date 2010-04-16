@@ -19,11 +19,13 @@ public class RequestContext {
 	public RequestContext() {
 		this.methodTypeCtx = METHOD_GET;
 		this.args = new HashMap();
+		this.form = new Form();
 	}
 	
 	public RequestContext(String method) {
 		this.methodTypeCtx = method;
 		this.args = new HashMap();
+		this.form = new Form();
 	}
 	
 	public Form getForm() {

@@ -54,7 +54,7 @@ public class Trainings extends BaseServlet{
 							requestContext.setMessageString("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Trainings(requestContext));	
 					}
-					
+
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
 							TrainingsData trainingData = new TrainingsData();
@@ -65,10 +65,11 @@ public class Trainings extends BaseServlet{
 							getServlet().redirectTo(new Trainings(requestContext));
 						} else {
 							RequestContext requestContext = new RequestContext();
+							Form errorForm = getServlet().getRequestContext().getForm();
 							requestContext.setMessageString("Invalid data, please try again");
+							requestContext.setForm(errorForm);
 							getServlet().redirectTo(new Trainings(requestContext));				
 						}
-						
 					}
 				}, form);
 				

@@ -37,6 +37,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		protected String queryString = null;
 		protected HashMap manyToManyRelationshipMap = null;
 		protected boolean hasManyToManyRelationships = false;
+		protected boolean isManyToManyDependent = false;
 		
 		public Data() {
 			this.manyToManyRelationshipMap = new HashMap();
@@ -50,6 +51,14 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// Override this
 		public String getPrefixName() {
 			return null;
+		}
+		
+		public void setAsManyToManyDependent() {
+			this.isManyToManyDependent = true;
+		}
+		
+		public boolean isManyToManyDependent() {
+			return this.isManyToManyDependent;
 		}
 		
 		// Override this
@@ -98,6 +107,16 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// Override this
 		public String getTableId() {
 			return "";
+		}
+		
+		// Override this
+		public boolean validate() {
+			return true;
+		}
+		
+		// Override this
+		public boolean validate(BaseData.Data foreignKey) {
+			return true;
 		}
 	}
 	
@@ -175,6 +194,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	// Override this
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	protected boolean validate() {
+		return this.form.validate();
 	}
 	
 	protected void save() {

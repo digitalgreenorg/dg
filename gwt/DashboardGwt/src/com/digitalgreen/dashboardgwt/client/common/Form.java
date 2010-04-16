@@ -16,6 +16,7 @@ public class Form {
 	private HashMap dataFormat = null;
 	private String queryString = null;
 	private FormQueueData formQueue = null;
+	private String[] errorStack = null;
 	
 	public Form() {}
 	
@@ -33,14 +34,6 @@ public class Form {
 		this.formQueue = new FormQueueData();
 	}
 	
-	public BaseData.Data getParent() {
-		return this.parent;
-	}
-
-	public HashMap getDataFormat() {
-		return this.dataFormat;
-	}
-	
 	public String getQueryString() {
 		return this.queryString;
 	}
@@ -51,6 +44,44 @@ public class Form {
 	
 	public void setQueryString(String queryString) {
 		this.queryString = URL.decodeComponent(queryString, true);
+	}
+	
+	public String[] getErrorStack() {
+		return this.errorStack;
+	}
+	
+	public boolean isValid() {
+		return this.errorStack != null;
+	}
+	
+	public boolean validate() {
+		boolean hasErrors = false;
+		this.parseQueryString(this.queryString);
+		if(!this.parent.validate()) {
+			hasErrors = true;
+		}
+		Object[] dataFormatKeys = dataFormat.keySet().toArray();
+		for(int i=0; i < dataFormatKeys.length; i++) {
+			// We already saved the parent so don't bother going over it again
+			if(dataFormatKeys[i].equals(this.parent.getPrefixName()) ||
+					dataFormatKeys[i].equals(this.parent.getPrefixName() + "_set")) {
+				continue;
+			}
+			Object value = dataFormat.get(dataFormatKeys[i]);
+			if(value instanceof ArrayList) {
+				for(int j=0; j < ((ArrayList)value).size(); j++) {
+					BaseData.Data dependentData = (BaseData.Data)((ArrayList)value).get(j);
+					if(!dependentData.validate(this.parent)) {
+						hasErrors = true;
+					}
+				}
+			} else {
+				if(!((BaseData.Data)value).validate(this.parent)) {
+					hasErrors = true;
+				}
+			}
+		}
+		return !hasErrors;
 	}
 	
 	// Save the dataFormat representation of the Form.  Transaction details
@@ -74,15 +105,19 @@ public class Form {
 				for(int j=0; j < ((ArrayList)value).size(); j++) {
 					BaseData.Data dependentData = (BaseData.Data)((ArrayList)value).get(j);
 					dependentData.save(this.parent);
-					formQueueAdd = this.formQueue.initFormQueueAdd(dependentData.getTableId(), 
-							dependentData.getId(), dependentData.getQueryString()); 
-					this.formQueue.addFormQueueData(formQueueAdd);
+					if(!dependentData.isManyToManyDependent()) {
+						formQueueAdd = this.formQueue.initFormQueueAdd(dependentData.getTableId(), 
+								dependentData.getId(), dependentData.getQueryString()); 
+						this.formQueue.addFormQueueData(formQueueAdd);
+					}
 				}
 			} else {
 				((BaseData.Data)value).save(this.parent);
-				formQueueAdd = this.formQueue.initFormQueueAdd(((BaseData.Data)value).getTableId(), 
-						((BaseData.Data)value).getId(), ((BaseData.Data)value).getQueryString());
-				this.formQueue.addFormQueueData(formQueueAdd);
+				if(!((BaseData.Data)value).isManyToManyDependent()) {
+					formQueueAdd = this.formQueue.initFormQueueAdd(((BaseData.Data)value).getTableId(), 
+							((BaseData.Data)value).getId(), ((BaseData.Data)value).getQueryString());
+					this.formQueue.addFormQueueData(formQueueAdd);
+				}
 			}
 		}
 	}
@@ -192,12 +227,14 @@ public class Form {
 				ArrayList listBaseData = new ArrayList();
 				if(!(value instanceof ArrayList)) {
 					BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+					baseData.setAsManyToManyDependent();
 					setDataObjectField(baseData, manyToManyRelationship.getField(), value);
 					listBaseData.add(baseData);
 				} else {
 					ArrayList srcValue = (ArrayList)value;
 					for(int j=0; j < srcValue.size(); j++) {
 						BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+						baseData.setAsManyToManyDependent();
 						setDataObjectField(baseData, manyToManyRelationship.getField(), srcValue.get(j));
 						listBaseData.add(baseData);
 					}
@@ -211,18 +248,23 @@ public class Form {
 		Object[] sourceKeys = sourceDict.keySet().toArray();
 		this.parent = parent.clone();
 		for(int i=0; i < sourceKeys.length; i++) {
-			setDataObjectField(this.parent, (String)sourceKeys[i], sourceDict.get(sourceKeys[i]));
+			if(sourceDict.get(sourceKeys[i]) instanceof ArrayList) {
+				for(int j=0; j < ((ArrayList)sourceDict.get(sourceKeys[i])).size(); j++) {
+					setDataObjectField(this.parent, (String)sourceKeys[i], ((ArrayList)sourceDict.get(sourceKeys[i])).get(j));
+				}
+			} else {
+				setDataObjectField(this.parent, (String)sourceKeys[i], sourceDict.get(sourceKeys[i]));
+			}
 		}
 		dataFormat.put((String)parent.getPrefixName(), this.parent);
-		try {
-			this.createManyToManyRelationships(this.parent, sourceDict);
-		} catch (Exception e) {
-			Window.alert("Exception : " + e.toString());
-		}
+		this.createManyToManyRelationships(this.parent, sourceDict);
 	}
 
 	// Return a tree data representation of a parsed query string.
 	public void parseQueryString(String queryString) {
+		if(!this.dataFormat.isEmpty()) {
+			return;
+		}
 		HashMap sourceDict = Form.flatten(queryString);
 		collectParent(this.parent, sourceDict);
 		for(int j=0; j < this.dependents.length; j++) {

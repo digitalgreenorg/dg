@@ -33,9 +33,11 @@ public class TrainingsData extends BaseData {
 		private VillagesData.Data village;
 		private DevelopmentManagersData.Data development_manager_present;
 		private FieldOfficersData.Data field_officer_present;
-	
+		private ArrayList animators_trained;
+		
 		public Data(){
 			super();
+			animators_trained = new ArrayList();
 			this.addManyToManyRelationship("animator", 
 					(new TrainingAnimatorsTrainedData()).new Data(), 
 					"animators_trained");
@@ -133,6 +135,9 @@ public class TrainingsData extends BaseData {
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
 				this.field_officer_present = fieldofficer1.getNewData();
 				this.field_officer_present.id = val;
+			} 
+			else if(key.equals("animators_trained")) {
+				animators_trained.add(val);
 			} else {
 				return;
 			}
@@ -325,8 +330,10 @@ public List serialize(JsArray<Type> trainingObjects) {
 			this.post(RequestContext.SERVER_HOST + TrainingsData.saveTrainingOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}
