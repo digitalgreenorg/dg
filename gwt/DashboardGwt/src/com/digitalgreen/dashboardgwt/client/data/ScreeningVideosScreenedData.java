@@ -97,7 +97,7 @@ public class ScreeningVideosScreenedData extends BaseData {
 	}
 	
 		
-	protected static String tableID = "41";
+	public static String tableID = "41";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening_videos_screened` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"screening_id INT  NOT NULL DEFAULT 0," +

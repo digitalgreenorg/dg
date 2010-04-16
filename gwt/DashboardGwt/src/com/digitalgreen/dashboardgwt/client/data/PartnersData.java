@@ -111,7 +111,7 @@ public class PartnersData extends BaseData {
 	}
 	
 	
-	protected static String tableID = "13";
+	public static String tableID = "13";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `partners` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PARTNER_NAME VARCHAR(100)  NOT NULL ," +

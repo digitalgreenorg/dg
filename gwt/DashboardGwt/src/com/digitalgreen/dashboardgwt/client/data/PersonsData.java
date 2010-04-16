@@ -215,7 +215,7 @@ public class PersonsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "20";
+	public static String tableID = "20";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PERSON_NAME VARCHAR(100)  NOT NULL ," +

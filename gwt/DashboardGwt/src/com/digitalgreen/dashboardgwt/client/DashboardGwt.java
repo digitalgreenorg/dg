@@ -36,6 +36,7 @@ public class DashboardGwt implements EntryPoint {
 		else{
 			ApplicationConstants.toggleConnection(true);
 		}
+		ApplicationConstants.createMappingBetweenTableIDAndDataObject();
 	}
 	
 	private void createHashMap() {

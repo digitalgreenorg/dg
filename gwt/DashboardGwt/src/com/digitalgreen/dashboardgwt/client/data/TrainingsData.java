@@ -160,7 +160,7 @@ public class TrainingsData extends BaseData {
 		}
 	}
 
-	protected static String tableID = "23";
+	public static String tableID = "23";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `training` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"TRAINING_PURPOSE TEXT NULL ," +

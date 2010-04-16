@@ -144,7 +144,7 @@ public class FieldOfficersData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "14";
+	public static String tableID = "14";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `field_officer` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"NAME VARCHAR(100) NOT NULL ," +

@@ -16,17 +16,14 @@ public class Syncronisation {
 	public Syncronisation(){	
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected HashMap mappingBetweenTableIDAndDataObject;
 	private FormQueueData formQueue;
 	private int lastSyncedId;
-	private int currentTableID=1;
+	private int currentIndex=0;
 	private String setGlobalKeyURL = "/dashboard/setkey/";
 	private BaseServlet servlet;
 	
 	public void syncFromLocalToMain(BaseServlet servlet){
 		this.servlet = servlet;
-		createMappingBetweenTableIDAndDataObject();
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results == "1") {
@@ -68,23 +65,22 @@ public class Syncronisation {
 	
 	public void syncFromMainToLocal(BaseServlet servlet){
 		this.servlet = servlet;
-		createMappingBetweenTableIDAndDataObject();
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
-					List objects = ((BaseData)mappingBetweenTableIDAndDataObject.get(currentTableID+"")).getListingOnline(results);
+					List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 					BaseData.Data object;
 					for (int i = 0; i < objects.size(); ++i) {
 						object = (BaseData.Data) objects.get(i);
 						object.save();
 					}
-					currentTableID++;
-					if(currentTableID == 31){
+					currentIndex++;
+					if(currentIndex == ApplicationConstants.tableIDs.length){
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Local database is in sync with the main server");
 						getServlet().redirectTo(new Index(requestContext));	
 					}else{
-						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)mappingBetweenTableIDAndDataObject.get(currentTableID+"")).getListingOnlineURL());
+						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
 					}
 					
 					
@@ -104,7 +100,7 @@ public class Syncronisation {
 			}
 		});
 
-		formQueue.get(RequestContext.SERVER_HOST + ((BaseData)mappingBetweenTableIDAndDataObject.get(currentTableID+"")).getListingOnlineURL());
+		formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
 	}
 	
 	
@@ -117,7 +113,7 @@ public class Syncronisation {
 					String queryString = "id="+formQueue.getResultSet().getFieldAsString(1)+"&"+formQueue.getResultSet().getFieldAsString(2);
 					if(formQueue.getResultSet().getFieldAsChar(4) == 'A'){
 						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
-						formQueue.post(RequestContext.SERVER_HOST + (String)((BaseData)mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL(), queryString);
+						formQueue.post(RequestContext.SERVER_HOST + (String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL(), queryString);
 						BaseData.dbClose();
 					}
 					else{
@@ -179,68 +175,5 @@ public class Syncronisation {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void createMappingBetweenTableIDAndDataObject(){
-		mappingBetweenTableIDAndDataObject = new HashMap();
-		RegionsData regionsData  = new RegionsData();
-		mappingBetweenTableIDAndDataObject.put(RegionsData.tableID, regionsData);
-		EquipmentHoldersData equipmentHoldersData= new EquipmentHoldersData();
-		mappingBetweenTableIDAndDataObject.put(EquipmentHoldersData.tableID, equipmentHoldersData);
-		ReviewersData reviewersData = new ReviewersData();
-		mappingBetweenTableIDAndDataObject.put(ReviewersData.tableID, reviewersData);
-		DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
-		mappingBetweenTableIDAndDataObject.put(DevelopmentManagersData.tableID, developmentManagersData);
-		StatesData statesData = new StatesData();
-		mappingBetweenTableIDAndDataObject.put(StatesData.tableID, statesData);
-		PartnersData partnersData = new PartnersData();
-		mappingBetweenTableIDAndDataObject.put(PartnersData.tableID, partnersData);
-		FieldOfficersData fieldOfficersData = new FieldOfficersData();
-		mappingBetweenTableIDAndDataObject.put(FieldOfficersData.tableID, fieldOfficersData);
-		DistrictsData districtsData = new DistrictsData();
-		mappingBetweenTableIDAndDataObject.put(DistrictsData.tableID, districtsData);
-		BlocksData blocksData = new BlocksData();
-		mappingBetweenTableIDAndDataObject.put(BlocksData.tableID, blocksData);
-		VillagesData villagesData = new VillagesData();
-		mappingBetweenTableIDAndDataObject.put(VillagesData.tableID, villagesData);
-		MonthlyCostPerVillageData monthlyCostPerVillageData = new MonthlyCostPerVillageData();
-		mappingBetweenTableIDAndDataObject.put(MonthlyCostPerVillageData.tableID, monthlyCostPerVillageData);
-		PersonGroupsData personGroupsData = new PersonGroupsData();
-		mappingBetweenTableIDAndDataObject.put(PersonGroupsData.tableID, personGroupsData);
-		PersonsData personsData = new PersonsData();
-		mappingBetweenTableIDAndDataObject.put(PersonsData.tableID, personsData);
-		PersonRelationsData personRelationsData = new PersonRelationsData();
-		mappingBetweenTableIDAndDataObject.put(PersonRelationsData.tableID, personRelationsData);
-		AnimatorsData animatorsData = new AnimatorsData();
-		mappingBetweenTableIDAndDataObject.put(AnimatorsData.tableID, animatorsData);
-		TrainingsData trainingsData = new TrainingsData();
-		mappingBetweenTableIDAndDataObject.put(TrainingsData.tableID, trainingsData);
-		TrainingAnimatorsTrainedData trainingAnimatorsTrainedData = new TrainingAnimatorsTrainedData();
-		mappingBetweenTableIDAndDataObject.put(TrainingAnimatorsTrainedData.tableID, trainingAnimatorsTrainedData);
-		AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
-		mappingBetweenTableIDAndDataObject.put(AnimatorAssignedVillagesData.tableID, animatorAssignedVillagesData);
-		AnimatorSalaryPerMonthData animatorSalaryPerMonthData = new AnimatorSalaryPerMonthData();
-		mappingBetweenTableIDAndDataObject.put(AnimatorSalaryPerMonthData.tableID, animatorSalaryPerMonthData);
-		LanguagesData languagesData = new LanguagesData();
-		mappingBetweenTableIDAndDataObject.put(LanguagesData.tableID, languagesData);
-		PracticesData practicesData = new PracticesData();
-		mappingBetweenTableIDAndDataObject.put(PracticesData.tableID, practicesData);
-		VideosData videosData = new VideosData();
-		mappingBetweenTableIDAndDataObject.put(VideosData.tableID, videosData);
-		VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticesData = new VideoRelatedAgriculturalPracticesData();
-		mappingBetweenTableIDAndDataObject.put(VideoRelatedAgriculturalPracticesData.tableID, videoRelatedAgriculturalPracticesData);
-		VideoFarmersShownData videoFarmersShownData = new VideoFarmersShownData();
-		mappingBetweenTableIDAndDataObject.put(VideoFarmersShownData.tableID, videoFarmersShownData);
-		ScreeningsData screeningsData = new ScreeningsData();
-		mappingBetweenTableIDAndDataObject.put(ScreeningsData.tableID, screeningsData);
-		ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedData = new ScreeningFarmerGroupsTargetedData();
-		mappingBetweenTableIDAndDataObject.put(ScreeningFarmerGroupsTargetedData.tableID, screeningFarmerGroupsTargetedData);
-		ScreeningVideosScreenedData screeningVideosScreenedData = new ScreeningVideosScreenedData();
-		mappingBetweenTableIDAndDataObject.put(ScreeningVideosScreenedData.tableID, screeningVideosScreenedData);
-		PersonMeetingAttendanceData personMeetingAttendanceData = new PersonMeetingAttendanceData();
-		mappingBetweenTableIDAndDataObject.put(PersonMeetingAttendanceData.tableID, personMeetingAttendanceData);
-		PersonAdoptPracticeData personAdoptPracticeData = new PersonAdoptPracticeData();
-		mappingBetweenTableIDAndDataObject.put(PersonAdoptPracticeData.tableID, personAdoptPracticeData);
-		EquipmentsData equipmentsData = new EquipmentsData();
-		mappingBetweenTableIDAndDataObject.put(EquipmentsData.tableID, equipmentsData);
-	}
+
 }

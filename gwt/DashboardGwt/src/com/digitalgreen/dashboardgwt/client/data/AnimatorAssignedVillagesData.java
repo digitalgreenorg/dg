@@ -119,7 +119,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 	}
 	
-	protected static String tableID = "24";
+	public static String tableID = "24";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator_assigned_village` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"animator_id INT  NOT NULL DEFAULT 0," +

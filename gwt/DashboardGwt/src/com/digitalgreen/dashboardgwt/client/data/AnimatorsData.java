@@ -16,7 +16,7 @@ public class AnimatorsData extends BaseData {
 		public final native String getAnimatorName() /*-{ return $wnd.checkForNullValues(this.fields.name); }-*/;
 		public final native String getAge() /*-{ return $wnd.checkForNullValues(this.fields.age); }-*/;
 		public final native String getGender() /*-{ return $wnd.checkForNullValues(this.fields.gender); }-*/;
-		public final native String getCSPFlags() /*-{ return $wnd.checkForNullValues(this.fields.csp_flags); }-*/;
+		public final native String getCSPFlags() /*-{ return $wnd.checkForNullValues(this.fields.csp_flag); }-*/;
 		public final native String getCameraOperatorFlag() /*-{ return $wnd.checkForNullValues(this.fields.camera_operator_flag); }-*/;
 		public final native String getFacilitatorFlag() /*-{ return $wnd.checkForNullValues(this.fields.facilitator_flag); }-*/;
 		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
@@ -220,7 +220,7 @@ public class AnimatorsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "22";
+	public static String tableID = "22";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"NAME VARCHAR(100)  NOT NULL ," +

@@ -174,7 +174,7 @@ public class Data extends BaseData.Data {
 		}
 	}
 	
-	protected static String tableID = "18";
+	public static String tableID = "18";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `monthly_cost_per_village` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"village_id INT  NOT NULL DEFAULT 0," +

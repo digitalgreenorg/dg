@@ -105,7 +105,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "37";
+	public static String tableID = "37";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `training_animators_trained` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"training_id INT  NOT NULL DEFAULT 0," +

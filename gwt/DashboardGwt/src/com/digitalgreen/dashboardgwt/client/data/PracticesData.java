@@ -109,7 +109,7 @@ public class PracticesData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "28";
+	public static String tableID = "28";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `practices` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"PRACTICE_NAME VARCHAR(200)  NOT NULL ," +

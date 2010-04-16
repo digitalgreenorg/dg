@@ -138,7 +138,7 @@ public class DistrictsData extends BaseData {
 		}
 	}
 	
-	protected static String tableID = "15";
+	public static String tableID = "15";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `district` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"DISTRICT_NAME VARCHAR(100)  NOT NULL ," +

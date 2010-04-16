@@ -120,7 +120,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 		
 	}
 
-	protected static String tableID = "25";
+	public static String tableID = "25";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator_salary_per_month` " +
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"animator_id INT  NOT NULL DEFAULT 0," +
