@@ -70,7 +70,6 @@ public class PersonsTemplate extends BaseTemplate{
 					
 					if(person.getGroup() == null)
 					{
-						Window.alert("person.getGroup() is null");
 						group = "null";
 					}
 					else
@@ -271,7 +270,7 @@ public class PersonsTemplate extends BaseTemplate{
 														"</div>" +
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
-																"<label for='id_personadoptpractice_set-0-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-0-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-0-date_of_adoption' size='10' />" +
+																"<label for='id_personadoptpractice_set-0-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-0-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-0-date_of_adoption' size='10' />" +
 																"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +
@@ -316,7 +315,7 @@ public class PersonsTemplate extends BaseTemplate{
 														"</div>" +
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
-																"<label for='id_personadoptpractice_set-1-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-1-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-1-date_of_adoption' size='10' />" +
+																"<label for='id_personadoptpractice_set-1-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-1-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-1-date_of_adoption' size='10' />" +
 																"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +
@@ -361,7 +360,7 @@ public class PersonsTemplate extends BaseTemplate{
 														"</div>" +
 														"<div class='form-row date_of_adoption  '>" +
 															"<div>" +
-																"<label for='id_personadoptpractice_set-2-date_of_adoption'>Date of adoption:</label><input id='id_personadoptpractice_set-2-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-2-date_of_adoption' size='10' />" +
+																"<label for='id_personadoptpractice_set-2-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-2-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-2-date_of_adoption' size='10' />" +
 																"</div>" +
 														"</div>" +
 														"<div class='form-row quality  '>" +

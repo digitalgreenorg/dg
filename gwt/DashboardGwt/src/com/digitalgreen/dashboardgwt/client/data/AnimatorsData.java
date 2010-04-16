@@ -229,8 +229,8 @@ public class AnimatorsData extends BaseData {
 												"CSP_FLAG SMALLINT  NULL DEFAULT NULL," +
 												"CAMERA_OPERATOR_FLAG SMALLINT  NULL DEFAULT NULL," +
 												"FACILITATOR_FLAG SMALLINT  NULL DEFAULT NULL," +
-												"PHONE_NO VARCHAR(100)  NOT NULL ," +
-												"ADDRESS VARCHAR(500)  NOT NULL ," +
+												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
+												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL," +
 												"partner_id INT  NOT NULL DEFAULT 0," +
 												"home_village_id INT  NOT NULL DEFAULT 0," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
