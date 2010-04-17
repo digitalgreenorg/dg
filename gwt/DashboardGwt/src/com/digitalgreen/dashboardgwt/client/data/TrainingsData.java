@@ -148,12 +148,10 @@ public class TrainingsData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			Window.alert("In validate method");
 			StringValidator trainingPurpose = new StringValidator(this.training_purpose,true,true,0,1024);
 			StringValidator trainingOutCome = new StringValidator(this.training_outcome,true,true,0,1024);
 			DateValidator trainingStartDate = new DateValidator(this.training_start_date, false, false);
 			DateValidator trainingEndDate = new DateValidator(this.training_end_date, false, false);
-			Window.alert("In training validate:"+trainingPurpose.validate() + trainingOutCome.validate() + trainingStartDate.validate() + trainingEndDate.validate());
 			return trainingPurpose.validate() && trainingOutCome.validate() && trainingStartDate.validate() && trainingEndDate.validate();
 		}
 		
