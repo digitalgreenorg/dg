@@ -164,7 +164,7 @@ public class AnimatorsData extends BaseData {
 				PartnersData partner = new PartnersData();
 				this.partner = partner.getNewData();
 				this.partner.id = val;
-			} else if(key.equals("home_village")) {
+			} else if(key.equals("village")) {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
 				this.village.id = val;
@@ -232,19 +232,19 @@ public class AnimatorsData extends BaseData {
 												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
 												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL," +
 												"partner_id INT  NOT NULL DEFAULT 0," +
-												"home_village_id INT  NOT NULL DEFAULT 0," +
+												"village_id INT  NOT NULL DEFAULT 0," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id), " +
-												"FOREIGN KEY(home_village_id) REFERENCES village(id), " +
+												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name " +
-			"FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.home_village_id = vil.id ORDER BY (-a.id)";
+			"FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY (-a.id)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
 	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
 	protected static String getAnimatorsOnlineURL = "/dashboard/getanimatorsonline/";
 	protected String table_name = "animator";
-	protected String[] fields = {"id", "name", "age", "gender", "csp_flag", "camera_operator_flag", "facilitator_flag", "phone_no", "address", "partner_id", "home_village_id", "equipmentholder_id"};
+	protected String[] fields = {"id", "name", "age", "gender", "csp_flag", "camera_operator_flag", "facilitator_flag", "phone_no", "address", "partner_id", "village_id", "equipmentholder_id"};
 	
 	public AnimatorsData() {
 		super();
@@ -412,7 +412,7 @@ public class AnimatorsData extends BaseData {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getVillagesListingOffline();
 		VillagesData.Data village;
-		String htmlVillage = "<select name=\"home_village\" id=\"id_home_village\""
+		String htmlVillage = "<select name=\"village\" id=\"id_village\""
 			+ "<option selected='selected' value=''>---------</option>";
 		for(int i = 0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
