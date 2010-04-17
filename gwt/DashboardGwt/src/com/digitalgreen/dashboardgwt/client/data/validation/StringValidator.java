@@ -2,6 +2,8 @@ package com.digitalgreen.dashboardgwt.client.data.validation;
 
 import java.util.HashMap;
 
+import com.google.gwt.user.client.Window;
+
 public class StringValidator extends BaseValidator {
 	
 	private int minValue = Integer.MIN_VALUE;
@@ -25,10 +27,14 @@ public class StringValidator extends BaseValidator {
 	
 	@Override
 	public boolean validate() {
-		if(!super.validate()) return false;
-		if(!(this.getValue().length() >= this.minValue && 
-				this.getValue().length() <= this.maxValue)) 
+		if(!super.validate()){ 
 			return false;
+		} else if(this.getValue() == null){
+			return true;
+		} else if(!(this.getValue().length() >= this.minValue && 
+				this.getValue().length() <= this.maxValue)){
+			return false;
+		}
 		return true;
 	}
 	
