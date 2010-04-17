@@ -295,17 +295,27 @@ public class AnimatorsData extends BaseData {
 	}-*/;
 	
 	public List serialize(JsArray<Type> animatorObjects) {
+		Window.alert("In serialize");
 		List animators = new ArrayList();
 		PartnersData partner = new PartnersData();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < animatorObjects.length(); i++) {
-
-			PartnersData.Data p = partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());
+			PartnersData.Data p=null;
+			try {
+				p = partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Window.alert("partner"+e.toString());
+			}
 			
-			VillagesData.Data v = null;
-			 v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
+			VillagesData.Data v=null;
+			try {
+				v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Window.alert("village"+e.toString());
+			}
 			
-
 			Data animator = new Data(animatorObjects.get(i).getPk(), 
 								animatorObjects.get(i).getAnimatorName(),
 								animatorObjects.get(i).getAge(), 
