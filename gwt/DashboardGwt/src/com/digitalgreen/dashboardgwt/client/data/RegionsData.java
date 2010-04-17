@@ -7,6 +7,8 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -72,6 +74,13 @@ public class RegionsData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);			
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator stringValidator = new StringValidator(this.region_name,false,false,0,50);
+			DateValidator dateValidator = new DateValidator(this.start_date, true, true);
+			return stringValidator.validate() && dateValidator.validate();
 		}
 		
 		@Override
@@ -178,7 +187,6 @@ public class RegionsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -199,7 +207,6 @@ public class RegionsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -213,8 +220,10 @@ public class RegionsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + RegionsData.saveRegionOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()){
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;
