@@ -5,6 +5,9 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -177,6 +180,26 @@ public class AnimatorsData extends BaseData {
 		}
 		
 		@Override
+		public boolean validate(){
+			StringValidator name = new StringValidator(this.name,false,false,0,100);
+			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,500);
+			
+			return name.validate() && age.validate() && phoneNo.validate() && address.validate();
+		}
+		
+		@Override
+		public boolean validate(BaseData.Data foreignkey){
+			StringValidator name = new StringValidator(this.name,false,false,0,100);
+			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,500);
+			
+			return name.validate() && age.validate() && phoneNo.validate() && address.validate();
+		}
+		
+		@Override
 		public void save() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();
 			this.id = animatorsDataDbApis.autoInsert(this.id, 
@@ -295,27 +318,12 @@ public class AnimatorsData extends BaseData {
 	}-*/;
 	
 	public List serialize(JsArray<Type> animatorObjects) {
-		Window.alert("In serialize");
 		List animators = new ArrayList();
 		PartnersData partner = new PartnersData();
 		VillagesData village = new VillagesData();
 		for(int i = 0; i < animatorObjects.length(); i++) {
-			PartnersData.Data p=null;
-			try {
-				p = partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				Window.alert("partner"+e.toString());
-			}
-			
-			VillagesData.Data v=null;
-			try {
-				v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				Window.alert("village"+e.toString());
-			}
-			
+			PartnersData.Data p=partner. new Data(animatorObjects.get(i).getPartner().getPk(), animatorObjects.get(i).getPartner().getPartnerName());;
+			VillagesData.Data v = village. new Data(animatorObjects.get(i).getVillage().getPk(), animatorObjects.get(i).getVillage().getVillageName());
 			Data animator = new Data(animatorObjects.get(i).getPk(), 
 								animatorObjects.get(i).getAnimatorName(),
 								animatorObjects.get(i).getAge(), 
@@ -392,8 +400,10 @@ public class AnimatorsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + AnimatorsData.saveAnimatorOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

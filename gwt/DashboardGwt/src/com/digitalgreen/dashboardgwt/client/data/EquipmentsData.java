@@ -6,6 +6,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.FloatValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -126,7 +129,19 @@ public class EquipmentsData extends BaseData {
 		}
 		
 		@Override
+		public boolean validate(){
+			StringValidator equipmentType = new StringValidator(this.equipment_type,false,false,0,100);
+			StringValidator ModelNo = new StringValidator(this.model_no,true,true,0,100);
+			StringValidator serialNo = new StringValidator(this.serial_no,true,true,0,100);
+			FloatValidator cost = new FloatValidator(this.cost,true,true);
+			DateValidator procurementDate = new DateValidator(this.procurement_date, true, true);
+			DateValidator warrantyExpirationDate = new DateValidator(this.warranty_expiration_date, true, true);
+			
+			return equipmentType.validate() && ModelNo.validate() && serialNo.validate() && cost.validate() && procurementDate.validate()
+			     && warrantyExpirationDate.validate();
+		}
 		
+		@Override		
 		public void save() {
 			EquipmentsData equipmentsDataDbApis = new EquipmentsData();			
 			this.id = equipmentsDataDbApis.autoInsert(this.id,
@@ -290,8 +305,10 @@ public class EquipmentsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + EquipmentsData.saveEquipmentOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;

@@ -8,6 +8,8 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -257,6 +259,25 @@ public class VideosData extends BaseData {
 			
 		}
 		
+		@Override
+		public boolean validate(){
+			StringValidator title = new StringValidator(this.title,false,false,0,200);
+			DateValidator videoProductionStartDate = new DateValidator(this.video_production_start_date, false, false);
+			DateValidator videoProductionEndDate = new DateValidator(this.video_production_end_date, false, false);
+			StringValidator summary= new StringValidator(this.summary,true,true,0,500);
+			StringValidator pictureQuality= new StringValidator(this.picture_quality,true,true,0,200);
+			StringValidator audioQuality= new StringValidator(this.audio_quality,true,true,0,200);
+			StringValidator editingQuality= new StringValidator(this.editing_quality,true,true,0,200);
+			DateValidator editStartDate = new DateValidator(this.edit_start_date, true, true);
+			DateValidator editFinishDate = new DateValidator(this.edit_finish_date, true, true);
+			StringValidator thematic_quality= new StringValidator(this.thematic_quality,true,true,0,200);
+			DateValidator approvalDate = new DateValidator(this.approval_date, true, true);
+			StringValidator remarks= new StringValidator(this.remarks,true,true,0,500);
+			
+			return title.validate() && videoProductionStartDate.validate() && videoProductionEndDate.validate() && summary.validate()
+				&& pictureQuality.validate() && audioQuality.validate() && editingQuality.validate() && editStartDate.validate()
+				&& editFinishDate.validate() && thematic_quality.validate() && approvalDate.validate() && remarks.validate();
+		}
 		
 		@Override
 		public void save() {
@@ -523,8 +544,10 @@ public class VideosData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;

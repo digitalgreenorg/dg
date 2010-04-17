@@ -7,6 +7,8 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.ReviewersData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -95,6 +97,16 @@ public class PartnersData extends BaseData {
 			} else if(key.equals("equipmentholder")) {
 				this.equipmentholder = (String)val;
 			}
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator partnerName = new StringValidator(this.partner_name,false,false,0,100);
+			DateValidator dateOfAssociation = new DateValidator(this.date_of_association, true, true);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,100);
+			
+			return partnerName.validate() && dateOfAssociation.validate() && phoneNo.validate() && address.validate();
 		}
 		
 		@Override
@@ -256,8 +268,12 @@ public class PartnersData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + PartnersData.savePartnerOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				if(this.validate()) {
+					this.save();
+					return true;
+				}
+			}
 		}
 		
 		return false;

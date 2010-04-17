@@ -5,6 +5,8 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -116,6 +118,15 @@ public class DistrictsData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator districtName = new StringValidator(this.district_name,false,false,0,100);
+			DateValidator startDate = new DateValidator(this.start_date, true,true);
+			DateValidator fieldOfficerStartDate = new DateValidator(this.fieldofficer_startday, true,true);
+			
+			return districtName.validate() && startDate.validate() && fieldOfficerStartDate.validate();
 		}
 		
 		@Override
@@ -296,8 +307,10 @@ public class DistrictsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + DistrictsData.saveDistrictOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;

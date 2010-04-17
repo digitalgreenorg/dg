@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.TimeValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -113,6 +115,21 @@ public class PersonGroupsData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator groupName = new StringValidator(this.group_name,false,false,0,100);
+			TimeValidator timings = new TimeValidator(this.timings,true,true);
+			
+			return groupName.validate() && timings.validate();
+		}
+		
+		@Override
+		public boolean validate(BaseData.Data foreignKey){
+			TimeValidator timings = new TimeValidator(this.timings,true,true);
+			
+			return timings.validate();
 		}
 		
 		@Override
@@ -255,7 +272,6 @@ public class PersonGroupsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception  : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -276,7 +292,6 @@ public class PersonGroupsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -291,8 +306,12 @@ public class PersonGroupsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + PersonGroupsData.savePersonGroupOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				if(this.validate()) {
+					this.save();
+					return true;
+				}
+			}
 		}
 		
 		return false;

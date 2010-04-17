@@ -8,6 +8,9 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Data;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Type;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -122,6 +125,16 @@ public class Data extends BaseData.Data {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);	
+		}
+		
+		@Override
+		public boolean validate(BaseData.Data foreignKey){
+			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
+			StringValidator quality = new StringValidator(this.quality,true,true,0,100);
+			IntegerValidator quantity = new IntegerValidator(this.quantity,true,true);
+			StringValidator quantityUnit = new StringValidator(this.quantity_unit,true,true,0,100);
+			
+			return dateOfAdoption.validate() && quality.validate() && quantity.validate() && quantityUnit.validate();
 		}
 		
 		@Override
@@ -268,7 +281,6 @@ public class Data extends BaseData.Data {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -294,7 +306,6 @@ public class Data extends BaseData.Data {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -309,8 +320,12 @@ public class Data extends BaseData.Data {
 			this.post(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				if(this.validate()) {
+					this.save();
+					return true;
+				}
+			}
 		}
 		
 		return false;

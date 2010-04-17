@@ -8,6 +8,8 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -170,6 +172,32 @@ public class PersonsData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator personName = new StringValidator(this.person_name,false,false,0,100);
+			StringValidator fatherName = new StringValidator(this.father_name,true,true,0,100);
+			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,500);
+			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings,true,true,0,200);
+			
+			return personName.validate() && fatherName.validate() && age.validate() && phoneNo.validate()
+				&& address.validate() && landHoldings.validate() ;
+		}
+		
+		@Override
+		public boolean validate(BaseData.Data foreignKey){
+			StringValidator personName = new StringValidator(this.person_name,false,false,0,100);
+			StringValidator fatherName = new StringValidator(this.father_name,true,true,0,100);
+			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,500);
+			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings,true,true,0,200);
+			
+			return personName.validate() && fatherName.validate() && age.validate() && phoneNo.validate()
+				&& address.validate() && landHoldings.validate() ;
 		}
 		
 		@Override		
@@ -353,7 +381,6 @@ public class PersonsData extends BaseData {
 				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -377,7 +404,6 @@ public class PersonsData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
 			
@@ -391,8 +417,10 @@ public class PersonsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + PersonsData.savePersonOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;

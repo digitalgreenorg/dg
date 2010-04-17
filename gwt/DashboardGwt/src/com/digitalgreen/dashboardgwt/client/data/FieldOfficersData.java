@@ -7,6 +7,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.LanguagesData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -120,6 +123,18 @@ public class FieldOfficersData extends BaseData {
 			}
 			this.addNameValueToQueryString(key, val);
 		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator name = new StringValidator(this.name,false,false,0,100);
+			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
+			DateValidator hireDate = new DateValidator(this.hire_date, true,true);
+			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
+			StringValidator address = new StringValidator(this.address,true,true,0,500);
+			
+			return name.validate() && age.validate() && hireDate.validate() && phoneNo.validate() && address.validate();
+		}
+		
 
 		@Override
 		public void save(){
@@ -294,8 +309,10 @@ public class FieldOfficersData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL, this.form.getQueryString());
 		}
 		else {
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

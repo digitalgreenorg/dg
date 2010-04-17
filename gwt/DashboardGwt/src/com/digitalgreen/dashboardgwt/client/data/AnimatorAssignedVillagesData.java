@@ -5,6 +5,8 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -89,6 +91,20 @@ public class AnimatorAssignedVillagesData extends BaseData{
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			
+			return startDate.validate();
+		}
+		
+		@Override
+		public boolean validate(BaseData.Data foreignKey){
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			
+			return startDate.validate();
 		}
 		
 		@Override
@@ -259,8 +275,10 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			this.post(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

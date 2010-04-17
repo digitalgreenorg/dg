@@ -7,6 +7,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.VideosData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -110,6 +113,17 @@ public class VillagesData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator villageName = new StringValidator(this.village_name,false,false,0,100);
+			IntegerValidator noOfHouseHolds = new IntegerValidator(this.no_of_households,true,true);
+			IntegerValidator population = new IntegerValidator(this.population,true,true);
+			StringValidator roadConnectivity = new StringValidator(this.road_connectivity,true,true,0,100);
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			
+			return villageName.validate() && noOfHouseHolds.validate() && population.validate() && roadConnectivity.validate() && startDate.validate();
 		}
 		
 		@Override
@@ -272,8 +286,10 @@ public class VillagesData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + this.saveVillageOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

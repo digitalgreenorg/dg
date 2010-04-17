@@ -5,6 +5,8 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -85,6 +87,14 @@ public class BlocksData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator blockName = new StringValidator(this.block_name,false,false,0,100);
+			DateValidator startDate = new DateValidator(this.start_date, true,true);
+			
+			return blockName.validate() && startDate.validate();
 		}
 		
 		@Override
@@ -233,8 +243,10 @@ public class BlocksData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + BlocksData.saveBlockOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

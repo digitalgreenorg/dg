@@ -6,6 +6,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -62,6 +63,13 @@ public class LanguagesData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator languageName = new StringValidator(this.language_name,false,false,0,100);
+			
+			return languageName.validate();
 		}
 		
 		@Override
@@ -200,8 +208,10 @@ public class LanguagesData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + LanguagesData.saveLanguageOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;
