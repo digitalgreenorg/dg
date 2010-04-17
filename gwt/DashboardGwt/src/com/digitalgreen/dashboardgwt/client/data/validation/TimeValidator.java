@@ -45,6 +45,8 @@ public class TimeValidator extends BaseValidator {
 	public boolean validate() {
 		if(!super.validate()) {
 			return false;
+		} else if(this.getValue() == null){
+			return true;
 		}
 		String[] dateTime = this.getValue().split(" ");
 		DateValidator dateValidator = new DateValidator(dateTime[0]);
