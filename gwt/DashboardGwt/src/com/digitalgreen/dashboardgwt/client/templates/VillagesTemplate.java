@@ -78,8 +78,8 @@ public class VillagesTemplate extends BaseTemplate {
 	}
 	
 	// A list of Element IDs that need to receive the data before the template is loaded.
-	final private String addDataToElementID[] = {"id_block", "id_animator-0-partner", "id_animator-1-partner", 
-			"id_animator-2-partner", "id_animator-3-partner", "id_animator-4-partner"};
+	final private String addDataToElementID[] = {"id_block", "id_animator_set-0-partner", "id_animator_set-1-partner", 
+			"id_animator_set-2-partner", "id_animator_set-3-partner", "id_animator_set-4-partner"};
 	
 	private String villagesListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -319,7 +319,7 @@ public class VillagesTemplate extends BaseTemplate {
 														"</div>" +
 														"<div class='inline-group'>" +
 															"<div class='tabular inline-related last-related'>" +
-																"<input type='hidden' name='animator-TOTAL_FORMS' value='5' id='id_animator-TOTAL_FORMS' /><input type='hidden' name='animator-INITIAL_FORMS' value='0' id='id_animator-INITIAL_FORMS' />" +
+																"<input type='hidden' name='animator_set-TOTAL_FORMS' value='5' id='id_animator_set-TOTAL_FORMS' /><input type='hidden' name='animator_set-INITIAL_FORMS' value='0' id='id_animator_set-INITIAL_FORMS' />" +
 																"<fieldset class='module'>" +
 																	"<h2>Animators</h2>" +
 																	"<table>" +
@@ -339,24 +339,24 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</thead>" +
 																		"<tr class='row1 '>" +
 																			"<td class='original'>" +
-																				"<input type='hidden' name='animator-0-id' id='id_animator-0-id' />" +
-																				"<input type='hidden' name='animator-0-animator' id='id_animator-0-animator' />" +
+																				"<input type='hidden' name='animator_set-0-id' id='id_animator_set-0-id' />" +
+																				"<input type='hidden' name='animator_set-0-animator_set' id='id_animator_set-0-animator' />" +
 																			"</td>" +
 																			"<td class='name'>" +
-																				"<input id='id_animator-0-name' type='text' class='vTextField' name='animator-0-name' maxlength='100' />" +
+																				"<input id='id_animator_set-0-name' type='text' class='vTextField' name='animator_set-0-name' maxlength='100' />" +
 																			"</td>" +
 																			"<td class='age'>" +
-																				"<input id='id_animator-0-age' type='text' class='vIntegerField' name='animator-0-age' />" +
+																				"<input id='id_animator_set-0-age' type='text' class='vIntegerField' name='animator_set-0-age' />" +
 																			"</td>" +
 																			"<td class='gender'>" +
-																				"<select name='animator-0-gender' id='id_animator-0-gender'>" +
+																				"<select name='animator_set-0-gender' id='id_animator_set-0-gender'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='M'>Male</option>" +
 																					"<option value='F'>Female</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='csp_flag'>" +
-																				"<select name='animator-0-csp_flag' id='id_animator-0-csp_flag'>" +
+																				"<select name='animator_set-0-csp_flag' id='id_animator_set-0-csp_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -364,7 +364,7 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='camera_operator_flag'>" +
-																				"<select name='animator-0-camera_operator_flag' id='id_animator-0-camera_operator_flag'>" +
+																				"<select name='animator_set-0-camera_operator_flag' id='id_animator_set-0-camera_operator_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -372,7 +372,7 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='facilitator_flag'>" +
-																				"<select name='animator-0-facilitator_flag' id='id_animator-0-facilitator_flag'>" +
+																				"<select name='animator_set-0-facilitator_flag' id='id_animator_set-0-facilitator_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -380,13 +380,13 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='phone_no'>" +
-																				"<input id='id_animator-0-phone_no' type='text' class='vTextField' name='animator-0-phone_no' maxlength='100' />" +
+																				"<input id='id_animator_set-0-phone_no' type='text' class='vTextField' name='animator_set-0-phone_no' maxlength='100' />" +
 																			"</td>" +
 																			"<td class='address'>" +
-																				"<input id='id_animator-0-address' type='text' class='vTextField' name='animator-0-address' maxlength='500' />" +
+																				"<input id='id_animator_set-0-address' type='text' class='vTextField' name='animator_set-0-address' maxlength='500' />" +
 																			"</td>" +
 																			"<td class='partner'>" +
-																				"<select name='animator-0-partner' id='id_animator-0-partner'>" +
+																				"<select name='animator_set-0-partner' id='id_animator_set-0-partner'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																				"</select>" +
 																			"</td>" +
@@ -394,24 +394,24 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</tr>" +
 																		"<tr class='row2 '>" +
 																			"<td class='original'>" +
-																				"<input type='hidden' name='animator-1-id' id='id_animator-1-id' />" +
-																				"<input type='hidden' name='animator-1-animator' id='id_animator-1-animator' />" +
+																				"<input type='hidden' name='animator_set-1-id' id='id_animator_set-1-id' />" +
+																				"<input type='hidden' name='animator_set-1-animator' id='id_animator_set-1-animator' />" +
 																			"</td>" +
 																			"<td class='name'>" +
-																				"<input id='id_animator-1-name' type='text' class='vTextField' name='animator-1-name' maxlength='100' />" +
+																				"<input id='id_animator_set-1-name' type='text' class='vTextField' name='animator_set-1-name' maxlength='100' />" +
 																			"</td>" +
 																			"<td class='age'>" +
-																				"<input id='id_animator-1-age' type='text' class='vIntegerField' name='animator-1-age' />" +
+																				"<input id='id_animator_set-1-age' type='text' class='vIntegerField' name='animator_set-1-age' />" +
 																			"</td>" +
 																			"<td class='gender'>" +
-																				"<select name='animator-1-gender' id='id_animator-1-gender'>" +
+																				"<select name='animator_set-1-gender' id='id_animator_set-1-gender'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='M'>Male</option>" +
 																					"<option value='F'>Female</option>" +
 																				"</select>" +
 																			"</td>" +
 																			"<td class='csp_flag'>" +
-																				"<select name='animator-1-csp_flag' id='id_animator-1-csp_flag'>" +
+																				"<select name='animator_set-1-csp_flag' id='id_animator_set-1-csp_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -419,7 +419,7 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='camera_operator_flag'>" +
-																				"<select name='animator-1-camera_operator_flag' id='id_animator-1-camera_operator_flag'>" +
+																				"<select name='animator_set-1-camera_operator_flag' id='id_animator_set-1-camera_operator_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -427,7 +427,7 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='facilitator_flag'>" +
-																				"<select name='animator-1-facilitator_flag' id='id_animator-1-facilitator_flag'>" +
+																				"<select name='animator_set-1-facilitator_flag' id='id_animator_set-1-facilitator_flag'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																					"<option value='1'>Unknown</option>" +
 																					"<option value='2'>Yes</option>" +
@@ -435,13 +435,13 @@ public class VillagesTemplate extends BaseTemplate {
 																				"</select>" +
 																			"</td>" +
 																			"<td class='phone_no'>" +
-																				"<input id='id_animator-1-phone_no' type='text' class='vTextField' name='animator-1-phone_no' maxlength='100' />" +
+																				"<input id='id_animator_set-1-phone_no' type='text' class='vTextField' name='animator_set-1-phone_no' maxlength='100' />" +
 																			"</td>" +
 																			"<td class='address'>" +
-																				"<input id='id_animator-1-address' type='text' class='vTextField' name='animator-1-address' maxlength='500' />" +
+																				"<input id='id_animator_set-1-address' type='text' class='vTextField' name='animator_set-1-address' maxlength='500' />" +
 																			"</td>" +
 																			"<td class='partner'>" +
-																				"<select name='animator-1-partner' id='id_animator-1-partner'>" +
+																				"<select name='animator_set-1-partner' id='id_animator_set-1-partner'>" +
 																					"<option value='' selected='selected'>---------</option>" +
 																				"</select>" +
 																			"</td>" +
@@ -449,24 +449,24 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</tr>" +
 																		"<tr class='row1 '>" +
 																			"<td class='original'>" +
-																				"<input type='hidden' name='animator-2-id' id='id_animator-2-id' />" +
-																				"<input type='hidden' name='animator-2-animator' id='id_animator-2-animator' />" +
+																				"<input type='hidden' name='animator_set-2-id' id='id_animator_set-2-id' />" +
+																				"<input type='hidden' name='animator_set-2-animator' id='id_animator_set-2-animator' />" +
 																			"</td>" +
 																		"<td class='name'>" +
-																			"<input id='id_animator-2-name' type='text' class='vTextField' name='animator-2-name' maxlength='100' />" +
+																			"<input id='id_animator_set-2-name' type='text' class='vTextField' name='animator_set-2-name' maxlength='100' />" +
 																		"</td>" +
 																		"<td class='age'>" +
-																			"<input id='id_animator-2-age' type='text' class='vIntegerField' name='animator-2-age' />" +
+																			"<input id='id_animator_set-2-age' type='text' class='vIntegerField' name='animator_set-2-age' />" +
 																		"</td>" +
 																		"<td class='gender'>" +
-																			"<select name='animator-2-gender' id='id_animator-2-gender'>" +
+																			"<select name='animator_set-2-gender' id='id_animator_set-2-gender'>" +
 																				"<option value='' selected='selected'>---------</option>" +
 																				"<option value='M'>Male</option>" +
 																				"<option value='F'>Female</option>" +
 																			"</select>" +
 																		"</td>" +
 																		"<td class='csp_flag'>" +
-																			"<select name='animator-2-csp_flag' id='id_animator-2-csp_flag'>" +
+																			"<select name='animator_set-2-csp_flag' id='id_animator_set-2-csp_flag'>" +
 																				"<option value='' selected='selected'>---------</option>" +
 																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
@@ -474,7 +474,7 @@ public class VillagesTemplate extends BaseTemplate {
 																			"</select>" +
 																		"</td>" +
 																		"<td class='camera_operator_flag'>" +
-																			"<select name='animator-2-camera_operator_flag' id='id_animator-2-camera_operator_flag'>" +
+																			"<select name='animator_set-2-camera_operator_flag' id='id_animator_set-2-camera_operator_flag'>" +
 																				"<option value='' selected='selected'>---------</option>" +
 																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
@@ -482,7 +482,7 @@ public class VillagesTemplate extends BaseTemplate {
 																			"</select>" +
 																		"</td>" +
 																		"<td class='facilitator_flag'>" +
-																			"<select name='animator-2-facilitator_flag' id='id_animator-2-facilitator_flag'>" +
+																			"<select name='animator_set-2-facilitator_flag' id='id_animator_set-2-facilitator_flag'>" +
 																				"<option value='' selected='selected'>---------</option>" +
 																				"<option value='1'>Unknown</option>" +
 																				"<option value='2'>Yes</option>" +
@@ -490,13 +490,13 @@ public class VillagesTemplate extends BaseTemplate {
 																			"</select>" +
 																		"</td>" +
 																		"<td class='phone_no'>" +
-																			"<input id='id_animator-2-phone_no' type='text' class='vTextField' name='animator-2-phone_no' maxlength='100' />" +
+																			"<input id='id_animator_set-2-phone_no' type='text' class='vTextField' name='animator_set-2-phone_no' maxlength='100' />" +
 																		"</td>" +
 																		"<td class='address'>" +
-																			"<input id='id_animator-2-address' type='text' class='vTextField' name='animator-2-address' maxlength='500' />" +
+																			"<input id='id_animator_set-2-address' type='text' class='vTextField' name='animator_set-2-address' maxlength='500' />" +
 																		"</td>" +
 																		"<td class='partner'>" +
-																			"<select name='animator-2-partner' id='id_animator-2-partner'>" +
+																			"<select name='animator_set-2-partner' id='id_animator_set-2-partner'>" +
 																				"<option value='' selected='selected'>---------</option>" +
 																			"</select>" +
 																		"</td>" +
@@ -504,24 +504,24 @@ public class VillagesTemplate extends BaseTemplate {
 																	"</tr>" +
 																	"<tr class='row2 '>" +
 																		"<td class='original'>" +
-																			"<input type='hidden' name='animator-3-id' id='id_animator-3-id' />" +
-																			"<input type='hidden' name='animator-3-animator' id='id_animator-3-animator' />" +
+																			"<input type='hidden' name='animator_set-3-id' id='id_animator_set-3-id' />" +
+																			"<input type='hidden' name='animator_set-3-animator' id='id_animator_set-3-animator' />" +
 																		"</td>" +
 																	"<td class='name'>" +
-																		"<input id='id_animator-3-name' type='text' class='vTextField' name='animator-3-name' maxlength='100' />" +
+																		"<input id='id_animator_set-3-name' type='text' class='vTextField' name='animator_set-3-name' maxlength='100' />" +
 																	"</td>" +
 																	"<td class='age'>" +
-																		"<input id='id_animator-3-age' type='text' class='vIntegerField' name='animator-3-age' />" +
+																		"<input id='id_animator_set-3-age' type='text' class='vIntegerField' name='animator_set-3-age' />" +
 																	"</td>" +
 																	"<td class='gender'>" +
-																		"<select name='animator-3-gender' id='id_animator-3-gender'>" +
+																		"<select name='animator_set-3-gender' id='id_animator_set-3-gender'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='M'>Male</option>" +
 																			"<option value='F'>Female</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='csp_flag'>" +
-																		"<select name='animator-3-csp_flag' id='id_animator-3-csp_flag'>" +
+																		"<select name='animator_set-3-csp_flag' id='id_animator_set-3-csp_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -529,7 +529,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='camera_operator_flag'>" +
-																		"<select name='animator-3-camera_operator_flag' id='id_animator-3-camera_operator_flag'>" +
+																		"<select name='animator_set-3-camera_operator_flag' id='id_animator_set-3-camera_operator_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -537,7 +537,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='facilitator_flag'>" +
-																		"<select name='animator-3-facilitator_flag' id='id_animator-3-facilitator_flag'>" +
+																		"<select name='animator_set-3-facilitator_flag' id='id_animator_set-3-facilitator_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -545,13 +545,13 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='phone_no'>" +
-																		"<input id='id_animator-3-phone_no' type='text' class='vTextField' name='animator-3-phone_no' maxlength='100' />" +
+																		"<input id='id_animator_set-3-phone_no' type='text' class='vTextField' name='animator_set-3-phone_no' maxlength='100' />" +
 																	"</td>" +
 																	"<td class='address'>" +
-																		"<input id='id_animator-3-address' type='text' class='vTextField' name='animator-3-address' maxlength='500' />" +
+																		"<input id='id_animator_set-3-address' type='text' class='vTextField' name='animator_set-3-address' maxlength='500' />" +
 																	"</td>" +
 																	"<td class='partner'>" +
-																		"<select name='animator-3-partner' id='id_animator-3-partner'>" +
+																		"<select name='animator_set-3-partner' id='id_animator_set-3-partner'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																		"</select>" +
 																	"</td>" +
@@ -559,24 +559,24 @@ public class VillagesTemplate extends BaseTemplate {
 																"</tr>" +
 																"<tr class='row1 '>" +
 																	"<td class='original'>" +
-																		"<input type='hidden' name='animator-4-id' id='id_animator-4-id' />" +
-																		"<input type='hidden' name='animator-4-animator' id='id_animator-4-animator' />" +
+																		"<input type='hidden' name='animator_set-4-id' id='id_animator_set-4-id' />" +
+																		"<input type='hidden' name='animator_set-4-animator' id='id_animator_set-4-animator' />" +
 																	"</td>" +
 																	"<td class='name'>" +
-																		"<input id='id_animator-4-name' type='text' class='vTextField' name='animator-4-name' maxlength='100' />" +
+																		"<input id='id_animator_set-4-name' type='text' class='vTextField' name='animator_set-4-name' maxlength='100' />" +
 																	"</td>" +
 																	"<td class='age'>" +
-																		"<input id='id_animator-4-age' type='text' class='vIntegerField' name='animator-4-age' />" +
+																		"<input id='id_animator_set-4-age' type='text' class='vIntegerField' name='animator_set-4-age' />" +
 																	"</td>" +
 																	"<td class='gender'>" +
-																		"<select name='animator-4-gender' id='id_animator-4-gender'>" +
+																		"<select name='animator_set-4-gender' id='id_animator_set-4-gender'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='M'>Male</option>" +
 																			"<option value='F'>Female</option>" +
 																		"</select>" +
 																	"</td>" +
 																	"<td class='csp_flag'>" +
-																		"<select name='animator-4-csp_flag' id='id_animator-4-csp_flag'>" +
+																		"<select name='animator_set-4-csp_flag' id='id_animator_set-4-csp_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -584,7 +584,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='camera_operator_flag'>" +
-																		"<select name='animator-4-camera_operator_flag' id='id_animator-4-camera_operator_flag'>" +
+																		"<select name='animator_set-4-camera_operator_flag' id='id_animator_set-4-camera_operator_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -592,7 +592,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='facilitator_flag'>" +
-																		"<select name='animator-4-facilitator_flag' id='id_animator-4-facilitator_flag'>" +
+																		"<select name='animator_set-4-facilitator_flag' id='id_animator_set-4-facilitator_flag'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																			"<option value='1'>Unknown</option>" +
 																			"<option value='2'>Yes</option>" +
@@ -600,13 +600,13 @@ public class VillagesTemplate extends BaseTemplate {
 																		"</select>" +
 																	"</td>" +
 																	"<td class='phone_no'>" +
-																		"<input id='id_animator-4-phone_no' type='text' class='vTextField' name='animator-4-phone_no' maxlength='100' />" +
+																		"<input id='id_animator_set-4-phone_no' type='text' class='vTextField' name='animator_set-4-phone_no' maxlength='100' />" +
 																	"</td>" +
 																	"<td class='address'>" +
-																		"<input id='id_animator-4-address' type='text' class='vTextField' name='animator-4-address' maxlength='500' />" +
+																		"<input id='id_animator_set-4-address' type='text' class='vTextField' name='animator_set-4-address' maxlength='500' />" +
 																	"</td>" +
 																	"<td class='partner'>" +
-																		"<select name='animator-4-partner' id='id_animator-4-partner'>" +
+																		"<select name='animator_set-4-partner' id='id_animator_set-4-partner'>" +
 																			"<option value='' selected='selected'>---------</option>" +
 																		"</select>" +
 																	"</td>" +

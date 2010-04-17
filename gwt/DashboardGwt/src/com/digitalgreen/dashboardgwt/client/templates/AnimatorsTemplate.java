@@ -75,7 +75,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 		}
 	}
 	
-	final private String addDataToElementID [] = {"id_partner","id_home_village","id_animatorassignedvillage_set-0-village",
+	final private String addDataToElementID [] = {"id_partner","id_village","id_animatorassignedvillage_set-0-village",
 			"id_animatorassignedvillage_set-1-village","id_animatorassignedvillage_set-2-village"};
 
 	private String animatorsListFormHtml = "<div class='actions'>" +
@@ -197,9 +197,9 @@ public class AnimatorsTemplate extends BaseTemplate {
 														"</select>" +
 													"</div>" +
 												"</div>" +
-												"<div class='form-row home_village  '>" +
+												"<div class='form-row village  '>" +
 													"<div>" +
-														"<label for='id_home_village' class='required'>Home village:</label><select name='home_village' id='id_home_village'>" +
+														"<label for='id_village' class='required'>Home village:</label><select name='village' id='id_village'>" +
 															"<option value='' selected='selected'>---------</option>" +
 														"</select>" +
 													"</div>" +
