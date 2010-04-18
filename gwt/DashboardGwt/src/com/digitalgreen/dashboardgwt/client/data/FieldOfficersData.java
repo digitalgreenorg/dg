@@ -125,14 +125,14 @@ public class FieldOfficersData extends BaseData {
 		}
 		
 		@Override
-		public boolean validate(){
-			StringValidator name = new StringValidator(this.name,false,false,0,100);
-			IntegerValidator age = new IntegerValidator(this.age,true,true,0,100);
-			DateValidator hireDate = new DateValidator(this.hire_date, true,true);
-			StringValidator phoneNo = new StringValidator(this.phone_no,true,true,0,100);
-			StringValidator address = new StringValidator(this.address,true,true,0,500);
-			
-			return name.validate() && age.validate() && hireDate.validate() && phoneNo.validate() && address.validate();
+		public boolean validate() {
+			StringValidator name = new StringValidator(this.name, false, false,	0, 100);
+			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
+			DateValidator hireDate = new DateValidator(this.hire_date, true, true);
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100);
+			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
+			return name.validate() && age.validate() && hireDate.validate()
+					&& phoneNo.validate() && address.validate();
 		}
 		
 

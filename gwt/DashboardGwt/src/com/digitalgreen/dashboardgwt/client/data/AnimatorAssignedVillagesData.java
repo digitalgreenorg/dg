@@ -95,16 +95,13 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		@Override
 		public boolean validate(){
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			
+			DateValidator startDate = new DateValidator(this.start_date, true, true);			
 			return startDate.validate();
 		}
 		
 		@Override
 		public boolean validate(BaseData.Data foreignKey){
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			
-			return startDate.validate();
+			return this.validate();
 		}
 		
 		@Override

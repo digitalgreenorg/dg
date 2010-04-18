@@ -260,23 +260,25 @@ public class VideosData extends BaseData {
 		}
 		
 		@Override
-		public boolean validate(){
-			StringValidator title = new StringValidator(this.title,false,false,0,200);
+		public boolean validate() {
+			StringValidator title = new StringValidator(this.title, false, false, 0, 200);
 			DateValidator videoProductionStartDate = new DateValidator(this.video_production_start_date, false, false);
 			DateValidator videoProductionEndDate = new DateValidator(this.video_production_end_date, false, false);
-			StringValidator summary= new StringValidator(this.summary,true,true,0,500);
-			StringValidator pictureQuality= new StringValidator(this.picture_quality,true,true,0,200);
-			StringValidator audioQuality= new StringValidator(this.audio_quality,true,true,0,200);
-			StringValidator editingQuality= new StringValidator(this.editing_quality,true,true,0,200);
+			StringValidator summary = new StringValidator(this.summary, true, true, 0, 500);
+			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, true, 0, 200);
+			StringValidator audioQuality = new StringValidator(this.audio_quality, true, true, 0, 200);
+			StringValidator editingQuality = new StringValidator(this.editing_quality, true, true, 0, 200);
 			DateValidator editStartDate = new DateValidator(this.edit_start_date, true, true);
 			DateValidator editFinishDate = new DateValidator(this.edit_finish_date, true, true);
-			StringValidator thematic_quality= new StringValidator(this.thematic_quality,true,true,0,200);
+			StringValidator thematic_quality = new StringValidator(this.thematic_quality, true, true, 0, 200);
 			DateValidator approvalDate = new DateValidator(this.approval_date, true, true);
-			StringValidator remarks= new StringValidator(this.remarks,true,true,0,500);
-			
-			return title.validate() && videoProductionStartDate.validate() && videoProductionEndDate.validate() && summary.validate()
-				&& pictureQuality.validate() && audioQuality.validate() && editingQuality.validate() && editStartDate.validate()
-				&& editFinishDate.validate() && thematic_quality.validate() && approvalDate.validate() && remarks.validate();
+			StringValidator remarks = new StringValidator(this.remarks, true, true, 0, 500);
+			return title.validate() && videoProductionStartDate.validate()
+					&& videoProductionEndDate.validate() && summary.validate()
+					&& pictureQuality.validate() && audioQuality.validate()
+					&& editingQuality.validate() && editStartDate.validate()
+					&& editFinishDate.validate() && thematic_quality.validate()
+					&& approvalDate.validate() && remarks.validate();
 		}
 		
 		@Override

@@ -129,16 +129,16 @@ public class EquipmentsData extends BaseData {
 		}
 		
 		@Override
-		public boolean validate(){
-			StringValidator equipmentType = new StringValidator(this.equipment_type,false,false,0,100);
-			StringValidator ModelNo = new StringValidator(this.model_no,true,true,0,100);
-			StringValidator serialNo = new StringValidator(this.serial_no,true,true,0,100);
-			FloatValidator cost = new FloatValidator(this.cost,true,true);
+		public boolean validate() {
+			StringValidator equipmentType = new StringValidator(this.equipment_type, false, false, 0, 100);
+			StringValidator ModelNo = new StringValidator(this.model_no, true, true, 0, 100);
+			StringValidator serialNo = new StringValidator(this.serial_no, true, true, 0, 100);
+			FloatValidator cost = new FloatValidator(this.cost, true, true);
 			DateValidator procurementDate = new DateValidator(this.procurement_date, true, true);
 			DateValidator warrantyExpirationDate = new DateValidator(this.warranty_expiration_date, true, true);
-			
-			return equipmentType.validate() && ModelNo.validate() && serialNo.validate() && cost.validate() && procurementDate.validate()
-			     && warrantyExpirationDate.validate();
+			return equipmentType.validate() && ModelNo.validate()
+					&& serialNo.validate() && cost.validate()
+					&& procurementDate.validate() && warrantyExpirationDate.validate();
 		}
 		
 		@Override		

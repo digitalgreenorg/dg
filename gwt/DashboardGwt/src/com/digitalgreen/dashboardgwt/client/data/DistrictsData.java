@@ -121,14 +121,14 @@ public class DistrictsData extends BaseData {
 		}
 		
 		@Override
-		public boolean validate(){
-			StringValidator districtName = new StringValidator(this.district_name,false,false,0,100);
-			DateValidator startDate = new DateValidator(this.start_date, true,true);
-			DateValidator fieldOfficerStartDate = new DateValidator(this.fieldofficer_startday, true,true);
-			
-			return districtName.validate() && startDate.validate() && fieldOfficerStartDate.validate();
+		public boolean validate() {
+			StringValidator districtName = new StringValidator(this.district_name, false, false, 0, 100);
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			DateValidator fieldOfficerStartDate = new DateValidator(this.fieldofficer_startday, true, true);
+			return districtName.validate() && startDate.validate()
+					&& fieldOfficerStartDate.validate();
 		}
-		
+
 		@Override
 		public void save(){
 			DistrictsData districtsDataDbApis = new DistrictsData();

@@ -128,15 +128,19 @@ public class Data extends BaseData.Data {
 		}
 		
 		@Override
-		public boolean validate(BaseData.Data foreignKey){
-			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
-			StringValidator quality = new StringValidator(this.quality,true,true,0,100);
-			IntegerValidator quantity = new IntegerValidator(this.quantity,true,true);
-			StringValidator quantityUnit = new StringValidator(this.quantity_unit,true,true,0,100);
-			
-			return dateOfAdoption.validate() && quality.validate() && quantity.validate() && quantityUnit.validate();
+		public boolean validate(BaseData.Data foreignKey) {
+			DateValidator dateOfAdoption = new DateValidator(
+					this.date_of_adoption, false, false);
+			StringValidator quality = new StringValidator(this.quality, true,
+					true, 0, 100);
+			IntegerValidator quantity = new IntegerValidator(this.quantity,
+					true, true);
+			StringValidator quantityUnit = new StringValidator(
+					this.quantity_unit, true, true, 0, 100);
+			return dateOfAdoption.validate() && quality.validate()
+					&& quantity.validate() && quantityUnit.validate();
 		}
-		
+
 		@Override
 		public void save() {
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();

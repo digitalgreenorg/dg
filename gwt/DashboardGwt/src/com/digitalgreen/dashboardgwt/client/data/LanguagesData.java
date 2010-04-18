@@ -66,9 +66,9 @@ public class LanguagesData extends BaseData {
 		}
 		
 		@Override
-		public boolean validate(){
-			StringValidator languageName = new StringValidator(this.language_name,false,false,0,100);
-			
+		public boolean validate() {
+			StringValidator languageName = new StringValidator(
+					this.language_name, false, false, 0, 100);
 			return languageName.validate();
 		}
 		
