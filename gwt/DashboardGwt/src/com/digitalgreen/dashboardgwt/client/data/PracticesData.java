@@ -6,6 +6,7 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -90,6 +91,14 @@ public class PracticesData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator stringValidatorN = new StringValidator(this.practice_name.trim(), false, false, 1, 50);
+			StringValidator stringValidatorS = new StringValidator(this.seasonality, false, false, 3, 3);
+			StringValidator stringValidatorSUM = new StringValidator(this.summary, true, true, 0, 1024);
+			return stringValidatorN.validate() && stringValidatorS.validate() && stringValidatorSUM.validate();
 		}
 		
 		@Override
@@ -232,8 +241,10 @@ public class PracticesData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + this.savePracticeOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()){
+				this.save();
+				return true;
+			}
 		}
 		return false;
 	}

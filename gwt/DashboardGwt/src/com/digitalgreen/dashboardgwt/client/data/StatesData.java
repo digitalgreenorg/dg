@@ -6,6 +6,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -88,6 +91,14 @@ public class StatesData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);	
+		}
+		
+		@Override
+		public boolean validate(){
+			StringValidator stringValidator = new StringValidator(this.state_name, false, false, 1, 50);
+			IntegerValidator integerValidator = new IntegerValidator(this.region.getId(), false, false);
+			DateValidator datevalidator = new DateValidator(this.start_date, true, true);
+			return stringValidator.validate() && integerValidator.validate() && datevalidator.validate();
 		}
 		
 		@Override
@@ -231,8 +242,10 @@ public class StatesData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()){
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;

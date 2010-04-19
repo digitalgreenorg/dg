@@ -6,6 +6,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -172,7 +175,14 @@ public class DevelopmentManagersData extends BaseData {
 		}
 		
 		@Override
+		public boolean validate(){
+			StringValidator stringValidatorN = new StringValidator(this.name, false, false, 1, 50);
+			StringValidator stringValidatorG = new StringValidator(this.gender, false, false, 1, 1);
+			IntegerValidator integerValidator = new IntegerValidator(this.region.getId(), false, false); 
+			return stringValidatorN.validate() && stringValidatorG.validate()  && integerValidator.validate();
+		}
 		
+		@Override		
 		public void save() {
 			DevelopmentManagersData developmentmanagersDataDbApis = new DevelopmentManagersData();
 			this.id = developmentmanagersDataDbApis.autoInsert(this.id, 
@@ -355,8 +365,10 @@ public class DevelopmentManagersData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + DevelopmentManagersData.saveDevelopmentManagerOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()){
+				this.save();
+				return true;
+			}
 		}
 		
 		return false;
