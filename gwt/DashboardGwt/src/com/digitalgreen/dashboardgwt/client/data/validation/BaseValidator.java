@@ -21,6 +21,15 @@ public class BaseValidator {
 	
 	// Override this
 	public boolean validate() {
-		return !(!nullable && value == null || !blank && value.equals(""));
+		if(!nullable && value == null) {
+			return false;
+		}
+		if(value != null) {
+			String valueTrim = new String(value);
+			if(!blank && valueTrim.trim().isEmpty()){
+				return false;
+			}
+		}
+		return true;
 	}
 }
