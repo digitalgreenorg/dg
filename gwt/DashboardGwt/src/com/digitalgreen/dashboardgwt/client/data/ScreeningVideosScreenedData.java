@@ -105,7 +105,7 @@ public class ScreeningVideosScreenedData extends BaseData {
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(video_id) REFERENCES video(id));";
 	
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `screening_videos_screened`;";
 	protected static String selectScreeningVideosScreened = "SELECT svs.id, vid.TITLE FROM screening_videos_screened svs, video vid" +
 	"WHERE svs.video_id = vid.id ORDER BY (vid.TITLE);";
 	protected static String listScreeningVideosScreened = "SELECT svs.id, vid.TITLE FROM screening_videos_screened svs, video vid" +
@@ -143,6 +143,16 @@ public class ScreeningVideosScreenedData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 
 	@Override

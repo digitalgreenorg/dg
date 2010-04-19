@@ -161,6 +161,7 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(state_id) REFERENCES state(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
+	protected static String dropTable = "DROP TABLE IF EXISTS `district`;";
 	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (district_name)";
 	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id);";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
@@ -199,6 +200,16 @@ public class DistrictsData extends BaseData {
 	@Override 
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

@@ -124,7 +124,7 @@ public class PracticesData extends BaseData {
 												"PRACTICE_NAME VARCHAR(200)  NOT NULL ," +
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
 												"SUMMARY TEXT NULL DEFAULT NULL );";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `practices`;";
 	protected static String selectPractices = "SELECT id, practice_name FROM practices ORDER BY(practice_name)";
 	protected static String listPractices = "SELECT * FROM practices ORDER BY(-id)";
 	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
@@ -163,6 +163,16 @@ public class PracticesData extends BaseData {
 	@Override
 	protected String[] getFields(){
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

@@ -214,7 +214,7 @@ public class ScreeningsData extends BaseData {
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `screening`;";
 	protected static String selectScreenings = "SELECT sc.id, sc.DATE, sc.location FROM screening sc ORDER BY (sc.DATE);";
 	protected static String listScreenings = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
 			"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name FROM screening sc JOIN village vil " +
@@ -256,6 +256,16 @@ public class ScreeningsData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

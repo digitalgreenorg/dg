@@ -173,7 +173,7 @@ public class FieldOfficersData extends BaseData {
 												"equipmentholder_id INT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `field_officer`;";
 	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
 	protected static String getFieldOfficerByID = "SELECT id, name FROM field_officer WHERE id = ?";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";
@@ -213,6 +213,16 @@ public class FieldOfficersData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return FieldOfficersData.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

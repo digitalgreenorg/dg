@@ -9,7 +9,6 @@ public class Schema {
 	
 	public static void createSchema() {
 		try {
-			
 			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
 			BaseData.getDb().execute(RegionsData.createTable);
@@ -53,5 +52,49 @@ public class Schema {
 		}
 	}
 	
-	public static void dropSchema() {}
+	public static void dropSchema() {
+		try {
+			BaseData.dbOpen();
+			BaseData.dbStartTransaction();
+			BaseData.getDb().execute(RegionsData.dropTable);
+			BaseData.getDb().execute(EquipmentHoldersData.dropTable);
+			BaseData.getDb().execute(ReviewersData.dropTable);
+			BaseData.getDb().execute(DevelopmentManagersData.dropTable);
+			BaseData.getDb().execute(StatesData.dropTable);
+			BaseData.getDb().execute(PartnersData.dropTable);
+			BaseData.getDb().execute(FieldOfficersData.dropTable);
+			BaseData.getDb().execute(DistrictsData.dropTable);
+			BaseData.getDb().execute(BlocksData.dropTable);
+			BaseData.getDb().execute(VillagesData.dropTable);
+			BaseData.getDb().execute(MonthlyCostPerVillageData.dropTable);
+			BaseData.getDb().execute(PersonGroupsData.dropTable);
+			BaseData.getDb().execute(PersonsData.dropTable);
+			BaseData.getDb().execute(PersonRelationsData.dropTable);
+			BaseData.getDb().execute(AnimatorsData.dropTable);
+			BaseData.getDb().execute(TrainingsData.dropTable);
+			BaseData.getDb().execute(TrainingAnimatorsTrainedData.dropTable);
+			BaseData.getDb().execute(AnimatorAssignedVillagesData.dropTable);
+			BaseData.getDb().execute(AnimatorSalaryPerMonthData.dropTable);
+			BaseData.getDb().execute(LanguagesData.dropTable);
+			BaseData.getDb().execute(PracticesData.dropTable);
+			BaseData.getDb().execute(VideosData.dropTable);
+			BaseData.getDb().execute(VideoRelatedAgriculturalPracticesData.dropTable);
+			BaseData.getDb().execute(VideoFarmersShownData.dropTable);
+			BaseData.getDb().execute(ScreeningsData.dropTable);
+			BaseData.getDb().execute(ScreeningFarmerGroupsTargetedData.dropTable);
+			BaseData.getDb().execute(ScreeningVideosScreenedData.dropTable);
+			BaseData.getDb().execute(PersonMeetingAttendanceData.dropTable);
+			BaseData.getDb().execute(PersonAdoptPracticeData.dropTable);
+			BaseData.getDb().execute(EquipmentsData.dropTable);
+			BaseData.getDb().execute(LoginData.dropTable);
+			BaseData.getDb().execute(FormQueueData.dropTable);
+			BaseData.dbCommit();
+			BaseData.dbClose();
+		} catch (DatabaseException e) {
+			Window.alert("Database Exception : Error in creating the tables");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }

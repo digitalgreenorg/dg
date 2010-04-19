@@ -128,7 +128,7 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 												"TOTAL_SALARY FLOAT(0,0)  NULL DEFAULT NULL," +
 												"PAY_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `animator_salary_per_month`;";
 	protected static String selectAnimatorSalaryPerMonths = "SELECT asp.id, a.NAME  FROM animator_salary_per_month asp, animator a " +
 			"WHERE asp.animator_id = a.id ORDER BY (NAME);";
 	protected static String listAnimatorSalaryPerMonths = "SELECT * FROM animator_salary_per_month aav JOIN animator a ON aav.animator_id = a.id " +
@@ -170,6 +170,16 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

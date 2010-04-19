@@ -260,27 +260,28 @@ public class PersonsData extends BaseData {
 	}
 
 	public static String tableID = "20";
-	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` "
-			+ "(id INTEGER PRIMARY KEY  NOT NULL ,"
-			+ "PERSON_NAME VARCHAR(100)  NOT NULL ,"
-			+ "FATHER_NAME VARCHAR(100)  NULL DEFAULT NULL ,"
-			+ "AGE INT  NULL DEFAULT NULL,"
-			+ "GENDER VARCHAR(1) NOT NULL,"
-			+ "PHONE_NO VARCHAR(100) NULL DEFAULT NULL,"
-			+ "ADDRESS VARCHAR(500) NULL DEFAULT NULL,"
-			+ "LAND_HOLDINGS INT  NULL DEFAULT NULL,"
-			+ "village_id INT NOT NULL DEFAULT 0,"
-			+ "group_id INT  NULL DEFAULT NULL,"
-			+ "equipmentholder_id INT  NULL DEFAULT NULL, "
-			+ "FOREIGN KEY(village_id) REFERENCES village(id), "
-			+ "FOREIGN KEY(group_id) REFERENCES person_groups(id), "
-			+ "FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); ";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
+												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"PERSON_NAME VARCHAR(100)  NOT NULL ," +
+												"FATHER_NAME VARCHAR(100)  NULL DEFAULT NULL ," +
+												"AGE INT  NULL DEFAULT NULL," +
+												"GENDER VARCHAR(1) NOT NULL," +
+												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
+												"ADDRESS VARCHAR(500) NULL DEFAULT NULL," +
+												"LAND_HOLDINGS INT  NULL DEFAULT NULL," +
+												"village_id INT NOT NULL DEFAULT 0," +
+												"group_id INT  NULL DEFAULT NULL," +
+												"equipmentholder_id INT  NULL DEFAULT NULL, " +
+												"FOREIGN KEY(village_id) REFERENCES village(id), " +
+												"FOREIGN KEY(group_id) REFERENCES person_groups(id), " +
+												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ; 
+	protected static String dropTable = "DROP TABLE IF EXISTS `person`;";
+	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
+	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
+			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
+			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id);";
 
-	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name "
-			+ "FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
-	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME "
-			+ "FROM person p LEFT JOIN village vil on p.village_id = vil.id "
-			+ "LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id);";
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	protected static String savePersonOnlineURL = "/dashboard/savepersononline/";
 	protected static String getPersonOnlineURL = "/dashboard/getpersonsonline/";
@@ -322,7 +323,17 @@ public class PersonsData extends BaseData {
 	}
 
 	@Override
-	public String getListingOnlineURL() {
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
+	}
+	
+	@Override
+	public String getListingOnlineURL(){
 		return PersonsData.getPersonOnlineURL;
 	}
 

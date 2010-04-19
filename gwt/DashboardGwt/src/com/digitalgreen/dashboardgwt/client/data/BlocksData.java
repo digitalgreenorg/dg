@@ -127,6 +127,7 @@ public class BlocksData extends BaseData {
 			+ "START_DATE DATE  NULL DEFAULT NULL,"
 			+ "district_id INT  NOT NULL DEFAULT 0, "
 			+ "FOREIGN KEY(district_id) REFERENCES district(id));";
+	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";
 	protected static String listBlocks = "SELECT block.id, block.BLOCK_NAME, block.START_DATE, district.id, district.DISTRICT_NAME FROM block JOIN district ON block.district_id = district.id ORDER BY (-block.id);";
 	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
@@ -168,6 +169,16 @@ public class BlocksData extends BaseData {
 		return this.fields;
 	}
 
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
+	}
+	
 	@Override
 	public String getListingOnlineURL() {
 		return BlocksData.getBlockOnlineURL;

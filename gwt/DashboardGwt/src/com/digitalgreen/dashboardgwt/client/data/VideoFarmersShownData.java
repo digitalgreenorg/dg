@@ -111,7 +111,7 @@ public class VideoFarmersShownData extends BaseData {
 												"person_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(video_id) REFERENCES video(id), " +
 												"FOREIGN KEY(person_id) REFERENCES person(id));";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `video_farmers_shown`;";
 	protected static String selectVideoFarmerShown = "SELECT vfs.id, vid.TITLE FROM video_farmers_shown vfs, video vid" +
 	"WHERE vfs.video_id = vid.id ORDER BY (vid.TITLE);";
 	protected static String listVideoFarmerShown = "SELECT vfs.id, vid.TITLE, p.person_name FROM video_farmers_shown vfs, video vid, person p" +
@@ -150,6 +150,16 @@ public class VideoFarmersShownData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

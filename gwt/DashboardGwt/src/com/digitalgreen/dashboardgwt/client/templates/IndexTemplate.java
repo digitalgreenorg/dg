@@ -82,7 +82,7 @@ public class IndexTemplate extends BaseTemplate {
 		
 		syncButton2.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	   Template.addLoadingMessage("Syncing...");
+		    	  Template.addLoadingMessage("Downloading data...");
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "resync");
 		    	   Index index = new Index(requestContext);

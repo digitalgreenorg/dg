@@ -111,7 +111,7 @@ public class Data extends BaseData.Data {
 												"TYPE_OF_RELATIONSHIP VARCHAR(100)  NOT NULL, " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(relative_id) REFERENCES person(id));" ;
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `person_relations`;";
 	protected static String selectPersonRelations = "SELECT id, type_of_relationship FROM person_relations ORDER BY (type_of_relationship);";
 	protected static String listPersonRelations = "SELECT * FROM person_relations pr JOIN person p ON p.id = pr.person_id" +
 			"ORDER BY (-pr.id);";
@@ -152,6 +152,16 @@ public class Data extends BaseData.Data {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

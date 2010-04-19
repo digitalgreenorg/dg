@@ -53,7 +53,7 @@ public class FormQueueData extends BaseData {
 										  "querystring VARCHAR NOT NULL, " +
 										  "sync_status BOOLEAN, " +
 										  "action CHAR(1)); ";  
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `formqueue`;";
 	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 LIMIT 1";
 	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE global_pk_id=?";
 	protected String table_name = "formqueue";
@@ -86,6 +86,16 @@ public class FormQueueData extends BaseData {
 	@Override 
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	public void addFormQueueData(FormQueueData.Data	formQueueData) {

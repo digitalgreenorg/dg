@@ -94,7 +94,7 @@ public class EquipmentHoldersData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_holder`;";
 	protected static String selectEquipmentHolders = "SELECT id FROM equipment_holder ORDER BY(-id)";
 	protected static String listEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String saveEquipmentHolderOnlineURL = "/dashboard/saveequipmentholderonline/";
@@ -135,6 +135,16 @@ public class EquipmentHoldersData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

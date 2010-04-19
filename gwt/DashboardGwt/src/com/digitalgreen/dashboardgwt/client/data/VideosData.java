@@ -364,7 +364,7 @@ public class VideosData extends BaseData {
 												"FOREIGN KEY(cameraoperator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(language_id) REFERENCES language(id) );";  
-
+	protected static String dropTable = "DROP TABLE IF EXISTS `video`;";
 	protected static String selectVideos = "SELECT video.id, video.title, village.id, village.village_name " +
 										   "FROM video JOIN village ON video.village_id = village.id" +
 										   " ORDER BY (video.title);";
@@ -412,6 +412,16 @@ public class VideosData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

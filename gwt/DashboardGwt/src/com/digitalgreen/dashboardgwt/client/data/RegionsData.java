@@ -104,6 +104,7 @@ public class RegionsData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL," +
 												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";
+	protected static String dropTable = "DROP TABLE IF EXISTS `region`;";
 	protected static String selectRegions = "SELECT id, region_name FROM region ORDER BY(region_name)";
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
 	protected static String saveRegionOnlineURL = "/dashboard/saveregiononline/";
@@ -142,6 +143,16 @@ public class RegionsData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

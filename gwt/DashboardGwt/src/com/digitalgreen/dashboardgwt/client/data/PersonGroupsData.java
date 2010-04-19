@@ -182,6 +182,8 @@ public class PersonGroupsData extends BaseData {
 	}
 
 	public static String tableID = "19";
+
+	protected static String dropTable = "DROP TABLE IF EXISTS `person_groups`;";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_groups` "
 			+ "(id INTEGER PRIMARY KEY  NOT NULL ,"
 			+ "GROUP_NAME VARCHAR(100)  NOT NULL ,"
@@ -234,7 +236,17 @@ public class PersonGroupsData extends BaseData {
 	}
 
 	@Override
-	public String getListingOnlineURL() {
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
+	}
+	
+	@Override
+	public String getListingOnlineURL(){
 		return PersonGroupsData.getPersonGroupOnlineURL;
 	}
 

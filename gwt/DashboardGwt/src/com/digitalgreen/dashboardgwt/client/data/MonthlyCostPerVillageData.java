@@ -188,7 +188,7 @@ public class Data extends BaseData.Data {
 												"DIGITALGREEN_COST FLOAT(0,0)  NULL DEFAULT NULL," +
 												"COMMUNITY_COST FLOAT(0,0)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id));";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `monthly_cost_per_village`;";
 	protected static String selectMonthlyCostPerVillages = "SELECT id, vil.village_name FROM monthly_cost_per_village mcpv, village vil WHERE" +
 			" mcpv.village_id = vil.id ORDER BY (vil.village_name);";
 	protected static String listMonthlyCostPerVillages = "SELECT * FROM monthly_cost_per_village mcps JOIN vllage vil ON mcps.village_id = vil.id ORDER BY (-mcps.id);";
@@ -229,6 +229,16 @@ public class Data extends BaseData.Data {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

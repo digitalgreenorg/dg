@@ -105,7 +105,7 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 												"persongroups_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(persongroups_id) REFERENCES person_groups(id));" ;
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `screening_farmer_groups_targeted`;";
 	protected static String selectScreeningFarmerGroupsTargeted = "SELECT id FROM screening_farmer_groups_targeted ORDER BY (id);";
 	protected static String listScreeningFarmerGroupsTargeted = "SELECT sfgt.id, pg.group_name FROM screening_farmer_groups_targeted sfgt" +
 			",person_group pg WHERE sfgt.persongroups_id = pg.id ORDER BY (sfgt.id);";
@@ -142,6 +142,16 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

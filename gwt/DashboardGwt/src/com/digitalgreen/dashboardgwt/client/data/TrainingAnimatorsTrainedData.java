@@ -112,6 +112,7 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 												"animator_id INT  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(training_id) REFERENCES training(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
+	protected static String dropTable = "DROP TABLE IF EXISTS `training_animators_trained`;";
 	protected static String selectTrainingAnimatorsTrained = "SELECT id FROM training_animators_trained ORDER BY (id)";
 	protected static String listTrainingAnimatorsTrained = "SELECT training_animators_trained.id, training.id, training.training_purpose, training.training_outcome, animator.id, animator.name FROM training_animators_trained JOIN training ON training_animators_trained.training_id = training.id JOIN animator ON training_animators_trained.animator_id = animator.id ORDER BY (training_animators_trained.id);";
 	protected static String saveTrainingAnimatorsTrainedOnlineURL = "/dashboard/savetraininganimatorstrainedonline/";
@@ -150,6 +151,16 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	@Override 
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 
 	@Override

@@ -15,6 +15,11 @@ public class IndexData extends BaseData {
 		super(callbacks);
 	}
 
+	public IndexData() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public static void createTables(){
 		Schema.createSchema();
 	}
@@ -32,12 +37,16 @@ public class IndexData extends BaseData {
 			this.select(LoginData.selectUser , username);
 			ResultSet resultSet = this.getResultSet();
 			if(resultSet.isValidRow()) {		
-				LoginData.dbClose();
+				BaseData.dbClose();
 				return true;
 			}
 			else{
-				LoginData.dbClose();
+				BaseData.dbClose();
 				return false;
 			}
 	}
+	
+	
+	
+	
 }

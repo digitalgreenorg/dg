@@ -158,7 +158,7 @@ public class VillagesData extends BaseData {
 												"CONTROL SMALLINT  NULL DEFAULT NULL," +
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `village`;";
 	protected static String selectVillages = "SELECT id, village_name FROM village ORDER BY(village_name)";
 	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name FROM village JOIN block ON village.block_id = block.id ORDER BY(-village.id)";
 	protected static String saveVillageOnlineURL = "/dashboard/savevillageonline/";
@@ -198,6 +198,16 @@ public class VillagesData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 			
 	@Override

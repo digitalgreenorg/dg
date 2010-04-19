@@ -90,6 +90,7 @@ public class LanguagesData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `language` " +
 											"(id INTEGER PRIMARY KEY  NOT NULL ," +
 											"language_name VARCHAR(100)  NOT NULL );";  
+	protected static String dropTable = "DROP TABLE IF EXISTS `language`;";
 	protected static String selectLanguages = "SELECT * FROM language ORDER BY(language_name);";
 	protected static String listLanguages = "SELECT * FROM language ORDER BY(-id)";
 	protected static String saveLanguageOnlineURL = "/dashboard/savelanguageonline/";
@@ -128,6 +129,16 @@ public class LanguagesData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

@@ -122,7 +122,7 @@ public class StatesData extends BaseData {
 												"region_id INT  NOT NULL DEFAULT 0," +
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) references region(id));"; 
-
+	protected static String dropTable = "DROP TABLE IF EXISTS `state`;";
 	protected static String selectStates = "SELECT id, state_name FROM state ORDER BY (state_name);";
 	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id ORDER BY (-state.id);";
 	protected static String saveStateOnlineURL = "/dashboard/savestateonline/";
@@ -161,6 +161,16 @@ public class StatesData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	

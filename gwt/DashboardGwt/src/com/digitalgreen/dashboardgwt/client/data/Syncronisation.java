@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.user.client.Window;
 
 public class Syncronisation {
@@ -17,8 +19,9 @@ public class Syncronisation {
 	}
 	
 	private FormQueueData formQueue;
+	private LoginData loginData;
 	private int lastSyncedId;
-	private int currentIndex=0;
+	private int currentIndex;
 	private String setGlobalKeyURL = "/dashboard/setkey/";
 	private BaseServlet servlet;
 	
@@ -27,7 +30,7 @@ public class Syncronisation {
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results == "1") {
-						updateSyncStatusOfLastSyncedRow();
+						updateSyncStatusOfLastSyncedRowInFormQueueTable();
 						if(!postRowOfFormQueueTable()){
 								updateGlobalPkIDOnMainServer();
 						}
@@ -64,7 +67,34 @@ public class Syncronisation {
 	}
 	
 	public void syncFromMainToLocal(BaseServlet servlet){
-		this.servlet = servlet;
+		loginData = new LoginData();
+		IndexData indexData = new IndexData(new OnlineOfflineCallbacks(servlet) {
+			public void onlineSuccessCallback(String results) {
+				if(results != "0") {
+					LoginData user = new LoginData();
+					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0");
+					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+				} else {
+					RequestContext requestContext = new RequestContext();
+					requestContext.setMessageString("You do not have a valid account.Please contact support. ");
+					getServlet().redirectTo(new Index(requestContext));				
+				}
+			}
+			
+			public void onlineErrorCallback(int errorCode) {
+				Window.alert("GOT AN ERROR connecting to server");
+				RequestContext requestContext = new RequestContext();
+				if (errorCode == BaseData.ERROR_RESPONSE)
+					requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+				else if (errorCode == BaseData.ERROR_SERVER)
+					requestContext.setMessageString("Problem in the connection with the server.");
+				else
+					requestContext.setMessageString("Unknown error.  Please contact support.");
+				getServlet().redirectTo(new Index(requestContext));	
+			}
+			
+		});
+		
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
@@ -76,14 +106,14 @@ public class Syncronisation {
 					}
 					currentIndex++;
 					if(currentIndex == ApplicationConstants.tableIDs.length){
+						updateSyncStatusInUserTable("0", "0");
 						RequestContext requestContext = new RequestContext();
 						requestContext.setMessageString("Local database is in sync with the main server");
 						getServlet().redirectTo(new Index(requestContext));	
 					}else{
+						updateSyncStatusInUserTable("1", currentIndex+"");
 						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
 					}
-					
-					
 				}
 			}
 			
@@ -99,8 +129,31 @@ public class Syncronisation {
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
-
-		formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+		
+		
+		this.servlet = servlet;
+		BaseData instance = new BaseData();
+		ArrayList<Integer> resultSet = new ArrayList<Integer>();
+		if(instance.checkIfUserTableExists()) {
+			resultSet = loginData.checkDirtyBitStatusInTheUserTable(ApplicationConstants.getUsernameCookie());
+		}
+			
+		if(instance.checkIfUserTableExists() && !resultSet.isEmpty() && resultSet.get(0) == 1){
+			// Case 1 : Download has been interrupted in between. Resume the download
+			this.currentIndex = resultSet.get(1);
+			BaseData baseData = (BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex]);
+			// Delete the table on which the sync got interrupted.
+			baseData.delete(baseData.getDeleteTableSql());
+			baseData.create(baseData.getCreateTableSql());
+			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+		}else{
+			//Delete the complete schema
+			Schema.dropSchema();
+			Schema.createSchema();
+			this.currentIndex = 0;
+			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
+		}
+				
 	}
 	
 	
@@ -132,7 +185,11 @@ public class Syncronisation {
 		}
 	}
 	
-	public void updateSyncStatusOfLastSyncedRow(){
+	public void updateSyncStatusInUserTable(String dirtyBit, String tableIndex){
+		loginData.updateSyncStatus(dirtyBit, tableIndex , ApplicationConstants.getUsernameCookie());
+	}
+	
+	public void updateSyncStatusOfLastSyncedRowInFormQueueTable(){
 		formQueue.update(FormQueueData.updateSyncStatusOfARow, ""+lastSyncedId);
 	}
 	
@@ -172,7 +229,7 @@ public class Syncronisation {
 		});
 		
 		indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
-		
+
 	}
 	
 

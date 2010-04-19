@@ -176,6 +176,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"FOREIGN KEY(expressed_interest_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_question_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_adoption_practice_id) REFERENCES practices(id) );";
+	protected static String dropTable = "DROP TABLE IF EXISTS `person_meeting_attendance`;";
 	protected static String selectPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME FROM person_meeting_attendance pma, person p" +
 			"WHERE pma.person_id = p.id ORDER BY (p.PERSON_NAME);";
 	protected static String listPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME, expressed_interest_practice_id" +
@@ -220,6 +221,16 @@ public class PersonMeetingAttendanceData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 
 	@Override

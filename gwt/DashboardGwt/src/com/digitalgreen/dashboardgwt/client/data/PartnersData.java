@@ -131,7 +131,7 @@ public class PartnersData extends BaseData {
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `partners`;";
 	protected static String selectPartners = "SELECT id, partner_name FROM partners ORDER BY(partner_name)";
 	protected static String getPartnerByID = "SELECT id, partner_name FROM partners WHERE id = ?";
 	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";
@@ -173,6 +173,16 @@ public class PartnersData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

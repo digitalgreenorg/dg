@@ -15,6 +15,7 @@ import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
+import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 public class Index extends BaseServlet {	
@@ -82,15 +83,6 @@ public class Index extends BaseServlet {
 						this.redirectTo(new Index(requestContext));
 					}
 					
-					/*Comment out the below lines when running the code from an hosted mode*/
-					/*LoginData user = new LoginData();
-					user.delete();
-					user.create();
-					user.insert("1000000", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
-					ApplicationConstants.toggleConnection(false);
-					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("You are ready to go offline!!. ");
-					this.redirectTo(new Index(requestContext));*/
 				}
 				else if (queryArg == "goonline"){
 					LoginData user = new LoginData();

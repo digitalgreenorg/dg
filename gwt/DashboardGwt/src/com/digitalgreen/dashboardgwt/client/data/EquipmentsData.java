@@ -173,7 +173,7 @@ public class EquipmentsData extends BaseData {
 												"WARRANTY_EXPIRATION_DATE DATE  NULL DEFAULT NULL," +
 												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
-	
+	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_id`;";
 	protected static String selectEquipments = "SELECT id, EQUIPMENT_TYPE FROM equipment_id  ORDER BY (EQUIPMENT_TYPE);";
 	protected static String listEquipments = "SELECT * FROM equipment_id ORDER BY (-id);";
 	protected static String saveEquipmentOfflineURL = "/dashboard/saveequipmentoffline/";
@@ -214,6 +214,16 @@ public class EquipmentsData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

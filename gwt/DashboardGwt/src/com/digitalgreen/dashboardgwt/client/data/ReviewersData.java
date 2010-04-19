@@ -106,6 +106,7 @@ public class ReviewersData extends BaseData {
 												"(id INTEGER PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
+	protected static String dropTable = "DROP TABLE IF EXISTS `reviewer`;";
 	protected static String selectReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String listReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String saveReviewerOnlineURL = "/dashboard/saverevieweronline/";
@@ -145,6 +146,16 @@ public class ReviewersData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

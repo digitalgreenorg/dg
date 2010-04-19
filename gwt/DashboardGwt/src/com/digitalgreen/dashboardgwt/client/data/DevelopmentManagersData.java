@@ -223,6 +223,7 @@ public class DevelopmentManagersData extends BaseData {
 												"SALARY FLOAT(0,0)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) REFERENCES region(id), " +
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
+	protected static String dropTable = "DROP TABLE IF EXISTS `development_manager`;";
 	protected static String selectDevelopmentManagers = "SELECT id, NAME FROM development_manager  ORDER BY (NAME);";
 	protected static String getDevelopmentManagerByID = "SELECT id, NAME FROM development_manager WHERE id = ?;";
 	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.equipmentholder_id,d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id);";
@@ -264,6 +265,16 @@ public class DevelopmentManagersData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 	
 	@Override

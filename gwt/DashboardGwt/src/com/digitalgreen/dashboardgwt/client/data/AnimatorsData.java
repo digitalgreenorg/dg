@@ -277,6 +277,7 @@ public class AnimatorsData extends BaseData {
 			+ "FOREIGN KEY(partner_id) REFERENCES partners(id), "
 			+ "FOREIGN KEY(village_id) REFERENCES village(id), "
 			+ "FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
+	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
 			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY (-a.id)";
@@ -318,6 +319,16 @@ public class AnimatorsData extends BaseData {
 	@Override
 	protected String[] getFields() {
 		return this.fields;
+	}
+	
+	@Override
+	protected String getCreateTableSql(){
+		return this.createTable;
+	}
+	
+	@Override
+	protected String getDeleteTableSql(){
+		return this.dropTable;
 	}
 
 	@Override
