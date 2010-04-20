@@ -24,6 +24,7 @@ public class Syncronisation {
 	private int currentIndex;
 	private String setGlobalKeyURL = "/dashboard/setkey/";
 	private BaseServlet servlet;
+	private int offset = 0;
 	
 	public void syncFromLocalToMain(BaseServlet servlet){
 		this.servlet = servlet;
@@ -73,7 +74,7 @@ public class Syncronisation {
 				if(results != "0") {
 					LoginData user = new LoginData();
 					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0");
-					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessageString("You do not have a valid account.Please contact support. ");
@@ -98,21 +99,27 @@ public class Syncronisation {
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
-					List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
-					BaseData.Data object;
-					for (int i = 0; i < objects.size(); ++i) {
-						object = (BaseData.Data) objects.get(i);
-						object.save();
-					}
-					currentIndex++;
-					if(currentIndex == ApplicationConstants.tableIDs.length){
-						updateSyncStatusInUserTable("0", "0");
-						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Local database is in sync with the main server");
-						getServlet().redirectTo(new Index(requestContext));	
+					if(!results.equals("EOF")){
+						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
+						BaseData.Data object;
+						for (int i = 0; i < objects.size(); ++i) {
+							object = (BaseData.Data) objects.get(i);
+							object.save();
+						}
+						offset = offset + ApplicationConstants.PAGESIZE;
+						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 					}else{
-						updateSyncStatusInUserTable("1", currentIndex+"");
-						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+						currentIndex++;
+						offset = 0;
+						if(currentIndex == ApplicationConstants.tableIDs.length){
+							updateSyncStatusInUserTable("0", "0");
+							RequestContext requestContext = new RequestContext();
+							requestContext.setMessageString("Local database is in sync with the main server");
+							getServlet().redirectTo(new Index(requestContext));	
+						}else{
+							updateSyncStatusInUserTable("1", ""+currentIndex);
+							formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
+						}
 					}
 				}
 			}
@@ -145,7 +152,7 @@ public class Syncronisation {
 			// Delete the table on which the sync got interrupted.
 			baseData.delete(baseData.getDeleteTableSql());
 			baseData.create(baseData.getCreateTableSql());
-			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL());
+			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 		}else{
 			//Delete the complete schema
 			Schema.dropSchema();
