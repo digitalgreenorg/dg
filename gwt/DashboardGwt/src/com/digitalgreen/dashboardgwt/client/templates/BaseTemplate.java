@@ -160,12 +160,13 @@ public class BaseTemplate extends Template {
 		"<!-- Header -->" +
 		"<div id='header'>" +
 			"<div id='branding'>" +
-				"<h1 id='site-name'>Digital Green Administration</h1>" +
+				"<h1 id='site-name'><a href='/site_media/DashboardGwt.html'>Digital Green Administration</a></h1>" +
 			"</div>" +
 			"<div id='user-tools'>Welcome, <span id='user-name'></span>" +
 			"<span id='logout'></span>" +
 			"</div>" +
 		"</div>" +
+		"<div id='home-link'><a href='/site_media/DashboardGwt.html'>&nbsp;&nbsp;&nbsp;Home</a></div>" +
 		"<div id='info-space'></div>" +
 		"<div id='loading-space'></div>" +
 		"<!-- END Header -->" +
