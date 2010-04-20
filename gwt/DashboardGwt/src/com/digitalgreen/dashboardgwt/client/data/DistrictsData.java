@@ -122,11 +122,26 @@ public class DistrictsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator districtName = new StringValidator(this.district_name, false, false, 0, 100);
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			DateValidator fieldOfficerStartDate = new DateValidator(this.fieldofficer_startday, true, true);
-			return districtName.validate() && startDate.validate()
-					&& fieldOfficerStartDate.validate();
+			StringValidator districtNameValidator = new StringValidator(this.district_name, false, false, 1, 100);
+			districtNameValidator.setError("Please make sure that 'District Name' is NOT EMPTY and not more then 100 CHARACTERS");
+			DateValidator startDateValidator = new DateValidator(this.start_date, true, true);
+			startDateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			StringValidator stateValidator = new  StringValidator(this.state.getId(), false, false, 1, 100);
+			stateValidator.setError("Please make sure you choose a state for 'State'.");
+			StringValidator fieldValidator = new StringValidator(this.fieldofficer.getId(), false, false, 1, 100);
+			fieldValidator.setError("Please make sure you choose a field officer for 'Field officer'.");
+			DateValidator fieldOfficerStartDateValidator = new DateValidator(this.fieldofficer_startday, true, true);
+			fieldOfficerStartDateValidator.setError("Please make sure 'Fieldofficer Start date' is formatted as YYYY-MM-DD.");
+			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
+			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(districtNameValidator);
+			validatorList.add(startDateValidator);
+			validatorList.add(stateValidator);
+			validatorList.add(fieldValidator);
+			validatorList.add(fieldOfficerStartDateValidator);
+			validatorList.add(partnerValidator);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
