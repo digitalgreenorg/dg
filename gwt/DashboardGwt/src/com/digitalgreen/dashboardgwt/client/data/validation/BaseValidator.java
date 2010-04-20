@@ -4,6 +4,7 @@ public class BaseValidator {
 	private boolean nullable = true;
 	private boolean blank = true;
 	private Object value = null;
+	private String errorString = "Invalid field.";
 	
 	public BaseValidator(Object value) {
 		this.value = value;
@@ -40,5 +41,13 @@ public class BaseValidator {
 			}
 		}
 		return true;
+	}
+
+	public void setError(String errorString) {
+		this.errorString = errorString;
+	}
+	
+	public String getError() {
+		return this.errorString;
 	}
 }

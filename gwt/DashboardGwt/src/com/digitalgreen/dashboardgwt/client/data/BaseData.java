@@ -8,6 +8,7 @@ import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -38,9 +39,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		protected HashMap manyToManyRelationshipMap = null;
 		protected boolean hasManyToManyRelationships = false;
 		protected boolean isManyToManyDependent = false;
+		protected ArrayList errorStack = null;
 		
 		public Data() {
 			this.manyToManyRelationshipMap = new HashMap();
+			this.errorStack = new ArrayList();
 		}
 		
 		// Override this
@@ -117,6 +120,21 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// Override this
 		public boolean validate(BaseData.Data foreignKey) {
 			return true;
+		}
+		
+		protected boolean executeValidators(ArrayList validators) {
+			boolean isValid = true;
+			for(int i=0; i < validators.size(); i++) {
+				if(!((BaseValidator)validators.get(i)).validate()) {
+					errorStack.add(((BaseValidator)validators.get(i)).getError());
+					isValid = false;
+				}
+			}
+			return isValid;
+		}
+		
+		public ArrayList getErrorStack() {
+			return this.errorStack;
 		}
 	}
 	

@@ -145,10 +145,12 @@ public class BaseTemplate extends Template {
 		return link;
 	}
 	
+	// HTML form -> query string
 	public static native String getFormString(String formId) /*-{
 		return $wnd.getFormString(formId);
 	}-*/;
 	
+	// Query string -> HTML form
 	public static native String putFormString(String queryString, String formId) /*-{
 		return $wnd.putFormString(queryString, formId);
 	}-*/;
@@ -164,7 +166,7 @@ public class BaseTemplate extends Template {
 			"<span id='logout'></span>" +
 			"</div>" +
 		"</div>" +
-		"<div id='error-space'></div>" +
+		"<div id='info-space'></div>" +
 		"<div id='loading-space'></div>" +
 		"<!-- END Header -->" +
 		"<!-- Content -->" +                 // Content gets added by subclasses

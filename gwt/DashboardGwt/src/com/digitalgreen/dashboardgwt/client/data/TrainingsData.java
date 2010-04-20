@@ -150,14 +150,29 @@ public class TrainingsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator trainingPurpose = new StringValidator(this.training_purpose, true, true, 0, 1024);
-			StringValidator trainingOutCome = new StringValidator(this.training_outcome, true, true, 0, 1024);
+			StringValidator trainingPurpose = new StringValidator(this.training_purpose, true, false, 0, 1024);
+			trainingPurpose.setError("Please make sure 'Training purpose' is less than 1024 characters.");
+			StringValidator trainingOutcome = new StringValidator(this.training_outcome, true, false, 0, 1024);
+			trainingOutcome.setError("Please make sure 'Training outcome' is less than 1024 characters.");	
 			DateValidator trainingStartDate = new DateValidator(this.training_start_date, false, false);
+			trainingStartDate.setError("Please make sure 'Training start date' is formatted as YYYY-MM-DD.");
 			DateValidator trainingEndDate = new DateValidator(this.training_end_date, false, false);
-			BaseValidator animatorsTrained = new ManyToManyValidator(this.animators_trained, false);
-			return trainingPurpose.validate() && trainingOutCome.validate()
-					&& trainingStartDate.validate()	&& trainingEndDate.validate()
-					&& animatorsTrained.validate();
+			trainingEndDate.setError("Please make sure 'Training end date' is formatted as YYYY-MM-DD.");
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			StringValidator fieldValidator = new StringValidator(this.field_officer_present.getId(), false, false, 1, 100);
+			fieldValidator.setError("Please make sure you choose a field officer present for 'Field officer present'.");
+			ManyToManyValidator animatorsTrained = new ManyToManyValidator(this.animators_trained, false);
+			animatorsTrained.setError("Please make sure you add some animators for 'Animators trained'");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(trainingPurpose);
+			validatorList.add(trainingOutcome);
+			validatorList.add(trainingStartDate);
+			validatorList.add(trainingEndDate);
+			validatorList.add(animatorsTrained);
+			validatorList.add(villageValidator);
+			validatorList.add(fieldValidator);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override

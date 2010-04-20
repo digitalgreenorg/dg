@@ -22,3 +22,13 @@
 	height: 20px;
 	padding: 1px 3px 1px 0;
 }
+
+.messageStringClass {
+	background:url("media/img/admin/icon_success.gif") no-repeat scroll 5px 0.3em #FFFFCC;
+	border-bottom:1px solid #DDDDDD;
+	color:#666666;
+	display:block;
+	font-size:12px;
+	margin:0 0 3px;
+	padding:4px 5px 4px 25px;
+}

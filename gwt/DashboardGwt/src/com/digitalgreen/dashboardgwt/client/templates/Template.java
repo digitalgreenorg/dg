@@ -15,14 +15,29 @@ public class Template implements TemplateInterface {
 		RootPanel.get().clear();
 	}
 	
+	private HTMLPanel getFormattedErrors() {
+		String errorStartHtml = "<p class='errornote'>";
+		String errorEndHtml = "</p>";
+		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + 
+				this.getRequestContext().getFormErrorString() + 
+				errorEndHtml);
+		return errorPanel;
+	}
+	
+	private HTMLPanel getFormattedMessages() {
+		String messageStartHtml = "<p class='messageStringClass'>";
+		String messageEndHtml = "</p>";
+		HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
+				this.getRequestContext().getMessageString() + 
+				messageEndHtml);
+		return messagePanel;
+	}
+	
 	public void fill() {
-		if(this.getRequestContext().hasMessages()) {
-			String messageStartHtml = "<p class='errornote'>";
-			String messageEndHtml = "</p>";
-			HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
-					this.getRequestContext().getMessageString() + 
-					messageEndHtml);
-			RootPanel.get("error-space").insert(messagePanel, 0);
+		if(!this.getRequestContext().hasFormErrors()) {
+			RootPanel.get("info-space").insert(this.getFormattedErrors(), 0);	
+		} else if(this.getRequestContext().hasMessages()) {
+			RootPanel.get("info-space").insert(this.getFormattedMessages(), 0);
 		}
 	}
 

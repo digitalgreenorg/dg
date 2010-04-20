@@ -16,7 +16,7 @@ public class Form {
 	private HashMap dataFormat = null;
 	private String queryString = null;
 	private FormQueueData formQueue = null;
-	private String[] errorStack = null;
+	private ArrayList baseDataErrorStack = null;
 	
 	public Form() {}
 	
@@ -25,6 +25,7 @@ public class Form {
 		this.dependents = new Object[] {};
 		this.dataFormat = new HashMap();
 		this.formQueue = new FormQueueData();
+		this.baseDataErrorStack = new ArrayList();
 	}
 	
 	public Form(BaseData.Data parent, Object[] dependents) {
@@ -32,6 +33,7 @@ public class Form {
 		this.dependents = dependents;
 		this.dataFormat = new HashMap();
 		this.formQueue = new FormQueueData();
+		this.baseDataErrorStack = new ArrayList();
 	}
 	
 	public String getQueryString() {
@@ -46,18 +48,15 @@ public class Form {
 		this.queryString = URL.decodeComponent(queryString, true);
 	}
 	
-	public String[] getErrorStack() {
-		return this.errorStack;
-	}
-	
 	public boolean isValid() {
-		return this.errorStack != null;
+		return this.baseDataErrorStack != null;
 	}
 	
 	public boolean validate() {
 		boolean hasErrors = false;
 		this.parseQueryString(this.queryString);
 		if(!this.parent.validate()) {
+			this.baseDataErrorStack.add(this.parent);
 			hasErrors = true;
 		}
 		Object[] dataFormatKeys = dataFormat.keySet().toArray();
@@ -72,11 +71,13 @@ public class Form {
 				for(int j=0; j < ((ArrayList)value).size(); j++) {
 					BaseData.Data dependentData = (BaseData.Data)((ArrayList)value).get(j);
 					if(!dependentData.validate(this.parent)) {
+						this.baseDataErrorStack.add(dependentData);
 						hasErrors = true;
 					}
 				}
 			} else {
 				if(!((BaseData.Data)value).validate(this.parent)) {
+					this.baseDataErrorStack.add(((BaseData.Data)value));
 					hasErrors = true;
 				}
 			}
@@ -274,5 +275,18 @@ public class Form {
 				collectDependency((BaseData.Data)this.dependents[j], sourceDict);
 			}	
 		}
+	}
+	
+	public String printFormErrors() {
+		String outputErrors = "";
+		for(int i=0; i < this.baseDataErrorStack.size(); i++) {
+			BaseData.Data baseData = (BaseData.Data)this.baseDataErrorStack.get(i);
+			outputErrors += "For " + baseData.getPrefixName() + ":</br>";
+			for(int j=0; j < baseData.getErrorStack().size(); j++) {
+				ArrayList errorList = baseData.getErrorStack();
+				outputErrors += "&nbsp;&nbsp;&nbsp;&nbsp;" + (String)errorList.get(j) + "</br>"; 
+			}
+		}
+		return outputErrors;
 	}
 }

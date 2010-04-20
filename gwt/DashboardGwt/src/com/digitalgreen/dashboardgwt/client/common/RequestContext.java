@@ -75,5 +75,12 @@ public class RequestContext {
 	public void setMethodTypeCtx(String methodTypeCtx) {
 		this.methodTypeCtx = methodTypeCtx;
 	}
+
+	public boolean hasFormErrors() {
+		return !this.form.isValid();
+	}
 	
+	public String getFormErrorString() {
+		return this.form.printFormErrors();
+	}
 }
