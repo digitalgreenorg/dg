@@ -250,198 +250,6 @@ def set_key_for_user(request):
 		else:
 			return HttpResponse("0")
 		
-		        		
-def save_region_online(request):
-	if request.method == 'POST':
-		form = RegionForm(request.POST)
-		if form.is_valid():	
-			#print request.session.get('username')
-			form.save()
-			return HttpResponseRedirect('/dashboard/getregionsonline/')
-		else:
-			return HttpResponse("0")
-	else:
-	   form = RegionForm()
-	   return HttpResponse(form)	
-		
-def get_regions_online(request):
-	if request.method == 'POST':
-		return redirect('region')
-	else:
-		regions = Region.objects.order_by("-id")
-		json_subcat = serializers.serialize("json", regions)
-		return HttpResponse(json_subcat, mimetype="application/javascript")
-		
-	
-def save_region_offline(request):
-	if request.method == 'POST':
-		form = RegionForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")
-		
-def save_state_online(request):
-	if request.method == 'POST':
-		form = StateForm(request.POST)
-		if form.is_valid():	
-			# This should redirect to show region page
-			form.save()
-			return HttpResponseRedirect('/dashboard/getstatesonline/')
-		else:
-			return HttpResponse("0")
-	else:
-		form = StateForm()
-		return HttpResponse(form)
-	
-	
-def get_states_online(request):
-	if request.method == 'POST':
-		return redirect('states')
-	else:
-		states = State.objects.select_related('region').order_by("-id")
-		json_subcat = serializers.serialize("json", states,  relations=('region',))
-		return HttpResponse(json_subcat, mimetype="application/javascript")
-
-def save_state_offline(request):
-	if request.method == 'POST':
-		form = StateForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")
-
-def save_fieldofficer_online(request):
-    if request.method == 'POST':
-        form = FieldOfficerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/getfieldofficersonline/')
-        else:
-            return HttpResponse("0")
-    else:
-    	form = FieldOfficerForm()
-    	return HttpResponse(form);
-
-def get_fieldofficers_online(request):
-    if request.method == 'POST':
-        return redirect('fieldofficer')
-    else:
-        fieldofficers = FieldOfficer.objects.order_by("-id")
-        json_subcat = serializers.serialize("json", fieldofficers)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-       
-def save_fieldofficer_offline(request):
-	if request.method == 'POST':
-		form = FieldOfficerForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")       
-
-def save_practice_online(request):
-    if request.method == 'POST':
-        form = PracticeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/getpracticesonline/')
-        else:
-            return HttpResponse("0")
-    else:
-    	form = PracticeForm()
-    	return HttpResponse(form);           
-        
-def get_practices_online(request):
-    if request.method == 'POST':
-        return redirect('practice')
-    else:
-        practices = Practices.objects.order_by("-id")
-        json_subcat = serializers.serialize("json", practices)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-       
-def save_practice_offline(request):
-	if request.method == 'POST':
-		form = PracticeForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")          
-
-def save_language_online(request):
-    if request.method == 'POST':
-        form = LanguageForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/getlanguagesonline/')
-        else:
-            return HttpResponse("0")
-    else:
-    	form = LanguageForm()
-    	return HttpResponse(form);           
-           
-        
-def get_languages_online(request):
-    if request.method == 'POST':
-        return redirect('language')
-    else:
-        languages = Language.objects.order_by("-id")
-        json_subcat = serializers.serialize("json", languages)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-       
-def save_language_offline(request):
-	if request.method == 'POST':
-		form = LanguageForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")       
-
-def save_partner_online(request):
-    if request.method == 'POST':
-        form = PartnerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/getpartnersonline/')
-        else:
-            return HttpResponse("0")
-    else:
-    	form = PartnerForm()
-    	return HttpResponse(form);            
-        
-def get_partners_online(request):
-    if request.method == 'POST':
-        return redirect('partner')
-    else:
-        partners = Partners.objects.order_by("-id")
-        json_subcat = serializers.serialize("json", partners)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-       
-def save_partner_offline(request):
-	if request.method == 'POST':
-		form = PartnerForm(request.POST)
-		if form.is_valid():
-			new_form  = form.save(commit=False)
-			new_form.id = request.POST['id']
-			new_form.save()
-			return HttpResponse("1")
-		else:
-			return HttpResponse("0")
-		
 def get_user_villages(request):
 	#print request.session.get('username')
 	#print request.session.get('user_id')
@@ -494,13 +302,227 @@ def get_user_districts(request):
 			districts = districts | District.objects.filter(district_name = user_permission.district_operated)
         		
 	return districts   
+		
+		        		
+def save_region_online(request):
+	if request.method == 'POST':
+		form = RegionForm(request.POST)
+		if form.is_valid():	
+			#print request.session.get('username')
+			form.save()
+			return HttpResponseRedirect('/dashboard/getregionsonline/')
+		else:
+			return HttpResponse("0")
+	else:
+	   form = RegionForm()
+	   return HttpResponse(form)	
+		
+		
+def get_regions_online(request, offset, limit):
+	if request.method == 'POST':
+		return redirect('region')
+	else:
+		regions = Region.objects.order_by("-id")[offset:limit]
+		if(regions):
+		  json_subcat = serializers.serialize("json", regions)
+		else:
+		  json_subcat = 'EOF'
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+		
+	
+def save_region_offline(request):
+	if request.method == 'POST':
+		form = RegionForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
+def save_state_online(request):
+	if request.method == 'POST':
+		form = StateForm(request.POST)
+		if form.is_valid():	
+			# This should redirect to show region page
+			form.save()
+			return HttpResponseRedirect('/dashboard/getstatesonline/')
+		else:
+			return HttpResponse("0")
+	else:
+		form = StateForm()
+		return HttpResponse(form)
+	
+	
+def get_states_online(request, offset, limit):
+	if request.method == 'POST':
+		return redirect('states')
+	else:
+		states = State.objects.select_related('region').order_by("-id")[offset:limit]
+		if(states):
+			json_subcat = serializers.serialize("json", states,  relations=('region',))
+		else:
+			json_subcat = 'EOF'
+		return HttpResponse(json_subcat, mimetype="application/javascript")
+
+def save_state_offline(request):
+	if request.method == 'POST':
+		form = StateForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+
+def save_fieldofficer_online(request):
+    if request.method == 'POST':
+        form = FieldOfficerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getfieldofficersonline/')
+        else:
+            return HttpResponse("0")
+    else:
+    	form = FieldOfficerForm()
+    	return HttpResponse(form);
+
+def get_fieldofficers_online(request, offset, limit ):
+    if request.method == 'POST':
+        return redirect('fieldofficer')
+    else:
+        fieldofficers = FieldOfficer.objects.order_by("-id")[offset:limit]
+        if(fieldofficers):
+         json_subcat = serializers.serialize("json", fieldofficers)
+        else:
+         json_subcat = 'EOF'
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_fieldofficer_offline(request):
+	if request.method == 'POST':
+		form = FieldOfficerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")       
+
+def save_practice_online(request):
+    if request.method == 'POST':
+        form = PracticeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getpracticesonline/')
+        else:
+            return HttpResponse("0")
+    else:
+    	form = PracticeForm()
+    	return HttpResponse(form);           
+        
+def get_practices_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('practice')
+    else:
+        practices = Practices.objects.order_by("-id")[offset:limit]
+        if(practices):
+         json_subcat = serializers.serialize("json", practices)
+        else:
+         json_subcat = 'EOF'
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_practice_offline(request):
+	if request.method == 'POST':
+		form = PracticeForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")          
+
+def save_language_online(request):
+    if request.method == 'POST':
+        form = LanguageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getlanguagesonline/')
+        else:
+            return HttpResponse("0")
+    else:
+    	form = LanguageForm()
+    	return HttpResponse(form);           
+           
+        
+def get_languages_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('language')
+    else:
+        languages = Language.objects.order_by("-id")[offset:limit]
+        if(languages):
+         json_subcat = serializers.serialize("json", languages)
+        else:
+         json_subcat = 'EOF'
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_language_offline(request):
+	if request.method == 'POST':
+		form = LanguageForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")       
+
+def save_partner_online(request):
+    if request.method == 'POST':
+        form = PartnerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/getpartnersonline/')
+        else:
+            return HttpResponse("0")
+    else:
+    	form = PartnerForm()
+    	return HttpResponse(form);            
+        
+def get_partners_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('partner')
+    else:
+        partners = Partners.objects.order_by("-id")[offset:limit]
+        if(partners):
+         json_subcat = serializers.serialize("json", partners)
+        else:
+         json_subcat = 'EOF'
+        return HttpResponse(json_subcat, mimetype="application/javascript")
+       
+def save_partner_offline(request):
+	if request.method == 'POST':
+		form = PartnerForm(request.POST)
+		if form.is_valid():
+			new_form  = form.save(commit=False)
+			new_form.id = request.POST['id']
+			new_form.save()
+			return HttpResponse("1")
+		else:
+			return HttpResponse("0")
+		
 
 def save_video_online(request):
     if request.method == 'POST':
         form = VideoForm(request.POST)
+        print request.POST
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/getvideosonline/')
+        	print "here"
+        	form.save()
+        	return HttpResponseRedirect('/dashboard/getvideosonline/')
         else:
         	#print form.errors
         	return HttpResponse("0")
@@ -515,24 +537,30 @@ def save_video_online(request):
     	form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
     	return HttpResponse(form);            
         
-def get_videos_online(request):
+def get_videos_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('video')
     else:
     	villages = get_user_villages(request);
-        videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", videos, relations=('village',))
+        videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        if(videos):
+         json_subcat = serializers.serialize("json", videos, relations=('village',))
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
        
 def save_video_offline(request):
 	if request.method == 'POST':
 		form = VideoForm(request.POST)
+		print request.POST
 		if form.is_valid():
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
 			new_form.save()
+			form.save_m2m();
 			return HttpResponse("1")
 		else:
+			print form.errors
 			return HttpResponse("0")    
 
 
@@ -552,14 +580,17 @@ def save_videoagriculturalpractices_online(request):
         form.fields['practice'].queryset = Practices.objects.distinct().order_by('practice_name')
     	return HttpResponse(form); 
 		
-def get_videoagriculturalpractices_online(request):
+def get_videoagriculturalpractices_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('videoagriculturalpractices')
 	else:
 		villages = get_user_villages(request)
 		videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
-        videoagriculturalpractices = VideoAgriculturalPractices.objects.filter(video__in = videos).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", videoagriculturalpractices)
+        videoagriculturalpractices = VideoAgriculturalPractices.objects.filter(video__in = videos).distinct().order_by("-id")[offset:limit]
+        if(videoagriculturalpractices):
+         json_subcat = serializers.serialize("json", videoagriculturalpractices)
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_videoagriculturalpractices_offline(request):
@@ -591,14 +622,17 @@ def save_personshowninvideo_online(request):
     	return HttpResponse(form);
 
 			
-def get_personshowninvideo_online(request):
+def get_personshowninvideo_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('personshowninvideo')
 	else:
 		villages = get_user_villages(request)
 		videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
-        personshowninvideo = PersonShownInVideo.objects.filter(video__in = videos).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", personshowninvideo)
+        personshowninvideo = PersonShownInVideo.objects.filter(video__in = videos).distinct().order_by("-id")[offset:limit]
+        if(personshowninvideo):
+         json_subcat = serializers.serialize("json", personshowninvideo)
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personshowninvideo_offline(request):
@@ -626,13 +660,16 @@ def save_district_online(request):
 		form = DistrictForm()
 		return HttpResponse(form)
 	
-def get_districts_online(request):
+def get_districts_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('districts')
 	else:
 		district_objects = get_user_districts(request);
-		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
+		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")[offset:limit]
+		if(districts):
+			json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_district_offline(request):
@@ -662,13 +699,16 @@ def save_block_online(request):
         return HttpResponse(form)
     
     
-def get_blocks_online(request):
+def get_blocks_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('blocks')
     else:
         districts = get_user_districts(request);
-        blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", blocks,  relations=('district'))
+        blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
+        if(blocks):
+         json_subcat = serializers.serialize("json", blocks,  relations=('district'))
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_block_offline(request):
@@ -696,12 +736,15 @@ def save_developmentmanager_online(request):
 		return HttpResponse(form)
 	
 	
-def get_developmentmanagers_online(request):
+def get_developmentmanagers_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('developmentmanagers')
 	else:
-		developmentmanagers = DevelopmentManager.objects.select_related('region').order_by("-id")
-		json_subcat = serializers.serialize("json", developmentmanagers,  relations=('region',))
+		developmentmanagers = DevelopmentManager.objects.select_related('region').order_by("-id")[offset:limit]
+		if(developmentmanagers):
+			json_subcat = serializers.serialize("json", developmentmanagers,  relations=('region',))
+		else:
+		    json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_developmentmanager_offline(request):
@@ -731,12 +774,15 @@ def save_equipment_online(request):
 		return HttpResponse(form)
 	
 	
-def get_equipments_online(request):
+def get_equipments_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('equipments')
 	else:
-		equipments = Equipment.objects.select_related('region').order_by("-id")
-		json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
+		equipments = Equipment.objects.select_related('region').order_by("-id")[offset:limit]
+		if(equipments):
+			json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_equipment_offline(request):
@@ -780,13 +826,16 @@ def save_village_online(request):
 			form_list = form_list + list(form_animator)
 		return HttpResponse(form_list)
 	
-def get_villages_online(request):
+def get_villages_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('villages')
 	else:
 		village_objects = get_user_villages(request);
-		villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", villages,  relations=('block',))
+		villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")[offset:limit]
+		if(villages):
+			json_subcat = serializers.serialize("json", villages,  relations=('block',))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_village_offline(request):
@@ -833,13 +882,16 @@ def save_animator_online(request):
 		return HttpResponse(f)
 	
 	
-def get_animators_online(request):
+def get_animators_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('animators')
 	else:
 		villages = get_user_villages(request);
-		animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
+		animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+		if(animators):
+			json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_animator_offline(request):
@@ -871,13 +923,16 @@ def save_animatorassignedvillage_online(request):
 		form.fields['animator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
 		return HttpResponse(form)
 	
-def get_animatorassignedvillages_online(request):
+def get_animatorassignedvillages_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('animatorassignedvillages')
 	else:
 		villages = get_user_villages(request);
-		animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
+		animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+		if(animatorassignedvillages):
+			json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 
@@ -921,13 +976,16 @@ def save_persongroup_online(request):
 			f = f + list(form)
 		return HttpResponse(f)
 	
-def get_persongroups_online(request):
+def get_persongroups_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('persongroups')
 	else:
 		villages = get_user_villages(request)
-		persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
+		persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+		if(persongroups):
+			json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_persongroup_offline(request):
@@ -970,14 +1028,16 @@ def save_person_online(request):
 			f = f + list(form)
 		return HttpResponse(f)
 	
-def get_persons_online(request):
+def get_persons_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('persons')
 	else:
 		villages = get_user_villages(request)
-		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-		#persons = Person.objects.filter(id__in = [1097,1109]);
-		json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
+		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+		if(persons):
+		  json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
+		else:
+		  json_subcat = 'EOF'	
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_person_offline(request):
@@ -1022,13 +1082,16 @@ def save_screening_online(request):
 			f = f + list(form)
 		return HttpResponse(f)
 	
-def get_screenings_online(request):
+def get_screenings_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('screenings')
 	else:
 		villages = get_user_villages(request)
-		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", screenings,  relations=('fieldofficer','animator','village'))
+		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+		if(screenings):
+			json_subcat = serializers.serialize("json", screenings,  relations=('fieldofficer', 'animator','village',))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 def save_screening_offline(request):
@@ -1038,6 +1101,7 @@ def save_screening_offline(request):
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
 			new_form.save()
+			form.save_m2m();
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
@@ -1063,16 +1127,18 @@ def save_groupstargetedinscreening_online(request):
         return HttpResponse(form);
 	
 
-def get_groupstargetedinscreening_online(request):
+def get_groupstargetedinscreening_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('groupstargetedinscreening')
 	else:
 		villages = get_user_villages(request)
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-        groupstargetedinscreening = GroupsTargetedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", groupstargetedinscreening)
+        groupstargetedinscreening = GroupsTargetedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")[offset:limit]
+        if(groupstargetedinscreening):
+         json_subcat = serializers.serialize("json", groupstargetedinscreening)
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
-
 
 def save_groupstargetedinscreening_offline(request):
 	if request.method == 'POST':
@@ -1103,14 +1169,17 @@ def save_videosscreenedinscreening_online(request):
         return HttpResponse(form);
       
 
-def get_videosscreenedinscreening_online(request):
+def get_videosscreenedinscreening_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('videosscreenedinscreening')
 	else:
 		villages = get_user_villages(request)
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-        videosscreenedinscreening = VideosScreenedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", videosscreenedinscreening)
+        videosscreenedinscreening = VideosScreenedInScreening.objects.filter(screening__in = screenings).distinct().order_by("-id")[offset:limit]
+        if(videosscreenedinscreening):
+         json_subcat = serializers.serialize("json", videosscreenedinscreening)
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_videosscreenedinscreening_offline(request):
@@ -1141,13 +1210,16 @@ def save_training_online(request):
         form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         return HttpResponse(form);            
         
-def get_trainings_online(request):
+def get_trainings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('video')
     else:
     	villages = get_user_villages(request);
-        trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", trainings, relations=('village',))
+        trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        if(trainings):
+         json_subcat = serializers.serialize("json", trainings, relations=('village',))
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
              
        
@@ -1158,20 +1230,24 @@ def save_training_offline(request):
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
 			new_form.save()
+			form.save_m2m();
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
 		
 #functions for Many to Many relation table TrainingAnimatorsTrained with user specific feature.
 #get_online function of TrainingAnimatorsTrained with regionalization feature        
-def get_traininganimatorstrained_online(request):
+def get_traininganimatorstrained_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('TrainingAnimatorsTrained')
     else:
     	villages = get_user_villages(request);
     	trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")
-        traininganimatorstrained = TrainingAnimatorsTrained.objects.filter(training__in = trainings).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", traininganimatorstrained)
+        traininganimatorstrained = TrainingAnimatorsTrained.objects.filter(training__in = trainings).distinct().order_by("-id")[offset:limit]
+        if(traininganimatorstrained):
+         json_subcat = serializers.serialize("json", traininganimatorstrained)
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
 #functions for MonthlyCostPerVillage with user specific feature.
@@ -1192,13 +1268,16 @@ def save_monthlycostpervillage_online(request):
         form.fields['village'].queryset = villages.order_by('village_name')
         return HttpResponse(form);            
         
-def get_monthlycostpervillages_online(request):
+def get_monthlycostpervillages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('monthlycostpervillage')
     else:
     	villages = get_user_villages(request);
-        monthlycostpervillages = MonthlyCostPerVillage.objects.filter(village__in = villages).distinct().order_by("-id")
-        json_subcat = serializers.serialize("json", monthlycostpervillages, relations=('village',))
+        monthlycostpervillages = MonthlyCostPerVillage.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        if(monthlycostpervillages):
+         json_subcat = serializers.serialize("json", monthlycostpervillages, relations=('village',))
+        else:
+         json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
        
 def save_monthlycostpervillage_offline(request):
@@ -1233,14 +1312,17 @@ def save_personrelation_online(request):
 		return HttpResponse(form)
 	
 	
-def get_personrelations_online(request):
+def get_personrelations_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('personrelations')
 	else:
 		villages = get_user_villages(request);
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-		personrelations = PersonRelations.objects.filter(person__in = persons).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personrelations)
+		personrelations = PersonRelations.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
+		if(personrelations):
+			json_subcat = serializers.serialize("json", personrelations)
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personrelation_offline(request):
@@ -1273,14 +1355,17 @@ def save_animatorsalarypermonth_online(request):
 		return HttpResponse(form)
 	
 	
-def get_animatorsalarypermonths_online(request):
+def get_animatorsalarypermonths_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('animatorsalarypermonths')
 	else:
 		villages = get_user_villages(request);
 		animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")
-		animatorsalarypermonths = AnimatorSalaryPerMonth.objects.filter(animator__in = animators).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", animatorsalarypermonths,  relations=('animator',))
+		animatorsalarypermonths = AnimatorSalaryPerMonth.objects.filter(animator__in = animators).distinct().order_by("-id")[offset:limit]
+		if(animatorsalarypermonths):
+			json_subcat = serializers.serialize("json", animatorsalarypermonths,  relations=('animator',))
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_animatorsalarypermonth_offline(request):
@@ -1313,14 +1398,17 @@ def save_personmeetingattendance_online(request):
 		form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
 		return HttpResponse(form)
 	
-def get_personmeetingattendances_online(request):
+def get_personmeetingattendances_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('personmeetingattendances')
 	else:
 		villages = get_user_villages(request);
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")
-		personmeetingattendances = PersonMeetingAttendance.objects.filter(screening__in = screenings).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personmeetingattendances)
+		personmeetingattendances = PersonMeetingAttendance.objects.filter(screening__in = screenings).distinct().order_by("-id")[offset:limit]
+		if(personmeetingattendances):
+			json_subcat = serializers.serialize("json", personmeetingattendances)
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personmeetingattendance_offline(request):
@@ -1354,14 +1442,17 @@ def save_personadoptpractice_online(request):
 		return HttpResponse(form)
 	
 	
-def get_personadoptpractices_online(request):
+def get_personadoptpractices_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('personadoptpractices')
 	else:
 		villages = get_user_villages(request);
 		persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-		personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")
-		json_subcat = serializers.serialize("json", personadoptpractices)
+		personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
+		if(personadoptpractices):
+			json_subcat = serializers.serialize("json", personadoptpractices)
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personadoptpractice_offline(request):
@@ -1391,12 +1482,15 @@ def save_equipmentholder_online(request):
 		form = EquipmentHolderForm()
 		return HttpResponse(form)
 	
-def get_equipmentholders_online(request):
+def get_equipmentholders_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('equipmentholders')
 	else:
-		equipmentholders = EquipmentHolder.objects.order_by("-id")
-		json_subcat = serializers.serialize("json", equipmentholders)
+		equipmentholders = EquipmentHolder.objects.order_by("-id")[offset:limit]
+		if(equipmentholders):
+			json_subcat = serializers.serialize("json", equipmentholders)
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_equipmentholder_offline(request):
@@ -1427,12 +1521,15 @@ def save_reviewer_online(request):
 		form = ReviewerForm()
 		return HttpResponse(form)
 	
-def get_reviewers_online(request):
+def get_reviewers_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('reviewers')
 	else:
-		reviewers = Reviewer.objects.order_by("-id")
-		json_subcat = serializers.serialize("json", reviewers)
+		reviewers = Reviewer.objects.order_by("-id")[offset:limit]
+		if(reviewers):
+			json_subcat = serializers.serialize("json", reviewers)
+		else:
+			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_reviewer_offline(request):
