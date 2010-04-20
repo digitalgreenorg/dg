@@ -1,3 +1,4 @@
+<<<<<<< .mine
 // "Add"-link html code. Defaults to Django's "+" image icon, but could use text instead.
 add_link_html = '<h2>Add New Row <img src = "/media/img/admin/icon_addlink.gif" width="10" height="10"></h2>';
 // "Delete"-link html code. Defaults to Django's "x" image icon, but could use text instead.
@@ -66,7 +67,7 @@ jQuery(function($) {
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
 	});
-	showStatus("Intializing the page. Please wait.");
+	//showStatus("Intializing the page. Please wait.");
 	
 	vil_id = $("#id_village").val()
 	if(vil_id>0) {
@@ -103,7 +104,7 @@ jQuery(function($) {
 					_new_template = (template).replace(/--per_list--/g, obj.per_list);			
 					initialize_add_screening();
 					
-					hideStatus();
+					//hideStatus();
 				}
 		});
 	}
@@ -120,8 +121,8 @@ jQuery(function($) {
 				}
 		});
 		//Disabling 'Person Group' & 'Animator Widgets' & showing msg 'Select village to enable' besides
-		$("#id_farmer_groups_targeted,#id_animator").attr('disabled', 'disabled');
-		$(".form-row.farmer_groups_targeted div, .form-row.animator div").append('<text class="error_msg" style="font-size:20px;float:center; margin-left:50px;margin-top:70px;">Select Village to Enable</text>');
+		//$("#id_farmer_groups_targeted,#id_animator").attr('disabled', 'disabled');
+		//$(".form-row.farmer_groups_targeted div, .form-row.animator div").append('<text class="error_msg" style="font-size:20px;float:center; margin-left:50px;margin-top:70px;">Select Village to Enable</text>');
 		hideStatus();
 	}
 
@@ -307,8 +308,8 @@ function update_id_fields(row, new_position)
 //Function called when village is selected
 function filter()
 {
-	if($("#id_village").val()>0){
-		showStatus("Loading Person Groups & Animators.");
+if($("#id_village").val()>0){
+		//showStatus("Loading Person Groups & Animators.");
 		$.ajax({ type: "GET", 
 				dataType: 'json',
 				url: "/feeds/person_pract/", 
@@ -323,12 +324,12 @@ function filter()
 					//For "Add new Row" template, replacing ther person list of block of the village
 					_new_template = (template).replace(/--per_list--/g, obj.per_list);
 					if(!is_edit){
-						$("#id_farmer_groups_targeted,#id_animator").removeAttr("disabled");
-						$(".error_msg").remove();
+						//$("#id_farmer_groups_targeted,#id_animator").removeAttr("disabled");
+						//$(".error_msg").remove();
 						initialize_add_screening();
 						
 					}
-					hideStatus();
+					//hideStatus();
 				}
 		});
 	}	
@@ -354,12 +355,36 @@ function update_animators(j){
 
 //Function called on Person Selection
 function filter_person() {	
-	
-	showStatus("Loading persons..");
+	//showStatus("Loading persons..");
 	//Get the Value of 'Initial-forms' and Person Group selected.
+	initialize_add_screening();
 	grps = $('#id_farmer_groups_targeted').val();
+	alert(grps);
 	init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
-	
+	//alert("In filter_person function");
+	<script type="text/javascript" src="/site_media/dashboardgwt/gears_init.js"></script>
+	//alert("After including");
+	var db = google.gears.factory.create('beta.database');
+	//alert("After creating new object of factory");
+	db.open('digitalgreen');
+	//alert("Opening database");
+	var rs = db.execute('select u.app_status from user u');
+	alert(rs.field(0));
+	if(rs.field(0) == 0){
+		alert("In offline mode");
+		var persons = db.execute("SELECT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");
+		while (persons.isValidRow()) {
+				//alert(rs.field(0) + '@' + rs.field(1));
+				alert("In while loop");
+				alert(persons.field(0) + '@' +persons.field(1));
+				persons.next();
+			}
+	rs.close();
+	persons.close();
+	db.close();
+	}
+	else{
+
 	$.ajax({ type: "GET", 
 			dataType: 'json',
 			url: "/feeds/persons/", 
@@ -385,8 +410,10 @@ function filter_person() {
 					    table.append(new_html);			
 					  	//Set Total forms
 					 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
-					 	hideStatus();
+					 	//hideStatus();
 					 }
 			 
 		 });
+	}
 }
+
