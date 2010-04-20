@@ -100,9 +100,17 @@ public class BlocksData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator blockName = new StringValidator(this.block_name, false, false, 0, 100);
+			StringValidator blockName = new StringValidator(this.block_name, false, false, 1, 100);
+			blockName.setError("Please make sure that 'Block Name' is NOT EMPTY and not more then 100 CHARACTERS");
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			return blockName.validate() && startDate.validate();
+			startDate.setError("Please make sure 'Start date' is formatted as 'YYYY-MM-DD'.");
+			StringValidator districtValidator = new StringValidator(this.district.getId(), false, false, 1, 100);
+			districtValidator.setError("Please make sure you choose a village for 'District'.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(blockName);
+			validatorList.add(startDate);
+			validatorList.add(districtValidator);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
