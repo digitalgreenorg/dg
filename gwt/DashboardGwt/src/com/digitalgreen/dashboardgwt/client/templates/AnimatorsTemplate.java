@@ -42,7 +42,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveAnimator);
+		super.fillDgFormFields(saveAnimator);
 	}
 	
 	protected void fillListings() {

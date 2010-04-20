@@ -3,19 +3,28 @@ package com.digitalgreen.dashboardgwt.client.data.validation;
 public class BaseValidator {
 	private boolean nullable = true;
 	private boolean blank = true;
-	private String value = null;
+	private Object value = null;
 	
-	public BaseValidator(String value) {
+	public BaseValidator(Object value) {
 		this.value = value;
 	}
 	
-	public BaseValidator(String value, boolean nullable, boolean blank) {
+	public BaseValidator(Object value, boolean nullable) {
+		this.value = value;
+		this.nullable = nullable;
+	}
+	
+	public BaseValidator(Object value, boolean nullable, boolean blank) {
 		this.value = value;
 		this.nullable = nullable;
 		this.blank = blank;
 	}
 
-	public String getValue() {
+	public boolean isNullable() {
+		return this.nullable;
+	}
+	
+	public Object getValue() {
 		return this.value;
 	}
 	
@@ -24,8 +33,8 @@ public class BaseValidator {
 		if(!nullable && value == null) {
 			return false;
 		}
-		if(value != null) {
-			String valueTrim = new String(value);
+		if(value != null && value instanceof String) {
+			String valueTrim = new String((String)value);
 			if(!blank && valueTrim.trim().isEmpty()){
 				return false;
 			}

@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
+import com.google.gwt.user.client.Window;
 
 public class Trainings extends BaseServlet{
 	
@@ -64,11 +65,11 @@ public class Trainings extends BaseServlet{
 							requestContext.getArgs().put("listing", trainings);
 							getServlet().redirectTo(new Trainings(requestContext));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							Form errorForm = getServlet().getRequestContext().getForm();
-							requestContext.setMessageString("Invalid data, please try again");
-							requestContext.setForm(errorForm);
-							getServlet().redirectTo(new Trainings(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setMessageString("Invalid data, please try again");
+							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().redirectTo(new Trainings(getServlet().getRequestContext()));				
 						}
 					}
 				}, form);
@@ -128,7 +129,7 @@ public class Trainings extends BaseServlet{
 								requestContext.getArgs().put("addPageData", addData);
 								getServlet().fillTemplate(new TrainingTemplate(requestContext));
 							} else {
-								/*Error in saving the data*/			
+								// Must be some internal error, or no data to fetch?
 							}
 						}
 					
@@ -145,10 +146,10 @@ public class Trainings extends BaseServlet{
 						
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new TrainingTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new TrainingTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessageString("Local Database error");

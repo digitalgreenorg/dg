@@ -84,35 +84,32 @@ public class BaseTemplate extends Template {
 		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
-		String requestMethod = this.getRequestContext().getMethodTypeCtx();
-		if(requestMethod == RequestContext.METHOD_GET) {
-			if(queryArg == "add") {
-				this.postForm = new FormPanel();
-				this.postForm.getElement().setId("add-form");
-				this.postForm.setAction(RequestContext.getServerUrl() + 
-						"add_" + 
-						templateType);
-				this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-				this.postForm.setMethod(FormPanel.METHOD_POST);
-				this.displayHtml = new HTMLPanel(addHtml);
+		if(queryArg == "add") {
+			this.postForm = new FormPanel();
+			this.postForm.getElement().setId("add-form");
+			this.postForm.setAction(RequestContext.getServerUrl() + 
+					"add_" + 
+					templateType);
+			this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+			this.postForm.setMethod(FormPanel.METHOD_POST);
+			this.displayHtml = new HTMLPanel(addHtml);
 				
-				String addData = (String)queryArgs.get("addPageData");
-				if(addData != null && addDataToElementID.length > 0  ){
-					HTMLPanel h = new HTMLPanel(addData);
-					for(int i = 0; i< addDataToElementID.length;i++){
-						this.displayHtml.getElementById(addDataToElementID[i]).setInnerHTML(h.getElementById(addDataToElementID[i]).getInnerHTML());
-					}
+			String addData = (String)queryArgs.get("addPageData");
+			if(addData != null && addDataToElementID.length > 0  ){
+				HTMLPanel h = new HTMLPanel(addData);
+				for(int i = 0; i< addDataToElementID.length;i++){
+					this.displayHtml.getElementById(addDataToElementID[i]).setInnerHTML(h.getElementById(addDataToElementID[i]).getInnerHTML());
 				}
-				this.postForm.add(this.displayHtml);
-				super.setContentPanel(this.postForm);
-			}else{
-				this.displayHtml = new HTMLPanel(listHtml);				
-				super.setContentPanel(this.displayHtml);
 			}
-		}	
-	}
+			this.postForm.add(this.displayHtml);
+			super.setContentPanel(this.postForm);	
+		} else {
+			this.displayHtml = new HTMLPanel(listHtml);				
+			super.setContentPanel(this.displayHtml);
+		}
+	}	
 	
-	protected void fillDGSubmitControls(final BaseServlet servlet) {
+	protected void fillDgFormFields(final BaseServlet servlet) {
 		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
 			Button b = Button.wrap(RootPanel.get("save").getElement());
 			b.addClickHandler(new ClickHandler() {
@@ -125,6 +122,11 @@ public class BaseTemplate extends Template {
 					servlet.response();
 				}
 		    });
+			// Fill up form with whatever's in the query string.
+			String queryString = this.getRequestContext().getForm().getQueryString();
+			if(queryString != null) {
+				BaseTemplate.putFormString(queryString, "add-form");
+			}
 		}
 	}
 	
@@ -146,7 +148,11 @@ public class BaseTemplate extends Template {
 	public static native String getFormString(String formId) /*-{
 		return $wnd.getFormString(formId);
 	}-*/;
-		
+	
+	public static native String putFormString(String queryString, String formId) /*-{
+		return $wnd.putFormString(queryString, formId);
+	}-*/;
+	
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
 		"<!-- Header -->" +

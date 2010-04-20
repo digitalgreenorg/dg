@@ -5,7 +5,9 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.ManyToManyValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -152,8 +154,10 @@ public class TrainingsData extends BaseData {
 			StringValidator trainingOutCome = new StringValidator(this.training_outcome, true, true, 0, 1024);
 			DateValidator trainingStartDate = new DateValidator(this.training_start_date, false, false);
 			DateValidator trainingEndDate = new DateValidator(this.training_end_date, false, false);
+			BaseValidator animatorsTrained = new ManyToManyValidator(this.animators_trained, false);
 			return trainingPurpose.validate() && trainingOutCome.validate()
-					&& trainingStartDate.validate()	&& trainingEndDate.validate();
+					&& trainingStartDate.validate()	&& trainingEndDate.validate()
+					&& animatorsTrained.validate();
 		}
 
 		@Override

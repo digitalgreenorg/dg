@@ -37,7 +37,7 @@ public class StatesTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, statesListFormHtml, addStatesServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveState);
+		super.fillDgFormFields(saveState);
 	}
 	
 	protected void fillListings() {

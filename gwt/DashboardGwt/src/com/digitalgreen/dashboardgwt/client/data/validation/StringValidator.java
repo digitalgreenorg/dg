@@ -31,8 +31,8 @@ public class StringValidator extends BaseValidator {
 			return false;
 		} else if(this.getValue() == null){
 			return true;
-		} else if(!(this.getValue().length() >= this.minValue && 
-				this.getValue().length() <= this.maxValue)){
+		} else if(!(((String)this.getValue()).length() >= this.minValue && 
+				((String)this.getValue()).length() <= this.maxValue)){
 			return false;
 		}
 		return true;

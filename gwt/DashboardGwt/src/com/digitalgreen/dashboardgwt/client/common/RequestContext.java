@@ -72,4 +72,8 @@ public class RequestContext {
 		return "http://" + SERVER_HOST + "/";
 	}
 	
+	public void setMethodTypeCtx(String methodTypeCtx) {
+		this.methodTypeCtx = methodTypeCtx;
+	}
+	
 }

@@ -17,7 +17,7 @@ public class FloatValidator extends BaseValidator {
 			return true;
 		} else {
 			try {
-				float checkFormat = Float.parseFloat(this.getValue());
+				float checkFormat = Float.parseFloat((String)this.getValue());
 			} catch (NumberFormatException e) {
 				return false;
 			}

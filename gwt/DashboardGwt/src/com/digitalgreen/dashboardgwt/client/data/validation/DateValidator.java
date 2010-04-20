@@ -50,7 +50,7 @@ public class DateValidator extends BaseValidator {
 		} else if(this.getValue() == null){
 			return true;
 		}		
-		String[] yearMonthDay = this.getValue().split("-");
+		String[] yearMonthDay = ((String)this.getValue()).split("-");
 		return this.validateYear(yearMonthDay[0])
 				&& this.validateMonth(yearMonthDay[1])
 				&& this.validateDay(yearMonthDay[2]);

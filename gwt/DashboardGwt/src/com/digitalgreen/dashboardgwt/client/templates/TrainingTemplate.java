@@ -8,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
+import com.google.gwt.user.client.Window;
 
 public class TrainingTemplate extends BaseTemplate{
 	
@@ -37,7 +38,7 @@ public class TrainingTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveTraining);
+		super.fillDgFormFields(saveTraining);
 	}
 	
 	protected void fillListings() {

@@ -47,7 +47,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveScreening);
+		super.fillDgFormFields(saveScreening);
 	}
 	
 	public void fillListings(){

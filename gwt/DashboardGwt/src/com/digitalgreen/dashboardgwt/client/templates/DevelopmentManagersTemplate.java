@@ -40,7 +40,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDGLinkControls(templatePlainType, templateType, dmListFormHtml, addDevelopmentManagersServlet);
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveDevelopmentManager);
+		super.fillDgFormFields(saveDevelopmentManager);
 	}
 	
 	protected void fillListings() {

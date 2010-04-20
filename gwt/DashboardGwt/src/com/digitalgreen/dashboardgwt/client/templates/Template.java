@@ -44,7 +44,7 @@ public class Template implements TemplateInterface {
 
 	private static void addSpinnerMessage(String message) {
 		try {
-			HTMLPanel imageHtml = new HTMLPanel("<img src='/site_media/media/img/admin/ajax-loader.gif' /> ");	
+			HTMLPanel imageHtml = new HTMLPanel("<img src='/media/img/admin/ajax-loader.gif' /> ");	
 			imageHtml.setStyleName("messageSpinnerClass");
 			HTMLPanel messageHtml = new HTMLPanel(message);
 			messageHtml.setStyleName("messageSpinnerDivClass");

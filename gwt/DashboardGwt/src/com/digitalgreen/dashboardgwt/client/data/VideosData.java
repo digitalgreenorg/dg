@@ -284,7 +284,7 @@ public class VideosData extends BaseData {
 		@Override
 		public void save() {
 			
-			if(this.id==null){
+			if(this.id == null){
 				this.last_modified = BaseData.getCurrentDateAndTime();
 			}
 				

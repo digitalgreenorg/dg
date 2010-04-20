@@ -34,13 +34,13 @@ public class IntegerValidator extends BaseValidator {
 			return true;
 		} else {
 			try {
-				this.valueInt = Integer.parseInt(this.getValue());
+				this.valueInt = Integer.parseInt((String)this.getValue());
 			} catch (NumberFormatException e) {
 				return false;
 			}
 
-			return (this.minValue != null ? this.getValue().length() >= this.minValue.toString().length(): true 
-					&& this.maxValue != null ? this.getValue().length() <= this.maxValue.toString().length(): true);
+			return (this.minValue != null ? ((String)this.getValue()).length() >= this.minValue.toString().length(): true 
+					&& this.maxValue != null ? ((String)this.getValue()).length() <= this.maxValue.toString().length(): true);
 		}
 	}
 }

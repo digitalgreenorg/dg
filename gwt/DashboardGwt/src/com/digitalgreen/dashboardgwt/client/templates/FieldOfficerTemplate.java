@@ -41,7 +41,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		super.fillDGLinkControls(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet);
 		
 		// Now add any submit control buttons
-		super.fillDGSubmitControls(saveFieldOfficer);
+		super.fillDgFormFields(saveFieldOfficer);
 	}
 	
 	final private String addDataToElementID[] = null;
