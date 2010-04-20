@@ -176,10 +176,35 @@ public class DevelopmentManagersData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator stringValidatorN = new StringValidator(this.name, false, false, 1, 50);
-			StringValidator stringValidatorG = new StringValidator(this.gender, false, false, 1, 1);
-			IntegerValidator integerValidator = new IntegerValidator(this.region.getId(), false, false); 
-			return stringValidatorN.validate() && stringValidatorG.validate()  && integerValidator.validate();
+			StringValidator nameValidator = new StringValidator(this.name, false, false, 1, 100);
+			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 100 CHARACTERS.");
+			StringValidator ageValidator = new StringValidator(this.age, true, false, 0, 3);
+			ageValidator.setError("Please make sure that 'Age' is not more then 3 CHARACTERS.");
+			StringValidator genderValidator = new StringValidator(this.gender, false, false, 1, 3);
+			genderValidator.setError("Please make sure that you have selected 'Gender'.");
+			DateValidator hireDate = new DateValidator(this.hire_date, true, false);
+			hireDate.setError("Please make sure 'Hire date' is formatted as YYYY-MM-DD.");
+			StringValidator phoneValidator = new StringValidator(this.phone_no, true, false, 0, 100);
+			phoneValidator.setError("Please make sure that 'Phone Number' is NOT MORE then 100 CHARACTERS.");
+			StringValidator addressValidator = new StringValidator(this.address, true, false, 0, 500);
+			addressValidator.setError("Please make sure that 'Address' is NOT MORE then 500 CHARACTERS.");
+			StringValidator specialityValidator = new StringValidator(this.speciality, true, false, 0, 500);
+			specialityValidator.setError("Please make sure that 'Speciality' is NOT MORE then 500 CHARACTERS.");
+			StringValidator regionValidator = new StringValidator(this.region.getId(), false, false, 1, 100);
+			regionValidator.setError("Please make sure you choose a region for 'Region'.");
+			DateValidator startDate = new DateValidator(this.start_day, true, false);
+			startDate.setError("Please make sure 'Start Date' is formatted as YYYY-MM-DD.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(nameValidator);
+			validatorList.add(ageValidator);
+			validatorList.add(genderValidator);
+			validatorList.add(hireDate);
+			validatorList.add(phoneValidator);
+			validatorList.add(addressValidator);
+			validatorList.add(specialityValidator);
+			validatorList.add(regionValidator);
+			validatorList.add(startDate);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override		
