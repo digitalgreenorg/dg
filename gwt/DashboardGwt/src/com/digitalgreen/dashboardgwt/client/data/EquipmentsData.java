@@ -130,15 +130,26 @@ public class EquipmentsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator equipmentType = new StringValidator(this.equipment_type, false, false, 0, 100);
-			StringValidator ModelNo = new StringValidator(this.model_no, true, true, 0, 100);
-			StringValidator serialNo = new StringValidator(this.serial_no, true, true, 0, 100);
+			StringValidator equipmentType = new StringValidator(this.equipment_type, false, false, 1, 300);
+			equipmentType.setError("Please make sure that 'Block Name' is NOT EMPTY and not more then 300 CHARACTERS");
+			StringValidator ModelNo = new StringValidator(this.model_no, true, false, 0, 100);
+			ModelNo.setError("Please make sure that 'Model No' not more then 300 CHARACTERS");
+			StringValidator serialNo = new StringValidator(this.serial_no, true, false, 0, 100);
+			serialNo.setError("Please make sure that 'Serial No' not more then 300 CHARACTERS");
 			FloatValidator cost = new FloatValidator(this.cost, true, true);
+			cost.setError("COST must be a number");
 			DateValidator procurementDate = new DateValidator(this.procurement_date, true, true);
+			procurementDate.setError("Please make sure 'Procurement date' is formatted as YYYY-MM-DD.");
 			DateValidator warrantyExpirationDate = new DateValidator(this.warranty_expiration_date, true, true);
-			return equipmentType.validate() && ModelNo.validate()
-					&& serialNo.validate() && cost.validate()
-					&& procurementDate.validate() && warrantyExpirationDate.validate();
+			warrantyExpirationDate.setError("Please make sure 'Warranty expiration date' is formatted as YYYY-MM-DD.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(equipmentType);
+			validatorList.add(ModelNo);
+			validatorList.add(serialNo);
+			validatorList.add(cost);
+			validatorList.add(procurementDate);
+			validatorList.add(warrantyExpirationDate);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override		

@@ -126,13 +126,26 @@ public class FieldOfficersData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator name = new StringValidator(this.name, false, false,	0, 100);
-			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
+			StringValidator name = new StringValidator(this.name, false, false,	1, 100);
+			name.setError("Please make sure that 'Name' is NOT EMPTY and not more then 100 CHARACTERS.");
+			StringValidator age = new StringValidator(this.age, true, false, 0, 3);
+			age.setError("Please make sure that 'Age' is not more then 3 CHARACTERS.");
+			StringValidator gender = new StringValidator(this.gender, false, false, 1, 1);
+			gender.setError("Please make sure that you have selected 'Gender'.");
 			DateValidator hireDate = new DateValidator(this.hire_date, true, true);
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100);
-			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
-			return name.validate() && age.validate() && hireDate.validate()
-					&& phoneNo.validate() && address.validate();
+			hireDate.setError("Please make sure 'Hire date' is formatted as YYYY-MM-DD.");
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100);
+			phoneNo.setError("Please make sure that 'Phone No' is not more then 100 CHARACTERS.");
+			StringValidator address = new StringValidator(this.address, true, false, 0, 500);
+			address.setError("Please make sure that 'Addredd' is not more then 500 CHARACTERS.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(name);
+			validatorList.add(age);
+			validatorList.add(gender);
+			validatorList.add(hireDate);
+			validatorList.add(phoneNo);
+			validatorList.add(address);
+			return this.executeValidators(validatorList);
 		}
 		
 
