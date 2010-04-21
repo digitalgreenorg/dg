@@ -1089,7 +1089,7 @@ def get_screenings_online(request, offset, limit):
 		villages = get_user_villages(request)
 		screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
 		if(screenings):
-			json_subcat = serializers.serialize("json", screenings,  relations=('fieldofficer', 'animator','village',))
+			json_subcat = serializers.serialize("json", screenings, relations=('village',))
 		else:
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
