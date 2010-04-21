@@ -30,8 +30,7 @@ public class PersonAdoptPracticeData extends BaseData{
 	
 public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "personadoptpractice";
-			
+		final private static String COLLECTION_PREFIX = "personadoptpractice";			
 		private PersonsData.Data person;
 		private PracticesData.Data practice;
 		private String prior_adoption_flag;

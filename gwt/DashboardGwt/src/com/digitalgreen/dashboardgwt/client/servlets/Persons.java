@@ -126,10 +126,10 @@ public class Persons extends BaseServlet {
 					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(addData != null) {
-								// Got whatever info we need to display for this GET request, so go ahead
-								// and display it by filling in the template.  No need to redirect.
-								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "add");
+								requestContext.getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new PersonsTemplate(requestContext));
 							} else {
 								/*Error in saving the data*/			
 							}
@@ -148,14 +148,14 @@ public class Persons extends BaseServlet {
 						
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessageString("Local Database error");
-								getServlet().redirectTo(new Persons(requestContext));				
+								getServlet().redirectTo(new Persons(requestContext));
 							}	
 						}
 					});
