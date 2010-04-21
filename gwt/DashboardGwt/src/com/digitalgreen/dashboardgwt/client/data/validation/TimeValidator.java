@@ -1,5 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data.validation;
 
+import com.google.gwt.user.client.Window;
+
 public class TimeValidator extends BaseValidator {
 
 	public TimeValidator(String value) {
@@ -48,12 +50,7 @@ public class TimeValidator extends BaseValidator {
 		} else if(this.getValue() == null){
 			return true;
 		}
-		String[] dateTime = ((String)this.getValue()).split(" ");
-		DateValidator dateValidator = new DateValidator(dateTime[0]);
-		if(!dateValidator.validate()) {
-			return false;
-		}
-		String[] hourMinuteSecond = dateTime[1].split(":");
+		String[] hourMinuteSecond = ((String)this.getValue()).split(":");
 		return this.validateHour(hourMinuteSecond[0]) &&
 			this.validateMinute(hourMinuteSecond[1]) &&
 			this.validateSecond(hourMinuteSecond[2]);
