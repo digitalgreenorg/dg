@@ -95,13 +95,29 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		@Override
 		public boolean validate(){
-			DateValidator startDate = new DateValidator(this.start_date, true, true);			
-			return startDate.validate();
+			StringValidator animatorValidator = new StringValidator(this.animator.getId(), false, false, 1, 100);
+			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(animatorValidator);
+			validatorList.add(villageValidator);
+			validatorList.add(startDate);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override
 		public boolean validate(BaseData.Data foreignKey){
-			return this.validate();
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			DateValidator startDate = new DateValidator(this.start_date, true, true);
+			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(villageValidator);
+			validatorList.add(startDate);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override

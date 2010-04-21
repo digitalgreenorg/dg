@@ -135,16 +135,29 @@ public class PersonGroupsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator groupName = new StringValidator(this.group_name,
-					false, false, 0, 100);
+			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100);
+			groupName.setError("Group name is a required field and is less than 100 characters");
 			TimeValidator timings = new TimeValidator(this.timings, true, true);
-			return groupName.validate() && timings.validate();
+			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(groupName);
+			validatorList.add(timings);
+			validatorList.add(villageValidator);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
+			StringValidator groupName = new StringValidator(this.group_name, true, true, 0, 100);
+			groupName.setError("Please make sure group name is less than 100 characters'");
 			TimeValidator timings = new TimeValidator(this.timings, true, true);
-			return timings.validate();
+			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(groupName);
+			validatorList.add(timings);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
