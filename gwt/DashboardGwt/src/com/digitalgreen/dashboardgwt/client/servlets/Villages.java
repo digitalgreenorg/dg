@@ -8,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
+import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.VillagesTemplate;
 import com.google.gwt.user.client.Window;
 
@@ -65,9 +66,10 @@ public class Villages extends BaseServlet {
 							requestContext.getArgs().put("listing", villages);
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
-							getServlet().redirectTo(new Villages(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));				
 						}
 						
 					}
@@ -145,10 +147,10 @@ public class Villages extends BaseServlet {
 						
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new VillagesTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessageString("Local Database error");

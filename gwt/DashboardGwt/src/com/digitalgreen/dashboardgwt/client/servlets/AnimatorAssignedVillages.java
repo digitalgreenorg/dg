@@ -63,9 +63,10 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							requestContext.getArgs().put("listing", animatorAssignedVillages);
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
-							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().redirectTo(new AnimatorAssignedVillages(getServlet().getRequestContext()));				
 						}
 						
 					}
@@ -143,10 +144,10 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessageString("Local Database error");

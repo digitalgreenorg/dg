@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.templates.PersonsTemplate;
+import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
 
 
 public class Persons extends BaseServlet {
@@ -65,9 +66,10 @@ public class Persons extends BaseServlet {
 							requestContext.getArgs().put("listing", persons);
 							getServlet().redirectTo(new Persons(requestContext ));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
-							getServlet().redirectTo(new Persons(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().redirectTo(new Persons(getServlet().getRequestContext()));				
 						}
 						
 					}
@@ -124,10 +126,10 @@ public class Persons extends BaseServlet {
 					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
 								/*Error in saving the data*/			
 							}

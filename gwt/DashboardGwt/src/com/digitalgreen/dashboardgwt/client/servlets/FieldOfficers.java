@@ -85,6 +85,7 @@ public class FieldOfficers extends BaseServlet{
 				if(queryArg.equals("list")){
 					FieldOfficersData fieldOfficerData = new FieldOfficersData(new OnlineOfflineCallbacks(this){
 						public void onlineSuccessCallback(String results){
+							Window.alert("result : " + results);
 							if(results != null){
 								FieldOfficersData fieldofficerdata = new FieldOfficersData();
 								List fieldOfficers = fieldofficerdata.getListingOnline(results);
