@@ -155,7 +155,7 @@ class ReviewerInline(generic.GenericTabularInline):
 
 
 class DevelopmentManagerAdmin(admin.ModelAdmin):
-	exclude = ('equipmentholder','salary')
+	exclude = ('salary',)
 	list_display = ('name','region')
 	#inlines = [ReviewerInline, ]
 
@@ -277,7 +277,7 @@ class PersonGroupsInline(admin.TabularInline):
 class AnimatorInline(admin.TabularInline):
 	model = Animator
 	extra = 5
-	exclude = ('equipmentholder','assigned_villages')
+	exclude = ('assigned_villages',)
 
 class VillageAdmin(admin.ModelAdmin):
 	list_display = ('village_name', 'block')
@@ -287,7 +287,6 @@ class VillageAdmin(admin.ModelAdmin):
 
 class PersonInline(admin.TabularInline):
     model = Person
-    exclude = ('equipmentholder',)
     extra = 30 
 
 
@@ -322,10 +321,8 @@ class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
 	search_fields = ['animator__name','village__village_name']
 
 class FieldOfficerAdmin(admin.ModelAdmin):
-	exclude = ('equipmentholder','reviewer','salary',)
+	exclude = ('salary',)
 
-class PartnersAdmin(admin.ModelAdmin):
-	exclude = ('equipmentholder','reviewer',)
 
 
 class PersonAdoptPracticeInline(admin.StackedInline):
@@ -348,7 +345,6 @@ class PersonForm(forms.ModelForm):
 class PersonAdmin(admin.ModelAdmin):
     inlines = [PersonAdoptPracticeInline]
     list_display = ('person_name','group','village')
-    exclude = ('equipmentholder',)
     search_fields = ['person_name','village__village_name','group__group_name']
     related_search_fields = {
        	'village': ('village_name',),
@@ -528,7 +524,7 @@ admin.site.register(Block, BlockAdmin)
 admin.site.register(DevelopmentManager, DevelopmentManagerAdmin)
 admin.site.register(FieldOfficer, FieldOfficerAdmin)
 admin.site.register(Village, VillageAdmin)
-admin.site.register(Partners, PartnersAdmin)
+admin.site.register(Partners)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(PersonGroups, PersonGroupsAdmin)
 admin.site.register(Animator, AnimatorAdmin)
