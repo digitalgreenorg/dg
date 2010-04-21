@@ -115,10 +115,10 @@ class DevelopmentManager(models.Model):
     speciality = models.TextField(db_column='SPECIALITY', blank=True) 
     region =  models.ForeignKey(Region) 
     start_day = models.DateField(null=True, db_column='START_DAY', blank=True)
-    reviewer = generic.GenericRelation(Reviewer)
+    #reviewer = generic.GenericRelation(Reviewer)
     #reviewer = models.ForeignKey(Reviewer,null=True,blank=True) 
     #equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True) 
-    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+    #equipmentholder =  generic.GenericRelation(EquipmentHolder)
     salary = models.FloatField(null=True, db_column='SALARY', blank=True) 
     class Meta:
         db_table = u'DEVELOPMENT_MANAGER'
@@ -152,9 +152,9 @@ class Partners(models.Model):
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
     #reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
-    reviewer = generic.GenericRelation(Reviewer)
+    #reviewer = generic.GenericRelation(Reviewer)
     #equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
-    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+    #equipmentholder =  generic.GenericRelation(EquipmentHolder)
 
     class Meta:
         db_table = u'PARTNERS'
@@ -173,10 +173,10 @@ class FieldOfficer(models.Model):
     salary = models.FloatField(null=True, db_column='SALARY', blank=True)
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True) 
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True) 
-    reviewer = generic.GenericRelation(Reviewer)
+    #reviewer = generic.GenericRelation(Reviewer)
     #reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
     #equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True) 
-    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+    #equipmentholder =  generic.GenericRelation(EquipmentHolder)
 
     class Meta:
         db_table = u'FIELD_OFFICER'
@@ -270,7 +270,7 @@ class Person(models.Model):
     land_holdings = models.IntegerField(null=True, db_column='LAND_HOLDINGS', blank=True) 
     village = models.ForeignKey(Village)
     group = models.ForeignKey(PersonGroups, null=True, blank=True)
-    equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True)
+    #equipmentholder = models.ForeignKey(EquipmentHolder,null=True, blank=True)
     relations = models.ManyToManyField('self', symmetrical=False, through='PersonRelations',related_name ='rel',null=True,blank=True)
     adopted_agricultural_practices = models.ManyToManyField('Practices',through='PersonAdoptPractice',null=True, blank=True)
     class Meta:
@@ -299,7 +299,7 @@ class Animator(models.Model):
     partner = models.ForeignKey(Partners)
     village = models.ForeignKey(Village, db_column = 'home_village_id')
     #equipmentholder = models.ForeignKey(EquipmentHolder, null=True, blank=True) 
-    equipmentholder =  generic.GenericRelation(EquipmentHolder)
+    #equipmentholder =  generic.GenericRelation(EquipmentHolder)
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     class Meta:
         db_table = u'ANIMATOR'
