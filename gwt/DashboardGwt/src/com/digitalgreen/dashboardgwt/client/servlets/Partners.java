@@ -72,9 +72,10 @@ public class Partners extends BaseServlet{
 						requestContext.getArgs().put("listing", partners);
 						getServlet().redirectTo(new Partners(requestContext ));
 					} else {
-						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Invalid data, please try again");
-						getServlet().redirectTo(new Partners(requestContext));				
+						// It's no longer a POST because there was an error, so start again.
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+						getServlet().getRequestContext().getArgs().put("action", "add");
+						getServlet().redirectTo(new Partners(getServlet().getRequestContext()));
 					}		
 				}
 			}, form);
