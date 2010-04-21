@@ -63,9 +63,10 @@ public class Regions extends BaseServlet {
 							requestContext.getArgs().put("listing", regions);
 							getServlet().redirectTo(new Regions(requestContext ));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
-							getServlet().redirectTo(new Regions(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().redirectTo(new Regions(getServlet().getRequestContext()));
 						}
 						
 					}

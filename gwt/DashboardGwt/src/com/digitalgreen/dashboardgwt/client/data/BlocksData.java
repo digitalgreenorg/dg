@@ -105,7 +105,7 @@ public class BlocksData extends BaseData {
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
 			startDate.setError("Please make sure 'Start date' is formatted as 'YYYY-MM-DD'.");
 			StringValidator districtValidator = new StringValidator(this.district.getId(), false, false, 1, 100);
-			districtValidator.setError("Please make sure you choose a village for 'District'.");
+			districtValidator.setError("Please make sure you choose a district for 'District'.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(blockName);
 			validatorList.add(startDate);
