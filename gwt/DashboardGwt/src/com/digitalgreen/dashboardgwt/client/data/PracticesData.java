@@ -95,10 +95,17 @@ public class PracticesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator stringValidatorN = new StringValidator(this.practice_name.trim(), false, false, 1, 50);
-			StringValidator stringValidatorS = new StringValidator(this.seasonality, false, false, 3, 3);
-			StringValidator stringValidatorSUM = new StringValidator(this.summary, true, true, 0, 1024);
-			return stringValidatorN.validate() && stringValidatorS.validate() && stringValidatorSUM.validate();
+			StringValidator nameValidator = new StringValidator(this.practice_name, false, false, 1, 200);
+			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 100 CHARACTERS.");
+			StringValidator seasonalityValidator = new StringValidator(this.seasonality, false, false, 3, 3);
+			seasonalityValidator.setError("Please make sure you choose a Season for 'Seasonality'.");
+			StringValidator summaryValidator = new StringValidator(this.summary, true, false, 0, 1024);
+			summaryValidator.setError("Please make sure 'Summary' is less than 1024 CHARACTERS.");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(nameValidator);
+			validatorList.add(seasonalityValidator);
+			validatorList.add(summaryValidator);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override

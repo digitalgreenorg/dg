@@ -71,9 +71,10 @@ public class Practices extends BaseServlet{
 							requestContext.getArgs().put("listing", practices);
 							getServlet().redirectTo(new Practices(requestContext));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
-							getServlet().redirectTo(new Practices(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().redirectTo(new Practices(getServlet().getRequestContext()));
 						}
 					}
 				}, form);
