@@ -228,7 +228,7 @@ public class TrainingsData extends BaseData {
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id));" ;  
 	protected static String dropTable = "DROP TABLE IF EXISTS `training`;";
 	protected static String selectTrainings = "SELECT id, TRAINING_PURPOSE, TRAINING_OUTCOME, TRAINING_START_DATE, TRAINING_END_DATE FROM training ORDER BY (-id)";
-	protected static String listTrainings = "SELECT training.id, training.training_purpose, training.training_outcome, training.training_start_date, training.training_end_date, village.id, village.village_name, development_manager.id, development_manager.name, field_officer.id, field_officer.name FROM training LEFT JOIN village ON training.village_id = village.id LEFT JOIN development_manager ON training.dm_id = development_manager.id JOIN field_officer ON training.fieldofficer_id = field_officer.id ORDER BY (training.id);";
+	protected static String listTrainings = "SELECT training.id, training.training_purpose, training.training_outcome, training.training_start_date, training.training_end_date, village.id, village.village_name, development_manager.id, development_manager.name, field_officer.id, field_officer.name FROM training LEFT JOIN village ON training.village_id = village.id LEFT JOIN development_manager ON training.dm_id = development_manager.id JOIN field_officer ON training.fieldofficer_id = field_officer.id ORDER BY (-training.id);";
 	protected static String saveTrainingOnlineURL = "/dashboard/savetrainingonline/";
 	protected static String getTrainingsOnlineURL = "/dashboard/gettrainingsonline/";
 	protected static String saveTrainingOfflineURL = "/dashboard/savetrainingoffline/";

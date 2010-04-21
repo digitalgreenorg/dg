@@ -27,7 +27,6 @@ public class DevelopmentManagersData extends BaseData {
 		public final native String getSpeciality() /*-{ return $wnd.checkForNullValues(this.fields.speciality); }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
 		public final native String getStartDay() /*-{ return $wnd.checkForNullValues(this.fields.start_day); }-*/;
-		public final native String getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 		public final native String getSalary() /*-{ return $wnd.checkForNullValues(this.fields.salary); }-*/;
 				
 	}
@@ -45,7 +44,6 @@ public class DevelopmentManagersData extends BaseData {
 		private String speciality;
 		private RegionsData.Data region;
 		private String start_day;
-		private String equipmentholder;
 		private String salary;
 		
 		
@@ -60,7 +58,7 @@ public class DevelopmentManagersData extends BaseData {
 		}
 
 		public Data(String id, String name,String age,String gender,String hire_date,String phone_no,String address,String speciality,
-				RegionsData.Data region, String start_day,String equipmentholder, String salary ) {
+				RegionsData.Data region, String start_day, String salary ) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -72,7 +70,6 @@ public class DevelopmentManagersData extends BaseData {
 			this.speciality = speciality;
 			this.region = region;
 			this.start_day = start_day;
-			this.equipmentholder = equipmentholder;
 			this.salary = salary;
 		}
 		
@@ -118,9 +115,6 @@ public class DevelopmentManagersData extends BaseData {
 			return this.start_day;
 		}
 				
-		public String getEquipmentHolderId(){
-			return this.equipmentholder;
-		}
 		
 		public String getSalary(){
 			return this.salary;
@@ -164,9 +158,7 @@ public class DevelopmentManagersData extends BaseData {
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
 			}  else if(key.equals("start_day")) {
 				this.start_day = (String)val;
-			}  else if(key.equals("equipmentholder")) {
-				this.equipmentholder = val;
-			} else if(key.equals("salary")) {
+			}  else if(key.equals("salary")) {
 				this.salary = val;
 			} else {
 				return;
@@ -220,7 +212,6 @@ public class DevelopmentManagersData extends BaseData {
 						this.speciality,
 						this.region.getId(),
 						this.start_day,
-						this.equipmentholder,
 						this.salary);
 			this.addNameValueToQueryString("id", this.id);
 			}
@@ -244,20 +235,18 @@ public class DevelopmentManagersData extends BaseData {
 												"SPECIALITY TEXT  NULL DEFAULT NULL ," +
 												"region_id INT  NOT NULL DEFAULT 0," +
 												"START_DAY DATE  NULL DEFAULT NULL," +
-												"equipmentholder_id INT  NULL DEFAULT NULL," +
 												"SALARY FLOAT(0,0)  NULL DEFAULT NULL, " +
-												"FOREIGN KEY(region_id) REFERENCES region(id), " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
+												"FOREIGN KEY(region_id) REFERENCES region(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `development_manager`;";
 	protected static String selectDevelopmentManagers = "SELECT id, NAME FROM development_manager  ORDER BY (NAME);";
 	protected static String getDevelopmentManagerByID = "SELECT id, NAME FROM development_manager WHERE id = ?;";
-	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.equipmentholder_id,d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id);";
+	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id);";
 	protected static String saveDevelopmentManagerOfflineURL = "/dashboard/savedevelopmentmanageroffline/";
 	protected static String saveDevelopmentManagerOnlineURL = "/dashboard/savedevelopmentmanageronline/";
 	protected static String getDevelopmentManagerOnlineURL = "/dashboard/getdevelopmentmanagersonline/";
 	protected String table_name = "development_manager";
 	protected String[] fields = {"id", "name", "age", "gender", "hire_date", "phone_no", "address", "speciality",
-			"region_id", "start_day", "equipmentholder_id", "salary"};
+			"region_id", "start_day", "salary"};
 	
 
 	public DevelopmentManagersData() {
@@ -330,7 +319,6 @@ public class DevelopmentManagersData extends BaseData {
 						developmentmanagerObjects.get(i).getAddress(),
 						developmentmanagerObjects.get(i).getSpeciality(),r,
 						developmentmanagerObjects.get(i).getStartDay(), 
-						developmentmanagerObjects.get(i).getEquipmentHolder() ,
 						developmentmanagerObjects.get(i).getSalary());
 			developmentmanagers.add(developmentmanager);
 		}
@@ -347,7 +335,6 @@ public class DevelopmentManagersData extends BaseData {
 		BaseData.dbOpen();
 		List developmentmanagers = new ArrayList();
 		RegionsData region = new RegionsData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		this.select(listDevelopmentManagers);
 		
 		if (this.getResultSet().isValidRow()){
@@ -364,8 +351,7 @@ public class DevelopmentManagersData extends BaseData {
 							this.getResultSet().getFieldAsString(6),
 							this.getResultSet().getFieldAsString(7),r,
 							this.getResultSet().getFieldAsString(10), 
-							this.getResultSet().getFieldAsString(11),
-							this.getResultSet().getFieldAsString(12));
+							this.getResultSet().getFieldAsString(11));
 					developmentmanagers.add(developmentmanager);
 				}				
 			} catch (DatabaseException e) {

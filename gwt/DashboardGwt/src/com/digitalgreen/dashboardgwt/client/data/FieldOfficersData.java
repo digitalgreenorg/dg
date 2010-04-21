@@ -26,8 +26,6 @@ public class FieldOfficersData extends BaseData {
 		public final native String getSalary() /*-{ return $wnd.checkForNullValues(this.fields.salary); }-*/;
 		public final native String getPhone() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
 		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
-		public final native String getReviewer() /*-{ return this.fields.reviewer; }-*/;
-		public final native String getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	}
 	
 	public class Data extends BaseData.Data{
@@ -41,8 +39,6 @@ public class FieldOfficersData extends BaseData {
 		private String salary;
 		private String phone_no;
 		private String address;
-		private String reviewer;
-		private String equipmentholder;
 		
 		public Data(){
 			super();
@@ -60,7 +56,7 @@ public class FieldOfficersData extends BaseData {
 		}
 		
 		public Data(String id, String name, String age, String gender, String hire_date, 
-				String salary, String phone_no, String address, String reviewer, String equipmentholder){
+				String salary, String phone_no, String address){
 			super();
 			this.id = id;
 			this.name = name;
@@ -70,8 +66,6 @@ public class FieldOfficersData extends BaseData {
 			this.salary = salary;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer = reviewer;
-			this.equipmentholder = equipmentholder;
 		}
 		
 
@@ -113,12 +107,7 @@ public class FieldOfficersData extends BaseData {
 			else if(key.equals("address")){
 				this.address = (String)val;
 			}
-			else if(key.equals("reviewer")) {
-				 this.reviewer = val;
-			}
-			else if(key.equals("equipmentholder")) {
-				this.equipmentholder = val;
-			} else {
+			else {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
@@ -159,9 +148,7 @@ public class FieldOfficersData extends BaseData {
 						this.hire_date, 
 						this.salary, 
 						this.phone_no, 
-						this.address, 
-						this.reviewer, 
-						this.equipmentholder);
+						this.address);
 			this.addNameValueToQueryString("id", this.id);
 		}
 		
@@ -181,11 +168,7 @@ public class FieldOfficersData extends BaseData {
 												"HIRE_DATE DATE NULL DEFAULT NULL," +
 												"SALARY FLOAT(0,0) NULL DEFAULT NULL," +
 												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL ," +
-												"ADDRESS VARCHAR(500) NULL DEFAULT NULL ," +
-												"reviewer_id INT NULL DEFAULT NULL," +
-												"equipmentholder_id INT NULL DEFAULT NULL, " +
-												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id))";
+												"ADDRESS VARCHAR(500) NULL DEFAULT NULL)";
 	protected static String dropTable = "DROP TABLE IF EXISTS `field_officer`;";
 	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
 	protected static String getFieldOfficerByID = "SELECT id, name FROM field_officer WHERE id = ?";
@@ -194,7 +177,7 @@ public class FieldOfficersData extends BaseData {
 	protected static String getFieldOfficersOnlineURL = "/dashboard/getfieldofficersonline/";
 	protected static String saveFieldOfficerOfflineURL = "/dashboard/savefieldofficeroffline/";
 	protected static String table_name = "field_officer";
-	protected static String[] fields = {"id", "name", "age", "gender", "hire_date", "salary",  "phone_no", "address", "reviewer_id", "equipmentholder_id"};
+	protected static String[] fields = {"id", "name", "age", "gender", "hire_date", "salary",  "phone_no", "address"};
 	
 	public FieldOfficersData(){
 		super();
@@ -254,9 +237,7 @@ public class FieldOfficersData extends BaseData {
 	
 	public List serialize(JsArray<Type> fieldOfficerObjects){
 		List fieldOfficers = new ArrayList();
-		ReviewersData reviewer = new ReviewersData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
-		
+				
 		for(int i = 0; i < fieldOfficerObjects.length(); i++){
 			Data fieldOfficer = new Data(fieldOfficerObjects.get(i).getPk(), 
 					fieldOfficerObjects.get(i).getFieldOfficerName(), 
@@ -265,9 +246,7 @@ public class FieldOfficersData extends BaseData {
 					fieldOfficerObjects.get(i).getHireDate(), 
 					fieldOfficerObjects.get(i).getSalary(), 
 					fieldOfficerObjects.get(i).getPhone(), 
-					fieldOfficerObjects.get(i).getAddress(), 
-					fieldOfficerObjects.get(i).getReviewer(), 
-					fieldOfficerObjects.get(i).getEquipmentHolder());
+					fieldOfficerObjects.get(i).getAddress());
 			fieldOfficers.add(fieldOfficer);
 		}
 		return fieldOfficers;
@@ -289,8 +268,7 @@ public class FieldOfficersData extends BaseData {
 					Data fieldOfficer = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3), 
 							this.getResultSet().getFieldAsString(4), this.getResultSet().getFieldAsString(5), 
-							this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7), 
-							this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9));
+							this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7));
 					fieldOfficers.add(fieldOfficer);
 				}
 			} catch (DatabaseException e){

@@ -22,8 +22,6 @@ public class PartnersData extends BaseData {
 		public final native String getDateOfAssociation() /*-{ return $wnd.checkForNullValues(this.fields.date_of_association); }-*/;
 		public final native String getPhoneNo() /*-{ return $wnd.checkForNullValues(this.fields.phone_no); }-*/;
 		public final native String getAddress() /*-{ return $wnd.checkForNullValues(this.fields.address); }-*/;
-		public final native String getReviewer() /*-{ return this.fields.reviewer; }-*/;
-		public final native String getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
@@ -34,8 +32,6 @@ public class PartnersData extends BaseData {
 		private String date_of_association;
 		private String phone_no;
 		private String address;
-		private String reviewer;
-		private String equipmentholder;
 		
 		public Data() {
 			super();
@@ -48,15 +44,13 @@ public class PartnersData extends BaseData {
 		}
 		
 		public Data(String id, String partner_name, String date_of_association, String phone_no,
-				String address,String reviewer, String equipmentholder) {
+				String address) {
 			super();
 			this.id = id;
 			this.partner_name = partner_name;
 			this.date_of_association = date_of_association;
 			this.phone_no = phone_no;
 			this.address = address;
-			this.reviewer = reviewer;
-			this.equipmentholder = equipmentholder;
 		}
 
 		
@@ -92,11 +86,7 @@ public class PartnersData extends BaseData {
 			else if(key.equals("address")) {
 				 this.address = (String)val;
 			} 
-			else if(key.equals("reviewer")) {
-				 this.reviewer = val;
-			} else if(key.equals("equipmentholder")) {
-				this.equipmentholder = (String)val;
-			}
+			
 		}
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.partner_name, false, false, 1, 100);
@@ -122,9 +112,7 @@ public class PartnersData extends BaseData {
 						this.partner_name, 
 						this.date_of_association,
 						this.phone_no, 
-						this.address, 
-						this.reviewer, 
-						this.equipmentholder);
+						this.address);
 		}
 	}
 	
@@ -134,11 +122,7 @@ public class PartnersData extends BaseData {
 												"PARTNER_NAME VARCHAR(100)  NOT NULL ," +
 												"DATE_OF_ASSOCIATION DATE  NULL DEFAULT NULL," +
 												"PHONE_NO VARCHAR(100)  NULL DEFAULT NULL ," +
-												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL ," +
-												"reviewer_id INT  NULL DEFAULT NULL," +
-												"equipmentholder_id INT  NULL DEFAULT NULL, " +
-												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );"; 
+												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `partners`;";
 	protected static String selectPartners = "SELECT id, partner_name FROM partners ORDER BY(partner_name)";
 	protected static String getPartnerByID = "SELECT id, partner_name FROM partners WHERE id = ?";
@@ -147,8 +131,7 @@ public class PartnersData extends BaseData {
 	protected static String getPartnerOnlineURL = "/dashboard/getpartnersonline/";
 	protected static String savePartnerOfflineURL = "/dashboard/savepartneroffline/";
 	protected String table_name = "partners";
-	protected String[] fields = {"id", "partner_name", "date_of_association", "phone_no", "address",
-			"reviewer_id", "equipmentholder_id"};
+	protected String[] fields = {"id", "partner_name", "date_of_association", "phone_no", "address"};
 	
 	public PartnersData() {
 		super();
@@ -210,15 +193,12 @@ public class PartnersData extends BaseData {
 	
 	public List serialize(JsArray<Type> partnerObjects){
 		List partners = new ArrayList();
-		ReviewersData reviewer = new ReviewersData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		
 		for(int i = 0; i < partnerObjects.length(); i++){
 			
 			Data partner = new Data(partnerObjects.get(i).getPk(), partnerObjects.get(i).getPartnerName(),
 					partnerObjects.get(i).getDateOfAssociation(), partnerObjects.get(i).getPhoneNo(),
-					partnerObjects.get(i).getAddress(), partnerObjects.get(i).getReviewer(),
-					partnerObjects.get(i).getEquipmentHolder());
+					partnerObjects.get(i).getAddress());
 			partners.add(partner);
 		}
 		return partners;
@@ -231,8 +211,6 @@ public class PartnersData extends BaseData {
 	
 	public List getPartnersListingOffline(){
 		BaseData.dbOpen();
-		ReviewersData reviewer = new ReviewersData();
-		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List partners = new ArrayList();
 		this.select(listPartners);
 		if (this.getResultSet().isValidRow()){
@@ -243,9 +221,7 @@ public class PartnersData extends BaseData {
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
-							this.getResultSet().getFieldAsString(4),
-							this.getResultSet().getFieldAsString(5),
-							this.getResultSet().getFieldAsString(6));
+							this.getResultSet().getFieldAsString(4));
 					partners.add(partner);
 	    	      }				
 			} catch (DatabaseException e) {

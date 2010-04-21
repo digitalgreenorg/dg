@@ -58,9 +58,6 @@ public class AnimatorsData extends BaseData {
 			return this.fields.village;
 		}-*/;
 
-		public final native String getEquipmentHolder() /*-{
-			return this.fields.equipment_holder;
-		}-*/;
 
 	}
 
@@ -78,7 +75,6 @@ public class AnimatorsData extends BaseData {
 		private String address;
 		private PartnersData.Data partner;
 		private VillagesData.Data village;
-		private String equipment_holder_id;
 
 		public Data() {
 			super();
@@ -107,8 +103,7 @@ public class AnimatorsData extends BaseData {
 		public Data(String id, String name, String age, String gender,
 				String csp_flag, String camera_operator_flag,
 				String facilitator_flag, String phone_no, String address,
-				PartnersData.Data partner, VillagesData.Data village,
-				String equipment_holder_id) {
+				PartnersData.Data partner, VillagesData.Data village) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -121,7 +116,6 @@ public class AnimatorsData extends BaseData {
 			this.address = address;
 			this.partner = partner;
 			this.village = village;
-			this.equipment_holder_id = equipment_holder_id;
 		}
 
 		public String getAnimatorName() {
@@ -164,9 +158,6 @@ public class AnimatorsData extends BaseData {
 			return this.village;
 		}
 
-		public String getEquipmentHolder() {
-			return this.equipment_holder_id;
-		}
 
 		@Override
 		public String getPrefixName() {
@@ -208,8 +199,6 @@ public class AnimatorsData extends BaseData {
 				VillagesData village = new VillagesData();
 				this.village = village.getNewData();
 				this.village.id = val;
-			} else if (key.equals("equipmentholder")) {
-				this.equipment_holder_id = val;
 			} else {
 				return;
 			}
@@ -237,7 +226,7 @@ public class AnimatorsData extends BaseData {
 					this.age, this.gender, this.csp_flag,
 					this.camera_operator_flag, this.facilitator_flag,
 					this.phone_no, this.address, this.partner.getId(),
-					this.village.getId(), this.equipment_holder_id);
+					this.village.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
 
@@ -248,7 +237,7 @@ public class AnimatorsData extends BaseData {
 					this.age, this.gender, this.csp_flag,
 					this.camera_operator_flag, this.facilitator_flag,
 					this.phone_no, this.address, this.partner.getId(),
-					foreignKey.getId(), this.equipment_holder_id);
+					foreignKey.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("village", foreignKey.getId());
 		}
@@ -273,10 +262,8 @@ public class AnimatorsData extends BaseData {
 			+ "ADDRESS VARCHAR(500)  NULL DEFAULT NULL,"
 			+ "partner_id INT  NOT NULL DEFAULT 0,"
 			+ "village_id INT  NOT NULL DEFAULT 0,"
-			+ "equipmentholder_id INT  NULL DEFAULT NULL, "
 			+ "FOREIGN KEY(partner_id) REFERENCES partners(id), "
-			+ "FOREIGN KEY(village_id) REFERENCES village(id), "
-			+ "FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) );";
+			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
@@ -287,7 +274,7 @@ public class AnimatorsData extends BaseData {
 	protected String table_name = "animator";
 	protected String[] fields = { "id", "name", "age", "gender", "csp_flag",
 			"camera_operator_flag", "facilitator_flag", "phone_no", "address",
-			"partner_id", "village_id", "equipmentholder_id" };
+			"partner_id", "village_id" };
 
 	public AnimatorsData() {
 		super();
@@ -364,8 +351,7 @@ public class AnimatorsData extends BaseData {
 					animatorObjects.get(i).getCameraOperatorFlag(),
 					animatorObjects.get(i).getFacilitatorFlag(),
 					animatorObjects.get(i).getPhoneNo(), animatorObjects.get(i)
-							.getAddress(), p, v, animatorObjects.get(i)
-							.getEquipmentHolder());
+							.getAddress(), p, v);
 
 			animators.add(animator);
 		}

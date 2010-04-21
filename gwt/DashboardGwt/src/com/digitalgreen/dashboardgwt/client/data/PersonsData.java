@@ -56,10 +56,6 @@ public class PersonsData extends BaseData {
 			return this.fields.group;
 		}-*/;
 
-		public final native String getEquipmentHolderId() /*-{
-			return $wnd.checkForNullValues(this.fields.equipmentholder_id);
-		}-*/;
-
 	}
 
 	public class Data extends BaseData.Data {
@@ -75,7 +71,6 @@ public class PersonsData extends BaseData {
 		private String land_holdings;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private String equipmentholder_id;
 
 		public Data() {
 			super();
@@ -89,7 +84,7 @@ public class PersonsData extends BaseData {
 		public Data(String id, String person_name, String father_name,
 				String age, String gender, String phone_no, String address,
 				String land_holdings, VillagesData.Data village,
-				PersonGroupsData.Data group, String equipmentholder_id) {
+				PersonGroupsData.Data group) {
 			super();
 			this.id = id;
 			this.person_name = person_name;
@@ -101,7 +96,6 @@ public class PersonsData extends BaseData {
 			this.land_holdings = land_holdings;
 			this.village = village;
 			this.group = group;
-			this.equipmentholder_id = equipmentholder_id;
 		}
 
 		public Data(String id, String person_name, VillagesData.Data village) {
@@ -158,10 +152,7 @@ public class PersonsData extends BaseData {
 			return this.group;
 		}
 
-		public String getEquipmentHolderId() {
-			return this.equipmentholder_id;
-		}
-
+		
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.village = (new VillagesData()).new Data();
@@ -199,8 +190,6 @@ public class PersonsData extends BaseData {
 				PersonGroupsData group = new PersonGroupsData();
 				this.group = group.getNewData();
 				this.group.id = val;
-			} else if (key.equals("equipmentholder")) {
-				this.equipmentholder_id = val;
 			} else {
 				return;
 			}
@@ -237,7 +226,7 @@ public class PersonsData extends BaseData {
 			this.id = personsDataDbApis.autoInsert(this.id, this.person_name,
 					this.father_name, this.age, this.gender, this.phone_no,
 					this.address, this.land_holdings, this.village.getId(),
-					this.group.getId(), this.equipmentholder_id);
+					this.group.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
 
@@ -247,7 +236,7 @@ public class PersonsData extends BaseData {
 			this.id = personsDataDbApis.autoInsert(this.id, this.person_name,
 					this.father_name, this.age, this.gender, this.phone_no,
 					this.address, this.land_holdings, this.village.getId(),
-					foreignKey.getId(), this.equipmentholder_id);
+					foreignKey.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("persongroup", foreignKey.getId());
 		}
@@ -271,10 +260,8 @@ public class PersonsData extends BaseData {
 												"LAND_HOLDINGS INT  NULL DEFAULT NULL," +
 												"village_id INT NOT NULL DEFAULT 0," +
 												"group_id INT  NULL DEFAULT NULL," +
-												"equipmentholder_id INT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
-												"FOREIGN KEY(group_id) REFERENCES person_groups(id), " +
-												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id) ); " ; 
+												"FOREIGN KEY(group_id) REFERENCES person_groups(id)); " ; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `person`;";
 	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
@@ -288,7 +275,7 @@ public class PersonsData extends BaseData {
 	protected String table_name = "person";
 	protected String[] fields = { "id", "person_name", "father_name", "age",
 			"gender", "phone_no", "address", "land_holder", "village_id",
-			"group_id", "equipmentholder_id" };
+			"group_id" };
 
 	public PersonsData() {
 		super();
@@ -367,8 +354,7 @@ public class PersonsData extends BaseData {
 					.getFatherName(), personObjects.get(i).getAge(),
 					personObjects.get(i).getGender(), personObjects.get(i)
 							.getPhoneNo(), personObjects.get(i).getAddress(),
-					personObjects.get(i).getLandHoldings(), vil, pg,
-					personObjects.get(i).getEquipmentHolderId());
+					personObjects.get(i).getLandHoldings(), vil, pg);
 
 			persons.add(person);
 		}
