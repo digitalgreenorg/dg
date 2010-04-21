@@ -131,11 +131,11 @@ public class EquipmentsData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator equipmentType = new StringValidator(this.equipment_type, false, false, 1, 300);
-			equipmentType.setError("Please make sure that 'Block Name' is NOT EMPTY and not more then 300 CHARACTERS");
+			equipmentType.setError("Please make sure that 'Block Name' is NOT EMPTY and not more than 300 CHARACTERS");
 			StringValidator ModelNo = new StringValidator(this.model_no, true, false, 0, 100);
-			ModelNo.setError("Please make sure that 'Model No' not more then 300 CHARACTERS");
+			ModelNo.setError("Please make sure that 'Model No' not more than 300 CHARACTERS");
 			StringValidator serialNo = new StringValidator(this.serial_no, true, false, 0, 100);
-			serialNo.setError("Please make sure that 'Serial No' not more then 300 CHARACTERS");
+			serialNo.setError("Please make sure that 'Serial No' not more than 300 CHARACTERS");
 			FloatValidator cost = new FloatValidator(this.cost, true, true);
 			cost.setError("COST must be a number");
 			DateValidator procurementDate = new DateValidator(this.procurement_date, true, true);

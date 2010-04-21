@@ -99,11 +99,20 @@ public class PartnersData extends BaseData {
 			}
 		}
 		public boolean validate(){
-			StringValidator stringValidatorN = new StringValidator(this.partner_name, false, false, 1, 100);
-			DateValidator dateValidator = new DateValidator(this.date_of_association, true, true);
-			IntegerValidator integerValidator = new IntegerValidator(this.phone_no, true, true);
-			StringValidator stringValidatorA = new StringValidator(this.address, true, true, 0, 1024);
-			return stringValidatorN.validate() && dateValidator.validate() && integerValidator.validate() && stringValidatorA.validate();
+			StringValidator nameValidator = new StringValidator(this.partner_name, false, false, 1, 100);
+			nameValidator.setError("Please make sure that 'Partner Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			DateValidator dateValidator = new DateValidator(this.date_of_association, true, false);
+			dateValidator.setError("Please make sure 'Date of Association' is formatted as 'YYYY-MM-DD'.");
+			StringValidator addressValidator = new StringValidator(this.phone_no, true, false, 0, 100);
+			addressValidator.setError("Please make sure that 'Phone No' is not more than 100 CHARACTERS");
+			StringValidator phoneValidator = new StringValidator(this.address, true, false, 0, 500);
+			phoneValidator.setError("Please make sure that 'Phone No' is not more than 500 CHARACTERS");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(nameValidator);
+			validatorList.add(dateValidator);
+			validatorList.add(addressValidator);
+			validatorList.add(phoneValidator);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
@@ -118,7 +127,6 @@ public class PartnersData extends BaseData {
 						this.equipmentholder);
 		}
 	}
-	
 	
 	public static String tableID = "13";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `partners` " +

@@ -68,7 +68,7 @@ public class LanguagesData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator languageName = new StringValidator(this.language_name, false, false, 1, 100);
-			languageName.setError("Please make sure that 'Language Name' is NOT EMPTY and not more then 100 CHARACTERS");
+			languageName.setError("Please make sure that 'Language Name' is NOT EMPTY and not more than 100 CHARACTERS");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(languageName);
 			return this.executeValidators(validatorList);
