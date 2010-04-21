@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.ManyToManyValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -164,6 +165,21 @@ public class TrainingsData extends BaseData {
 			fieldValidator.setError("Please make sure you choose a field officer present for 'Field officer present'.");
 			ManyToManyValidator animatorsTrained = new ManyToManyValidator(this.animators_trained, false);
 			animatorsTrained.setError("Please make sure you add some animators for 'Animators trained'");
+			ArrayList predicateStartDate = new ArrayList();
+			predicateStartDate.add("training_start_date");
+			predicateStartDate.add(this.training_start_date);
+			ArrayList predicateEndDate = new ArrayList();
+			predicateEndDate.add("training_end_date");
+			predicateEndDate.add(this.training_end_date);
+			ArrayList predicateVillageId = new ArrayList();
+			predicateVillageId.add("village_id");
+			predicateVillageId.add(this.village.getId());
+			ArrayList startDateEndDateVillageIdIndex = new ArrayList();
+			startDateEndDateVillageIdIndex.add(predicateStartDate);
+			startDateEndDateVillageIdIndex.add(predicateStartDate);
+			startDateEndDateVillageIdIndex.add(predicateVillageId);
+			UniqueConstraintValidator startDateEndDateVillageId = new UniqueConstraintValidator(startDateEndDateVillageIdIndex, new TrainingsData());
+			startDateEndDateVillageId.setError("The start date, training end date, and village are already in the system.  Please make sure they are unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(trainingPurpose);
 			validatorList.add(trainingOutcome);
@@ -172,6 +188,7 @@ public class TrainingsData extends BaseData {
 			validatorList.add(animatorsTrained);
 			validatorList.add(villageValidator);
 			validatorList.add(fieldValidator);
+			validatorList.add(startDateEndDateVillageId);
 			return this.executeValidators(validatorList);
 		}
 
@@ -241,7 +258,7 @@ public class TrainingsData extends BaseData {
 	}
 
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return this.table_name;
 	}
 	
@@ -274,7 +291,7 @@ public class TrainingsData extends BaseData {
 		return eval(json);
 	}-*/;
 	
-public List serialize(JsArray<Type> trainingObjects) {
+	public List serialize(JsArray<Type> trainingObjects) {
 		List trainings = new ArrayList();
 		VillagesData village = new VillagesData();
 
@@ -302,8 +319,6 @@ public List serialize(JsArray<Type> trainingObjects) {
 		return trainings;
 	}
 			
-		
-	
 	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));

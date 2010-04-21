@@ -219,7 +219,7 @@ public class FieldOfficersData extends BaseData {
 	}
 	
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return FieldOfficersData.table_name;
 	}
 	

@@ -207,7 +207,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	// Override this
-	protected String getTableName() {
+	public String getTableName() {
 		return this.table_name;
 	}
 	
@@ -468,7 +468,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.update(updateApplicationStatus, app_status,username );
 	}
 	
-	protected ResultSet getResultSet() {
+	public ResultSet getResultSet() {
 		return this.lastResultSet;
 	}
 	

@@ -145,7 +145,7 @@ public class Data extends BaseData.Data {
 	}
 	
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return this.table_name;
 	}
 	

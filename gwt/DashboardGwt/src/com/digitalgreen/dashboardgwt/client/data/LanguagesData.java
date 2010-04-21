@@ -124,7 +124,7 @@ public class LanguagesData extends BaseData {
 	}
 	
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return this.table_name;
 	}
 	
