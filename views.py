@@ -312,7 +312,8 @@ def save_region_online(request):
 			form.save()
 			return HttpResponseRedirect('/dashboard/getregionsonline/')
 		else:
-			return HttpResponse("0")
+			print form.errors
+			return HttpResponse(form.errors.as_text(), status=201)
 	else:
 	   form = RegionForm()
 	   return HttpResponse(form)	
@@ -327,7 +328,7 @@ def get_regions_online(request, offset, limit):
 		  json_subcat = serializers.serialize("json", regions)
 		else:
 		  json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript")
+		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
 		
 	
 def save_region_offline(request):
