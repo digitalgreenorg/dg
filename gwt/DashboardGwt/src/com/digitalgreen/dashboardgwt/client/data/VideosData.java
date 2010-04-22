@@ -9,7 +9,9 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.ManyToManyValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -79,10 +81,14 @@ public class VideosData extends BaseData {
 	    private String video_suitable_for;
 	    private String remarks;
 	    private String actors;
-	    private String last_modified; 
+	    private String last_modified;
+	    private ArrayList related_agricultural_practices;
+	    private ArrayList farmers_shown;
 		
 		public Data() {
 			super();
+			this.related_agricultural_practices = new ArrayList();
+			this.farmers_shown = new ArrayList();
 			this.addManyToManyRelationship("practice", 
 					(new VideoRelatedAgriculturalPracticesData()).new Data(), 
 					"related_agricultural_practices");
@@ -108,7 +114,6 @@ public class VideosData extends BaseData {
 			this.title = title;
 			this.village = village;
 		}
-		
 
 		public Data(String id, String title ,String video_production_start_date, String video_production_end_date,  VillagesData.Data village) {
 			super();
@@ -252,33 +257,113 @@ public class VideosData extends BaseData {
 				this.remarks = (String)val;
 			} else if(key.equals("actors")) {
 				this.actors = (String)val;
+			} else if(key.equals("related_agricultural_practices")){
+				this.related_agricultural_practices.add(val);
+			} else if(key.equals("farmers_shown")){
+				this.farmers_shown.add(val);
 			} else {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);			
-			
 		}
 		
 		@Override
 		public boolean validate() {
-			StringValidator title = new StringValidator(this.title, false, false, 0, 200);
+			StringValidator title = new StringValidator(this.title, false, false, 1, 200);
+			title.setError("Please make sure that 'Title' is NOT EMPTY and not more than 200 characters.");
+			StringValidator videoType = new StringValidator(this.video_type, false, false, 1, 1);;
+			videoType.setError("Please make sure you choose a video type for 'Video type'.");
 			DateValidator videoProductionStartDate = new DateValidator(this.video_production_start_date, false, false);
+			videoProductionStartDate.setError("Please make sure 'Video production start date' is NOT EMPTY and id formatted as 'YYYY-MM-DD'.");
 			DateValidator videoProductionEndDate = new DateValidator(this.video_production_end_date, false, false);
-			StringValidator summary = new StringValidator(this.summary, true, true, 0, 500);
-			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, true, 0, 200);
+			videoProductionEndDate.setError("Please make sure 'Video production end date' is NOT EMPTY and id formatted as 'YYYY-MM-DD'.");
+			StringValidator language = new StringValidator(this.language.getId(), false, false, 1, 100);
+			language.setError("Please make sure you choose a language for 'Language'.");
+			StringValidator storybase = new StringValidator(this.storybase, false, false, 1, 1);
+			storybase.setError("Please make sure you choose a storybase type for 'Storybase'.");
+			StringValidator summary = new StringValidator(this.summary, true, false, 0, 1024);
+			summary.setError("Please make sure that 'Title' is not more than 1024 CHARACTERS");
+			StringValidator village = new StringValidator(this.facilitator.getId(), false, false, 1, 100);
+			village.setError("Please make sure you choose a village for 'Village'.");
+			StringValidator facilitator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			facilitator.setError("Please make sure you choose a facilitator for 'Facilitator'.");
+			StringValidator cameraOperator = new StringValidator(this.cameraoperator.getId(), false, false, 1, 100);
+			cameraOperator.setError("Please make sure you choose a camera operator for 'Camera Operator'.");
+			ManyToManyValidator relatedAgriculturalPractices = new ManyToManyValidator(this.related_agricultural_practices, false);
+			relatedAgriculturalPractices.setError("Please make sure you add some practices for 'Related agricultural practices'");
+			ManyToManyValidator farmersShown = new ManyToManyValidator(this.related_agricultural_practices, false);
+			farmersShown.setError("Please make sure you add some farmers for 'Farmers shown'");
+			StringValidator actors = new StringValidator(this.actors, false, false, 1, 1);
+			actors.setError("Please make sure you choose a actor for 'Actors'.");
+			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, false, 0, 200);
+			pictureQuality.setError("Please make sure 'Picture quality' is less than 200 CHARACTERS.");
 			StringValidator audioQuality = new StringValidator(this.audio_quality, true, true, 0, 200);
+			audioQuality.setError("Please make sure 'Audio quality' is less than 200 CHARACTERS.");
 			StringValidator editingQuality = new StringValidator(this.editing_quality, true, true, 0, 200);
+			editingQuality.setError("Please make sure 'Editing quality' is less than 200 CHARACTERS.");
 			DateValidator editStartDate = new DateValidator(this.edit_start_date, true, true);
+			editStartDate.setError("Please make sure 'Edit start date' is formatted as YYYY-MM-DD.");
 			DateValidator editFinishDate = new DateValidator(this.edit_finish_date, true, true);
+			editFinishDate.setError("Please make sure 'Edit finish date' is formatted as YYYY-MM-DD.");
 			StringValidator thematic_quality = new StringValidator(this.thematic_quality, true, true, 0, 200);
+			thematic_quality.setError("Please make sure 'Thematic quality' is less than 200 CHARACTERS.");
 			DateValidator approvalDate = new DateValidator(this.approval_date, true, true);
+			approvalDate.setError("Please make sure 'Approval date' is formatted as YYYY-MM-DD.");
+			StringValidator videoSuitableFor = new StringValidator(this.video_suitable_for, false, false, 1, 1);
+			videoSuitableFor.setError("Please make sure you choose a video suitable for 'Video suitable for'.");
 			StringValidator remarks = new StringValidator(this.remarks, true, true, 0, 500);
-			return title.validate() && videoProductionStartDate.validate()
-					&& videoProductionEndDate.validate() && summary.validate()
-					&& pictureQuality.validate() && audioQuality.validate()
-					&& editingQuality.validate() && editStartDate.validate()
-					&& editFinishDate.validate() && thematic_quality.validate()
-					&& approvalDate.validate() && remarks.validate();
+			remarks.setError("Please make sure 'Remarks' is less than 500 CHARACTERS.");
+			
+			ArrayList uniqueTitle = new ArrayList();
+			uniqueTitle.add("TITLE");
+			uniqueTitle.add(this.title);
+			
+			ArrayList uniqueVideoProductionStartDate = new ArrayList();
+			uniqueVideoProductionStartDate.add("VIDEO_PRODUCTION_START_DATE");
+			uniqueVideoProductionStartDate.add(this.video_production_start_date);
+			
+			ArrayList uniqueVideoProductionEndDate = new ArrayList();
+			uniqueVideoProductionEndDate.add("VIDEO_PRODUCTION_END_DATE");
+			uniqueVideoProductionEndDate.add(this.video_production_end_date);
+			
+			ArrayList uniqueVillage = new ArrayList();
+			uniqueVillage.add("village_id");
+			uniqueVillage.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(uniqueTitle);
+			uniqueTogether.add(uniqueVideoProductionStartDate);
+			uniqueTogether.add(uniqueVideoProductionEndDate);
+			uniqueTogether.add(uniqueVillage);
+			
+			UniqueConstraintValidator uniqueTitleStartEndDateVillageID = new UniqueConstraintValidator(uniqueTogether, new VideosData());
+			uniqueTitleStartEndDateVillageID.setError("The Title, video production start date, video production end date, and village are already in the system.  Please make sure they are unique.");
+
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(title);
+			validatorList.add(videoType);
+			validatorList.add(videoProductionStartDate);
+			validatorList.add(videoProductionEndDate);
+			validatorList.add(language);
+			validatorList.add(storybase);
+			validatorList.add(summary);
+			validatorList.add(village);
+			validatorList.add(facilitator);
+			validatorList.add(cameraOperator);
+			validatorList.add(relatedAgriculturalPractices);
+			validatorList.add(farmersShown);
+			validatorList.add(actors);
+			validatorList.add(pictureQuality);
+			validatorList.add(audioQuality);
+			validatorList.add(editingQuality);
+			validatorList.add(editStartDate);
+			validatorList.add(editFinishDate);
+			validatorList.add(thematic_quality);
+			validatorList.add(approvalDate);
+			validatorList.add(videoSuitableFor);
+			validatorList.add(remarks);
+			validatorList.add(uniqueTitleStartEndDateVillageID);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override
@@ -392,7 +477,6 @@ public class VideosData extends BaseData {
 	public VideosData(OnlineOfflineCallbacks callbacks, Form form) {
 		super(callbacks, form);
 	}
-	
 
 	@Override
 	public Data getNewData() {
@@ -492,7 +576,7 @@ public class VideosData extends BaseData {
 									videoObjects.get(i).getRemarks(),
 									videoObjects.get(i).getActors(),
 									videoObjects.get(i).getLastModified());
-			
+
 			videos.add(video);
 		}
 		return videos;
@@ -517,10 +601,8 @@ public class VideosData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
-			
 		}
 		BaseData.dbClose();
 		return videos;
@@ -541,15 +623,12 @@ public class VideosData extends BaseData {
 	    	      }				
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
-				// TODO Auto-generated catch block
 				BaseData.dbClose();
 			}
-			
 		}
 		BaseData.dbClose();
 		return videos;
 	}
-	
 	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
@@ -587,7 +666,6 @@ public class VideosData extends BaseData {
 		}
 		html = html + "</select>";
 		
-		
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
@@ -610,7 +688,6 @@ public class VideosData extends BaseData {
 		}
 		html = html + "</select>";
 		
-		
 		List cameraoperators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data cameraoperator;
 		html = html + "<select name=\"cameraoperator\" id=\"id_cameraoperator\">" + 
@@ -620,7 +697,6 @@ public class VideosData extends BaseData {
 			html = html + "<option value = \"" + cameraoperator.getId() +"\">" + cameraoperator.getAnimatorName() + "</option>";
 		}
 		html = html + "</select>";
-		
 		
 		PracticesData practicesData = new PracticesData();
 		List practices = practicesData.getAllPracticesOffline();
@@ -676,6 +752,4 @@ public class VideosData extends BaseData {
 		}
 		return false;
 	}
-	
-
 }

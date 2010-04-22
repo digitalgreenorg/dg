@@ -7,6 +7,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -68,9 +69,17 @@ public class LanguagesData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator languageName = new StringValidator(this.language_name, false, false, 1, 100);
-			languageName.setError("Please make sure that 'Language Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			languageName.setError("Please make sure that 'Language Name' is NOT EMPTY and not more than 100 characters.");
+			ArrayList language_name = new ArrayList();
+			language_name.add("language_name");
+			language_name.add(this.language_name);
+			ArrayList uniqueName = new ArrayList();
+			uniqueName.add(language_name);
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new LanguagesData());
+			uniqueNameValidator.setError("The Language is already in the system.  Please make sure it is unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(languageName);
+			validatorList.add(uniqueNameValidator);
 			return this.executeValidators(validatorList);
 		}
 		

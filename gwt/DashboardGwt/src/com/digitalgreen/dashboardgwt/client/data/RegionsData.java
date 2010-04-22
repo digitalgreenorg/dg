@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -79,12 +80,20 @@ public class RegionsData extends BaseData {
 		@Override
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.region_name, false, false, 1, 100);
-			nameValidator.setError("Please make sure that 'Region Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			nameValidator.setError("Please make sure that 'Region Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator dateValidator = new DateValidator(this.start_date, true, false);
 			dateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			ArrayList region_name = new ArrayList();
+			region_name.add("region_name");
+			region_name.add(this.region_name);
+			ArrayList uniqueRegionName = new ArrayList();
+			uniqueRegionName.add(region_name);
+			UniqueConstraintValidator regionName = new UniqueConstraintValidator(uniqueRegionName, new RegionsData());
+			regionName.setError("The 'Region name' is already in the system.  Please make sure it is unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);
 			validatorList.add(dateValidator);
+			validatorList.add(regionName);
 			return this.executeValidators(validatorList);
 		}
 		

@@ -169,7 +169,7 @@ public class DevelopmentManagersData extends BaseData {
 		@Override
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.name, false, false, 1, 100);
-			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 100 CHARACTERS.");
+			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 100 characters.");
 			StringValidator ageValidator = new StringValidator(this.age, true, false, 0, 3);
 			ageValidator.setError("Please make sure that 'Age' is not more than 3 CHARACTERS.");
 			StringValidator genderValidator = new StringValidator(this.gender, false, false, 1, 3);

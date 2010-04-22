@@ -10,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.data.PersonsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -222,6 +223,31 @@ public class PersonsData extends BaseData {
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
 			
+			ArrayList person_name = new ArrayList();
+			person_name.add("person_name");
+			person_name.add(this.person_name);
+			
+			ArrayList father_name = new ArrayList();
+			father_name.add("father_name");
+			father_name.add(this.father_name);
+			
+			ArrayList group_id = new ArrayList();
+			group_id.add("group_id");
+			group_id.add(this.group.getId());
+			
+			ArrayList village_id = new ArrayList();
+			village_id.add("village_id");
+			village_id.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(person_name);
+			uniqueTogether.add(father_name);
+			uniqueTogether.add(group_id);
+			uniqueTogether.add(village_id);
+			
+			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueTogether, new PersonsData());
+			uniquePersonFatherGroupVillage.setError("The Person, father, group, and village are already in the system.  Please make sure they are unique.");
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personName);
 			validatorList.add(fatherName);
@@ -231,6 +257,7 @@ public class PersonsData extends BaseData {
 			validatorList.add(address);
 			validatorList.add(landHoldings);
 			validatorList.add(villageValidator);
+			validatorList.add(uniquePersonFatherGroupVillage);
 			return this.executeValidators(validatorList);
 		}
 

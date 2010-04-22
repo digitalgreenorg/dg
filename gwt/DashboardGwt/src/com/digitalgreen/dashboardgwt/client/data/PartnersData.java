@@ -90,7 +90,7 @@ public class PartnersData extends BaseData {
 		}
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.partner_name, false, false, 1, 100);
-			nameValidator.setError("Please make sure that 'Partner Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			nameValidator.setError("Please make sure that 'Partner Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator dateValidator = new DateValidator(this.date_of_association, true, false);
 			dateValidator.setError("Please make sure 'Date of Association' is formatted as 'YYYY-MM-DD'.");
 			StringValidator addressValidator = new StringValidator(this.phone_no, true, false, 0, 100);

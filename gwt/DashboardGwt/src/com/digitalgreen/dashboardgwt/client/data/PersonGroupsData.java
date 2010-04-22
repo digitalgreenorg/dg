@@ -11,6 +11,7 @@ import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.TimeValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -141,10 +142,22 @@ public class PersonGroupsData extends BaseData {
 			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			ArrayList group_name = new ArrayList();
+			group_name.add("group_name");
+			group_name.add(this.group_name);
+			ArrayList villageId = new ArrayList();
+			villageId.add("village_id");
+			villageId.add(this.village.getId());
+			ArrayList groupVillageId = new ArrayList();
+			groupVillageId.add(group_name);
+			groupVillageId.add(villageId);
+			UniqueConstraintValidator uniqueGroupVillageId = new UniqueConstraintValidator(groupVillageId, new PersonGroupsData());
+			uniqueGroupVillageId.setError("The Person group and village are already in the system.  Please make sure they are unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(groupName);
 			validatorList.add(timings);
 			validatorList.add(villageValidator);
+			validatorList.add(uniqueGroupVillageId);
 			return this.executeValidators(validatorList);
 		}
 

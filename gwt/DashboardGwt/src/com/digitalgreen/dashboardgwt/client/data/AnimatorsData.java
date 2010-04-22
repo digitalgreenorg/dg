@@ -8,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -221,6 +222,29 @@ public class AnimatorsData extends BaseData {
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
 			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
 			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			
+			ArrayList unqName = new ArrayList();
+			unqName.add("name");
+			unqName.add(this.name);
+			ArrayList unqGender = new ArrayList();
+			unqGender.add("gender");
+			unqGender.add(this.gender);
+			ArrayList unqPartner = new ArrayList();
+			unqPartner.add("partner_id");
+			unqPartner.add(this.partner.getId());
+			ArrayList unqVillage = new ArrayList();
+			unqVillage.add("village_id");
+			unqVillage.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(unqName);
+			uniqueTogether.add(unqGender);
+			uniqueTogether.add(unqPartner);
+			uniqueTogether.add(unqVillage);
+			
+			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
+			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(name);
 			validatorList.add(age);
@@ -229,6 +253,7 @@ public class AnimatorsData extends BaseData {
 			validatorList.add(address);
 			validatorList.add(villageValidator);
 			validatorList.add(partnerValidator);
+			validatorList.add(uniqueNameGenderPartnerVillage);
 			return this.executeValidators(validatorList);
 		}
 
@@ -246,6 +271,26 @@ public class AnimatorsData extends BaseData {
 			address.setError("Please make sure that 'address' is less than 500 characters");
 			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
 			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			
+			ArrayList unqName = new ArrayList();
+			unqName.add("name");
+			unqName.add(this.name);
+			ArrayList unqGender = new ArrayList();
+			unqGender.add("gender");
+			unqGender.add(this.gender);
+			ArrayList unqPartner = new ArrayList();
+			unqPartner.add("partner_id");
+			unqPartner.add(this.partner.getId());
+			ArrayList unqVillage = new ArrayList();
+
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(unqName);
+			uniqueTogether.add(unqGender);
+			uniqueTogether.add(unqPartner);
+			
+			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
+			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(name);
 			validatorList.add(age);
@@ -253,6 +298,7 @@ public class AnimatorsData extends BaseData {
 			validatorList.add(phoneNo);
 			validatorList.add(address);
 			validatorList.add(partnerValidator);
+			validatorList.add(uniqueNameGenderPartnerVillage);
 			return this.executeValidators(validatorList);
 		}
 
@@ -287,20 +333,20 @@ public class AnimatorsData extends BaseData {
 	}
 
 	public static String tableID = "22";
-	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` "
-			+ "(id INTEGER PRIMARY KEY  NOT NULL ,"
-			+ "NAME VARCHAR(100)  NOT NULL ,"
-			+ "AGE INT  NULL DEFAULT NULL,"
-			+ "GENDER VARCHAR(1)  NOT NULL ,"
-			+ "CSP_FLAG SMALLINT  NULL DEFAULT NULL,"
-			+ "CAMERA_OPERATOR_FLAG SMALLINT  NULL DEFAULT NULL,"
-			+ "FACILITATOR_FLAG SMALLINT  NULL DEFAULT NULL,"
-			+ "PHONE_NO VARCHAR(100) NULL DEFAULT NULL,"
-			+ "ADDRESS VARCHAR(500)  NULL DEFAULT NULL,"
-			+ "partner_id INT  NOT NULL DEFAULT 0,"
-			+ "village_id INT  NOT NULL DEFAULT 0,"
-			+ "FOREIGN KEY(partner_id) REFERENCES partners(id), "
-			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
+	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
+											"(id INTEGER PRIMARY KEY  NOT NULL ," +
+											"NAME VARCHAR(100)  NOT NULL ," +
+											"AGE INT  NULL DEFAULT NULL," +
+											"GENDER VARCHAR(1)  NOT NULL ," +
+											"CSP_FLAG SMALLINT  NULL DEFAULT NULL," +
+											"CAMERA_OPERATOR_FLAG SMALLINT  NULL DEFAULT NULL," +
+											"FACILITATOR_FLAG SMALLINT  NULL DEFAULT NULL," +
+											"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
+											"ADDRESS VARCHAR(500)  NULL DEFAULT NULL," +
+											"partner_id INT  NOT NULL DEFAULT 0," +
+											"village_id INT  NOT NULL DEFAULT 0," +
+											"FOREIGN KEY(partner_id) REFERENCES partners(id), " +
+											"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "

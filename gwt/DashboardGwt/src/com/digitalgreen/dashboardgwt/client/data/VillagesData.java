@@ -10,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.data.VideosData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -118,7 +119,7 @@ public class VillagesData extends BaseData {
 		@Override
 		public boolean validate(){
 			StringValidator villageName = new StringValidator(this.village_name,false,false,0,100);
-			villageName.setError("Village Name is a required field and is less than 100 characters");
+			villageName.setError("Village Name is a required field and is less than 100 characters.");
 			StringValidator blockValidator = new StringValidator(this.block.getId(), false, false, 1, 100);
 			blockValidator.setError("Please make sure you choose a block for 'Block'.");
 			IntegerValidator noOfHouseHolds = new IntegerValidator(this.no_of_households,true,true);
@@ -126,9 +127,23 @@ public class VillagesData extends BaseData {
 			IntegerValidator population = new IntegerValidator(this.population,true,true);
 			population.setError("Please enter integer for population");
 			StringValidator roadConnectivity = new StringValidator(this.road_connectivity,true,true,0,100);
-			roadConnectivity.setError("Please make sure that road connectivity is less than 100 characters");
+			roadConnectivity.setError("Please make sure that road connectivity is less than 100 characters.");
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
 			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			ArrayList village_name = new ArrayList();
+			village_name.add("village_name");
+			village_name.add(this.village_name);
+			ArrayList blockID = new ArrayList();
+			blockID.add("block_id");
+			blockID.add(this.block.getId());
+			ArrayList uniqueVillage = new ArrayList();
+			uniqueVillage.add(village_name);
+			ArrayList villageBllockID = new ArrayList();
+			villageBllockID.add(village_name);
+			villageBllockID.add(blockID);
+			UniqueConstraintValidator uniqueVillageBlockID = new UniqueConstraintValidator(villageBllockID, new VillagesData());
+			uniqueVillageBlockID.setError("The Village and Block pair is already in the system.  Please make sure it is unique.");
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(villageName);
 			validatorList.add(blockValidator);
@@ -136,6 +151,7 @@ public class VillagesData extends BaseData {
 			validatorList.add(population);
 			validatorList.add(roadConnectivity);
 			validatorList.add(startDate);
+			validatorList.add(uniqueVillageBlockID);
 			return this.executeValidators(validatorList);
 		}
 		

@@ -7,6 +7,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -101,15 +102,23 @@ public class BlocksData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator blockName = new StringValidator(this.block_name, false, false, 1, 100);
-			blockName.setError("Please make sure that 'Block Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			blockName.setError("Please make sure that 'Block Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
 			startDate.setError("Please make sure 'Start date' is formatted as 'YYYY-MM-DD'.");
 			StringValidator districtValidator = new StringValidator(this.district.getId(), false, false, 1, 100);
 			districtValidator.setError("Please make sure you choose a district for 'District'.");
+			ArrayList block_name = new ArrayList();
+			block_name.add("block_name");
+			block_name.add(this.block_name);
+			ArrayList uniqueName = new ArrayList();
+			uniqueName.add(block_name);
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new BlocksData());
+			uniqueNameValidator.setError("The Block is already in the system.  Please make sure it is unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(blockName);
 			validatorList.add(startDate);
 			validatorList.add(districtValidator);
+			validatorList.add(uniqueNameValidator);
 			return this.executeValidators(validatorList);
 		}
 

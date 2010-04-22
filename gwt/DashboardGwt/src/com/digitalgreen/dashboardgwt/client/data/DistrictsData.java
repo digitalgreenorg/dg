@@ -7,6 +7,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -123,7 +124,7 @@ public class DistrictsData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator districtNameValidator = new StringValidator(this.district_name, false, false, 1, 100);
-			districtNameValidator.setError("Please make sure that 'District Name' is NOT EMPTY and not more than 100 CHARACTERS");
+			districtNameValidator.setError("Please make sure that 'District Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator startDateValidator = new DateValidator(this.start_date, true, true);
 			startDateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
 			StringValidator stateValidator = new  StringValidator(this.state.getId(), false, false, 1, 100);
@@ -134,6 +135,13 @@ public class DistrictsData extends BaseData {
 			fieldOfficerStartDateValidator.setError("Please make sure 'Fieldofficer Start date' is formatted as YYYY-MM-DD.");
 			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
 			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			ArrayList district_name = new ArrayList();
+			district_name.add("district_name");
+			district_name.add(this.district_name);
+			ArrayList uniqueName = new ArrayList();
+			uniqueName.add(district_name);
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new DistrictsData());
+			uniqueNameValidator.setError("The District is already in the system.  Please make sure it is unique.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(districtNameValidator);
 			validatorList.add(startDateValidator);
@@ -141,6 +149,7 @@ public class DistrictsData extends BaseData {
 			validatorList.add(fieldValidator);
 			validatorList.add(fieldOfficerStartDateValidator);
 			validatorList.add(partnerValidator);
+			validatorList.add(uniqueNameValidator);
 			return this.executeValidators(validatorList);
 		}
 

@@ -116,7 +116,7 @@ public class FieldOfficersData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator name = new StringValidator(this.name, false, false,	1, 100);
-			name.setError("Please make sure that 'Name' is NOT EMPTY and not more than 100 CHARACTERS.");
+			name.setError("Please make sure that 'Name' is NOT EMPTY and not more than 100 characters.");
 			StringValidator age = new StringValidator(this.age, true, false, 0, 3);
 			age.setError("Please make sure that 'Age' is not more than 3 CHARACTERS.");
 			StringValidator gender = new StringValidator(this.gender, false, false, 1, 1);
