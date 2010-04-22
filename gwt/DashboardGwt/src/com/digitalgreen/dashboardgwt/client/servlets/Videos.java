@@ -32,7 +32,7 @@ public class Videos extends BaseServlet {
 				Form form = this.requestContext.getForm();
 				VideosData videoData = new VideosData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
+						if(this.getStatusCode() == 200) {
 							VideosData videodata = new VideosData();
 							List videos = videodata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
@@ -40,7 +40,10 @@ public class Videos extends BaseServlet {
 							requestContext.getArgs().put("listing", videos);
 							getServlet().redirectTo(new Videos(requestContext ));						
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(results);
+							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));			
 						}
 					}
 					
@@ -64,9 +67,11 @@ public class Videos extends BaseServlet {
 							requestContext.getArgs().put("listing", videos);
 							getServlet().redirectTo(new Videos(requestContext ));
 						} else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Invalid data, please try again");
-							getServlet().redirectTo(new Videos(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));
 						}
 						
 					}
@@ -145,10 +150,10 @@ public class Videos extends BaseServlet {
 						
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new VideosTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setMessage("Local Database error");

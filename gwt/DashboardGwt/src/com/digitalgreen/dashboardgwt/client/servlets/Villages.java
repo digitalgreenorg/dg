@@ -34,7 +34,7 @@ public class Villages extends BaseServlet {
 				Form form = this.requestContext.getForm();
 				VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
+						if(this.getStatusCode() == 200) {
 							VillagesData villageData = new VillagesData();
 							List villages = villageData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
@@ -42,7 +42,10 @@ public class Villages extends BaseServlet {
 							requestContext.getArgs().put("listing", villages);
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(results);
+							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));			
 						}
 					}
 					
@@ -68,7 +71,8 @@ public class Villages extends BaseServlet {
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
 							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));				
 						}
 						

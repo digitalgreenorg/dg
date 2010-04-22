@@ -34,7 +34,7 @@ public class Screenings extends BaseServlet {
 					
 					@Override
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
+						if(this.getStatusCode() == 200) {
 							ScreeningsData screeningdata = new ScreeningsData();
 							List screenings = screeningdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
@@ -43,7 +43,10 @@ public class Screenings extends BaseServlet {
 							getServlet().redirectTo(new Screenings(requestContext ));
 						}
 						else {
-							Window.alert("Error in saving the data.");
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(results);
+							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));
 						}
 					}
 					
@@ -70,9 +73,11 @@ public class Screenings extends BaseServlet {
 							getServlet().redirectTo(new Screenings(requestContext ));
 						}
 						else {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Invalid data, please try again");
-							getServlet().redirectTo(new Screenings(requestContext));				
+							// It's no longer a POST because there was an error, so start again.
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));
 						}
 					}
 				}, form);
@@ -160,10 +165,10 @@ public class Screenings extends BaseServlet {
 						@Override
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new ScreeningsTemplate(requestContext));
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
 							}
 							else {
 								RequestContext requestContext = new RequestContext();

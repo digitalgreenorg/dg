@@ -40,7 +40,7 @@ public class States extends BaseServlet{
 				Form form = this.requestContext.getForm();
 				StatesData stateData = new StatesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
+						if(this.getStatusCode() == 200) {
 							StatesData statedata = new StatesData();
 							List states = statedata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
@@ -48,7 +48,10 @@ public class States extends BaseServlet{
 							requestContext.getArgs().put("listing", states);
 							getServlet().redirectTo(new States(requestContext ));						
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(results);
+							getServlet().redirectTo(new States(getServlet().getRequestContext()));			
 						}
 					}
 					
@@ -74,7 +77,8 @@ public class States extends BaseServlet{
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
 							getServlet().redirectTo(new States(getServlet().getRequestContext()));				
 						}
 						
