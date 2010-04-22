@@ -41,11 +41,6 @@ public class Regions extends BaseServlet {
 							requestContext.getArgs().put("listing", regions);
 							getServlet().redirectTo(new Regions(requestContext ));						
 						} else {
-							Window.alert(results);
-							//RequestContext requestContext = new RequestContext();
-							//requestContext.setMessage(results);
-							//getServlet().redirectTo(new Regions(requestContext ));
-
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 							getServlet().getRequestContext().getArgs().put("action", "add");
 							getServlet().getRequestContext().setErrorMessage(results);

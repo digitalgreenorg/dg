@@ -263,7 +263,6 @@ public class Form {
 
 	// Return a tree data representation of a parsed query string.
 	public void parseQueryString(String queryString) {
-		Window.alert("parseQueryString");
 		if(!this.dataFormat.isEmpty()) {
 			return;
 		}

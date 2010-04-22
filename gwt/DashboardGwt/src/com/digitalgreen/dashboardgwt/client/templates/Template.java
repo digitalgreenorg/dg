@@ -17,7 +17,6 @@ public class Template implements TemplateInterface {
 	}
 	
 	private HTMLPanel getFormattedErrors() {
-		Window.alert("getFormattedErrors");
 		String errorStartHtml = "<p class='errornote'>";
 		String errorEndHtml = "</p>";
 		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + 
@@ -27,7 +26,6 @@ public class Template implements TemplateInterface {
 	}
 	
 	private HTMLPanel getFormattedMessages() {
-		Window.alert("getFormattedMessages");
 		String messageStartHtml = "<p class='messageStringClass'>";
 		String messageEndHtml = "</p>";
 		HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
