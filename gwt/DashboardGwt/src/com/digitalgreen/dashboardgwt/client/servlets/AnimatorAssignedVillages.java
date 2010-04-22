@@ -35,7 +35,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
 							List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("AnimatorAssignedVillage successfully saved");
+							requestContext.setMessage("AnimatorAssignedVillage successfully saved");
 							requestContext.getArgs().put("listing", animatorAssignedVillages);
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
@@ -46,11 +46,11 @@ public class AnimatorAssignedVillages extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
 					}
 					
@@ -59,7 +59,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
 							List animatorAssignedVillages = animatorAssignedVillageData.getAnimatorsAssignedVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("AnimatorAssignedVillage successfully saved");
+							requestContext.setMessage("AnimatorAssignedVillage successfully saved");
 							requestContext.getArgs().put("listing", animatorAssignedVillages);
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
@@ -94,11 +94,11 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
 						}
 						
@@ -111,7 +111,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));				
 							}	
 						}
@@ -134,11 +134,11 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
 						}
 						
@@ -150,7 +150,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));				
 							}	
 						}

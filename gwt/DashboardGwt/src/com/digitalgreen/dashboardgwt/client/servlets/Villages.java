@@ -38,7 +38,7 @@ public class Villages extends BaseServlet {
 							VillagesData villageData = new VillagesData();
 							List villages = villageData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Village successfully saved");
+							requestContext.setMessage("Village successfully saved");
 							requestContext.getArgs().put("listing", villages);
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
@@ -49,11 +49,11 @@ public class Villages extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Villages(requestContext));	
 					}
 					
@@ -62,7 +62,7 @@ public class Villages extends BaseServlet {
 							VillagesData villageData = new VillagesData();
 							List villages = villageData.getVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Village successfully saved");
+							requestContext.setMessage("Village successfully saved");
 							requestContext.getArgs().put("listing", villages);
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
@@ -97,11 +97,11 @@ public class Villages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Villages(requestContext));	
 						}
 						
@@ -114,7 +114,7 @@ public class Villages extends BaseServlet {
 								getServlet().redirectTo(new Villages(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Villages(requestContext));				
 							}	
 						}
@@ -137,11 +137,11 @@ public class Villages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Villages(requestContext));	
 						}
 						
@@ -153,7 +153,7 @@ public class Villages extends BaseServlet {
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Villages(requestContext));				
 							}	
 						}

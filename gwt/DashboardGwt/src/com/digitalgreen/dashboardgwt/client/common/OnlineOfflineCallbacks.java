@@ -5,6 +5,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 
 public class OnlineOfflineCallbacks {
 	private BaseServlet servlet;
+	private int statusCode;
 	public OnlineOfflineCallbacks(BaseServlet servlet) {
 		this.servlet = servlet;
 	}
@@ -16,4 +17,12 @@ public class OnlineOfflineCallbacks {
 	public void onlineSuccessCallback(String results) {}
 	public void onlineErrorCallback(int errorCode) {}
 	public void offlineSuccessCallback(Object results) {}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+	
+	public int getStatusCode() {
+		return this.statusCode;
+	}
 }

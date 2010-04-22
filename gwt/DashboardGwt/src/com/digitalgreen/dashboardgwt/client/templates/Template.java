@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -16,25 +17,27 @@ public class Template implements TemplateInterface {
 	}
 	
 	private HTMLPanel getFormattedErrors() {
+		Window.alert("getFormattedErrors");
 		String errorStartHtml = "<p class='errornote'>";
 		String errorEndHtml = "</p>";
 		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + 
-				this.getRequestContext().getFormErrorString() + 
+				this.getRequestContext().getErrorMessage() + 
 				errorEndHtml);
 		return errorPanel;
 	}
 	
 	private HTMLPanel getFormattedMessages() {
+		Window.alert("getFormattedMessages");
 		String messageStartHtml = "<p class='messageStringClass'>";
 		String messageEndHtml = "</p>";
 		HTMLPanel messagePanel = new HTMLPanel(messageStartHtml + 
-				this.getRequestContext().getMessageString() + 
+				this.getRequestContext().getMessage() + 
 				messageEndHtml);
 		return messagePanel;
 	}
 	
 	public void fill() {
-		if(!this.getRequestContext().hasFormErrors()) {
+		if( this.getRequestContext().hasErrorMessages()) {
 			RootPanel.get("info-space").insert(this.getFormattedErrors(), 0);	
 		} else if(this.getRequestContext().hasMessages()) {
 			RootPanel.get("info-space").insert(this.getFormattedMessages(), 0);

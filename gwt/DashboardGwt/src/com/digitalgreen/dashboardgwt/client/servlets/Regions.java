@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.templates.RegionsTemplate;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class Regions extends BaseServlet {
 	public Regions() {
@@ -31,26 +33,34 @@ public class Regions extends BaseServlet {
 				Form form = this.requestContext.getForm();
 				RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
+						if(this.getStatusCode() == 200) {
 							RegionsData regiondata = new RegionsData();
 							List regions = regiondata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Region successfully saved");
+							requestContext.setMessage("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
 							getServlet().redirectTo(new Regions(requestContext ));						
 						} else {
-							/*Error in saving the data*/			
+							Window.alert(results);
+							//RequestContext requestContext = new RequestContext();
+							//requestContext.setMessage(results);
+							//getServlet().redirectTo(new Regions(requestContext ));
+
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(results);
+							getServlet().redirectTo(new Regions(getServlet().getRequestContext()));
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Regions(requestContext));	
 					}
 					
@@ -59,13 +69,14 @@ public class Regions extends BaseServlet {
 							RegionsData regiondata = new RegionsData();
 							List regions = regiondata.getRegionsListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Region successfully saved");
+							requestContext.setMessage("Region successfully saved");
 							requestContext.getArgs().put("listing", regions);
 							getServlet().redirectTo(new Regions(requestContext ));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
+							getServlet().getRequestContext().getArgs().put("action", "add");
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
 							getServlet().redirectTo(new Regions(getServlet().getRequestContext()));
 						}
 						
@@ -95,11 +106,11 @@ public class Regions extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Regions(requestContext));	
 						}
 						
@@ -112,7 +123,7 @@ public class Regions extends BaseServlet {
 								getServlet().redirectTo(new Regions(requestContext ));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Regions(requestContext));				
 							}	
 						}

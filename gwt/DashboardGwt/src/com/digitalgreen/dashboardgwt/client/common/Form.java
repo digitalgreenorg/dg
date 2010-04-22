@@ -49,7 +49,7 @@ public class Form {
 	}
 	
 	public boolean isValid() {
-		return this.baseDataErrorStack != null;
+		return this.baseDataErrorStack != null && this.baseDataErrorStack.isEmpty();
 	}
 	
 	public boolean validate() {
@@ -263,6 +263,7 @@ public class Form {
 
 	// Return a tree data representation of a parsed query string.
 	public void parseQueryString(String queryString) {
+		Window.alert("parseQueryString");
 		if(!this.dataFormat.isEmpty()) {
 			return;
 		}

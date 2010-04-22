@@ -39,7 +39,7 @@ public class PersonGroups extends BaseServlet{
 							PersonGroupsData personGroupData = new PersonGroupsData();
 							List personGroups = personGroupData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("PersonGroup successfully saved");
+							requestContext.setMessage("PersonGroup successfully saved");
 							requestContext.getArgs().put("listing", personGroups);
 							getServlet().redirectTo(new PersonGroups(requestContext));
 						} else {
@@ -50,11 +50,11 @@ public class PersonGroups extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new PersonGroups(requestContext));	
 					}
 					
@@ -63,7 +63,7 @@ public class PersonGroups extends BaseServlet{
 							PersonGroupsData personGroupData = new PersonGroupsData();
 							List personGroups = personGroupData.getPersonGroupsListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("PersonGroup successfully saved");
+							requestContext.setMessage("PersonGroup successfully saved");
 							requestContext.getArgs().put("listing", personGroups);
 							getServlet().redirectTo(new PersonGroups(requestContext));
 						} else {
@@ -99,11 +99,11 @@ public class PersonGroups extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new PersonGroups(requestContext));	
 						}
 						
@@ -116,7 +116,7 @@ public class PersonGroups extends BaseServlet{
 								getServlet().redirectTo(new PersonGroups(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new PersonGroups(requestContext));				
 							}	
 						}
@@ -139,11 +139,11 @@ public class PersonGroups extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new PersonGroups(requestContext));	
 						}
 						
@@ -155,7 +155,7 @@ public class PersonGroups extends BaseServlet{
 								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new PersonGroups(requestContext));				
 							}	
 						}

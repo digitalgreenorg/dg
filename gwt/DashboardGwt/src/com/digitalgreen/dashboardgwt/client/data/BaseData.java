@@ -259,7 +259,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 			Request request = builder.sendRequest(postData, new RequestCallback() {
 			public void onResponseReceived(Request request, Response response) {
-				if(response.getStatusCode() == 200) {
+				if(response.getStatusCode() == 200 || response.getStatusCode() == 201) {
+					dataOnlineCallbacks.setStatusCode(response.getStatusCode());
 					dataOnlineCallbacks.onlineSuccessCallback(response.getText());
 				}
 			}

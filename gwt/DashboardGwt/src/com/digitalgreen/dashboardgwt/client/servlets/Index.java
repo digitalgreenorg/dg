@@ -48,11 +48,11 @@ public class Index extends BaseServlet {
 								user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
 								ApplicationConstants.toggleConnection(false);
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("You are ready to go offline!!. ");
+								requestContext.setMessage("You are ready to go offline!!. ");
 								getServlet().redirectTo(new Index(requestContext));								
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("You do not have a valid account.Please contact support. ");
+								requestContext.setMessage("You do not have a valid account.Please contact support. ");
 								getServlet().redirectTo(new Index(requestContext));				
 							}
 						}
@@ -61,11 +61,11 @@ public class Index extends BaseServlet {
 							Window.alert("GOT AN ERROR connecting to server");
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
@@ -79,7 +79,7 @@ public class Index extends BaseServlet {
 						user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
 						ApplicationConstants.toggleConnection(false);
 						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("You are ready to go offline!!. ");
+						requestContext.setMessage("You are ready to go offline!!. ");
 						this.redirectTo(new Index(requestContext));
 					}
 					
@@ -89,7 +89,7 @@ public class Index extends BaseServlet {
 					user.updateAppStatus("1",ApplicationConstants.getUsernameCookie());
 					ApplicationConstants.toggleConnection(true);
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("You are ready to go Online. While you are online you will be able to sync your changes!");
+					requestContext.setMessage("You are ready to go Online. While you are online you will be able to sync your changes!");
 					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg == "sync"){

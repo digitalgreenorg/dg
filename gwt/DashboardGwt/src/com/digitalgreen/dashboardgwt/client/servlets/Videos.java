@@ -36,7 +36,7 @@ public class Videos extends BaseServlet {
 							VideosData videodata = new VideosData();
 							List videos = videodata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Video successfully saved");
+							requestContext.setMessage("Video successfully saved");
 							requestContext.getArgs().put("listing", videos);
 							getServlet().redirectTo(new Videos(requestContext ));						
 						} else {
@@ -47,11 +47,11 @@ public class Videos extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Videos(requestContext));	
 					}
 					
@@ -60,12 +60,12 @@ public class Videos extends BaseServlet {
 							VideosData videodata = new VideosData();
 							List videos = videodata.getVideosListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Video successfully saved");
+							requestContext.setMessage("Video successfully saved");
 							requestContext.getArgs().put("listing", videos);
 							getServlet().redirectTo(new Videos(requestContext ));
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
+							requestContext.setMessage("Invalid data, please try again");
 							getServlet().redirectTo(new Videos(requestContext));				
 						}
 						
@@ -95,11 +95,11 @@ public class Videos extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Videos(requestContext));	
 						}
 						
@@ -112,7 +112,7 @@ public class Videos extends BaseServlet {
 								getServlet().fillTemplate(new VideosTemplate(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Videos(requestContext));				
 							}	
 						}
@@ -135,11 +135,11 @@ public class Videos extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Videos(requestContext));	
 						}
 						
@@ -151,7 +151,7 @@ public class Videos extends BaseServlet {
 								getServlet().fillTemplate(new VideosTemplate(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Videos(requestContext));				
 							}	
 						}

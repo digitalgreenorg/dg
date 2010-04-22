@@ -13,7 +13,8 @@ public class RequestContext {
 	private String methodTypeCtx = null;
 	private String formAction = null;
 	private HashMap args = null;
-	private String messageString = null;
+	private String message = null;
+	private String errorMessage = null;
 	private Form form = null;
 	
 	public RequestContext() {
@@ -37,15 +38,23 @@ public class RequestContext {
 	}
 
 	public boolean hasMessages() {
-		return this.messageString != null;
+		return this.message != null;
 	}
 	
-	public void setMessageString(String messageString) {
-		this.messageString = messageString;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
-	public String getMessageString() {
-		return this.messageString;
+	public String getMessage() {
+		return this.message;
+	}
+	
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+	
+	public String getErrorMessage() {
+		return this.errorMessage;
 	}
 	
 	public String getMethodTypeCtx() {
@@ -76,11 +85,8 @@ public class RequestContext {
 		this.methodTypeCtx = methodTypeCtx;
 	}
 
-	public boolean hasFormErrors() {
-		return !this.form.isValid();
+	public boolean hasErrorMessages(){
+		return this.errorMessage != null;
 	}
-	
-	public String getFormErrorString() {
-		return this.form.printFormErrors();
-	}
+
 }

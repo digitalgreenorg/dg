@@ -38,7 +38,7 @@ public class Animators extends BaseServlet{
 							AnimatorsData animatorData = new AnimatorsData();
 							List animators = animatorData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Animator successfully saved");
+							requestContext.setMessage("Animator successfully saved");
 							requestContext.getArgs().put("listing", animators);
 							getServlet().redirectTo(new Animators(requestContext));
 						} else {
@@ -49,11 +49,11 @@ public class Animators extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Animators(requestContext));	
 					}
 					
@@ -62,7 +62,7 @@ public class Animators extends BaseServlet{
 							AnimatorsData animatorData = new AnimatorsData();
 							List animators = animatorData.getAnimatorsListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Animator successfully saved");
+							requestContext.setMessage("Animator successfully saved");
 							requestContext.getArgs().put("listing", animators);
 							getServlet().redirectTo(new Animators(requestContext));
 						} else {
@@ -97,11 +97,11 @@ public class Animators extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Animators(requestContext));	
 						}
 						
@@ -114,7 +114,7 @@ public class Animators extends BaseServlet{
 								getServlet().redirectTo(new Animators(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Animators(requestContext));				
 							}	
 						}
@@ -137,11 +137,11 @@ public class Animators extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Animators(requestContext));	
 						}
 						
@@ -153,7 +153,7 @@ public class Animators extends BaseServlet{
 								getServlet().fillTemplate(new AnimatorsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Animators(requestContext));				
 							}	
 						}

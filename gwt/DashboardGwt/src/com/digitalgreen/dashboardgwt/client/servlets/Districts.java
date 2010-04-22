@@ -37,7 +37,7 @@ public class Districts extends BaseServlet{
 							DistrictsData districtdata = new DistrictsData();
 							List districts = districtdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("District successfully saved");
+							requestContext.setMessage("District successfully saved");
 							requestContext.getArgs().put("listing", districts);
 							getServlet().redirectTo(new Districts(requestContext ));
 						}
@@ -49,11 +49,11 @@ public class Districts extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Districts(requestContext));
 					}
 					
@@ -62,7 +62,7 @@ public class Districts extends BaseServlet{
 							DistrictsData districtdata = new DistrictsData();
 							List districts = districtdata.getDistrictsListingsOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("District successfully saved");
+							requestContext.setMessage("District successfully saved");
 							requestContext.getArgs().put("listing", districts);
 							getServlet().redirectTo(new Districts(requestContext ));
 						}
@@ -98,11 +98,11 @@ public class Districts extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Districts(requestContext));
 						}
 						
@@ -116,7 +116,7 @@ public class Districts extends BaseServlet{
 							} 
 							else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Districts(requestContext));
 							}
 						}
@@ -140,11 +140,11 @@ public class Districts extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Districts(requestContext));	
 						}
 						
@@ -156,7 +156,7 @@ public class Districts extends BaseServlet{
 								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Districts(requestContext));				
 							}
 						}

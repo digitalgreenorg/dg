@@ -37,7 +37,7 @@ public class Trainings extends BaseServlet{
 							TrainingsData trainingData = new TrainingsData();
 							List trainings = trainingData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Training successfully saved");
+							requestContext.setMessage("Training successfully saved");
 							requestContext.getArgs().put("listing", trainings);
 							getServlet().redirectTo(new Trainings(requestContext));
 						} else {
@@ -48,11 +48,11 @@ public class Trainings extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Trainings(requestContext));	
 					}
 
@@ -61,7 +61,7 @@ public class Trainings extends BaseServlet{
 							TrainingsData trainingData = new TrainingsData();
 							List trainings = trainingData.getTrainingsListingsOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Training successfully saved");
+							requestContext.setMessage("Training successfully saved");
 							requestContext.getArgs().put("listing", trainings);
 							getServlet().redirectTo(new Trainings(requestContext));
 						} else {
@@ -95,11 +95,11 @@ public class Trainings extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Trainings(requestContext));	
 						}
 						
@@ -112,7 +112,7 @@ public class Trainings extends BaseServlet{
 								getServlet().redirectTo(new Trainings(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Trainings(requestContext));				
 							}	
 						}
@@ -135,11 +135,11 @@ public class Trainings extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Trainings(requestContext));	
 						}
 						
@@ -151,7 +151,7 @@ public class Trainings extends BaseServlet{
 								getServlet().fillTemplate(new TrainingTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Trainings(requestContext));				
 							}	
 						}

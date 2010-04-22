@@ -38,7 +38,7 @@ public class Screenings extends BaseServlet {
 							ScreeningsData screeningdata = new ScreeningsData();
 							List screenings = screeningdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Screenings successfully saved");
+							requestContext.setMessage("Screenings successfully saved");
 							requestContext.getArgs().put("listing", screenings);
 							getServlet().redirectTo(new Screenings(requestContext ));
 						}
@@ -51,11 +51,11 @@ public class Screenings extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Screenings(requestContext));	
 					}
 					
@@ -65,13 +65,13 @@ public class Screenings extends BaseServlet {
 							ScreeningsData screeningdata = new ScreeningsData();
 							List screenings = screeningdata.getScreeningsListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Screenings successfully saved");
+							requestContext.setMessage("Screenings successfully saved");
 							requestContext.getArgs().put("listing", screenings);
 							getServlet().redirectTo(new Screenings(requestContext ));
 						}
 						else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid data, please try again");
+							requestContext.setMessage("Invalid data, please try again");
 							getServlet().redirectTo(new Screenings(requestContext));				
 						}
 					}
@@ -103,11 +103,11 @@ public class Screenings extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Screenings(requestContext));
 						}
 						
@@ -122,7 +122,7 @@ public class Screenings extends BaseServlet {
 							}
 							else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Screenings(requestContext));				
 							}
 						}
@@ -149,11 +149,11 @@ public class Screenings extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Screenings(requestContext));	
 						}
 						
@@ -167,7 +167,7 @@ public class Screenings extends BaseServlet {
 							}
 							else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Screenings(requestContext));				
 							}
 						}

@@ -44,7 +44,7 @@ public class Blocks extends BaseServlet {
 							BlocksData blockdata = new BlocksData();
 							List blocks = blockdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Block successfully saved");
+							requestContext.setMessage("Block successfully saved");
 							requestContext.getArgs().put("listing", blocks);
 							getServlet().redirectTo(new Blocks(requestContext ));
 						}
@@ -56,11 +56,11 @@ public class Blocks extends BaseServlet {
 					public  void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Blocks(requestContext));	
 					}
 					
@@ -69,7 +69,7 @@ public class Blocks extends BaseServlet {
 							BlocksData blockdata = new BlocksData();
 							List blocks = blockdata.getBlocksListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Block successfully saved");
+							requestContext.setMessage("Block successfully saved");
 							requestContext.getArgs().put("listing", blocks);
 							getServlet().redirectTo(new Blocks(requestContext ));
 						}
@@ -105,11 +105,11 @@ public class Blocks extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Blocks(requestContext));	
 						}
 						
@@ -123,7 +123,7 @@ public class Blocks extends BaseServlet {
 							}
 							else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Blocks(requestContext));				
 							}
 						}
@@ -147,11 +147,11 @@ public class Blocks extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Blocks(requestContext));	
 						}
 						
@@ -164,7 +164,7 @@ public class Blocks extends BaseServlet {
 							}
 							else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new Blocks(requestContext));
 							}
 						}

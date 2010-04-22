@@ -43,7 +43,7 @@ public class DevelopmentManagers extends BaseServlet {
 							DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
 							List developmentmanagers = developmentmanagerdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("DevelopmentManager successfully saved");
+							requestContext.setMessage("DevelopmentManager successfully saved");
 							requestContext.getArgs().put("listing", developmentmanagers);
 							getServlet().redirectTo(new DevelopmentManagers(requestContext ));						
 						} else {
@@ -54,11 +54,11 @@ public class DevelopmentManagers extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new DevelopmentManagers(requestContext));	
 					}
 					
@@ -67,7 +67,7 @@ public class DevelopmentManagers extends BaseServlet {
 							DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
 							List developmentmanagers = developmentmanagerdata.getDevelopmentManagersListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("DevelopmentManager successfully saved");
+							requestContext.setMessage("DevelopmentManager successfully saved");
 							requestContext.getArgs().put("listing", developmentmanagers);
 							getServlet().redirectTo(new DevelopmentManagers(requestContext ));
 						} else {
@@ -104,11 +104,11 @@ public class DevelopmentManagers extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new DevelopmentManagers(requestContext));	
 						}
 						
@@ -121,7 +121,7 @@ public class DevelopmentManagers extends BaseServlet {
 								getServlet().fillTemplate(new DevelopmentManagersTemplate(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new DevelopmentManagers(requestContext));				
 							}	
 						}
@@ -145,11 +145,11 @@ public class DevelopmentManagers extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new DevelopmentManagers(requestContext));	
 						}
 						
@@ -161,7 +161,7 @@ public class DevelopmentManagers extends BaseServlet {
 								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new DevelopmentManagers(requestContext));				
 							}	
 						}

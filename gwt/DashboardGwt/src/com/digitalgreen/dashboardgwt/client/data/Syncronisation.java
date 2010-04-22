@@ -37,7 +37,7 @@ public class Syncronisation {
 						}
 				} else if(results =="0") {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("Validation Error : Form cannot be verified on the main server");
+					requestContext.setMessage("Validation Error : Form cannot be verified on the main server");
 					getServlet().redirectTo(new Index(requestContext));		
 				}else if(results=="synced"){
 					setGlobalIDInLocalUserTable();
@@ -51,18 +51,18 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+					requestContext.setMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessageString("Problem in the connection with the server.");
+					requestContext.setMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessageString("Unknown error.  Please contact support.");
+					requestContext.setMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
 		
 		if(!postRowOfFormQueueTable()){
 			RequestContext requestContext = new RequestContext();
-			requestContext.setMessageString("Local database is in sync with the main server ");
+			requestContext.setMessage("Local database is in sync with the main server ");
 			servlet.redirectTo(new Index(requestContext));
 		}
 	}
@@ -77,7 +77,7 @@ public class Syncronisation {
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("You do not have a valid account.Please contact support. ");
+					requestContext.setMessage("You do not have a valid account.Please contact support. ");
 					getServlet().redirectTo(new Index(requestContext));				
 				}
 			}
@@ -86,11 +86,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+					requestContext.setMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessageString("Problem in the connection with the server.");
+					requestContext.setMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessageString("Unknown error.  Please contact support.");
+					requestContext.setMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 			
@@ -114,7 +114,7 @@ public class Syncronisation {
 						if(currentIndex == ApplicationConstants.tableIDs.length){
 							updateSyncStatusInUserTable("0", "0");
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Local database is in sync with the main server");
+							requestContext.setMessage("Local database is in sync with the main server");
 							getServlet().redirectTo(new Index(requestContext));	
 						}else{
 							updateSyncStatusInUserTable("1", ""+currentIndex);
@@ -128,11 +128,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+					requestContext.setMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessageString("Problem in the connection with the server.");
+					requestContext.setMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessageString("Unknown error.  Please contact support.");
+					requestContext.setMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
@@ -212,11 +212,11 @@ public class Syncronisation {
 					LoginData user = new LoginData();
 					user.update(results, "1", "0", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie());
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("Local database is in sync with the main server");
+					requestContext.setMessage("Local database is in sync with the main server");
 					getServlet().redirectTo(new Index(requestContext));
 				} else {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessageString("You do not have a valid account.Please contact support. ");
+					requestContext.setMessage("You do not have a valid account.Please contact support. ");
 					getServlet().redirectTo(new Index(requestContext));				
 				}
 			}
@@ -225,11 +225,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+					requestContext.setMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessageString("Problem in the connection with the server.");
+					requestContext.setMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessageString("Unknown error.  Please contact support.");
+					requestContext.setMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 			

@@ -44,7 +44,7 @@ public class States extends BaseServlet{
 							StatesData statedata = new StatesData();
 							List states = statedata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("State successfully saved");
+							requestContext.setMessage("State successfully saved");
 							requestContext.getArgs().put("listing", states);
 							getServlet().redirectTo(new States(requestContext ));						
 						} else {
@@ -55,11 +55,11 @@ public class States extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new States(requestContext));	
 					}
 					
@@ -68,7 +68,7 @@ public class States extends BaseServlet{
 							StatesData statedata = new StatesData();
 							List states = statedata.getStatesListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("State successfully saved");
+							requestContext.setMessage("State successfully saved");
 							requestContext.getArgs().put("listing", states);
 							getServlet().redirectTo(new States(requestContext ));
 						} else {
@@ -105,11 +105,11 @@ public class States extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new States(requestContext));	
 						}
 						
@@ -122,7 +122,7 @@ public class States extends BaseServlet{
 								getServlet().fillTemplate(new StatesTemplate(requestContext));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new States(requestContext));				
 							}	
 						}
@@ -146,11 +146,11 @@ public class States extends BaseServlet{
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessageString("Problem in the connection with the server.");
+								requestContext.setMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessageString("Unknown error.  Please contact support.");
+								requestContext.setMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new States(requestContext));	
 						}
 						
@@ -162,7 +162,7 @@ public class States extends BaseServlet{
 								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessageString("Local Database error");
+								requestContext.setMessage("Local Database error");
 								getServlet().redirectTo(new States(requestContext));				
 							}	
 						}

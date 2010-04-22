@@ -41,7 +41,7 @@ public class Login extends BaseServlet {
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid credentials, please try again.");
+							requestContext.setMessage("Invalid credentials, please try again.");
 							getServlet().redirectTo(new Login(requestContext));				
 						}
 					}
@@ -49,11 +49,11 @@ public class Login extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Login(requestContext));			
 						
 					}
@@ -66,7 +66,7 @@ public class Login extends BaseServlet {
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Invalid credentials, please try again");
+							requestContext.setMessage("Invalid credentials, please try again");
 							getServlet().redirectTo(new Login(requestContext));	
 						}
 					}

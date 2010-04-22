@@ -44,7 +44,7 @@ public class Partners extends BaseServlet{
 						PartnersData partnersData = new PartnersData();
 						List partners = partnersData.getListingOnline(results);
 						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Partner successfully saved");
+						requestContext.setMessage("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
 						getServlet().redirectTo(new Partners(requestContext ));						
 					} else {
@@ -55,11 +55,11 @@ public class Partners extends BaseServlet{
 				public void onlineErrorCallback(int errorCode) {
 					RequestContext requestContext = new RequestContext();
 					if (errorCode == BaseData.ERROR_RESPONSE)
-						requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+						requestContext.setMessage("Unresponsive Server.  Please contact support.");
 					else if (errorCode == BaseData.ERROR_SERVER)
-						requestContext.setMessageString("Problem in the connection with the server.");
+						requestContext.setMessage("Problem in the connection with the server.");
 					else
-						requestContext.setMessageString("Unknown error.  Please contact support.");
+						requestContext.setMessage("Unknown error.  Please contact support.");
 					getServlet().redirectTo(new Partners(requestContext));	
 				}
 					
@@ -68,7 +68,7 @@ public class Partners extends BaseServlet{
 						PartnersData partnerData = new PartnersData();
 						List partners = partnerData.getPartnersListingOffline();
 						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Partner successfully saved");
+						requestContext.setMessage("Partner successfully saved");
 						requestContext.getArgs().put("listing", partners);
 						getServlet().redirectTo(new Partners(requestContext ));
 					} else {
@@ -101,11 +101,11 @@ public class Partners extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Partners(requestContext));	
 					}
 						
@@ -118,7 +118,7 @@ public class Partners extends BaseServlet{
 							getServlet().redirectTo(new Partners(requestContext));
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Local Database error");
+							requestContext.setMessage("Local Database error");
 							getServlet().redirectTo(new Partners(requestContext));				
 						}
 					}

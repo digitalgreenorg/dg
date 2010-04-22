@@ -47,7 +47,7 @@ public class Languages extends BaseServlet{
 						LanguagesData languagesData = new LanguagesData();
 						List languages = languagesData.getListingOnline(results);
 						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Language successfully saved");
+						requestContext.setMessage("Language successfully saved");
 						requestContext.getArgs().put("listing", languages);
 						getServlet().redirectTo(new Languages(requestContext ));						
 					} else {
@@ -58,11 +58,11 @@ public class Languages extends BaseServlet{
 				public void onlineErrorCallback(int errorCode) {
 					RequestContext requestContext = new RequestContext();
 					if (errorCode == BaseData.ERROR_RESPONSE)
-						requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+						requestContext.setMessage("Unresponsive Server.  Please contact support.");
 					else if (errorCode == BaseData.ERROR_SERVER)
-						requestContext.setMessageString("Problem in the connection with the server.");
+						requestContext.setMessage("Problem in the connection with the server.");
 					else
-						requestContext.setMessageString("Unknown error.  Please contact support.");
+						requestContext.setMessage("Unknown error.  Please contact support.");
 					getServlet().redirectTo(new Languages(requestContext));	
 				}
 					
@@ -71,7 +71,7 @@ public class Languages extends BaseServlet{
 						LanguagesData languageData = new LanguagesData();
 						List languages = languageData.getLanguagesListingOffline();
 						RequestContext requestContext = new RequestContext();
-						requestContext.setMessageString("Language successfully saved");
+						requestContext.setMessage("Language successfully saved");
 						requestContext.getArgs().put("listing", languages);
 						getServlet().redirectTo(new Languages(requestContext ));
 					} else {
@@ -104,11 +104,11 @@ public class Languages extends BaseServlet{
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessageString("Unresponsive Server.  Please contact support.");
+							requestContext.setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessageString("Problem in the connection with the server.");
+							requestContext.setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessageString("Unknown error.  Please contact support.");
+							requestContext.setMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Languages(requestContext));	
 					}
 						
@@ -121,7 +121,7 @@ public class Languages extends BaseServlet{
 							getServlet().redirectTo(new Languages(requestContext));
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessageString("Local Database error");
+							requestContext.setMessage("Local Database error");
 							getServlet().redirectTo(new Languages(requestContext));				
 						}
 					}
