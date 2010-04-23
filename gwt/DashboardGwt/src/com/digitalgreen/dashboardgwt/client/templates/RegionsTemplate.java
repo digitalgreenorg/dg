@@ -4,6 +4,9 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
+import com.google.gwt.user.client.ui.Hyperlink;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,16 +34,17 @@ public class RegionsTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
+		super.fillDgListPage(templatePlainType, templateType, regionsListFormHtml, addRegionServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveRegion);
+		super.fillDgFormPage(saveRegion);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -49,18 +53,24 @@ public class RegionsTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				RegionsData.Data region;
+				RequestContext requestContext = null;
 				for (int row = 0; row < regions.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					region = (RegionsData.Data) regions.get(row);
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", region.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/region/"+ region.getId() +"/'>" +
+							region.getRegionName() + "</a>", new Regions(requestContext)));
 					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ region.getId() + "' name='_selected_action' /></td>" +
-							"<th><a href='/admin/dashboard/region/"+ region.getId() +"/'>" + region.getRegionName() +"</a></th></tr>";
+							"<th id = 'row" + row + "'></th></tr>";
 				}
 				regionsListFormHtml = regionsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = null;
@@ -89,8 +99,7 @@ public class RegionsTemplate extends BaseTemplate {
 							"</tr>" +
 						"</thead>" +
 						"<tbody>";
-							
-						
+
 	final  private String regionsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 						"<div id='content' class='flex'>" +
 							"<h1>Select region to change</h1>" +

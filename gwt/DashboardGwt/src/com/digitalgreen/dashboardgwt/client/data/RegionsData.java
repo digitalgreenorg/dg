@@ -191,7 +191,6 @@ public class RegionsData extends BaseData {
 			Data region = new Data(regionObjects.get(i).getPk(), regionObjects.get(i).getRegionName(), regionObjects.get(i).getStartDate());
 			regions.add(region);
 		}
-		
 		return regions;
 	}
 	
@@ -214,7 +213,6 @@ public class RegionsData extends BaseData {
 				Window.alert("Database Exception : " + e.toString());
 				BaseData.dbClose();
 			}
-			
 		}
 		BaseData.dbClose();
 		return regions;
@@ -233,8 +231,7 @@ public class RegionsData extends BaseData {
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
 				BaseData.dbClose();
-			}
-			
+			}	
 		}
 		BaseData.dbClose();
 		return regions;
@@ -249,8 +246,20 @@ public class RegionsData extends BaseData {
 				this.save();
 				return true;
 			}
+		}		
+		return false;
+	}
+	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + RegionsData.saveRegionOnlineURL + id + "/", this.form.getQueryString());
 		}
-		
+		else{
+			if(this.validate()){
+				this.save();
+				return true;
+			}
+		}		
 		return false;
 	}
 	
@@ -264,5 +273,23 @@ public class RegionsData extends BaseData {
 		return false;
 	}
 	
-
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
 }
