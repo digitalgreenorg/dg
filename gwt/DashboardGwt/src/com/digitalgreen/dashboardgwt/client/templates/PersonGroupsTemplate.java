@@ -12,6 +12,7 @@ import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class PersonGroupsTemplate extends BaseTemplate{
 	
@@ -21,7 +22,6 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
-		
 		String templateType = "person_groups";
 		String templatePlainType = "dashboard/persongroup/add/";
 		RequestContext requestContext = new RequestContext();
@@ -41,17 +41,18 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		super.fillDGTemplate(templateType, persongroupsListHtml, persongroupsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
-		this.fillListings();
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
+		super.fillDgListPage(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(savePersonGroup);
+		super.fillDgFormPage(savePersonGroup);
 	}
 	
-	protected void fillListings() {
-		
+	protected List<Hyperlink> fillListings() {		
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -60,12 +61,18 @@ public class PersonGroupsTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				PersonGroupsData.Data personGroup;
+				RequestContext requestContext = null;
 				for (int row = 0; row < personGroups.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					personGroup = (PersonGroupsData.Data)personGroups.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", personGroup.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/persongroups/" + personGroup.getId() + "/'>" +
+							personGroup.getPersonGroupName() + "</a>", new PersonGroups(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ personGroup.getId() + "' name='_selected_action' /></td>" +
 						"<th><a href='/admin/dashboard/personGroup/"+ personGroup.getId() +"/'>" + personGroup.getPersonGroupName()+"</a></th>" +
@@ -75,6 +82,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 				persongroupsListFormHtml = persongroupsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = {"id_village","id_person_set-0-village","id_person_set-1-village","id_person_set-2-village",

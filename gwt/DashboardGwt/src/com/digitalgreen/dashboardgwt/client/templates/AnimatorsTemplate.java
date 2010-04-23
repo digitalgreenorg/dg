@@ -6,6 +6,8 @@ import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorsData;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,17 +40,19 @@ public class AnimatorsTemplate extends BaseTemplate {
 		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();		
-		this.fillListings();
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
+		super.fillDgListPage(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveAnimator);
+		super.fillDgFormPage(saveAnimator);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -57,15 +61,21 @@ public class AnimatorsTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				AnimatorsData.Data animator;
+				RequestContext requestContext = null;
 				for (int row = 0; row < animators.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					animator = (AnimatorsData.Data)animators.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", animator.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/animator/" + animator.getId() +"/'>" +
+							animator.getAnimatorName() + "</a>", new Animators(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ animator.getId() + "' name='_selected_action' /></td>" +
-						"<th><a href='/admin/dashboard/animator/"+ animator.getId() +"/'>" + animator.getAnimatorName()+"</a></th>" +
+					  "<th id = 'row" + row + "'></th>" +
 						"<td>"+ animator.getPartner().getPartnerName() + "</td>" + 
 						"<td>"+ animator.getVillage().getVillageName() + "</td>" + 
 					"</tr>";
@@ -73,6 +83,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 				animatorsListFormHtml = animatorsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID [] = {"id_partner","id_village","id_animatorassignedvillage_set-0-village",
@@ -127,7 +138,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 									"</div>" +
 								"</div>";
 	
-	final static private String animatorsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+	final private String animatorsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='colM'>" +
 								"<h1>Add Animator</h1>" +
 								"<div id='content-main'>" +

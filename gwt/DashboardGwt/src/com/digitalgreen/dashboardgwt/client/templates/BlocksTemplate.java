@@ -1,14 +1,14 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BlocksData;
-import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class BlocksTemplate extends BaseTemplate{
 	
@@ -35,37 +35,45 @@ public class BlocksTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet);
+		super.fillDgListPage(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveBlock);
+		super.fillDgFormPage(saveBlock);
 	}
 	
-	protected void fillListings(){
+	protected List<Hyperlink> fillListings(){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		if(queryArg == null || queryArg != "add") {
 			List blocks = (List)queryArgs.get("listing");
 			if(blocks  != null){
 				String tableRows ="";
 				String style;
 				BlocksData.Data block;
+				RequestContext requestContext = null;
 				for (int row = 0; row < blocks.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					block = (BlocksData.Data)blocks.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", block.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/block/"+ block.getId() +"/'>" +
+							block.getBlockName() + "</a>", new Blocks(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 								"<td><input type='checkbox' class='action-select' value='" + block.getId() + "' name='_selected_action' /></td>" +
-								"<th><a href='/admin/dashboard/" + block.getId() + "/'>" + block.getBlockName() + "</a></th>" +
+								"<th id = 'row" + row + "'></th>" +
 								"<td>" + block.getDistrict().getDistrictName()  + "</td>" +
 								"</tr>";
 				}
 				blocksListFormHtml = blocksListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = {"id_district"};

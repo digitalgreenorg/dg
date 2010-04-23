@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.data.LanguagesData;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Languages;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class LanguagesTemplate extends BaseTemplate{
 	
@@ -35,16 +37,17 @@ public class LanguagesTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet);
+		super.fillDgListPage(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveLanguage);
+		super.fillDgFormPage(saveLanguage);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -53,17 +56,26 @@ public class LanguagesTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				LanguagesData.Data language;
+				RequestContext requestContext = null;
 				for (int row = 0; row < languages.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					language = (LanguagesData.Data) languages.get(row);
-					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ language.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/language/"+ language.getId() +"/'>" + language.getLanguageName() +"</a></th></tr>";
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", language.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/language/" + language.getId() +"/'>" +
+							language.getLanguageName() + "</a>", new Languages(requestContext)));
+					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" + 
+									language.getId() + "' name='_selected_action' /></td>" +
+									"<th id = 'row" + row + "'></th></tr>";
 				}
 				languagesListFormHtml = languagesListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = null;

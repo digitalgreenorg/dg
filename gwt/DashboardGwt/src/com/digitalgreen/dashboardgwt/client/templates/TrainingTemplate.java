@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class TrainingTemplate extends BaseTemplate{
 	
@@ -34,16 +36,18 @@ public class TrainingTemplate extends BaseTemplate{
 		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
-		this.fillListings();
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
+		super.fillDgListPage(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveTraining);
+		super.fillDgFormPage(saveTraining);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -52,21 +56,28 @@ public class TrainingTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				TrainingsData.Data training;
+				RequestContext requestContext = null;
 				for (int row = 0; row < trainings.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					training = (TrainingsData.Data) trainings.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", training.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/training/"+ training.getId() +"/'>" + 
+							training.getTrainingStartDate()+ "</a>", new Trainings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ training.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/training/"+ training.getId() +"/'>" + training.getTrainingStartDate()+"</a></th>" +
+									"<th id = 'row" + row + "'></th>" +
 									"<td>"+ training.getVillage().getVillageName() + "</td>" +
 								"</tr>";
 				}
 				trainingListFormHtml = trainingListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = {"id_village","id_development_manager_present","id_field_officer_present","id_animators_trained"};

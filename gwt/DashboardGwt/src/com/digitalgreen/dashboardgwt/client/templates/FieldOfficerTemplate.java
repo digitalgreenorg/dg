@@ -1,11 +1,13 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.FieldOfficersData;
 import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 
 public class FieldOfficerTemplate extends BaseTemplate{
@@ -35,20 +37,21 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		super.fill();
 		
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet);
+		super.fillDgListPage(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet, links);
 		
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveFieldOfficer);
+		super.fillDgFormPage(saveFieldOfficer);
 	}
 	
 	final private String addDataToElementID[] = null;
 
-	public void fillListings(){
+	public List<Hyperlink> fillListings(){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add"){
@@ -59,17 +62,26 @@ public class FieldOfficerTemplate extends BaseTemplate{
 				String tableRows = "";
 				String style;
 				FieldOfficersData.Data fieldofficer;
+				RequestContext requestContext = null;
 				for (int row=0; row<fieldOfficers.size(); ++row){
 					if(row%2 == 0)
 						style = "row2";
 					else 
 						style = "row1";
 					fieldofficer = (FieldOfficersData.Data) fieldOfficers.get(row);
-					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='actoin-select' value='" + fieldofficer.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/fieldofficer/" + fieldofficer.getId() + "/'>" + fieldofficer.getFieldOfficerName() + "</a></th></tr>";
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", fieldofficer.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/fieldofficer/"+ fieldofficer.getId() +"/'>" +
+							fieldofficer.getFieldOfficerName() + "</a>", new FieldOfficers(requestContext)));
+					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='actoin-select' value='" + 
+									fieldofficer.getId() + "' name='_selected_action' /></td>" +
+									"<th id = 'row" + row + "'></th></tr>";
 				}
 				fieldofficerListFormHtml = fieldofficerListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 
 	private String fieldofficerListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +

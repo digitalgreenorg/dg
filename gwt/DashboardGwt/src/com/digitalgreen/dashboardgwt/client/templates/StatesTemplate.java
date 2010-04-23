@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.servlets.States;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class StatesTemplate extends BaseTemplate{
 	
@@ -33,16 +35,17 @@ public class StatesTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, statesListFormHtml, addStatesServlet);
+		super.fillDgListPage(templatePlainType, templateType, statesListFormHtml, addStatesServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveState);
+		super.fillDgFormPage(saveState);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -51,21 +54,28 @@ public class StatesTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				StatesData.Data state;
+				RequestContext requestContext = null;
 				for (int row = 0; row < states.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					state = (StatesData.Data) states.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", state.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/state/" + state.getId() + "/'>" +
+							state.getStateName() + "</a>", new States(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ state.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/state/"+ state.getId() +"/'>" + state.getStateName()+"</a></th>" +
+									"<th id = 'row" + row + "'></th>" +
 									"<td>"+ state.getRegion().getRegionName() + "</td>" +
 								"</tr>";
 				}
 				statesListFormHtml = statesListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	
@@ -155,5 +165,4 @@ public class StatesTemplate extends BaseTemplate{
 								"</div>"+
 								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 								"<script type='text/javascript'>DateTimeShortcuts.init()</script>"; 
-	
 }

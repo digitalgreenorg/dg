@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,11 +9,14 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
+import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
+
 	public AnimatorAssignedVillagesTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
@@ -26,27 +30,28 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
-		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet1 = new AnimatorAssignedVillages(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new AnimatorAssignedVillagesData()).getNewData());
+		saveRequestContext.getArgs().put("form", saveForm);
+		AnimatorAssignedVillages addAnimatorAssignedVillagesServlet1 = new AnimatorAssignedVillages(requestContext);
 		saveRequestContext.setForm(saveForm);
 		AnimatorAssignedVillages saveAnimatorAssignedVillage = new AnimatorAssignedVillages(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorassignedvillageListHtml, animatorassignedvillageAddHtml, addDataToElementID);
-
 		// Add it to the rootpanel
-		super.fill();		
-		this.fillListings();		
+		super.fill();
+		//Now add listings
+		List<Hyperlink> links = this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
+		super.fillDgListPage(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveAnimatorAssignedVillage);
+		super.fillDgFormPage(saveAnimatorAssignedVillage);
 	}
 	
-	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -55,21 +60,28 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				AnimatorAssignedVillagesData.Data animatorAssignedVillage;
+				RequestContext requestContext = null;
 				for (int row = 0; row < animatorAssignedVillages.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					animatorAssignedVillage = (AnimatorAssignedVillagesData.Data) animatorAssignedVillages.get(row);
-					tableRows += "<tr class='" +style+ "'>" +
-								  "<td><input type='checkbox' class='action-select' value='"+ animatorAssignedVillage.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/animatorAssignedVillage/"+ animatorAssignedVillage.getId() +"/'>" + animatorAssignedVillage.getAnimator().getAnimatorName()+"</a></th>" +
-									"<td>"+ animatorAssignedVillage.getVillage().getVillageName() + "</td>" +
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", animatorAssignedVillage.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/animatorassignedvillage/" + animatorAssignedVillage.getId() + "/'>" +
+							animatorAssignedVillage.getAnimator().getAnimatorName() +"</a>", new AnimatorAssignedVillages(requestContext)));
+					tableRows += "<tr class='" + style + "'>" +
+								  "<td><input type='checkbox' class='action-select' value='" + animatorAssignedVillage.getId() + "' name='_selected_action' /></td>" +
+								  "<th id = 'row" + row + "'></th>" +
+									"<td>" + animatorAssignedVillage.getVillage().getVillageName() + "</td>" +
 								"</tr>";
 				}
 				animatorassignedvillageListFormHtml = animatorassignedvillageListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	
@@ -103,7 +115,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 									"</tr>" +
 								"</thead>" +
 								"<tbody>";
-								
+
 	
 	// Fill ids:  listing-form-body, add-link
 	private String animatorassignedvillageListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
@@ -137,12 +149,12 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 												"</select>" +
 											"</div>" +
 										"</div>" +
-										"<div class='form-row village  '>" +
-											"<div>" +
-												"<label for='id_village' class='required'>Village:</label><select name='village' id='id_village'>" +
-												"<option value='' selected='selected'>---------</option>" +
-												"</select>" +
-											"</div>" +
+									"</div>" +
+									"<div class='form-row village  '>" +
+										"<div>" +
+											"<label for='id_village' class='required'>Village:</label><select name='village' id='id_village'>" +
+											"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
 										"</div>" +
 										"<div class='form-row start_date  '>" +
 											"<div>" +

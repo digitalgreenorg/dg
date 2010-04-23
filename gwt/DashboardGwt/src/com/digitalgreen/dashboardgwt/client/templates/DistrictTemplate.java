@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
@@ -7,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Districts;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class DistrictTemplate extends BaseTemplate{
 	
@@ -33,16 +35,17 @@ public class DistrictTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links = this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
+		super.fillDgListPage(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveDistrict);
+		super.fillDgFormPage(saveDistrict);
 	}
 	
-	protected void fillListings(){
+	protected List<Hyperlink> fillListings(){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// Add Listings
@@ -51,15 +54,21 @@ public class DistrictTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				DistrictsData.Data district;
+				RequestContext requestContext = null;
 				for ( int row = 0; row < districts.size(); row++) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					district = (DistrictsData.Data) districts.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", district.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/district/" + district.getId() +"/'>" +
+							district.getDistrictName() + "</a>", new Districts(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 									"<td><input type='checkbox' class='action-select' value='" + district.getId() + "' name='_selected_action' /></td>" +
-									"<th><a href='/admin/dashboard/district/" + district.getId() + "/'>" + district.getDistrictName() + "</a></th>" +
+									"<th id = 'row" + row + "'></th>" +
 									"<td>" + district.getState().getStateName() + "</td><td>" + district.getFieldOfficer().getFieldOfficerName() + 
 									"</td><td>" + district.getPartner().getPartnerName() + "</td>" +
 								"</tr>";
@@ -67,6 +76,7 @@ public class DistrictTemplate extends BaseTemplate{
 				districtListFormHtml = districtListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 
 	final private String addDataToElementID[] = {"id_state", "id_fieldofficer", "id_partner"};

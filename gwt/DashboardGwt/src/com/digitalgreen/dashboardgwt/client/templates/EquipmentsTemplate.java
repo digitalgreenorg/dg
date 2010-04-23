@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Equipments;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class EquipmentsTemplate extends BaseTemplate{
 	
@@ -34,16 +36,18 @@ public class EquipmentsTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		
-		this.fillListings();
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, equipmentsListFormHtml, addEquipmentsServlet);
+		super.fillDgListPage(templatePlainType, templateType, equipmentsListFormHtml, addEquipmentsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveEquipment);
+		super.fillDgFormPage(saveEquipment);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -52,16 +56,22 @@ public class EquipmentsTemplate extends BaseTemplate{
 				String tableRows ="";
 				String style;
 				EquipmentsData.Data equipment;
+				RequestContext requestContext = null;
 				for (int row = 0; row < equipments.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					equipment = (EquipmentsData.Data) equipments.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", equipment.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/equipment/" + equipment.getId() + "/'>" +
+							equipment.getEquipmentType() + "</a>", new Equipments(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
-								  "<td><input type='checkbox' class='action-select' value='"+ equipment.getId() 
-								  + "' name='_selected_action' /></td> <th><a href='/admin/dashboard/equipment/"+ equipment.getId() 
-								  +"/'>" + equipment.getEquipmentType()+"</a></th>" +
+								  "<td><input type='checkbox' class='action-select' value='"+ equipment.getId() + 
+								  "' name='_selected_action' /></td>" +
+								  "<th id = 'row" + row + "'></th>" +
 									"<td>"+ equipment.getModelNo()+ "</td>" +
 									"<td>"+ equipment.getSerialNo()+ "</td>" +
 								"</tr>";
@@ -70,6 +80,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 				equipmentsListFormHtml = equipmentsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 
@@ -173,8 +184,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 										"</div>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>"+
-	"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-	"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
-	
+								"</div>" +
+								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
+								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
 }

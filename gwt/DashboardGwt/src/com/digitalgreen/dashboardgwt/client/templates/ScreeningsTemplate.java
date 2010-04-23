@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
@@ -47,18 +46,19 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet);
+		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveScreening);
+		super.fillDgFormPage(saveScreening);
 	}
 	
-	public void fillListings(){
+	public List<Hyperlink> fillListings(){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -67,15 +67,21 @@ public class ScreeningsTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				ScreeningsData.Data screening;
+				RequestContext requestContext = null;
 				for (int row = 0; row <screenings.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					screening = (ScreeningsData.Data) screenings.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", screening.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
+							screening.getDate() + "</a>", new Screenings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ screening.getId() + "' name='_selected_action' /></td>" +
-								  "<th><a href='"+ screening.getId() + "/'>"+ screening.getDate() + "</a></th>"+ 
+								  "<th id = 'row" + row + "'></th>" + 
 									"<td>"+ screening.getVillage().getVillageName() + "</td>"+
 									"<td>"+ screening.getLocation()+"</td>" +
 								"</tr>";
@@ -83,6 +89,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 				screeningsListFormHtml = screeningsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};

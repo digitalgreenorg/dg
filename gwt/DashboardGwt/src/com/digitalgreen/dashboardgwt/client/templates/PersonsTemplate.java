@@ -15,6 +15,7 @@ import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class PersonsTemplate extends BaseTemplate{
 	
@@ -41,17 +42,19 @@ public class PersonsTemplate extends BaseTemplate{
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, personsListHtml, personsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
-		super.fill();		
-		this.fillListings();
+		super.fill();
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, personsListFormHtml, addPersonsServlet);
+		super.fillDgListPage(templatePlainType, templateType, personsListFormHtml, addPersonsServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(savePerson);
+		super.fillDgFormPage(savePerson);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -61,6 +64,7 @@ public class PersonsTemplate extends BaseTemplate{
 				String style;
 				PersonsData.Data person;
 				String group;
+				RequestContext requestContext = null;
 				for (int row = 0; row <persons.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
@@ -76,17 +80,22 @@ public class PersonsTemplate extends BaseTemplate{
 					{
 						group = person.getGroup().getPersonGroupName();
 					}
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", person.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/person/"+ person.getId() +"/'>" +
+							person.getPersonName() + "</a>", new Persons(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ person.getId() + "' name='_selected_action' /></td>" +
-								  "<th><a href='/admin/dashboard/person/"+ person.getId() + "/'>"+ person.getPersonName() + "</a></th>"+
+								  "<th id = 'row" + row + "'></th>" +
 								  "<td>"+ group + "</td>"+
 								  "<td>"+ person.getVillage().getVillageName() + "</td>" +
 								"</tr>";
-					
 				}
 				personsListFormHtml = personsListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 
 	final private String addDataToElementID[] = {"id_village","id_group","id_personadoptpractice_set-0-practice",

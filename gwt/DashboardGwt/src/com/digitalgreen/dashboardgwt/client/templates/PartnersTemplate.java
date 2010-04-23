@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PartnersData;
 import com.digitalgreen.dashboardgwt.client.servlets.Partners;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class PartnersTemplate extends BaseTemplate {
 	public PartnersTemplate (RequestContext requestContext) {
@@ -33,16 +35,17 @@ public class PartnersTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
+		super.fillDgListPage(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(savePartner);
+		super.fillDgFormPage(savePartner);
 	}
 	
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -51,17 +54,26 @@ public class PartnersTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				PartnersData.Data partner;
+				RequestContext requestContext = null;
 				for (int row = 0; row < partners.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					partner = (PartnersData.Data)partners.get(row);
-					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ partner.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/partner/"+ partner.getId() +"/'>" + partner.getPartnerName() +"</a></th></tr>";
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", partner.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/partner/"+ partner.getId() +"/'>" +
+							partner.getPartnerName()+"</a>", new Partners(requestContext)));
+					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" +
+									partner.getId() + "' name='_selected_action' /></td>" +
+									"<th id = 'row" + row + "'></th></tr>";
 				}
 				partnersListFormHtml = partnersListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 
 	final private String addDataToElementID[] = null;
