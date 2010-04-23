@@ -7,6 +7,7 @@ import java.util.Set;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
 import com.digitalgreen.dashboardgwt.client.data.BaseData.Data;
+import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
@@ -275,6 +276,10 @@ public class Form {
 				collectDependency((BaseData.Data)this.dependents[j], sourceDict);
 			}	
 		}
+	}
+	
+	public static String retriveQueryStringFromHTMLString(String html){
+		return BaseTemplate.createEditQueryString(html);
 	}
 	
 	public String printFormErrors() {

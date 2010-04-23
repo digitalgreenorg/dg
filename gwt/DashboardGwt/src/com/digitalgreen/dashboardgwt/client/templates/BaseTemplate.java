@@ -60,7 +60,7 @@ public class BaseTemplate extends Template {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
 			Hyperlink addLink = new Hyperlink();
@@ -78,13 +78,54 @@ public class BaseTemplate extends Template {
 		}
 	}
 	
+	protected void fillDgLinkPage(String templateType,
+			  String templatePlainType,
+		      String inputListFormHtml, 
+		      final BaseServlet servlet, List<Hyperlink> links) {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		//If we're unsure, just default to list view
+		if(queryArg.equals("list")) {
+			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
+			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
+			Hyperlink addLink = new Hyperlink();
+			addLink.setHTML("<a class='addlink' href='#" + 
+					templateType + 
+					"'> Add " + templatePlainType + "</a>");
+			// Take them to the add page
+			addLink.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Template.addLoadingMessage();
+					servlet.response();
+				}
+			});
+			RootPanel.get("add-link").add(addLink);			
+			for(int i = 0; i < links.size(); i++){
+				RootPanel.get("row"+i).add(links.get(i));
+			}
+		}
+	}	
+	
+	public Hyperlink createHyperlink(String linkText, final BaseServlet servlet){
+		Hyperlink addLink = new Hyperlink();
+		addLink.setHTML(linkText);
+		addLink.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Template.addLoadingMessage();
+				servlet.response();
+			}
+		});
+		
+		return addLink;
+	}
+	
 	protected void fillDGTemplate(String templateType, 
 								  String listHtml,
 								  String addHtml, String addDataToElementID[]) {
 		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
-		if(queryArg == "add") {
+		if(queryArg.equals("add") || queryArg.equals("edit")) {
 			this.postForm = new FormPanel();
 			this.postForm.getElement().setId("add-form");
 			this.postForm.setAction(RequestContext.getServerUrl() + 
@@ -109,8 +150,27 @@ public class BaseTemplate extends Template {
 		}
 	}	
 	
+	public static String createEditQueryString(String html){
+		FormPanel form = new FormPanel();
+		form.getElement().setId("tempEditForm");
+		form.add(new HTMLPanel(html));
+		HTMLPanel tempEditDiv = new HTMLPanel("<div id='tempEditDiv' style='display:none;'></div>");
+		RootPanel.get("footer").insert(tempEditDiv,0);
+		RootPanel.get("tempEditDiv").add(form);
+		String queryString = BaseTemplate.getFormString("tempEditForm");
+		RootPanel.get("tempEditDiv").removeFromParent();
+		return queryString;
+	}
+	
 	protected void fillDgFormFields(final BaseServlet servlet) {
-		if(this.getRequestContext().getMethodTypeCtx() == RequestContext.METHOD_GET) {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		String queryArg = (String)queryArgs.get("action");
+		if(this.getRequestContext().getMethodTypeCtx().equals(RequestContext.METHOD_GET) && 
+				(queryArg.equals("add") || queryArg.equals("edit"))) {
+			if(this.requestContext.getArgs().get("action").equals("edit")) {
+				servlet.getRequestContext().getArgs().put("id", this.requestContext.getArgs().get("id"));
+			}
+			servlet.getRequestContext().getArgs().put("action", this.getRequestContext().getArgs().get("action"));
 			Button b = Button.wrap(RootPanel.get("save").getElement());
 			b.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {

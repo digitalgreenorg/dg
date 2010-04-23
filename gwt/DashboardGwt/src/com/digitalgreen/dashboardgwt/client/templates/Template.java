@@ -17,11 +17,9 @@ public class Template implements TemplateInterface {
 	}
 	
 	private HTMLPanel getFormattedErrors() {
-		String errorStartHtml = "<p class='errornote'>";
-		String errorEndHtml = "</p>";
-		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + 
-				this.getRequestContext().getErrorMessage() + 
-				errorEndHtml);
+		String errorStartHtml = "<pre class='errornote'>";
+		String errorEndHtml = "</pre>";
+		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + this.getRequestContext().getErrorMessage() + errorEndHtml);
 		return errorPanel;
 	}
 	

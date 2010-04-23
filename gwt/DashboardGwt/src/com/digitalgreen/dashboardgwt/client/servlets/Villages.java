@@ -8,9 +8,11 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
+import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.VillagesTemplate;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class Villages extends BaseServlet {
 	
@@ -35,51 +37,49 @@ public class Villages extends BaseServlet {
 				VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(this.getStatusCode() == 200) {
-							VillagesData villageData = new VillagesData();
-							List villages = villageData.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Village successfully saved");
-							requestContext.getArgs().put("listing", villages);
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
-							getServlet().getRequestContext().setErrorMessage(results);
-							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));			
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Villages(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Villages(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							VillagesData villageData = new VillagesData();
-							List villages = villageData.getVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Village successfully saved");
-							requestContext.getArgs().put("listing", villages);
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
 							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
-							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));				
+							getServlet().redirectTo(new Villages(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					villageData.apply(villageData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					villageData.apply(villageData.postPageData());
+				}
 				
-				villageData.apply(villageData.postPageData());
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
@@ -87,14 +87,15 @@ public class Villages extends BaseServlet {
 				if(queryArg.equals("list")){
 					VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
+							if(this.getStatusCode() == 200) {
 								VillagesData villageData = new VillagesData();
 								List villages = villageData.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", villages);
-								getServlet().redirectTo(new Villages(requestContext));						
+								getServlet().getRequestContext().getArgs().put("listing", villages);
+								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 
@@ -106,35 +107,37 @@ public class Villages extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Villages(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								VillagesData villageData = new VillagesData();
 								List villages = villageData.getVillagesListingOffline();
-								RequestContext requestContext = new RequestContext();
 								requestContext.getArgs().put("listing", villages);
-								getServlet().redirectTo(new Villages(requestContext));
+								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Villages(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
 					villageData.apply(villageData.getListPageData());
 				}
-				else if(queryArg == "add"){
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new VillagesTemplate(requestContext));
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -146,7 +149,7 @@ public class Villages extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Villages(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -157,15 +160,17 @@ public class Villages extends BaseServlet {
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Villages(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					villageData.apply(villageData.getAddPageData());	
-				}
-				else {
-					this.fillTemplate(new VillagesTemplate(this.requestContext));
+					if(queryArg.equals("add")) {
+						villageData.apply(villageData.getAddPageData());
+					}
+					else{
+						villageData.apply(villageData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

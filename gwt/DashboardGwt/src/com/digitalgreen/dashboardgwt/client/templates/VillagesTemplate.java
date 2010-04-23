@@ -13,6 +13,7 @@ import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 public class VillagesTemplate extends BaseTemplate {
 	public VillagesTemplate(RequestContext requestContext) {
@@ -42,16 +43,17 @@ public class VillagesTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
-		this.fillListings();
+		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet);
+		super.fillDgLinkPage(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet, links);
 		// Now add any submit control buttons
 		super.fillDgFormFields(saveVillage);
 	}
 
-	protected void fillListings() {
+	protected List<Hyperlink> fillListings() {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
+		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
 		if(queryArg == null || queryArg != "add") {
 			// 	Add Listings
@@ -60,21 +62,28 @@ public class VillagesTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				VillagesData.Data village;
+				RequestContext requestContext = null;
 				for (int row = 0; row < villages.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					village = (VillagesData.Data)villages.get(row);
+					requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "edit");
+					requestContext.getArgs().put("id", village.getId());
+					links.add(this.createHyperlink("<a href='#dashboard/village/"+ village.getId() +"/'>" +
+							village.getVillageName()+"</a>", new Villages(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ village.getId() + "' name='_selected_action' /></td>" +
-						"<th><a href='/admin/dashboard/village/"+ village.getId() +"/'>" + village.getVillageName()+"</a></th>" +
+						"<th id = 'row" + row + "'></th>" +
 						"<td>"+ village.getBlock().getBlockName() + "</td>" + 
 					"</tr>";
 				}
 				villagesListFormHtml = villagesListFormHtml + tableRows + "</tbody></table>";
 			}
 		}
+		return links;
 	}
 	
 	// A list of Element IDs that need to receive the data before the template is loaded.
