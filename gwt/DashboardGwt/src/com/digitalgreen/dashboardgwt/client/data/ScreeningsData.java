@@ -8,6 +8,12 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.DevelopmentManagersData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.ManyToManyValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.TimeValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -182,6 +188,88 @@ public class ScreeningsData extends BaseData {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);
+		}
+		
+		@Override
+		public boolean validate(){
+			DateValidator dateValidator = new DateValidator(this.date, false, false);
+			dateValidator.setError("Please make sure 'Date' is NOT EMPTY and is formatted as YYYY-MM-DD.");
+			
+			TimeValidator startTimeValidator = new TimeValidator(this.start_time, false, false);
+			startTimeValidator.setError("Please make sure 'Start time' is NOT EMPTY and is formatted as 'HH:MM:SS' and it must be in 24 HOUR format.");
+			
+			TimeValidator endTimeValidator = new TimeValidator(this.end_time, false, false);
+			endTimeValidator.setError("Please make sure 'End time' is NOT EMPTY and is formatted as 'HH:MM:SS' and it must be in 24 HOUR format.");
+			
+			StringValidator locationValidator = new StringValidator(this.location, true, false, 0, 200);
+			locationValidator.setError("Please make sure that 'Location' in not nore than 200 CHARACTERS.");
+			
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			
+			StringValidator animatorValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
+			
+			ManyToManyValidator videoScreenedValidator = new ManyToManyValidator(videoes_screened, false);
+			videoScreenedValidator.setError("Please make sure you add some animators for 'Videoes screened'.");
+			
+			IntegerValidator targetPersonAttendanceValidator = new IntegerValidator(this.target_person_attendance, true, false);
+			targetPersonAttendanceValidator.setError("Please make sure that 'Target person attendance' is a number.");
+			
+			IntegerValidator targetAudienceIntereseValidator = new IntegerValidator(this.target_audience_interest, true, false);
+			targetAudienceIntereseValidator.setError("Please make sure that 'Target audience interest' is a number.");
+			
+			IntegerValidator targetAdoptionsValidator = new IntegerValidator(this.target_adoptions, true, false);
+			targetAdoptionsValidator.setError("Please make sure that 'Target adoptions' is a number.");
+			
+			ManyToManyValidator farmerGroupValidator = new ManyToManyValidator(farmer_groups_targeted, false);
+			farmerGroupValidator.setError("Please make sure you add some animators for 'Farmer groups targeted'.");
+			
+			ArrayList uniqueDate = new ArrayList();
+			uniqueDate.add("date");
+			uniqueDate.add(this.date);
+			
+			ArrayList uniqueStartTime = new ArrayList();
+			uniqueStartTime.add("start_time");
+			uniqueStartTime.add(this.start_time);
+			
+			ArrayList uniqueEndTime = new ArrayList();
+			uniqueEndTime.add("end_time");
+			uniqueEndTime.add(this.end_time);
+			
+			ArrayList uniqueLocation = new ArrayList();
+			uniqueLocation.add("location");
+			uniqueLocation.add(this.location);
+			
+			ArrayList uniqueVillage = new ArrayList();
+			uniqueVillage.add("village_id");
+			uniqueVillage.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(uniqueDate);
+			uniqueTogether.add(uniqueStartTime);
+			uniqueTogether.add(uniqueEndTime);
+			uniqueTogether.add(uniqueLocation);
+			uniqueTogether.add(uniqueVillage);
+			
+			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueTogether, new ScreeningsData());
+			uniqueDateStartEndTimeLocationVillageId.setError("The Date, Start time, End time, Location, and Village are already in the system.  Please make sure they are unique.");
+			
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(dateValidator);
+			validatorList.add(startTimeValidator);
+			validatorList.add(endTimeValidator);
+			validatorList.add(locationValidator);
+			validatorList.add(villageValidator);
+			validatorList.add(animatorValidator);
+			validatorList.add(videoScreenedValidator);
+			validatorList.add(targetPersonAttendanceValidator);
+			validatorList.add(targetAudienceIntereseValidator);
+			validatorList.add(targetAdoptionsValidator);
+			validatorList.add(farmerGroupValidator);
+			validatorList.add(uniqueDateStartEndTimeLocationVillageId);
+			
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override
