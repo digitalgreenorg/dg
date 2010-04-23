@@ -38,9 +38,9 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		super.fill();		
 		this.fillListings();		
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
+		super.fillDgListPage(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveAnimatorAssignedVillage);
+		super.fillDgFormPage(saveAnimatorAssignedVillage);
 	}
 	
 	

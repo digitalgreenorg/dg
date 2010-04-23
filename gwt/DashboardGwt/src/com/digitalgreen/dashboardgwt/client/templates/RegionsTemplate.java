@@ -33,9 +33,9 @@ public class RegionsTemplate extends BaseTemplate {
 		//Now add listings
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
+		super.fillDgListPage(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveRegion);
+		super.fillDgFormPage(saveRegion);
 	}
 	
 	protected void fillListings() {
@@ -55,7 +55,8 @@ public class RegionsTemplate extends BaseTemplate {
 					else
 						style = "row1";
 					region = (RegionsData.Data) regions.get(row);
-					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ region.getId() + "' name='_selected_action' /></td><th><a href='/admin/dashboard/region/"+ region.getId() +"/'>" + region.getRegionName() +"</a></th></tr>";
+					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ region.getId() + "' name='_selected_action' /></td>" +
+							"<th><a href='/admin/dashboard/region/"+ region.getId() +"/'>" + region.getRegionName() +"</a></th></tr>";
 				}
 				regionsListFormHtml = regionsListFormHtml + tableRows + "</tbody></table>";
 			}

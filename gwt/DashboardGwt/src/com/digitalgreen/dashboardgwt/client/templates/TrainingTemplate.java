@@ -36,9 +36,9 @@ public class TrainingTemplate extends BaseTemplate{
 		super.fill();
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
+		super.fillDgListPage(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveTraining);
+		super.fillDgFormPage(saveTraining);
 	}
 	
 	protected void fillListings() {

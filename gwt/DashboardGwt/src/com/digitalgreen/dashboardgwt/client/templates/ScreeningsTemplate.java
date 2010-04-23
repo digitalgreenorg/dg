@@ -51,9 +51,9 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet);
+		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveScreening);
+		super.fillDgFormPage(saveScreening);
 	}
 	
 	public void fillListings(){

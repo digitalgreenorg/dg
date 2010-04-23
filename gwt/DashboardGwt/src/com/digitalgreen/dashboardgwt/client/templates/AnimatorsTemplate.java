@@ -40,9 +40,9 @@ public class AnimatorsTemplate extends BaseTemplate {
 		super.fill();		
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
+		super.fillDgListPage(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveAnimator);
+		super.fillDgFormPage(saveAnimator);
 	}
 	
 	protected void fillListings() {

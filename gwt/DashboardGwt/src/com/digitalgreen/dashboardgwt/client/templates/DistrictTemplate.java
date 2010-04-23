@@ -35,9 +35,9 @@ public class DistrictTemplate extends BaseTemplate{
 		//Now add listings
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
+		super.fillDgListPage(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveDistrict);
+		super.fillDgFormPage(saveDistrict);
 	}
 	
 	protected void fillListings(){

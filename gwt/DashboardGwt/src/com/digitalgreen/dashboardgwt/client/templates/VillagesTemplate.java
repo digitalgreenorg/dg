@@ -45,9 +45,9 @@ public class VillagesTemplate extends BaseTemplate {
 		//Now add listings
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
-		super.fillDgLinkPage(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet, links);
+		super.fillDgListPage(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveVillage);
+		super.fillDgFormPage(saveVillage);
 	}
 
 	protected List<Hyperlink> fillListings() {

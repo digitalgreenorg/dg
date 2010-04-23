@@ -35,9 +35,9 @@ public class VideosTemplate extends BaseTemplate {
 		//Now add listings
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, videosListFormHtml, addVideosServlet);
+		super.fillDgListPage(templatePlainType, templateType, videosListFormHtml, addVideosServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveVideo);
+		super.fillDgFormPage(saveVideo);
 	}
 	
 	protected void fillListings() {

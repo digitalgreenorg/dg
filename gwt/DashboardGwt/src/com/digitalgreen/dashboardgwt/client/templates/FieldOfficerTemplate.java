@@ -38,10 +38,10 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		this.fillListings();
 		
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet);
+		super.fillDgListPage(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet);
 		
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveFieldOfficer);
+		super.fillDgFormPage(saveFieldOfficer);
 	}
 	
 	final private String addDataToElementID[] = null;

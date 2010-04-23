@@ -36,9 +36,9 @@ public class EquipmentsTemplate extends BaseTemplate{
 		
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, equipmentsListFormHtml, addEquipmentsServlet);
+		super.fillDgListPage(templatePlainType, templateType, equipmentsListFormHtml, addEquipmentsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveEquipment);
+		super.fillDgFormPage(saveEquipment);
 	}
 	
 	protected void fillListings() {

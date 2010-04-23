@@ -37,9 +37,9 @@ public class LanguagesTemplate extends BaseTemplate{
 		//Now add listings
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet);
+		super.fillDgListPage(templatePlainType, templateType, languagesListFormHtml, addLanguagesServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveLanguage);
+		super.fillDgFormPage(saveLanguage);
 	}
 	
 	protected void fillListings() {

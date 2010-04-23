@@ -26,9 +26,9 @@ public class DisctrictTemplate extends BaseTemplate{
 		// Add it to the rootpanel
 		super.fill();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
+		super.fillDgListPage(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(saveDistrict);
+		super.fillDgFormPage(saveDistrict);
 	}
 
 	final private String addDataToElementID[] = null;

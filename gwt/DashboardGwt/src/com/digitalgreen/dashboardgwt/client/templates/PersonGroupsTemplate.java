@@ -43,9 +43,9 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		super.fill();
 		this.fillListings();
 		// Now add hyperlinks
-		super.fillDGLinkControls(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
+		super.fillDgListPage(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet);
 		// Now add any submit control buttons
-		super.fillDgFormFields(savePersonGroup);
+		super.fillDgFormPage(savePersonGroup);
 	}
 	
 	protected void fillListings() {

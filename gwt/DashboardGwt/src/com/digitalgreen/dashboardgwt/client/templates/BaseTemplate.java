@@ -53,32 +53,7 @@ public class BaseTemplate extends Template {
 		super.fill();
 	}
 	
-	protected void fillDGLinkControls(String templateType,
-									  String templatePlainType,
-								      String inputListFormHtml, 
-								      final BaseServlet servlet) {
-		HashMap queryArgs = this.getRequestContext().getArgs();
-		String queryArg = (String)queryArgs.get("action");
-		// If we're unsure, just default to list view
-		if(queryArg.equals("list")) {
-			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
-			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
-			Hyperlink addLink = new Hyperlink();
-			addLink.setHTML("<a class='addlink' href='#" + 
-					templateType + 
-					"'> Add " + templatePlainType + "</a>");
-			// Take them to the add page
-			addLink.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					Template.addLoadingMessage();
-					servlet.response();
-				}
-			});
-			RootPanel.get("add-link").add(addLink);			
-		}
-	}
-	
-	protected void fillDgLinkPage(String templateType,
+	protected void fillDgListPage(String templateType,
 			  String templatePlainType,
 		      String inputListFormHtml, 
 		      final BaseServlet servlet, List<Hyperlink> links) {
@@ -162,7 +137,7 @@ public class BaseTemplate extends Template {
 		return queryString;
 	}
 	
-	protected void fillDgFormFields(final BaseServlet servlet) {
+	protected void fillDgFormPage(final BaseServlet servlet) {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		if(this.getRequestContext().getMethodTypeCtx().equals(RequestContext.METHOD_GET) && 
