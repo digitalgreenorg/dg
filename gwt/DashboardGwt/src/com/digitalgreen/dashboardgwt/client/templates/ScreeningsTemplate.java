@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
+import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
+import com.digitalgreen.dashboardgwt.client.data.PersonMeetingAttendanceData;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
@@ -34,7 +37,10 @@ public class ScreeningsTemplate extends BaseTemplate {
 		requestContext.setArgs(args);
 		Screenings addScreeningServlet = new Screenings(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new ScreeningsData()).getNewData());
+		ArrayList personMeetingAttendanceData = new ArrayList();
+		personMeetingAttendanceData.add((new PersonMeetingAttendanceData()).getNewData());
+		Form saveForm = new Form((new ScreeningsData()).getNewData(),
+				new Object[] {personMeetingAttendanceData});
 		saveRequestContext.setForm(saveForm);
 		Screenings saveScreening = new Screenings(saveRequestContext);
 				
@@ -170,7 +176,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"<div class='form-row village  '>" +
 										"<div>" +
 											"<label for='id_village' class='required'>Village:</label>"+
-											"<select name='village' id='id_village' onchange='filter()'>" +
+											"<select name='village' id='id_village' >" +
 												"<option value='' selected='selected'>---------</option>" +
 											"</select>" +
 /*											
@@ -304,6 +310,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 							"<br class='clear' />" +
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";// +
-//						"<script src='/DashboardGwt/war/media/js/screening_page_offline.js' type='text/javascript'></script>";
+						"<script type='text/javascript'>DateTimeShortcuts.init()</script>"+						
+						"<script src='/site_media/dashboardgwt/gears_init.js' type='text/javascript'></script>"+
+						"<script src='/site_media/media/js/screening_page.js' type='text/javascript'></script>";
 }
