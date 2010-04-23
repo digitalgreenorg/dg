@@ -42,9 +42,17 @@ public class ScreeningsData extends BaseData {
 	    private VillagesData.Data village;
 	    private FieldOfficersData.Data fieldofficer; 
 	    private AnimatorsData.Data animator;
+	    private ArrayList videoes_screened;
+	    private ArrayList farmer_groups_targeted;
 
 	    public Data() {
 			super();
+			videoes_screened = new ArrayList();
+			farmer_groups_targeted = new ArrayList();
+			this.addManyToManyRelationship("video", (new ScreeningVideosScreenedData()).new Data(), 
+					"videoes_screened");
+			this.addManyToManyRelationship("persongroups", (new ScreeningFarmerGroupsTargetedData()).new Data(), 
+			"farmer_groups_targeted");
 		}
 		
 	    public Data(String id) {
@@ -166,6 +174,10 @@ public class ScreeningsData extends BaseData {
 				AnimatorsData animator = new AnimatorsData();
 				this.animator = animator.getNewData();
 				this.animator.id = val;
+			} else if(key.equals("videoes_screened")) {
+				videoes_screened.add(val);
+			} else if(key.equals("farmer_groups_targeted")) {
+				farmer_groups_targeted.add(val);
 			} else {
 				return;
 			}

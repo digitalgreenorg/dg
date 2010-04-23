@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonMeetingAttendanceData.Data;
 import com.digitalgreen.dashboardgwt.client.data.PersonMeetingAttendanceData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
 
 public class PersonMeetingAttendanceData extends BaseData {
 
@@ -62,6 +64,13 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.id = id;
 			this.person = person;
 		}
+		
+		public Data(String id, ScreeningsData.Data screening, PersonsData.Data person){
+			super();
+			this.id = id;
+			this.screening = screening;
+			this.person = person;
+		}
 			
 		public ScreeningsData.Data getScreening(){
 			return this.screening;
@@ -91,6 +100,10 @@ public class PersonMeetingAttendanceData extends BaseData {
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
+			obj.person = (new PersonsData()).new Data();
+			obj.expressed_interest_practice = (new PracticesData()).new Data();
+			obj.expressed_adoption_practice = (new PracticesData()).new Data();
+			obj.expressed_question_practice = (new PracticesData()).new Data();
 			return obj;
 		}
 		
@@ -153,6 +166,19 @@ public class PersonMeetingAttendanceData extends BaseData {
 		}
 		
 		@Override
+		public void save(BaseData.Data foreignKey) {
+			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();			
+			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
+						foreignKey.getId(),
+						this.person.getId(),
+						this.expressed_interest_practice.getId(),this.expressed_interest,
+						this.expressed_adoption_practice.getId(),this.expressed_adoption,
+						this.expressed_question_practice.getId(),this.expressed_question);
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("screening", foreignKey.getId());
+		}
+		
+		@Override
 		public String getTableId() {
 			PersonMeetingAttendanceData personMeetingAttendancesDataDbApis = new PersonMeetingAttendanceData();
 			return personMeetingAttendancesDataDbApis.tableID;
@@ -179,10 +205,10 @@ public class PersonMeetingAttendanceData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_meeting_attendance`;";
 	protected static String selectPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME FROM person_meeting_attendance pma, person p" +
 			"WHERE pma.person_id = p.id ORDER BY (p.PERSON_NAME);";
-	protected static String listPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME, expressed_interest_practice_id" +
+	protected static String listPersonMeetingAttendances = "SELECT pma.id,p.id, p.PERSON_NAME, expressed_interest_practice_id" +
 			",EXPRESSED_INTEREST,expressed_adoption_practice_id, EXPRESSED_ADOPTION,expressed_question_practice_id,EXPRESSED_QUESTION " +
 			"FROM person_meeting_attendance pma, person p WHERE p.id = pma.person_id " +
-			"and p.group_id = pg.id ORDER BY (-p.id);";
+			"ORDER BY (-pma.id);";
 	protected static String savePersonMeetingAttendanceOfflineURL = "/dashboard/savepersonmeetingattendanceoffline/";
 	protected static String savePersonMeetingAttendanceOnlineURL = "/dashboard/savepersonmeetingattendanceonline/";
 	protected static String getPersonMeetingAttendanceOnlineURL = "/dashboard/getpersonmeetingattendancesonline/";
@@ -281,9 +307,81 @@ public class PersonMeetingAttendanceData extends BaseData {
 		return personMeetingAttendances;
 	}
 	
+	public List getPersonMeetingAttendancesListingOffline(){
+		BaseData.dbOpen();
+		List personMeetingAttendances = new ArrayList();
+		PersonsData person = new PersonsData();
+		this.select(listPersonMeetingAttendances);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					PersonsData.Data p = person.new Data(this.getResultSet().getFieldAsString(1),  this.getResultSet().getFieldAsString(2));
+					Data personMeetingAttendance = new Data(this.getResultSet().getFieldAsString(0), p);
+					personMeetingAttendances.add(personMeetingAttendance);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personMeetingAttendances;
+	}
+
 	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
-		
+	
+	public List getAllPersonMeetingAttendancesOffline(){
+		BaseData.dbOpen();
+		List personMeetingAttendances = new ArrayList();
+		PersonsData person = new PersonsData();
+		this.select(selectPersonMeetingAttendances);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					PersonsData.Data p = person.new Data(this.getResultSet().getFieldAsString(1),  this.getResultSet().getFieldAsString(2));
+					Data personMeetingAttendance = new Data(this.getResultSet().getFieldAsString(0), p);
+					personMeetingAttendances.add(personMeetingAttendance);
+	    	      }				
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+			
+		}
+		BaseData.dbClose();
+		return personMeetingAttendances;
+	}
+	
+	
+	public Object postPageData() {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + PersonMeetingAttendanceData.savePersonMeetingAttendanceOnlineURL, this.form.getQueryString());
+		}
+		else{
+			this.save();
+			return true;
+		}
+		return null;
+	}
+	
+	public Object getListPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonMeetingAttendanceData.getPersonMeetingAttendanceOnlineURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}	
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + PersonMeetingAttendanceData.savePersonMeetingAttendanceOnlineURL);
+		}
+		return false;
+	}
 }

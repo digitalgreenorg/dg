@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningVideosScreenedData.Type;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningVideosScreenedData.Data;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class ScreeningVideosScreenedData extends BaseData {
 	
@@ -87,6 +88,16 @@ public class ScreeningVideosScreenedData extends BaseData {
 					this.screening.getId(),
 					this.video.getId());
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public void save(BaseData.Data foreignKey){
+			ScreeningVideosScreenedData screeningVideosScreenedsDataDbApis = new ScreeningVideosScreenedData();
+			this.id = screeningVideosScreenedsDataDbApis.autoInsert(this.id,
+					foreignKey.getId(), 
+					this.video.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("screening", foreignKey.getId());
 		}
 		
 		@Override

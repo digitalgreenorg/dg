@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningFarmerGroupsTargetedData.Data;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningFarmerGroupsTargetedData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	
@@ -23,22 +24,22 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		final private static String COLLECTION_PREFIX = "screeningfarmergroupstargeted";
 		
 		private ScreeningsData.Data screening;// FK to the Screenings table
-		private PersonGroupsData.Data group;
+		private PersonGroupsData.Data persongroups;
 				
 		public Data() {
 			super();
 		}
 		
-		public Data(String id, ScreeningsData.Data screening, PersonGroupsData.Data group) {
+		public Data(String id, ScreeningsData.Data screening, PersonGroupsData.Data persongroups) {
 			this.id = id;
 			this.screening = screening;
-			this.group = group;
+			this.persongroups = persongroups;
 			}
 		
-		public Data(String id, PersonGroupsData.Data group){
+		public Data(String id, PersonGroupsData.Data persongroups){
 			super();
 			this.id = id;
-			this.group = group;
+			this.persongroups = persongroups;
 		}
 			
 		public ScreeningsData.Data getScreening(){
@@ -46,13 +47,13 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		}
 		
 		public PersonGroupsData.Data getPersonGroup(){
-			return this.group;
+			return this.persongroups;
 		}
 		
 		public BaseData.Data clone(){
 			Data obj = new Data();
 			obj.screening = (new ScreeningsData()).new Data();
-			obj.group = (new PersonGroupsData()).new Data();
+			obj.persongroups = (new PersonGroupsData()).new Data();
 				
 			return obj;
 		}
@@ -70,10 +71,10 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 				this.screening = screening.getNewData();
 				this.screening.id = val;
 				
-			} else if(key.equals("group")) {
-				PersonGroupsData group = new PersonGroupsData();
-				this.group = group.getNewData();
-				this.group.id = val;
+			} else if(key.equals("persongroups")) {
+				PersonGroupsData persongroups = new PersonGroupsData();
+				this.persongroups = persongroups.getNewData();
+				this.persongroups.id = val;
 			} else {
 				return;
 			}
@@ -86,8 +87,18 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
 			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(this.id,
 					this.screening.getId(),
-					this.group.getId());
+					this.persongroups.getId());
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public void save(BaseData.Data foreignKey){
+			ScreeningFarmerGroupsTargetedData screeningFarmerGroupsTargetedsDataDbApis = new ScreeningFarmerGroupsTargetedData();
+			this.id = screeningFarmerGroupsTargetedsDataDbApis.autoInsert(this.id,
+					foreignKey.getId(), 
+					this.persongroups.getId());
+			this.addNameValueToQueryString("id", this.id);
+			this.addNameValueToQueryString("screening", foreignKey.getId());
 		}
 		
 		@Override
@@ -171,10 +182,10 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	public List serialize(JsArray<Type> screeningFarmerGroupsTargetedObjects){
 		List screeningFarmerGroupsTargeteds = new ArrayList();
 		ScreeningsData screening = new ScreeningsData();
-		PersonGroupsData group = new PersonGroupsData();
+		PersonGroupsData persongroups = new PersonGroupsData();
 		for(int i = 0; i < screeningFarmerGroupsTargetedObjects.length(); i++){
 			ScreeningsData.Data sc = screening.new Data(screeningFarmerGroupsTargetedObjects.get(i).getScreening());
-			PersonGroupsData.Data pg = group.new Data(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup());
+			PersonGroupsData.Data pg = persongroups.new Data(screeningFarmerGroupsTargetedObjects.get(i).getPersonGroup());
 			
 			Data screeningFarmerGroupsTargeted = new Data(screeningFarmerGroupsTargetedObjects.get(i).getPk(),sc,pg);
 			screeningFarmerGroupsTargeteds.add(screeningFarmerGroupsTargeted);
