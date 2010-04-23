@@ -78,7 +78,6 @@ public class Regions extends BaseServlet {
 				else{
 					regionData.apply(regionData.postPageData());
 				}
-				
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();

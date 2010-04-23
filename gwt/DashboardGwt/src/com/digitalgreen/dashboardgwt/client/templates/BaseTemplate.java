@@ -111,7 +111,7 @@ public class BaseTemplate extends Template {
 			this.displayHtml = new HTMLPanel(addHtml);
 				
 			String addData = (String)queryArgs.get("addPageData");
-			if(addData != null && addDataToElementID.length > 0  ){
+			if(addData != null && addDataToElementID != null && addDataToElementID.length > 0  ){
 				HTMLPanel h = new HTMLPanel(addData);
 				for(int i = 0; i< addDataToElementID.length;i++){
 					this.displayHtml.getElementById(addDataToElementID[i]).setInnerHTML(h.getElementById(addDataToElementID[i]).getInnerHTML());
@@ -201,7 +201,6 @@ public class BaseTemplate extends Template {
 			"<span id='logout'></span>" +
 			"</div>" +
 		"</div>" +
-		"<div id='home-link'><a href='/site_media/DashboardGwt.html'>&nbsp;&nbsp;&nbsp;Home</a></div>" +
 		"<div id='info-space'></div>" +
 		"<div id='loading-space'></div>" +
 		"<!-- END Header -->" +
