@@ -308,11 +308,9 @@ def save_region_online(request):
 	if request.method == 'POST':
 		form = RegionForm(request.POST)
 		if form.is_valid():	
-			#print request.session.get('username')
 			form.save()
-			return HttpResponseRedirect('/dashboard/getregionsonline/')
+			return HttpResponse('')
 		else:
-			print form.errors
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
 	   form = RegionForm()
@@ -328,7 +326,7 @@ def get_regions_online(request, offset, limit):
 		  json_subcat = serializers.serialize("json", regions)
 		else:
 		  json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 		
 	
 def save_region_offline(request):
@@ -797,35 +795,58 @@ def save_equipment_offline(request):
 		else:
 			return HttpResponse("0")		
 		
-def save_village_online(request):
-	PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
-	AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
-	if request.method == "POST":
-	   form = VillageForm(request.POST)
-	   formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
-	   formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
-	   if form.is_valid() and formset_person_group.is_valid() and formset_animator.is_valid():
-	   	saved_village = form.save()
-	   	village = Village.objects.get(pk=saved_village.id)
-	   	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance=village)
-	   	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance=village)
-	   	formset_person_group.save()
-	   	formset_animator.save()
-	   	return HttpResponseRedirect('/dashboard/getvillagesonline/')
-	   else:
-	   	return HttpResponse("0")
-	else:
-		form = VillageForm()
-		blocks = get_user_blocks(request);
-		form.fields['block'].queryset = blocks.order_by('block_name')
-		formset_person_group = PersonGroupInlineFormSet()
-		formset_animator = AnimatorInlineFormSet()
-		form_list = list(form)
-		for form_person_group in formset_person_group.forms:
-			form_list = form_list + list(form_person_group)
-		for form_animator in formset_animator.forms:
-			form_list = form_list + list(form_animator)
-		return HttpResponse(form_list)
+def save_village_online(request, id):
+       PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
+       AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
+       if request.method == "POST":
+       	  if(id):
+       	  	village = Village.objects.get(id=id)
+       	  	form = VillageForm(request.POST, instance = village)
+       	  	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance = village)
+       	  	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance = village)
+          else:
+          	form = VillageForm(request.POST)
+          	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
+          	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
+          if form.is_valid() and formset_person_group.is_valid() and formset_animator.is_valid():
+                  saved_village = form.save()
+                  village = Village.objects.get(pk=saved_village.id)
+                  formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance=village)
+                  formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance=village)
+                  formset_person_group.save()
+                  formset_animator.save()
+                  return HttpResponse('')
+          else:
+          	      errors = form.errors.as_text() 
+          	      for form_person_group in formset_person_group.forms:
+          	      	    if(form_person_group.errors):
+          	             errors = errors + '\n' + form_person_group.errors.as_text()
+          	      for form_animator in formset_animator.forms:
+          	            if(form_animator.errors): 
+          	             errors = errors + '\n' + form_animator.errors.as_text()
+          	      print errors
+          	      return HttpResponse(errors, status=201)
+       else:
+               if(id):
+                       village = Village.objects.get(id=id)
+                       form = VillageForm(instance = village)
+                       formset_person_group = PersonGroupInlineFormSet(instance = village)
+                       formset_animator = AnimatorInlineFormSet(instance = village)
+               else:
+                       form = VillageForm()
+                       formset_person_group = PersonGroupInlineFormSet()
+                       formset_animator = AnimatorInlineFormSet()                        
+               blocks = get_user_blocks(request);
+               form.fields['block'].queryset = blocks.order_by('block_name')
+               form_list = list(form)
+               for form_person_group in formset_person_group.forms:
+                       form_list = form_list + list(form_person_group)
+               for form_animator in formset_animator.forms:
+                       form_list = form_list + list(form_animator)
+               return HttpResponse(form_list)
+ 	
+
+
 	
 def get_villages_online(request, offset, limit):
 	if request.method == 'POST':
