@@ -4,6 +4,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.RegionsData;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Hyperlink;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class RegionsTemplate extends BaseTemplate {
 		Form saveForm = new Form((new RegionsData()).getNewData());
 		saveRequestContext.setForm(saveForm);
 		Regions saveRegion = new Regions(saveRequestContext);
-
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
@@ -46,7 +46,7 @@ public class RegionsTemplate extends BaseTemplate {
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			// 	Add Listings
 			List regions = (List)queryArgs.get("listing");			
 			if(regions  != null){
@@ -60,12 +60,14 @@ public class RegionsTemplate extends BaseTemplate {
 					else
 						style = "row1";
 					region = (RegionsData.Data) regions.get(row);
+					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", region.getId());
-					links.add(this.createHyperlink("<a href='#dashboard/region/"+ region.getId() +"/'>" +
+					links.add(this.createHyperlink("<a href='#dashboard/region/" + region.getId() + "/'>" +
 							region.getRegionName() + "</a>", new Regions(requestContext)));
-					tableRows += "<tr class='" +style+ "'><td><input type='checkbox' class='action-select' value='"+ region.getId() + "' name='_selected_action' /></td>" +
-							"<th id = 'row" + row + "'></th></tr>";
+					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" + 
+								region.getId() + "' name='_selected_action' /></td>" +
+								"<th id = 'row" + row + "'></th></tr>";
 				}
 				regionsListFormHtml = regionsListFormHtml + tableRows + "</tbody></table>";
 			}

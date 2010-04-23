@@ -37,7 +37,7 @@ public class Regions extends BaseServlet {
 					public void onlineSuccessCallback(String results) {
 						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Village successfully saved");
+							requestContext.setMessage("Region successfully saved");
 							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Regions(requestContext));
 						} else {
