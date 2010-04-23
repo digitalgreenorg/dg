@@ -40,7 +40,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveAnimatorAssignedVillage);
+		super.fillDgFormFields(saveAnimatorAssignedVillage);
 	}
 	
 	

@@ -39,7 +39,7 @@ public class BlocksTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveBlock);
+		super.fillDgFormFields(saveBlock);
 	}
 	
 	protected void fillListings(){

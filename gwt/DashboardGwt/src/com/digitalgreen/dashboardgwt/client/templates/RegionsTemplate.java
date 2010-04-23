@@ -35,7 +35,7 @@ public class RegionsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, regionsListFormHtml, addRegionServlet);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveRegion);
+		super.fillDgFormFields(saveRegion);
 	}
 	
 	protected void fillListings() {

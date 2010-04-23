@@ -37,7 +37,7 @@ public class PartnersTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, partnersListFormHtml, addPartnersServlet);
 		// Now add any submit control buttons
-		super.fillDgFormPage(savePartner);
+		super.fillDgFormFields(savePartner);
 	}
 	
 	protected void fillListings() {

@@ -38,7 +38,7 @@ public class PracticeTemplate  extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, practiceListFormHtml, addPracticesServlet);
 		// Now add any submit control buttons
-		super.fillDgFormPage(savePractice);
+		super.fillDgFormFields(savePractice);
 	}
 	
 	public void fillListings(){
