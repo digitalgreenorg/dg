@@ -251,8 +251,6 @@ def set_key_for_user(request):
 			return HttpResponse("0")
 		
 def get_user_villages(request):
-	#print request.session.get('username')
-	#print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
 	villages = Village.objects.none()
 	for user_permission in user_permissions:
@@ -270,8 +268,6 @@ def get_user_villages(request):
 	return villages
 
 def get_user_blocks(request):
-	#print request.session.get('username')
-	#print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
 	blocks = Block.objects.none()
 	for user_permission in user_permissions:
@@ -288,8 +284,6 @@ def get_user_blocks(request):
 
 
 def get_user_districts(request):
-	#print request.session.get('username')
-	#print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
 	districts = District.objects.none()
 	for user_permission in user_permissions:
@@ -517,13 +511,10 @@ def save_partner_offline(request):
 def save_video_online(request):
     if request.method == 'POST':
         form = VideoForm(request.POST)
-        print request.POST
         if form.is_valid():
-        	print "here"
         	form.save()
         	return HttpResponseRedirect('/dashboard/getvideosonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = VideoForm()
@@ -551,7 +542,6 @@ def get_videos_online(request, offset, limit):
 def save_video_offline(request):
 	if request.method == 'POST':
 		form = VideoForm(request.POST)
-		print request.POST
 		if form.is_valid():
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
@@ -559,7 +549,6 @@ def save_video_offline(request):
 			form.save_m2m();
 			return HttpResponse("1")
 		else:
-			print form.errors
 			return HttpResponse("0")    
 
 
@@ -570,7 +559,6 @@ def save_videoagriculturalpractices_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getvideoagriculturalpracticesonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = VideoAgriculturalPracticesForm()
@@ -611,7 +599,6 @@ def save_personshowninvideo_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getpersonshowninvideoonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = PersonShownInVideoForm()
@@ -817,14 +804,13 @@ def save_village_online(request, id):
                   formset_animator.save()
                   return HttpResponse('')
           else:
-          	      errors = form.errors.as_text() 
+          	      errors = form.errors.as_text()
           	      for form_person_group in formset_person_group.forms:
           	      	    if(form_person_group.errors):
           	             errors = errors + '\n' + form_person_group.errors.as_text()
           	      for form_animator in formset_animator.forms:
           	            if(form_animator.errors): 
           	             errors = errors + '\n' + form_animator.errors.as_text()
-          	      print errors
           	      return HttpResponse(errors, status=201)
        else:
                if(id):
@@ -1139,7 +1125,6 @@ def save_groupstargetedinscreening_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getgroupstargetedinscreeningonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = GroupsTargetedInScreeningForm()
@@ -1181,7 +1166,6 @@ def save_videosscreenedinscreening_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getvideosscreenedinscreeningonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = VideosScreenedInScreeningForm()
@@ -1223,7 +1207,6 @@ def save_training_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/gettrainingsonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = TrainingForm()
@@ -1282,7 +1265,6 @@ def save_monthlycostpervillage_online(request):
             form.save()
             return HttpResponseRedirect('/dashboard/getmonthlycostpervillagesonline/')
         else:
-        	#print form.errors
         	return HttpResponse("0")
     else:
     	form = MonthlyCostPerVillageForm()
@@ -2011,7 +1993,6 @@ def village(request):
 def add_video(request):
         if request.method == 'POST':
                 form = VideoForm(request.POST)
-                #print request.POST
                 if form.is_valid():
                         form.save()
                         
