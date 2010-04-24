@@ -829,17 +829,24 @@ def save_developmentmanager_offline(request):
 		
  		
         
-def save_equipment_online(request):
+def save_equipment_online(request,id):
 	if request.method == 'POST':
-		form = EquipmentForm(request.POST)
-		if form.is_valid():	
-			# This should redirect to show region page
-			form.save()
-			return HttpResponseRedirect('/dashboard/getequipmentsonline/')
+		if(id):
+			equipment = Equipment.objects.get(id = id)
+			form = EquipmentForm(request.POST, instance = equipment)
 		else:
-			return HttpResponse(form.errors.as_text(), status=201)
+			form  = EquipmentForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponse('')
+		else:
+			return HttpResponse(form.errors.as_txt(),status = 201)		
 	else:
-		form = EquipmentForm()
+		if(id):
+			equipment = Equipment.objects.get(id = id)
+			form = EquipmentForm(instance = equipment)
+		else:
+			form  = EquipmentForm()
 		return HttpResponse(form)
 	
 	
@@ -852,7 +859,7 @@ def get_equipments_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_equipment_offline(request):
 	if request.method == 'POST':
@@ -924,7 +931,7 @@ def get_villages_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", villages,  relations=('block',))
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_village_offline(request):
 	#PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
@@ -947,28 +954,40 @@ def save_village_offline(request):
 def save_animator_online(request):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
 	if request.method == 'POST':
-		form = AnimatorForm(request.POST)
-		formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
+		if(id):
+			animator = Animator.objects.get(id=id)
+			form = AnimatorForm(request.POST, instance = animator)
+			formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance = animator)
+		else:
+			form = AnimatorForm(request.POST)
+       		formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
 		if form.is_valid() and formset.is_valid():	
-			# This should redirect to show region page
 			saved_animator = form.save()
 			animator = Animator.objects.get(pk=saved_animator.id)
 			formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
 			formset.save()
-			return HttpResponseRedirect('/dashboard/getanimatorsonline/')
+			return HttpResponseRedirect('')
 		else:
-			return HttpResponse(form.errors.as_text() + formset.errors.as_text(), status=201)
+			errors = form.errors.as_text()
+			for form_person in formset.forms:
+          	      	    if(form_person.errors):
+          	             errors = errors + '\n' + form_person.errors.as_text()
+			return HttpResponse(errors, status=201)
 	else:
-		form1 = AnimatorForm()
-		f = list(form1)
+		if(id):
+			animator = Animator.objects.get(id=id)
+			form = AnimatorForm(instance = animator)
+			formset = AnimatorAssignedVillageInlineFormSet(instance = animator)
+		else:
+			form = AnimatorForm()
+			formset = AnimatorAssignedVillageInlineFormSet()
 		villages = get_user_villages(request)
-		formset = AnimatorAssignedVillageInlineFormSet()
-		form1.fields['village'].queryset = villages.order_by('village_name')
-		for form in formset.forms:
-			form.fields['village'].queryset = villages.order_by('village_name')
-			f = f + list(form)
-		return HttpResponse(f)
-	
+		form.fields['village'].queryset = villages.order_by('village_name')
+		form_list = list(form)
+		for f in formset.forms:
+			f.fields['village'].queryset = villages.order_by('village_name')
+			form_list = form_list + list(f)
+		return HttpResponse(form_list)		
 	
 def get_animators_online(request, offset, limit):
 	if request.method == 'POST':
@@ -980,9 +999,9 @@ def get_animators_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
-def save_animator_offline(request):
+def save_animator_offline(request,id):
 	if request.method == 'POST':
 		form = AnimatorForm(request.POST)
 		if form.is_valid():
@@ -996,16 +1015,24 @@ def save_animator_offline(request):
 # functions for animator assigned village with user specific feature.
 #save_online function, get_online and save_offline functions of animatorassignedvillage with regionalization feature 
 
-def save_animatorassignedvillage_online(request):
+def save_animatorassignedvillage_online(request,id):
 	if request.method == 'POST':
-		form = AnimatorAssignedVillageForm(request.POST)
+		if(id):
+			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
+			form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)
+		else:
+			form = AnimatorAssignedVillageForm(request.POST)
 		if form.is_valid():	
 			form.save()
-			return HttpResponseRedirect('/dashboard/getanimatorassignedvillagesonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
-		form = AnimatorAssignedVillageForm()
+		if(id):
+			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
+			form = AnimatorAssignedVillageForm(instance = animatorassignedvillage)
+		else:
+			form = AnimatorAssignedVillageForm()
 		villages = get_user_villages(request);
 		form.fields['village'].queryset = villages.order_by('village_name')
 		form.fields['animator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
@@ -1021,7 +1048,7 @@ def get_animatorassignedvillages_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 
 def save_animatorassignedvillage_offline(request):
@@ -1073,7 +1100,7 @@ def save_persongroup_online(request,id):
 		form.fields['village'].queryset = villages.order_by('village_name')
 		form_set = list(form)
 		for f in formset.forms:
-			form.fields['village'].queryset = villages.order_by('village_name')
+			f.fields['village'].queryset = villages.order_by('village_name')
 			form_set = form_set + list(f)
 		return HttpResponse(form_set)
 	
@@ -1242,7 +1269,7 @@ def save_groupstargetedinscreening_online(request):
         form = GroupsTargetedInScreeningForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getgroupstargetedinscreeningonline/')
+            return HttpResponseRedirect('')
         else:
         	return HttpResponse(form.errors.as_text(), status=201)
     else:
@@ -1264,7 +1291,7 @@ def get_groupstargetedinscreening_online(request, offset, limit):
          json_subcat = serializers.serialize("json", groupstargetedinscreening)
         else:
          json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_groupstargetedinscreening_offline(request):
 	if request.method == 'POST':
@@ -1283,7 +1310,7 @@ def save_videosscreenedinscreening_online(request):
         form = VideosScreenedInScreeningForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getvideosscreenedinscreeningonline/')
+            return HttpResponseRedirect('')
         else:
 			return HttpResponse(form.errors.as_text(), status=201)
     else:
@@ -1305,7 +1332,7 @@ def get_videosscreenedinscreening_online(request, offset, limit):
          json_subcat = serializers.serialize("json", videosscreenedinscreening)
         else:
          json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_videosscreenedinscreening_offline(request):
 	if request.method == 'POST':
@@ -1375,7 +1402,7 @@ def save_traininganimatorstrained_online(request):
         form = TrainingAnimatorsTrainedForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/gettraininganimatorstrainedonline/')
+            return HttpResponseRedirect('')
         else:
         	return HttpResponse(form.errors.as_text(), status=201)
     else:
@@ -1396,7 +1423,7 @@ def get_traininganimatorstrained_online(request, offset, limit):
          json_subcat = serializers.serialize("json", traininganimatorstrained)
         else:
          json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_traininganimatorstrained_offline(request):
 	if request.method == 'POST':
@@ -1417,7 +1444,7 @@ def save_monthlycostpervillage_online(request):
         form = MonthlyCostPerVillageForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/getmonthlycostpervillagesonline/')
+            return HttpResponseRedirect('')
         else:
         	return HttpResponse(form.errors.as_text(), status=201)
     else:
@@ -1436,7 +1463,7 @@ def get_monthlycostpervillages_online(request, offset, limit):
          json_subcat = serializers.serialize("json", monthlycostpervillages, relations=('village',))
         else:
          json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+        return HttpResponse(json_subcat, mimetype="application/javascript")
        
 def save_monthlycostpervillage_offline(request):
 	if request.method == 'POST':
@@ -1459,7 +1486,7 @@ def save_personrelation_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getpersonrelationsonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1481,7 +1508,7 @@ def get_personrelations_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", personrelations)
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personrelation_offline(request):
 	if request.method == 'POST':
@@ -1503,7 +1530,7 @@ def save_animatorsalarypermonth_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getanimatorsalarypermonthsonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1524,7 +1551,7 @@ def get_animatorsalarypermonths_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", animatorsalarypermonths,  relations=('animator',))
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_animatorsalarypermonth_offline(request):
 	if request.method == 'POST':
@@ -1546,7 +1573,7 @@ def save_personmeetingattendance_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getpersonmeetingattendancesonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1567,7 +1594,7 @@ def get_personmeetingattendances_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", personmeetingattendances)
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personmeetingattendance_offline(request):
 	if request.method == 'POST':
@@ -1590,7 +1617,7 @@ def save_personadoptpractice_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getpersonadoptpracticesonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1611,7 +1638,7 @@ def get_personadoptpractices_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", personadoptpractices)
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_personadoptpractice_offline(request):
 	if request.method == 'POST':
@@ -1633,7 +1660,7 @@ def save_equipmentholder_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getequipmentholdersonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1649,7 +1676,7 @@ def get_equipmentholders_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", equipmentholders)
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_equipmentholder_offline(request):
 	if request.method == 'POST':
@@ -1672,7 +1699,7 @@ def save_reviewer_online(request):
 		if form.is_valid():	
 			# This should redirect to show region page
 			form.save()
-			return HttpResponseRedirect('/dashboard/getreviewersonline/')
+			return HttpResponseRedirect('')
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
@@ -1688,7 +1715,7 @@ def get_reviewers_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", reviewers)
 		else:
 			json_subcat = 'EOF'
-		return HttpResponse(json_subcat, mimetype="application/javascript", status = 200)
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_reviewer_offline(request):
 	if request.method == 'POST':
