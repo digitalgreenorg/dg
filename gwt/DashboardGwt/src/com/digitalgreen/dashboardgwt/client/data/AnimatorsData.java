@@ -246,6 +246,7 @@ public class AnimatorsData extends BaseData {
 			
 			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
 			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			uniqueNameGenderPartnerVillage.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(name);
@@ -292,6 +293,7 @@ public class AnimatorsData extends BaseData {
 			
 			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
 			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			uniqueNameGenderPartnerVillage.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(name);

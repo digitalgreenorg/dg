@@ -155,6 +155,8 @@ public class PersonGroupsData extends BaseData {
 			groupVillageId.add(villageId);
 			UniqueConstraintValidator uniqueGroupVillageId = new UniqueConstraintValidator(groupVillageId, new PersonGroupsData());
 			uniqueGroupVillageId.setError("The Person group and village are already in the system.  Please make sure they are unique.");
+			uniqueGroupVillageId.setCheckId(this.getId());
+
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(groupName);
 			validatorList.add(timings);
@@ -165,8 +167,8 @@ public class PersonGroupsData extends BaseData {
 
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			StringValidator groupName = new StringValidator(this.group_name, true, true, 0, 100);
-			groupName.setError("Please make sure group name is less than 100 characters'");
+			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100);
+			groupName.setError("Please make sure to enter a group name and that it's less than 100 characters");
 			TimeValidator timings = new TimeValidator(this.timings, true, true);
 			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
 			ArrayList validatorList = new ArrayList();

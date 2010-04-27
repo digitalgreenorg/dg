@@ -128,7 +128,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 			// dirty
 			if(queryString.endsWith("&")) {
-				queryString = queryString.substring(0, queryString.length() - 1);
+				queryString = queryString.substring(0, queryString.length() - 1 - 1);
 			}
 			BaseData.dbClose();
 			return queryString;
@@ -450,12 +450,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 					}
 				}
 				updateSql += " WHERE " + this.getFields()[0] + "=" + args[0] + ";";
-				Window.alert("Getting an UPDATE sql: " + updateSql);
-				String temp = "";
-				for(int j=0; j < tempListString.length; j++) {
-					temp += tempListString[j] + " ";
-				}
-				Window.alert("The temp string = " + temp);
 				this.update(updateSql, tempListString);
 			}
 			return args[0];

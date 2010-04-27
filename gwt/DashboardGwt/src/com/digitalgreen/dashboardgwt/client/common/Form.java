@@ -96,7 +96,7 @@ public class Form {
 		String queryString = this.parent.toQueryString(id);
 		for(int i=0; i < this.dependents.length; i++) {
 			if(this.dependents[i] instanceof ArrayList) {
-				queryString += "& " + ((BaseData.Data)((ArrayList)this.dependents[i]).get(0)).toInlineQueryString(id);
+				queryString += "&" + ((BaseData.Data)((ArrayList)this.dependents[i]).get(0)).toInlineQueryString(id);
 			} else {
 				queryString += "&" + ((BaseData.Data)this.dependents[i]).toInlineQueryString(id);
 			}
