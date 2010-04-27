@@ -2,22 +2,20 @@ package com.digitalgreen.dashboardgwt.client.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
-
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
-import com.digitalgreen.dashboardgwt.client.data.BaseData.Data;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 public class Form {
-	private BaseData.Data parent;
+	private BaseData.Data parent = null;
 	private Object[] dependents = null;
 	private HashMap dataFormat = null;
 	private String queryString = null;
 	private FormQueueData formQueue = null;
 	private ArrayList baseDataErrorStack = null;
+	private String id = null;
 	
 	public Form() {}
 	
@@ -53,6 +51,14 @@ public class Form {
 		return this.baseDataErrorStack != null && this.baseDataErrorStack.isEmpty();
 	}
 	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
 	public boolean validate() {
 		boolean hasErrors = false;
 		this.parseQueryString(this.queryString);
@@ -86,6 +92,18 @@ public class Form {
 		return !hasErrors;
 	}
 	
+	public void toQueryString(String id) {
+		String queryString = this.parent.toQueryString(id);
+		for(int i=0; i < this.dependents.length; i++) {
+			if(this.dependents[i] instanceof ArrayList) {
+				queryString += "& " + ((BaseData.Data)((ArrayList)this.dependents[i]).get(0)).toInlineQueryString(id);
+			} else {
+				queryString += "&" + ((BaseData.Data)this.dependents[i]).toInlineQueryString(id);
+			}
+		}
+		this.queryString = queryString;
+	}
+	
 	// Save the dataFormat representation of the Form.  Transaction details
 	// are left up to the caller.
 	public void save() {
@@ -93,7 +111,7 @@ public class Form {
 		// Save the parent first to get a FK for its dependents
 		this.parent.save();
 		FormQueueData.Data formQueueAdd = this.formQueue.initFormQueueAdd(this.parent.getTableId(), 
-				this.parent.getId(), this.parent.getQueryString());
+				this.parent.getId(), this.parent.getQueryString(), this.parent.getMode());
 		this.formQueue.addFormQueueData(formQueueAdd);
 		Object[] dataFormatKeys = dataFormat.keySet().toArray();
 		for(int i=0; i < dataFormatKeys.length; i++) {
@@ -109,7 +127,8 @@ public class Form {
 					dependentData.save(this.parent);
 					if(!dependentData.isManyToManyDependent()) {
 						formQueueAdd = this.formQueue.initFormQueueAdd(dependentData.getTableId(), 
-								dependentData.getId(), dependentData.getQueryString()); 
+								dependentData.getId(), dependentData.getQueryString(), 
+								dependentData.getMode());
 						this.formQueue.addFormQueueData(formQueueAdd);
 					}
 				}
@@ -117,7 +136,8 @@ public class Form {
 				((BaseData.Data)value).save(this.parent);
 				if(!((BaseData.Data)value).isManyToManyDependent()) {
 					formQueueAdd = this.formQueue.initFormQueueAdd(((BaseData.Data)value).getTableId(), 
-							((BaseData.Data)value).getId(), ((BaseData.Data)value).getQueryString());
+							((BaseData.Data)value).getId(), ((BaseData.Data)value).getQueryString(), 
+							((BaseData.Data)value).getMode());
 					this.formQueue.addFormQueueData(formQueueAdd);
 				}
 			}
@@ -154,8 +174,11 @@ public class Form {
 	}
 	
 	private void setDataObjectField(BaseData.Data dataObj, String key, Object val) {
-		if(val != null && val instanceof String) {	
+		if(val != null && val instanceof String) {
 			dataObj.setObjValueFromString(key, (String)val);
+			if(key.equals("id")) {
+				dataObj.setMode(FormQueueData.Data.ACTION_EDIT);
+			}
 		}
 	}
 	
@@ -268,6 +291,10 @@ public class Form {
 			return;
 		}
 		HashMap sourceDict = Form.flatten(queryString);
+		// Add the special edit id in case we have one
+		if(this.id != null) {
+			sourceDict.put("id", this.id);
+		}
 		collectParent(this.parent, sourceDict);
 		for(int j=0; j < this.dependents.length; j++) {
 			if(this.dependents[j] instanceof ArrayList) {

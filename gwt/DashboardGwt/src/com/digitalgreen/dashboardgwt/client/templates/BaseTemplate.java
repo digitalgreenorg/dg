@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
+import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Login;
@@ -26,6 +27,7 @@ public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
 	protected FormPanel postForm = null;
 	protected HTMLPanel displayHtml = null;
+	protected Form formTemplate = null;
 
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -56,7 +58,8 @@ public class BaseTemplate extends Template {
 	protected void fillDgListPage(String templateType,
 			  String templatePlainType,
 		      String inputListFormHtml, 
-		      final BaseServlet servlet, List<Hyperlink> links) {
+		      final BaseServlet servlet, 
+		      List<Hyperlink> links) {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		//If we're unsure, just default to list view
@@ -74,7 +77,7 @@ public class BaseTemplate extends Template {
 					servlet.response();
 				}
 			});
-			RootPanel.get("add-link").add(addLink);			
+			RootPanel.get("add-link").add(addLink);
 			for(int i = 0; i < links.size(); i++){
 				RootPanel.get("row"+i).add(links.get(i));
 			}
@@ -111,6 +114,7 @@ public class BaseTemplate extends Template {
 			this.displayHtml = new HTMLPanel(addHtml);
 				
 			String addData = (String)queryArgs.get("addPageData");
+
 			if(addData != null && addDataToElementID != null && addDataToElementID.length > 0  ){
 				HTMLPanel h = new HTMLPanel(addData);
 				for(int i = 0; i< addDataToElementID.length;i++){
@@ -148,6 +152,7 @@ public class BaseTemplate extends Template {
 			servlet.getRequestContext().getArgs().put("action", this.getRequestContext().getArgs().get("action"));
 			Button b = Button.wrap(RootPanel.get("save").getElement());
 			b.addClickHandler(new ClickHandler() {
+				// This gets executed on a POST request.
 				public void onClick(ClickEvent event) {
 					Template.addLoadingMessage();
 					// The query string can only be formed if we're on the page with 

@@ -116,7 +116,9 @@ public class PersonGroupsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if (key.equals("group_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			} else if (key.equals("group_name")) {
 				this.group_name = val;
 			} else if (key.equals("days")) {
 				this.days = val;
@@ -199,7 +201,21 @@ public class PersonGroupsData extends BaseData {
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("village", foreignKey.getId());
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			PersonGroupsData personGroupsData = new PersonGroupsData();
+			return rowToQueryString(personGroupsData.getTableName(), personGroupsData.getFields(), 
+					"id", id, "");
+		}
 
+		@Override
+		public String toInlineQueryString(String id) {
+			PersonGroupsData personGroupsData = new PersonGroupsData();
+			return rowToQueryString(personGroupsData.getTableName(), personGroupsData.getFields(), 
+					"village_id", id, this.COLLECTION_PREFIX + "_set");
+		}
+		
 		@Override
 		public String getTableId() {
 			PersonGroupsData personGroupsDataDbApis = new PersonGroupsData();

@@ -74,7 +74,8 @@ public class Villages extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
-					villageData.apply(villageData.postPageData((String)this.requestContext.getArgs().get("id")));
+					form.setId((String)this.requestContext.getArgs().get("id"));
+					villageData.apply(villageData.postPageData(form.getId()));
 				}
 				else{
 					villageData.apply(villageData.postPageData());
@@ -126,6 +127,7 @@ public class Villages extends BaseServlet {
 					villageData.apply(villageData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,12 +166,13 @@ public class Villages extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						villageData.apply(villageData.getAddPageData());
 					}
 					else{
-						villageData.apply(villageData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+						form.setId((String)this.requestContext.getArgs().get("id"));
+						villageData.apply(villageData.getAddPageData(form.getId()));
 					}
 				}
 			}

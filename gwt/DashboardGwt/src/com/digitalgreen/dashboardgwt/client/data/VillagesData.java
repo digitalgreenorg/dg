@@ -94,7 +94,9 @@ public class VillagesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("village_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			} else if(key.equals("village_name")) {
 				this.village_name = val;
 			} else if(key.equals("block")) {
 				BlocksData block = new BlocksData();
@@ -143,6 +145,7 @@ public class VillagesData extends BaseData {
 			villageBllockID.add(blockID);
 			UniqueConstraintValidator uniqueVillageBlockID = new UniqueConstraintValidator(villageBllockID, new VillagesData());
 			uniqueVillageBlockID.setError("The Village and Block pair is already in the system.  Please make sure it is unique.");
+			uniqueVillageBlockID.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(villageName);
@@ -170,6 +173,12 @@ public class VillagesData extends BaseData {
 		}
 		
 		@Override
+		public String toQueryString(String id) {
+			VillagesData villageData = new VillagesData();
+			return this.rowToQueryString(villageData.getTableName(), villageData.getFields(), "id", id, "");
+		}
+		
+		@Override
 		public String getTableId() {
 			VillagesData villagesDataDbApis = new VillagesData();
 			return villagesDataDbApis.tableID;
@@ -194,7 +203,7 @@ public class VillagesData extends BaseData {
 	protected static String getVillageOnlineURL = "/dashboard/getvillagesonline/";
 	protected static String saveVillageOfflineURL = "/dashboard/savevillageoffline/";
 	protected String[] fields = {"id", "village_name", "block_id", "no_of_households", "population",
-			"road_connectivty", "control", "start_date"};
+			"road_connectivity", "control", "start_date"};
 	protected String table_name = "village";
 	
 	public VillagesData() {
@@ -360,8 +369,9 @@ public class VillagesData extends BaseData {
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.saveVillageOnlineURL + id + "/" );
 		}
-		else{
-			return true;
+		else {
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
 	}

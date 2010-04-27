@@ -18,6 +18,12 @@ import com.google.gwt.user.client.ui.Hyperlink;
 public class VillagesTemplate extends BaseTemplate {
 	public VillagesTemplate(RequestContext requestContext) {
 		super(requestContext);
+		ArrayList personGroupData = new ArrayList();
+		personGroupData.add((new PersonGroupsData()).getNewData());
+		ArrayList animatorsData = new ArrayList();
+		animatorsData.add((new AnimatorsData()).getNewData());
+		this.formTemplate = new Form((new VillagesData()).getNewData(), 
+				new Object[] {personGroupData, animatorsData});
 	}
 	
 	@Override
@@ -28,15 +34,10 @@ public class VillagesTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Villages addVillagesServlet = new Villages(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		ArrayList personGroupData = new ArrayList();
-		personGroupData.add((new PersonGroupsData()).getNewData());
-		ArrayList animatorsData = new ArrayList();
-		animatorsData.add((new AnimatorsData()).getNewData());
-		Form saveForm = new Form((new VillagesData()).getNewData(), 
-				new Object[] {personGroupData, animatorsData});
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Villages saveVillage = new Villages(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, villagesListHtml, villagesAddHtml, addDataToElementID);
@@ -72,6 +73,7 @@ public class VillagesTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", village.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/village/"+ village.getId() +"/'>" +
 							village.getVillageName()+"</a>", new Villages(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +

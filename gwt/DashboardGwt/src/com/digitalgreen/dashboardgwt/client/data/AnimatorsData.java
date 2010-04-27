@@ -176,7 +176,9 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if (key.equals("name")) {
+			if (key.equals("id")) {
+				this.id = val;
+			} else if (key.equals("name")) {
 				this.name = val;
 			} else if (key.equals("age")) {
 				this.age = val;
@@ -325,6 +327,20 @@ public class AnimatorsData extends BaseData {
 			this.addNameValueToQueryString("village", foreignKey.getId());
 		}
 
+		@Override
+		public String toQueryString(String id) {
+			AnimatorsData animatorsData = new AnimatorsData();
+			return rowToQueryString(animatorsData.getTableName(), animatorsData.getFields(), 
+					"id", id, "");
+		}
+
+		@Override
+		public String toInlineQueryString(String id) {
+			AnimatorsData animatorsData = new AnimatorsData();
+			return rowToQueryString(animatorsData.getTableName(), animatorsData.getFields(), 
+					"village_id", id, this.COLLECTION_PREFIX + "_set");
+		}
+		
 		@Override
 		public String getTableId() {
 			AnimatorsData animatorsDataDbApis = new AnimatorsData();

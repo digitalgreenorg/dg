@@ -8,6 +8,7 @@ import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.data.BlocksData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
@@ -33,17 +34,18 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	public class Data implements Cloneable {
-		
 		protected String id = null;
 		protected String queryString = null;
 		protected HashMap manyToManyRelationshipMap = null;
 		protected boolean hasManyToManyRelationships = false;
 		protected boolean isManyToManyDependent = false;
 		protected ArrayList errorStack = null;
+		protected String mode = null;
 		
 		public Data() {
 			this.manyToManyRelationshipMap = new HashMap();
 			this.errorStack = new ArrayList();
+			this.mode = FormQueueData.Data.ACTION_ADD;
 		}
 		
 		// Override this
@@ -54,6 +56,14 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// Override this
 		public String getPrefixName() {
 			return null;
+		}
+		
+		public String getMode() {
+			return this.mode;
+		}
+		
+		public void setMode(String mode) {
+			this.mode = mode;
 		}
 		
 		public void setAsManyToManyDependent() {
@@ -72,6 +82,57 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 		// Override this
 		public void save(BaseData.Data withForeignKey) {}
+		
+		// Override this
+		public String toQueryString(String id) {
+			return "";
+		}
+		
+		// Override this
+		public String toInlineQueryString(String id) {
+			return "";
+		}
+		
+		protected String rowToQueryString(String tableName, String []fields,
+				String predicateLValue, String predicateRValue, String prefix) {
+			String queryString = "";
+			BaseData dbApi = new BaseData();
+			String query = "SELECT * FROM " + tableName + " WHERE " + predicateLValue + "=" +
+				predicateRValue + ";";
+			BaseData.dbOpen();
+			dbApi.select(query);
+			if (dbApi.getResultSet().isValidRow()) {
+				for (int i=0; dbApi.getResultSet().isValidRow(); ++i, dbApi.getResultSet().next()) {
+					String queryStringPart = "";
+					for(int j=0; j < fields.length; j++) {
+						try {
+							String value = dbApi.getResultSet().getFieldAsString(j);
+							String name = fields[j];
+							if(fields[j].endsWith("_id")) {
+								name = fields[j].substring(0, fields[j].length() - 3);
+							}
+							if(!prefix.equals("")) {
+								name = prefix.endsWith("_set") ? prefix + "-" + i + "-" + name :
+									prefix + "-" + name;
+							}
+							queryStringPart += value != null ? name + "=" + value : name;
+							if(fields.length != j-1) {
+								queryStringPart += "&";
+							}
+						} catch (DatabaseException e) {
+							e.printStackTrace();
+						}
+					}
+					queryString += queryStringPart + "&";
+				}
+			}
+			// dirty
+			if(queryString.endsWith("&")) {
+				queryString = queryString.substring(0, queryString.length() - 1);
+			}
+			BaseData.dbClose();
+			return queryString;
+		}
 		
 		public String getId() {
 			return this.id;
@@ -370,12 +431,33 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		// This client passed in a value for id
 		if(args[0] != null || !this.getFields()[0].equals("id")){
 			for(int i=0; i < tempList.size(); i++) {
-				if(tempList.get(i) == null) 
-					tempListString[i] = (String)tempList.get(i);
-				else
-					tempListString[i] = "" + tempList.get(i);
+				tempListString[i] = tempList.get(i) == null ? (String)tempList.get(i) : "" + tempList.get(i);
 			}
-			this.insert(insertSql, tempListString);
+			try {
+				BaseData.dbOpen();
+				this.lastResultSet = BaseData.db.execute(insertSql, tempListString);
+				BaseData.dbClose();
+			// Assuming duplicate exception (yuck), but no other way to tell.
+			} catch (DatabaseException e) {
+				String updateSql = "UPDATE " + this.getTableName() + " SET ";
+				String[] fields = this.getFields();
+				for(int i=0; i < fields.length; i++) {
+					if(i == fields.length - 1) {
+						updateSql += fields[i] + "=?";
+					} else {
+						updateSql += fields[i] + "=?, ";
+					}
+				}
+				updateSql += " WHERE " + this.getFields()[0] + "=" + args[0] + ";";
+				Window.alert("Getting an UPDATE sql: " + updateSql);
+				String temp = "";
+				for(int j=0; j < tempListString.length; j++) {
+					temp += tempListString[j] + " ";
+				}
+				Window.alert("The temp string = " + temp);
+				this.update(updateSql, tempListString);
+				Window.alert("ARE WE COMING HERE?");
+			}
 			return args[0];
 		}
 		// Get an autoincremented id
@@ -508,7 +590,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		if(!this.isOnline()) {
 			this.dataOnlineCallbacks.offlineSuccessCallback(methodResponse);
 		}
-		//this.dataOnlineCallbacks.onlineSuccessCallback("1");
 	}
 
 }

@@ -123,7 +123,7 @@ public class Trainings extends BaseServlet{
 					});
 					trainingData.apply(trainingData.getListPageData());
 				}
-				else if(queryArg == "add"){
+				else if(queryArg == "add") {
 					TrainingsData trainingData = new TrainingsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(addData != null) {
@@ -160,7 +160,45 @@ public class Trainings extends BaseServlet{
 							}	
 						}
 					});
-					trainingData.apply(trainingData.getAddPageData());	
+					trainingData.apply(trainingData.getAddPageData());
+				}else if(queryArg == "edit"){
+					TrainingsData trainingData = new TrainingsData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String addData) {
+							if(addData != null) {
+								RequestContext requestContext = new RequestContext();
+								requestContext.getArgs().put("action", "edit");
+								requestContext.getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new TrainingTemplate(requestContext));
+							} else {
+								// Must be some internal error, or no data to fetch?
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessage("Problem in the connection with the server.");
+							else
+								requestContext.setMessage("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Trainings(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object addData) {
+							if((String)addData != null) {
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new TrainingTemplate(getServlet().getRequestContext()));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessage("Local Database error");
+								getServlet().redirectTo(new Trainings(requestContext));
+							}	
+						}
+					});
+					trainingData.apply(trainingData.getAddPageData());
 				}
 				else {
 					this.fillTemplate(new TrainingTemplate(this.requestContext));

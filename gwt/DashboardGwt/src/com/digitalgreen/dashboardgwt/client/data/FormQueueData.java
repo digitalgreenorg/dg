@@ -3,6 +3,8 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 
 public class FormQueueData extends BaseData {
 
@@ -10,7 +12,6 @@ public class FormQueueData extends BaseData {
 		
 		final public static String ACTION_ADD = "A";
 		final public static String ACTION_EDIT = "E";
-		final public static String ACTION_DELETE = "D";
 		
 		final public static String SYNC_READY = "0";
 		final public static String SYNC_DONE = "1";
@@ -49,10 +50,10 @@ public class FormQueueData extends BaseData {
 	protected ArrayList formQueryStringList = null;
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `formqueue` " +
 										  "(table_id INTEGER NOT NULL, " +
-										  "global_pk_id INTEGER NOT NULL PRIMARY KEY, " +
+										  "global_pk_id INTEGER NOT NULL, " +
 										  "querystring VARCHAR NOT NULL, " +
 										  "sync_status BOOLEAN, " +
-										  "action CHAR(1)); ";  
+										  "action CHAR(1) NOT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `formqueue`;";
 	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 LIMIT 1";
 	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE global_pk_id=?";
@@ -71,9 +72,9 @@ public class FormQueueData extends BaseData {
 	}
 
 	public FormQueueData.Data initFormQueueAdd(String table_id, String global_pk_id, 
-			String queryString) {
+			String queryString, String mode) {
 		FormQueueData.Data formQueueData = new FormQueueData.Data(table_id, global_pk_id, queryString);
-		formQueueData.setAction(formQueueData.ACTION_ADD);
+		formQueueData.setAction(mode);
 		formQueueData.setSyncStatus(formQueueData.SYNC_READY);
 		return formQueueData;
 	}
