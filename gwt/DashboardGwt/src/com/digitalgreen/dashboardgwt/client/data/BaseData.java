@@ -439,9 +439,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				BaseData.dbClose();
 			// Assuming duplicate exception (yuck), but no other way to tell.
 			} catch (DatabaseException e) {
+				BaseData.dbClose();
 				String updateSql = "UPDATE " + this.getTableName() + " SET ";
 				String[] fields = this.getFields();
-				for(int i=0; i < fields.length; i++) {
+				for(int i= 0; i < fields.length; i++) {
 					if(i == fields.length - 1) {
 						updateSql += fields[i] + "=?";
 					} else {
@@ -456,7 +457,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				}
 				Window.alert("The temp string = " + temp);
 				this.update(updateSql, tempListString);
-				Window.alert("ARE WE COMING HERE?");
 			}
 			return args[0];
 		}
@@ -558,7 +558,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public void execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
-			this.lastResultSet = BaseData.db.execute(sql, args);	
+			this.lastResultSet = BaseData.db.execute(sql, args);
 		} catch (DatabaseException e) {
 			Window.alert("Database execute error:" + e.toString());
 		}
