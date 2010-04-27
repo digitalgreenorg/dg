@@ -307,7 +307,7 @@ def save_region_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			region = Region.objects.get(id = id)
@@ -350,7 +350,7 @@ def save_state_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			state = State.objects.get(id = id)
@@ -392,7 +392,7 @@ def save_fieldofficer_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			fieldofficer = FieldOfficer.objects.get(id = id)
@@ -434,7 +434,7 @@ def save_practice_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			practice = Practice.objects.get(id = id)
@@ -476,7 +476,7 @@ def save_language_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			language = Language.objects.get(id = id)
@@ -511,7 +511,7 @@ def save_language_offline(request):
 def save_partner_online(request,id):
 	if request.method == 'POST':
 		if(id):
-			partner = Partner.objects.get(id = id)
+			partner = Partners.objects.get(id = id)
 			form = PartnerForm(request.POST, instance = partner)
 		else:
 			form  = PartnerForm(request.POST)
@@ -519,10 +519,10 @@ def save_partner_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
-			partner = Partner.objects.get(id = id)
+			partner = Partners.objects.get(id = id)
 			form = PartnerForm(instance = partner)
 		else:
 			form  = PartnerForm()
@@ -709,7 +709,7 @@ def save_district_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			district = District.objects.get(id = id)
@@ -752,7 +752,7 @@ def save_block_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			block = Block.objects.get(id = id)
@@ -797,7 +797,7 @@ def save_developmentmanager_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			developmentmanager = DevelopmentManager.objects.get(id = id)
@@ -805,6 +805,7 @@ def save_developmentmanager_online(request,id):
 		else:
 			form  = DevelopmentManagerForm()
 		return HttpResponse(form)	
+	
 def get_developmentmanagers_online(request, offset, limit):
 	if request.method == 'POST':
 		return redirect('developmentmanagers')
@@ -826,9 +827,7 @@ def save_developmentmanager_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")		
-		
- 		
-        
+		  
 def save_equipment_online(request,id):
 	if request.method == 'POST':
 		if(id):
@@ -840,7 +839,7 @@ def save_equipment_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			equipment = Equipment.objects.get(id = id)
@@ -885,6 +884,7 @@ def save_village_online(request, id):
           	form = VillageForm(request.POST)
           	formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
           	formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
+          
           if form.is_valid() and formset_person_group.is_valid() and formset_animator.is_valid():
                   saved_village = form.save()
                   village = Village.objects.get(pk=saved_village.id)
@@ -901,6 +901,7 @@ def save_village_online(request, id):
           	      for form_animator in formset_animator.forms:
           	            if(form_animator.errors): 
           	             errors = errors + '\n' + form_animator.errors.as_text()
+          	      print errors
           	      return HttpResponse(errors, status=201)
        else:
                if(id):
@@ -915,11 +916,7 @@ def save_village_online(request, id):
                blocks = get_user_blocks(request);
                form.fields['block'].queryset = blocks.order_by('block_name')
                form_list = list(form)
-               for form_person_group in formset_person_group.forms:
-                       form_list = form_list + list(form_person_group)
-               for form_animator in formset_animator.forms:
-                       form_list = form_list + list(form_animator)
-               return HttpResponse(form_list)
+               return HttpResponse(form.as_table() + formset_person_group.as_table() + formset_animator.as_table())
  	
 def get_villages_online(request, offset, limit):
 	if request.method == 'POST':
@@ -934,12 +931,8 @@ def get_villages_online(request, offset, limit):
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_village_offline(request):
-	#PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups, extra=5)
-	#AnimatorInlineFormSet = inlineformset_factory(Village, Animator, extra=5)
 	if request.method == 'POST':
 		form = VillageForm(request.POST)
-		#formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
-		#formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
 		if form.is_valid():
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
@@ -948,10 +941,7 @@ def save_village_offline(request):
 		else:
 			return HttpResponse("0")
 		
-# function for animator with user specific feature.
-#save_online function, get_online and save_offline functions of animator with regionalization feature 
-# function for animator with user specific feature.
-def save_animator_online(request):
+def save_animator_online(request, id):
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
 	if request.method == 'POST':
 		if(id):
@@ -970,8 +960,8 @@ def save_animator_online(request):
 		else:
 			errors = form.errors.as_text()
 			for form_person in formset.forms:
-          	      	    if(form_person.errors):
-          	             errors = errors + '\n' + form_person.errors.as_text()
+				if(form_person.errors):
+					errors = errors + '\n' + form_person.errors.as_text()
 			return HttpResponse(errors, status=201)
 	else:
 		if(id):
@@ -983,11 +973,9 @@ def save_animator_online(request):
 			formset = AnimatorAssignedVillageInlineFormSet()
 		villages = get_user_villages(request)
 		form.fields['village'].queryset = villages.order_by('village_name')
-		form_list = list(form)
 		for f in formset.forms:
 			f.fields['village'].queryset = villages.order_by('village_name')
-			form_list = form_list + list(f)
-		return HttpResponse(form_list)		
+		return HttpResponse(form.as_table() + formset.as_table())
 	
 def get_animators_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1001,7 +989,7 @@ def get_animators_online(request, offset, limit):
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
-def save_animator_offline(request,id):
+def save_animator_offline(request):
 	if request.method == 'POST':
 		form = AnimatorForm(request.POST)
 		if form.is_valid():
@@ -1011,9 +999,6 @@ def save_animator_offline(request,id):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-
-# functions for animator assigned village with user specific feature.
-#save_online function, get_online and save_offline functions of animatorassignedvillage with regionalization feature 
 
 def save_animatorassignedvillage_online(request,id):
 	if request.method == 'POST':
@@ -1062,10 +1047,6 @@ def save_animatorassignedvillage_offline(request):
 		else:
 			return HttpResponse("0")	
 		
-		
-#functions for persongroups with user specific feature.
-#save_online function, get_online and save_offline functions of persongroups with regionalization feature
-
 def save_persongroup_online(request,id):
 	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=30)
 	if request.method == 'POST':
@@ -1085,8 +1066,8 @@ def save_persongroup_online(request,id):
 		else:
 			errors = form.errors.as_text()
 			for form_person in formset.forms:
-          	      	    if(form_person.errors):
-          	             errors = errors + '\n' + form_person.errors.as_text()
+				if(form_person.errors):
+					errors = errors + '\n' + form_person.errors.as_text()
 			return HttpResponse(errors, status=201)
 	else:
 		if(id):
@@ -1098,11 +1079,9 @@ def save_persongroup_online(request,id):
 			formset = PersonFormSet()
 		villages = get_user_villages(request)
 		form.fields['village'].queryset = villages.order_by('village_name')
-		form_set = list(form)
 		for f in formset.forms:
 			f.fields['village'].queryset = villages.order_by('village_name')
-			form_set = form_set + list(f)
-		return HttpResponse(form_set)
+		return HttpResponse(form.as_table() + formset.as_table())
 	
 def get_persongroups_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1126,10 +1105,6 @@ def save_persongroup_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-		
-
-#functions for person with user specific feature.
-#save_online function, get_online and save_offline functions of person with regionalization feature
 
 def save_person_online(request, id):
 	PersonAdoptPracticeFormSet = inlineformset_factory( Person,PersonAdoptPractice,extra=3)
@@ -1150,8 +1125,8 @@ def save_person_online(request, id):
 		else:
 			errors = form.errors.as_text()
 			for form_person in formset.forms:
-          	      	    if(form_person.errors):
-          	             errors = errors + '\n' + form_person.errors.as_text()
+				if(form_person.errors):
+					errors = errors + '\n' + form_person.errors.as_text()
 			return HttpResponse(errors, status=201)
 	else:
 		if(id):
@@ -1164,10 +1139,7 @@ def save_person_online(request, id):
 		villages = get_user_villages(request)
 		form.fields['village'].queryset = villages.order_by('village_name')
 		form.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
-		form_list = list(form)
-		for f in formset.forms:
-			form_list = form_list + list(f)
-		return HttpResponse(form_list)
+		return HttpResponse(form.as_table() + formset.as_table())
 	
 def get_persons_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1191,9 +1163,6 @@ def save_person_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-		
-#functions for SCREENING with user specific feature.
-#save_online function, get_online and save_offline functions of SCREENING with regionalization feature
 
 def save_screening_online(request,id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
@@ -1231,10 +1200,7 @@ def save_screening_online(request,id):
 		form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
 		form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
 		form.fields['videoes_screened'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
-		form_list = list(form)
-		for form_person_meeting_attendance in formset.forms:
-			form_list = form_list + list(form_person_meeting_attendance)
-		return HttpResponse(form_list)
+		return HttpResponse(form.as_table() + formset.as_table())
 	
 def get_screenings_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1259,10 +1225,6 @@ def save_screening_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-
-
-#functions for GROUPSTARGETEDINSCREENING with user specific feature.
-#save_online function, get_online and save_offline functions of GROUPSTARGETEDINSCREENING with regionalization feature
 
 def save_groupstargetedinscreening_online(request):
     if request.method == 'POST':
@@ -1303,8 +1265,7 @@ def save_groupstargetedinscreening_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-#functions for VIDEOSSCREENEDINSCREENING with user specific feature.
-#save_online function, get_online and save_offline functions of VIDEOSSCREENEDINSCREENING with regionalization feature
+		
 def save_videosscreenedinscreening_online(request):
     if request.method == 'POST':
         form = VideosScreenedInScreeningForm(request.POST)
@@ -1344,8 +1305,6 @@ def save_videosscreenedinscreening_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")       
-#functions for TRAINING with user specific feature.
-#save_online function, get_online and save_offline functions of TRAINING with regionalization feature
 
 def save_training_online(request,id):
 	if request.method == 'POST':
@@ -1358,7 +1317,7 @@ def save_training_online(request,id):
 			form.save()
 			return HttpResponse('')
 		else:
-			return HttpResponse(form.errors.as_txt(),status = 201)		
+			return HttpResponse(form.errors.as_text(),status = 201)		
 	else:
 		if(id):
 			training = Training.objects.get(id = id)
@@ -1372,7 +1331,7 @@ def save_training_online(request,id):
 
 def get_trainings_online(request, offset, limit):
     if request.method == 'POST':
-        return redirect('video')
+        return redirect('training')
     else:
     	villages = get_user_villages(request);
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
@@ -1395,8 +1354,6 @@ def save_training_offline(request):
 		else:
 			return HttpResponse("0")
 		
-#functions for Many to Many relation table TrainingAnimatorsTrained with user specific feature.
-#get_online function of TrainingAnimatorsTrained with regionalization feature        
 def save_traininganimatorstrained_online(request):
     if request.method == 'POST':
         form = TrainingAnimatorsTrainedForm(request.POST)
@@ -1436,8 +1393,6 @@ def save_traininganimatorstrained_offline(request):
 			return HttpResponse("1")
 		else:
 			return HttpResponse("0")
-#functions for MonthlyCostPerVillage with user specific feature.
-#save_online function, get_online and save_offline functions of MonthlyCostPerVillage with regionalization feature
 		
 def save_monthlycostpervillage_online(request):
     if request.method == 'POST':
@@ -1451,7 +1406,7 @@ def save_monthlycostpervillage_online(request):
     	form = MonthlyCostPerVillageForm()
     	villages = get_user_villages(request);
         form.fields['village'].queryset = villages.order_by('village_name')
-        return HttpResponse(form);            
+        return HttpResponse(form)            
         
 def get_monthlycostpervillages_online(request, offset, limit):
     if request.method == 'POST':
@@ -1477,14 +1432,10 @@ def save_monthlycostpervillage_offline(request):
 			return HttpResponse("0")
 
 
-#functions for PersonRelations with user specific feature.
-#save_online function, get_online and save_offline functions of PersonRelations without regionalization feature
-
 def save_personrelation_online(request):
 	if request.method == 'POST':
 		form = PersonRelationsForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
@@ -1521,14 +1472,10 @@ def save_personrelation_offline(request):
 		else:
 			return HttpResponse("0")
 		
-#functions for AnimatorSalaryPerMonth with user specific feature.
-#save_online function, get_online and save_offline functions of AnimatorSalaryPerMonth with regionalization feature
-
 def save_animatorsalarypermonth_online(request):
 	if request.method == 'POST':
 		form = AnimatorSalaryPerMonthForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
@@ -1564,14 +1511,10 @@ def save_animatorsalarypermonth_offline(request):
 		else:
 			return HttpResponse("0")
 
-#functions for PersonMeetingAttendance with user specific feature.
-#save_online function, get_online and save_offline functions of PersonMeetingAttendance with regionalization feature
-
 def save_personmeetingattendance_online(request):
 	if request.method == 'POST':
 		form = PersonMeetingAttendanceForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
@@ -1607,15 +1550,10 @@ def save_personmeetingattendance_offline(request):
 		else:
 			return HttpResponse("0")
 		
-		
-#functions for PersonAdoptPractice with user specific feature.
-#save_online function, get_online and save_offline functions of PersonAdoptPractice with regionalization feature
-
 def save_personadoptpractice_online(request):
 	if request.method == 'POST':
 		form = PersonAdoptPracticeForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
@@ -1625,7 +1563,6 @@ def save_personadoptpractice_online(request):
 		villages = get_user_villages(request);
 		form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
 		return HttpResponse(form)
-	
 	
 def get_personadoptpractices_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1651,14 +1588,10 @@ def save_personadoptpractice_offline(request):
 		else:
 			return HttpResponse("0")
 
-#functions for EquipmentHolder with user specific feature.
-#save_online function, get_online and save_offline functions of EquipmentHolder with regionalization feature
-
 def save_equipmentholder_online(request):
 	if request.method == 'POST':
 		form = EquipmentHolderForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
@@ -1689,15 +1622,10 @@ def save_equipmentholder_offline(request):
 		else:
 			return HttpResponse("0")
 
-
-#functions for Reviewer with user specific feature.
-#save_online function, get_online and save_offline functions of Reviewer with regionalization feature
-
 def save_reviewer_online(request):
 	if request.method == 'POST':
 		form = ReviewerForm(request.POST)
 		if form.is_valid():	
-			# This should redirect to show region page
 			form.save()
 			return HttpResponseRedirect('')
 		else:
