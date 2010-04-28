@@ -268,12 +268,45 @@ public class PartnersData extends BaseData {
 		return false;
 	}
 	
-	public Object getPageData(){
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + PartnersData.getPartnerOnlineURL);
 		}
 		else{
 			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePartnerOnlineURL);
+		}
+		else{
+			return "No add data required";
 		}
 		return false;
 	}

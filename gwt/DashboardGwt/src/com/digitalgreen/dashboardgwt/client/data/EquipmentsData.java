@@ -334,8 +334,21 @@ public class EquipmentsData extends BaseData {
 		
 		return false;
 	}
-			
-	public Object getPageData(){
+	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveEquipmentOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL);
 		}
@@ -343,6 +356,44 @@ public class EquipmentsData extends BaseData {
 			return true;
 		}
 		return false;
+	}	
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveEquipmentOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
 	}
+	
+	public String retrieveDataAndConvertResultIntoHtml(){
+		EquipmentHoldersData equipmentHoldersData = new EquipmentHoldersData();
+		List equipmentHolders = equipmentHoldersData.getAllEquipmentHoldersOffline();
+		EquipmentHoldersData.Data equipmentHolder;
+		String html = "<select id='id_equipmentholder' name='equipmentholder'>" +
+				" <option selected='selected' value=''>---------</option>";
+		
+		for(int i =0; i< equipmentHolders.size(); i++){
+			equipmentHolder = (EquipmentHoldersData.Data) equipmentHolders.get(i);
+			html = html + "<option value = \"" + equipmentHolder.getId() + "\">" + equipmentHolder.getEquipmentHolderName() +  "</option>";
+		}
+		html = html + "</select>";
+		
+		return html;
+	}
+
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveEquipmentOnlineURL);
+		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+
+	
 
 }

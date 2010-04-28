@@ -10,17 +10,18 @@ import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.templates.DistrictTemplate;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
-public class Districts extends BaseServlet{
-
-	public Districts(){
+public class Districts extends BaseServlet {
+	
+	public Districts() {
 		super();
 	}
 	
 	public Districts(RequestContext requestContext) {
 		super(requestContext);
 	}
-
+	
 	@Override
 	public void response() {
 		super.response();
@@ -31,70 +32,71 @@ public class Districts extends BaseServlet{
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				DistrictsData districtData = new DistrictsData(new OnlineOfflineCallbacks(this){
+				DistrictsData districtsData = new DistrictsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							DistrictsData districtdata = new DistrictsData();
-							List districts = districtdata.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("District successfully saved");
-							requestContext.getArgs().put("listing", districts);
-							getServlet().redirectTo(new Districts(requestContext ));
-						}
-						else {
-							// Error in saving data
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Districts(requestContext));
+						} else {
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Districts(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Districts(requestContext));
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Districts(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							DistrictsData districtdata = new DistrictsData();
-							List districts = districtdata.getDistrictsListingsOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("District successfully saved");
-							requestContext.getArgs().put("listing", districts);
-							getServlet().redirectTo(new Districts(requestContext ));
-						}
-						else {
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Districts(requestContext));
+						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new Districts(getServlet().getRequestContext()));
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new Districts(getServlet().getRequestContext()));			
 						}
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					districtsData.apply(districtsData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					districtsData.apply(districtsData.postPageData());
+				}
 				
-				districtData.apply(districtData.postPageData());
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list") {
-					DistrictsData districtData = new DistrictsData(new OnlineOfflineCallbacks(this){
+				if(queryArg.equals("list")){
+					DistrictsData districtsData = new DistrictsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								DistrictsData districtdata = new DistrictsData();
-								List districts = districtdata.getListingOnline(results);
+							if(this.getStatusCode() == 200) {
+								DistrictsData districtsData = new DistrictsData();
+								List districts = districtsData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", districts);
+								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));						
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", districts);
-								getServlet().fillTemplate(new DistrictTemplate(requestContext));
-							}
-							else {
-								// Error in saving the data			
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -103,40 +105,42 @@ public class Districts extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Districts(requestContext));
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								DistrictsData districtdata = new DistrictsData();
-								List districts = districtdata.getDistrictsListingsOffline();
-								RequestContext requestContext = new RequestContext();
+								DistrictsData districtsData = new DistrictsData();
+								List districts = districtsData.getDistrictsListingsOffline();
 								requestContext.getArgs().put("listing", districts);
-								getServlet().fillTemplate(new DistrictTemplate(requestContext));
-							} 
-							else {
+								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Districts(requestContext));
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
 					});
-					districtData.apply(districtData.getListPageData());
+					districtsData.apply(districtsData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					DistrictsData districtData = new DistrictsData(new OnlineOfflineCallbacks(this){
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					DistrictsData districtsData = new DistrictsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new DistrictTemplate(requestContext));
-							}
-							else{
-								// error in saving data
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
+					
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -145,7 +149,7 @@ public class Districts extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Districts(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -156,15 +160,17 @@ public class Districts extends BaseServlet{
 								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Districts(requestContext));				
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
 					});
-					districtData.apply(districtData.getAddPageData());
-				}
-				else {
-					this.fillTemplate(new DistrictTemplate(this.requestContext));
+					if(queryArg.equals("add")) {
+						districtsData.apply(districtsData.getAddPageData());
+					}
+					else{
+						districtsData.apply(districtsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

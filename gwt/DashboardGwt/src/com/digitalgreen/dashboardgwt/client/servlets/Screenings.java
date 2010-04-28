@@ -10,8 +10,10 @@ import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData;
 import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class Screenings extends BaseServlet {
+	
 	public Screenings() {
 		super();
 	}
@@ -30,81 +32,72 @@ public class Screenings extends BaseServlet {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				ScreeningsData screeningData = new ScreeningsData(new OnlineOfflineCallbacks(this){
-					
-					@Override
+				ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(this.getStatusCode() == 200) {
-							ScreeningsData screeningdata = new ScreeningsData();
-							List screenings = screeningdata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Screenings successfully saved");
-							requestContext.getArgs().put("listing", screenings);
-							getServlet().redirectTo(new Screenings(requestContext ));
-						}
-						else {
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Screenings(requestContext));
+						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
-							getServlet().getRequestContext().setErrorMessage(results);
-							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));	
 						}
 					}
 					
-					@Override
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Screenings(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));	
 					}
 					
-					@Override
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							ScreeningsData screeningdata = new ScreeningsData();
-							List screenings = screeningdata.getScreeningsListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Screenings successfully saved");
-							requestContext.getArgs().put("listing", screenings);
-							getServlet().redirectTo(new Screenings(requestContext ));
-						}
-						else {
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Screenings(requestContext));
+						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
 							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
-							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));
+							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));			
 						}
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
+					screeningsData.apply(screeningsData.postPageData(form.getId()));
+				}
+				else{
+					screeningsData.apply(screeningsData.postPageData());
+				}
 				
-				screeningData.apply(screeningData.postPageData());
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
-					ScreeningsData screeningData = new ScreeningsData(new OnlineOfflineCallbacks(this){
-						
-						@Override
+				if(queryArg.equals("list")){
+					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								ScreeningsData screeningdata = new ScreeningsData();
-								List screenings = screeningdata.getListingOnline(results);
+							if(this.getStatusCode() == 200) {
+								ScreeningsData screeningsData = new ScreeningsData();
+								List screenings = screeningsData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", screenings);
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));						
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", screenings);
-								getServlet().fillTemplate(new ScreeningsTemplate(requestContext));
-							}
-							else {
-								Window.alert("Error in saving the data.");
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
-						@Override
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -113,44 +106,43 @@ public class Screenings extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Screenings(requestContext));
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
-						@Override
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								ScreeningsData screeningdata = new ScreeningsData();
-								List screenings = screeningdata.getScreeningsListingOffline();
-								RequestContext requestContext = new RequestContext();
+								ScreeningsData screeningsData = new ScreeningsData();
+								List screenings = screeningsData.getScreeningsListingOffline();
 								requestContext.getArgs().put("listing", screenings);
-								getServlet().fillTemplate(new ScreeningsTemplate(requestContext));
-							}
-							else {
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Screenings(requestContext));				
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
 					});
-					screeningData.apply(screeningData.getListPageData());
+					screeningsData.apply(screeningsData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					ScreeningsData screeningData = new ScreeningsData(new OnlineOfflineCallbacks(this){
-						
-						@Override
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
+					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new ScreeningsTemplate(requestContext));
-							}
-							else {
-								Window.alert("Error in saving the data.");
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
-						@Override
+					
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -159,28 +151,29 @@ public class Screenings extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Screenings(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
-						@Override
 						public void offlineSuccessCallback(Object addData) {
 							if((String)addData != null) {
 								// Got whatever info we need to display for this GET request, so go ahead
 								// and display it by filling in the template.  No need to redirect.
 								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
-							}
-							else {
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Screenings(requestContext));				
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
-					});
-					screeningData.apply(screeningData.getAddPageData());
-				}
-				else {
-					this.fillTemplate(new ScreeningsTemplate(this.requestContext));
+					}, form);
+					if(queryArg.equals("add")) {
+						screeningsData.apply(screeningsData.getAddPageData());
+					}
+					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
+						screeningsData.apply(screeningsData.getAddPageData(form.getId()));
+					}
 				}
 			}
 		}

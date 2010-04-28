@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.VideosData;
 import com.digitalgreen.dashboardgwt.client.templates.VideosTemplate;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class Videos extends BaseServlet {
 	
@@ -26,77 +28,76 @@ public class Videos extends BaseServlet {
 		
 		if (!this.isLoggedIn()) {
 			super.redirectTo(new Login());
-		}else {
+		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				VideosData videoData = new VideosData(new OnlineOfflineCallbacks(this) {
+				VideosData videosData = new VideosData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(this.getStatusCode() == 200) {
-							VideosData videodata = new VideosData();
-							List videos = videodata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Video successfully saved");
-							requestContext.getArgs().put("listing", videos);
-							getServlet().redirectTo(new Videos(requestContext ));						
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Videos(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
-							getServlet().getRequestContext().setErrorMessage(results);
-							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));			
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Videos(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Videos(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							VideosData videodata = new VideosData();
-							List videos = videodata.getVideosListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Video successfully saved");
-							requestContext.getArgs().put("listing", videos);
-							getServlet().redirectTo(new Videos(requestContext ));
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Videos(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
 							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
-							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));
+							getServlet().redirectTo(new Videos(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
+					videosData.apply(videosData.postPageData(form.getId()));
+				}
+				else{
+					videosData.apply(videosData.postPageData());
+				}
 				
-				videoData.apply(videoData.postPageData());
-
 			}
-			else{
+			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
-					VideosData videoData = new VideosData(new OnlineOfflineCallbacks(this) {
+				if(queryArg.equals("list")){
+					VideosData videosData = new VideosData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								VideosData videodata = new VideosData();
-								List videos = videodata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", videos);
-								getServlet().fillTemplate(new VideosTemplate(requestContext));						
+							if(this.getStatusCode() == 200) {
+								VideosData videosData = new VideosData();
+								List videos = videosData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", videos);
+								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-					
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -105,35 +106,40 @@ public class Videos extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Videos(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								VideosData videodata = new VideosData();
-								List videos = videodata.getVideosListingOffline();
-								RequestContext requestContext = new RequestContext();
+								VideosData videosData = new VideosData();
+								List videos = videosData.getVideosListingOffline();
 								requestContext.getArgs().put("listing", videos);
-								getServlet().fillTemplate(new VideosTemplate(requestContext));
+								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Videos(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					videoData.apply(videoData.getListPageData());	
+					videosData.apply(videosData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					VideosData videoData = new VideosData(new OnlineOfflineCallbacks(this) {
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
+					VideosData videosData = new VideosData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new VideosTemplate(requestContext));
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -145,7 +151,7 @@ public class Videos extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Videos(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -156,14 +162,18 @@ public class Videos extends BaseServlet {
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Videos(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
-					videoData.apply(videoData.getAddPageData());	
-				} else {
-					this.fillTemplate(new VideosTemplate(this.requestContext));
+					}, form);
+					if(queryArg.equals("add")) {
+						videosData.apply(videosData.getAddPageData());
+					}
+					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
+						videosData.apply(videosData.getAddPageData(form.getId()));
+					}
 				}
 			}
 		}

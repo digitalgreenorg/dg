@@ -60,7 +60,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			// 	Add Listings
 			List screenings = (List)queryArgs.get("listing");			
 			if(screenings  != null){

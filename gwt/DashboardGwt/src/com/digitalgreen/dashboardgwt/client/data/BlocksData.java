@@ -297,11 +297,34 @@ public class BlocksData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveBlockOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public Object getListPageData() {
 		if (BaseData.isOnline()) {
 			this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL);
 		} else {
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveBlockOnlineURL + id + "/" );
+		}
+		else{
 			return true;
 		}
 		return false;

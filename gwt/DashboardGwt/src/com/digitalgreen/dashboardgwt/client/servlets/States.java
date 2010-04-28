@@ -9,25 +9,19 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.templates.StatesTemplate;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.XMLParser;
-import com.google.gwt.xml.client.Document;
 
-public class States extends BaseServlet{
+public class States extends BaseServlet {
 	
-	public States(){
+	public States() {
 		super();
 	}
 	
 	public States(RequestContext requestContext) {
 		super(requestContext);
 	}
-
+	
 	@Override
 	public void response() {
 		super.response();
@@ -38,74 +32,72 @@ public class States extends BaseServlet{
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				StatesData stateData = new StatesData(new OnlineOfflineCallbacks(this) {
+				StatesData statesData = new StatesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
 						if(this.getStatusCode() == 200) {
-							StatesData statedata = new StatesData();
-							List states = statedata.getListingOnline(results);
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("State successfully saved");
-							requestContext.getArgs().put("listing", states);
-							getServlet().redirectTo(new States(requestContext ));						
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new States(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
-							getServlet().getRequestContext().setErrorMessage(results);
-							getServlet().redirectTo(new States(getServlet().getRequestContext()));			
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new States(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new States(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new States(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							StatesData statedata = new StatesData();
-							List states = statedata.getStatesListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("State successfully saved");
-							requestContext.getArgs().put("listing", states);
-							getServlet().redirectTo(new States(requestContext ));
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new States(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
 							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
-							getServlet().redirectTo(new States(getServlet().getRequestContext()));				
+							getServlet().redirectTo(new States(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
+					statesData.apply(statesData.postPageData(form.getId()));
+				}
+				else{
+					statesData.apply(statesData.postPageData());
+				}
 				
-				stateData.apply(stateData.postPageData());
-
 			}
-			else{
+			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
-					StatesData stateData = new StatesData(new OnlineOfflineCallbacks(this) {
+				if(queryArg.equals("list")){
+					StatesData statesData = new StatesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								StatesData statedata = new StatesData();
-								List states = statedata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", states);
-								getServlet().fillTemplate(new StatesTemplate(requestContext));
-								//getServlet().redirectTo(new States(requestContext ));						
+							if(this.getStatusCode() == 200) {
+								StatesData statesData = new StatesData();
+								List states = statesData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", states);
+								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-					
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -114,36 +106,40 @@ public class States extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new States(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								StatesData statedata = new StatesData();
-								List states = statedata.getStatesListingOffline();
-								RequestContext requestContext = new RequestContext();
+								StatesData statesData = new StatesData();
+								List states = statesData.getStatesListingOffline();
 								requestContext.getArgs().put("listing", states);
-								getServlet().fillTemplate(new StatesTemplate(requestContext));
+								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new States(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					stateData.apply(stateData.getListPageData());	
+					statesData.apply(statesData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					StatesData stateData = new StatesData(new OnlineOfflineCallbacks(this) {
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
+					StatesData statesData = new StatesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new StatesTemplate(requestContext));
-								//getServlet().redirectTo(new States(requestContext ));						
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -155,7 +151,7 @@ public class States extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new States(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -166,19 +162,20 @@ public class States extends BaseServlet{
 								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new States(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
-					stateData.apply(stateData.getAddPageData());	
+					}, form);
+					if(queryArg.equals("add")) {
+						statesData.apply(statesData.getAddPageData());
+					}
+					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
+						statesData.apply(statesData.getAddPageData(form.getId()));
+					}
 				}
-				else{
-					this.fillTemplate(new StatesTemplate(this.requestContext));
-				}
-				
 			}
-			
 		}
 	}
 }

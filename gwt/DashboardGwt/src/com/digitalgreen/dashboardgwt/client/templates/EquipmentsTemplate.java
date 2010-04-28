@@ -49,7 +49,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			// 	Add Listings
 			List equipments = (List)queryArgs.get("listing");			
 			if(equipments  != null){
@@ -84,7 +84,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 	}
 	
 
-	final private String addDataToElementID[] = null;
+	final private String addDataToElementID[] = {"id_equipmentholder"};
 	
 	private String equipmentsListFormHtml = "<div class='actions'>" +
 									"<label>Action: <select name='action'>" + 

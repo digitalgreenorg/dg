@@ -495,6 +495,19 @@ public class PersonsData extends BaseData {
 
 		return false;
 	}
+	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.savePersonOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public Object getListPageData() {
 		if (BaseData.isOnline()) {
@@ -505,7 +518,18 @@ public class PersonsData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePersonOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
 
+	
 	public String retrieveDataAndConvertResultIntoHtml() {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();

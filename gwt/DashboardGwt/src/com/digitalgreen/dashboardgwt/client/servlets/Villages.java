@@ -132,7 +132,9 @@ public class Villages extends BaseServlet {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
 								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
-									getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
 								}
 								getServlet().getRequestContext().getArgs().put("addPageData", addData);
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));

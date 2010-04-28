@@ -534,12 +534,35 @@ public class AnimatorsData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveAnimatorOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public Object getListPageData() {
 		if (BaseData.isOnline()) {
 			this.get(RequestContext.SERVER_HOST
 					+ AnimatorsData.getAnimatorsOnlineURL);
 		} else {
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveAnimatorOnlineURL + id + "/" );
+		}
+		else{
 			return true;
 		}
 		return false;

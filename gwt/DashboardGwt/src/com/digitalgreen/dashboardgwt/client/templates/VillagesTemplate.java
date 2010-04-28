@@ -55,8 +55,7 @@ public class VillagesTemplate extends BaseTemplate {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
-		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			// 	Add Listings
 			List villages = (List)queryArgs.get("listing");			
 			if(villages != null){
@@ -351,7 +350,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"<tr class='row1 '>" +
 																			"<td class='original'>" +
 																				"<input type='hidden' name='animator_set-0-id' id='id_animator_set-0-id' />" +
-																				"<input type='hidden' name='animator_set-0-animator_set' id='id_animator_set-0-animator' />" +
+																				"<input type='hidden' name='animator_set-0-village' id='id_animator_set-0-village' />" +
 																			"</td>" +
 																			"<td class='name'>" +
 																				"<input id='id_animator_set-0-name' type='text' class='vTextField' name='animator_set-0-name' maxlength='100' />" +
@@ -406,7 +405,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"<tr class='row2 '>" +
 																			"<td class='original'>" +
 																				"<input type='hidden' name='animator_set-1-id' id='id_animator_set-1-id' />" +
-																				"<input type='hidden' name='animator_set-1-animator' id='id_animator_set-1-animator' />" +
+																				"<input type='hidden' name='animator_set-1-village' id='id_animator_set-1-village' />" +
 																			"</td>" +
 																			"<td class='name'>" +
 																				"<input id='id_animator_set-1-name' type='text' class='vTextField' name='animator_set-1-name' maxlength='100' />" +
@@ -461,7 +460,7 @@ public class VillagesTemplate extends BaseTemplate {
 																		"<tr class='row1 '>" +
 																			"<td class='original'>" +
 																				"<input type='hidden' name='animator_set-2-id' id='id_animator_set-2-id' />" +
-																				"<input type='hidden' name='animator_set-2-animator' id='id_animator_set-2-animator' />" +
+																				"<input type='hidden' name='animator_set-2-village' id='id_animator_set-2-village' />" +
 																			"</td>" +
 																		"<td class='name'>" +
 																			"<input id='id_animator_set-2-name' type='text' class='vTextField' name='animator_set-2-name' maxlength='100' />" +
@@ -516,7 +515,7 @@ public class VillagesTemplate extends BaseTemplate {
 																	"<tr class='row2 '>" +
 																		"<td class='original'>" +
 																			"<input type='hidden' name='animator_set-3-id' id='id_animator_set-3-id' />" +
-																			"<input type='hidden' name='animator_set-3-animator' id='id_animator_set-3-animator' />" +
+																			"<input type='hidden' name='animator_set-3-village' id='id_animator_set-3-village' />" +
 																		"</td>" +
 																	"<td class='name'>" +
 																		"<input id='id_animator_set-3-name' type='text' class='vTextField' name='animator_set-3-name' maxlength='100' />" +
@@ -571,7 +570,7 @@ public class VillagesTemplate extends BaseTemplate {
 																"<tr class='row1 '>" +
 																	"<td class='original'>" +
 																		"<input type='hidden' name='animator_set-4-id' id='id_animator_set-4-id' />" +
-																		"<input type='hidden' name='animator_set-4-animator' id='id_animator_set-4-animator' />" +
+																		"<input type='hidden' name='animator_set-4-village' id='id_animator_set-4-village' />" +
 																	"</td>" +
 																	"<td class='name'>" +
 																		"<input id='id_animator_set-4-name' type='text' class='vTextField' name='animator_set-4-name' maxlength='100' />" +

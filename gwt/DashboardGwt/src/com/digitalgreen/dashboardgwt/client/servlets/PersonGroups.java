@@ -9,13 +9,12 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData;
 import com.digitalgreen.dashboardgwt.client.templates.PersonGroupsTemplate;
-import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
-
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
-public class PersonGroups extends BaseServlet{
+public class PersonGroups extends BaseServlet {
 	
-	public PersonGroups(){
+	public PersonGroups() {
 		super();
 	}
 	
@@ -33,66 +32,68 @@ public class PersonGroups extends BaseServlet{
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				PersonGroupsData personGroupData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
+				PersonGroupsData personGroupsData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							PersonGroupsData personGroupData = new PersonGroupsData();
-							List personGroups = personGroupData.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("PersonGroup successfully saved");
-							requestContext.getArgs().put("listing", personGroups);
+							requestContext.setMessage("Person Group successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new PersonGroups(requestContext));
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new PersonGroups(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new PersonGroups(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new PersonGroups(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							PersonGroupsData personGroupData = new PersonGroupsData();
-							List personGroups = personGroupData.getPersonGroupsListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("PersonGroup successfully saved");
-							requestContext.getArgs().put("listing", personGroups);
+							requestContext.setMessage("Person Group successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new PersonGroups(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new PersonGroups(getServlet().getRequestContext()));				
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new PersonGroups(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					personGroupsData.apply(personGroupsData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					personGroupsData.apply(personGroupsData.postPageData());
+				}
 				
-				personGroupData.apply(personGroupData.postPageData());
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg.equals("list")){
-					PersonGroupsData personGroupData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
+					PersonGroupsData personGroupsData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								PersonGroupsData personGroupData = new PersonGroupsData();
-								List personGroups = personGroupData.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", personGroups);
-								getServlet().fillTemplate(new PersonGroupsTemplate(requestContext));
-								//getServlet().redirectTo(new PersonGroups(requestContext));						
+							if(this.getStatusCode() == 200) {
+								PersonGroupsData personGroupsData = new PersonGroupsData();
+								List personGroups = personGroupsData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", personGroups);
+								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 
@@ -104,35 +105,39 @@ public class PersonGroups extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new PersonGroups(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								PersonGroupsData personGroupData = new PersonGroupsData();
-								List personGroups = personGroupData.getPersonGroupsListingOffline();
-								RequestContext requestContext = new RequestContext();
+								PersonGroupsData personGroupsData = new PersonGroupsData();
+								List personGroups = personGroupsData.getPersonGroupsListingOffline();
 								requestContext.getArgs().put("listing", personGroups);
-								getServlet().redirectTo(new PersonGroups(requestContext));
+								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new PersonGroups(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					personGroupData.apply(personGroupData.getListPageData());
+					personGroupsData.apply(personGroupsData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					PersonGroupsData personGroupData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					PersonGroupsData personGroupsData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new PersonGroupsTemplate(requestContext));
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -144,7 +149,7 @@ public class PersonGroups extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new PersonGroups(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -155,15 +160,17 @@ public class PersonGroups extends BaseServlet{
 								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new PersonGroups(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					personGroupData.apply(personGroupData.getAddPageData());	
-				}
-				else {
-					this.fillTemplate(new PersonGroupsTemplate(this.requestContext));
+					if(queryArg.equals("add")) {
+						personGroupsData.apply(personGroupsData.getAddPageData());
+					}
+					else{
+						personGroupsData.apply(personGroupsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

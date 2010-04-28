@@ -9,12 +9,12 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData;
 import com.digitalgreen.dashboardgwt.client.templates.PersonsTemplate;
-import com.digitalgreen.dashboardgwt.client.templates.TrainingTemplate;
-
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class Persons extends BaseServlet {
 	
-	public Persons(){
+	public Persons() {
 		super();
 	}
 	
@@ -34,67 +34,69 @@ public class Persons extends BaseServlet {
 				Form form = this.requestContext.getForm();
 				PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							PersonsData persondata = new PersonsData();
-							List persons = persondata.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Person successfully saved");
-							requestContext.getArgs().put("listing", persons);
-							getServlet().redirectTo(new Persons(requestContext ));						
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Persons(requestContext));
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Persons(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Persons(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Persons(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							PersonsData persondata = new PersonsData();
-							List persons = persondata.getPersonsListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Person successfully saved");
-							requestContext.getArgs().put("listing", persons);
-							getServlet().redirectTo(new Persons(requestContext ));
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new Persons(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new Persons(getServlet().getRequestContext()));				
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new Persons(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					personData.apply(personData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					personData.apply(personData.postPageData());
+				}
 				
-				personData.apply(personData.postPageData());
-
 			}
-			else{
+			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
-					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
+				if(queryArg.equals("list")){
+					PersonsData personsData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								PersonsData persondata = new PersonsData();
-								List persons = persondata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", persons);
-								getServlet().fillTemplate(new PersonsTemplate(requestContext));						
+							if(this.getStatusCode() == 200) {
+								PersonsData personsData = new PersonsData();
+								List persons = personsData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", persons);
+								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-					
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -103,35 +105,39 @@ public class Persons extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Persons(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								PersonsData persondata = new PersonsData();
-								List persons = persondata.getPersonsListingOffline();
-								RequestContext requestContext = new RequestContext();
+								PersonsData personsData = new PersonsData();
+								List persons = personsData.getPersonsListingOffline();
 								requestContext.getArgs().put("listing", persons);
-								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Persons(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					personData.apply(personData.getListPageData());	
+					personsData.apply(personsData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					PersonsData personData = new PersonsData(new OnlineOfflineCallbacks(this) {
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					PersonsData personsData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new PersonsTemplate(requestContext));
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -143,7 +149,7 @@ public class Persons extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Persons(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -154,14 +160,17 @@ public class Persons extends BaseServlet {
 								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Persons(requestContext));
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					personData.apply(personData.getAddPageData());	
-				} else {
-					this.fillTemplate(new PersonsTemplate(this.requestContext));
+					if(queryArg.equals("add")) {
+						personsData.apply(personsData.getAddPageData());
+					}
+					else{
+						personsData.apply(personsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

@@ -273,16 +273,6 @@ public class RegionsData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL);
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public Object getAddPageData(String id){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL + id + "/" );
@@ -292,4 +282,15 @@ public class RegionsData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL);
+		}
+		else{
+			return "No add data required";
+		}
+		return false;
+	}
+	
 }

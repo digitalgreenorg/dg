@@ -237,7 +237,21 @@ public class LanguagesData extends BaseData {
 		return false;
 	}
 	
-	public Object getPageData(){
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + LanguagesData.getLanguageOnlineURL);
 		}
@@ -246,4 +260,24 @@ public class LanguagesData extends BaseData {
 		}
 		return false;
 	}	
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL);
+		}
+		else{
+			return "No add data required";
+		}
+		return false;
+	}
 }

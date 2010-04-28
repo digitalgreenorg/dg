@@ -53,7 +53,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			// 	Add Listings
 			List animatorAssignedVillages = (List)queryArgs.get("listing");			
 			if(animatorAssignedVillages  != null){
@@ -139,8 +139,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 						"<div id='content' class='colM'>" +
 							"<h1>Add Animator Assigned Village</h1>" +
 							"<div id='content-main'>" +
-								//"<form enctype='multipart/form-data' action='' method='post' id='animatorassignedvillage_form'>" +
-								//"<div>" +
+								   "<div>" +
 									"<fieldset class='module aligned '>" +
 										"<div class='form-row animator  '>" +
 											"<div>" +
@@ -149,12 +148,13 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 												"</select>" +
 											"</div>" +
 										"</div>" +
-									"</div>" +
-									"<div class='form-row village  '>" +
-										"<div>" +
-											"<label for='id_village' class='required'>Village:</label><select name='village' id='id_village'>" +
-											"<option value='' selected='selected'>---------</option>" +
-											"</select>" +
+										"<div class='form-row village  '>" +
+											"<div>" +
+												"<label for='id_village' class='required'>Village:</label>" +
+												"<select name='village' id='id_village'>" +
+													"<option value='' selected='selected'>---------</option>" +
+												"</select>" +
+											"</div>" +
 										"</div>" +
 										"<div class='form-row start_date  '>" +
 											"<div>" +
@@ -168,9 +168,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 									"<script type='text/javascript'>document.getElementById('id_animator').focus();</script>" +
 									"<script type='text/javascript'>" +
 									"</script>" +
-								"</div>" +
-								//"</form>" +
-							//"</div>" +
+							"</div>" +
 						"</div>"+
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";

@@ -3,11 +3,13 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Data;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData.Type;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
 
 public class EquipmentHoldersData extends BaseData {
@@ -24,6 +26,7 @@ public class EquipmentHoldersData extends BaseData {
 			
 		private String content_type;
 		private String object_id;
+		private String equipmentHolderName; //This field doesn't exist in the Django Model. Made to take care of generic foreign key references.
 		
 		public Data() {
 			super();
@@ -41,12 +44,22 @@ public class EquipmentHoldersData extends BaseData {
 			this.id = id;
 		}
 		
+		public Data(String id, String equipmentHolderName ) {
+			super();
+			this.id = id;
+			this.equipmentHolderName = equipmentHolderName;
+		}
+		
 		public String getContentType(){
 			return this.content_type;
 		}
 		
 		public String getObjectId(){
 			return this.object_id;
+		}
+		
+		public String getEquipmentHolderName(){
+			return this.equipmentHolderName;
 		}
 		
 		public BaseData.Data clone() {
@@ -95,7 +108,7 @@ public class EquipmentHoldersData extends BaseData {
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id INT NOT NULL DEFAULT 0);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_holder`;";
-	protected static String selectEquipmentHolders = "SELECT id FROM equipment_holder ORDER BY(-id)";
+	protected static String selectEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String listEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String saveEquipmentHolderOnlineURL = "/dashboard/saveequipmentholderonline/";
 	protected static String getEquipmentHolderOnlineURL = "/dashboard/getequipmentholdersonline/";
@@ -175,6 +188,43 @@ public class EquipmentHoldersData extends BaseData {
 	@Override
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
-	}	
+	}
+
+	public List getAllEquipmentHoldersOffline(){
+		BaseData.dbOpen();
+		List equipmentHolders = new ArrayList();
+		this.select(selectEquipmentHolders);
+		if(this.getResultSet().isValidRow()){
+			try {
+				String equipmentHolderName = "";
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					
+					// Get the name of the reviewer (Generic Foreign Key to Development Manager, Field Officer and Partner)
+					if(this.getResultSet().getFieldAsString(1) == DevelopmentManagersData.tableID){
+						DevelopmentManagersData dm = (DevelopmentManagersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						dm.select(dm.getDevelopmentManagerByID, this.getResultSet().getFieldAsString(2));
+						equipmentHolderName = dm.getResultSet().getFieldAsString(1);
+					} else if(this.getResultSet().getFieldAsString(1) == FieldOfficersData.tableID){
+						FieldOfficersData fo = (FieldOfficersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						fo.select(fo.getFieldOfficerByID, this.getResultSet().getFieldAsString(2));
+						equipmentHolderName = fo.getResultSet().getFieldAsString(1);
+					} else if(this.getResultSet().getFieldAsString(1) == PartnersData.tableID){
+						PartnersData p = (PartnersData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(this.getResultSet().getFieldAsString(1));
+						p.select(p.getPartnerByID, this.getResultSet().getFieldAsString(2));
+						equipmentHolderName = p.getResultSet().getFieldAsString(1);
+					} 
+					
+					Data equipmentHolder = new Data(this.getResultSet().getFieldAsString(0), equipmentHolderName);
+					equipmentHolders.add(equipmentHolder);
+				}
+			}
+			catch(DatabaseException e){
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return equipmentHolders;
+	}
 		
 }

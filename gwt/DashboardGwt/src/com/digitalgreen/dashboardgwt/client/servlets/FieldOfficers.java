@@ -1,23 +1,20 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FieldOfficersData;
-
 import com.digitalgreen.dashboardgwt.client.templates.FieldOfficerTemplate;
-
 import com.google.gwt.user.client.Window;
-import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
-public class FieldOfficers extends BaseServlet{
-
-	public FieldOfficers(){
+public class FieldOfficers extends BaseServlet {
+	
+	public FieldOfficers() {
 		super();
 	}
 	
@@ -33,103 +30,148 @@ public class FieldOfficers extends BaseServlet{
 			super.redirectTo(new Login());
 		} else {
 			String method = this.getMethodTypeCtx();
-			if(method.equals(RequestContext.METHOD_POST)){
+			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				FieldOfficersData fieldOfficerData = new FieldOfficersData(new OnlineOfflineCallbacks(this){
-					public void onlineSuccessCallback(String results){
-						if(results != null){
-							FieldOfficersData fieldofficersData = new FieldOfficersData();
-							List fieldOfficers = fieldofficersData.getListingOnline(results);
+				FieldOfficersData fieldOfficersData = new FieldOfficersData(new OnlineOfflineCallbacks(this) {
+					public void onlineSuccessCallback(String results) {
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Field Officer successfully saved.");
-							requestContext.getArgs().put("listing", fieldOfficers);
+							requestContext.setMessage("FieldOfficer successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new FieldOfficers(requestContext));
 						} else {
-							/*Error in saving the data*/
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new FieldOfficers(getServlet().getRequestContext()));	
 						}
 					}
 					
-					public void onlineErrorCallback(int errorCode){
-						RequestContext requestContext = new RequestContext();
+					public void onlineErrorCallback(int errorCode) {
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new FieldOfficers(requestContext));
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new FieldOfficers(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
-						// If login success in the offline case		
 						if((Boolean)results) {
-							FieldOfficersData fieldOfficerData = new FieldOfficersData();
-							List fieldOfficers = fieldOfficerData.getFieldOfficersListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Field Officer successfully saved.");
-							requestContext.getArgs().put("listing", fieldOfficers);
-							getServlet().redirectTo(new FieldOfficers(requestContext ));
+							requestContext.setMessage("FieldOfficer successfully saved");
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new FieldOfficers(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new FieldOfficers(getServlet().getRequestContext()));				
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new FieldOfficers(getServlet().getRequestContext()));			
 						}
 					}
 				}, form);
-				fieldOfficerData.apply(fieldOfficerData.postPageData());
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					fieldOfficersData.apply(fieldOfficersData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					fieldOfficersData.apply(fieldOfficersData.postPageData());
+				}
+				
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg.equals("list")){
-					FieldOfficersData fieldOfficerData = new FieldOfficersData(new OnlineOfflineCallbacks(this){
-						public void onlineSuccessCallback(String results){
-							Window.alert("result : " + results);
-							if(results != null){
-								FieldOfficersData fieldofficerdata = new FieldOfficersData();
-								List fieldOfficers = fieldofficerdata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", fieldOfficers);
-								getServlet().redirectTo(new FieldOfficers(requestContext));
+					FieldOfficersData fieldOfficersData = new FieldOfficersData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String results) {
+							if(this.getStatusCode() == 200) {
+								FieldOfficersData fieldOfficersData = new FieldOfficersData();
+								List fieldOfficers = fieldOfficersData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", fieldOfficers);
+								getServlet().fillTemplate(new FieldOfficerTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
-						public void onlineErrorCallback(int errorCode){
+
+						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
-							if(errorCode == BaseData.ERROR_RESPONSE){
-								requestContext.setMessage("Unresopnsive Server. Please contact support.");
-							}
-							else if(errorCode == BaseData.ERROR_SERVER){
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
 								requestContext.setMessage("Problem in the connection with the server.");
-							}
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new FieldOfficers(requestContext));
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
-						public void offlineSuccessCallback(Object results){
-							if((Boolean)results){
-								FieldOfficersData fieldofficerdata = new FieldOfficersData();
-								List fieldOfficers = fieldofficerdata.getFieldOfficersListingOffline();
-								RequestContext requestContext = new RequestContext();
+						public void offlineSuccessCallback(Object results) {
+							if((Boolean)results) {
+								FieldOfficersData fieldOfficersData = new FieldOfficersData();
+								List fieldOfficers = fieldOfficersData.getFieldOfficersListingOffline();
 								requestContext.getArgs().put("listing", fieldOfficers);
-								getServlet().redirectTo(new FieldOfficers(requestContext));
-							}
-							else {
+								getServlet().fillTemplate(new FieldOfficerTemplate(getServlet().getRequestContext()));
+							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new FieldOfficers(requestContext));
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
 					});
-					fieldOfficerData.apply(fieldOfficerData.getPageData());
-					
+					fieldOfficersData.apply(fieldOfficersData.getListPageData());
 				}
-				else {
-					this.fillTemplate(new FieldOfficerTemplate(this.requestContext));
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					FieldOfficersData fieldOfficersData = new FieldOfficersData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String addData) {
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new FieldOfficerTemplate(getServlet().getRequestContext()));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessage("Problem in the connection with the server.");
+							else
+								requestContext.setMessage("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Index(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object addData) {
+							if((String)addData != null) {
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new FieldOfficerTemplate(getServlet().getRequestContext()));
+							} else {
+								Window.alert("here2");
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
+						}
+					});
+					if(queryArg.equals("add")) {
+						fieldOfficersData.apply(fieldOfficersData.getAddPageData());
+					}
+					else{
+						fieldOfficersData.apply(fieldOfficersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

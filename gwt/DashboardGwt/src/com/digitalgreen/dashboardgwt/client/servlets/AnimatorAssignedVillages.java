@@ -9,8 +9,11 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.templates.AnimatorAssignedVillagesTemplate;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 public class AnimatorAssignedVillages extends BaseServlet {
+	
 	public AnimatorAssignedVillages() {
 		super();
 	}
@@ -31,48 +34,50 @@ public class AnimatorAssignedVillages extends BaseServlet {
 				Form form = this.requestContext.getForm();
 				AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
-							List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("AnimatorAssignedVillage successfully saved");
-							requestContext.getArgs().put("listing", animatorAssignedVillages);
+							requestContext.setMessage("Animator Assigned Village successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new AnimatorAssignedVillages(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new AnimatorAssignedVillages(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
-							List animatorAssignedVillages = animatorAssignedVillageData.getAnimatorsAssignedVillagesListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("AnimatorAssignedVillage successfully saved");
-							requestContext.getArgs().put("listing", animatorAssignedVillages);
+							requestContext.setMessage("Animator Assigned Village successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new AnimatorAssignedVillages(getServlet().getRequestContext()));				
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new AnimatorAssignedVillages(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					animatorAssignedVillageData.apply(animatorAssignedVillageData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					animatorAssignedVillageData.apply(animatorAssignedVillageData.postPageData());
+				}
 				
-				animatorAssignedVillageData.apply(animatorAssignedVillageData.postPageData());
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
@@ -80,14 +85,15 @@ public class AnimatorAssignedVillages extends BaseServlet {
 				if(queryArg.equals("list")){
 					AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
+							if(this.getStatusCode() == 200) {
 								AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
 								List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", animatorAssignedVillages);
-								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));						
+								getServlet().getRequestContext().getArgs().put("listing", animatorAssignedVillages);
+								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 
@@ -99,35 +105,39 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
-								List animatorAssignedVillages = animatorAssignedVillageData.getAnimatorsAssignedVillagesListingOffline();
-								RequestContext requestContext = new RequestContext();
+								AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
+								List animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline();
 								requestContext.getArgs().put("listing", animatorAssignedVillages);
-								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
+								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
 					animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData());
 				}
-				else if(queryArg == "add"){
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(requestContext));
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -139,7 +149,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -150,15 +160,17 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					animatorAssignedVillageData.apply(animatorAssignedVillageData.getAddPageData());	
-				}
-				else {
-					this.fillTemplate(new AnimatorAssignedVillagesTemplate(this.requestContext));
+					if(queryArg.equals("add")) {
+						animatorAssignedVillageData.apply(animatorAssignedVillageData.getAddPageData());
+					}
+					else{
+						animatorAssignedVillageData.apply(animatorAssignedVillageData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
 			}
 		}

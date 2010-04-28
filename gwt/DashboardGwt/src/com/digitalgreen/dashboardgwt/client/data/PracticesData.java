@@ -275,12 +275,46 @@ public class PracticesData extends BaseData {
 		return false;
 	}
 	
-	public Object getPageData(){
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.savePracticeOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + PracticesData.getPracticeOnlineURL);
 		}
 		else {
 			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePracticeOnlineURL + id + "/" );
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePracticeOnlineURL);
+		}
+		else{
+			return "No add data required";
 		}
 		return false;
 	}

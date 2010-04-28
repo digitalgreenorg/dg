@@ -277,6 +277,19 @@ public class StatesData extends BaseData {
 		return false;
 	}
 	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveStateOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + StatesData.getStateOnlineURL);
@@ -286,6 +299,17 @@ public class StatesData extends BaseData {
 		}
 		return false;
 	}	
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveStateOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();

@@ -54,7 +54,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		
 		// If we're unsure, just default to list view
-		if(queryArg == null || queryArg != "add"){
+		if(queryArg.equals("list")) {
 			
 			// Add Listing
 			List fieldOfficers = (List)queryArgs.get("listing");

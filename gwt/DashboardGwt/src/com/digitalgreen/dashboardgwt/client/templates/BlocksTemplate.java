@@ -46,7 +46,7 @@ public class BlocksTemplate extends BaseTemplate{
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
-		if(queryArg == null || queryArg != "add") {
+		if(queryArg.equals("list")) {
 			List blocks = (List)queryArgs.get("listing");
 			if(blocks  != null){
 				String tableRows ="";

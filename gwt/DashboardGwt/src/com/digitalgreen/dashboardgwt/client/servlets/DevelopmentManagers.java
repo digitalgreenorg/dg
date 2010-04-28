@@ -2,24 +2,19 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 
 import java.util.HashMap;
 import java.util.List;
+
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.DevelopmentManagersData;
 import com.digitalgreen.dashboardgwt.client.templates.DevelopmentManagersTemplate;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.XMLParser;
-import com.google.gwt.xml.client.Document;
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 
 public class DevelopmentManagers extends BaseServlet {
-	public  DevelopmentManagers(){
+	
+	public DevelopmentManagers() {
 		super();
 	}
 	
@@ -37,70 +32,71 @@ public class DevelopmentManagers extends BaseServlet {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
+				DevelopmentManagersData developmentManagersData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-							List developmentmanagers = developmentmanagerdata.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("DevelopmentManager successfully saved");
-							requestContext.getArgs().put("listing", developmentmanagers);
-							getServlet().redirectTo(new DevelopmentManagers(requestContext ));						
+							requestContext.setMessage("Development Manager successfully saved");
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new DevelopmentManagers(requestContext));
 						} else {
-							/*Error in saving the data*/			
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new DevelopmentManagers(getServlet().getRequestContext()));	
 						}
 					}
 					
 					public void onlineErrorCallback(int errorCode) {
-						RequestContext requestContext = new RequestContext();
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new DevelopmentManagers(requestContext));	
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new DevelopmentManagers(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-							List developmentmanagers = developmentmanagerdata.getDevelopmentManagersListingOffline();
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("DevelopmentManager successfully saved");
-							requestContext.getArgs().put("listing", developmentmanagers);
-							getServlet().redirectTo(new DevelopmentManagers(requestContext ));
+							requestContext.setMessage("Development Manager successfully saved");
+							requestContext.getArgs().put("action", "list");
+							getServlet().redirectTo(new DevelopmentManagers(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");		
-							getServlet().redirectTo(new DevelopmentManagers(getServlet().getRequestContext()));				
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new DevelopmentManagers(getServlet().getRequestContext()));			
 						}
-						
 					}
 				}, form);
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					developmentManagersData.apply(developmentManagersData.postPageData((String)this.requestContext.getArgs().get("id")));
+				}
+				else{
+					developmentManagersData.apply(developmentManagersData.postPageData());
+				}
 				
-				developmentmanagerData.apply(developmentmanagerData.postPageData());
-
 			}
-			else{
+			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "list"){
-					DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
+				if(queryArg.equals("list")){
+					DevelopmentManagersData developmentManagersData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-								List developmentmanagers = developmentmanagerdata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", developmentmanagers);
-								getServlet().fillTemplate(new DevelopmentManagersTemplate(requestContext));
-								//getServlet().redirectTo(new DevelopmentManagers(requestContext ));						
+							if(this.getStatusCode() == 200) {
+								DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
+								List developmentManagers = developmentManagersData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", developmentManagers);
+								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-					
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -109,36 +105,39 @@ public class DevelopmentManagers extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new DevelopmentManagers(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								DevelopmentManagersData developmentmanagerdata = new DevelopmentManagersData();
-								List developmentmanagers = developmentmanagerdata.getDevelopmentManagersListingOffline();
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", developmentmanagers);
-								getServlet().fillTemplate(new DevelopmentManagersTemplate(requestContext));
+								DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
+								List developmentManagers = developmentManagersData.getDevelopmentManagersListingOffline();
+								requestContext.getArgs().put("listing", developmentManagers);
+								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new DevelopmentManagers(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					developmentmanagerData.apply(developmentmanagerData.getListPageData());	
+					developmentManagersData.apply(developmentManagersData.getListPageData());
 				}
-				else if(queryArg == "add"){
-					DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					DevelopmentManagersData developmentManagersData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
-							if(addData != null) {
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("action", "add");
-								requestContext.getArgs().put("addPageData", addData);
-								getServlet().fillTemplate(new DevelopmentManagersTemplate(requestContext));
-								//getServlet().redirectTo(new DevelopmentManagers(requestContext ));						
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
 					
@@ -150,7 +149,7 @@ public class DevelopmentManagers extends BaseServlet {
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new DevelopmentManagers(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
@@ -161,20 +160,19 @@ public class DevelopmentManagers extends BaseServlet {
 								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new DevelopmentManagers(requestContext));				
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
 					});
-					developmentmanagerData.apply(developmentmanagerData.getAddPageData());	
+					if(queryArg.equals("add")) {
+						developmentManagersData.apply(developmentManagersData.getAddPageData());
+					}
+					else{
+						developmentManagersData.apply(developmentManagersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					}
 				}
-				else{
-					this.fillTemplate(new DevelopmentManagersTemplate(this.requestContext));
-				}
-				
 			}
-			
 		}
 	}
-	
 }

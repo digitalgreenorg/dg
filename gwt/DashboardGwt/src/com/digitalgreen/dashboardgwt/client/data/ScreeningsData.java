@@ -481,6 +481,19 @@ public class ScreeningsData extends BaseData {
 		return null;
 	}
 	
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.saveScreeningOnlineURL + id + "/", this.form.getQueryString());
+		}
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// Get all information/data to displayt he screening list page.
 	public Object getListPageData() {
 		if(BaseData.isOnline()) {
@@ -490,6 +503,18 @@ public class ScreeningsData extends BaseData {
 		}
 		return false;	
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveScreeningOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		

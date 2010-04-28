@@ -6,24 +6,19 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
-import com.digitalgreen.dashboardgwt.client.data.PartnersData;
-import com.digitalgreen.dashboardgwt.client.templates.PracticeTemplate;
 import com.digitalgreen.dashboardgwt.client.data.PracticesData;
-import com.google.gwt.user.client.Cookies;
+import com.digitalgreen.dashboardgwt.client.templates.PracticeTemplate;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
-import com.google.gwt.json.client.JSONParser;
-
-
-public class Practices extends BaseServlet{
+public class Practices extends BaseServlet {
 	
-	public Practices(){
+	public Practices() {
 		super();
 	}
 	
-	public Practices(RequestContext requestContext){
+	public Practices(RequestContext requestContext) {
 		super(requestContext);
 	}
 	
@@ -37,66 +32,72 @@ public class Practices extends BaseServlet{
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
 				Form form = this.requestContext.getForm();
-				PracticesData practiceData = new PracticesData(new OnlineOfflineCallbacks(this){
+				PracticesData practicesData = new PracticesData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results != null) {
-							PracticesData practicesdata = new PracticesData();
-							List practices = practicesdata.getListingOnline(results);
+						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Practice successfully saved");
-							requestContext.getArgs().put("listing", practices);
+							requestContext.setMessage("Practices successfully saved");
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Practices(requestContext));
 						} else {
-							/*Error in saving the data*/
+							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							getServlet().getRequestContext().setErrorMessage(results) ;
+							getServlet().redirectTo(new Practices(getServlet().getRequestContext()));	
 						}
 					}
-
-					public void onlineErrorCallback(int errorCode){
-						RequestContext requestContext = new RequestContext();
-						if(errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+					
+					public void onlineErrorCallback(int errorCode) {
+						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+						if (errorCode == BaseData.ERROR_RESPONSE)
+							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
-						getServlet().redirectTo(new Practices(requestContext));
+							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+						getServlet().redirectTo(new Practices(getServlet().getRequestContext()));	
 					}
 					
 					public void offlineSuccessCallback(Object results) {
 						if((Boolean)results) {
-							PracticesData practicedata = new PracticesData();
-							List practices = practicedata.getPracticesListingOffline();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Practice successfully saved");
-							requestContext.getArgs().put("listing", practices);
+							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Practices(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().getArgs().put("action", "add");
-							getServlet().redirectTo(new Practices(getServlet().getRequestContext()));
+							getServlet().getRequestContext().setErrorMessage(getServlet().getRequestContext().getForm().printFormErrors());
+							getServlet().redirectTo(new Practices(getServlet().getRequestContext()));			
 						}
 					}
 				}, form);
-				practiceData.apply(practiceData.postPageData());
+				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
+					practicesData.apply(practicesData.postPageData(form.getId()));
+				}
+				else{
+					practicesData.apply(practicesData.postPageData());
+				}
+				
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg.equals("list")){
-					PracticesData practiceData = new PracticesData(new OnlineOfflineCallbacks(this){
+					PracticesData practicesData = new PracticesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(results != null) {
-								PracticesData practicedata = new PracticesData();
-								List practices = practicedata.getListingOnline(results);
-								RequestContext requestContext = new RequestContext();
-								requestContext.getArgs().put("listing", practices);
-								getServlet().redirectTo(new Practices(requestContext));
+							if(this.getStatusCode() == 200) {
+								PracticesData practicesData = new PracticesData();
+								List practices = practicesData.getListingOnline(results);
+								getServlet().getRequestContext().getArgs().put("listing", practices);
+								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));						
 							} else {
-								/*Error in saving the data*/			
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
 							}
 						}
-						
+
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
@@ -105,27 +106,74 @@ public class Practices extends BaseServlet{
 								requestContext.setMessage("Problem in the connection with the server.");
 							else
 								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Practices(requestContext));
+							getServlet().redirectTo(new Index(requestContext));
 						}
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								PracticesData practicedata = new PracticesData();
-								List practices = practicedata.getPracticesListingOffline();
-								RequestContext requestContext = new RequestContext();
+								PracticesData practicesData = new PracticesData();
+								List practices = practicesData.getPracticesListingOffline();
 								requestContext.getArgs().put("listing", practices);
-								getServlet().redirectTo(new Practices(requestContext));
+								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Local Database error");
-								getServlet().redirectTo(new Practices(requestContext));				
-							}
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
 						}
 					});
-					practiceData.apply(practiceData.getPageData());
+					practicesData.apply(practicesData.getListPageData());
 				}
-				else {
-					this.fillTemplate(new PracticeTemplate(this.requestContext));
+				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
+					PracticesData practicesData = new PracticesData(new OnlineOfflineCallbacks(this) {
+						public void onlineSuccessCallback(String addData) {
+							if(this.getStatusCode() == 200) {
+								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
+								}
+								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
+							}
+						}
+					
+						public void onlineErrorCallback(int errorCode) {
+							RequestContext requestContext = new RequestContext();
+							if (errorCode == BaseData.ERROR_RESPONSE)
+								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							else if (errorCode == BaseData.ERROR_SERVER)
+								requestContext.setMessage("Problem in the connection with the server.");
+							else
+								requestContext.setMessage("Unknown error.  Please contact support.");
+							getServlet().redirectTo(new Index(requestContext));	
+						}
+						
+						public void offlineSuccessCallback(Object addData) {
+							if((String)addData != null) {
+								// Got whatever info we need to display for this GET request, so go ahead
+								// and display it by filling in the template.  No need to redirect.
+								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
+								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setMessage("Unexpected local error. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));				
+							}	
+						}
+					}, form);
+					if(queryArg.equals("add")) {
+						practicesData.apply(practicesData.getAddPageData());
+					}
+					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
+						practicesData.apply(practicesData.getAddPageData(form.getId()));
+					}
 				}
 			}
 		}
