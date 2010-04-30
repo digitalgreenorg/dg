@@ -93,6 +93,43 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return "";
 		}
 		
+		private String rowToQueryStringForManyToMany(String id) {
+			String queryString = "";
+			if(!this.hasManyToManyRelationships) {
+				return "";
+			}
+			
+			Object []keys = (Object[])this.manyToManyRelationshipMap.keySet().toArray();
+			for(int i=0; i < keys.length; i++) {
+				String queryStringPart = "";
+				ManyToManyRelationship manyToManyRelationship = (ManyToManyRelationship)this.manyToManyRelationshipMap.get(keys[i]);
+				BaseData dbApi = new BaseData();
+				String query = "SELECT * FROM " + manyToManyRelationship.getToTable().getTableName() + " WHERE " +
+					this.getPrefixName() + "_id=" + id;
+				BaseData.dbOpen();
+				dbApi.select(query);
+				if (dbApi.getResultSet().isValidRow()) {
+					for (int j=0; dbApi.getResultSet().isValidRow(); ++j, dbApi.getResultSet().next()) {
+						try {
+							queryStringPart += manyToManyRelationship.getAttributeCollectionName() + "=" + 
+								dbApi.getResultSet().getFieldAsString(2) + "&";
+						} catch (DatabaseException e) {
+							e.printStackTrace();
+						}
+					}
+					if(queryStringPart.endsWith("&")) {
+						queryStringPart = queryStringPart.substring(0, queryStringPart.length() - 1 - 1);
+					}
+				}
+				queryString += queryStringPart;
+				if(i != keys.length - 1 && !queryString.endsWith("&")) {
+					queryString += "&";
+				}
+			}
+			BaseData.dbClose();
+			return queryString;
+		}
+		
 		protected String rowToQueryString(String tableName, String []fields,
 				String predicateLValue, String predicateRValue, String prefix) {
 			String queryString = "";
@@ -131,7 +168,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				queryString = queryString.substring(0, queryString.length() - 1 - 1);
 			}
 			BaseData.dbClose();
-			return queryString;
+			return queryString + "&" + this.rowToQueryStringForManyToMany(predicateRValue);
 		}
 		
 		public String getId() {
@@ -139,11 +176,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 		
 		public void addManyToManyRelationship(String fieldName,
-				BaseData.Data toTableBaseData,
+				BaseData toTableBaseData,
 				String attributeCollectionName) {
-			ManyToManyRelationship manyToManyRelationships = new ManyToManyRelationship(fieldName,
+			ManyToManyRelationship manyToManyRelationship = new ManyToManyRelationship(fieldName,
 					toTableBaseData, attributeCollectionName);
-			this.manyToManyRelationshipMap.put((String)attributeCollectionName, manyToManyRelationships);
+			this.manyToManyRelationshipMap.put((String)attributeCollectionName, manyToManyRelationship);
 			this.hasManyToManyRelationships = true;
 		}
 		
@@ -202,10 +239,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	public class ManyToManyRelationship {
 		
 		private String field;
-		private BaseData.Data toTable;
+		private BaseData toTable;
 		private String attributeCollectionName;
 	
-		public ManyToManyRelationship(String field, BaseData.Data toTable,
+		public ManyToManyRelationship(String field, BaseData toTable,
 				String attributeCollectionName) {
 			this.field = field;
 			this.toTable = toTable;
@@ -216,7 +253,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return this.attributeCollectionName;
 		}
 		
-		public BaseData.Data getToTable() {
+		public BaseData getToTable() {
 			return this.toTable;
 		}
 		

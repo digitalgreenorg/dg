@@ -42,9 +42,9 @@ public class TrainingsData extends BaseData {
 		
 		public Data(){
 			super();
-			animators_trained = new ArrayList();
+			this.animators_trained = new ArrayList();
 			this.addManyToManyRelationship("animator", 
-					(new TrainingAnimatorsTrainedData()).new Data(), 
+					new TrainingAnimatorsTrainedData(), 
 					"animators_trained");
 		}
 		
@@ -114,7 +114,10 @@ public class TrainingsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("training_purpose")){
+			if(key.equals("id")) {
+				this.id = val;
+			}
+			else if(key.equals("training_purpose")){
 				this.training_purpose = val;
 			}
 			else if(key.equals("training_outcome")){
@@ -136,7 +139,7 @@ public class TrainingsData extends BaseData {
 				this.development_manager_present = developmentmanager1.getNewData();
 				this.development_manager_present.id = val;
 			}
-			else if(key.equals("field_officer_present")){
+			else if(key.equals("fieldofficer")){
 				FieldOfficersData fieldofficer1 = new FieldOfficersData();
 				this.field_officer_present = fieldofficer1.getNewData();
 				this.field_officer_present.id = val;
@@ -180,6 +183,8 @@ public class TrainingsData extends BaseData {
 			startDateEndDateVillageIdIndex.add(predicateVillageId);
 			UniqueConstraintValidator startDateEndDateVillageId = new UniqueConstraintValidator(startDateEndDateVillageIdIndex, new TrainingsData());
 			startDateEndDateVillageId.setError("The start date, training end date, and village are already in the system.  Please make sure they are unique.");
+			startDateEndDateVillageId.setCheckId(this.getId());
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(trainingPurpose);
 			validatorList.add(trainingOutcome);
@@ -204,6 +209,12 @@ public class TrainingsData extends BaseData {
 					this.development_manager_present.getId(),
 					this.field_officer_present.getId());
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			TrainingsData trainingsData = new TrainingsData();
+			return this.rowToQueryString(trainingsData.getTableName(), trainingsData.getFields(), "id", id, "");
 		}
 		
 		@Override
@@ -233,7 +244,7 @@ public class TrainingsData extends BaseData {
 	protected static String getTrainingsOnlineURL = "/dashboard/gettrainingsonline/";
 	protected static String saveTrainingOfflineURL = "/dashboard/savetrainingoffline/";
 	protected String table_name = "training";
-	protected String[] fields = {"id", "training_purpose", "training_outcome", "training_start_dat", "training_end_date", "village_id", "dm_id", "fieldofficer_id"};
+	protected String[] fields = {"id", "training_purpose", "training_outcome", "training_start_date", "training_end_date", "village_id", "dm_id", "fieldofficer_id"};
 	
 	public TrainingsData() {
 		super();
@@ -397,7 +408,7 @@ public class TrainingsData extends BaseData {
 	
 	public Object postPageData(String id) {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + this.saveTrainingOnlineURL + id + "/", this.form.getQueryString());
+			this.post(RequestContext.SERVER_HOST + TrainingsData.saveTrainingOnlineURL + id + "/", this.form.getQueryString());
 		}
 		else{
 			if(this.validate()) {
@@ -414,17 +425,6 @@ public class TrainingsData extends BaseData {
 		}
 		else{
 			return true;
-		}
-		return false;
-	}
-	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveTrainingOnlineURL + id + "/" );
-		}
-		else {
-			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
 	}
@@ -481,6 +481,17 @@ public class TrainingsData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + TrainingsData.saveTrainingOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + TrainingsData.saveTrainingOnlineURL + id + "/");
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

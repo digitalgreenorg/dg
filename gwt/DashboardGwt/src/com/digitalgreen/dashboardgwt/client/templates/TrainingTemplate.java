@@ -16,6 +16,7 @@ public class TrainingTemplate extends BaseTemplate{
 	
 	public TrainingTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new TrainingsData()).new Data());
 	}
 	
 	@Override
@@ -27,10 +28,10 @@ public class TrainingTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Trainings addTrainingsServlet = new Trainings(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new TrainingsData()).new Data());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Trainings saveTraining = new Trainings(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, trainingListHtml, trainingAddHtml, addDataToElementID);
@@ -66,6 +67,7 @@ public class TrainingTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", training.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/training/"+ training.getId() +"/'>" + 
 							training.getTrainingStartDate()+ "</a>", new Trainings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
@@ -216,7 +218,7 @@ public class TrainingTemplate extends BaseTemplate{
         											"</div>" +
         											"<div class='form-row field_officer_present  '>" +
         												"<div>" +
-        													"<label for='id_field_officer_present' class='required'>Field officer present:</label><select name='field_officer_present' id='id_field_officer_present'>" +
+        													"<label for='id_field_officer_present' class='required'>Field officer present:</label><select name='fieldofficer' id='id_field_officer_present'>" +
         														"<option value='' selected='selected'>---------</option>" +
         													"</select>" +
         												"</div>" +

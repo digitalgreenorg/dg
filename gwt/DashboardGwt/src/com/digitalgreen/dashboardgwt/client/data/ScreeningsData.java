@@ -55,10 +55,10 @@ public class ScreeningsData extends BaseData {
 			super();
 			videoes_screened = new ArrayList();
 			farmer_groups_targeted = new ArrayList();
-			this.addManyToManyRelationship("video", (new ScreeningVideosScreenedData()).new Data(), 
+			this.addManyToManyRelationship("video", (new ScreeningVideosScreenedData()), 
 					"videoes_screened");
-			this.addManyToManyRelationship("persongroups", (new ScreeningFarmerGroupsTargetedData()).new Data(), 
-			"farmer_groups_targeted");
+			this.addManyToManyRelationship("persongroups", (new ScreeningFarmerGroupsTargetedData()), 
+					"farmer_groups_targeted");
 		}
 		
 	    public Data(String id) {

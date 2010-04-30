@@ -90,10 +90,10 @@ public class VideosData extends BaseData {
 			this.related_agricultural_practices = new ArrayList();
 			this.farmers_shown = new ArrayList();
 			this.addManyToManyRelationship("practice", 
-					(new VideoRelatedAgriculturalPracticesData()).new Data(), 
+					(new VideoRelatedAgriculturalPracticesData()), 
 					"related_agricultural_practices");
 			this.addManyToManyRelationship("person", 
-					(new VideoFarmersShownData()).new Data(), 
+					(new VideoFarmersShownData()), 
 					"farmers_shown");
 		}
 		

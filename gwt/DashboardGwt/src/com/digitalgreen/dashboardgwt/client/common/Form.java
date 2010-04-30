@@ -101,7 +101,12 @@ public class Form {
 				queryString += "&" + ((BaseData.Data)this.dependents[i]).toInlineQueryString(id);
 			}
 		}
-		this.queryString = queryString;
+		
+		// This fixes the validation error issue where, on validation error, we want
+		// to preserve the user inputted fields that caused the error.  Fix for now.
+		if(this.queryString == null) {
+			this.queryString = queryString;
+		}
 	}
 	
 	// Save the dataFormat representation of the Form.  Transaction details
@@ -251,14 +256,14 @@ public class Form {
 			if(manyToManyRelationship != null) {
 				ArrayList listBaseData = new ArrayList();
 				if(!(value instanceof ArrayList)) {
-					BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+					BaseData.Data baseData = ((manyToManyRelationship.getToTable()).getNewData()).clone();
 					baseData.setAsManyToManyDependent();
 					setDataObjectField(baseData, manyToManyRelationship.getField(), value);
 					listBaseData.add(baseData);
 				} else {
 					ArrayList srcValue = (ArrayList)value;
 					for(int j=0; j < srcValue.size(); j++) {
-						BaseData.Data baseData = manyToManyRelationship.getToTable().clone();
+						BaseData.Data baseData = ((manyToManyRelationship.getToTable()).getNewData()).clone();
 						baseData.setAsManyToManyDependent();
 						setDataObjectField(baseData, manyToManyRelationship.getField(), srcValue.get(j));
 						listBaseData.add(baseData);
