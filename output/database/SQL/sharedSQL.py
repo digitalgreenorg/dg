@@ -65,7 +65,10 @@ def child_geog_list(request, geog, id):
         sql = """SELECT DISTINCT D.id, DISTRICT_NAME AS name from DISTRICT D
                   WHERE state_id = """+str(id)
         if(partner_id):
-            sql += " AND D.partner_id in ("+','.join(partner_id)+")"
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
+            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
+            if(filtered_partner_list):
+                sql += " AND D.partner_id in ("+','.join(filtered_partner_list)+")"
     elif(geog == 'DISTRICT'):
         sql="SELECT id, BLOCK_NAME as name FROM BLOCK where district_id = "+str(id)
     elif(geog == "BLOCK"):
@@ -144,8 +147,10 @@ def method_overview(request, geog,id, type):
     
     if(geog=="COUNTRY"):
         #Hacking attachGeogDate for attaching geography till state in country case.
-        filterPartnerGeogDate(sql_ds,main_tab_abb,date_field,'state',0, from_date,to_date,partners)
+        attachGeogDate(sql_ds,main_tab_abb,date_field,'state',0, from_date,to_date)
         sql_ds['where'].pop();
+        if(partners):
+            sql_ds['where'].append("D.id in (SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partners)+"))")
         sql_ds['lojoin'].append(['STATE S','S.id = D.state_id']);
     else:
         filterPartnerGeogDate(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)

@@ -110,12 +110,16 @@ def getDatesPartners(request):
 
 def filterPartnerGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partner_id):
     if(partner_id):
-        partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partner_id)+")"]
         if(geog.upper()=="COUNTRY"):
+            partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partner_id)+")"]
             attachGeogDate(sql_ds,par_table_id,date_filter_field,'district',partner_sql,from_date,to_date)
             return
         elif(geog.upper()=="STATE"):
-            sql_ds['where'].append("D.id in ("+partner_sql[0]+")")
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
+            dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
+            if(dist_part_list):
+                partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
+                sql_ds['where'].append("D.id in ("+partner_sql[0]+")")
             
     attachGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
 

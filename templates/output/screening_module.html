@@ -241,11 +241,11 @@
 	avg_lines1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 	avg_lines1.addVariable("data_file",escape('{% url dg.output.views.screeningAnalytics.screening_percent_lines geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}{% if get_req_url %}&{%else%}?{%endif%}type=prod'));
 	avg_lines1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
-						<graph gid="1"><title>Relative Attendance</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Relative Expressed Interest</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="3"><title>Relative Expressed Adoption</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="4"><title>Relative Expressed Question</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						</graphs></settings>'))
+						<graph gid="1"><title>Relative Attendance</title><color>#FFCC00</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="2"><title>Relative Expressed Interest</title><color>#999999</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="3"><title>Relative Expressed Adoption</title><color>#3366FF</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="4"><title>Relative Expressed Question</title><color>#FF0000</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						</graphs><legend><values><text><![CDATA[: {value}%]]></text> </values></legend><values><y_left><unit>%</unit></y_left></values></settings>'))
 	
 	
 	var practice1 = new SWFObject("/media/Output/amxy/amxy.swf", "amxy", eochartwidth, eochartheight, "8", "#FFFFFF");
@@ -255,7 +255,7 @@
 	practice1.addVariable("data_file", escape('{% url dg.output.views.screeningAnalytics.screening_practice_wise_scatter_data geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}')); 
 	//practice1.write("flash_area_practice_type_scatter1");
 	
-	var male_female_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", "420", "300", "8", "#FFFFFF");
+	var male_female_pie1 = new SWFObject("/media/Output/ampie/ampie.swf", "mfratio_pie", eochartwidth, eochartheight, "8", "#FFFFFF");
 	male_female_pie1.addParam("wmode", "transparent");
 	male_female_pie1.addVariable("path", "/media/Output/ampie/");
 	male_female_pie1.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"))
@@ -307,11 +307,11 @@
 	avg_lines.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 	avg_lines.addVariable("data_file",escape('{% url dg.output.views.screeningAnalytics.screening_percent_lines geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}{% if get_req_url %}&{%else%}?{%endif%}type=prod'));
 	avg_lines.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
-						<graph gid="1"><title>Relative Attendance</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Relative Expressed Interest</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="3"><title>Relative Expressed Adoption</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="4"><title>Relative Expressed Question</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						</graphs></settings>'))
+						<graph gid="1"><title>Relative Attendance</title><color>#FFCC00</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="2"><title>Relative Expressed Interest</title><color>#999999</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="3"><title>Relative Expressed Adoption</title><color>#3366FF</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						<graph gid="4"><title>Relative Expressed Question</title><color>#FF0000</color><balloon_text><![CDATA[{value}%]]></balloon_text></graph> \
+						</graphs><legend><values><text><![CDATA[: {value}%]]></text></values></legend><values><y_left><unit>%</unit></y_left></values></settings>'))
 	avg_lines.write("flash_area_avg_lines");
 	
 	

@@ -14,8 +14,14 @@ def screening_module(request,geog,id):
     tot_val = run_query(screeningAnalyticsSQL.totAttendees_totScreening_datediff(request,geog,id))[0];
     tot_scr = tot_val['tot_scr']
     tot_att = tot_val['tot_dist_per']
-    avg_scr = float(tot_scr)/tot_val['tot_days']
-    avg_att = float(tot_val['tot_per'])/tot_scr
+    if(tot_val['tot_days']):
+        avg_scr = float(tot_scr)/tot_val['tot_days']
+    else:
+        avg_scr = 0
+    if(tot_scr):
+        avg_att = float(tot_val['tot_per'])/tot_scr
+    else:
+        avg_att = 0
     
     search_box_params = views.common.get_search_box(request,geog,id, screeningAnalyticsSQL.screening_min_date)
     
