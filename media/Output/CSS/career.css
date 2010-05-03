@@ -1,0 +1,73 @@
+
+#careernavpanel						{ margin-left:5%; margin-top:0%; width:100%; background-color:none; height:100% }
+#careertitleimg						{ margin-left:0%; top:10px; width:77px; height:5%; }
+#careertitledesc					{ margin-left:0%; margin-top:10px; width:95%; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+.careertitledesca					{ border-bottom-width:3px; border-bottom-style:solid; border-bottom-color:#e8f7ba;  }
+.careertitledesca	a				{ text-decoration:none; font-size:1em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }	
+.careertitledesca	a:hover			{ color:Black; }	 
+
+#careerbody							{ width:100%; margin:0%; padding:0%; }
+#careerbodydiv1						{ float:left; width:12.5%; min-height:600px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
+#careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; }
+#careerbodydiv3						{ float:left; width:12.5%; margin:0%; padding:0%; }
+
+#contentheader						{ width:100%; margin-top:0px; text-align:center; margin-left:0%; margin-right:0%; }
+#contentheadertable					{ width:100%; margin-top:5px; background-color:none; }
+.contentheadertitlediv				{ font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; margin-left:2px; }
+.contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
+
+#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
+#table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+.contenttd1							{ width:75%; padding:5px 5px 0px 5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; }
+.contenttd2							{ width:25%; }	
+.contenttd1div						{ margin-top:0px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; }
+.contenttd1div ul					{ list-style-type:square; }
+.contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding-top:2px; padding-right:2px; padding-left:2px; }
+.contenttd2div3						{ margin-top:0px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:1px; border-style:solid; border-color:Gray; }
+
+
+
+#divstattitle						{ margin-left:5px; width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:5px; background-color:none; }
+#divtitletable						{ float:none; margin-left:0px; }
+.divtitletablename					{ float:none; margin-left:0px; }
+.divtitletableimg					{ float:none; padding-left:10px; padding-top:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray;}
+#divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:6px; border-left-style:solid; border-left-color:#fbae0c; }
+#divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
+
+#table2								{ margin-left:5px; width:100%; margin-top:10px; }
+.content2td							{ width:100%; }
+#content2tdtitle1					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
+#content2tdtitle2					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
+#content2tdtitle3					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
+#content2tdtitle4					{ float:none; margin-left:0px; margin-top:10px; width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; border-width:0px; border-style:solid; border-color:#59af04; padding:2px; }
+#content2tdtitle4	a				{ color:Gray; font-weight:bold; text-decoration:none; }
+#content2tdtitle4	a:hover			{ color:#fbae0c; font-weight:bold; text-decoration:underline; }
+
+#contenttitletable					{ float:none; margin-left:0px; }
+#contenttitletablename				{ float:none; margin-left:0px; }
+#content2tdtitleimg					{ width:20px; height:20px; margin-left:10px; margin-top:4px; background:url("/media/Output/Images/applybtn2.png"); background-repeat:no-repeat; cursor:pointer; }	
+#contenttitlename					{ font-size:1.1em; font-family:Calibri; font-weight:normal; color:Black; text-decoration:underline }
+#contenttitletableimg				{ float:none; padding-left:0px; padding-top:5px}
+
+#content2desc1						{ display:none; margin-left:0px; width:100%; background-color:#E8F7BA; border-width:1px; border-style:solid; border-color:#59af04;}
+#content2desc2						{ display:none; margin-left:0px; width:100%; background-color:#E8F7BA; border-width:1px; border-style:solid; border-color:#59af04;}
+#content2desc3						{ display:none; margin-left:0px; width:100%; background-color:#E8F7BA; border-width:1px; border-style:solid; border-color:#59af04;}
+
+#content2descclose					{ float:right; margin-top:2px; width:18px; height:20px; text-align:right; background:url("/media/Output/Images/applybtn3.png"); background-repeat:no-repeat; cursor:pointer; }
+#content2descdiv					{ float:none; padding:0px 5px 5px 5px; font-size:1.0em; font-family:Calibri; font-weight:normal; color:Black; text-align:justify; }
+#content2descdiv ul					{ margin-top:5px; list-style-type:square; color:#5b6e1d; }
+
+
+
+
+
+
+#table1stat							{ width:100%; margin-top:2px; background-color:#bbd569; border-top-width:2px; border-top-style:solid; border-top-color:#59af04;}
+.table1statdesc						{ width:15%; margin-top:0px; z-index:500; }
+.statdesc							{ float:none; width:98%; margin-left:2px; margin-top:2px; height:30px; background-color:White; }
+.statdescname						{ float:left; width:88%; height:30px; margin-top:1px; margin-left:0px; padding-top:2px; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; text-align:center; }
+#statdescimg						{ float:left; width:12%; height:30px; margin-top:3px; text-align:center; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
+#statdescimg1						{ position:absolute; z-index:900; padding:10px; max-height:30px; min-width:200px; margin-top:-40px; margin-left:-100px; text-align:center; background-color:#f2f8d8;  font-size:0.8em; font-family:Calibri; font-weight:normal; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
+.statnumber							{ float:none; width:98%; padding-bottom:2px;  margin-left:2px; margin-top:0px; margin-bottom:2px; height:30px; background-color:White;  }
+.statdesnumber						{ margin-left:2px; font-size:1.5em; font-family:Calibri; font-weight:bold; color:Gray; text-align:center }
+

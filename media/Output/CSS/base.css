@@ -1,67 +1,61 @@
-#mainbody									{ background-color:#dfedc5}
+body										{ background-color:none; font-size:100%;}
+img											{ border-style:none; }
+/* Navigation for logo and help/search*/
 
-/* Nav Menu */
-#navmenu									{ margin-top:3px; margin-left:1%; width:150px; background-color:White; float:left; border-color:#add540; border-style:solid; border-width:1px; min-height:106px}	
-#navmenutitle								{ margin-left:10px; margin-top:2px; width:142px; margin-bottom:0px; height:80px;  background-repeat:no-repeat; cursor:pointer}
-#navmenutitle a img							{ border-style:none}
-#navmenu ul#navmenulist li a				{ float:left; text-decoration:none; color:#445e1e; margin-left:5px; }
-#navmenu ul#navmenulist li a:visited		{ text-decoration:none; color:#445e1e; }
-#navmenu ul#navmenulist li a:hover			{ text-decoration:none; color:Orange; }
-#navmenulist								{ margin-top:0px; padding-top:0px}
-#navmenulist li 							{ display:block; margin-left:-30px; width:125px; height:20px; font-family:Calibri; font-size:18px; font-weight:bold; border-bottom-style:solid; border-bottom-width:2px; border-bottom-color:#d9ecaf; padding-top:5px; padding-left:2px}
-#navarrowimg								{ float:left; width:12px; height:15px; background:url("/media/Output/Images/arrowbg1.png"); background-repeat:no-repeat; margin-top:5px; margin-left:2px }
-/* Center class */
-#tablegrid									{ margin-top:2px; margin-left:1%; float:left}
-#default									{ margin-top:0px; margin-left:0%; width: 920px; background-color:#ffffff; border-color:#add540; border-style:solid; border-width:1px; float:none}
-#defaultfooter								{ margin-top:0px; margin-left:0%; width: 922px; height:30px; background:url("/media/Output/Images/defaultfooterbg1.png"); background-repeat:no-repeat; float:none; z-index:9000}
-#gridfooter									{ margin-left:0px; margin-top:5px; border-width:0px; border-style:solid; border-color:#FFFFFF; width:900px; padding-top:10px}
+#fullbody									{ width:99.92%; left:0%; top:0%; margin:0%; padding:0%; position:absolute; z-index:100;  border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; }
+#toplinks									{ float:none; width:100%; margin:0%; padding-top:3px; z-index:100; }	
+#toprightlinks								{ width:100%; font-size:0.8em; font-family:Calibri; font-weight:normal; padding-top:0px }
+.toprightlinks1								{ width:50%;}
+.toprightlinks2								{ margin-left:0px; }
+.topheadermenu								{ float:right; margin-left:2px; margin-right:2px; }
+.topheadermenu a							{ text-decoration:none; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; }
+.topheadermenu a:hover						{ text-decoration:underline; color:Black; }
 
-/* Customize your search */ 
-#searchbody						{ margin-top:0px; margin-left:10px; width:898px; height:50px; border-right-color:#b7e33f; border-right-width:1px; border-right-style:solid; border-left-color:#b7e33f; border-left-width:1px; border-left-style:solid; border-top-color:#b7e33f; border-top-width:1px; border-top-style:solid;}
-#searchbodytitle				{ z-index:9900; color:#465420; font-family:Calibri; font-size:14px; font-weight:bold; padding-top:10px; padding-left:15px; padding-right:5px; margin-top:10px; margin-left:0px;}
-#searchbodytitleimg				{ z-index:9900; background:url("/media/Output/Images/searchbg10.png"); background-repeat:no-repeat; width:46px; height:29px; margin-top:-29px; margin-left:150px; position:absolute}
-#searchlevel					{ margin-top:0px; margin-left:0px; float:none; padding-top:0px; }
-.searchbody1					{ float:left; color:#465420; font-family:Calibri; font-size:12px; font-weight:normal; padding-top:10px; padding-left:25px; padding-right:20px}
-#searchbody5					{ float:left; color:#465420; font-family:Calibri; font-size:12px; font-weight:normal; padding-top:8px; padding-left:15px; padding-right:5px} 
-.select							{ background-color:#e4f1c9; border-style:solid; border-width:1px; border-color:#666666; width:160px; text-align:center}
+#navclass									{ width:100%; margin:0%; padding:0%; z-index:100;  border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; height:70px; background-color:#d1f26f; }	
+#navclass1									{ margin-top:0px; float:none; width:100% }
+#navheaderleft								{ float:left; margin-top:15px; margin-left:5px; font-size:1.8em; font-family:Cambria; font-weight:bold; color:White;}
+#navheaderright								{ float:right; width:220px; margin-top:15px; margin-right:10px}
+#navhelp									{ margin-top:1px; float:left; width:20px; height:20px; margin-right:20px}
+#navsearch									{ margin-top:0px; float:left; font-size:1em; font-family:Calibri; font-weight:normal;}
+#navsearchinput								{ background-color:White; border-width:1px; border-style:solid; border-color:#59AF04; font-size:0.8em; font-family:Calibri; font-weight:normal; height:16px; color:#5b6e1d}
+#navsearchbtn								{ margin-top:0px; float:left; border-top-width:1px; border-top-style:solid; border-top-color:#59AF04; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#59AF04; border-right-width:1px; border-right-style:solid; border-right-color:#59AF04;  }
 
-/* Calender CSS */
-#dglogo							{ float:left; margin-top:0px; margin-left:10px; width:190px; height:80px; text-align:left; background:url("/media/Output/Images/navchartbg5.png"); background-repeat:no-repeat; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; }
 
-#timelinedesc					{ float:none; background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:478px;  width:430px; height:60px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal;}
+/* header Navigation */
 
-#timelinedesc1					{ background-color:#fcfeef; border-width:thin; border-style:solid; border-color:#CCCCCC; margin-top:0px; margin-left:8px;  width:900px; height:260px; text-align:center; color:#586835; font-family:Calibri; font-size:14px; font-weight:normal; display:none}
+#navpanel									{ margin-top:0px; width:100%; float:none; background-color:#59af04; height:30px; margin-top:0px}
+#headermenulist								{ float:none; margin-right:0px; margin-left:13%; text-align:center}
+.headermenu									{ float:left; }
+#headermenutitle							{ margin-left:5px; margin-top:2px; margin-right:50px; z-index:500 }
+#headermenutitlename						{ padding-top:0px; font-size:1.4em; z-index:500; font-family:Calibri; font-weight:bold; color:White; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:White; background-color:none }
+#subheadmenutop								{ position:absolute; background-color:White; margin-top:-30px; margin-left:-5px; z-index:+1; font-size:1.0em; z-index:500; font-family:Calibri; font-weight:bold; color:#59af04; padding-top:2px; padding-left:5px; padding-bottom:0px; padding-right:10px; border-top-width:1px; border-top-style:solid; border-top-color:Green; border-right-width:1px; border-right-style:solid; border-right-color:Green; border-left-width:1px; border-left-style:solid; border-left-color:Green; display:none  }
+#subheadmenu								{ position:absolute; background-color:White; margin-top:-1px; margin-left:-5px; z-index:+0; width:250px; min-height:60px; border-width:1px; border-style:solid; border-color:Green; display:none }
+#subheadmenulist							{ list-tyle-type:none; margin-top:5px; margin-bottom:5px}
+#subheadmenulist li							{ float:none; display:block; width:250px; list-tyle-type:none; margin-left:-40px; }
+#subheadmenulist li  a					    { float:none; display:block; background-color:none; color:Black; width:98%; text-align:left; font-size:0.7em; font-family:Calibri; font-weight:normal; padding-left:5px; margin-top:5px; text-decoration:none}
 
-#timelinedesc1btntop			{ background:url("/media/Output/Images/closebtn1.png"); background-repeat:no-repeat; width:50px; height:16px; margin-top:5px; margin-left:93.5%; color:#666666; font-family:Calibri; font-size:10px; font-weight:normal; padding-top:2px; padding-right:20px;padding-left:-10px}
-	
-#timelinedescfooter				{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-top:42px; margin-left:10px; position:absolute;}
-#timelinedescfooter1			{ color:#666666; font-family:Calibri; font-size:12px; font-weight:normal; margin-left:405px; width:16px; height:16px; margin-top:41px; position:absolute; background:url("/media/Output/Images/applybtn2.png"); background-repeat:no-repeat;}
+/* Main body Content*/
 
-#inlinedatepicker1				{ margin-top:62px; padding-left:0px; margin-left:670px; position:absolute; width:120px; height:20px; padding-top:5px; font-family:Calibri; font-size:16px; font-weight:bold; background-color:#f1f5d7; padding-top:5px; border-width:2px; border-style:solid; border-color:#e9efc0;}
-#inlinedatepicker2				{ margin-top:112px; padding-left:0px; margin-left:670px; position:absolute; width:120px; height:20px; padding-top:5px; font-family:Calibri; font-size:16px; font-weight:bold; background-color:#f1f5d7; padding-top:5px; border-width:2px; border-style:solid; border-color:#e9efc0;}
+#contentdiv									{ margin-top:0px; background-color:none; width:100%; left:0%; }
+#mainbodytable								{ margin-top:0px; background-color:none; width:100%; left:0%; border:0;}
+.mainbodytd1								{ margin-top:0px; width:100%; margin-left:0%; padding-top:0px; }
+.mainbodytd									{ padding-top:0px; margin-top:0px; width:100%; margin-left:0%; padding-top:0px; }
+#content									{ margin-top:0px; padding:0; top:0px; left:0%; width:100%; margin-bottom:0px; background-color:White;  }
+#contentdesc								{ float:none; margin-top:50px; margin-bottom:0px; width:100%; }
 
-#timelinedesc1calender			{ margin-top:-5px; padding-left:9px; margin-left:600px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; color:#a9a9a8; background:url("/media/Output/Images/timelinedesc1calenderbg2.png"); background-repeat:no-repeat; width:100px; height:64px} 
-#inlinedatepickerheader			{ margin-top:5px; padding-left:9px; margin-left:690px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; color:#a9a9a8; text-align:left}
-#inlinedatepicker1desc			{ margin-top:70px; padding-left:9px; margin-left:620px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal;}
-#inlinedatepicker2desc			{ margin-top:120px; padding-left:9px; margin-left:635px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal;}
-#inlinedatepicker1format		{ margin-top:70px; padding-left:9px; margin-left:800px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal}
-#inlinedatepicker2format		{ margin-top:120px; padding-left:9px; margin-left:800px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal}
-#inlinedatepickersubmitbtn		{ margin-top:150px; padding-left:0px; margin-left:670px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7;}
-#inlinedatepickerresetbtn		{ margin-top:150px; padding-left:0px; margin-left:735px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7;}
+/* footer section */
 
-#inlinedatepickererrormsg		{ margin-top:180px; padding-left:0px; margin-left:645px; position:absolute; font-family:Calibri; font-size:14px; font-weight: normal; background-color:#f1f5d7; padding:4px;}
+#contentfoot1								{ float:none; margin-left:0px; margin-bottom:0px; width:90%; height:60px; background-color:none; }
+#contentfoot								{ float:none; margin-left:0%; margin-bottom:0px; width:90%; height:60px; background-color:none; }
+#footertable								{ margin-top:70px; margin-left:5%; width:90%; height:40px; background-color:none; position:absolute }
+#footertd1									{ width:30%; height:50px; margin-top:70px;}
+#footertd21									{ background-color:none; width:15%; padding-left:5px; padding-top:1px; height:30px; margin-top:5px; border-top-width:1px; border-top-style:solid; border-top-color:Gray; font-size:0.8em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+#footertd22									{ background-color:none; width:85%; height:30px; margin-top:5px; border-top-width:1px; border-top-style:solid; border-top-color:Gray; text-align:right; padding-right:5px }
+#footernavlist								{ float:right}
+.footermenu									{ float:left; text-align:right; margin-left:10px; padding-top:0px; margin-top:2px; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+.footermenu a								{ text-decoration:none; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+.footermenu a:hover							{ text-decoration:underline; }
 
-#inlinedatepickerbg				{ margin-top:5px; padding-right:5px; margin-left:7px; position:absolute; width:580px; height:200px; background-color:#f1f5d7}
-
-#inlinedatepicker1-container	{ margin-top:5px;margin-left:10px; position:absolute}
-#inlinedatepickerdiv			{ margin-top:75px;margin-left:280px; position:absolute}
-#inlinedatepicker2-container	{ margin-top:5px; margin-left:370px; position:absolute}
-
-#datepicker1					{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:10px; width:160px; height:25px; padding-top:8px; border-right-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
-#datepickergap					{ float:left; background-color:#f1f5d7; border-bottom-style:solid; border-top-style:solid; border-bottom-width:1px; border-bottom-color:#e7efb6; border-top-width:1px; border-top-color:#e7efb6; margin-top:5px; margin-left:0px; margin-right:0px; height:25px; padding-top:8px}
-#datepicker2 					{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:160px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
-#datepicker12reset				{ float:left; background-color:#f1f5d7; border-style:solid; border-width:1px; border-color:#e7efb6; margin-top:5px; margin-left:0px; width:54px; height:25px; padding-top:8px; border-left-width:0px; font-family:Calibri; font-size:16px; font-weight: bold;}
-
-a#resetdate						{ text-decoration:none; color:#dbd026; font-family:Calibri; font-size:16px; font-weight: bold; }
-a#resetdate:hover				{ text-decoration:underline; color:#666666; font-family:Calibri; font-size:16px; font-weight: bold; }
-
+#footertd31									{ width:15%; padding-left:5px; padding-top:1px; height:30px; margin-top:5px; font-size:0.8em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+#footertd32									{ width:85%; height:30px; margin-top:5px; text-align:right; padding-right:5px }
+#footercopyright							{ float:none; text-align:left; padding-left:10px; margin-left:30%; height:30px; margin-top:0px; font-size:0.8em; font-family:Calibri; font-weight:bold; color:#c9c9c9; }

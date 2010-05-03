@@ -1,66 +1,20 @@
-from dg.dashboard.models import *
-from django.db import connection
-from django.template import Template, Context
-
-def construct_query(var, context_dict):
-    return Template(var).render(Context(context_dict))
-
-def run_query(query_string, *query_args):
-    return_list = []
-    cursor = connection.cursor()
-    cursor.execute(query_string, query_args)
-    col_names = [desc[0] for desc in cursor.description]
-    rows = cursor.fetchall()
-    for row in rows:
-        return_list.append(dict(zip(col_names,row)))
-    return return_list
-
-#this returns 
-#{ dict_key : (tuple of remaing columns), ...}
-
-def run_query_dict(query_string, dict_key, *query_args):
-    return_list = {}
-    cursor = connection.cursor()
-    cursor.execute(query_string,query_args)
-    col_names = [desc[0] for desc in cursor.description]
-    rows = cursor.fetchall()
-    if(dict_key != col_names[0]):
-        raise Exception, dict_key+" is not the first column in returned query's column list"
-    for row in rows:
-        return_list[row[0]] = row[1:]
-        
-    return return_list
-
-#this returns 
-#{ dict_key : [list of remaing columns], ...}
-
-def run_query_dict_list(query_string, dict_key, *query_args):
-    return_list = {}
-    cursor = connection.cursor()
-    cursor.execute(query_string,query_args)
-    col_names = [desc[0] for desc in cursor.description]
-    rows = cursor.fetchall()
-    if(dict_key != col_names[0]):
-        raise Exception, dict_key+" is not the first column in returned query's column list"
-    for row in rows:
-        return_list[row[0]] = list(row[1:])
-        
-    return return_list
+from dg.output.database.utility import *
+from dg.output.database import filter
 
 
-    
 #Query for the drop down menu in search box
 #Context Required: geog can be (state/district/block/village(
 #                  id for(district/block/village)
 #                  geog_parent (e.g. 'state'->'district'->'block'->'village'
 search_drop_down_list = r"""
-SELECT id, {{geog|upper}}_NAME AS name
-FROM {{geog|upper}}
-{% ifnotequal geog 'state' %}
-WHERE {{geog_parent}}_id = {{id}}
-{% endifnotequal %}
-ORDER BY name
+    SELECT id, {{geog|upper}}_NAME AS name
+    FROM {{geog|upper}}
+    {% ifnotequal geog 'state' %}
+    WHERE {{geog_parent}}_id = {{id}}
+    {% endifnotequal %}
+    ORDER BY name
 """
+
 
 #Query for breadcrumbs
 #Params: geog - options to be calculated for this geog
@@ -86,13 +40,127 @@ def breadcrumbs_options_sql(geog,id, is_child):
     WHERE {{geog|first}}1.{{par_geog}}_id = {{geog|first}}2.{{par_geog}}_id
         and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
 
+def get_partners_sql(geog, id):
+    geog = geog.upper()
+    if geog not in ["COUNTRY", "STATE"]:
+        return ''
+    
+    sql_ds = getInitSQLds()
+    sql_ds['select'].extend(["DISTINCT P.id", "P.PARTNER_NAME"])
+    sql_ds['from'].append("DISTRICT D")
+    sql_ds['join'].append(["PARTNERS P", "P.id = D.partner_id"])
+    if (geog=="STATE"):
+        sql_ds['where'].append("D.state_id = "+str(id))
+    
+    return joinSQLds(sql_ds);
 
+def child_geog_list(request, geog, id):
+    from_date, to_date, partner_id = getDatesPartners(request)
+    geog = geog.upper()
+    if(geog == "COUNTRY"):
+        sql = "SELECT DISTINCT S.id, STATE_NAME AS name from STATE S"
+        if(partner_id):
+            sql+=  """ JOIN DISTRICT D ON (D.state_id = S.id)
+                  WHERE D.partner_id in ("""+','.join(partner_id)+")"
+    elif(geog == "STATE"):
+        sql = """SELECT DISTINCT D.id, DISTRICT_NAME AS name from DISTRICT D
+                  WHERE state_id = """+str(id)
+        if(partner_id):
+            sql += " AND D.partner_id in ("+','.join(partner_id)+")"
+    elif(geog == 'DISTRICT'):
+        sql="SELECT id, BLOCK_NAME as name FROM BLOCK where district_id = "+str(id)
+    elif(geog == "BLOCK"):
+        sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE block_id = "+str(id)
+    elif(geog == "VILLAGE"):
+        sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE id = "+str(id);
+    else:
+        sql = ''
+    
+    return sql;
 
-
+def method_overview(request, geog,id, type):
+    geog = geog.upper();
+    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    from_date, to_date, partners = getDatesPartners(request)
+    
+    if(geog == 'VILLAGE'):
+        geog_child = 'VILLAGE'
+    else:
+        geog_child = geog_list[geog_list.index(geog)+1]
+    
+    date_field = main_tab_abb = ''
+    sql_ds = getInitSQLds();
+    if(geog=="VILLAGE"):
+        sql_ds['select'].append("village_id as id")
+    else:
+        sql_ds['select'].append(geog_child[0]+".id as id")
+    if(type == 'production'):
+        sql_ds['select'].append('COUNT(DISTINCT VID.id) as tot_pro')
+        sql_ds['from'].append('VIDEO VID')
+        main_tab_abb = "VID"
+        date_field = "VID.VIDEO_PRODUCTION_END_DATE"
+    elif(type=='screening'):
+        sql_ds['select'].append('COUNT(DISTINCT SC.id) as tot_scr')
+        sql_ds['from'].append('SCREENING SC')
+        main_tab_abb = "SC"
+        date_field = "SC.DATE"
+    elif(type=='adoption'):
+        sql_ds['select'].append('COUNT(DISTINCT PAP.id) as tot_ado')
+        sql_ds['from'].append('PERSON_ADOPT_PRACTICE PAP')
+        sql_ds['lojoin'].append(['PERSON P','P.id = PAP.person_id'])
+        main_tab_abb = "P"
+        date_field = "PAP.DATE_OF_ADOPTION"
+    elif(type=='practice'):
+        sql_ds['select'].append('COUNT(DISTINCT VRAP.practices_id) as tot_pra')
+        sql_ds['from'].append('VIDEO_related_agricultural_practices VRAP')
+        sql_ds['lojoin'].append(['VIDEO VID','VID.id = VRAP.video_id'])
+        main_tab_abb = 'VID'
+        date_field = "VID.VIDEO_PRODUCTION_END_DATE"
+    elif(type=='person'):
+        sql_ds['select'].append('COUNT(DISTINCT P.id) as tot_per')
+        sql_ds['from'].append('PERSON P')
+        main_tab_abb = 'P'
+        if(from_date is not None and to_date is not None):
+            sql_ds['join'].append(["""(
+            SELECT person_id, min(date) as DATE
+            FROM (
+                SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
+                FROM VIDEO_farmers_shown vs, VIDEO vid
+                WHERE vs.video_id = vid.id
+    
+                UNION
+    
+                SELECT  person_id , DATE_OF_ADOPTION AS date
+                FROM PERSON_ADOPT_PRACTICE pa
+    
+                UNION
+    
+                SELECT  pa.person_id, DATE
+                FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
+                WHERE pa.screening_id = sc.id ) TMP
+                GROUP BY person_id
+            )AS TAB""", "TAB.person_id = P.id"])
+            date_field = "TAB.DATE"
+            
+    
+    if(geog=="COUNTRY"):
+        #Hacking attachGeogDate for attaching geography till state in country case.
+        filterPartnerGeogDate(sql_ds,main_tab_abb,date_field,'state',0, from_date,to_date,partners)
+        sql_ds['where'].pop();
+        sql_ds['lojoin'].append(['STATE S','S.id = D.state_id']);
+    else:
+        filterPartnerGeogDate(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)
+    
+    if(geog!="VILLAGE"):
+        sql_ds['group by'].append(geog_child+"_NAME")
+        sql_ds['order by'].append(geog_child+"_NAME")
+    
+    return joinSQLds(sql_ds);
+    
 #Query for Total Video Production in Overview module
 #Context Required:'type' can be (production/screening/adoption/practice/person)
 #                :'geography' can be (state/district/block/village
-#                : 'to_date' and 'from_date' (as required by MySQL) are OPTIONAL
+#                : 'to_date' and 'from_date' (as required by MySQL format) are OPTIONAL
 #                : id of parent geography (e.g. for 'district' parent is 'state'). For state, this can be omitted
 overview = r"""    
     SELECT {{geog_child|first }}.id as id, {{geog_child|upper }}_NAME as name, COUNT({% ifequal type 'practice' %} distinct vid_pr.practices_id {%else%}{{type|slice:":3"}}.id {%endifequal%}) as tot_{{type|slice:":3"}}
@@ -158,9 +226,77 @@ overview = r"""
     ORDER BY {{geog_child|upper }}_NAME
     """
     
+def method_overview_line_chart(request,geog,id,type):
+    sql_ds = getInitSQLds();
+    sql_inn_ds = getInitSQLds();
+    from_date, to_date, partners = getDatesPartners(request)
+    
+    if(type=='practice'):
+        sql_ds['select'].extend(["date", "COUNT(*)"])
+        
+        sql_inn_ds = getInitSQLds();
+        sql_inn_ds['select'].extend(["VRAP.practices_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
+        sql_inn_ds['from'].append("VIDEO VID");
+        sql_inn_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
+        filterPartnerGeogDate(sql_inn_ds,'VID','dummy',geog,id,None,None,partners)
+        sql_inn_ds['group by'].append("practices_id");
+        
+        sql_ds['from'].append('('+joinSQLds(sql_inn_ds)+') as tab1')
+        sql_ds['group by'].append('date');
+    elif(type=='person'):
+        sql_ds['select'].extend(["date", "COUNT(*)"])
+        
+        sql_inn_ds = getInitSQLds();
+        sql_inn_ds['select'].extend(["person_id", "MIN(date) as date"])
+        sql_inn_ds['from'].append("""(
+            SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
+            FROM VIDEO_farmers_shown vs, VIDEO vid
+            WHERE vs.video_id = vid.id
 
+            UNION
+
+            SELECT  person_id , DATE_OF_ADOPTION AS date
+            FROM PERSON_ADOPT_PRACTICE pa
+
+            UNION
+
+            SELECT  pa.person_id, DATE
+            FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
+            WHERE pa.screening_id = sc.id
+
+        ) as tab""");
+        if(geog.upper()!="COUNTRY" or partners):
+            sql_inn_ds['join'].append(["PERSON P","P.id = tab.person_id"])
+            filterPartnerGeogDate(sql_inn_ds,'P','dummy',geog,id,None,None,partners)
+        sql_inn_ds['group by'].append("tab.person_id");
+        
+        sql_ds['from'].append('('+joinSQLds(sql_inn_ds)+') as tab1')
+        sql_ds['group by'].append('date');
+    elif(type=='production'):
+        sql_ds['select'].extend(["VIDEO_PRODUCTION_END_DATE as date", "count(*)"])
+        sql_ds['from'].append("VIDEO VID");
+        filterPartnerGeogDate(sql_ds,'VID','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("VIDEO_PRODUCTION_END_DATE");
+    elif(type=='screening'):
+        sql_ds['select'].extend(["DATE AS date", "count(*)"])
+        sql_ds['from'].append("SCREENING SC");
+        filterPartnerGeogDate(sql_ds,'SC','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("DATE");
+    elif(type=='adoption'):
+        sql_ds['select'].extend(["DATE_OF_ADOPTION AS date", "count(*)"])
+        sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP");
+        if(geog.upper()!="COUNTRY" or partners):
+            sql_ds['join'].append(["PERSON P","P.id = PAP.person_id"])
+            filterPartnerGeogDate(sql_ds,'P','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("DATE_OF_ADOPTION");
+        
+    if(from_date is not None and to_date is not None):
+        sql_ds['having'].append("date between '"+from_date+"' and '"+to_date+"'")
+        
+    return joinSQLds(sql_ds)
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
+
 #Context Required:'type' can be (production/screening/adoption/practice/person)
 #                :'geography' can be (state/district/block/village)
 

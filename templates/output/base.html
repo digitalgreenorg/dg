@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{% block title %}  {% endblock %}</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />     
+	<link rel="icon" type="image/png" href="/media/Output/Images/dgfavicon3.png">
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/base.css' />   
+    {% block cssfile %}
+       
+    {% endblock cssfile %}    
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />     
+              
+    <script type="text/javascript" src="/media/Output/JS/jquery-1.3.2.min.js"></script>   
+	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>	
+    <script type="text/javascript" src="/media/Output/amline/swfobject.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>    
+    <script type="text/javascript" src="/media/Output/JS/Jdatepick.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/Jdefaultload.js"></script>
+    {% block jsfile %}
+       
+    {% endblock jsfile %} 
+</head>
+
+<body>
+<div id='fullbody'>
+	<div id='navclass'>
+		<div id='navclass1'>
+			<div id='toplinks'>
+				<table id='toprightlinks' cellspacing='0' cellpadding='0'>
+					<tr>
+						<td class='toprightlinks1'></td>
+						<td class='toprightlinks2'>
+							<div class='topheadermenu'> <a href="#"> Contact us </a>&nbsp;&nbsp; </div>
+							<div class='topheadermenu'> | </div>
+							<div class='topheadermenu'> <a href="#"> Careers </a> </div>
+						</td>						
+					</tr>				
+				</table>
+			</div>	
+			<div id='navheaderleft'> <a href="#"> <img src="/media/Output/Images/dglogo9.png" alt='temp' title="Help"> </a>   </div>
+			<div id='navheaderright'>
+				<div id='navhelp'>					  
+				</div>			 
+				<form>
+				<div id='navsearch'>  			
+					<input id='navsearchinput' value='Search...' type='text' >						
+				</div>
+				<div id='navsearchbtn'>
+					<img src="/media/Output/Images/searchgobtn2.png" alt='temp' title='Go'>
+				</div>
+				</form>			
+			</div>					
+		</div>
+	</div>		
+
+	<table cellspacing='0' cellpadding='0' id='mainbodytable'>
+		<tr>
+			<td class='mainbodytd1' colspan='2' cellspacing='0' cellpadding='0'>
+				<div id='navpanel'>
+					<div id='headermenulist' class='headermenulist'>									
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									About									
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										About
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="#" title='Team'> Team </a>  </li>															
+											<li> <a href="#" title='Partners'> Partners </a> </li>
+										</ul>										
+									</div> 
+								</div>
+							</div>
+						</div>
+					
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Analytics
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Analytics
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="#" title='Overview'> Progress Metrics </a>  </li>				
+											<li> <a href="#" title='Production'> Video Statistics </a> </li>
+										</ul>										
+									</div> 									 
+								</div>
+							</div>	
+						</div>					
+					
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									News
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										News
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="#" title='Updates'> Updates </a>  </li>				
+											<li> <a href="#" title='Press'> Press </a> </li>
+											<li> <a href="#" title='Nexus: The Monthly Newsletter'> Nexus </a> </li>
+										</ul>										
+									</div> 
+								</div>
+							</div>	
+						</div>				
+					</div>
+				</div>		
+			</td>
+		</tr>
+		<tr>
+			<td class='mainbodytd' colspan='2' cellspacing='0px' cellpadding='0px'>
+				<div id='content'>
+					<div id='contentdesc'>
+						{% block content %}
+						{% endblock content %}	
+					</div>				
+				</div>			
+			</td>
+		</tr>
+		<tr>
+			<td class='mainbodytd' colspan='2' cellspacing='0' cellpadding='0'>
+				<br/>
+				<br/>
+				<br/>		
+			</td>
+		</tr>
+		<tr>	
+			<td id='footertd21'>
+				<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.5/in/80x15.png"/></a>				
+			</td>
+			<td id='footertd22'>
+				<div id='footernavlist'>					
+					
+					<div class='footermenu'> Follow us on: </div>
+					<div class='footermenu'> <a href='http://www.facebook.com/digitalgreenorg' title='Follow us on Facebook' target='_blank'> <img src="/media/Output/Images/facebook-icon3.gif" alt='temp'> </a> </div>
+					
+					<div class='footermenu'> <a href='http://twitter.com/digitalgreenorg' title='Follow us on Twitter'> <img src="/media/Output/Images/twitter-icon3.gif" alt='temp' target='_blank'> </a> </div>
+					
+					<div class='footermenu'> <a href='http://www.youtube.com/digitalgreenorg' title='Follow us on youtube'> <img src="/media/Output/Images/youtube-icon3.png" alt='temp' target='_blank'> </a> </div>
+										
+				</div>
+			</td>
+		</tr>
+		<tr>	
+			<td id='footertd31'>				
+			</td>
+			<td id='footertd32'>				
+				<div id='footercopyright'>
+					
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<br/>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* CSS Document */
+
+#customize					{ float:left; margin-top:-30px; margin-left:0px; width:14%; min-height:850px; background-color:none; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; }
+
+#customizetitle				{ float:none; margin-top:0px; margin-left:0px; width:100%; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#c9caca; background-color:none; height:0px; }
+#customizebody				{ margin-top:0px; margin-left:0px; width:100%; background-color:none; }
+.contentheadertitle			{ padding-top:0px; font-size:1.6em; font-family:Calibri; font-weight:bold; color:#b5b5b5; }
+#customizetitlename			{ float:none; padding-top:0px; padding-left:2px; width:100%;}
+
+
+/* CALENDER */
+.custombodytd1				{ width:20%; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; margin-left:5px; text-align:left}
+.custombodytd2				{ width:76%; }
+
+.customdiv					{ float:none; margin-top:0px; margin-right:0px; width:100%; background-color:none; }
+.customtitle				{ float:none; margin-top:0px; margin-left:0px; width:100%; font-size:0.8em; font-family:Calibri; font-weight:bold; color:#5b6e1d; background-color:none; height:30px; border-bottom-width:3px; border-bottom-style:solid; border-bottom-color:#e8f7ba; }
+#calenderbody				{ float:none; margin-top:0px; margin-left:0px; width:100%; background-color:#none; }
+.customtitletable			{ float:none; margin-top:0px; padding-left:0px; width:100%;}
+#calenderbodytable			{ float:none; margin-top:0px; padding-left:0px; width:100%; padding-bottom:5px}
+#calenderbodytitle			{ text-align:left; font-size:78%; font-family:Calibri; font-weight:normal; color:Gray; }
+.customtitlename			{ float:left; margin-top:14px; padding-left:3px; width:70%; height:18px}
+.customtitleimg				{ float:right; margin-top:5px; padding-top:4px; text-align:right; width:20%; height:18px; }
+#arrowimg					{ float:none; margin-top:0px; margin-left:0px; width:100%; background-color:#f4fdd6; text-align:right; display:none}
+
+
+#calendertodatetitle		{ margin-top:10px; }
+div.inputdiv				{ padding:2px; width:91%; height:15px; border-style:solid; border-color:Green; border-width:1px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d }
+
+/* SELECT BODY */
+#selectbody					{ margin-top:0px; width:100%; background-color:none; }
+.searchbody1				{ margin-top:0px; width:100%; padding-left:5px; padding-top:5px; padding-bottom:5px; }
+select						{ padding:2px; width:93%; border-style:solid; size:1px; border-color:Green; border-width:1px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; background-color:#f3fdd5}
+
+#submitdiv					{ margin-top:10px; width:100%; }
+#submittable				{ margin-top:0px; width:95%; padding-left:10px; }
+.submitbtn					{ margin-top:0px; width:50%;}
+.resetbtn					{ margin-top:0px; width:50%;}
+#Reset1						{ min-width:60%; font-size:90%; font-family:Calibri; font-weight:normal; color:Black; }
+#Submit1					{ min-width:50%; font-size:90%; font-family:Calibri; font-weight:normal; color:Black; }
+
+/* PARTNER BODY */
+#partnerbody				{ float:none; margin-top:0px; margin-left:0px; width:100%; background-color:none; }
+#partnerbodytable			{ float:none; margin-top:0px; padding-left:0px; width:96%; padding-bottom:5px; margin-top:5px; }
+.custompartnerbodytd		{ float:none; width:100%; border-bottom-style:solid; border-bottom-color:Green; border-bottom-width:1px; margin-top:5px; }
+.partnerdiv					{ float:left; padding:1px; width:85%; height:20px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; }
+.partnercheckbox			{ float:left; padding:1px; width:12%; margin-right:0px;  }
+
+/* content header defined */
+#contentbody				{ float:right; margin-top:-30px; margin-right:0px; width:85%; background-color:none; }					
+#contentheader				{ width:99%; height:32px; margin-top:0px; }
+#datepicker1				{ width:300px; }
+
+
+/* Expansion Overlay of Charts */
+#expandview1				{ z-index:9900; position:fixed; background-color:Black; }
+#expandview3				{ border-color:Orange; border-style:solid; border-width:2px; z-index:9998; position:fixed; background-color:White; display:none}
+#expandview4				{ padding-left:2%; padding-top:1%}
+
+#expandviewtitle			{ border-bottom-color:#ecedec; border-bottom-style:solid; border-bottom-width:2px; float:left; margin-top:10px; margin-left:10px; width:95%; height:30px; font-family:Calibri; font-weight:bold; font-size:26px; color: Green; text-align:center }
+#expandviewclosebtn			{ float:left; margin-top:10px; margin-left:10px; width:20px; height:20px; background:url("/media/Output/Images/closebtn4.png"); background-repeat:no-repeat; cursor:pointer }
+.expandviewchart			{ float:none; margin-top:10px; margin-left:10px}

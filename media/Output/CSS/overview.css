@@ -1,0 +1,51 @@
+
+#table1								{ width:99%;}
+#divstattitle						{ width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
+#divtitletable						{ float:none; margin-left:0px; }
+.divtitletablename					{ float:none; margin-left:0px; }
+.divtitletableimg					{ float:none; padding-left:10px; padding-top:5px}
+#divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:6px; border-left-style:solid; border-left-color:#fbae0c; }
+#divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
+
+
+#table1stat							{ width:100%; margin-top:2px; background-color:#bbd569; border-top-width:2px; border-top-style:solid; border-top-color:#59af04;}
+.table1statdesc						{ width:15%; margin-top:0px; z-index:500; }
+.statdesc							{ float:none; width:98%; margin-left:2px; margin-top:2px; height:20px; background-color:White; }
+.statdescname						{ float:left; width:88%; height:20px; margin-top:1px; margin-left:0px; padding-top:2px; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; text-align:center; }
+#statdescimg						{ float:left; width:12%; height:20px; margin-top:3px; text-align:center; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
+#statdescimg1						{ position:absolute; z-index:900; padding:10px; max-height:30px; min-width:200px; margin-top:-40px; margin-left:-150px; text-align:center; background-color:#f2f8d8;  font-size:0.8em; font-family:Calibri; font-weight:normal; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
+.statnumber							{ float:none; width:98%; padding-top:8px;  margin-left:2px; margin-top:0px; margin-bottom:2px; background-color:White;  }
+.statdesnumber						{ margin-left:2px; font-size:1.8em; font-family:Calibri; font-weight:bold; color:#b5b5b5; text-align:center }
+
+
+
+/* content table for displaying number statistics in table */
+#contenttable						{ margin-top:5px; width:100%; }
+#table2								{ width:99%; margin-bottom:5px; border-width:1px; border-style:solid; border-color:#59af04; background-color:#e8f7ba; }
+.table2statdesc1					{ width:15%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#59af04;}
+.table2statdesc11					{ width:15%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green;}
+.table2statdesc2					{ width:15%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
+.table2statdesc2 a					{ color:#5b6e1d; font-weight:normal; text-decoration:none}
+.table2statdesc2 a:hover			{ color:Black; font-weight:normal; text-decoration:underline}
+.table2statdesc21					{ width:15%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
+#table2tddiv						{ float:left; width:90%; margin-top:0px; padding-top:6px; cursor:pointer; }
+
+/* for sorting table2 styles for all sorting order(ascending, descending and none) */
+th.header div#table2tddiv1			{ float:left; width:10%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tddefaultbg2.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:0.6}
+th.headerSortUp div#table2tddiv1	{ float:left; width:10%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tdascenbg4.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:1}
+th.headerSortDown div#table2tddiv1	{ float:left; width:10%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tddescbg4.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:1}
+
+
+/* for the header of table2 to highlight the current geography */
+#table2tddiv0						{ width:100%; margin-top:0px; margin-left:0px; cursor:pointer; }
+#table2tdhead						{ width:90%; float:left; margin-left:0px; margin-top:5px; font-size:1.2em; font-family:Calibri; font-weight:normal; color:Black; }	
+
+
+/* display the chart */
+#contentchart						{ margin-top:10px; width:100%; }
+#contentchart1						{ margin-top:5px; width:98.6%; border-width:1px; border-style:solid; border-color:#59af04; }	
+#zoomicon							{ width:100%; background-color:#e8f7ba; text-align:right; font-size:2em; font-family:Calibri; font-weight:bold; color:#5b6e1d; padding-right:0px; height:30px; padding-bottom:5px; }
+#zoomiconimg						{ width:35px; height:15px; padding-top:0px; margin-left:96%; border-width:0px; border-style:solid; border-color:#59af04; }
+#zoomiconimg a img					{ margin-top:0px; width:30px; height:20px; }
+#flashcontent						{ width:99%; text-align:center }
+				

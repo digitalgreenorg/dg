@@ -1,0 +1,308 @@
+{% extends "base_analytics.html" %}
+
+{% block title %} Analytics Dashboard: Overview  {% endblock %}
+
+{% block cssfile %}  
+    {{block.super}}   
+    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/overview.css' />
+{% endblock cssfile %}
+
+{% block jsfile %}  
+    {{block.super}}   
+    <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>
+{% endblock jsfile %}
+
+{% block contentheadertitle %} Progress Metrics {% endblock contentheadertitle %}
+
+
+	{% block contentbody %}
+		{{block.super}}
+		<div id='contentstat'>	
+			<div id='table1'>
+				<div id='divstattitle'>
+					<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='divtitletablename'> <div id='divstattitlename'>National Statistics</div> </td>
+							<td class='divtitletableimg'>  </td>
+						</tr>
+					</table>								
+				</div>
+				<table id='table1stat' cellspacing='0' cellpadding='0'> 				
+					<tr>
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Farmer Groups / Villages	</div>
+								<div id='statdescimg'> 	
+									<div id='statdescimg1'>	
+										The total number of farmer groups and villages in a chosen geography						
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{country_data.tot_pg}} / {{country_data.tot_vil}}	</div>
+							</div>																				
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Videos Produced	</div>
+								<div id='statdescimg'> 
+									<div id='statdescimg1'>	
+										The total number of videos produced in a given location						
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{country_data.tot_vid}}	</div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Disseminations	</div>
+								<div id='statdescimg'>
+									<div id='statdescimg1'>	
+										The total number of videos that have been screened						
+									</div>									 									
+								</div>																
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{country_data.tot_scr}}	</div>
+							</div>																			
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Adoptions	</div>
+								<div id='statdescimg'> 	
+									<div id='statdescimg1'>	
+										Total number of farmers following or taking up practice as shown in DG video						
+									</div>									
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{country_data.tot_ado}}	</div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	Agricultural Practices	</div>
+								<div id='statdescimg'> 	
+									<div id='statdescimg1'>	
+										The total number of agricultural practices followed						
+									</div>
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{country_data.tot_pra}}	</div>
+							</div>													
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>	<br/>	</div>
+								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	<br/> </div>
+							</div>													
+						</td>
+					</tr>
+					
+				</table>				
+			</div>
+					
+		</div>
+		<div id='contenttable'>	
+					<table id='table2' cellspacing='0' cellpadding='0'>
+						<thead>
+							<tr>					    
+								<th class='table2statdesc1'>
+									<div id='table2tddiv0'>
+										<div id='table2tdhead'>	{{geography|title}}	</div>
+										<div id='table2tddiv1'>    </div>
+									</div>					
+								</th>
+								<th class='table2statdesc1'>
+									<div id='table2tddiv'> Videos Produced   </div>
+									<div id='table2tddiv1'>    </div>									
+								</th>
+						
+								<th class='table2statdesc1'>
+						    		<div id='table2tddiv'> Disseminations    </div>
+						    		<div id='table2tddiv1'>    </div>													
+								</th>
+						
+								<th class='table2statdesc1'>
+						    		<div id='table2tddiv'> Farmer Adoptions	</div>
+						    		<div id='table2tddiv1'>    </div>														
+								</th>
+						
+								<th class='table2statdesc1'>
+									<div id='table2tddiv'> Agricultural Practices  </div>
+									<div id='table2tddiv1'>    </div>									
+								</th>
+								<th class='table2statdesc11'>
+									<div id='table2tddiv'> Farmers 	</div>
+									<div id='table2tddiv1'>    </div>
+								</th>					
+							</tr>				 
+				 		</thead>
+				 		<tbody>
+				 			{% for item in table_data %}
+				 			<tr>
+								<td class='table2statdesc2'>
+									{% ifnotequal item.id None %}
+										{% ifnotequal item.geog None %}
+											<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=item.geog id=item.id %}{{get_req_url}}'>
+											{{ item.name }} </a>
+										{% else %}
+											{{ item.name }}
+										{% endifnotequal  %}
+									{% else %}
+										{{ item.name }}
+									{% endifnotequal  %}
+								</td>
+								<td class='table2statdesc2'> 
+									{% ifnotequal item.geog None %}
+											<a href='{% url dg.output.views.videoAnalytics.video_module geog=item.geog id=item.id %}{{get_req_url}}'>
+											{{ item.tot_pro }} </a>
+										{% else %}
+											{{ item.tot_pro }}
+										{% endifnotequal  %}
+								</td>
+								<td class='table2statdesc2'> 
+						   			{{ item.tot_scr }} 
+								</td>
+								<td class='table2statdesc2'> 
+									{{ item.tot_ado }} 
+								</td>
+								<td class='table2statdesc2'>
+									{{ item.tot_pra }}
+								</td>
+								<td class='table2statdesc21'>
+									{{ item.tot_per }} 
+								</td>																
+						 	</tr>				 					 	
+				 			{% endfor %}
+				 		</tbody>		 							
+					</table>
+					
+					<table id='table2' cellpadding="0" cellspacing="0">
+			        <tr>			            
+					    <td class='table2statdesc2'>
+					    	{% if par_geog_data.geog %}
+					    		<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}'>
+								{{ par_geog_data.name }} </a>
+							{% else %}
+								{{par_geog_data.name}}
+							{% endif %}
+					       	        
+					    </td>
+					    <td class='table2statdesc2'>
+					    	{% if par_geog_data.geog %}
+					    		<a href='{% url dg.output.views.videoAnalytics.video_module geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}' target="_blank">
+							    {{par_geog_data.tot_vid}}</a>
+							{% else %}
+								{{par_geog_data.tot_vid}}
+							{% endif %}
+					    </td>
+					    
+					    <td class='table2statdesc2'> 
+					        {{ par_geog_data.tot_scr }}
+					    </td>
+					    
+					    <td class='table2statdesc2'> 
+						    {{ par_geog_data.tot_ado }} 
+					    </td>
+					    
+					    <td class='table2statdesc2'>
+					        {{ par_geog_data.tot_pra }} 
+					    </td>
+					    
+					    <td class='table2statdesc21'>
+					        {{ par_geog_data.tot_per }} 
+					    </td>										
+		            </tr>
+			    </table>
+		</div>
+		<div id='contentchart'>
+			<div id='divstattitle'>
+				<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+					<tr>
+						<td class='divtitletablename'> <div id='divstattitlename'>Cumulative Line Graph</div> </td>
+						<td class='divtitletableimg'>
+							<div id='divtitleimg'>
+								<div id='statdescimg1'>	
+									This is the cumulative line graph. Drag the mouse across the timeline to zoomin here						
+								</div>									 									
+							</div> 												
+						</td>
+					</tr>
+				</table>								
+			</div>
+			<div id='contentchart1'>
+				<div id='zoomicon'> 
+					<div id='zoomiconimg'>
+						<a href='javascript:zoomIn(so2,"Cumulative Line Graph")'>  <img src="/media/Output/Images/zoomicon1.png" alt='temp' title="Zoom In">  </a>
+					</div>
+				</div>
+				<div id="flashcontent">
+						<strong>You need to upgrade your Flash Player</strong>
+				</div>					
+			</div>			
+		</div>
+		
+
+<div> 
+    <div id="expandview1">        
+    </div>       
+    <div id="expandview3">    	
+    	<div id="expandviewtitle"></div>
+    	<div id="expandviewclosebtn" title="Close"></div>    
+        <div class="expandviewchart" id="expandview4">        	
+        </div>
+        <br/>     
+    </div>
+</div> 
+
+	
+<!-- amline script--> 
+	
+	<script type="text/javascript">	 		 
+		var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
+		so2.addParam("wmode", "transparent");
+		so2.addVariable("path", "/media/Output/amline/");
+		so2.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
+		so2.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
+		so2.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'));
+	 </script>
+	
+	<script type="text/javascript">	 		 
+		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", tchartwidth, tchartheight, "8", "#FFFFFF");
+		so1.addParam("wmode", "transparent");
+		so1.addVariable("path", "/media/Output/amline/");
+		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
+		so1.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
+		so1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
+						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
+						</graphs></settings>'));
+		so1.write("flashcontent");				
+
+	 </script>
+
+<!-- end of amline script -->
+		
+{% endblock contentbody %}	

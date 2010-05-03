@@ -2,25 +2,28 @@ div.calendar
 {
   font-size: smaller;
   color: #3e3e3e;
+  font-family: Calibri;
 }
 
 div.calendar.popup
 {
   margin-left: 0px;
-  margin-top: 0px;
+  margin-top: 20px;
   z-index: 9999;
+  width:200px;
+  height:100px
 }
 
 div.calendar table
 {
   background-color: #ffffff;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #51aee3;
   border-collapse: separate;
   border-spacing: 1px;
 }
 
 div.calendar thead {
-  background-color: #fff;
+  background-color: #f1f9fe;
 }
 
 div.calendar td,
@@ -33,7 +36,8 @@ div.calendar th
 div.calendar td.title
 {
   font-weight: bold;
-  color: #e8a800;
+  color: #086398;
+  background-color: #ffffff;
 }
 
 div.calendar th
@@ -70,7 +74,7 @@ div.calendar td.button:active
 div.calendar tr.days td.selected
 {
   font-weight: bold;
-  background-color: #e8a800;
+  background-color: #feba28;
   border-color: #e8a800 !important;
   color: #fff !important;
 }

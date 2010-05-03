@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from dg.views import *
 from django.contrib.auth.views import login, logout
-from dg.output.views import common, overviewAnalytics, videoAnalytics
+from dg.output.views import common, overviewAnalytics, videoAnalytics, screeningAnalytics, others
 from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
@@ -20,7 +20,7 @@ urlpatterns = patterns('',
 	(r'^feeds/persons_village/(\d+)/$', feeds_persons_village),
 	(r'^feeds/test/(\d+)/$', test),
 	(r'^feeds/test_gwt/(\d+)/$', test_gwt),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
+#    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     # Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
     (r'^hello/$', hello),
@@ -153,18 +153,30 @@ urlpatterns = patterns('',
 	(r'^dashboard/screenings/$', screening),
 	(r'^dashboard/login/$', login),
 	(r'^dashboard/logout/$', logout),    
-    (r'^output/test1/(country|state|district|block|village)/(\d+)$',common.test_output),
+    (r'^output/test1/(country|state|district|block|village)/(\d*)/?$',common.test_output),
     (r'^output/dropdownval/$',common.overview_drop_down),
-    (r'^output/overview/(country|state|district|block|village)/(\d+)/$',overviewAnalytics.overview),
-    (r'^output/overview/line/(country|state|district|block|village)/(\d+)/$',common.overview_line_graph),
-    (r'^output/video/module/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_module),
-    (r'^output/video/mfpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_pie_graph_mf_ratio),
-    (r'^output/video/actorpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_actor_wise_pie),
-    (r'^output/video/typepie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_type_wise_pie),
-    (r'^output/video/geogpie/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_geog_pie_data),
-    (r'^output/video/practicescatter/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_practice_wise_scatter),
-    (r'^output/video/languagescatter/data/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_language_wise_scatter_data),
-    (r'^output/video/monthbar/data/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_monthwise_bar_data),
-    (r'^output/video/monthbar/settings/(country|state|district|block|village)/(\d+)/$',videoAnalytics.video_monthwise_bar_settings),
-        
+    (r'^output/overview/line/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',common.overview_line_graph),
+    (r'^output/video/module/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_module),
+    (r'^output/video/mfpie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_pie_graph_mf_ratio),
+    (r'^output/video/actorpie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_actor_wise_pie),
+    (r'^output/video/typepie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_type_wise_pie),
+    (r'^output/video/geogpie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_geog_pie_data),
+    (r'^output/video/practicescatter/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_practice_wise_scatter),
+    (r'^output/video/languagescatter/data/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_language_wise_scatter_data),
+    (r'^output/video/monthbar/data/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_monthwise_bar_data),
+    (r'^output/video/monthbar/settings/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_monthwise_bar_settings),
+    (r'^output/base_career/$', others.base_career),
+    (r'^output/base_contact/$', others.base_contact),
+    (r'^output/base_career_immediate/$', others.base_career_immediate),
+    (r'^output/base_overview/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',overviewAnalytics.new_overview),
+    (r'^output/base_production/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',videoAnalytics.video_module),
+    (r'^output/screening/module/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_module),
+    (r'^output/screening/mfpie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_mf_ratio),
+    (r'^output/screening/geogpie/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_geog_pie_data),
+    (r'^output/screening/totlines/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_tot_lines),
+    (r'^output/screening/percentlines/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_percent_lines),
+    (r'^output/screening/monthbar/data/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_monthwise_bar_data),
+    (r'^output/screening/monthbar/settings/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_monthwise_bar_settings),
+    (r'^output/screening/practicescatter/(?P<geog>country|state|district|block|village)/(?P<id>\d+)/$',screeningAnalytics.screening_practice_wise_scatter_data),
+    
 )

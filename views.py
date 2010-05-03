@@ -10,7 +10,7 @@ from django.template.loader import get_template
 from django.template import Context, Template
 from django.shortcuts import render_to_response
 from django.db import connection, transaction
-from dg.output.database.common import run_query, run_query_dict
+from dg.output.database.utility import run_query, run_query_dict
 import datetime
 import cjson
 import re
