@@ -155,9 +155,8 @@ def method_overview(request, geog,id, type):
     else:
         filterPartnerGeogDate(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)
     
-    if(geog!="VILLAGE"):
-        sql_ds['group by'].append(geog_child+"_NAME")
-        sql_ds['order by'].append(geog_child+"_NAME")
+    sql_ds['group by'].append(geog_child.lower()+"_id")
+    sql_ds['order by'].append(geog_child.lower()+"_id")
     
     return joinSQLds(sql_ds);
     
