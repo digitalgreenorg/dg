@@ -62,7 +62,6 @@ def get_search_box(request,geog,id, min_date_func):
     search_box_params['geog_val'] = breadcrumbs_options(geog,id)
     search_box_params['cur_geog'] = geog
     search_box_params['cur_id'] = id
-    print request.path
     search_box_params['base_url'] = '/'.join(request.path.split('/')[:-3] + [''])
     
     
