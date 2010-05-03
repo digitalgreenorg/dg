@@ -86,7 +86,6 @@ $(document).ready(function(){
       	$("div#contentsitemap").find("div#content2tdtitleimg").show();     	
       	     	         	            	
      });
-     
      	
 });
            

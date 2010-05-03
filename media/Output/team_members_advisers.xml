@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<NAME>Ankhi Das</NAME>
+		<POSITION> </POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY> </COMPANY>
+		<PAGELINK> </PAGELINK>
+	</TEAM>	
+	<TEAM>
+		<NAME>Carlos Perez</NAME>
+		<POSITION>Ecological Anthropologist</POSITION>    
+    	<COUNTRY>USA</COUNTRY>
+		<COMPANY>International Research Institute for Climate and Society, Columbia University</COMPANY>
+		<PAGELINK>http://portal.iri.columbia.edu/portal/server.pt?open=1&amp;objID=5117&amp;parentname=SearchResult&amp;parentid=1&amp;mode=2&amp;in_hi_userid=2&amp;cached=true </PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>Dr. V Balaji</NAME>
+		<POSITION>  </POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>  </COMPANY>
+		<PAGELINK> </PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>Prof. M S Swaminathan</NAME>
+		<POSITION>Chairman</POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>M.S. Swaminathan Research Foundation</COMPANY>
+		<PAGELINK>http://www.mssrf.org/about_us/about_chairman.htm/</PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>Randolph Wang</NAME>
+		<POSITION>Ph.D</POSITION>    
+    	<COUNTRY>USA</COUNTRY>
+		<COMPANY>UC Berkeley</COMPANY>
+		<PAGELINK>http://dsh.cs.washington.edu/rywang/</PAGELINK>
+	</TEAM>
+</CATALOG>

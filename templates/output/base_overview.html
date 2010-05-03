@@ -151,27 +151,23 @@
 							</tr>				 
 				 		</thead>
 				 		<tbody>
-				 			{% for item in table_data %}
+				 			{% for item in item_list %}
 				 			<tr>
 								<td class='table2statdesc2'>
 									{% ifnotequal item.id None %}
-										{% ifnotequal item.geog None %}
-											<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=item.geog id=item.id %}{{get_req_url}}'>
-											{{ item.name }} </a>
-										{% else %}
-											{{ item.name }}
-										{% endifnotequal  %}
+									{% ifnotequal geog  'village' %}
+									<a href='/output/base_overview/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+									{{ item.name }} </a>
 									{% else %}
-										{{ item.name }}
+									{{ item.name }}
+									{% endifnotequal  %}
+									{% else %}
+									{{ item.name }}
 									{% endifnotequal  %}
 								</td>
 								<td class='table2statdesc2'> 
-									{% ifnotequal item.geog None %}
-											<a href='{% url dg.output.views.videoAnalytics.video_module geog=item.geog id=item.id %}{{get_req_url}}'>
-											{{ item.tot_pro }} </a>
-										{% else %}
-											{{ item.tot_pro }}
-										{% endifnotequal  %}
+									<a href='/output/base_production/{{geography}}/{{item.id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}' target="_blank">
+									{{ item.tot_pro }} </a> 
 								</td>
 								<td class='table2statdesc2'> 
 						   			{{ item.tot_scr }} 
@@ -192,38 +188,50 @@
 					
 					<table id='table2' cellpadding="0" cellspacing="0">
 			        <tr>			            
-					    <td class='table2statdesc2'>
-					    	{% if par_geog_data.geog %}
-					    		<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}'>
-								{{ par_geog_data.name }} </a>
+					    <td class='table2statdesc2'>	
+					        {% ifequal geog  'state' %}							
+							<a href='/output/base_overview/country/1'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal geog  'district' %}							
+							<a href='/output/base_overview/state/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal geog  'block' %}							
+							<a href='/output/base_overview/district/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ par_geog.name }} </a>
+							{%endifequal%}
+							
+							{% ifequal geog  'village' %}							
+							<a href='/output/base_overview/block/{{par_id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}'>
+							{{ block_name }} </a>
+							{% endifequal%}
+							{% if par_geog.name %}
 							{% else %}
-								{{par_geog_data.name}}
-							{% endif %}
-					       	        
+								India
+							{%endif%}				        
 					    </td>
 					    <td class='table2statdesc2'>
-					    	{% if par_geog_data.geog %}
-					    		<a href='{% url dg.output.views.videoAnalytics.video_module geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}' target="_blank">
-							    {{par_geog_data.tot_vid}}</a>
-							{% else %}
-								{{par_geog_data.tot_vid}}
-							{% endif %}
+						<a href='/output/base_procution/{{flash_geog}}/{{id}}{% if from_date and to_date %}/?from_date={{from_date}}&to_date={{to_date}}{%endif%}' target="_blank">
+							{{par_geog.tot_vid}}  </a>									        
 					    </td>
 					    
 					    <td class='table2statdesc2'> 
-					        {{ par_geog_data.tot_scr }}
+					        {{ par_geog.tot_scr }}
 					    </td>
 					    
 					    <td class='table2statdesc2'> 
-						    {{ par_geog_data.tot_ado }} 
+						    {{ par_geog.tot_ado }} 
 					    </td>
 					    
 					    <td class='table2statdesc2'>
-					        {{ par_geog_data.tot_pra }} 
+					        {{ par_geog.tot_pra }} 
 					    </td>
 					    
 					    <td class='table2statdesc21'>
-					        {{ par_geog_data.tot_per }} 
+					        {{ par_geog.tot_per }} 
 					    </td>										
 		            </tr>
 			    </table>
@@ -272,11 +280,12 @@
 <!-- amline script--> 
 	
 	<script type="text/javascript">	 		 
+		// <![CDATA[		
 		var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
 		so2.addParam("wmode", "transparent");
 		so2.addVariable("path", "/media/Output/amline/");
 		so2.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so2.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
+		so2.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
 		so2.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
 						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
@@ -286,12 +295,15 @@
 						</graphs></settings>'));
 	 </script>
 	
+	
 	<script type="text/javascript">	 		 
+		// <![CDATA[
+		//alert(tchartwidth);		
 		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", tchartwidth, tchartheight, "8", "#FFFFFF");
 		so1.addParam("wmode", "transparent");
 		so1.addVariable("path", "/media/Output/amline/");
 		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so1.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
+		so1.addVariable("data_file",'/output/overview/line/{{geog}}/{{id}}/');
 		so1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
 						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
@@ -305,4 +317,4 @@
 
 <!-- end of amline script -->
 		
-{% endblock contentbody %}	
+	{% endblock contentbody %}	

@@ -1,0 +1,96 @@
+{% extends "base_team.html" %}
+
+{% block title %} Interns - digital Green Team{% endblock %}
+
+{% block cssfile %}
+	{{block.super}}	
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block careerbody %}
+    	
+	<div id='contentdiv2'>
+    	<div id='divstattitle'>
+			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+				<tr>
+					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} Team - Interns {% endblock teampagetitle %}</div> </td>
+					<td class='divtitletableimg'>  </td>
+				</tr>
+			</table>								
+		</div>
+		<table id='table2' cellspacing='0' cellpadding='5'>						
+			<tr>												
+				<td class='content2td' cellspacing='0' cellpadding='0' > 
+					<div id='content2tdtitle1'></div>			
+				</td>													
+			</tr>
+							
+		</table>
+    </div>
+    <div id='contentdiv1'>
+		
+		<script type="text/javascript">
+			var xmlDoc=null;
+			if (window.ActiveXObject)
+			{// code for IE
+    			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+			}
+			else if (document.implementation.createDocument)
+			{// code for Mozilla, Firefox, Opera, etc.
+    			xmlDoc=document.implementation.createDocument("","",null);
+			}
+			else
+			{
+				alert('Your browser cannot handle this script');
+			}
+			if (xmlDoc!=null) 
+			{
+				xmlDoc.async=false;
+				xmlDoc.load("/media/output/team_members_interns.xml");				
+				var x=xmlDoc.getElementsByTagName("TEAM");
+				//alert(x.length);
+				document.write("<table id='table1' cellspacing='8px' cellpadding='0'>");				
+				for (i=0;i<x.length;i++)
+ 					{
+  						document.write("<tr><td class='boardtd1' cellspacing='5px' cellpadding='0'>");  					
+  						document.write("<div class='boardtd1div1'>");
+  							document.write("<div class='boardtd1div1name'>");
+  								document.write(x[i].getElementsByTagName("NAME")[0].childNodes[0].nodeValue);  								
+  							document.write("</div>");	
+  						document.write("</div>");
+  					
+  						document.write("<div class='boardtd1div2'>");
+  							document.write("<div class='boardtd1div2title'>");
+  								document.write("<ul class='boardtd1div2ul'>");
+  									document.write("<li>"); 
+  										document.write(x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue);	
+  									document.write("</li>");  									 									
+  								document.write("</ul>");
+  								  								
+  							document.write("</div>");
+  							document.write("<div class='boardtd1div2desc'>");  								
+  									document.write("<ul class='boardtd1div2ul'>"); 
+  									document.write("<li>"); 
+  										document.write((x[i].getElementsByTagName("MAJOR")[0].childNodes[0].nodeValue)+",");  										
+  									document.write("</li>"); 									
+  									document.write("<li>"); 
+  										document.write(x[i].getElementsByTagName("COMPANY")[0].childNodes[0].nodeValue);  										
+  									document.write("</li>");
+  									document.write("<li>"); 
+  										if( (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue)!=" " )
+  											{ 
+  												document.write("<a href=" + (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue) + " target='_blank'>" + "View Profile" + "</a>" );
+  											}  										
+  									document.write("</li>");  									
+  								document.write("</ul>");  									  									
+  							document.write("</div>");
+  						document.write("</div>");
+  						document.write("</td></tr>");
+  					}
+  				document.write("</table>");
+			}	
+		</script>					
+	</div>
+	
+{% endblock careerbody %}	
+		

@@ -1,5 +1,4 @@
 from dg.output.database.utility import *
-from dg.output.database import filter
 
 
 #Query for the drop down menu in search box
