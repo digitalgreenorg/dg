@@ -1,3 +1,6 @@
+from django.shortcuts import *
+from django.http import Http404, HttpResponse
+
 #Mindless views for plain HTML pages on the main website
 
 def base_career(request):   
