@@ -42,7 +42,10 @@ def screening_tot_lines(request, geog, id):
     for row in rows:
         return_val.append(';'.join([str(x) for x in row]))
 
-    return HttpResponse('\n'.join(return_val))
+    if(return_val):
+        return HttpResponse('\n'.join(return_val))
+    
+    return HttpResponse(';;;;')
 
 def screening_percent_lines(request, geog, id):
     rows = run_query_raw(screeningAnalyticsSQL.screening_percent_attendance(request, geog, id))
@@ -50,8 +53,10 @@ def screening_percent_lines(request, geog, id):
     for row in rows:
         return_val.append(';'.join([str(x) for x in row]))
 
-    return HttpResponse('\n'.join(return_val))    
-
+    if(return_val):
+        return HttpResponse('\n'.join(return_val))
+    
+    return HttpResponse(';;;;')
 
     ###############
     ## Bar Graph ##

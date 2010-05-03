@@ -63,8 +63,6 @@ def get_search_box(request,geog,id, min_date_func):
     search_box_params['cur_geog'] = geog
     search_box_params['cur_id'] = id
     search_box_params['base_url'] = '/'.join(request.path.split('/')[:-3] + [''])
-    
-    
 
     return search_box_params
     
@@ -182,7 +180,7 @@ def overview_line_graph(request,geog,id):
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
             
-        append_str = iter_date.__str__() +';'
+        append_str = str(iter_date) +';'
         if('prod' in type): append_str += str(sum_vid)+';'
         if('screen' in type): append_str += str(sum_sc)+';'       
         if('adopt' in type): append_str += str(sum_adopt)+';'    

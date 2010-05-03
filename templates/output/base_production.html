@@ -337,7 +337,7 @@
 	male_female_pie.addVariable("path", "/media/Output/ampie/");
 	male_female_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"))
 	male_female_pie.addVariable("data_file", escape('{% url dg.output.views.videoAnalytics.video_pie_graph_mf_ratio geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
-	//male_female_pie.write("flash_area_mf_ratio");
+	male_female_pie.write("flash_area_mf_ratio");
 	
 	
 	
@@ -346,7 +346,7 @@
 	actor_wise_pie.addVariable("path", "/media/Output/ampie/");
 	actor_wise_pie.addVariable("settings_file", encodeURIComponent("/media/Output/ampie/ampie_settings.xml"));
 	actor_wise_pie.addVariable("data_file", escape('{% url dg.output.views.videoAnalytics.video_actor_wise_pie geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
-	//actor_wise_pie.write("flash_area_actor_ratio");
+	actor_wise_pie.write("flash_area_actor_ratio");
 	
 	</script>
 
