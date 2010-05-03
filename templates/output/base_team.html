@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %} digital Green Team {% endblock %}
+{% block title %} Team:: Digital Green {% endblock %}
 
 {% block cssfile %}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />       
@@ -71,7 +71,7 @@
 			if (xmlDoc!=null) 
 			{
 				xmlDoc.async=false;
-				xmlDoc.load("/media/output/team_members.xml");
+				xmlDoc.load("/media/Output/team_members.xml");
 				//alert("hello");
 				var x=xmlDoc.getElementsByTagName("TEAM");
 

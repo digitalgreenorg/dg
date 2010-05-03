@@ -1,6 +1,6 @@
 {% extends "base_team.html" %}
 
-{% block title %} Board Members - digital Green Team{% endblock %}
+{% block title %} Board Members:: Digital Green {% endblock %}
 
 {% block cssfile %}
 	{{block.super}}	
@@ -46,7 +46,7 @@
 			if (xmlDoc!=null) 
 			{
 				xmlDoc.async=false;
-				xmlDoc.load("/media/output/team_members_board.xml");				
+				xmlDoc.load("/media/Output/team_members_board.xml");				
 				var x=xmlDoc.getElementsByTagName("TEAM");
 				//alert(x.length);
 				document.write("<table id='table1' cellspacing='8px' cellpadding='0'>");				

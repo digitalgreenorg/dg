@@ -3,6 +3,11 @@ from django.http import Http404, HttpResponse
 
 #Mindless views for plain HTML pages on the main website
 
+def base_home(request):
+    
+    return render_to_response('base_home.html')
+
+
 def base_career(request):
     
     return render_to_response('base_career.html')

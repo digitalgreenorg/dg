@@ -8,7 +8,7 @@
 
 #careerbody							{ width:100%; margin:0%; padding:0%; }
 #careerbodydiv1						{ float:left; width:12.5%; min-width:150px; min-height:600px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top; }
-#careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; background:url("/media/Output/Images/teamheader3.png"); background-repeat:no-repeat; background-position:top center; }
+#careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; }
 #careerbodydiv3						{ float:left; width:12.5%; min-width:60px; margin:0%; padding:0%; }
 
 #contentheader						{ width:100%; margin-top:10px; text-align:center; margin-left:0%; margin-right:0%; }

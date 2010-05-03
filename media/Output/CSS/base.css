@@ -13,7 +13,7 @@ img											{ border-style:none; }
 
 #navclass									{ width:100%; margin:0%; padding:0%; z-index:100;  border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; height:70px; background-color:#d1f26f; }	
 #navclass1									{ margin-top:0px; float:none; width:100% }
-#navheaderleft								{ float:left; margin-top:15px; margin-left:5px; font-size:1.8em; font-family:Cambria; font-weight:bold; color:White;}
+#navheaderleft								{ float:left; margin-top:0px; margin-left:5px; font-size:1.8em; font-family:Cambria; font-weight:bold; color:White;}
 #navheaderright								{ float:right; width:220px; margin-top:15px; margin-right:10px}
 #navhelp									{ margin-top:1px; float:left; width:20px; height:20px; margin-right:20px}
 #navsearch									{ margin-top:0px; float:left; font-size:1em; font-family:Calibri; font-weight:normal;}
@@ -28,6 +28,8 @@ img											{ border-style:none; }
 .headermenu									{ float:left; }
 #headermenutitle							{ margin-left:5px; margin-top:2px; margin-right:50px; z-index:500 }
 #headermenutitlename						{ padding-top:0px; font-size:1.4em; z-index:500; font-family:Calibri; font-weight:bold; color:White; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:White; background-color:none }
+#subheadmenutop a							{ font-family:Calibri; font-weight:bold; color:#59af04; text-decoration:none; }	
+
 #subheadmenutop								{ position:absolute; background-color:White; margin-top:-30px; margin-left:-5px; z-index:+1; font-size:1.0em; z-index:500; font-family:Calibri; font-weight:bold; color:#59af04; padding-top:2px; padding-left:5px; padding-bottom:0px; padding-right:10px; border-top-width:1px; border-top-style:solid; border-top-color:Green; border-right-width:1px; border-right-style:solid; border-right-color:Green; border-left-width:1px; border-left-style:solid; border-left-color:Green; display:none  }
 #subheadmenu								{ position:absolute; background-color:White; margin-top:-1px; margin-left:-5px; z-index:+0; width:250px; min-height:60px; border-width:1px; border-style:solid; border-color:Green; display:none }
 #subheadmenulist							{ list-tyle-type:none; margin-top:5px; margin-bottom:5px}

@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %} Press: digitalGreen {% endblock %}
+{% block title %} Press:: DigitalGreen {% endblock %}
 
 {% block cssfile %}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/press.css' />       
@@ -66,7 +66,7 @@
 			if (xmlDoc!=null) 
 			{
 				xmlDoc.async=false;
-				xmlDoc.load("/media/output/press.xml");
+				xmlDoc.load("/media/Output/press.xml");
 				//alert("hello");
 				var x=xmlDoc.getElementsByTagName("TEAM");
 

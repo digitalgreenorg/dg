@@ -1,0 +1,115 @@
+
+{% extends "base.html" %}
+
+{% block title %} Home:: Digital Green  {% endblock %}
+
+{% block cssfile %}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/home.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+{% block content %}
+
+<div id='careerbody'>
+
+<div id='careerbodydiv1'>
+		
+</div>
+
+
+<div id='careerbodydiv2'>
+{% block careerbody %}
+    
+    <div id='contentdiv2'>
+    	<div id='divstattitle'>
+			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+				<tr>
+					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} Welcome  {% endblock teampagetitle %}</div> </td>
+					<td class='divtitletableimg'>  </td>
+				</tr>
+			</table>								
+		</div>
+    	<table id='table2' cellspacing='0' cellpadding='5'>						
+			<tr>												
+				<td class='content2td' cellspacing='0' cellpadding='0' > 
+					<div id='content2tdtitle1'></div>			
+				</td>													
+			</tr>							
+		</table>
+    </div>   
+
+	
+	<div id='contentdiv1'>
+		<table id='table1' cellspacing='0' cellpadding='5'>						
+			<tr>												
+				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
+					<div class='contenttd1div'>
+							Digital Green is a young and dynamic organization that uses tools of information and communication technology for social change. 
+							It creates enabling environments for communities to adopt new and better behaviors to bring about sustainable change in the 
+							quality of life among populations living at the base of social pyramid. 
+							In its first intervention, it demonstrated immense potential in improving the lives of small and 
+							marginal farmers in a highly cost effective manner.
+							<br>
+							<br>
+							This outcome has added a totally new dimension to existing behavior change communication approaches. 
+							Encouraged by such an impressive outcome, Digital Green is now set to apply this approach to select locations in 
+							various parts of the developing world.  Digital Green's technology and approach has also elicited interest in other 
+							social domains like public health, education and livelihood.	
+							<br>
+							<br>
+							We're currently exploring additional partnerships and recruiting new members to our team.  
+							Please see our partners and careers pages to apply.  
+							Find out more in the about section and see our blog  for the latest quarterly updates.  
+							Also, check out The Nexus, a monthly newsletter produced by members of the Digital Green team, and the buzz about our work in the press.													
+					</div>					
+				</td>													
+			</tr>
+			<tr>												
+				<td class='contenttd1'cellspacing='0' cellpadding='0'>
+					<div class='contenttd1div'>
+						<img alt="Video Production going on in a village" src="/media/Output/Images/homephoto2.png"/> 
+					</div> 					
+				</td>													
+			</tr>
+		</table>					
+	</div>
+    
+    <div id='contentdiv2'>
+    	
+    	<table id='table2' cellspacing='0' cellpadding='5'>						
+			<tr>												
+				<td class='content2td'cellspacing='0' cellpadding='0'>
+					<div id='content2tdtitle4'>												
+					</div>				 
+				</td>
+			</tr>							
+		</table>
+    </div>   
+{% endblock careerbody %}
+</div>
+<div id='careerbodydiv3'> 
+
+	<div class='contenttd2div'>			
+		<object width="300" height="200">
+			<param name="movie" value="http://www.youtube.com/v/7yHHRworSgU&hl=en_US&fs=1&"></param>
+			<param name="allowFullScreen" value="true"></param>
+			<param name="allowscriptaccess" value="always"></param>
+			<embed src="http://www.youtube.com/v/7yHHRworSgU&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="200"></embed>
+		</object>			
+		<div class='contenttd2divdesc'>
+			<a href="http://www.youtube.com/digitalgreenorg" target=_blank>Check more of the videos here</a>
+		</div>
+	</div>
+	
+	<div class='contenttd2div1'>			
+		<div class='contenttd2divanalytics'>
+			<a href="../base_overview"><img src="/media/Output/Images/analyticsbg4.png" alt=temp></a>
+		<div>	
+	</div>
+	
+</div> 
+</div>   
+{% endblock content %}

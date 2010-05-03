@@ -7,9 +7,9 @@
 .careertitledesca	a:hover			{ color:Black; }	 
 
 #careerbody							{ width:100%; margin:0%; padding:0%; }
-#careerbodydiv1						{ float:left; width:12.5%; min-height:600px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
-#careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; }
-#careerbodydiv3						{ float:left; width:12.5%; margin:0%; padding:0%; }
+#careerbodydiv1						{ float:left; width:5px; min-height:600px; margin:0%; padding:0%; border-right-width:0px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
+#careerbodydiv2						{ float:left; width:900px; margin:0%; padding:0%; }
+#careerbodydiv3						{ float:left; margin:0%; padding:0%; }
 
 #contentheader						{ width:100%; margin-top:0px; text-align:center; margin-left:0%; margin-right:0%; }
 #contentheadertable					{ width:100%; margin-top:5px; background-color:none; }
@@ -18,12 +18,17 @@
 
 #contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
 #table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:75%; padding:5px 5px 0px 5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; }
-.contenttd2							{ width:25%; }	
+.contenttd1							{ width:98%; padding:5px 5px 0px 5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; }
 .contenttd1div						{ margin-top:0px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; }
 .contenttd1div ul					{ list-style-type:square; }
-.contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding-top:2px; padding-right:2px; padding-left:2px; }
-.contenttd2div3						{ margin-bottom:2px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:0px; border-style:solid; border-color:Gray; }
+.contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding:3px 2px 0px 2px;  margin-left:30px; margin-top:70px; }
+.contenttd2div1						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding:3px 2px 0px 2px;  margin-left:30px; margin-top:20px; }
+.contenttd2divdesc					{ height:39px; width:300px; background:url("/media/Output/Images/videobg1.png"); background-repeat:no-repeat; margin-bottom:2px; padding-top:10px; text-align:center; }
+.contenttd2divdesc a				{ color:#5B6E1D; font-weight:bold; text-decoration:none; font-size:1.2em }
+.contenttd2divdesc a:hover			{ color:Black; text-decoration:underline; }
+.contenttd2divanalytics 			{ height:202px; width:300px; }	
+
+.contenttd2div3						{ margin-top:0px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:0px; border-style:solid; border-color:Gray; }
 
 
 
