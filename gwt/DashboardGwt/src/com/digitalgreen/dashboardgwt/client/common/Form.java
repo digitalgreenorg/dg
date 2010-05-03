@@ -113,6 +113,11 @@ public class Form {
 	// are left up to the caller.
 	public void save() {
 		this.parseQueryString(this.queryString);
+		// Prepare the save first in case it's a many to many, we may need to
+		// delete rows in corresponding m2m tables.
+		if(this.id != null && this.parent.hasManyToManyRelationships()) {
+			this.parent.deleteManyToManyDependents(this.id);
+		}
 		// Save the parent first to get a FK for its dependents
 		this.parent.save();
 		FormQueueData.Data formQueueAdd = this.formQueue.initFormQueueAdd(this.parent.getTableId(), 

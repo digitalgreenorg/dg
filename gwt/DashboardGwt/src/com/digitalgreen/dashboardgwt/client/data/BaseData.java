@@ -118,7 +118,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 						}
 					}
 					if(queryStringPart.endsWith("&")) {
-						queryStringPart = queryStringPart.substring(0, queryStringPart.length() - 1 - 1);
+						queryStringPart = queryStringPart.substring(0, queryStringPart.length() - 1);
 					}
 				}
 				queryString += queryStringPart;
@@ -152,7 +152,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 								name = prefix.endsWith("_set") ? prefix + "-" + i + "-" + name :
 									prefix + "-" + name;
 							}
-							queryStringPart += value != null ? name + "=" + value : name;
+							queryStringPart += value != null ? name + "=" + value : name + "=";
 							if(fields.length != j-1) {
 								queryStringPart += "&";
 							}
@@ -190,6 +190,20 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		
 		public boolean hasManyToManyRelationships() {
 			return this.hasManyToManyRelationships;
+		}
+		
+		public void deleteManyToManyDependents(String id) {
+			if(!this.hasManyToManyRelationships) {
+				return;
+			}
+			Object []keys = (Object[])this.manyToManyRelationshipMap.keySet().toArray();
+			for(int i=0; i < keys.length; i++) {
+				ManyToManyRelationship manyToManyRelationship = (ManyToManyRelationship)this.manyToManyRelationshipMap.get(keys[i]);
+				BaseData dbApi = new BaseData();
+				String dml = "DELETE FROM " + manyToManyRelationship.getToTable().getTableName() + " WHERE " +
+					this.getPrefixName() + "_id=" + id +";";
+				dbApi.delete(dml);
+			}
 		}
 		
 		public void addNameValueToQueryString(String name, String value) {
@@ -329,7 +343,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 	
 	protected void save() {
-		BaseData.dbOpen();
 		try {
 			BaseData.dbStartTransaction();
 			this.form.save();
@@ -338,7 +351,6 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		BaseData.dbClose();
 	}
 	
 	protected static Database getDb() {
@@ -400,8 +412,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		try {
 			if(BaseData.db != null) {
 				BaseData.db.close();
+				BaseData.db = null;
 			}
-			BaseData.db = null;
 		} catch (DatabaseException e) {
 			Window.alert("Database close error: " + e.toString());
 		}
@@ -421,11 +433,15 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 
 	public static void dbStartTransaction() throws DatabaseException {
+		BaseData.dbOpen();
 		db.execute("BEGIN TRANSACTION;");
+		BaseData.dbClose();
 	}
 	
 	public static void dbCommit() throws DatabaseException {
-		db.execute("COMMIT;");	
+		BaseData.dbOpen();
+		db.execute("COMMIT;");
+		BaseData.dbClose();
 	}
 	
 	public void create(String createSql, String ...args){

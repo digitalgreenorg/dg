@@ -43,8 +43,9 @@ public class UniqueConstraintValidator extends BaseValidator {
 				}
 			} catch (DatabaseException e) {
 				e.printStackTrace();
+			} finally {
+				BaseData.dbClose();
 			}
-			BaseData.dbClose();
 			return false;
 		}
 		BaseData.dbClose();
