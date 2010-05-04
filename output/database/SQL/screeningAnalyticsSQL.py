@@ -117,3 +117,16 @@ def screening_percent_attendance(request, geog, id):
     sql_ds_main['order by'].append("DATE")
     
     return joinSQLds(sql_ds_main)
+
+
+def screening_per_day(request, geog, id):
+    from_date, to_date, partners = getDatesPartners(request);
+    
+    sql_ds = getInitSQLds();
+    sql_ds['select'].extend(["DATE as date", "COUNT(SC.id) as count"]);
+    sql_ds['from'].append("SCREENING SC");
+    filterPartnerGeogDate(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners);
+    sql_ds['group by'].append("DATE")
+    sql_ds['order by'].append("DATE")
+    
+    return joinSQLds(sql_ds)

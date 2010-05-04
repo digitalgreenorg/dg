@@ -63,9 +63,8 @@
   </graphs>
   <labels>
     <label lid="0">
-       <text><![CDATA[<font face="Calibri">No. of Videos</font>]]></text>
-       <x>10</x>
-       <y>200</y>
+       <x>15</x>
+       <y>150</y>
        <width>0</width>
        <text_size>15</text_size>
 	   <fill_color>333333</fill_color>

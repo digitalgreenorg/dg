@@ -411,16 +411,15 @@ def month_bar_settings(request,geog,id,sqlFunc,ballon_string):
 
         #Making Settings file
         settings = []
-        settings.append(r'<settings><graphs>')
+        settings.append(r'<graphs>')
         
         for year in year_list:
             settings.append(r'<graph><type/><title>'+str(year)+'</title><balloon_text>{series},{title}: '+ballon_string+' = {value}</balloon_text></graph>')
             
             
-        settings.append(r'</graphs></settings>')
-        settings = ''.join(settings)
+        settings.append(r'</graphs>')
+        return HttpResponse(''.join(settings))
         
     else:
-        settings = ''
-           
-    return HttpResponse(settings)
+        return HttpResponse('')
+    

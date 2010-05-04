@@ -35,7 +35,11 @@ def screening_module(request,geog,id):
                                                           avg_att=avg_att, \
                                                           get_req_url = get_req_url
                                                           ))
-    
+
+    ################
+    ## LINE CHART ##
+    ################
+
 def screening_tot_lines(request, geog, id):
     rows = run_query_raw(screeningAnalyticsSQL.screening_raw_attendance(request, geog, id))
     return_val = []
@@ -57,6 +61,27 @@ def screening_percent_lines(request, geog, id):
         return HttpResponse('\n'.join(return_val))
     
     return HttpResponse(';;;;')
+
+def screening_per_day_line(request,geog,id):
+    rows = run_query_raw(screeningAnalyticsSQL.screening_per_day(request, geog, id))
+    if (not rows):
+        return HttpResponse(';')
+    
+    return_val = []
+    prev_date = rows[0][0]
+    return_val.append(';'.join([str(x) for x in rows[0]]))
+    
+    day_one_delta = datetime.timedelta(days=1)
+    for row in rows[1:]:
+        prev_date += day_one_delta;
+        while (prev_date!=row[0]):
+            return_val.append(str(prev_date)+';0')
+            prev_date += day_one_delta;
+        
+        return_val.append(str(row[0])+';'+str(row[1]))
+        
+    return HttpResponse('\n'.join(return_val)) 
+            
 
     ###############
     ## Bar Graph ##

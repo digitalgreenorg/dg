@@ -59,11 +59,8 @@
 	</balloon>
 	<labels>
 		<label lid="0">
-			  <text><![CDATA[<font face="Calibri">No. of Videos</font>
-		  <b/>
-		</text>]]></text>
-			  <x>-2</x>
-			  <y>240</y>
+			  <x>-5</x>
+			  <y>200</y>
 			  <width>0</width>
 			  <text_color>333333</text_color>
 			  <text_size>15</text_size>
