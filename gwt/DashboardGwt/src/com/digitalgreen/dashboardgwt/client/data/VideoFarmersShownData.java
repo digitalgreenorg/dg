@@ -171,6 +171,12 @@ public class VideoFarmersShownData extends BaseData {
 	public String getSaveOfflineURL(){
 		return VideoFarmersShownData.saveVideoFarmerOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return VideoFarmersShownData.saveVideoFarmerOnlineURL;
+	}
+
 
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

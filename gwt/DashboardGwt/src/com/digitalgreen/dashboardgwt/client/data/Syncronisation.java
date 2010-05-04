@@ -159,8 +159,7 @@ public class Syncronisation {
 			Schema.createSchema();
 			this.currentIndex = 0;
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
-		}
-				
+		}			
 	}
 	
 	
@@ -173,11 +172,17 @@ public class Syncronisation {
 					String queryString = "id="+formQueue.getResultSet().getFieldAsString(1)+"&"+formQueue.getResultSet().getFieldAsString(2);
 					if(formQueue.getResultSet().getFieldAsChar(4) == 'A'){
 						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
-						formQueue.post(RequestContext.SERVER_HOST + (String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL(), queryString);
+						formQueue.post(RequestContext.SERVER_HOST + 
+								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL(), 
+								queryString);
 						BaseData.dbClose();
 					}
-					else{
-						// Take care of edit case
+					else if(formQueue.getResultSet().getFieldAsChar(4) == 'E'){
+						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
+						formQueue.post(RequestContext.SERVER_HOST + 
+								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL() + formQueue.getResultSet().getFieldAsString(1) +"/" , 
+								queryString);
+						BaseData.dbClose();
 					}
 						
 				}

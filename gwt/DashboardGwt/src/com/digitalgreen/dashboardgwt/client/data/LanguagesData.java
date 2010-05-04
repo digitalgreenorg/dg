@@ -162,6 +162,11 @@ public class LanguagesData extends BaseData {
 		return LanguagesData.saveLanguageOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return LanguagesData.saveLanguageOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

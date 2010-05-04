@@ -64,7 +64,9 @@ public class RegionsTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", region.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/region/" + region.getId() + "/'>" +
-							region.getRegionName() + "</a>", new Regions(requestContext)));
+							region.getRegionName() + "</a>",
+							"dashboard/region/" + region.getId() + "/",
+							new Regions(requestContext)));
 					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" + 
 								region.getId() + "' name='_selected_action' /></td>" +
 								"<th id = 'row" + row + "'></th></tr>";

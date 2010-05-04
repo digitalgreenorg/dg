@@ -178,6 +178,12 @@ public class RegionsData extends BaseData {
 	public String getSaveOfflineURL(){
 		return RegionsData.saveRegionOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return RegionsData.saveRegionOnlineURL;
+	}
+
 
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

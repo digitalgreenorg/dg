@@ -174,6 +174,11 @@ public class Data extends BaseData.Data {
 		return PersonRelationsData.savePersonRelationOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return PersonRelationsData.savePersonRelationOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

@@ -169,6 +169,11 @@ public class EquipmentHoldersData extends BaseData {
 	public String getSaveOfflineURL(){
 		return EquipmentHoldersData.saveEquipmentHolderOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return EquipmentHoldersData.saveEquipmentHolderOnlineURL;
+	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

@@ -518,6 +518,11 @@ public class VideosData extends BaseData {
 		return VideosData.saveVideoOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return VideosData.saveVideoOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

@@ -69,7 +69,9 @@ public class TrainingTemplate extends BaseTemplate{
 					requestContext.getArgs().put("id", training.getId());
 					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/training/"+ training.getId() +"/'>" + 
-							training.getTrainingStartDate()+ "</a>", new Trainings(requestContext)));
+							training.getTrainingStartDate()+ "</a>",
+							"dashboard/training/"+ training.getId() +"/",
+							new Trainings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ training.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th>" +

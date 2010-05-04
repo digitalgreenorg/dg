@@ -231,6 +231,12 @@ public class FieldOfficersData extends BaseData {
 		return FieldOfficersData.saveFieldOfficerOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return FieldOfficersData.saveFieldOfficerOnlineURL;
+	}
+	
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

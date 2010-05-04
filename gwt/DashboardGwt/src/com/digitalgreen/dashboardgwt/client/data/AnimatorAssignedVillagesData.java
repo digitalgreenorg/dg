@@ -218,6 +218,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOnlineURL;
+	}
+	
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

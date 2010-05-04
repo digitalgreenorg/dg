@@ -167,6 +167,11 @@ public class ReviewersData extends BaseData {
 	public String getSaveOfflineURL(){
 		return ReviewersData.saveReviewerOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return ReviewersData.saveReviewerOnlineURL;
+	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

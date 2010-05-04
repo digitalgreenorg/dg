@@ -428,6 +428,11 @@ public class AnimatorsData extends BaseData {
 	public String getSaveOfflineURL() {
 		return AnimatorsData.saveAnimatorOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL() {
+		return AnimatorsData.saveAnimatorOnlineURL;
+	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

@@ -175,6 +175,11 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 		return ScreeningFarmerGroupsTargetedData.saveScreeningFarmerGroupsTargetedOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return ScreeningFarmerGroupsTargetedData.saveScreeningFarmerGroupsTargetedOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

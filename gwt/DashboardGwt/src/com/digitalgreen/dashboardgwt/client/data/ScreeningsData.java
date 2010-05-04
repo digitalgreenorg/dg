@@ -378,6 +378,11 @@ public class ScreeningsData extends BaseData {
 		return ScreeningsData.saveScreeningOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return ScreeningsData.saveScreeningOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

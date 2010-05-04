@@ -65,7 +65,9 @@ public class PartnersTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", partner.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/partner/"+ partner.getId() +"/'>" +
-							partner.getPartnerName()+"</a>", new Partners(requestContext)));
+							partner.getPartnerName()+"</a>",
+							"dashboard/partner/"+ partner.getId() +"/",
+							new Partners(requestContext)));
 					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" +
 									partner.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th></tr>";

@@ -201,6 +201,12 @@ public class PracticesData extends BaseData {
 		return PracticesData.savePracticeOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return PracticesData.savePracticeOnlineURL;
+	}
+	
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

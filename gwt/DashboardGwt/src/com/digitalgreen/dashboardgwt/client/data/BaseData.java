@@ -626,6 +626,12 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return null;
 	}
 	
+	// Override this
+	public String getSaveOnlineURL(){
+		return null;
+	}
+
+	
 	public static String getCurrentDateAndTime(){
 		Date date = new Date();
 		return date.getYear() + 1900 + "-" + date.getMonth() +"-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();

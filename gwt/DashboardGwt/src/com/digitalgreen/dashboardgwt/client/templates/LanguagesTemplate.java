@@ -67,7 +67,9 @@ public class LanguagesTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", language.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/language/" + language.getId() +"/'>" +
-							language.getLanguageName() + "</a>", new Languages(requestContext)));
+							language.getLanguageName() + "</a>", 
+							"dashboard/language/" + language.getId() +"/",
+							new Languages(requestContext)));
 					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" + 
 									language.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th></tr>";

@@ -298,6 +298,11 @@ public class TrainingsData extends BaseData {
 		return TrainingsData.saveTrainingOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return TrainingsData.saveTrainingOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

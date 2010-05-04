@@ -72,7 +72,9 @@ public class AnimatorsTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", animator.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/animator/" + animator.getId() +"/'>" +
-							animator.getAnimatorName() + "</a>", new Animators(requestContext)));
+							animator.getAnimatorName() + "</a>",
+							"dashboard/animator/" + animator.getId() +"/",
+							new Animators(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ animator.getId() + "' name='_selected_action' /></td>" +
 					  "<th id = 'row" + row + "'></th>" +

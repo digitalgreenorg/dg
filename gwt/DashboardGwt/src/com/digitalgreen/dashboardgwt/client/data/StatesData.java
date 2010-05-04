@@ -199,7 +199,11 @@ public class StatesData extends BaseData {
 	public String getSaveOfflineURL(){
 		return StatesData.saveStateOfflineURL;
 	}
-
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return StatesData.saveStateOnlineURL;
+	}
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

@@ -301,6 +301,11 @@ public class DevelopmentManagersData extends BaseData {
 		return DevelopmentManagersData.saveDevelopmentManagerOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return DevelopmentManagersData.saveDevelopmentManagerOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

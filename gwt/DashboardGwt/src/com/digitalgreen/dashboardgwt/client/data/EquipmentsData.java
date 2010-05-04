@@ -247,6 +247,11 @@ public class EquipmentsData extends BaseData {
 		return EquipmentsData.saveEquipmentOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return EquipmentsData.saveEquipmentOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

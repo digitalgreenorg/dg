@@ -67,7 +67,9 @@ public class EquipmentsTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", equipment.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/equipment/" + equipment.getId() + "/'>" +
-							equipment.getEquipmentType() + "</a>", new Equipments(requestContext)));
+							equipment.getEquipmentType() + "</a>", 
+							"dashboard/equipment/" + equipment.getId() + "/",
+							new Equipments(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ equipment.getId() + 
 								  "' name='_selected_action' /></td>" +

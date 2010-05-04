@@ -66,7 +66,9 @@ public class PracticeTemplate  extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", practice.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/practice/"+ practice.getId() +"/'>" +
-							practice.getPracticeName()+"</a>", new Practices(requestContext)));
+							practice.getPracticeName()+"</a>", 
+							"dashboard/practice/"+ practice.getId() +"/",
+							new Practices(requestContext)));
 					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='action-select' value='" +  
 									practice.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th></tr>";

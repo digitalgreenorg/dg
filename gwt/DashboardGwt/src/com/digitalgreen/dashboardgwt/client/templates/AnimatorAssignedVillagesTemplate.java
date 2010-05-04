@@ -71,7 +71,9 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", animatorAssignedVillage.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/animatorassignedvillage/" + animatorAssignedVillage.getId() + "/'>" +
-							animatorAssignedVillage.getAnimator().getAnimatorName() +"</a>", new AnimatorAssignedVillages(requestContext)));
+							animatorAssignedVillage.getAnimator().getAnimatorName() +"</a>",
+							"dashboard/animatorassignedvillage/" + animatorAssignedVillage.getId() +"/",
+							new AnimatorAssignedVillages(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 								  "<td><input type='checkbox' class='action-select' value='" + animatorAssignedVillage.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>" +

@@ -72,7 +72,9 @@ public class PersonGroupsTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", personGroup.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/persongroups/" + personGroup.getId() + "/'>" +
-							personGroup.getPersonGroupName() + "</a>", new PersonGroups(requestContext)));
+							personGroup.getPersonGroupName() + "</a>",
+							"dashboard/persongroups/" + personGroup.getId() + "/",
+							new PersonGroups(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ personGroup.getId() + "' name='_selected_action' /></td>" +
 					  "<th id = 'row" + row + "'></th>" +

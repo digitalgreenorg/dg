@@ -1,4 +1,3 @@
-<<<<<<< .mine
 // "Add"-link html code. Defaults to Django's "+" image icon, but could use text instead.
 add_link_html = '<h2>Add New Row <img src = "/media/img/admin/icon_addlink.gif" width="10" height="10"></h2>';
 // "Delete"-link html code. Defaults to Django's "x" image icon, but could use text instead.
@@ -9,7 +8,8 @@ position_field = 'position'; // Name of inline model field (integer) used for or
 
 //This is the HTML template used for "Add new Row" button
 template = '<tr class="row1"> \
-    <td class="original"> \
+    <td class="delete"></td> \
+	<td class="original"> \
 		  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id"> \
           <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening"> \
     </td> \
@@ -18,13 +18,12 @@ template = '<tr class="row1"> \
 			<option selected="selected" value="">---------</option> \
 			--per_list-- \
 		</select> \
-		<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-0-person" class="add-another" href="/admin/dashboard/person/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a> \
 	</td> \
 	<td class="expressed_interest_practice"> \
         <select id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice"> \
 		<option selected="selected" value="">---------</option> \
 		--prac_list-- \
-		</select><a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-0-expressed_interest_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a> \
+		</select>\
 	</td> \
     <td class="expressed_interest"> \
 		<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-0-expressed_interest"> \
@@ -34,7 +33,6 @@ template = '<tr class="row1"> \
 			<option selected="selected" value="">---------</option> \
 			--prac_list-- \
 		</select> \
-		<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-0-expressed_adoption_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a> \
     </td> \
     <td class="expressed_adoption"> \
         <input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-0-expressed_adoption"> \
@@ -44,12 +42,10 @@ template = '<tr class="row1"> \
 			<option selected="selected" value="">---------</option> \
 			--prac_list-- \
 			</select> \
-			<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-0-expressed_question_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a> \
     </td> \
     <td class="expressed_question"> \
         <input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question"> \
     </td> \
-    <td class="delete"></td> \
 </tr>';
 
 //To store the List of Practices. This is only set once on page load, and reused later(many times) when required
@@ -62,82 +58,77 @@ _new_template = '';
 //is_inited: Flag if the page has been initialized once using init_add_screening() function
 var is_edit,is_inited = false;
 
-jQuery(function($) {
-	$('body').append('<div id="box"></div><div id="screen"></div>');
-	$(window).resize(function(){
-		$('#box').css("display") == 'block'?showStatus(null):"";
-	});
-	//showStatus("Intializing the page. Please wait.");
-	
-	vil_id = $("#id_village").val()
-	if(vil_id>0) {
-	
-	//Case when village is already entered on page load
-		is_edit = true;
-		//Hiding ID and Lookup icon in PersonMeetingAttendance Section
-		$('div.inline-group div.tabular table input.vForeignKeyRawIdAdminField').hide();
-		$('div.inline-group div.tabular table a.related-lookup').hide();
-		
-		//Storing the already selected animator & Person Groups
-		var anim_selected = $("#id_animator").val();
-		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
-				
-		$.ajax({ type: "GET", 
-				dataType: 'json',
-				url: "/feeds/person_pract/", 
-				data:{vil_id:vil_id,mode:2},
-				success: function(obj) {		
-					//storing practice_list			
-					template = (template).replace(/--prac_list--/g, obj.prac_list);
-					_prac_list = obj.prac_list;
-					
-					//updating farmer group list and Animator_list
-					update_farmer_groups(eval('('+obj.pg+')'));
-					update_animators(eval('('+obj.anim+')'));
-					
-					//Restoring the already selected animator and Person Group	
-					$("#id_animator").val(anim_selected);
-					$("#id_farmer_groups_targeted").val(pg_selected);			
-						
-									
-					//For "Add new Row" template, replacing ther person list of block of the village
-					_new_template = (template).replace(/--per_list--/g, obj.per_list);			
-					initialize_add_screening();
-					
-					//hideStatus();
-				}
-		});
-	}
-	else {
-		//Case when village was not present on load
-		is_edit = false;
-		$.ajax({ type: "GET", 
-				dataType: 'json',
-				url: "/feeds/person_pract/", 
-				data:{mode:0},
-				success: function(obj) {
-				template = (template).replace(/--prac_list--/g, obj.prac_list);
-				_prac_list = obj.prac_list;				
-				}
-		});
-		//Disabling 'Person Group' & 'Animator Widgets' & showing msg 'Select village to enable' besides
-		//$("#id_farmer_groups_targeted,#id_animator").attr('disabled', 'disabled');
-		//$(".form-row.farmer_groups_targeted div, .form-row.animator div").append('<text class="error_msg" style="font-size:20px;float:center; margin-left:50px;margin-top:70px;">Select Village to Enable</text>');
-		hideStatus();
-	}
 
-	
-});
 function  showStatus(msg){
 	$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
 	$('#box').css({'display': 'block'});
 	if(msg != null)
 		$('#box').html(msg);	
 }
+
 function hideStatus() {
 	$('#box').css('display', 'none');
 	$('#screen').css('display', 'none');
 }
+
+var screening_page = {
+init :function() {
+	alert('function is called');
+	$('body').append('<div id="box"></div><div id="screen"></div>');
+	$(window).resize(function(){
+		$('#box').css("display") == 'block'?showStatus(null):"";
+	});
+	
+	
+	vil_id = $("#id_village").val()
+	var pg_selected = $("#id_farmer_groups_targeted").val() || [];
+	
+	if(vil_id>0 && pg_selected>0) {
+		showStatus("Intializing the page. Please wait.");
+		alert('inside edit');
+		//Case when village is already entered on page load
+		is_edit = true;		
+		var w  = window.location.href.split('/')
+		var id = w[w.length-2]
+		
+		$.ajax({ type: "GET", 
+				dataType: 'html',
+				url: "/dashboard/getattendance/"+id+"/", 
+				success: function(obj) {		
+					$('div.inline-group div.tabular').html('')
+					$('div.inline-group div.tabular').append(obj)
+					
+					$.ajax({ type: "GET", 
+						dataType: 'json',
+						url: "/feeds/person_pract/", 
+						data:{vil_id:vil_id,mode:2},
+						success: function(obj) {		
+							//storing practice_list			
+							template = (template).replace(/--prac_list--/g, obj.prac_list);
+							_prac_list = obj.prac_list;
+				
+							//For "Add new Row" template, replacing ther person list of block of the village
+							_new_template = (template).replace(/--per_list--/g, obj.per_list);			
+							initialize_add_screening();
+							hideStatus();
+						}
+					});
+					
+					$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+				}
+		});
+		
+	}
+	else {
+		alert('else');
+		is_edit = false;
+		$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+	}
+	
+	
+}
+};
+
 
 //Function to clear section of Person-Meeting-Attendance
 function clear_table(tab) {
@@ -171,13 +162,13 @@ function initialize_add_screening() {
 	
 	tabu = $('div.inline-group div.tabular');
 	table = tabu.find('table');
-	
+	alert('here1');
 	// Hide initial deleted rows
 	table.find('td.delete input:checkbox:checked').parent('td').parent('tr').addClass('deleted_row').hide();
 	
 	// "Add"-button in bottom of inline for adding new rows
 	tabu.find('fieldset').after('<a class="add" href="#">' + add_link_html + '</a>');
-	
+	alert('here2');
 	tabu.find('a.add').click(function(){
 	   table.append(_new_template);
     	
@@ -188,12 +179,13 @@ function initialize_add_screening() {
 	    // Place for special code to re-enable javascript widgets after clone (e.g. an ajax-autocomplete field)
 	    // Fictive example: new_item.find('.autocomplete').each(function() { $(this).triggerHandler('autocomplete'); });
 	}).removeAttr('href').css('cursor', 'pointer');
-	
+	alert('here3');
 	// "Delete"-buttons for each row that replaces the default checkbox 
 	table.find('tr:not(.add_template) td.delete').each(
 		function() {
 		    create_delete_button($(this));
-	});    
+	});  
+	alert('here4');
 }
 
 // Function for creating fancy delete buttons
@@ -304,116 +296,56 @@ function update_id_fields(row, new_position)
     // Are there other element types...? Add here.
 }
 
-
-//Function called when village is selected
-function filter()
-{
-if($("#id_village").val()>0){
-		//showStatus("Loading Person Groups & Animators.");
-		$.ajax({ type: "GET", 
-				dataType: 'json',
-				url: "/feeds/person_pract/", 
-				data:{vil_id:$("#id_village").val(),mode:1},
-				success: function(obj) {
-					update_farmer_groups(eval('('+obj.pg+')'));
-					update_animators(eval('('+obj.anim+')'));
-					
-					//Clearing Person_meeting_attendance section
-					clear_table($('div.inline-group div.tabular table'));
-					
-					//For "Add new Row" template, replacing ther person list of block of the village
-					_new_template = (template).replace(/--per_list--/g, obj.per_list);
-					if(!is_edit){
-						//$("#id_farmer_groups_targeted,#id_animator").removeAttr("disabled");
-						//$(".error_msg").remove();
-						initialize_add_screening();
-						
-					}
-					//hideStatus();
-				}
-		});
-	}	
-}
-
-//Function to Update Farmer Group in Widget
-function update_farmer_groups(j){
-	var options = '<option value="">---------- </option>';
-    for (var i = 0; i < j.length; i++) 
-		options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['group_name'] + '</option>';
-	$("#id_farmer_groups_targeted").html(options);
-    
-}
-
-//Function to update animators in Widget
-function update_animators(j){
-	var options = '<option value="">---------- </option>';
-    for (var i = 0; i < j.length; i++) 
-    	options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['name'] + '</option>';
-    $("#id_animator").html(options);
-    
-}
-
 //Function called on Person Selection
 function filter_person() {	
-	//showStatus("Loading persons..");
+	showStatus("Loading persons..");
 	//Get the Value of 'Initial-forms' and Person Group selected.
-	initialize_add_screening();
 	grps = $('#id_farmer_groups_targeted').val();
-	alert(grps);
+	tabu = $('div.inline-group div.tabular');
+	table = tabu.find('table');
 	init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
-	//alert("In filter_person function");
-	<script type="text/javascript" src="/site_media/dashboardgwt/gears_init.js"></script>
-	//alert("After including");
-	var db = google.gears.factory.create('beta.database');
-	//alert("After creating new object of factory");
-	db.open('digitalgreen');
-	//alert("Opening database");
-	var rs = db.execute('select u.app_status from user u');
-	alert(rs.field(0));
-	if(rs.field(0) == 0){
-		alert("In offline mode");
-		var persons = db.execute("SELECT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");
-		while (persons.isValidRow()) {
-				//alert(rs.field(0) + '@' + rs.field(1));
-				alert("In while loop");
-				alert(persons.field(0) + '@' +persons.field(1));
-				persons.next();
-			}
-	rs.close();
-	persons.close();
-	db.close();
-	}
-	else{
-
+	
 	$.ajax({ type: "GET", 
-			dataType: 'json',
-			url: "/feeds/persons/", 
-			data:{groups:grps, init:init_form,mode:0},
-			success: function(obj){
-						if(obj.html=='Error') {
-							alert('Sorry, some error Occured. Please notify Systems Team.');
-							return;
-						}
+		dataType: 'json',
+		url: "/get/person/", 
+		data:{groups:grps,},
+		success: function(obj) {		
+			//For "Add new Row" template, replacing ther person list of block of the village
+			template = (template).replace(/--per_list--/g, obj.per_list);			
+			initialize_add_screening();
+		}
+	});	
+	
+	$.ajax({ type: "GET", 
+		dataType: 'json',
+		url: "/feeds/persons/", 
+		data:{groups:grps, init:init_form,mode:1},
+		success: function(obj){
+				if(obj.html=='Error') {
+					alert('Sorry, some error Occured. Please notify Systems Team.');
+					return;
+				}
+					
+				//Case when No Person is present in the person groups.
+				if(obj.tot_val == init_form) {
+					alert("Selected Group has no Person registered.");
+					clear_table(table);
+					table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
+					hideStatus();
+					return;
+				}
 						
-						//Case when No Person is present in the person groups.
-						if(obj.tot_val == init_form) {
-							alert("Selected Group has no Person registered.");
-							clear_table(table);
-							table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
-							return;
-						}
-						
-						//Create & append the list of persons 
-						new_html = (obj.html).replace(/--prac_list--/g, _prac_list);
-						table = $('div.inline-group div.tabular').find('table');						
-						clear_table(table);
-					    table.append(new_html);			
-					  	//Set Total forms
-					 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
-					 	//hideStatus();
-					 }
-			 
-		 });
-	}
+				//Create & append the list of persons 
+				_new_template = (template).replace(/--prac_list--/g, obj.prac);
+				_prac_list = obj.prac;
+				
+				new_html = (obj.html).replace(/--prac_list--/g, _prac_list);
+				table = $('div.inline-group div.tabular').find('table');						
+				clear_table(table);
+			    table.append(new_html);			
+			  	//Set Total forms
+			 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
+			 	hideStatus();
+		}
+	});
 }
-

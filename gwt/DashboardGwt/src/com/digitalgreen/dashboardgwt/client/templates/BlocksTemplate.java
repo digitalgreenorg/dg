@@ -63,7 +63,9 @@ public class BlocksTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", block.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/block/"+ block.getId() +"/'>" +
-							block.getBlockName() + "</a>", new Blocks(requestContext)));
+							block.getBlockName() + "</a>",
+							"dashboard/block/"+ block.getId() +"/",
+							new Blocks(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 								"<td><input type='checkbox' class='action-select' value='" + block.getId() + "' name='_selected_action' /></td>" +
 								"<th id = 'row" + row + "'></th>" +

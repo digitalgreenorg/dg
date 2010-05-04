@@ -65,7 +65,9 @@ public class DistrictTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", district.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/district/" + district.getId() +"/'>" +
-							district.getDistrictName() + "</a>", new Districts(requestContext)));
+							district.getDistrictName() + "</a>",
+							"dashboard/district/" + district.getId() +"/",
+							new Districts(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 									"<td><input type='checkbox' class='action-select' value='" + district.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th>" +

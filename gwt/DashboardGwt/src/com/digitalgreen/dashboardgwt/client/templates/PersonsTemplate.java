@@ -84,7 +84,9 @@ public class PersonsTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", person.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/person/"+ person.getId() +"/'>" +
-							person.getPersonName() + "</a>", new Persons(requestContext)));
+							person.getPersonName() + "</a>",
+							"dashboard/person/"+ person.getId() +"/",
+							new Persons(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ person.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>" +

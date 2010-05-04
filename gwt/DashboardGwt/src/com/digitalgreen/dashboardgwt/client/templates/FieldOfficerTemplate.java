@@ -73,7 +73,9 @@ public class FieldOfficerTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", fieldofficer.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/fieldofficer/"+ fieldofficer.getId() +"/'>" +
-							fieldofficer.getFieldOfficerName() + "</a>", new FieldOfficers(requestContext)));
+							fieldofficer.getFieldOfficerName() + "</a>",
+							"dashboard/fieldofficer/"+ fieldofficer.getId() +"/",
+							new FieldOfficers(requestContext)));
 					tableRows += "<tr class='" + style + "'><td><input type='checkbox' class='actoin-select' value='" + 
 									fieldofficer.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th></tr>";

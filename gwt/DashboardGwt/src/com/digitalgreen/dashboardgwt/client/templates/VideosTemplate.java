@@ -65,7 +65,9 @@ public class VideosTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", video.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/video/" + video.getId() + "/'>" + 
-							video.getTitle() + "</a>", new Videos(requestContext)));
+							video.getTitle() + "</a>",
+							"dashboard/video/" + video.getId() + "/",
+							new Videos(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ video.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>"+ 

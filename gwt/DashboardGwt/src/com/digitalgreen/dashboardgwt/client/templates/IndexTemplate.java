@@ -39,40 +39,34 @@ public class IndexTemplate extends BaseTemplate {
 	}
 	
 	private void goOfflineOnline(){
-		final Button offlineButton = new Button("GO OFFLINE");
-		final Button onlineButton = new Button("GO ONLINE");
-		final Button syncButton1 = new Button("Sync from local to main");
-		final Button syncButton2 = new Button("Sync from main to local");
+		final Button applicationStatusButton = new Button();
+		final Button uploadButton = new Button("Upload");
+		final Button downloadButton = new Button("Download");
 		
-		VerticalPanel vpanel = new VerticalPanel();
 		HorizontalPanel hpanel = new HorizontalPanel();
-		hpanel.add(offlineButton);
-		hpanel.add(syncButton1);
-		hpanel.add(syncButton2);
-		vpanel.add(hpanel);
-		vpanel.add(onlineButton);
-		RootPanel.get("goOffline").add(vpanel);
+		hpanel.add(applicationStatusButton);
+		hpanel.add(downloadButton);
+		hpanel.add(uploadButton);
+		RootPanel.get("goOffline").add(hpanel);
 		
-		offlineButton.addClickHandler(new ClickHandler() {
+		applicationStatusButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   requestContext.getArgs().put("action", "gooffline");
+		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
+		    		   requestContext.getArgs().put("action", "gooffline");
+		    	   }
+		    	   else{
+		    		   requestContext.getArgs().put("action", "goonline");
+		    	   }
+		    		   
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
 		      }		      
 	    });
-		
-		onlineButton.addClickHandler(new ClickHandler() {
+				
+		uploadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   requestContext.getArgs().put("action", "goonline");
-		    	   Index index = new Index(requestContext);
-		    	   index.response();
-		      }		      
-	    });
-		
-		syncButton1.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
+		    	  Template.addLoadingMessage("Uploading data...");
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "sync");
 		    	   Index index = new Index(requestContext);
@@ -80,9 +74,9 @@ public class IndexTemplate extends BaseTemplate {
 		      }		      
 	    });
 		
-		syncButton2.addClickHandler(new ClickHandler() {
+		downloadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	  Template.addLoadingMessage("Downloading data...");
+		    	   Template.addLoadingMessage("Downloading data...");
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   requestContext.getArgs().put("action", "resync");
 		    	   Index index = new Index(requestContext);
@@ -91,13 +85,13 @@ public class IndexTemplate extends BaseTemplate {
 	    });
 		
 		if (!ApplicationConstants.getCurrentOnlineStatus()){
-			offlineButton.setEnabled(false);
-			syncButton1.setEnabled(false);
-			syncButton2.setEnabled(false);
+			applicationStatusButton.setText("Go Online");
+			uploadButton.setEnabled(false);
+			downloadButton.setEnabled(false);
 		}
-		else{
-			onlineButton.setEnabled(false);
-		}	
+		else {
+			applicationStatusButton.setText("Go Offline");
+		}
 	}
 	
 	

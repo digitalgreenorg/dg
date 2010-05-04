@@ -164,6 +164,11 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		return TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return TrainingAnimatorsTrainedData.saveTrainingAnimatorsTrainedOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

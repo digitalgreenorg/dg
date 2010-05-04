@@ -65,7 +65,9 @@ public class StatesTemplate extends BaseTemplate{
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", state.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/state/" + state.getId() + "/'>" +
-							state.getStateName() + "</a>", new States(requestContext)));
+							state.getStateName() + "</a>",
+							"dashboard/state/" + state.getId() + "/",
+							new States(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ state.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th>" +

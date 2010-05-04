@@ -84,9 +84,10 @@ public class BaseTemplate extends Template {
 		}
 	}	
 	
-	public Hyperlink createHyperlink(String linkText, final BaseServlet servlet){
-		Hyperlink addLink = new Hyperlink();
-		addLink.setHTML(linkText);
+	public Hyperlink createHyperlink(String linkText, String tokenText, final BaseServlet servlet){
+		Hyperlink addLink = new Hyperlink(linkText, true, tokenText); 
+		//Hyperlink addLink = new Hyperlink();
+		//addLink.setHTML(linkText);
 		addLink.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Template.addLoadingMessage();

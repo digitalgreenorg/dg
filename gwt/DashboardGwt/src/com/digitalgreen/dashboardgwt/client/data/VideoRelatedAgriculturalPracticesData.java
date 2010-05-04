@@ -172,6 +172,11 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 	public String getSaveOfflineURL(){
 		return VideoRelatedAgriculturalPracticesData.saveVideoRelatedAgriculturalPracticeOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return VideoRelatedAgriculturalPracticesData.saveVideoRelatedAgriculturalPracticeOnlineURL;
+	}
 
 	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

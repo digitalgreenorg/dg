@@ -53,6 +53,12 @@ public class ScreeningsTemplate extends BaseTemplate {
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveScreening);
+		
+		/*if(this.getRequestContext().getArgs().get("action").equals("edit")){
+			Window.alert("going to call function");
+			callScreeningFilter(this.getRequestContext().getForm().getQueryString());
+		}*/
+			
 	}
 	
 	public List<Hyperlink> fillListings(){
@@ -77,8 +83,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", screening.getId());
-					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
-							screening.getDate() + "</a>", new Screenings(requestContext)));
+					links.add(this.createHyperlink("<a href='dashboard/screening/"+ screening.getId() +"/'>" +
+							screening.getDate() + "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ screening.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>" + 
@@ -146,12 +152,15 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</div>" +
 					"</div>";
 	
-//	public static native String callScreeningFilter() /*-{
-//		return $wnd.callFilter();
-//	}-*/;
-//
+	public static native void callScreeningFilter(String queryString) /*-{
+			$wnd.init(queryString);
+	}-*/;
 	
 	final private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
+							"<link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' />" +
+							"<script src='/site_media/media/js/jquery.js' type='text/javascript'></script>" +
+							"<script src='/site_media/media/js/screening_page.js' type='text/javascript'></script>" +
+							"<script type='text/javascript'>screening_page.init()</script>" +
 							"<div id='content' class='colM'>" +
 							"<h1>Add screening</h1>" +
 						    "<div id='content-main'>" +
@@ -183,7 +192,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"<div class='form-row village  '>" +
 										"<div>" +
 											"<label for='id_village' class='required'>Village:</label>"+
-											"<select name='village' id='id_village' >" +
+											"<select name='village' id='id_village'>" +
 												"<option value='' selected='selected'>---------</option>" +
 											"</select>" +
 /*											
@@ -279,7 +288,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"<div class='form-row farmer_groups_targeted  '>" +
 										"<div>" +
 											"<label for='id_farmer_groups_targeted' class='required'>Farmer groups targeted:</label>" +
-											"<select multiple='multiple' onchange='filter_person();' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
+											//"<select multiple='multiple' onchange='filter_person();' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
+											"<select multiple='multiple' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
 											"</select>" +
 										"</div>" +
 									"</div>" +
@@ -293,6 +303,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 											"<table>" +
 												"<thead>" +
 													"<tr>" +
+														"<th>Delete?</th>" +
 														"<th colspan='2'>Person</th>" +
 														"<th >Expressed interest practice</th>" +
 														"<th >Expressed interest</th>" +
@@ -300,7 +311,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 														"<th >Expressed adoption</th>" +
 														"<th >Expressed question practice</th>" +
 														"<th >Expressed question</th>" +
-														"<th>Delete?</th>" +
 													"</tr>" +
 												"</thead>" +
 											"</table>" +
@@ -318,6 +328,5 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 						"<script type='text/javascript'>DateTimeShortcuts.init()</script>"+						
-						"<script src='/site_media/dashboardgwt/gears_init.js' type='text/javascript'></script>"+
-						"<script src='/site_media/media/js/screening_page.js' type='text/javascript'></script>";
+						"<script src='/site_media/dashboardgwt/gears_init.js' type='text/javascript'></script>";
 }

@@ -74,7 +74,9 @@ public class VillagesTemplate extends BaseTemplate {
 					requestContext.getArgs().put("id", village.getId());
 					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/village/"+ village.getId() +"/'>" +
-							village.getVillageName()+"</a>", new Villages(requestContext)));
+							village.getVillageName()+"</a>",
+							"dashboard/village/"+ village.getId() +"/",
+							new Villages(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 					  "<td><input type='checkbox' class='action-select' value='"+ village.getId() + "' name='_selected_action' /></td>" +
 						"<th id = 'row" + row + "'></th>" +
@@ -186,7 +188,8 @@ public class VillagesTemplate extends BaseTemplate {
 													"</fieldset>" +
 													"<div class='inline-group'>" +
 														"<div class='tabular inline-related '>" +
-															"<input type='hidden' name='persongroups_set-TOTAL_FORMS' value='5' id='id_persongroups_set-TOTAL_FORMS' /><input type='hidden' name='persongroups_set-INITIAL_FORMS' value='0' id='id_persongroups_set-INITIAL_FORMS' />" +
+															"<input type='hidden' name='persongroups_set-TOTAL_FORMS' value='5' id='id_persongroups_set-TOTAL_FORMS' />" +
+															"<input type='hidden' name='persongroups_set-INITIAL_FORMS' value='0' id='id_persongroups_set-INITIAL_FORMS' />" +
 																"<fieldset class='module'>" +
 																	"<h2>Person groups</h2>" +
 																	"<table>" +
@@ -329,7 +332,8 @@ public class VillagesTemplate extends BaseTemplate {
 														"</div>" +
 														"<div class='inline-group'>" +
 															"<div class='tabular inline-related last-related'>" +
-																"<input type='hidden' name='animator_set-TOTAL_FORMS' value='5' id='id_animator_set-TOTAL_FORMS' /><input type='hidden' name='animator_set-INITIAL_FORMS' value='0' id='id_animator_set-INITIAL_FORMS' />" +
+																"<input type='hidden' name='animator_set-TOTAL_FORMS' value='5' id='id_animator_set-TOTAL_FORMS' />" +
+																"<input type='hidden' name='animator_set-INITIAL_FORMS' value='0' id='id_animator_set-INITIAL_FORMS' />" +
 																"<fieldset class='module'>" +
 																	"<h2>Animators</h2>" +
 																	"<table>" +

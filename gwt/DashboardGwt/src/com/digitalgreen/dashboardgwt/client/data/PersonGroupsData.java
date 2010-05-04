@@ -298,6 +298,12 @@ public class PersonGroupsData extends BaseData {
 	public String getSaveOfflineURL() {
 		return PersonGroupsData.savePersonGroupOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL() {
+		return PersonGroupsData.savePersonGroupOnlineURL;
+	}
+
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

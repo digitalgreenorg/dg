@@ -259,6 +259,11 @@ public class Data extends BaseData.Data {
 	public String getSaveOfflineURL(){
 		return PersonAdoptPracticeData.savePersonAdoptPracticeOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL;
+	}
 		
 		
 	public final native JsArray<Type> asArrayOfData(String json) /*-{

@@ -257,6 +257,11 @@ public class VillagesData extends BaseData {
 	public String getSaveOfflineURL(){
 		return VillagesData.saveVillageOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL(){
+		return VillagesData.saveVillageOnlineURL;
+	}
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

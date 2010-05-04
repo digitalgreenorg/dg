@@ -40,49 +40,12 @@ public class Index extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg == "gooffline"){
-					IndexData.createTables();	
-					IndexData indexData = new IndexData(new OnlineOfflineCallbacks(this) {
-						public void onlineSuccessCallback(String results) {
-							if(results != "0") {
-								LoginData user = new LoginData();
-								user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "0", "0");
-								ApplicationConstants.toggleConnection(false);
-								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("You are ready to go offline!!. ");
-								getServlet().redirectTo(new Index(requestContext));								
-							} else {
-								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("You do not have a valid account.Please contact support. ");
-								getServlet().redirectTo(new Index(requestContext));				
-							}
-						}
-						
-						public void onlineErrorCallback(int errorCode) {
-							Window.alert("GOT AN ERROR connecting to server");
-							RequestContext requestContext = new RequestContext();
-							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessage("Unresponsive Server.  Please contact support.");
-							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessage("Problem in the connection with the server.");
-							else
-								requestContext.setMessage("Unknown error.  Please contact support.");
-							getServlet().redirectTo(new Index(requestContext));	
-						}
-						
-					});
-					
-					// Comment the below line when you are not running the code form a hosted mode.
-					if(!indexData.checkIfUserEntryExistsInTable(ApplicationConstants.getUsernameCookie()))
-						indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
-					else{
-						LoginData user = new LoginData();
-						user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
-						ApplicationConstants.toggleConnection(false);
-						RequestContext requestContext = new RequestContext();
-						requestContext.setMessage("You are ready to go offline!!. ");
-						this.redirectTo(new Index(requestContext));
-					}
-					
+					LoginData user = new LoginData();
+					user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+					ApplicationConstants.toggleConnection(false);
+					RequestContext requestContext = new RequestContext();
+					requestContext.setMessage("You are ready to go offline!!. ");
+					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg == "goonline"){
 					LoginData user = new LoginData();

@@ -374,6 +374,12 @@ public class PersonsData extends BaseData {
 	public String getSaveOfflineURL() {
 		return PersonsData.savePersonOfflineURL;
 	}
+	
+	@Override
+	public String getSaveOnlineURL() {
+		return PersonsData.savePersonOnlineURL;
+	}
+
 
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);

@@ -269,6 +269,11 @@ public class PersonMeetingAttendanceData extends BaseData {
 		return PersonMeetingAttendanceData.savePersonMeetingAttendanceOfflineURL;
 	}
 	
+	@Override
+	public String getSaveOnlineURL(){
+		return PersonMeetingAttendanceData.savePersonMeetingAttendanceOnlineURL;
+	}
+	
 	public final native JsArray<Type> asArrayOfData(String json) /*-{
 		return eval(json);
 	}-*/;

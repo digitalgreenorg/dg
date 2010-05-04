@@ -69,7 +69,9 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", developmentmanager.getId());
 					links.add(this.createHyperlink("<a href='#dashboard/developmentmanager/" + developmentmanager.getId() + "/'>" +
-							developmentmanager.getName() + "</a>", new DevelopmentManagers(requestContext)));
+							developmentmanager.getName() + "</a>",
+							"dashboard/developmentmanager/" + developmentmanager.getId() + "/",
+							new DevelopmentManagers(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ developmentmanager.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>" +
