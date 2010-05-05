@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class IndexTemplate extends BaseTemplate {
@@ -43,11 +44,23 @@ public class IndexTemplate extends BaseTemplate {
 		final Button uploadButton = new Button("Upload");
 		final Button downloadButton = new Button("Download");
 		
-		HorizontalPanel hpanel = new HorizontalPanel();
-		hpanel.add(applicationStatusButton);
-		hpanel.add(downloadButton);
-		hpanel.add(uploadButton);
-		RootPanel.get("goOffline").add(hpanel);
+		applicationStatusButton.setSize("350px", "5em");
+		downloadButton.setSize("150px", "4em");
+		uploadButton.setSize("150px", "4em");
+		
+		VerticalPanel body = new VerticalPanel();
+		HorizontalPanel layer1 = new HorizontalPanel();
+		HorizontalPanel layer2 = new HorizontalPanel();
+		layer2.add(applicationStatusButton);
+		HorizontalPanel layer3 = new HorizontalPanel();
+		layer3.add(downloadButton);
+		layer3.add(uploadButton);
+		body.setHorizontalAlignment(body.ALIGN_CENTER);
+		body.add(layer1);
+		body.add(layer2);
+		body.add(layer3);
+		body.setStyleName("controlPanelClass");
+		RootPanel.get("goOffline").add(body);
 		
 		applicationStatusButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
@@ -85,12 +98,12 @@ public class IndexTemplate extends BaseTemplate {
 	    });
 		
 		if (!ApplicationConstants.getCurrentOnlineStatus()){
-			applicationStatusButton.setText("Go Online");
+			applicationStatusButton.setText("Click to go online");
 			uploadButton.setEnabled(false);
 			downloadButton.setEnabled(false);
 		}
 		else {
-			applicationStatusButton.setText("Go Offline");
+			applicationStatusButton.setText("Click to go offline");
 		}
 	}
 	
@@ -239,7 +252,8 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
 
-		HTMLPanel h = new HTMLPanel("<div id = 'goOffline' style='float: right; margin: 100px;'></div>");
+		HTMLPanel h = new HTMLPanel("<div id = 'goOffline'></div>");
+		h.setStyleName("mainControlPanelArea");
 		RootPanel.get("container").add(h);
 		goOfflineOnline();
 		

@@ -201,7 +201,7 @@ public class BaseTemplate extends Template {
 		"<!-- Header -->" +
 		"<div id='header'>" +
 			"<div id='branding'>" +
-				"<h1 id='site-name'><a href='/site_media/DashboardGwt.html'>Digital Green Administration</a></h1>" +
+				"<h1 id='site-name'><a href='/site_media/DashboardGwt.html'><img src='/media/img/admin/dglogo.png' /></a>O<sub>2</sub></h1>" +
 			"</div>" +
 			"<div id='user-tools'>Welcome, <span id='user-name'></span>" +
 			"<span id='logout'></span>" +
