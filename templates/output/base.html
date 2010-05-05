@@ -18,9 +18,21 @@
     <script type="text/javascript" src="/media/Output/JS/jquery.tablesorter.min.js"></script>    
     <script type="text/javascript" src="/media/Output/JS/Jdatepick.js"></script>
     <script type="text/javascript" src="/media/Output/JS/Jdefaultload.js"></script>
-    {% block jsfile %}
-       
-    {% endblock jsfile %} 
+    {% block jsfile %}       
+    {% endblock jsfile %}
+     
+    <script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-16211208-1");
+			pageTracker._trackPageview();
+			} 
+	catch(err) {}
+	</script>
+    
 </head>
 
 <body>
@@ -39,7 +51,7 @@
 					</tr>				
 				</table>
 			</div>	
-			<div id='navheaderleft'> <a href="#"> <img src="/media/Output/Images/dglogo11.png" alt='temp' title="Help"> </a>   </div>
+			<div id='navheaderleft'> <a href="/"> <img src="/media/Output/Images/dglogo11.png" alt='Digital Green Logo' title="Logo"> </a>   </div>
 			<div id='navheaderright'>
 				<div id='navhelp'>					  
 				</div>			 
@@ -65,7 +77,7 @@
 								<div id='headermenutitlename' class='headermenutitlenameclass'> 
 									Home
 									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										<a href="/home">Home</a>
+										<a href="/">Home</a>
 									</div>								 
 								</div>
 							</div>
@@ -97,9 +109,9 @@
 									</div>
 									<div id='subheadmenu' class='subheadmenuclass'>
 										<ul id='subheadmenulist'>
-											<li> <a href="{% if search_box_params %}{% url dg.output.views.overviewAnalytics.new_overview geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.overviewAnalytics.new_overview geog='country' id=1 %}{%endif%}" title='Overview'> Progress Metrics</a></li>
-											<li> <a href="{% if search_box_params %}{% url dg.output.views.videoAnalytics.video_module geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.videoAnalytics.video_module geog='country' id=1 %}{%endif%}" title='Production'> Video Production </a></li>
-											<li> <a href="{% if search_box_params %}{% url dg.output.views.screeningAnalytics.screening_module geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.screeningAnalytics.screening_module geog='country' id=1 %}{%endif%}" title='Screening'> Disseminations </a> </li>
+											<li> <a href="{% if search_box_params %}{% url dg.output.views.overviewAnalytics.new_overview geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.overviewAnalytics.new_overview geog='country' id=1 %}{%endif%}" title='Progress Dashboard'> Progress Dashboard</a></li>
+											<li> <a href="{% if search_box_params %}{% url dg.output.views.videoAnalytics.video_module geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.videoAnalytics.video_module geog='country' id=1 %}{%endif%}" title='Video Production Statistics'> Video Production Statistics </a></li>
+											<li> <a href="{% if search_box_params %}{% url dg.output.views.screeningAnalytics.screening_module geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.screeningAnalytics.screening_module geog='country' id=1 %}{%endif%}" title='Video Screening Statistics'> Video Screening Statistics </a> </li>
 										</ul>										
 									</div> 									 
 								</div>
@@ -115,9 +127,9 @@
 									</div>
 									<div id='subheadmenu' class='subheadmenuclass'>
 										<ul id='subheadmenulist'>
-											<li> <a href="http://www.digitalgreen.org/updates" title='Updates' target=_blank> Updates </a>  </li>				
+											<li> <a href="http://sites.digitalgreen.org/inside-digital-green/updates" title='Updates' target=_blank> Updates </a>  </li>				
 											<li> <a href="/press" title='Press'> Press </a> </li>
-											<li> <a href="http://www.digitalgreen.org/nexus" title='Nexus: The Monthly Newsletter' target=_blank> Nexus </a> </li>
+											<li> <a href="http://sites.digitalgreen.org/inside-digital-green/nexus" title='Nexus: The Monthly Newsletter' target=_blank> Nexus </a> </li>
 										</ul>										
 									</div> 
 								</div>
