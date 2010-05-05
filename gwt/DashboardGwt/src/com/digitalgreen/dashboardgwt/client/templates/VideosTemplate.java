@@ -15,6 +15,7 @@ public class VideosTemplate extends BaseTemplate {
 	
 	public VideosTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new VideosData()).getNewData());;
 	}
 	
 	@Override
@@ -25,10 +26,11 @@ public class VideosTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Videos addVideosServlet = new Videos(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new VideosData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Videos saveVideo = new Videos(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, videosListHtml, videosAddHtml, addDataToElementID);
@@ -64,6 +66,7 @@ public class VideosTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", video.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/video/" + video.getId() + "/'>" + 
 							video.getTitle() + "</a>",
 							"dashboard/video/" + video.getId() + "/",

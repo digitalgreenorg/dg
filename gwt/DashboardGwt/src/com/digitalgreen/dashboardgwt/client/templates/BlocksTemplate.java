@@ -14,6 +14,7 @@ public class BlocksTemplate extends BaseTemplate{
 	
 	public BlocksTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new BlocksData()).getNewData());
 	}
 	
 	@Override
@@ -24,10 +25,10 @@ public class BlocksTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Blocks addBlocksServlet = new Blocks(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new BlocksData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Blocks saveBlock = new Blocks(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -62,6 +63,7 @@ public class BlocksTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", block.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/block/"+ block.getId() +"/'>" +
 							block.getBlockName() + "</a>",
 							"dashboard/block/"+ block.getId() +"/",

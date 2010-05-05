@@ -16,6 +16,7 @@ public class LanguagesTemplate extends BaseTemplate{
 	
 	public LanguagesTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new LanguagesData()).getNewData());
 	}
 	
 	@Override
@@ -26,9 +27,9 @@ public class LanguagesTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new LanguagesData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Languages addLanguagesServlet = new Languages(requestContext);
 		Languages saveLanguage = new Languages(saveRequestContext);
 		
@@ -66,6 +67,7 @@ public class LanguagesTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", language.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/language/" + language.getId() +"/'>" +
 							language.getLanguageName() + "</a>", 
 							"dashboard/language/" + language.getId() +"/",

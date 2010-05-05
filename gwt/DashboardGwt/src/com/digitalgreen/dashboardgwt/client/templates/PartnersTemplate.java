@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Hyperlink;
 public class PartnersTemplate extends BaseTemplate {
 	public PartnersTemplate (RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new PartnersData()).getNewData());
 	}
 	
 	@Override
@@ -23,12 +24,11 @@ public class PartnersTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new PartnersData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Partners addPartnersServlet = new Partners(requestContext);
 		Partners savePartner = new Partners(saveRequestContext);
-		
 		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, partnersListHtml, partnersAddHtml, addDataToElementID);
@@ -64,6 +64,7 @@ public class PartnersTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", partner.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/partner/"+ partner.getId() +"/'>" +
 							partner.getPartnerName()+"</a>",
 							"dashboard/partner/"+ partner.getId() +"/",

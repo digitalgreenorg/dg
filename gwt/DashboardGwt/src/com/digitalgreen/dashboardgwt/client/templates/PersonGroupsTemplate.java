@@ -18,6 +18,10 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	
 	public PersonGroupsTemplate(RequestContext requestContext) {
 		super(requestContext);
+		ArrayList personData = new ArrayList();
+		personData.add((new PersonsData()).getNewData());
+		this.formTemplate = new Form((new PersonGroupsData()).getNewData(), 
+				new Object[] {personData});
 	}
 	
 	@Override
@@ -28,13 +32,10 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		PersonGroups addPersonsGroupsServlet = new PersonGroups(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		ArrayList personData = new ArrayList();
-		personData.add((new PersonsData()).getNewData());
-		Form saveForm = new Form((new PersonGroupsData()).getNewData(), 
-				new Object[] {personData});
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		PersonGroups savePersonGroup = new PersonGroups(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -71,6 +72,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", personGroup.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/persongroups/" + personGroup.getId() + "/'>" +
 							personGroup.getPersonGroupName() + "</a>",
 							"dashboard/persongroups/" + personGroup.getId() + "/",

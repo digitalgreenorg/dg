@@ -21,6 +21,10 @@ public class PersonsTemplate extends BaseTemplate{
 	
 	public PersonsTemplate(RequestContext requestContext) {
 		super(requestContext);
+		ArrayList personAdoptPracticeData = new ArrayList();
+		personAdoptPracticeData.add((new PersonAdoptPracticeData()).getNewData());
+		this.formTemplate = new Form((new PersonsData()).getNewData(),
+				new Object[] {personAdoptPracticeData});
 	}
 
 	@Override
@@ -31,14 +35,12 @@ public class PersonsTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Persons addPersonsServlet = new Persons(requestContext);
-		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);		
-		ArrayList personAdoptPracticeData = new ArrayList();
-		personAdoptPracticeData.add((new PersonAdoptPracticeData()).getNewData());
-		Form saveForm = new Form((new PersonsData()).getNewData(),
-				new Object[] {personAdoptPracticeData});
-		saveRequestContext.setForm(saveForm);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		saveRequestContext.setForm(this.formTemplate);
 		Persons savePerson = new Persons(saveRequestContext);
+		
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, personsListHtml, personsAddHtml, addDataToElementID);
 		// Add it to the rootpanel
@@ -83,6 +85,7 @@ public class PersonsTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", person.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/person/"+ person.getId() +"/'>" +
 							person.getPersonName() + "</a>",
 							"dashboard/person/"+ person.getId() +"/",

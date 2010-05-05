@@ -17,6 +17,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 	
 	public DevelopmentManagersTemplate(RequestContext requestContext){
 		super(requestContext);
+		this.formTemplate = new Form((new DevelopmentManagersData()).getNewData());
 	}
 	
 	@Override
@@ -27,10 +28,10 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		DevelopmentManagers addDevelopmentManagersServlet = new DevelopmentManagers(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new DevelopmentManagersData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		DevelopmentManagers saveDevelopmentManager = new DevelopmentManagers(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -68,6 +69,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", developmentmanager.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/developmentmanager/" + developmentmanager.getId() + "/'>" +
 							developmentmanager.getName() + "</a>",
 							"dashboard/developmentmanager/" + developmentmanager.getId() + "/",

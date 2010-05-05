@@ -15,6 +15,7 @@ public class PracticeTemplate  extends BaseTemplate{
 	
 	public PracticeTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new PracticesData()).getNewData());
 	}
 	
 	@Override
@@ -25,9 +26,10 @@ public class PracticeTemplate  extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new PracticesData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Practices addPracticesServlet = new Practices(requestContext);
 		Practices savePractice = new Practices(saveRequestContext);
 		
@@ -65,6 +67,7 @@ public class PracticeTemplate  extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", practice.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/practice/"+ practice.getId() +"/'>" +
 							practice.getPracticeName()+"</a>", 
 							"dashboard/practice/"+ practice.getId() +"/",

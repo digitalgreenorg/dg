@@ -17,6 +17,10 @@ public class AnimatorsTemplate extends BaseTemplate {
 	
 	public AnimatorsTemplate(RequestContext requestContext){
 		super(requestContext);
+		ArrayList animatorAssignedVillageData = new ArrayList();
+		animatorAssignedVillageData.add((new AnimatorAssignedVillagesData()).getNewData());
+		this.formTemplate = new Form((new AnimatorsData()).getNewData(), 
+				new Object[] {animatorAssignedVillageData}); 
 	}
 	
 	@Override
@@ -28,13 +32,10 @@ public class AnimatorsTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Animators addAnimatorsServlet = new Animators(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		ArrayList animatorAssignedVillageData = new ArrayList();
-		animatorAssignedVillageData.add((new AnimatorAssignedVillagesData()).getNewData());
-		Form saveForm = new Form((new AnimatorsData()).getNewData(), 
-				new Object[] {animatorAssignedVillageData});
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Animators saveAnimator = new Animators(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, animatorsListHtml, animatorsAddHtml, addDataToElementID);
@@ -71,6 +72,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", animator.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/animator/" + animator.getId() +"/'>" +
 							animator.getAnimatorName() + "</a>",
 							"dashboard/animator/" + animator.getId() +"/",

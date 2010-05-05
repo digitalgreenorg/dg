@@ -15,6 +15,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 	
 	public EquipmentsTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new EquipmentsData()).getNewData());
 	}
 	
 	@Override
@@ -25,10 +26,10 @@ public class EquipmentsTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Equipments addEquipmentsServlet = new Equipments(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new EquipmentsData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Equipments saveEquipment = new Equipments(saveRequestContext);
 				
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -66,6 +67,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", equipment.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/equipment/" + equipment.getId() + "/'>" +
 							equipment.getEquipmentType() + "</a>", 
 							"dashboard/equipment/" + equipment.getId() + "/",

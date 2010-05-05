@@ -14,6 +14,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 	
 	public FieldOfficerTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new FieldOfficersData()).getNewData());;
 	}
 	
 	@Override
@@ -24,9 +25,9 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new FieldOfficersData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		FieldOfficers addFieldOfficersServlet = new FieldOfficers(requestContext);
 		FieldOfficers saveFieldOfficer = new FieldOfficers(saveRequestContext);
 		
@@ -72,6 +73,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", fieldofficer.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/fieldofficer/"+ fieldofficer.getId() +"/'>" +
 							fieldofficer.getFieldOfficerName() + "</a>",
 							"dashboard/fieldofficer/"+ fieldofficer.getId() +"/",

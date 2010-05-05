@@ -14,6 +14,7 @@ import java.util.List;
 public class RegionsTemplate extends BaseTemplate {
 	public RegionsTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new RegionsData()).getNewData());
 	}
 	
 	@Override
@@ -24,10 +25,10 @@ public class RegionsTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Regions addRegionServlet = new Regions(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new RegionsData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Regions saveRegion = new Regions(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, regionsListHtml, regionsAddHtml, addDataToElementID);
@@ -63,6 +64,7 @@ public class RegionsTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", region.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/region/" + region.getId() + "/'>" +
 							region.getRegionName() + "</a>",
 							"dashboard/region/" + region.getId() + "/",

@@ -14,6 +14,7 @@ public class StatesTemplate extends BaseTemplate{
 	
 	public StatesTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new StatesData()).getNewData());
 	}
 	
 	@Override
@@ -24,10 +25,11 @@ public class StatesTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		States addStatesServlet = new States(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
 		Form saveForm = new Form((new StatesData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		States saveState = new States(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -64,6 +66,7 @@ public class StatesTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", state.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/state/" + state.getId() + "/'>" +
 							state.getStateName() + "</a>",
 							"dashboard/state/" + state.getId() + "/",

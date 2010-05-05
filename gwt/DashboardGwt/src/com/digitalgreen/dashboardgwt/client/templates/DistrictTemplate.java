@@ -14,6 +14,7 @@ public class DistrictTemplate extends BaseTemplate{
 	
 	public DistrictTemplate(RequestContext requestContext) {
 		super(requestContext);
+		this.formTemplate = new Form((new DistrictsData()).getNewData());
 	}
 	
 	@Override
@@ -24,10 +25,10 @@ public class DistrictTemplate extends BaseTemplate{
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Districts addDistrictsServlet = new Districts(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		Form saveForm = new Form((new DistrictsData()).getNewData());
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Districts saveDistrict = new Districts(saveRequestContext);
 		
 		// Draw the content of the template depending on the request type (GET/POST)
@@ -64,6 +65,7 @@ public class DistrictTemplate extends BaseTemplate{
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", district.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/district/" + district.getId() +"/'>" +
 							district.getDistrictName() + "</a>",
 							"dashboard/district/" + district.getId() +"/",
