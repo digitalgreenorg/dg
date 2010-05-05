@@ -24,6 +24,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class ScreeningsTemplate extends BaseTemplate {
 	public ScreeningsTemplate(RequestContext requestContext) {
 		super(requestContext);
+		ArrayList personMeetingAttendanceData = new ArrayList();
+		personMeetingAttendanceData.add((new PersonMeetingAttendanceData()).getNewData());
+		this.formTemplate = new Form((new ScreeningsData()).getNewData(),
+				new Object[] {personMeetingAttendanceData});
 	}
 		
 	@Override
@@ -34,15 +38,11 @@ public class ScreeningsTemplate extends BaseTemplate {
 		HashMap args = new HashMap();
 		args.put("action", "add");
 		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
 		Screenings addScreeningServlet = new Screenings(requestContext);
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
-		ArrayList personMeetingAttendanceData = new ArrayList();
-		personMeetingAttendanceData.add((new PersonMeetingAttendanceData()).getNewData());
-		Form saveForm = new Form((new ScreeningsData()).getNewData(),
-				new Object[] {personMeetingAttendanceData});
-		saveRequestContext.setForm(saveForm);
+		saveRequestContext.setForm(this.formTemplate);
 		Screenings saveScreening = new Screenings(saveRequestContext);
-				
 		// Draw the content of the template depending on the request type (GET/POST)
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		//Now add listings
@@ -52,13 +52,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveScreening);
-		
-		/*if(this.getRequestContext().getArgs().get("action").equals("edit")){
-			Window.alert("going to call function");
-			callScreeningFilter(this.getRequestContext().getForm().getQueryString());
-		}*/
-			
+		super.fillDgFormPage(saveScreening);	
 	}
 	
 	public List<Hyperlink> fillListings(){
@@ -83,6 +77,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", screening.getId());
+					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
 							screening.getDate() + "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +

@@ -55,9 +55,9 @@ public class ScreeningsData extends BaseData {
 			super();
 			videoes_screened = new ArrayList();
 			farmer_groups_targeted = new ArrayList();
-			this.addManyToManyRelationship("video", (new ScreeningVideosScreenedData()), 
+			this.addManyToManyRelationship("video", new ScreeningVideosScreenedData(), 
 					"videoes_screened");
-			this.addManyToManyRelationship("persongroups", (new ScreeningFarmerGroupsTargetedData()), 
+			this.addManyToManyRelationship("persongroups", new ScreeningFarmerGroupsTargetedData(), 
 					"farmer_groups_targeted");
 		}
 		
@@ -154,7 +154,9 @@ public class ScreeningsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("date")) {
+			if(key.equals("id")) {
+				this.id = val;
+			} else if(key.equals("date")) {
 				this.date = (String)val;
 			} else if(key.equals("start_time")){
 				this.start_time = (String)val;
@@ -255,6 +257,7 @@ public class ScreeningsData extends BaseData {
 			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueTogether, new ScreeningsData());
 			uniqueDateStartEndTimeLocationVillageId.setError("The Date, Start time, End time, Location, and Village are already in the system.  Please make sure they are unique.");
 			uniqueDateStartEndTimeLocationVillageId.setCheckId(this.getId());
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(dateValidator);
 			validatorList.add(startTimeValidator);
@@ -268,13 +271,11 @@ public class ScreeningsData extends BaseData {
 			validatorList.add(targetAdoptionsValidator);
 			validatorList.add(farmerGroupValidator);
 			validatorList.add(uniqueDateStartEndTimeLocationVillageId);
-			
 			return this.executeValidators(validatorList);
 		}
 		
 		@Override
 		public void save() {
-			
 			ScreeningsData screeningsDataDbApis = new ScreeningsData();			
 			this.id = screeningsDataDbApis.autoInsert(this.id, 
 					this.date, 
@@ -480,10 +481,12 @@ public class ScreeningsData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + ScreeningsData.saveScreeningOnlineURL, this.form.getQueryString());
 		}
 		else{
-			this.save();
-			return true;
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
 		}
-		return null;
+		return false;
 	}
 	
 	public Object postPageData(String id) {
