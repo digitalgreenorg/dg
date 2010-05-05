@@ -12,8 +12,10 @@ public class Schema {
 			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
 			BaseData.getDb().execute(RegionsData.createTable);
+			Window.alert("here1");
 			BaseData.getDb().execute(EquipmentHoldersData.createTable);
 			BaseData.getDb().execute(ReviewersData.createTable);
+			Window.alert("here2");
 			BaseData.getDb().execute(DevelopmentManagersData.createTable);
 			BaseData.getDb().execute(StatesData.createTable);
 			BaseData.getDb().execute(PartnersData.createTable);

@@ -73,58 +73,63 @@ function hideStatus() {
 
 var screening_page = {
 init :function() {
-	alert('function is called');
 	$('body').append('<div id="box"></div><div id="screen"></div>');
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
 	});
+
+	var w  = window.location.href.split('/')
+	var id = w[w.length-2]
 	
-	
-	vil_id = $("#id_village").val()
-	var pg_selected = $("#id_farmer_groups_targeted").val() || [];
-	
-	if(vil_id>0 && pg_selected>0) {
-		showStatus("Intializing the page. Please wait.");
-		alert('inside edit');
-		//Case when village is already entered on page load
+	if(id > 0) {
 		is_edit = true;		
-		var w  = window.location.href.split('/')
-		var id = w[w.length-2]
+		vil_id = $("#id_village").val()
+		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
 		
-		$.ajax({ type: "GET", 
-				dataType: 'html',
-				url: "/dashboard/getattendance/"+id+"/", 
-				success: function(obj) {		
-					$('div.inline-group div.tabular').html('')
-					$('div.inline-group div.tabular').append(obj)
+		if(vil_id>0 && pg_selected.length >0) {
+		//Case when village is already entered on page load
+			showStatus("Intializing the page. Please wait.");
+			
+			// Get the person meeting attendance data, requires the screening id.
+			$.ajax({ type: "GET", 
+					dataType: 'html',
+					url: "/dashboard/getattendance/"+id+"/", 
+					success: function(obj) {		
+						$('div.inline-group div.tabular').html('')
+						$('div.inline-group div.tabular').append(obj)
 					
-					$.ajax({ type: "GET", 
-						dataType: 'json',
-						url: "/feeds/person_pract/", 
-						data:{vil_id:vil_id,mode:2},
-						success: function(obj) {		
-							//storing practice_list			
-							template = (template).replace(/--prac_list--/g, obj.prac_list);
-							_prac_list = obj.prac_list;
+						// Set the practice and person list for the "add new row"
+						$.ajax({ type: "GET", 
+							dataType: 'json',
+							url: "/feeds/person_pract/", 
+							data:{vil_id:vil_id,mode:2},
+							success: function(obj) {		
+								//storing practice_list			
+								template = (template).replace(/--prac_list--/g, obj.prac_list);
+								_prac_list = obj.prac_list;
 				
-							//For "Add new Row" template, replacing ther person list of block of the village
-							_new_template = (template).replace(/--per_list--/g, obj.per_list);			
-							initialize_add_screening();
-							hideStatus();
-						}
-					});
-					
-					$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
-				}
-		});
-		
+								//For "Add new Row" template, replacing ther person list of block of the village
+								_new_template = (template).replace(/--per_list--/g, obj.per_list);			
+								initialize_add_screening();
+								hideStatus();
+							}
+						});
+						//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+					}
+			});
+		}
 	}
 	else {
-		alert('else');
 		is_edit = false;
-		$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
+		
+		// Case, when the add form has some validation error and the person group is selected.
+		if(pg_selected.length >0) {
+			filter_person()
+		}
+		//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 	}
-	
+	$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 	
 }
 };
@@ -162,13 +167,11 @@ function initialize_add_screening() {
 	
 	tabu = $('div.inline-group div.tabular');
 	table = tabu.find('table');
-	alert('here1');
 	// Hide initial deleted rows
 	table.find('td.delete input:checkbox:checked').parent('td').parent('tr').addClass('deleted_row').hide();
 	
 	// "Add"-button in bottom of inline for adding new rows
 	tabu.find('fieldset').after('<a class="add" href="#">' + add_link_html + '</a>');
-	alert('here2');
 	tabu.find('a.add').click(function(){
 	   table.append(_new_template);
     	
@@ -179,13 +182,11 @@ function initialize_add_screening() {
 	    // Place for special code to re-enable javascript widgets after clone (e.g. an ajax-autocomplete field)
 	    // Fictive example: new_item.find('.autocomplete').each(function() { $(this).triggerHandler('autocomplete'); });
 	}).removeAttr('href').css('cursor', 'pointer');
-	alert('here3');
 	// "Delete"-buttons for each row that replaces the default checkbox 
 	table.find('tr:not(.add_template) td.delete').each(
 		function() {
 		    create_delete_button($(this));
 	});  
-	alert('here4');
 }
 
 // Function for creating fancy delete buttons
@@ -296,31 +297,117 @@ function update_id_fields(row, new_position)
     // Are there other element types...? Add here.
 }
 
-//Function called on Person Selection
-function filter_person() {	
-	showStatus("Loading persons..");
-	//Get the Value of 'Initial-forms' and Person Group selected.
-	grps = $('#id_farmer_groups_targeted').val();
-	tabu = $('div.inline-group div.tabular');
-	table = tabu.find('table');
-	init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
-	
-	$.ajax({ type: "GET", 
-		dataType: 'json',
-		url: "/get/person/", 
-		data:{groups:grps,},
-		success: function(obj) {		
-			//For "Add new Row" template, replacing ther person list of block of the village
-			template = (template).replace(/--per_list--/g, obj.per_list);			
-			initialize_add_screening();
+//Function called on Person Group Selection
+function filter_person() {
+	var grps = $("#id_farmer_groups_targeted").val() || [];
+	var db = google.gears.factory.create('beta.database');
+	db.open('digitalgreen');
+	var rs = db.execute('select u.app_status from user u');
+	//this will check for online/offline
+	alert('grps.length = ' + grps.length)
+	if(rs.field(0) == 0 && grps.length > 0 ) {
+		
+		var table = $('div.inline-group div.tabular').find('table');						
+ 		table.append('<tbody></tbody>');
+		
+		var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P");
+		var prac_options = ['<option value="" selected="selected">---------</option>'];
+		while(prac.isValidRow()) {
+			prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
+			prac.next();
 		}
-	});	
+		
+		var off_template  = '<tr class="row1"> \
+		<td class="delete"></td> \
+		<td class="original"> \
+			  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id"> \
+			  <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening"> \
+		</td> \
+		<td class="person"> \
+			<select id="id_personmeetingattendance_set-0-person" name="personmeetingattendance_set-0-person"> \
+				--per_list-- \
+			</select> \
+		</td> \
+		<td class="expressed_interest_practice"> \
+			<select id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice"> \
+			--prac_list-- \
+			</select> \
+		</td> \
+		<td class="expressed_interest"> \
+			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-0-expressed_interest"> \
+		</td> \
+		<td class="expressed_adoption_practice"> \
+			<select id="id_personmeetingattendance_set-0-expressed_adoption_practice" name="personmeetingattendance_set-0-expressed_adoption_practice"> \
+				--prac_list-- \
+			</select> \
+		</td> \
+		<td class="expressed_adoption"> \
+			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-0-expressed_adoption"> \
+		</td> \
+		<td class="expressed_question_practice"> \
+			<select id="id_personmeetingattendance_set-0-expressed_question_practice" name="personmeetingattendance_set-0-expressed_question_practice"> \
+				--prac_list-- \
+				</select> \
+		</td> \
+		<td class="expressed_question"> \
+			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question"> \
+		</td> \
+		</tr>';
 	
-	$.ajax({ type: "GET", 
-		dataType: 'json',
-		url: "/feeds/persons/", 
-		data:{groups:grps, init:init_form,mode:1},
-		success: function(obj){
+		off_template = (off_template).replace(/--prac_list--/g, prac_options.join('\n'));
+		
+		alert('grps = ' + grps)
+		var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
+		alert('person = ' + persons)
+		var tot_form = 0;
+		while (persons.isValidRow()) {
+				var per = '<option value="'+persons.field(0)+'">'+persons.field(1)+'</option>'
+				var row = (off_template).replace(/--per_list--/g, per);
+				table.find('tbody').append(row);
+				tot_form += 1;
+				persons.next();
+		}
+		table.find('tr:not(.add_template) td.delete').each(
+		function() {
+		    create_delete_button($(this));
+		});
+		
+		update_positions(table, true);
+	 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
+		rs.close();
+		prac.close();
+		persons.close();
+		db.close();
+
+	}	
+	else {
+		showStatus("Loading persons..");
+		//Get the Value of 'Initial-forms' and Person Group selected.
+		grps = $('#id_farmer_groups_targeted').val();
+		tabu = $('div.inline-group div.tabular');
+		table = tabu.find('table');
+		init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
+	
+		// Get all the person of the block to which the group belongs.
+		// This person list will be used for "add-new row" template
+		$.ajax({ type: "GET", 
+			dataType: 'json',
+			url: "/get/person/", 
+			data:{groups:grps,},
+			success: function(obj) {		
+				//For "Add new Row" template, replacing ther person list of block of the village
+				template = (template).replace(/--per_list--/g, obj.per_list);			
+				initialize_add_screening();
+			}
+		});	
+	
+		// Get the list of the person belonging to the selected person group
+		// Also get the list of the practices for "add new row" template
+		$.ajax({ type: "GET", 
+			dataType: 'json',
+			url: "/feeds/persons/modified/", 
+			data:{groups:grps, init:init_form,mode:1},
+			success: function(obj){
 				if(obj.html=='Error') {
 					alert('Sorry, some error Occured. Please notify Systems Team.');
 					return;
@@ -346,6 +433,7 @@ function filter_person() {
 			  	//Set Total forms
 			 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
 			 	hideStatus();
-		}
-	});
+			}
+		});
+	}
 }

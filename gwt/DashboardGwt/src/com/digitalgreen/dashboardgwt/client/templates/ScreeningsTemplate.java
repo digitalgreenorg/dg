@@ -83,7 +83,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", screening.getId());
-					links.add(this.createHyperlink("<a href='dashboard/screening/"+ screening.getId() +"/'>" +
+					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
 							screening.getDate() + "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ screening.getId() + "' name='_selected_action' /></td>" +

@@ -254,7 +254,7 @@ public class ScreeningsData extends BaseData {
 			
 			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueTogether, new ScreeningsData());
 			uniqueDateStartEndTimeLocationVillageId.setError("The Date, Start time, End time, Location, and Village are already in the system.  Please make sure they are unique.");
-			
+			uniqueDateStartEndTimeLocationVillageId.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(dateValidator);
 			validatorList.add(startTimeValidator);
@@ -304,7 +304,7 @@ public class ScreeningsData extends BaseData {
 												"DATE DATE  NOT NULL ," +
 												"START_TIME TIME  NOT NULL ," +
 												"END_TIME TIME  NOT NULL ," +
-												"LOCATION VARCHAR(200)  NOT NULL ," +
+												"LOCATION VARCHAR(200) NULL," +
 												"TARGET_PERSON_ATTENDANCE INT  NULL DEFAULT NULL," +
 												"TARGET_AUDIENCE_INTEREST INT  NULL DEFAULT NULL," +
 												"TARGET_ADOPTIONS INT  NULL DEFAULT NULL," +
@@ -529,7 +529,7 @@ public class ScreeningsData extends BaseData {
 		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
 		sbHtml.append("<select name=\"village\" id=\"id_village\">" + 
-						"<option value='' selected='selected'>---------</option>");
+						"<option value=''>---------</option>");
 		for(int i = 0; i < villages.size(); i++){
 			village = (VillagesData.Data)villages.get(i);
 			sbHtml.append("<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>");
@@ -540,7 +540,7 @@ public class ScreeningsData extends BaseData {
 		List animators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data animator;
 		sbHtml.append("<select name=\"animator\" id=\"id_animator\">" + 
-						"<option value='' selected='selected'>---------</option>");
+						"<option value='' >---------</option>");
 		for(int i = 0; i < animators.size(); i++){
 			animator = (AnimatorsData.Data)animators.get(i);
 			sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>");
@@ -551,7 +551,7 @@ public class ScreeningsData extends BaseData {
 		List videos = videoData.getAllVideosOffline();
 		VideosData.Data video;
 		sbHtml.append("<select name=\"videoes_screened\" id=\"id_videoes_screened\">" + 
-						"<option value='' selected='selected'>---------</option>");
+						"<option value='' >---------</option>");
 		for(int i = 0; i < videos.size(); i++){
 			video = (VideosData.Data)videos.get(i);
 			sbHtml.append("<option value = \"" + video.getId() +"\">" + video.getTitle() + "</option>");
@@ -562,7 +562,7 @@ public class ScreeningsData extends BaseData {
 		List fieldOfficers = fieldOfficerData.getAllFieldOfficersOffline();
 		FieldOfficersData.Data fieldOfficer;
 		sbHtml.append("<select name=\"fieldofficer\" id=\"id_fieldofficer\">" + 
-						"<option value='' selected='selected'>---------</option>");
+						"<option value=''>---------</option>");
 		for(int i = 0; i < fieldOfficers.size(); i++){
 			fieldOfficer = (FieldOfficersData.Data)fieldOfficers.get(i);
 			sbHtml.append("<option value = \"" + fieldOfficer.getId() +"\">" + fieldOfficer.getFieldOfficerName() + "</option>");
@@ -573,7 +573,7 @@ public class ScreeningsData extends BaseData {
 		List personGroups = personGroupData.getAllPersonGroupsOffline();
 		PersonGroupsData.Data personGroup;
 		sbHtml.append("<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
-						"<option value='' selected='selected'>---------</option>");
+						"<option value=''>---------</option>");
 		for(int i = 0; i < personGroups.size(); i++){
 			personGroup = (PersonGroupsData.Data)personGroups.get(i);
 			sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>");

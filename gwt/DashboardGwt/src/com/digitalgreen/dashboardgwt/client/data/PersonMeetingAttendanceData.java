@@ -192,11 +192,11 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"screening_id INT  NOT NULL DEFAULT 0," +
 												"person_id INT  NOT NULL DEFAULT 0," +
 												"expressed_interest_practice_id INT  NULL DEFAULT NULL," +
-												"EXPRESSED_INTEREST TEXT  NOT NULL ," +
+												"EXPRESSED_INTEREST TEXT NULL DEFAULT NULL ," +
 												"expressed_adoption_practice_id INT  NULL DEFAULT NULL," +
-												"EXPRESSED_ADOPTION TEXT  NOT NULL ," +
+												"EXPRESSED_ADOPTION TEXT NULL DEFAULT NULL," +
 												"expressed_question_practice_id INT  NULL DEFAULT NULL," +
-												"EXPRESSED_QUESTION TEXT  NOT NULL, " +
+												"EXPRESSED_QUESTION TEXT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(expressed_interest_practice_id) REFERENCES practices(id), " +

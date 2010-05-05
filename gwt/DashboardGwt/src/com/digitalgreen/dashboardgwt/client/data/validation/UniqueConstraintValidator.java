@@ -33,7 +33,9 @@ public class UniqueConstraintValidator extends BaseValidator {
 			}
 		}
 		query += ";";
+		Window.alert("SQL query = " + query);
 		this.baseData.select(query);
+		Window.alert("after running select");
 		if (this.baseData.getResultSet().isValidRow()) {
 			try {
 				if(this.checkId != null && 

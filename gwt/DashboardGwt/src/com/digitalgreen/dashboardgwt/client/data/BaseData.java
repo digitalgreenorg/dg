@@ -344,12 +344,18 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	protected void save() {
 		try {
+			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
+			BaseData.dbClose();
 			this.form.save();
 			this.form.getFormQueue().save();
+			BaseData.dbOpen();
 			BaseData.dbCommit();
+			BaseData.dbClose();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			BaseData.dbClose();
 		}
 	}
 	
@@ -433,15 +439,15 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 
 	public static void dbStartTransaction() throws DatabaseException {
-		BaseData.dbOpen();
+		//BaseData.dbOpen();
 		db.execute("BEGIN TRANSACTION;");
-		BaseData.dbClose();
+		//BaseData.dbClose();
 	}
 	
 	public static void dbCommit() throws DatabaseException {
-		BaseData.dbOpen();
+		//BaseData.dbOpen();
 		db.execute("COMMIT;");
-		BaseData.dbClose();
+		//BaseData.dbClose();
 	}
 	
 	public void create(String createSql, String ...args){
