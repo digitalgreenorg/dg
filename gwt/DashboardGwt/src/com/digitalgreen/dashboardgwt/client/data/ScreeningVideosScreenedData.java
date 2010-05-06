@@ -65,7 +65,9 @@ public class ScreeningVideosScreenedData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("screening")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
 				this.screening.id = val;
@@ -98,6 +100,12 @@ public class ScreeningVideosScreenedData extends BaseData {
 					this.video.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("screening", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			ScreeningVideosScreenedData screeningVideosScreenedData = new ScreeningVideosScreenedData();
+			return this.rowToQueryString(screeningVideosScreenedData.getTableName(), screeningVideosScreenedData.getFields(), "id", id, "");
 		}
 		
 		@Override

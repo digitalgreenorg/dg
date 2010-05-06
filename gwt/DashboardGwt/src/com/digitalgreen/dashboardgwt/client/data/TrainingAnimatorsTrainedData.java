@@ -64,7 +64,9 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("training")){
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("training")){
 				TrainingsData training1 = new TrainingsData();
 				this.training = training1.getNewData();
 				this.training.id = val;
@@ -87,6 +89,12 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 					this.animator.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("training", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			TrainingAnimatorsTrainedData trainingAnimatorsTrainedData = new TrainingAnimatorsTrainedData();
+			return this.rowToQueryString(trainingAnimatorsTrainedData.getTableName(), trainingAnimatorsTrainedData.getFields(), "id", id, "");
 		}
 		
 		@Override

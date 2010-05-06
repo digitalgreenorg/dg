@@ -75,7 +75,9 @@ public class ReviewersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("content_type")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("content_type")) {
 				this.content_type = (String)val;
 			} else if(key.equals("object_id")) {
 				this.object_id = (String)val;
@@ -92,6 +94,12 @@ public class ReviewersData extends BaseData {
 					this.content_type, 
 					this.object_id);
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			ReviewersData reviewersData = new ReviewersData();
+			return this.rowToQueryString(reviewersData.getTableName(), reviewersData.getFields(), "id", id, "");
 		}
 		
 		@Override

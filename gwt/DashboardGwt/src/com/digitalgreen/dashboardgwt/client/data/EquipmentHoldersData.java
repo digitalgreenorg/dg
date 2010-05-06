@@ -75,7 +75,9 @@ public class EquipmentHoldersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("content_type")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("content_type")) {
 				this.content_type = (String)val;
 			} else if(key.equals("object_id")) {
 				this.object_id = (String)val;
@@ -93,6 +95,13 @@ public class EquipmentHoldersData extends BaseData {
 					this.object_id);
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			EquipmentHoldersData equipmentHoldersData = new EquipmentHoldersData();
+			return this.rowToQueryString(equipmentHoldersData.getTableName(), equipmentHoldersData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {

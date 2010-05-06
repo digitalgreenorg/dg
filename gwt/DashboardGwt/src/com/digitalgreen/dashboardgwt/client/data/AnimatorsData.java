@@ -563,15 +563,7 @@ public class AnimatorsData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveAnimatorOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
+
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		PartnersData partnerData = new PartnersData();
@@ -621,6 +613,17 @@ public class AnimatorsData extends BaseData {
 			this.get(RequestContext.SERVER_HOST
 					+ AnimatorsData.saveAnimatorOnlineURL);
 		} else {
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveAnimatorOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

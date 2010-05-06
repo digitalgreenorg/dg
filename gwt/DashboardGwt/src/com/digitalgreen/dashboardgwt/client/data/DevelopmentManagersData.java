@@ -136,7 +136,9 @@ public class DevelopmentManagersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("name")) {
 				this.name = (String)val;
 			} else if(key.equals("age")) {
 				this.age = (String)val;
@@ -214,7 +216,14 @@ public class DevelopmentManagersData extends BaseData {
 						this.start_day,
 						this.salary);
 			this.addNameValueToQueryString("id", this.id);
-			}
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
+			return this.rowToQueryString(developmentManagersData.getTableName(), developmentManagersData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {
@@ -424,16 +433,6 @@ public class DevelopmentManagersData extends BaseData {
 		return false;
 	}	
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveDevelopmentManagerOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();
@@ -455,6 +454,17 @@ public class DevelopmentManagersData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + DevelopmentManagersData.saveDevelopmentManagerOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveDevelopmentManagerOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

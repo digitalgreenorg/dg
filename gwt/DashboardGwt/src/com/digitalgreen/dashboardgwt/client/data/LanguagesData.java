@@ -57,7 +57,9 @@ public class LanguagesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("language_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("language_name")) {
 				this.language_name = (String)val;
 			}
 			else {
@@ -89,6 +91,13 @@ public class LanguagesData extends BaseData {
 			this.id = languagesDataDbApis.autoInsert(this.id, this.language_name);
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			LanguagesData languagesData = new LanguagesData();
+			return this.rowToQueryString(languagesData.getTableName(), languagesData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {
@@ -266,21 +275,22 @@ public class LanguagesData extends BaseData {
 		return false;
 	}	
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL);
 		}
 		else{
+			return "No add data required";
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveLanguageOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return "No add data required";
 		}
 		return false;

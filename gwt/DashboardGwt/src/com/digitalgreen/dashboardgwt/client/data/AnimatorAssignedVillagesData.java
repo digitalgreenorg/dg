@@ -75,7 +75,9 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("animator")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("animator")) {
 				AnimatorsData animator1 = new AnimatorsData();
 				this.animator = animator1.getNewData();
 				this.animator.id = val;
@@ -139,6 +141,19 @@ public class AnimatorAssignedVillagesData extends BaseData{
 					this.start_date);
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("animator", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
+			return this.rowToQueryString(animatorAssignedVillagesData.getTableName(), animatorAssignedVillagesData.getFields(), "id", id, "");
+		}
+		
+		@Override
+		public String toInlineQueryString(String id) {
+			AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
+			return rowToQueryString(animatorAssignedVillagesData.getTableName(), animatorAssignedVillagesData.getFields(), 
+					"animator_id", id, this.COLLECTION_PREFIX + "_set");
 		}
 		
 		@Override
@@ -333,17 +348,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 		return false;
 	}
-	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveAnimatorAssignedVillageOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
+		
 	public String retrieveDataAndConvertResultIntoHtml() {
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAnimatorsListingOffline();
@@ -375,6 +380,17 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.saveAnimatorAssignedVillageOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveAnimatorAssignedVillageOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

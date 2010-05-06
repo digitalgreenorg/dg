@@ -106,7 +106,9 @@ public class EquipmentsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("equipment_type")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("equipment_type")) {
 				this.equipment_type = (String)val;
 			} else if(key.equals("model_no")) {
 				this.model_no = (String)val;
@@ -165,6 +167,13 @@ public class EquipmentsData extends BaseData {
 						this.equipmentholder.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			EquipmentsData equipmentsData = new EquipmentsData();
+			return this.rowToQueryString(equipmentsData.getTableName(), equipmentsData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {
@@ -363,16 +372,6 @@ public class EquipmentsData extends BaseData {
 		return false;
 	}	
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveEquipmentOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		EquipmentHoldersData equipmentHoldersData = new EquipmentHoldersData();
 		List equipmentHolders = equipmentHoldersData.getAllEquipmentHoldersOffline();
@@ -398,7 +397,17 @@ public class EquipmentsData extends BaseData {
 		}
 		return false;
 	}
-
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveEquipmentOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
 	
 
 }

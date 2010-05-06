@@ -86,7 +86,9 @@ public class FieldOfficersData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("name")){
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("name")){
 				this.name = (String)val;
 			}
 			else if(key.equals("age")){
@@ -151,6 +153,13 @@ public class FieldOfficersData extends BaseData {
 						this.address);
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			FieldOfficersData fieldOfficersData = new FieldOfficersData();
+			return this.rowToQueryString(fieldOfficersData.getTableName(), fieldOfficersData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {
@@ -347,16 +356,6 @@ public class FieldOfficersData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL);
@@ -366,4 +365,16 @@ public class FieldOfficersData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveFieldOfficerOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return  "No add data required";
+		}
+		return false;
+	}
+	
 }

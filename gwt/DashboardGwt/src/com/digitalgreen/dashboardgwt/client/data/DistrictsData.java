@@ -97,7 +97,9 @@ public class DistrictsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("district_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("district_name")) {
 				this.district_name = (String)val;
 			} else if(key.equals("start_date")){
 				this.start_date = (String)val;
@@ -165,6 +167,13 @@ public class DistrictsData extends BaseData {
 						this.partner.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			DistrictsData districtsData = new DistrictsData();
+			return this.rowToQueryString(districtsData.getTableName(), districtsData.getFields(), "id", id, "");
+		}
+		
 		
 		@Override
 		public String getTableId() {
@@ -378,17 +387,7 @@ public class DistrictsData extends BaseData {
 		}
 		return false;
 	}
-	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveDistrictOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
+		
 	public String retrieveDataAndConvertResultIntoHtml() {
 		StatesData stateData = new StatesData();
 		List states = stateData.getStatesListingOffline();
@@ -430,6 +429,17 @@ public class DistrictsData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + DistrictsData.saveDistrictOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveDistrictOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

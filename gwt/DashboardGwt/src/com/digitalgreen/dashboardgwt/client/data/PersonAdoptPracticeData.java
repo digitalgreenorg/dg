@@ -102,7 +102,9 @@ public class Data extends BaseData.Data {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("person")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("person")) {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
 				this.person.id = val;
@@ -174,6 +176,19 @@ public class Data extends BaseData.Data {
 					this.quantity_unit);
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("person", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			PersonAdoptPracticeData personAdoptPracticeData = new PersonAdoptPracticeData();
+			return this.rowToQueryString(personAdoptPracticeData.getTableName(), personAdoptPracticeData.getFields(), "id", id, "");
+		}
+		
+		@Override
+		public String toInlineQueryString(String id) {
+			PersonAdoptPracticeData personAdoptPracticeData = new PersonAdoptPracticeData();
+			return rowToQueryString(personAdoptPracticeData.getTableName(), personAdoptPracticeData.getFields(), 
+					"person_id", id, this.COLLECTION_PREFIX + "_set");
 		}
 		
 		@Override

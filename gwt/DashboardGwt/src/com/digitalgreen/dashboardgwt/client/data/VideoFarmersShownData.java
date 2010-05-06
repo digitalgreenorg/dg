@@ -63,7 +63,9 @@ public class VideoFarmersShownData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("video")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("video")) {
 				VideosData video = new VideosData();
 				this.video = video.getNewData();
 				this.video.id = val;
@@ -94,6 +96,12 @@ public class VideoFarmersShownData extends BaseData {
 						this.person.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("video", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			VideoFarmersShownData videoFarmersShownData = new VideoFarmersShownData();
+			return this.rowToQueryString(videoFarmersShownData.getTableName(), videoFarmersShownData.getFields(), "id", id, "");
 		}
 		
 		@Override

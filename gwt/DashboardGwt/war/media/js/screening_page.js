@@ -57,7 +57,7 @@ _new_template = '';
 //is_edit: Flag if the page has village present on load
 //is_inited: Flag if the page has been initialized once using init_add_screening() function
 var is_edit,is_inited = false;
-
+var app_status;
 
 function  showStatus(msg){
 	$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
@@ -82,16 +82,38 @@ init :function() {
 	var id = w[w.length-2]
 	
 	if(id > 0) {
-		is_edit = true;		
-		vil_id = $("#id_village").val()
-		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
+		try {
+			var db = google.gears.factory.create('beta.database');
+			db.open('digitalgreen');
+			var rs = db.execute('select u.app_status from user u');
+			if(rs.field(0) == 0 ) {
+				app_status = 0
+				// Offline case
+			}
+			else if (rs.field(0) == 1) {
+				app_status = 1
+				// Online case
+			}
+			rs.close();
+			db.close();
+		}
+		catch(err) {
+			// If an exception is caught, assume online case
+			app_status = 1;
+			db.close();
+		}
 		
-		if(vil_id>0 && pg_selected.length >0) {
-		//Case when village is already entered on page load
-			showStatus("Intializing the page. Please wait.");
+		if (app_status == 1){						
+			is_edit = true;		
+			vil_id = $("#id_village").val()
+			var pg_selected = $("#id_farmer_groups_targeted").val() || [];
+		
+			if(vil_id>0 && pg_selected.length >0) {
+			//Case when village is already entered on page load
+				showStatus("Intializing the page. Please wait.");
 			
-			// Get the person meeting attendance data, requires the screening id.
-			$.ajax({ type: "GET", 
+				// Get the person meeting attendance data, requires the screening id.
+				$.ajax({ type: "GET", 
 					dataType: 'html',
 					url: "/dashboard/getattendance/"+id+"/", 
 					success: function(obj) {		
@@ -116,7 +138,32 @@ init :function() {
 						});
 						//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 					}
-			});
+				});
+			}
+		}
+		else if (app_status ==0){
+			// Code for offline edit case
+			// 1) Retrive the rows of person meeting attendance
+			// 2) Retrive the person and practice fields from the local database 
+			// 3) Add new row template to the html
+				showStatus("Intializing the page. Please wait.");
+				$("#id_farmer_groups_targeted").attr('disabled', 'true');
+				var db = google.gears.factory.create('beta.database');
+				db.open('digitalgreen');
+				
+				var table = $('div.inline-group div.tabular').find('table');						
+				table.append('<tbody></tbody>');
+				
+				var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
+				var prac_options = [];
+				while(prac.isValidRow()) {
+					prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
+					prac.next();
+				}
+				// Add practice to add new row template
+				template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
+				
+				hideStatus();
 		}
 	}
 	else {
@@ -300,69 +347,40 @@ function update_id_fields(row, new_position)
 //Function called on Person Group Selection
 function filter_person() {
 	var grps = $("#id_farmer_groups_targeted").val() || [];
-	var db = google.gears.factory.create('beta.database');
-	db.open('digitalgreen');
-	var rs = db.execute('select u.app_status from user u');
-	//this will check for online/offline
-	alert('grps.length = ' + grps.length)
-	if(rs.field(0) == 0 && grps.length > 0 ) {
-		
+	if(app_status == 0 && grps.length > 0 ) {
+		showStatus("Loading persons..");
 		var table = $('div.inline-group div.tabular').find('table');						
  		table.append('<tbody></tbody>');
 		
-		var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P");
-		var prac_options = ['<option value="" selected="selected">---------</option>'];
+		var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
+		var prac_options = [];
 		while(prac.isValidRow()) {
 			prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
 			prac.next();
 		}
 		
-		var off_template  = '<tr class="row1"> \
-		<td class="delete"></td> \
-		<td class="original"> \
-			  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id"> \
-			  <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening"> \
-		</td> \
-		<td class="person"> \
-			<select id="id_personmeetingattendance_set-0-person" name="personmeetingattendance_set-0-person"> \
-				--per_list-- \
-			</select> \
-		</td> \
-		<td class="expressed_interest_practice"> \
-			<select id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice"> \
-			--prac_list-- \
-			</select> \
-		</td> \
-		<td class="expressed_interest"> \
-			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-0-expressed_interest"> \
-		</td> \
-		<td class="expressed_adoption_practice"> \
-			<select id="id_personmeetingattendance_set-0-expressed_adoption_practice" name="personmeetingattendance_set-0-expressed_adoption_practice"> \
-				--prac_list-- \
-			</select> \
-		</td> \
-		<td class="expressed_adoption"> \
-			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-0-expressed_adoption"> \
-		</td> \
-		<td class="expressed_question_practice"> \
-			<select id="id_personmeetingattendance_set-0-expressed_question_practice" name="personmeetingattendance_set-0-expressed_question_practice"> \
-				--prac_list-- \
-				</select> \
-		</td> \
-		<td class="expressed_question"> \
-			<input type="text" maxlength="500" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question"> \
-		</td> \
-		</tr>';
-	
-		off_template = (off_template).replace(/--prac_list--/g, prac_options.join('\n'));
+		// Add practice to add new row template
+		template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
 		
-		alert('grps = ' + grps)
+		var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
+		var person_options = [];
+		while(persons_list_for_add_new_row.isValidRow()) {
+			person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +'(' + persons_list_for_add_new_row.field(2) + ')'+'</option>');
+			persons_list_for_add_new_row.next();
+		}
+
+		// Add person to add new row template 
+		_new_template = (template).replace(/--per_list--/g, person_options.join('\n'));
+		
+		// Add "add new row" button
+		initialize_add_screening();
+		
 		var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
-		alert('person = ' + persons)
 		var tot_form = 0;
 		while (persons.isValidRow()) {
-				var per = '<option value="'+persons.field(0)+'">'+persons.field(1)+'</option>'
-				var row = (off_template).replace(/--per_list--/g, per);
+				var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
+				//var row = (off_template).replace(/--per_list--/g, per);
+				var row = (template).replace(/--per_list--/g, per);
 				table.find('tbody').append(row);
 				tot_form += 1;
 				persons.next();
@@ -371,14 +389,13 @@ function filter_person() {
 		function() {
 		    create_delete_button($(this));
 		});
-		
 		update_positions(table, true);
 	 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
 		rs.close();
 		prac.close();
 		persons.close();
 		db.close();
-
+		hideStatus();
 	}	
 	else {
 		showStatus("Loading persons..");
@@ -398,7 +415,7 @@ function filter_person() {
 				//For "Add new Row" template, replacing ther person list of block of the village
 				template = (template).replace(/--per_list--/g, obj.per_list);			
 				initialize_add_screening();
-			}
+			} 
 		});	
 	
 		// Get the list of the person belonging to the selected person group

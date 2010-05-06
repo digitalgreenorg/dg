@@ -67,7 +67,9 @@ public class RegionsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("region_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("region_name")) {
 				this.region_name = (String)val;
 			} else if(key.equals("start_date")) {
 				this.start_date = (String)val;
@@ -105,6 +107,12 @@ public class RegionsData extends BaseData {
 					this.start_date);
 			this.addNameValueToQueryString("id", this.id);
 		}		
+		
+		@Override
+		public String toQueryString(String id) {
+			RegionsData regionsData = new RegionsData();
+			return this.rowToQueryString(regionsData.getTableName(), regionsData.getFields(), "id", id, "");
+		}
 		
 		@Override
 		public String getTableId() {
@@ -269,19 +277,9 @@ public class RegionsData extends BaseData {
 		return false;
 	}
 	
-	public Object getPageData(){
+	public Object getListPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionOnlineURL);
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL + id + "/" );
 		}
 		else{
 			return true;
@@ -294,6 +292,17 @@ public class RegionsData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL);
 		}
 		else{
+			return "No add data required";
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveRegionOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return "No add data required";
 		}
 		return false;

@@ -121,14 +121,16 @@ public class Regions extends BaseServlet {
 							}	
 						}
 					});
-					regionData.apply(regionData.getPageData());
+					regionData.apply(regionData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
 								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
-									getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+									}
 								}
 								getServlet().getRequestContext().getArgs().put("addPageData", addData);
 								getServlet().fillTemplate(new RegionsTemplate(getServlet().getRequestContext()));

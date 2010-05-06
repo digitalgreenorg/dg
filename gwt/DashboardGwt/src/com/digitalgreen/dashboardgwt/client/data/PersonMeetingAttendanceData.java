@@ -115,7 +115,9 @@ public class PersonMeetingAttendanceData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("screening")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("screening")) {
 				ScreeningsData screening = new ScreeningsData();
 				this.screening = screening.getNewData();
 				this.screening.id = val;
@@ -176,6 +178,19 @@ public class PersonMeetingAttendanceData extends BaseData {
 						this.expressed_question_practice.getId(),this.expressed_question);
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("screening", foreignKey.getId());
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			PersonMeetingAttendanceData personMeetingAttendanceData = new PersonMeetingAttendanceData();
+			return this.rowToQueryString(personMeetingAttendanceData.getTableName(), personMeetingAttendanceData.getFields(), "id", id, "");
+		}
+		
+		@Override
+		public String toInlineQueryString(String id) {
+			PersonMeetingAttendanceData personMeetingAttendanceData = new PersonMeetingAttendanceData();
+			return rowToQueryString(personMeetingAttendanceData.getTableName(), personMeetingAttendanceData.getFields(), 
+					"screening_id", id, this.COLLECTION_PREFIX + "_set");
 		}
 		
 		@Override

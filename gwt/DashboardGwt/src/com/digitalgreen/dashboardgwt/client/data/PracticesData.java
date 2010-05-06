@@ -79,7 +79,9 @@ public class PracticesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val){
 			super.setObjValueFromString(key, val);
-			if(key.equals("practice_name")){
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("practice_name")){
 				this.practice_name = (String)val;
 			}
 			else if(key.equals("seasonality")){
@@ -125,6 +127,12 @@ public class PracticesData extends BaseData {
 					this.seasonality, 
 					this.summary);
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			PracticesData practicesData = new PracticesData();
+			return this.rowToQueryString(practicesData.getTableName(), practicesData.getFields(), "id", id, "");
 		}
 		
 		@Override
@@ -305,16 +313,6 @@ public class PracticesData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.savePracticeOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.savePracticeOnlineURL);
@@ -324,4 +322,16 @@ public class PracticesData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePracticeOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return "No add data required";
+		}
+		return false;
+	}
+	
 }

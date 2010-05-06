@@ -422,15 +422,6 @@ public class PersonGroupsData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.savePersonGroupOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		VillagesData villageData = new VillagesData();
@@ -468,6 +459,17 @@ public class PersonGroupsData extends BaseData {
 			this.get(RequestContext.SERVER_HOST
 					+ PersonGroupsData.savePersonGroupOnlineURL);
 		} else {
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePersonGroupOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

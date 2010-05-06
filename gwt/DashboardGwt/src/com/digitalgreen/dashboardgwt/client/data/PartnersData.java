@@ -114,6 +114,19 @@ public class PartnersData extends BaseData {
 						this.phone_no, 
 						this.address);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			PartnersData partnersData = new PartnersData();
+			return this.rowToQueryString(partnersData.getTableName(), partnersData.getFields(), "id", id, "");
+		}
+		
+		@Override
+		public String getTableId() {
+			PartnersData partnersDataDbApis = new PartnersData();
+			return partnersDataDbApis.tableID;
+		}
+		
 	}
 	
 	public static String tableID = "13";
@@ -296,16 +309,6 @@ public class PartnersData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-	
 	public Object getAddPageData(){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.savePartnerOnlineURL);
@@ -315,4 +318,16 @@ public class PartnersData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return "No add data required";
+		}
+		return false;
+	}
+	
 }

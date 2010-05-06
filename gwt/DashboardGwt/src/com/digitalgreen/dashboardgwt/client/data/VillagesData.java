@@ -370,17 +370,6 @@ public class VillagesData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveVillageOnlineURL + id + "/" );
-		}
-		else {
-			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
-		}
-		return false;
-	}
-
 	public String retrieveDataAndConvertResultIntoHtml(){
 		BlocksData blockData = new BlocksData();
 		List blocks = blockData.getAllBlocksOffline();
@@ -413,6 +402,17 @@ public class VillagesData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + this.saveVillageOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveVillageOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

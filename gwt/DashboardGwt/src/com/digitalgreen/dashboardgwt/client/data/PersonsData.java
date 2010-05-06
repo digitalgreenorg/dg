@@ -169,7 +169,9 @@ public class PersonsData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if (key.equals("person_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if (key.equals("person_name")) {
 				this.person_name = (String) val;
 			} else if (key.equals("father_name")) {
 				this.father_name = (String) val;
@@ -285,6 +287,21 @@ public class PersonsData extends BaseData {
 					foreignKey.getId());
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("persongroup", foreignKey.getId());
+		}
+		
+
+		@Override
+		public String toQueryString(String id) {
+			PersonsData personsData = new PersonsData();
+			return rowToQueryString(personsData.getTableName(), personsData.getFields(), 
+					"id", id, "");
+		}
+
+		@Override
+		public String toInlineQueryString(String id) {
+			PersonsData personsData = new PersonsData();
+			return rowToQueryString(personsData.getTableName(), personsData.getFields(), 
+					"group_id", id, this.COLLECTION_PREFIX + "_set");
 		}
 
 		@Override
@@ -525,17 +542,6 @@ public class PersonsData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.savePersonOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-
-	
 	public String retrieveDataAndConvertResultIntoHtml() {
 		VillagesData villageData = new VillagesData();
 		List villages = villageData.getAllVillagesOffline();
@@ -589,5 +595,17 @@ public class PersonsData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePersonOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+
 
 }

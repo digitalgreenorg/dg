@@ -78,7 +78,9 @@ public class StatesData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {		
 			super.setObjValueFromString(key, val);
-			if(key.equals("state_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("state_name")) {
 				this.state_name = val;
 			} else if(key.equals("region")) {
 				// Have to Create an instance of RegionsData to create an instance of RegionsData.Data -- any better way of doing this??
@@ -122,6 +124,12 @@ public class StatesData extends BaseData {
 			StatesData statesDataDbApis = new StatesData();		
 			this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			StatesData statesData = new StatesData();
+			return this.rowToQueryString(statesData.getTableName(), statesData.getFields(), "id", id, "");
 		}
 		
 		@Override
@@ -303,17 +311,7 @@ public class StatesData extends BaseData {
 		}
 		return false;
 	}	
-	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveStateOnlineURL + id + "/" );
-		}
-		else {
-			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
-		}
-		return false;
-	}
+
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();
@@ -334,6 +332,18 @@ public class StatesData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + StatesData.saveStateOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveStateOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;

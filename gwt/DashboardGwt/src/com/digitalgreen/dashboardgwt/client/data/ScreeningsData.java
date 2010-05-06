@@ -225,7 +225,7 @@ public class ScreeningsData extends BaseData {
 			targetAdoptionsValidator.setError("Please make sure that 'Target adoptions' is a number.");
 			
 			ManyToManyValidator farmerGroupValidator = new ManyToManyValidator(farmer_groups_targeted, false);
-			farmerGroupValidator.setError("Please make sure you add some animators for 'Farmer groups targeted'.");
+			farmerGroupValidator.setError("Please make sure you add some farmer groups for 'Farmer groups targeted'.");
 			
 			ArrayList uniqueDate = new ArrayList();
 			uniqueDate.add("date");
@@ -290,6 +290,12 @@ public class ScreeningsData extends BaseData {
 					this.animator.getId());
 			this.addNameValueToQueryString("id", this.id);
 
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			ScreeningsData screeningsData = new ScreeningsData();
+			return this.rowToQueryString(screeningsData.getTableName(), screeningsData.getFields(), "id", id, "");
 		}
 		
 		@Override
@@ -512,18 +518,6 @@ public class ScreeningsData extends BaseData {
 		return false;	
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveScreeningOnlineURL + id + "/" );
-		}
-		else {
-			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
-		}
-		return false;
-	}
-
-	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		
 		StringBuilder sbHtml = new StringBuilder();
@@ -595,4 +589,17 @@ public class ScreeningsData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveScreeningOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+
+	
 }

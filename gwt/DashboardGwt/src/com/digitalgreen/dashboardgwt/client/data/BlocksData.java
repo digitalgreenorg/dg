@@ -85,7 +85,9 @@ public class BlocksData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if (key.equals("block_name")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if (key.equals("block_name")) {
 				this.block_name = (String) val;
 			} else if (key.equals("start_date")) {
 				this.start_date = (String) val;
@@ -129,6 +131,13 @@ public class BlocksData extends BaseData {
 					this.start_date, this.district.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
+		
+		@Override
+		public String toQueryString(String id) {
+			BlocksData blocksData = new BlocksData();
+			return this.rowToQueryString(blocksData.getTableName(), blocksData.getFields(), "id", id, "");
+		}
+		
 
 		@Override
 		public String getTableId() {
@@ -325,16 +334,6 @@ public class BlocksData extends BaseData {
 		return false;
 	}
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveBlockOnlineURL + id + "/" );
-		}
-		else{
-			return true;
-		}
-		return false;
-	}
-
 	public String retrieveDataAndConvertResultIntoHtml() {
 		DistrictsData districtData = new DistrictsData();
 		List districts = districtData.getAllDistrictsOffline();
@@ -360,4 +359,16 @@ public class BlocksData extends BaseData {
 		}
 		return false;
 	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveBlockOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+
 }

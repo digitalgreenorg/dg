@@ -199,7 +199,9 @@ public class VideosData extends BaseData {
 		@Override
 		public void setObjValueFromString(String key, String val) {
 			super.setObjValueFromString(key, val);
-			if(key.equals("title")) {
+			if(key.equals("id")) {
+				this.id = val;
+			}else if(key.equals("title")) {
 				this.title = (String)val;
 			} else if(key.equals("video_type")){
 				this.video_type = val;
@@ -404,6 +406,12 @@ public class VideosData extends BaseData {
 						this.actors, 
 						this.last_modified);
 			this.addNameValueToQueryString("id", this.id);
+		}
+		
+		@Override
+		public String toQueryString(String id) {
+			VideosData videosData = new VideosData();
+			return this.rowToQueryString(videosData.getTableName(), videosData.getFields(), "id", id, "");
 		}
 		
 		@Override
@@ -672,16 +680,6 @@ public class VideosData extends BaseData {
 		return false;
 	}	
 	
-	public Object getAddPageData(String id){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.saveVideoOnlineURL + id + "/" );
-		}
-		else {
-			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
-		}
-		return false;
-	}
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		LanguagesData languageData = new LanguagesData();
@@ -777,6 +775,17 @@ public class VideosData extends BaseData {
 			this.get(RequestContext.SERVER_HOST + VideosData.saveVideoOnlineURL);
 		}
 		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.saveVideoOnlineURL + id + "/" );
+		}
+		else {
+			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
