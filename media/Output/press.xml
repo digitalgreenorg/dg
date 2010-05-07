@@ -41,7 +41,7 @@
 	<TEAM>
 		<TITLE>Hindustan Times </TITLE>
 		<HEADLINE>'Giving circles' that goes beyond monetary funding  </HEADLINE>
-		<REFERENCE>http://8939424819261502873-a-digitalgreen-org-s-sites.googlegroups.com/a/digitalgreen.org/inside-digital-green/HTarticle.pdf?attachauth=ANoY7cqXWFuJ8uUM8M5jLe5Yg5l5YZ8EQO5wQnM99zI3E9TepxDlZ10ZEYZHLagUz_Azxinc1uHuj_B1T4W1KpM5Uh_pCqAoYHkwccMyHXTjaXwZsRjXQz2XoZZln2n5979K0t6mf9HI9y1uEmXqpSHjW_4amB-8GU0RAWUwT4SPcCtxiZodMPdIxoRpUbGITh-V64p0Oi_rjXBE_Anf402TQyIhMuCslQ%3D%3D&amp;attredirects=0</REFERENCE>
+		<REFERENCE>http://sites.google.com/a/digitalgreen.org/inside-digital-green/IPFPressHighlights.pdf</REFERENCE>
 		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"Philanthropy should then address not just the financial needs, but also the physical, human, social, and technological."</DESC>
@@ -53,7 +53,7 @@
 	<TEAM>
 		<TITLE>Hindustan Times </TITLE>
 		<HEADLINE>Instead of space, he landed on farm land   </HEADLINE>
-		<REFERENCE>http://8939424819261502873-a-digitalgreen-org-s-sites.googlegroups.com/a/digitalgreen.org/inside-digital-green/HTarticle.pdf?attachauth=ANoY7cqXWFuJ8uUM8M5jLe5Yg5l5YZ8EQO5wQnM99zI3E9TepxDlZ10ZEYZHLagUz_Azxinc1uHuj_B1T4W1KpM5Uh_pCqAoYHkwccMyHXTjaXwZsRjXQz2XoZZln2n5979K0t6mf9HI9y1uEmXqpSHjW_4amB-8GU0RAWUwT4SPcCtxiZodMPdIxoRpUbGITh-V64p0Oi_rjXBE_Anf402TQyIhMuCslQ%3D%3D&amp;attredirects=0</REFERENCE>
+		<REFERENCE>http://sites.google.com/a/digitalgreen.org/inside-digital-green/HTarticle.pdf</REFERENCE>
 		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"They had a new perspective of the world from space and became do-gooders on Earth."</DESC>
@@ -77,7 +77,7 @@
 	<TEAM>
 		<TITLE>Press Trust of India </TITLE>
 		<HEADLINE> Digital tech to help farmers improve livelihood  </HEADLINE>
-		<REFERENCE>http://www.ptinews.com/maintenance.htm?aspxerrorpath=/news/fullnews.aspx</REFERENCE>
+		<REFERENCE>http://in.news.yahoo.com/20/20100311/1416/tnl-digital-technology-to-help-farmers-i.html</REFERENCE>
 		<PRESSDATE> </PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"We anticipate that with support from the Gates Foundation, Rikin and his team at Digital Green will have impact over 1,000 villages, each consisting of 1,000-2,000 people. Indeed, they are already on the way there."</DESC>
@@ -100,7 +100,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Sify </TITLE>
-		<HEADLINE> 'Technology Review' identifies Top 20 Indian innovators under 35  </HEADLINE>
+		<HEADLINE> Many Indians honored at MIT's EmTech </HEADLINE>
 		<REFERENCE>http://www.stockwatch.in/many-indians-honored-mit-s-emtech-24916</REFERENCE>
 		<PRESSDATE> Tues, Mar 9 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
@@ -127,18 +127,6 @@
 		<HEADLINE> 20 young Indians honoured at Em Tech 2010</HEADLINE>
 		<REFERENCE>http://www.ciol.com/News/News/News-Reports/20-young-Indians-honoured-at-EmTech-2010/132754/0/</REFERENCE>
 		<PRESSDATE> </PRESSDATE>
-		<PLACE>Bangalore</PLACE>
-		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
-		<COMPANY> </COMPANY>
-		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
-	</TEAM>
-	<TEAM>
-		<TITLE>CIOL </TITLE>
-		<HEADLINE> 20 young Indians honoured at Em Tech 2010</HEADLINE>
-		<REFERENCE>http://sify.com/finance/digital-green-to-help-educate-farmers-news-technology-kdfoH4jgjcg.html</REFERENCE>
-		<PRESSDATE> Fri, Mar 5 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
 		<COMPANY> </COMPANY>
@@ -208,7 +196,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>CXO Today </TITLE>
-		<HEADLINE>  BIll Gates on a free Wheel  </HEADLINE>
+		<HEADLINE>  Bill Gates on a free Wheel  </HEADLINE>
 		<REFERENCE>http://www.cxotoday.com/India/News/Bill_Gates_on_a_Free_Wheel/551-104769-913.html</REFERENCE>
 		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
@@ -220,7 +208,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Science / AAAS </TITLE>
-		<HEADLINE> Scince: Sustainable Goal  </HEADLINE>
+		<HEADLINE> Science: Sustainable Goal  </HEADLINE>
 		<REFERENCE>http://www.sciencemag.org/content/vol322/issue5907/newsmakers.dtl</REFERENCE>
 		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
