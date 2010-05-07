@@ -156,7 +156,7 @@
 								<td class='table2statdesc2'>
 									{% ifnotequal item.id None %}
 										{% ifnotequal item.geog None %}
-											<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=item.geog id=item.id %}{{get_req_url}}'>
+											<a href='{% url dg.output.views.overviewAnalytics.overview_module geog=item.geog id=item.id %}{{get_req_url}}'>
 											{{ item.name }} </a>
 										{% else %}
 											{{ item.name }}
@@ -199,7 +199,7 @@
 			        <tr>			            
 					    <td class='table2statdesc2'>
 					    	{% if par_geog_data.geog %}
-					    		<a href='{% url dg.output.views.overviewAnalytics.new_overview geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}'>
+					    		<a href='{% url dg.output.views.overviewAnalytics.overview_module geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}'>
 								{{ par_geog_data.name }} </a>
 							{% else %}
 								{{par_geog_data.name}}

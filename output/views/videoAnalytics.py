@@ -15,9 +15,9 @@ def video_module(request,geog,id):
     if(geog not in geog_list):
         raise Http404()
 
-    tot_vid = run_query(videoAnalyticsSQL.mvideo_tot_video(request,geog=geog,id=id))[0]['count']
-    tot_scr = run_query(videoAnalyticsSQL.mvideo_tot_scr(request,geog=geog,id=id))[0]['count']
-    tot_avg = run_query(videoAnalyticsSQL.mvideo_avg_time(request,geog=geog,id=id))[0]['avg']
+    tot_vid = run_query(videoAnalyticsSQL.video_tot_video(request,geog=geog,id=id))[0]['count']
+    tot_scr = run_query(videoAnalyticsSQL.video_tot_scr(request,geog=geog,id=id))[0]['count']
+    tot_avg = run_query(videoAnalyticsSQL.video_avg_time(request,geog=geog,id=id))[0]['avg']
     search_box_params = views.common.get_search_box(request,geog,id, videoAnalyticsSQL.video_min_date)
     
     get_req_url = request.META['QUERY_STRING']
@@ -39,18 +39,18 @@ def video_module(request,geog,id):
 
 # Pie chart for male-female ratio in video module 
 def video_pie_graph_mf_ratio(request,geog,id):
-    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.mvideo_malefemale_ratio, \
+    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.video_malefemale_ratio, \
                                       {"M":"Male","F":"Female"}, 'Ratio of videos featuring {{value}} actors')
     
 #Data generator for Actor Wise Pie chart
 def video_actor_wise_pie(request,geog,id):
-    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.mvideo_actor_wise_pie, \
+    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.video_actor_wise_pie, \
                                       {"I":"Individual","F":"Family","G":"Group"}, 'Ratio of videos featuring {{value}} actor')
     
 
 #Data generator for Video-Type Wise Pie chart
 def video_type_wise_pie(request,geog,id):
-    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.mvideo_type_wise_pie, \
+    return views.common.pie_chart_data(request,geog,id,videoAnalyticsSQL.video_type_wise_pie, \
                                       {1:"Demonstration",2:"Success Story",3:"Activity Introduction",4:"Discussion",5:"General Awareness"}, \
                                       'Ratio of videos featuring {{value}} type')
     
@@ -64,7 +64,7 @@ def video_geog_pie_data(request,geog,id):
     url2 = request.META['QUERY_STRING']
     if(url2): url2 = '/?'+url2
         
-    vid_prod = run_query(sharedSQL.method_overview(request,geog,id,'production'))
+    vid_prod = run_query(sharedSQL.overview(request,geog,id,'production'))
     geog_name = run_query_dict(sharedSQL.child_geog_list(request, geog, id),'id')
     
     return_val = []
@@ -84,11 +84,11 @@ def video_geog_pie_data(request,geog,id):
     
 
 def video_language_wise_scatter_data(request,geog,id):
-    return views.common.scatter_chart_data(request,geog,id,videoAnalyticsSQL.mvideo_language_wise_scatter)
+    return views.common.scatter_chart_data(request,geog,id,videoAnalyticsSQL.video_language_wise_scatter)
     
     
 def video_practice_wise_scatter(request,geog,id):
-    return views.common.scatter_chart_data(request,geog,id,videoAnalyticsSQL.mvideo_practice_wise_scatter)
+    return views.common.scatter_chart_data(request,geog,id,videoAnalyticsSQL.video_practice_wise_scatter)
     
 
     ###############
@@ -97,9 +97,9 @@ def video_practice_wise_scatter(request,geog,id):
 
 #Data generator for Month-wise Bar graph
 def video_monthwise_bar_data(request,geog,id):
-    return views.common.month_bar_data(request,geog,id,videoAnalyticsSQL.mvideo_month_bar);
+    return views.common.month_bar_data(request,geog,id,videoAnalyticsSQL.video_month_bar);
 
 #Settings generator for Month-wise Bar graph
 def video_monthwise_bar_settings(request,geog,id):
-    return views.common.month_bar_settings(request,geog,id,videoAnalyticsSQL.mvideo_month_bar, "Video Production")
+    return views.common.month_bar_settings(request,geog,id,videoAnalyticsSQL.video_month_bar, "Video Production")
    

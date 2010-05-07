@@ -117,7 +117,7 @@ def screening_geog_pie_data(request,geog,id):
     url2 = request.META['QUERY_STRING']
     if(url2): url2 = '/?'+url2
         
-    scr_geog = run_query(sharedSQL.method_overview(request,geog,id,'screening'))
+    scr_geog = run_query(sharedSQL.overview(request,geog,id,'screening'))
     geog_name = run_query_dict(sharedSQL.child_geog_list(request, geog, id),'id')
     
     return_val = []

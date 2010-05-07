@@ -7,7 +7,7 @@ from dg.output import views
 from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, construct_query, getDatesPartners
 
 
-def new_overview(request,geog,id):
+def overview_module(request,geog,id):
     id = int(id)
     from_date, to_date, partners = getDatesPartners(request)
     geog_list = [None,'country','state','district','block','village',None]
@@ -17,11 +17,11 @@ def new_overview(request,geog,id):
     geog_child = geog_list[geog_list.index(geog)+1]
     
     #Constructing table data 
-    vid_prod = run_query_dict(sharedSQL.method_overview(type='production',geog=geog,id=id,request=request),'id');
-    vid_screening = run_query_dict(sharedSQL.method_overview(type='screening',geog=geog,id=id,request=request),'id');
-    adoption = run_query_dict(sharedSQL.method_overview(type='adoption',geog=geog,id=id,request=request),'id');
-    tot_prac = run_query_dict(sharedSQL.method_overview(type='practice',geog=geog,id=id,request=request),'id');
-    tot_per = run_query_dict(sharedSQL.method_overview(type='person',geog=geog,id=id,request=request),'id');
+    vid_prod = run_query_dict(sharedSQL.overview(type='production',geog=geog,id=id,request=request),'id');
+    vid_screening = run_query_dict(sharedSQL.overview(type='screening',geog=geog,id=id,request=request),'id');
+    adoption = run_query_dict(sharedSQL.overview(type='adoption',geog=geog,id=id,request=request),'id');
+    tot_prac = run_query_dict(sharedSQL.overview(type='practice',geog=geog,id=id,request=request),'id');
+    tot_per = run_query_dict(sharedSQL.overview(type='person',geog=geog,id=id,request=request),'id');
     
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
     table_data = run_query(sharedSQL.child_geog_list(request, geog, id))
@@ -55,12 +55,12 @@ def new_overview(request,geog,id):
             
       
 #par_geog is summed data in the below table  
-    par_geog_data= run_query(overviewAnalyticsSQL.method_overview_sum_geog(request ,geog, id))[0]
+    par_geog_data= run_query(overviewAnalyticsSQL.overview_sum_geog(request ,geog, id))[0]
     par_geog_data['geog'] = geog_par
     
 
 #country data is the top-data   
-    country_data = run_query(overviewAnalyticsSQL.method_overview_sum_geog(None ,'country', 1))[0]
+    country_data = run_query(overviewAnalyticsSQL.overview_sum_geog(None ,'country', 1))[0]
     country_data.update(run_query(overviewAnalyticsSQL.overview_nation_pg_vil_total())[0])
     
 #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any

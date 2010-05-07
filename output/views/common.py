@@ -126,27 +126,27 @@ def overview_line_graph(request,geog,id):
         type = ['prod','screen','prac','person','adopt']
     
     if('prod' in type):
-        vid_prod_rs = run_query_dict(sharedSQL.method_overview_line_chart(type='production',geog=geog,id=id, request=request),'date');
+        vid_prod_rs = run_query_dict(sharedSQL.overview_line_chart(type='production',geog=geog,id=id, request=request),'date');
     else:
         vid_prod_rs = []
         
     if('screen' in type):
-        sc_rs = run_query_dict(sharedSQL.method_overview_line_chart(type='screening',geog=geog,id=id, request=request),'date');
+        sc_rs = run_query_dict(sharedSQL.overview_line_chart(type='screening',geog=geog,id=id, request=request),'date');
     else:
         sc_rs = []
         
     if('adopt' in type):
-        adopt_rs = run_query_dict(sharedSQL.method_overview_line_chart(type='adoption',geog=geog,id=id, request=request),'date');
+        adopt_rs = run_query_dict(sharedSQL.overview_line_chart(type='adoption',geog=geog,id=id, request=request),'date');
     else:
         adopt_rs = []
         
     if('prac' in type):
-        prac_rs = run_query_dict(sharedSQL.method_overview_line_chart(type='practice',geog=geog,id=id, request=request),'date');
+        prac_rs = run_query_dict(sharedSQL.overview_line_chart(type='practice',geog=geog,id=id, request=request),'date');
     else:
         prac_rs = []
         
     if('person' in type):
-        person_rs = run_query_dict(sharedSQL.method_overview_line_chart(type='person',geog=geog,id=id, request=request),'date');
+        person_rs = run_query_dict(sharedSQL.overview_line_chart(type='person',geog=geog,id=id, request=request),'date');
     else:
         person_rs = []
         
