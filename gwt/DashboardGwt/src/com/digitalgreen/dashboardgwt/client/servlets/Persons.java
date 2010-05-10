@@ -124,6 +124,7 @@ public class Persons extends BaseServlet {
 					personsData.apply(personsData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					PersonsData personsData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Persons extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						personsData.apply(personsData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						personsData.apply(personsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

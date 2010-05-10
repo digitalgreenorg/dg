@@ -34,7 +34,8 @@
 }
 
 .controlPanelClass {
-	border: 2px solid black;
+	border: solid 1px #CCCCCC;
+	margin-top:20px;
 }
 
 .mainControlPanelArea {
@@ -43,6 +44,56 @@
 	margin-left: 30px;
 }
 
-.layer3Class {
-	align: center;
+.buttonHideClass {
+	opacity: 0.15;
+	filter:alpha(opacity=15);
+}
+
+.buttonShowClass {
+	cursor: pointer;
+}
+
+.onlineOfflineButtonClass {
+	cursor: pointer;
+}
+
+.modeTextClass {
+	color: #5B80B2; 
+	font-size: 18px; 
+	margin-left: 0px;
+	padding-top: 12px;
+	padding-left: 12px;
+	float: left;
+}
+
+.dotsClass {
+	padding-top: 9px; 
+	padding-left: 2px;
+}
+
+.bulletsClass {
+	float: left;
+	margin-top: -3px;
+	padding-left: 30px;	
+}
+
+.textClass {
+	float: right;
+	color: #767676;
+	margin-top: 5px;
+	padding-left: 15px;
+	width: 350px;
+	margin-bottom: 20px;
+	font-size: 18px;
+}
+
+.bulletPointClass {
+	height: 160px;
+}
+
+.instructionsClass {
+	font-size: 18px;
+	text-align: center;
+	margin-bottom: 10px;
+	
 }

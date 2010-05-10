@@ -348,7 +348,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 		return false;
 	}
-		
+
 	public String retrieveDataAndConvertResultIntoHtml() {
 		AnimatorsData animatorData = new AnimatorsData();
 		List animators = animatorData.getAnimatorsListingOffline();

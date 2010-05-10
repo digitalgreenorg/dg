@@ -124,6 +124,7 @@ public class Districts extends BaseServlet {
 					districtsData.apply(districtsData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					DistrictsData districtsData = new DistrictsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Districts extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						districtsData.apply(districtsData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						districtsData.apply(districtsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

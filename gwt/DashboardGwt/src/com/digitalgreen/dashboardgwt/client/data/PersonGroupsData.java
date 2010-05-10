@@ -421,7 +421,6 @@ public class PersonGroupsData extends BaseData {
 		}
 		return false;
 	}
-	
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		VillagesData villageData = new VillagesData();

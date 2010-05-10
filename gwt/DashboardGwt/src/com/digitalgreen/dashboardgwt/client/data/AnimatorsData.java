@@ -562,8 +562,6 @@ public class AnimatorsData extends BaseData {
 		}
 		return false;
 	}
-	
-
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		PartnersData partnerData = new PartnersData();

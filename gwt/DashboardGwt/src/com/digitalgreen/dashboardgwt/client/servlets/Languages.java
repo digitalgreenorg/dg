@@ -124,6 +124,7 @@ public class Languages extends BaseServlet {
 					languagesData.apply(languagesData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					LanguagesData languagesData = new LanguagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Languages extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						languagesData.apply(languagesData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						languagesData.apply(languagesData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

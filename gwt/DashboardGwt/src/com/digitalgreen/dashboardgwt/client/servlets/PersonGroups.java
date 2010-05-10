@@ -76,8 +76,7 @@ public class PersonGroups extends BaseServlet {
 				}
 				else{
 					personGroupsData.apply(personGroupsData.postPageData());
-				}
-				
+				}	
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
@@ -124,6 +123,7 @@ public class PersonGroups extends BaseServlet {
 					personGroupsData.apply(personGroupsData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					PersonGroupsData personGroupsData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +164,12 @@ public class PersonGroups extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						personGroupsData.apply(personGroupsData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						personGroupsData.apply(personGroupsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

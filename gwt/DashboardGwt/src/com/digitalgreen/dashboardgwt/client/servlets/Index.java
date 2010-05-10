@@ -44,7 +44,6 @@ public class Index extends BaseServlet {
 					user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
 					ApplicationConstants.toggleConnection(false);
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("You are ready to go offline!!. ");
 					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg == "goonline"){
@@ -52,7 +51,6 @@ public class Index extends BaseServlet {
 					user.updateAppStatus("1",ApplicationConstants.getUsernameCookie());
 					ApplicationConstants.toggleConnection(true);
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("You are ready to go Online. While you are online you will be able to sync your changes!");
 					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg == "sync"){

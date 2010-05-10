@@ -24,11 +24,13 @@ import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -40,29 +42,52 @@ public class IndexTemplate extends BaseTemplate {
 	}
 	
 	private void goOfflineOnline(){
-		final Button applicationStatusButton = new Button();
-		final Button uploadButton = new Button("Upload");
-		final Button downloadButton = new Button("Download");
+		final Image uploadButton;
+		final Image downloadButton;
+
+		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
+		RootPanel.get("controlPanel").add(bodyHtml);
+		Image onlineOfflineButton = Image.wrap(RootPanel.get("onlineOfflineButtonId").getElement());
+		downloadButton = Image.wrap(RootPanel.get("downloadButtonId").getElement());
+		uploadButton = Image.wrap(RootPanel.get("uploadButtonId").getElement());
+		String modeText = "";
+		if(!ApplicationConstants.getCurrentOnlineStatus()) {
+			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+			downloadButton.setStyleName("buttonHideClass");
+			uploadButton.setStyleName("buttonHideClass");
+			modeText = "Connected in offline mode";
+		} else {
+			onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
+			downloadButton.setStyleName("buttonShowClass");
+			uploadButton.setStyleName("buttonShowClass");
+			modeText = "Connected in online mode";
+		}
+		modeText += "<span id='dotsId'><img class='dotsClass' src='/media/img/admin/dots.gif' /></span>";
+		HTMLPanel modeTextHtml = new HTMLPanel(modeText);
+		modeTextHtml.getElement().setId("modeTextAndDotsId");
+		modeTextHtml.setStyleName("modeTextClass");
+		RootPanel.get("modeTextId").insert(modeTextHtml, 0);
+		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
+		onlineOfflineButton.setPixelSize(350, 80);
 		
-		applicationStatusButton.setSize("350px", "5em");
-		downloadButton.setSize("150px", "4em");
-		uploadButton.setSize("150px", "4em");
+		Timer t = new Timer() {
+			@Override
+			public void run() {
+				Image modeIcon;
+				String modeIconUrl = "";
+				RootPanel.get("dotsId").clear();
+				if(!ApplicationConstants.getCurrentOnlineStatus()) {
+					modeIcon = new Image("/media/img/admin/offline-mode-icon.png");				
+				} else {
+					modeIcon = new Image("/media/img/admin/online-mode-icon.png");	
+				}
+				RootPanel.get("modeIconId").clear();
+				RootPanel.get("modeIconId").insert(modeIcon, 0);
+			}
+		};
+		t.schedule(1000);
 		
-		VerticalPanel body = new VerticalPanel();
-		HorizontalPanel layer1 = new HorizontalPanel();
-		HorizontalPanel layer2 = new HorizontalPanel();
-		layer2.add(applicationStatusButton);
-		HorizontalPanel layer3 = new HorizontalPanel();
-		layer3.add(downloadButton);
-		layer3.add(uploadButton);
-		body.setHorizontalAlignment(body.ALIGN_CENTER);
-		body.add(layer1);
-		body.add(layer2);
-		body.add(layer3);
-		body.setStyleName("controlPanelClass");
-		RootPanel.get("goOffline").add(body);
-		
-		applicationStatusButton.addClickHandler(new ClickHandler() {
+		onlineOfflineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
@@ -79,34 +104,30 @@ public class IndexTemplate extends BaseTemplate {
 				
 		uploadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
+		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
+		    		  return;
+		    	  }
 		    	  Template.addLoadingMessage("Uploading data...");
-		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   requestContext.getArgs().put("action", "sync");
-		    	   Index index = new Index(requestContext);
-		    	   index.response();
+		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	  requestContext.getArgs().put("action", "sync");
+		    	  Index index = new Index(requestContext);
+		    	  index.response();
 		      }		      
 	    });
 		
 		downloadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
-		    	   Template.addLoadingMessage("Downloading data...");
-		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   requestContext.getArgs().put("action", "resync");
-		    	   Index index = new Index(requestContext);
-		    	   index.response();
+		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
+		    		  return;
+		    	  }
+		    	  Template.addLoadingMessage("Downloading data...");
+		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	  requestContext.getArgs().put("action", "resync");
+		    	  Index index = new Index(requestContext);
+		    	  index.response();
 		      }		      
 	    });
-		
-		if (!ApplicationConstants.getCurrentOnlineStatus()){
-			applicationStatusButton.setText("Click to go online");
-			uploadButton.setEnabled(false);
-			downloadButton.setEnabled(false);
-		}
-		else {
-			applicationStatusButton.setText("Click to go offline");
-		}
 	}
-	
 	
 	private void addHyperlink(String id, String linkTxt, String tokenTxt, final BaseServlet servlet) {
 		Hyperlink link = new Hyperlink(linkTxt, true, tokenTxt); 
@@ -252,12 +273,97 @@ public class IndexTemplate extends BaseTemplate {
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
 
-		HTMLPanel h = new HTMLPanel("<div id = 'goOffline'></div>");
+		HTMLPanel h = new HTMLPanel("<div id='controlPanel'></div>");
 		h.setStyleName("mainControlPanelArea");
 		RootPanel.get("container").add(h);
+		HTMLPanel bulletsHtml = new HTMLPanel(this.bulletsBodyHtml);
+		bulletsHtml.setStyleName("bulletsClass");
+		RootPanel.get("container").add(bulletsHtml);
 		goOfflineOnline();
 		
 	}
+	
+	final static private String bulletsBodyHtml = 
+		"<div class='instructionsClass'>Instructions & Tips</div>" + 
+		"<div id='bullet1' class='bulletPointClass'>" +
+			"<img src='/media/img/admin/bulletpoint.png' />" + 
+			"<div id='text1' class='textClass'>" +
+				"Before going offline, click on the 'Download' button to download a local copy " +
+				"of the main server to your browser.  Then click on the 'Go Offline' button to access " +
+				"and add information in offline mode." + 
+			"</div>" + 
+		"</div>" +
+		"<div id='bullet2' class='bulletPointClass'>" +
+			"<img src='/media/img/admin/bulletpoint.png' />" + 
+			"<div id='text2' class='textClass'>" +
+				"You can now edit or add " +
+				"information in offline mode.  After you're done, click on the 'Go Online' button to " +
+				"upload any newly edited or added information to the main server.  You can do this by clicking " +
+				"on the 'Upload' button." +
+			"</div>" + 
+		"</div>" +
+		"<div id='bullet3' class='bulletPointClass'>" +
+			"<img src='/media/img/admin/bulletpoint.png' />" + 
+			"<div id='text3' class='textClass'>" +
+				"Make sure you have internet access before clicking on the 'Go Online' button.  Some level of" +
+				"internet access is necessary to download and upload data to the main server." +
+			"</div>" + 
+		"</div>";
+		
+	
+	final static private String bodyContentHtml = 
+		"<div style='font-size: 20px; width: 375px; color: rgb(65, 118, 144);'>Welcome to COCO, DigitalGreen's " +
+				"connect-online, connect-offline system -- from anywhere, to everywhere.</div>" +	
+		"<table cellspacing='0' cellpadding='0' class='controlPanelClass'>" +
+			"<tbody>" +
+				"<tr>" +
+					"<td align='center' style='vertical-align: top; border-width: 0px; padding: 0px;'>" +
+						"<table cellspacing='0' cellpadding='0' width='100%' height='40px'>" +
+							"<tbody>" +
+								"<tr>" +
+									"<td style='width:100%; align: left; border-width: 0px; padding: 0px; padding-top: 2px;'>" +
+										"<div id='modeTextId'>" +
+											"<div id='modeIconId' style='float: right; margin-right: 15px;'>" +
+											"</div>" +
+										"</div>" +
+									"</td>" +
+								"</tr>" +
+							"</tbody>" +
+						"</table>" +
+					"</td>" +
+				"</tr>" +
+				"<tr>" +
+					"<td align='center' style='vertical-align: top; border-width: 0px'>" +
+						"<table cellspacing='0' cellpadding='0'>" +
+							"<tbody>" +
+								"<tr>" +
+									"<td align='left' style='vertical-align: top; border-width: 0px; padding-top: 0px;'>" +
+										"<img id='onlineOfflineButtonId' src='' />" +
+									"</td>" +
+								"</tr>" +
+							"</tbody>" +
+						"</table>" +
+					"</td>" +
+				"</tr>" +
+				"<tr>" +
+					"<td align='left' style='vertical-align: top; border-width: 0px; padding-top: 0px;'>" +
+						"<table cellspacing='0' cellpadding='0'>" +
+							"<tbody>" +
+								"<tr>" +
+									"<td align='left' style='vertical-align: top; border-width: 0px;'>" +
+										"<img id='downloadButtonId' src='/media/img/admin/download-icon.png' width='150px' height='60px' />" +
+									"</td>" +
+									"<td width='30px' style='border-width: 0px;'></td>" + 
+									"<td align='left' style='vertical-align: top; border-width: 0px;'>" +
+										"<img id='uploadButtonId' src='/media/img/admin/upload-icon.png' width='150px' height='60px' />" +
+									"</td>" +
+								"</tr>" +
+							"</tbody>" +
+						"</table>" +
+					"</td>" +
+				"</tr>" +
+			"</tbody>" +
+		"</table>";
 	
 	final static private String indexContentHtml = "<div id='content' class='colMS'>" +
 							"<h1>Administration</h1>" +

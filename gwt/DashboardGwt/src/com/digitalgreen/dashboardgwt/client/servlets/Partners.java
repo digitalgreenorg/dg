@@ -124,6 +124,7 @@ public class Partners extends BaseServlet {
 					partnersData.apply(partnersData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					PartnersData partnersData = new PartnersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Partners extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						partnersData.apply(partnersData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						partnersData.apply(partnersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

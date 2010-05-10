@@ -124,6 +124,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 					animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class AnimatorAssignedVillages extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						animatorAssignedVillageData.apply(animatorAssignedVillageData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						animatorAssignedVillageData.apply(animatorAssignedVillageData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

@@ -124,6 +124,7 @@ public class FieldOfficers extends BaseServlet {
 					fieldOfficersData.apply(fieldOfficersData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					FieldOfficersData fieldOfficersData = new FieldOfficersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -165,11 +166,12 @@ public class FieldOfficers extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						fieldOfficersData.apply(fieldOfficersData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						fieldOfficersData.apply(fieldOfficersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

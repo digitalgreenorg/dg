@@ -124,6 +124,7 @@ public class DevelopmentManagers extends BaseServlet {
 					developmentManagersData.apply(developmentManagersData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					DevelopmentManagersData developmentManagersData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class DevelopmentManagers extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						developmentManagersData.apply(developmentManagersData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						developmentManagersData.apply(developmentManagersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

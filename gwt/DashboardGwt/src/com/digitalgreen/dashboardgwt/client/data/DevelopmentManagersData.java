@@ -433,7 +433,6 @@ public class DevelopmentManagersData extends BaseData {
 		return false;
 	}	
 	
-	
 	public String retrieveDataAndConvertResultIntoHtml(){
 		RegionsData regionData = new RegionsData();
 		List regions = regionData.getAllRegionsOffline();

@@ -124,6 +124,7 @@ public class Equipments extends BaseServlet {
 					equipmentsData.apply(equipmentsData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					EquipmentsData equipmentsData = new EquipmentsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Equipments extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						equipmentsData.apply(equipmentsData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						equipmentsData.apply(equipmentsData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}

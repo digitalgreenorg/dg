@@ -124,6 +124,7 @@ public class Blocks extends BaseServlet {
 					blocksData.apply(blocksData.getListPageData());
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					Form form = this.requestContext.getForm();
 					BlocksData blocksData = new BlocksData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String addData) {
 							if(this.getStatusCode() == 200) {
@@ -164,11 +165,12 @@ public class Blocks extends BaseServlet {
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
-					});
+					}, form);
 					if(queryArg.equals("add")) {
 						blocksData.apply(blocksData.getAddPageData());
 					}
 					else{
+						form.setId((String)this.requestContext.getArgs().get("id"));
 						blocksData.apply(blocksData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}
 				}
