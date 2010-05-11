@@ -72,6 +72,7 @@ public class Partners extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					partnersData.apply(partnersData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

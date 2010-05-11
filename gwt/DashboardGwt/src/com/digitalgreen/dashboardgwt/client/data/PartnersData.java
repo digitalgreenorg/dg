@@ -85,9 +85,12 @@ public class PartnersData extends BaseData {
 			} 
 			else if(key.equals("address")) {
 				 this.address = (String)val;
-			} 
-			
+			} else {
+				return;
+			}
+			this.addNameValueToQueryString(key, val);
 		}
+		
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.partner_name, false, false, 1, 100);
 			nameValidator.setError("Please make sure that 'Partner Name' is NOT EMPTY and not more than 100 characters.");
@@ -113,6 +116,7 @@ public class PartnersData extends BaseData {
 						this.date_of_association,
 						this.phone_no, 
 						this.address);
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
@@ -291,6 +295,7 @@ public class PartnersData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/", this.form.getQueryString());
 		}
 		else{
+			Window.alert("THE ID = " + id);
 			if(this.validate()) {
 				this.save();
 				return true;

@@ -72,6 +72,7 @@ public class Animators extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					animatorsData.apply(animatorsData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

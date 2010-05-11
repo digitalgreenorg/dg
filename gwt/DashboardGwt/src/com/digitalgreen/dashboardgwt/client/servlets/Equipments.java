@@ -72,6 +72,7 @@ public class Equipments extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					equipmentsData.apply(equipmentsData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

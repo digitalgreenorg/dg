@@ -72,6 +72,7 @@ public class Districts extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					districtsData.apply(districtsData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

@@ -72,6 +72,7 @@ public class FieldOfficers extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					fieldOfficersData.apply(fieldOfficersData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

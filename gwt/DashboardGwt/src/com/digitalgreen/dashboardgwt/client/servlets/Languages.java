@@ -72,6 +72,7 @@ public class Languages extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					languagesData.apply(languagesData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

@@ -72,6 +72,7 @@ public class PersonGroups extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					personGroupsData.apply(personGroupsData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

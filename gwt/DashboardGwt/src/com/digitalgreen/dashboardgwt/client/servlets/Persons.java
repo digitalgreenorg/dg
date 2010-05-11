@@ -72,6 +72,7 @@ public class Persons extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					personData.apply(personData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

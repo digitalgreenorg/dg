@@ -72,6 +72,7 @@ public class Blocks extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					blocksData.apply(blocksData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{

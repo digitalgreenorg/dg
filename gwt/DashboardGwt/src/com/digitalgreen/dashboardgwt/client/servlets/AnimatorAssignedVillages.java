@@ -72,6 +72,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 					}
 				}, form);
 				if(this.requestContext.getArgs().get("action").equals("edit")) {
+					form.setId((String)this.requestContext.getArgs().get("id"));
 					animatorAssignedVillageData.apply(animatorAssignedVillageData.postPageData((String)this.requestContext.getArgs().get("id")));
 				}
 				else{
