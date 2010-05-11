@@ -121,8 +121,8 @@ class AnimatorSalaryPerMonthForm(forms.ModelForm):
 		model = AnimatorSalaryPerMonth
 		
 class PersonMeetingAttendanceForm(forms.ModelForm):
-	class Meta:
-		model = PersonMeetingAttendance
+    class Meta:
+        model = PersonMeetingAttendance
 		
 class EquipmentHolderForm(forms.ModelForm):
 	class Meta:

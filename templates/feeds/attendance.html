@@ -1,0 +1,55 @@
+{{ formset.management_form }}
+
+<fieldset class="module">
+<h2>Person meeting attendances</h2>
+<table>
+<thead>
+	<tr>
+		<th>Delete?</th>
+		<th colspan="2">Person</th>
+		<th>Expressed interest practice</th>
+		<th>Expressed interest</th>
+		<th>Expressed adoption practice</th>
+		<th>Expressed adoption</th>
+		<th>Expressed question practice</th>
+		<th>Expressed question</th>
+	</tr>
+</thead>
+<tbody>
+{% for form in formset.forms %}
+<tr class="has_original {% cycle 'row1' 'row2' %}">
+<td class="delete">
+	<input type="checkbox" id="id_personmeetingattendance_set-{{ forloop.counter0 }}-DELETE" name="personmeetingattendance_set-{{ forloop.counter0 }}-DELETE" style="display: none;">
+</td>
+
+<td class="original">
+	{{ form.id }}
+	{{ form.screening }}
+</td>
+
+<td class="person">
+	{{ form.person }}
+</td>
+<td class="expressed_interest_practice">
+	{{ form.expressed_interest_practice }}    
+</td>
+<td class="expressed_interest">
+    {{ form.expressed_interest }}
+</td>
+<td class="expressed_adoption_practice">
+	{{ form.expressed_adoption_practice }}
+</td>
+<td class="expressed_adoption">
+	{{ form.expressed_adoption }}
+</td>
+<td class="expressed_question_practice">
+	{{ form.expressed_question_practice }}
+</td>
+<td class="expressed_question">
+	{{ form.expressed_question }}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</fieldset>
