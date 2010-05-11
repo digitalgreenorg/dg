@@ -275,10 +275,10 @@ public class IndexTemplate extends BaseTemplate {
 
 		HTMLPanel h = new HTMLPanel("<div id='controlPanel'></div>");
 		h.setStyleName("mainControlPanelArea");
-		RootPanel.get("container").add(h);
+		RootPanel.get("sub-container").add(h);
 		HTMLPanel bulletsHtml = new HTMLPanel(this.bulletsBodyHtml);
 		bulletsHtml.setStyleName("bulletsClass");
-		RootPanel.get("container").add(bulletsHtml);
+		RootPanel.get("sub-container").add(bulletsHtml);
 		goOfflineOnline();
 		
 	}
@@ -305,7 +305,7 @@ public class IndexTemplate extends BaseTemplate {
 		"<div id='bullet3' class='bulletPointClass'>" +
 			"<img src='/media/img/admin/bulletpoint.png' />" + 
 			"<div id='text3' class='textClass'>" +
-				"Make sure you have internet access before clicking on the 'Go Online' button.  Some level of" +
+				"Make sure you have internet access before clicking on the 'Go Online' button.  Some level of " +
 				"internet access is necessary to download and upload data to the main server." +
 			"</div>" + 
 		"</div>";

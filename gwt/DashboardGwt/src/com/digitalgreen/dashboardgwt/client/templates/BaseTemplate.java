@@ -51,7 +51,7 @@ public class BaseTemplate extends Template {
 	public void fill() {
 		RootPanel.get("user-name").add(new HTMLPanel("b", ApplicationConstants.getUsernameCookie() + "."));
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
-		RootPanel.get("container").add(this.getContentPanel());
+		RootPanel.get("sub-container").add(this.getContentPanel());
 		super.fill();
 	}
 	
@@ -201,7 +201,7 @@ public class BaseTemplate extends Template {
 		"<!-- Header -->" +
 		"<div id='header'>" +
 			"<div id='branding'>" +
-				"<h1 id='site-name'><a href='/site_media/DashboardGwt.html'><img src='/media/img/admin/coco-logo.png' /></a></h1>" +
+				"<h1 id='site-name'><a href='/media/DashboardGwt/war/DashboardGwt.html'><img src='/media/img/admin/coco-logo.png' /></a></h1>" +
 			"</div>" +
 			"<div id='user-tools'>Welcome, <span id='user-name'></span>" +
 			"<span id='logout'></span>" +
@@ -213,7 +213,8 @@ public class BaseTemplate extends Template {
 		"<!-- Content -->" +                 // Content gets added by subclasses
 		"<!-- Submit Button -->" +           // For now gets added by subclasses
 		"<!-- END Content -->" +
-		"<div id='footer'></div>" +
+		"<div id='sub-container'>" +
+		"</div>" +
 	"</div>" +
 	"<!-- END Container -->";
 }
