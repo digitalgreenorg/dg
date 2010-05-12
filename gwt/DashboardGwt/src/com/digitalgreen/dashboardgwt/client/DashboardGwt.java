@@ -3,12 +3,16 @@ package com.digitalgreen.dashboardgwt.client;
 import java.util.HashMap;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.gears.client.GearsException;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.servlets.*;
+import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.Window;
 
 public class DashboardGwt implements EntryPoint {
 	// Some globals
@@ -23,26 +27,31 @@ public class DashboardGwt implements EntryPoint {
 	/* Sets the status of the application as online / offline
 	 * This function is called every time the application is refreshed */ 
 	private void setup(){
-		BaseData instance = new BaseData();
-		if(instance.checkIfUserTableExists()) {
-			int status = instance.getApplicationStatus();
-			if(status == 0){
-				ApplicationConstants.toggleConnection(false);
+		try{
+			BaseData.dbCheck();
+			BaseData instance = new BaseData();
+			if(instance.checkIfUserTableExists()) {
+				int status = instance.getApplicationStatus();
+				if(status == 0){
+					ApplicationConstants.toggleConnection(false);
+				}
+				else{
+					ApplicationConstants.toggleConnection(true);
+				}	
 			}
 			else{
 				ApplicationConstants.toggleConnection(true);
-			}	
-		}
-		else{
+			}
+			ApplicationConstants.createMappingBetweenTableIDAndDataObject();
+		}catch(Exception e){
 			ApplicationConstants.toggleConnection(true);
+			ApplicationConstants.createMappingBetweenTableIDAndDataObject();
+			//Window.alert("here Exception caught");
 		}
-		ApplicationConstants.createMappingBetweenTableIDAndDataObject();
 	}
 	
 	private void createHashMap() {
-
 		RequestContext requestContext = null;
-		
 		// AnimatorAssignedVillages
 		hMap.put("dashboard/animatorassignedvillage", new AnimatorAssignedVillages());
 		// Add AnimatorAssignedVillages
