@@ -11,6 +11,8 @@ public class Template implements TemplateInterface {
 	protected RequestContext requestContext = null;
 	private Widget contentPanel = null;
 	
+	public Template() {}
+	
 	public Template(RequestContext requestContext) {
 		this.requestContext = requestContext;
 		RootPanel.get().clear();
