@@ -61,7 +61,7 @@ public class LoginTemplate extends Template {
     				"<h1 id='site-name'>Digital Green administration</h1>"+
     			"</div>"+
     		"</div>"+
-    		"<div id='error-space'></div>" +
+    		"<div id='info-space'></div>" +
     		"<div id='content' class='colM'>"+
     			"<div id='content-main'>" +
     				"<div class='form-row'>"+

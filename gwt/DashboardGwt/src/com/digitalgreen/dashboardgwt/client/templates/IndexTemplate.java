@@ -31,9 +31,19 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+
+import com.google.gwt.gears.client.Factory;
+import com.google.gwt.gears.client.GearsException;
+import com.google.gwt.gears.client.localserver.LocalServer;
+import com.google.gwt.gears.client.localserver.ManagedResourceStore;
+import com.google.gwt.gears.offline.client.Offline;
+import com.google.gwt.user.client.ui.HTML;
+
 
 public class IndexTemplate extends BaseTemplate {
 	
@@ -41,10 +51,49 @@ public class IndexTemplate extends BaseTemplate {
 		super(requestContext);
 	}
 	
+	 private void createManagedResourceStore() {
+		    try {
+		      final ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
+
+		      new Timer() {
+		        final String oldVersion = managedResourceStore.getCurrentVersion();
+		        String transferringData = "Transferring data";
+
+		        @Override
+		        public void run() {
+		          switch (managedResourceStore.getUpdateStatus()) {
+		            case ManagedResourceStore.UPDATE_OK:
+		              if (managedResourceStore.getCurrentVersion().equals(oldVersion)) {
+		            	  //RootPanel.get("statusBar").add(new HTMLPanel("No update was available."));
+		              } else {
+		            	  //RootPanel.get("statusBar").add(new HTMLPanel("Update to "
+		                   // + managedResourceStore.getCurrentVersion()
+		                   // + " was completed.  Please refresh the page to see the changes."));
+		              }
+		              break;
+		            case ManagedResourceStore.UPDATE_CHECKING:
+		            case ManagedResourceStore.UPDATE_DOWNLOADING:
+		              transferringData += ".";
+		              //RootPanel.get("statusBar").add(new HTMLPanel(transferringData));
+		              schedule(500);
+		              break;
+		            case ManagedResourceStore.UPDATE_FAILED:
+		            	//RootPanel.get("statusBar").add(new HTMLPanel(managedResourceStore.getLastErrorMessage()));
+		              break;
+		          }
+		        }
+		      }.schedule(500);
+
+		    } catch (GearsException e) {
+		      //RootPanel.get("statusBar").add(new HTMLPanel("Unkown error"));
+		    }
+		  }
+
+	
 	private void goOfflineOnline(){
 		final Image uploadButton;
 		final Image downloadButton;
-
+		
 		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
 		RootPanel.get("controlPanel").add(bodyHtml);
 		Image onlineOfflineButton = Image.wrap(RootPanel.get("onlineOfflineButtonId").getElement());
@@ -92,9 +141,13 @@ public class IndexTemplate extends BaseTemplate {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
 		    		   requestContext.getArgs().put("action", "gooffline");
+		    		   LocalServer server = Factory.getInstance().createLocalServer();
+		    		   createManagedResourceStore();
+		    			      
 		    	   }
 		    	   else{
 		    		   requestContext.getArgs().put("action", "goonline");
+
 		    	   }
 		    		   
 		    	   Index index = new Index(requestContext);
