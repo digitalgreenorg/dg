@@ -29,6 +29,10 @@ public class BaseTemplate extends Template {
 	protected HTMLPanel displayHtml = null;
 	protected Form formTemplate = null;
 
+	public BaseTemplate() {
+		super();
+	}
+	
 	public BaseTemplate(RequestContext requestContext) {
 		super(requestContext);
 		initUI();
@@ -186,6 +190,14 @@ public class BaseTemplate extends Template {
 		return link;
 	}
 	
+	public static native void showGlassDoorMessage(String htmlMsg) /*-{
+		return $wnd.showStatus(htmlMsg);
+	}-*/;
+
+	public static native void hideGlassDoorMessage() /*-{
+		return $wnd.hideStatus();
+	}-*/;
+
 	// HTML form -> query string
 	public static native String getFormString(String formId) /*-{
 		return $wnd.getFormString(formId);
@@ -194,7 +206,7 @@ public class BaseTemplate extends Template {
 	// Query string -> HTML form
 	public static native String putFormString(String queryString, String formId) /*-{
 		return $wnd.putFormString(queryString, formId);
-	}-*/;
+	}-*/;	
 	
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +
@@ -215,6 +227,7 @@ public class BaseTemplate extends Template {
 		"<!-- END Content -->" +
 		"<div id='sub-container'>" +
 		"</div>" +
+		"<div id='footer'></div>" +
 	"</div>" +
 	"<!-- END Container -->";
 }
