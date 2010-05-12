@@ -5,8 +5,6 @@ import com.google.gwt.user.client.Window;
 
 public class Schema {
 	
-	
-	
 	public static void createSchema() {
 		try {
 			BaseData.dbOpen();

@@ -113,7 +113,7 @@ public class ScreeningsData extends BaseData {
 			return this.start_time;
 		}		
 		public String getEndTime(){
-			return this.start_time;
+			return this.end_time;
 		}
 		public String getLocation(){
 			return this.location;
@@ -330,8 +330,8 @@ public class ScreeningsData extends BaseData {
 	protected static String getScreeningOnlineURL = "/dashboard/getscreeningsonline/";
 	protected static String saveScreeningOfflineURL = "/dashboard/savescreeningoffline/";
 	protected String table_name = "screening";
-	protected String[] fields = {"id", "date", "START_TIME", "END_TIME", "LOCATION", "TARGET_PERSON_ATTENDANCE", "TARGET_AUDIENCE_INTEREST",
-									"TARGET_ADOPTIONS","village_id", "fieldofficer_id", "animator_id"}; 
+	protected String[] fields = {"id", "date", "start_time", "end_time", "location", "target_person_attendance", "target_audience_interest",
+									"target_adoptions","village", "fieldofficer", "animator"}; 
 	
 	public ScreeningsData() {
 		super();

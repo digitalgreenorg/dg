@@ -32,7 +32,7 @@ public class LoginData extends BaseData {
 	protected static String tableID = "31";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `user` " +
 	  "(last_inserted_id INTEGER PRIMARY KEY NOT NULL, " +
-	  "username VARCHAR(100)," +
+	  " username VARCHAR(100)," +
 	  " password VARCHAR(100)," +
 	  " app_status CHAR(1)," +
 	  " dirty_bit CHAR(1)," +

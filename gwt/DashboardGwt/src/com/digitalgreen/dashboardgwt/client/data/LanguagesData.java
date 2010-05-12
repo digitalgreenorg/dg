@@ -257,7 +257,9 @@ public class LanguagesData extends BaseData {
 		}
 		else{
 			if(this.validate()) {
+				Window.alert("here1");
 				this.save();
+				Window.alert("here2");
 				return true;
 			}
 		}

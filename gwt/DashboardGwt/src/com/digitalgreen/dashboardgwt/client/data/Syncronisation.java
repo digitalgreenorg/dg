@@ -141,10 +141,10 @@ public class Syncronisation {
 		this.servlet = servlet;
 		BaseData instance = new BaseData();
 		ArrayList<Integer> resultSet = new ArrayList<Integer>();
+		
 		if(instance.checkIfUserTableExists()) {
 			resultSet = loginData.checkDirtyBitStatusInTheUserTable(ApplicationConstants.getUsernameCookie());
 		}
-			
 		if(instance.checkIfUserTableExists() && !resultSet.isEmpty() && resultSet.get(0) == 1){
 			// Case 1 : Download has been interrupted in between. Resume the download
 			this.currentIndex = resultSet.get(1);
@@ -159,7 +159,8 @@ public class Syncronisation {
 			Schema.createSchema();
 			this.currentIndex = 0;
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
-		}			
+		}
+		
 	}
 	
 	
@@ -169,7 +170,8 @@ public class Syncronisation {
 		if(formQueue.getResultSet().isValidRow()){
 			try {
 				if(formQueue.getResultSet().getFieldAsInt(3) == 0){
-					String queryString = "id="+formQueue.getResultSet().getFieldAsString(1)+"&"+formQueue.getResultSet().getFieldAsString(2);
+					//String queryString = "id="+formQueue.getResultSet().getFieldAsString(1)+"&"+formQueue.getResultSet().getFieldAsString(2);
+					String queryString = formQueue.getResultSet().getFieldAsString(2);
 					if(formQueue.getResultSet().getFieldAsChar(4) == 'A'){
 						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
 						formQueue.post(RequestContext.SERVER_HOST + 
