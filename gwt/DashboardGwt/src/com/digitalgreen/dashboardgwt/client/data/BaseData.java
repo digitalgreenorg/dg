@@ -402,7 +402,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.request(RequestBuilder.POST, url, null);
 	}
 	
-	public static boolean dbOpen() {
+	public static boolean dbOpen(){
 		try{
 			if(BaseData.db == null) {
 				BaseData.db = Factory.getInstance().createDatabase();
@@ -422,6 +422,15 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			}
 		} catch (DatabaseException e) {
 			Window.alert("Database close error: " + e.toString());
+		}
+	}
+	
+	public static void dbCheck() throws Exception{
+		try{
+			BaseData.db = Factory.getInstance().createDatabase();
+			db.open(BaseData.databaseName);
+		}catch(Exception e){
+			throw e;
 		}
 	}
 	
@@ -570,17 +579,17 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		this.update(updateLastInsertedID, id, ApplicationConstants.getUsernameCookie());
 	}
 	
-	public boolean checkIfUserTableExists(){
-		BaseData.dbOpen();
-		this.select(userTableExists);
-		if (this.getResultSet().isValidRow()){
-			BaseData.dbClose();
-			return true;
-		}
-		else{
-			BaseData.dbClose();
-			return false;
-		}
+	public Boolean checkIfUserTableExists(){
+			BaseData.dbOpen();
+			this.select(userTableExists);
+			if (this.getResultSet().isValidRow()){
+				BaseData.dbClose();
+				return true;
+			}
+			else{
+				BaseData.dbClose();
+				return false;
+			}
 	}
 	
 	public int getApplicationStatus(){
