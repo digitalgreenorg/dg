@@ -40,26 +40,62 @@ public class Index extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg == "gooffline"){
-					LoginData user = new LoginData();
-					user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
-					ApplicationConstants.toggleConnection(false);
-					RequestContext requestContext = new RequestContext();
-					this.redirectTo(new Index(requestContext));
+					try{
+						BaseData.dbCheck();
+						LoginData user = new LoginData();
+						user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+						ApplicationConstants.toggleConnection(false);
+						RequestContext requestContext = new RequestContext();
+						this.redirectTo(new Index(requestContext));
+					}catch (Exception e){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+									+ "and reload the application.");
+						this.redirectTo(new Index(requestContext));
+					}
 				}
 				else if (queryArg == "goonline"){
-					LoginData user = new LoginData();
-					user.updateAppStatus("1",ApplicationConstants.getUsernameCookie());
-					ApplicationConstants.toggleConnection(true);
-					RequestContext requestContext = new RequestContext();
-					this.redirectTo(new Index(requestContext));
+					try{
+						BaseData.dbCheck();
+						LoginData user = new LoginData();
+						user.updateAppStatus("1",ApplicationConstants.getUsernameCookie());
+						ApplicationConstants.toggleConnection(true);
+						RequestContext requestContext = new RequestContext();
+						this.redirectTo(new Index(requestContext));
+					}catch (Exception e){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+									+ "and reload the application.");
+						this.redirectTo(new Index(requestContext));
+					}
 				}
 				else if (queryArg == "sync"){
-					Syncronisation syncronisation = new Syncronisation();
-					syncronisation.syncFromLocalToMain(this);
+					try{
+						BaseData.dbCheck();
+						Syncronisation syncronisation = new Syncronisation();
+						syncronisation.syncFromLocalToMain(this);
+					}catch (Exception e){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+									+ "and reload the application.");
+						this.redirectTo(new Index(requestContext));
+					}
 				}
 				else if (queryArg == "resync"){
-					Syncronisation syncronisation = new Syncronisation();
-					syncronisation.syncFromMainToLocal(this);
+					try{
+						BaseData.dbCheck();
+						Syncronisation syncronisation = new Syncronisation();
+						syncronisation.syncFromMainToLocal(this);
+					}catch (Exception e){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+									+ "and reload the application.");
+						this.redirectTo(new Index(requestContext));
+					}
 				}
 			}
 			else{
