@@ -52,6 +52,10 @@ def base_partner(request):
     
     return render_to_response('base_partner.html')
 
+def base_partnerselection(request):
+    
+    return render_to_response('base_partnerselection.html')
+
 def base_career_immediate(request):
     
     return render_to_response('base_career_immediate.html')

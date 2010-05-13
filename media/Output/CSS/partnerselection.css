@@ -1,36 +1,39 @@
 
 #careernavpanel						{ margin-left:5%; margin-top:0%; width:100%; background-color:none; height:100% }
-#careertitleimg						{ margin-left:0%; top:10px; width:77px; height:5%; }
+#careertitleimg						{ margin-left:0%; top:10px; width:95%; height:5%; text-align:left;  }
 #careertitledesc					{ margin-left:0%; margin-top:10px; width:95%; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
 .careertitledesca					{ border-bottom-width:3px; border-bottom-style:solid; border-bottom-color:#e8f7ba;  }
 .careertitledesca	a				{ text-decoration:none; font-size:1em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }	
 .careertitledesca	a:hover			{ color:Black; }	 
 
 #careerbody							{ width:100%; margin:0%; padding:0%; }
-#careerbodydiv1						{ float:left; width:12.5%; min-height:600px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
+#careerbodydiv1						{ float:left; width:12.5%; min-width:150px; min-height:600px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top; }
 #careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; }
-#careerbodydiv3						{ float:left; width:12.5%; margin:0%; padding:0%; }
+#careerbodydiv3						{ float:left; width:12.5%; min-width:60px; margin:0%; padding:0%; }
 
 #contentheader						{ width:100%; margin-top:10px; text-align:center; margin-left:0%; margin-right:0%; }
 #contentheadertable					{ width:100%; margin-top:5px; background-color:none; }
 .contentheadertitlediv				{ width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; align:center; padding-bottom:2px; }
 .contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
 
-#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
-#table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:100%; padding:0px; font-size:0.8em; font-family:Calibri; font-weight:normal;  text-align:justify; background-color:none; margin-bottom:10px; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#59af04; }
-.contenttd1div1						{ float:left; width:433px; min-height:140px; margin-bottom:20px; padding:0px; background-color:#f2f2f2; margin-right:20px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
-.contenttd1div1left					{ float:left; width:149px; height:116px; margin-right:5px; margin-left:4px; margin-top:5px; margin-bottom:5px; border-width:0px; border-style:solid; border-color:Gray; }
-.contenttd1div1right				{ float:left; margin-right:5px; width:270px;  background-color:none; margin-top:5px; margin-bottom:5px;}
-.contenttd1div1lidiv2title			{ float:none; padding:5px; background-color:none; }	
-.contenttd1div1lidiv2desc			{ float:none; padding:5px; padding-bottom:10px; background-color:none; color:#5B6E1D; }
+#contentdiv1						{ width:98%; margin-top:0px; text-align:justify; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; margin-left:1%; margin-right:0%; }
+#contentdiv1	a					{ color:Gray; font-weight:bold; text-decoration:none; }
+#contentdiv1	a:hover				{ color:#fbae0c; font-weight:bold; text-decoration:underline; }
 
-.contenttd1div1lidiv2title a		{ font-size:1em; font-family:Calibri; color:Black; font-weight:bold; text-decoration:none; }
-.contenttd1div1lidiv2title a:hover	{ color:Black; text-decoration:underline; }
+#index								{ text-decoration:underline; }
+.section							{ color:#5B6E1D; display:block; background-color:#E8F7BA; padding-top:5px; padding-bottom:5px; padding-left:2px; }
 
 
-.contenttd1div2						{ float:left; width:85%; margin-top:0px; }
-.contenttd1div2title				{ float:none; width:100%; margin-top:0px; padding-left:0px; height:40px; }
+#contentdiv1 img					{ margin:5px; margin-right:0px }
+#contentdiv1 ul						{ margin-top:5px; }
+#table1								{ margin-left:0px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+.contenttd1							{ width:33%; padding:2px 2px 0px 2px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; background-color:none; margin-bottom:10px; border:1px solid #e0e0e0; }
+.contenttd1div						{ float:none; width:95%; margin-top:5px; margin-bottom:5px; text-align:left; margin-left:1% }
+.contenttd1div1 img					{ position:absolute; z-index:0; width:123px; height:147px;}
+.contenttd1div1name					{ width:122px; position:absolute; z-index:1; margin-top:122px; text-align:center; font-size:1.0em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
+
+.contenttd1div2						{ float:left; width:83%; margin-top:0px; }
+.contenttd1div2title				{ float:none; width:100%; margin-top:0px; padding-left:0px; padding-top:0px; padding-bottom:0px; }
 .contenttd1div2titleul				{ margin-top:5px; margin-left:2px; margin-bottom:0px; text-decoration:none; }
 .contenttd1div2titleul li			{ display:inline; color:Gray; font-weight:bold; margin-right:80px; margin-left:-40px }	
 .contenttd1div2titleul li a			{ color:Gray; font-weight:bold; text-decoration:none; }
@@ -40,7 +43,6 @@
 
 
 
-.contenttd1div ul					{ list-style-type:square; }
 .contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding-top:2px; padding-right:2px; padding-left:2px; }
 .contenttd2div3						{ margin-top:0px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:1px; border-style:solid; border-color:Gray; }
 
@@ -55,7 +57,7 @@
 
 #table2								{ margin-left:5px; width:100%; margin-top:10px; }
 .content2td							{ width:100%; }
-#content2tdtitle1					{ float:none; margin-left:0px; margin-top:0px; width:95%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; }
+#content2tdtitle1					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
 #content2tdtitle2					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
 #content2tdtitle3					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
 #content2tdtitle4					{ float:none; margin-left:0px; margin-top:0px; width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; border-width:0px; border-style:solid; border-color:#59af04; padding:2px; }
