@@ -59,7 +59,7 @@ _new_template = '';
 var is_edit,is_inited = false;
 var app_status;
 
-function  showStatus(msg){
+function showStatus(msg) {
 	$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
 	$('#box').css({'display': 'block'});
 	if(msg != null)

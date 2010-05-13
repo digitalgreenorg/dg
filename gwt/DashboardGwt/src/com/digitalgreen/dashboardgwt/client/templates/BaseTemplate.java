@@ -190,12 +190,22 @@ public class BaseTemplate extends Template {
 		return link;
 	}
 	
-	public static native void showGlassDoorMessage(String htmlMsg) /*-{
-		return $wnd.showStatus(htmlMsg);
+	public void showGlassDoorMessage(String htmlMsg) {
+		//RootPanel.get().getElement().setId("screen");
+		BaseTemplate.showGlassDoorMessageJavascript(htmlMsg);
+	}
+	
+	public static native void showGlassDoorMessageJavascript(String htmlMsg) /*-{
+		return $wnd.showGlassDoorMessage(htmlMsg);
 	}-*/;
 
-	public static native void hideGlassDoorMessage() /*-{
-		return $wnd.hideStatus();
+	public void hideGlassDoorMessage() {
+		BaseTemplate.hideGlassDoorMessageJavascript();
+		//RootPanel.get().getElement().setId("");
+	}
+	
+	public static native void hideGlassDoorMessageJavascript() /*-{
+		return $wnd.hideGlassDoorMessage();
 	}-*/;
 
 	// HTML form -> query string
@@ -228,6 +238,7 @@ public class BaseTemplate extends Template {
 		"<div id='sub-container'>" +
 		"</div>" +
 		"<div id='footer'></div>" +
+		"<div id='box'></div>" +
 	"</div>" +
 	"<!-- END Container -->";
 }

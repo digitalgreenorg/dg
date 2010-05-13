@@ -157,7 +157,7 @@ public class VillagesData extends BaseData {
 			validatorList.add(uniqueVillageBlockID);
 			return this.executeValidators(validatorList);
 		}
-		
+
 		@Override
 		public void save() {
 			VillagesData villagesDataDbApis = new VillagesData();

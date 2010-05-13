@@ -14,6 +14,7 @@ import com.digitalgreen.dashboardgwt.client.data.UsersData;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
+import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
 import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.user.client.Cookies;
@@ -36,10 +37,10 @@ public class Index extends BaseServlet {
 			super.redirectTo(new Login());
 		} 
 		else {
-			if(method == RequestContext.METHOD_POST) {
+			if(method.equals(RequestContext.METHOD_POST)) {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
-				if(queryArg == "gooffline"){
+				if(queryArg.equals("gooffline")) {
 					try{
 						BaseData.dbCheck();
 						LoginData user = new LoginData();
@@ -55,7 +56,7 @@ public class Index extends BaseServlet {
 						this.redirectTo(new Index(requestContext));
 					}
 				}
-				else if (queryArg == "goonline"){
+				else if (queryArg.equals("goonline")) {
 					try{
 						BaseData.dbCheck();
 						LoginData user = new LoginData();
@@ -71,7 +72,7 @@ public class Index extends BaseServlet {
 						this.redirectTo(new Index(requestContext));
 					}
 				}
-				else if (queryArg == "sync"){
+				else if (queryArg.equals("sync")){
 					try{
 						BaseData.dbCheck();
 						Syncronisation syncronisation = new Syncronisation();
@@ -84,7 +85,7 @@ public class Index extends BaseServlet {
 						this.redirectTo(new Index(requestContext));
 					}
 				}
-				else if (queryArg == "resync"){
+				else if (queryArg.equals("resync")){
 					try{
 						BaseData.dbCheck();
 						Syncronisation syncronisation = new Syncronisation();

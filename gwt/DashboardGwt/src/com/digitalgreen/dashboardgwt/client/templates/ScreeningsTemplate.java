@@ -323,5 +323,5 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 						"<script type='text/javascript'>DateTimeShortcuts.init()</script>"+						
-						"<script src='/site_media/dashboardgwt/gears_init.js' type='text/javascript'></script>";
+						"<script src='/dashboardgwt/gears_init.js' type='text/javascript'></script>";
 }

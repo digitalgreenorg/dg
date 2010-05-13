@@ -91,14 +91,11 @@ public class IndexTemplate extends BaseTemplate {
 
 	
 	private void goOfflineOnline(){
-		final Image uploadButton;
-		final Image downloadButton;
-		
 		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
 		RootPanel.get("controlPanel").add(bodyHtml);
 		Image onlineOfflineButton = Image.wrap(RootPanel.get("onlineOfflineButtonId").getElement());
-		downloadButton = Image.wrap(RootPanel.get("downloadButtonId").getElement());
-		uploadButton = Image.wrap(RootPanel.get("uploadButtonId").getElement());
+		final Image downloadButton = Image.wrap(RootPanel.get("downloadButtonId").getElement());
+		final Image uploadButton = Image.wrap(RootPanel.get("uploadButtonId").getElement());
 		String modeText = "";
 		if(!ApplicationConstants.getCurrentOnlineStatus()) {
 			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
@@ -135,7 +132,7 @@ public class IndexTemplate extends BaseTemplate {
 			}
 		};
 		t.schedule(1000);
-		
+
 		onlineOfflineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
@@ -161,11 +158,14 @@ public class IndexTemplate extends BaseTemplate {
 		    		  return;
 		    	  }
 		    	  Template.addLoadingMessage("Uploading data...");
+		    	  //BaseTemplate operationUi = new BaseTemplate();
+		    	  //operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' />Uploading to main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "sync");
 		    	  Index index = new Index(requestContext);
 		    	  index.response();
-		      }		      
+		    	  //operationUi.hideGlassDoorMessage();
+		      }
 	    });
 		
 		downloadButton.addClickHandler(new ClickHandler() {
@@ -174,10 +174,13 @@ public class IndexTemplate extends BaseTemplate {
 		    		  return;
 		    	  }
 		    	  Template.addLoadingMessage("Downloading data...");
+		    	  //BaseTemplate operationUi = new BaseTemplate();
+		    	  //operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' />Downloading your data from the main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "resync");
 		    	  Index index = new Index(requestContext);
 		    	  index.response();
+		    	  //operationUi.hideGlassDoorMessage();
 		      }		      
 	    });
 	}
@@ -333,7 +336,6 @@ public class IndexTemplate extends BaseTemplate {
 		bulletsHtml.setStyleName("bulletsClass");
 		RootPanel.get("sub-container").add(bulletsHtml);
 		goOfflineOnline();
-		
 	}
 	
 	final static private String bulletsBodyHtml = 

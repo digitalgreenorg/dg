@@ -73,6 +73,18 @@
   <!--                                           -->
   <body class="">
   	<script type="text/javascript">
+  		function showGlassDoorMessage(msg){
+  			$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
+  			$('#box').css({'display': 'block'});
+  			if(msg != null)
+  				$('#box').html(msg);	
+		}
+
+  		function hideGlassDoorMessage() {
+  			$('#box').css('display', 'none');
+  			$('#screen').css('display', 'none');
+  		}
+  		
  		function getFormString(formId) {
  			return $('#' + formId).serialize();
  		}
