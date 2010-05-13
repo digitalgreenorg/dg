@@ -153,8 +153,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	final private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' />" +
-							"<script src='/site_media/media/js/jquery.js' type='text/javascript'></script>" +
-							"<script src='/site_media/media/js/screening_page_offline.js' type='text/javascript'></script>" +
+							"<script src='/media/js/jquery.js' type='text/javascript'></script>" +
+							"<script src='/media/js/screening_page_offline.js' type='text/javascript'></script>" +
 							"<script type='text/javascript'>screening_page_offline.init()</script>" +
 							"<div id='content' class='colM'>" +
 							"<h1>Add screening</h1>" +
