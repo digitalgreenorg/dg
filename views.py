@@ -24,7 +24,7 @@ from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str
 from django.conf.urls.defaults import *
 
-	
+
 def search(request):
         """
         Searches in the fields of the given related model and returns the
@@ -61,34 +61,6 @@ def search(request):
             return HttpResponse(data)
         return HttpResponseNotFound()
 
-
-def hello(request):
-	return HttpResponse("Hello world")
-
-def homepage(request):
-	return HttpResponse("This is a home page")
-
-def current_datetime(request):
-	now = datetime.datetime.now()
-	#t = get_template('current_datetime.html')
-	##html = "<html><body>It is now %s. </body></html>" %now
-	#html = t.render(Context({'current_date':now}))
-	#return HttpResponse(html)
-	return render_to_response('current_datetime.html',{'current_date':now})
-
-def hours_ahead(reqest,offset):
-	try:
-		hour_offset = int(offset)
-	except ValueError:
-		raise Http404()
-	next_time = datetime.datetime.now() + datetime.timedelta(hours=hour_offset)
-	#assert False
-	#html = "<html><body>In %s hour(s), it will be %s.<body></html>" % (offset, dt)
-	#return HttpResponse(html)
-	return render_to_response('hours_ahead.html',locals())
-
-
-
 def test(request, village_id):
         village = Village.objects.get(pk=int(village_id))
         animators = Animator.objects.filter(assigned_villages=village)
@@ -96,12 +68,10 @@ def test(request, village_id):
         json_subcat = serializers.serialize("json", animators)
         return HttpResponse("callback0(" + json_subcat + ");", mimetype="application/javascript")
 
-
 def test_gwt(request, region_id):
 	if request.method == 'POST':
 		form = RegionTestForm(request.POST)
 		if form.is_valid():
-			#new_form = form.save()
 			new_form  = form.save(commit=False)
 			new_form.id = request.POST['id']
 			new_form.save()
@@ -111,12 +81,11 @@ def test_gwt(request, region_id):
 	else:
 		return HttpResponse("Get Request")
 
-
 def feed_animators(request, village_id):
-        village = Village.objects.get(pk=int(village_id))
-        animators = Animator.objects.filter(assigned_villages=village)
+	village = Village.objects.get(pk=int(village_id))
+	animators = Animator.objects.filter(assigned_villages=village)
 	json_subcat = serializers.serialize("json", animators)
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+	return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def feeds_persons(request, group_id):
 	group = PersonGroups.objects.get(pk=int(group_id))
@@ -155,7 +124,7 @@ def feed_person_html_on_person_group(request):
 								 html = chomp.sub('',html.render(Context(dict(persons=persons,init=init_id)))), \
 								 prac = chomp.sub('',get_prac()))))
 		
-		
+
 #Takes 'mode' parameter
 #On mode = 0 , returns only list of persons and tot_val (value of TOTAL FORM in "Screening" page)
 #On mode = 1, returns prac_list, persons and tot_val
@@ -164,7 +133,7 @@ def feed_person_html_on_person_group_modified(request):
 	mode = int(request.GET.get('mode'))
 	group_id = request.GET.getlist('groups')
 	init_id = request.GET.get('init')
-	
+
 	if(not(group_id and init_id) or mode not in [0,1]):
 		return HttpResponse('{"html":\'Error\'}');
 	
@@ -188,8 +157,6 @@ def feed_person_html_on_person_group_modified(request):
 								 prac = chomp.sub('',get_prac()))))
 
 				
-		
-	
 #return Practices in Options <options ..>...</option>
 def get_prac():
 	pracs = Practices.objects.all()
@@ -1168,61 +1135,31 @@ def get_animators_online(request, offset, limit):
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
-'''def save_animator_offline(request, id):
-	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
-	if request.method == 'POST':
-		if(id):
-			animator = Animator.objects.get(id=id)
-       	  	form = AnimatorForm(request.POST, instance = animator)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = AnimatorForm(request.POST)
-		    #formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES)
-		    if form.is_valid(): # and formset.is_valid():	
-				new_form  = form.save(commit=False)
-				new_form.id = request.POST['id']
-				animator = Animator.objects.get(pk=new_form.id)
-				formset = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
-				new_form.save()
-				new_formset = formset.save(commit=False)
-				if(not new_formset.is_valid()):
-				    return HttpResponse("0")
-				i = 0
-				for new_form in new_formset.forms:
-					new_form.id = request.POST['animatorassignedvillage_set-'+i+'-id']
-					i = i+1
-				new_formset.save()
-				return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")	'''
-	
 def save_animator_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if id:
+			print "IN EDIT CASE " + str(id)
 			animator = Animator.objects.get(id=id)
-       	  	form = AnimatorForm(request.POST, instance = animator)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = AnimatorForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = AnimatorForm(request.POST, instance = animator)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
+			print "IN ADD CASE "
+			form = AnimatorForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
 
 def save_animatorassignedvillage_online(request,id):
 	if request.method == 'POST':
-		if(id):
+		if id:
 			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
 			form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)
 		else:
@@ -1233,7 +1170,7 @@ def save_animatorassignedvillage_online(request,id):
 		else:
 			return HttpResponse(form.errors.as_text(), status=201)
 	else:
-		if(id):
+		if id:
 			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
 			form = AnimatorAssignedVillageForm(instance = animatorassignedvillage)
 		else:
@@ -1258,24 +1195,26 @@ def get_animatorassignedvillages_online(request, offset, limit):
 
 def save_animatorassignedvillage_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if id:
 			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
-       	  	form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = AnimatorAssignedVillageForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")	
-		
+			form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				print form.errors
+				return HttpResponse("0")
+		else:
+			form = AnimatorAssignedVillageForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				print form.errors
+				return HttpResponse("0")
+
 def save_persongroup_online(request,id):
 	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=30)
 	if request.method == 'POST':
