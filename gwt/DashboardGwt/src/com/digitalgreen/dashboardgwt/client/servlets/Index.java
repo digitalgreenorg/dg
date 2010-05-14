@@ -100,6 +100,8 @@ public class Index extends BaseServlet {
 				}
 			}
 			else{
+				BaseTemplate operationUi = new BaseTemplate();
+				operationUi.hideGlassDoorMessage();
 				this.fillTemplate(new IndexTemplate(this.requestContext));
 			}
 		}

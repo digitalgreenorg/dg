@@ -74,10 +74,12 @@
   <body class="">
   	<script type="text/javascript">
   		function showGlassDoorMessage(msg){
-  			$('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height(), 'display':'inline'});
+  			$('#screen').css({ opacity: 0.7, 'width':screen.width,'height':screen.height, 'display':'inline'});
   			$('#box').css({'display': 'block'});
-  			if(msg != null)
-  				$('#box').html(msg);	
+  			if(msg != null){
+  				$('#box').html(msg);
+  			}
+  				
 		}
 
   		function hideGlassDoorMessage() {

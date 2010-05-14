@@ -63,29 +63,20 @@ public class IndexTemplate extends BaseTemplate {
 		        public void run() {
 		          switch (managedResourceStore.getUpdateStatus()) {
 		            case ManagedResourceStore.UPDATE_OK:
-		              if (managedResourceStore.getCurrentVersion().equals(oldVersion)) {
-		            	  //RootPanel.get("statusBar").add(new HTMLPanel("No update was available."));
-		              } else {
-		            	  //RootPanel.get("statusBar").add(new HTMLPanel("Update to "
-		                   // + managedResourceStore.getCurrentVersion()
-		                   // + " was completed.  Please refresh the page to see the changes."));
-		              }
 		              break;
 		            case ManagedResourceStore.UPDATE_CHECKING:
 		            case ManagedResourceStore.UPDATE_DOWNLOADING:
 		              transferringData += ".";
-		              //RootPanel.get("statusBar").add(new HTMLPanel(transferringData));
 		              schedule(500);
 		              break;
 		            case ManagedResourceStore.UPDATE_FAILED:
-		            	//RootPanel.get("statusBar").add(new HTMLPanel(managedResourceStore.getLastErrorMessage()));
 		              break;
 		          }
 		        }
 		      }.schedule(500);
 
 		    } catch (GearsException e) {
-		      //RootPanel.get("statusBar").add(new HTMLPanel("Unkown error"));
+		    	Window.alert("Download of static content failed.");
 		    }
 		  }
 
@@ -136,15 +127,16 @@ public class IndexTemplate extends BaseTemplate {
 		onlineOfflineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+		    	   BaseTemplate operationUi = new BaseTemplate();
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
+		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going offline");
 		    		   requestContext.getArgs().put("action", "gooffline");
 		    		   LocalServer server = Factory.getInstance().createLocalServer();
 		    		   createManagedResourceStore();
-		    			      
 		    	   }
 		    	   else{
+		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going online");
 		    		   requestContext.getArgs().put("action", "goonline");
-
 		    	   }
 		    		   
 		    	   Index index = new Index(requestContext);
@@ -157,14 +149,13 @@ public class IndexTemplate extends BaseTemplate {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
-		    	  Template.addLoadingMessage("Uploading data...");
-		    	  //BaseTemplate operationUi = new BaseTemplate();
-		    	  //operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' />Uploading to main server");
+		    	  //Template.addLoadingMessage("Uploading data...");
+		    	  BaseTemplate operationUi = new BaseTemplate();
+		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Uploading to main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "sync");
 		    	  Index index = new Index(requestContext);
 		    	  index.response();
-		    	  //operationUi.hideGlassDoorMessage();
 		      }
 	    });
 		
@@ -173,14 +164,13 @@ public class IndexTemplate extends BaseTemplate {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
-		    	  Template.addLoadingMessage("Downloading data...");
-		    	  //BaseTemplate operationUi = new BaseTemplate();
-		    	  //operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' />Downloading your data from the main server");
+		    	  //Template.addLoadingMessage("Downloading data...");
+		    	  BaseTemplate operationUi = new BaseTemplate();
+		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "resync");
 		    	  Index index = new Index(requestContext);
 		    	  index.response();
-		    	  //operationUi.hideGlassDoorMessage();
 		      }		      
 	    });
 	}

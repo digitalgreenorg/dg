@@ -191,7 +191,6 @@ public class BaseTemplate extends Template {
 	}
 	
 	public void showGlassDoorMessage(String htmlMsg) {
-		//RootPanel.get().getElement().setId("screen");
 		BaseTemplate.showGlassDoorMessageJavascript(htmlMsg);
 	}
 	
@@ -201,7 +200,6 @@ public class BaseTemplate extends Template {
 
 	public void hideGlassDoorMessage() {
 		BaseTemplate.hideGlassDoorMessageJavascript();
-		//RootPanel.get().getElement().setId("");
 	}
 	
 	public static native void hideGlassDoorMessageJavascript() /*-{
@@ -239,6 +237,7 @@ public class BaseTemplate extends Template {
 		"</div>" +
 		"<div id='footer'></div>" +
 		"<div id='box'></div>" +
+		"<div id='screen'></div>" +
 	"</div>" +
 	"<!-- END Container -->";
 }
