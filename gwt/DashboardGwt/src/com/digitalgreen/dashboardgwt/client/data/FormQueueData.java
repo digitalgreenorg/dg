@@ -39,7 +39,9 @@ public class FormQueueData extends BaseData {
 		@Override
 		public void save() {
 			FormQueueData formQueueData = new FormQueueData();
-			formQueueData.autoInsert(this.table_id,
+			formQueueData.systemAutoIncrement = true;
+			formQueueData.autoInsert(this.id,
+					this.table_id,
 					this.global_pk_id,
 					this.queryString,
 					this.syncStatus,
@@ -49,7 +51,8 @@ public class FormQueueData extends BaseData {
 	
 	protected ArrayList formQueryStringList = null;
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `formqueue` " +
-										  "(table_id INTEGER NOT NULL, " +
+										  "(id INTEGER PRIMARY KEY, " +
+										  "table_id INTEGER NOT NULL, " +
 										  "global_pk_id INTEGER NOT NULL, " +
 										  "querystring VARCHAR NOT NULL, " +
 										  "sync_status BOOLEAN, " +
@@ -58,8 +61,7 @@ public class FormQueueData extends BaseData {
 	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 LIMIT 1";
 	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE global_pk_id=?";
 	protected String table_name = "formqueue";
-	protected String[] fields = {"table_id", "global_pk_id", "querystring", "sync_status", "action"};
-	
+	protected String[] fields = {"id", "table_id", "global_pk_id", "querystring", "sync_status", "action"};
 	
 	public FormQueueData() {
 		super();
@@ -68,7 +70,7 @@ public class FormQueueData extends BaseData {
 	
 	public FormQueueData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
-		this.formQueryStringList = new ArrayList();	
+		this.formQueryStringList = new ArrayList();
 	}
 
 	public FormQueueData.Data initFormQueueAdd(String table_id, String global_pk_id, 

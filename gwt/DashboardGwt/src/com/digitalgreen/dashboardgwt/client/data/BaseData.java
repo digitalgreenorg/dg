@@ -283,7 +283,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected ResultSet lastResultSet;
 	protected String table_name = "";
 	protected String[] fields = {};
-	
+	protected boolean systemAutoIncrement = false;
+
 	final static public int ERROR_RESPONSE = 1;
 	final static public int ERROR_SERVER = 2;
 	
@@ -526,16 +527,21 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		else{
 			String newId = this.getNextRowId();
 			if(!newId.equals("ERROR")) {
-				tempList.add(0, newId);
-				for(int i=0; i < tempList.size(); i++) {
-					if(tempList.get(i) == null) 
-						tempListString[i] = (String)tempList.get(i);
-					else
-						tempListString[i] = "" + tempList.get(i);
+				if(this.systemAutoIncrement) {
+					this.insert(insertSql, args);
+					return "";
+				} else {
+					tempList.add(0, newId);
+					for(int i=0; i < tempList.size(); i++) {
+						if(tempList.get(i) == null) 
+							tempListString[i] = (String)tempList.get(i);
+						else
+							tempListString[i] = "" + tempList.get(i);
+					}
+					this.insert(insertSql, tempListString);
+					this.updateLastInsertedID(newId);
+					return newId;
 				}
-				this.insert(insertSql, tempListString);
-				this.updateLastInsertedID(newId);
-				return newId;
 			}
 		}
 		return "-1";
