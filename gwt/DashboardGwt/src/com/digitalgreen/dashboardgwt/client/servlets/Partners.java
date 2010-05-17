@@ -88,8 +88,10 @@ public class Partners extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								PartnersData partnersData = new PartnersData();
-								List partners = partnersData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", partners);
+								if(!results.equals("EOF")){
+									List partners = partnersData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", partners);
+								}
 								getServlet().fillTemplate(new PartnersTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

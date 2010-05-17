@@ -87,8 +87,10 @@ public class PersonGroups extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								PersonGroupsData personGroupsData = new PersonGroupsData();
-								List personGroups = personGroupsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", personGroups);
+								if(!results.equals("EOF")){
+									List personGroups = personGroupsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", personGroups);
+								}
 								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

@@ -249,7 +249,7 @@ public class PersonsData extends BaseData {
 			
 			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueTogether, new PersonsData());
 			uniquePersonFatherGroupVillage.setError("The Person, father, group, and village are already in the system.  Please make sure they are unique.");
-			
+			uniquePersonFatherGroupVillage.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personName);
 			validatorList.add(fatherName);
@@ -337,7 +337,7 @@ public class PersonsData extends BaseData {
 	protected static String getPersonOnlineURL = "/dashboard/getpersonsonline/";
 	protected String table_name = "person";
 	protected String[] fields = { "id", "person_name", "father_name", "age",
-			"gender", "phone_no", "address", "land_holder", "village_id",
+			"gender", "phone_no", "address", "land_holdings", "village_id",
 			"group_id" };
 
 	public PersonsData() {

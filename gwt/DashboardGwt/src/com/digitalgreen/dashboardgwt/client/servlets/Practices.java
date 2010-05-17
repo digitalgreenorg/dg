@@ -88,8 +88,10 @@ public class Practices extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								PracticesData practicesData = new PracticesData();
-								List practices = practicesData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", practices);
+								if(!results.equals("EOF")){
+									List practices = practicesData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", practices);
+								}
 								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

@@ -398,7 +398,7 @@ public class PersonsTemplate extends BaseTemplate{
 													"</div>" +
 												"</div>" +
 												"<div class='submit-row' >" +
-												"<input id='save' value='Save' class='default' name='_save' />" +
+												"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 												"</div>" +
 												"<script type='text/javascript'>document.getElementById('id_person_name').focus();</script>" +
 												"<script type='text/javascript'>" +

@@ -89,8 +89,10 @@ public class Trainings extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								TrainingsData trainingsData = new TrainingsData();
-								List trainings = trainingsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", trainings);
+								if(!results.equals("EOF")){
+									List trainings = trainingsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", trainings);
+								}
 								getServlet().fillTemplate(new TrainingTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

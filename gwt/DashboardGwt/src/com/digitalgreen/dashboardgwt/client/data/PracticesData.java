@@ -111,6 +111,7 @@ public class PracticesData extends BaseData {
 			uniquePractice.add(practice_name);
 			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniquePractice, new PracticesData());
 			uniqueNameValidator.setError("The Practice name is already in the system.  Please make sure it is unique.");
+			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);
 			validatorList.add(seasonalityValidator);

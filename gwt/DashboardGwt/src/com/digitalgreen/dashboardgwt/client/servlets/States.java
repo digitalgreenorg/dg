@@ -88,8 +88,10 @@ public class States extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								StatesData statesData = new StatesData();
-								List states = statesData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", states);
+								if(!results.equals("EOF")){
+									List states = statesData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", states);
+								}
 								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

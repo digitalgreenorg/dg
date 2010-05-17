@@ -88,8 +88,10 @@ public class Animators extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								AnimatorsData animatorsData = new AnimatorsData();
-								List animators = animatorsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", animators);
+								if(!results.equals("EOF")){
+									List animators = animatorsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", animators);
+								}
 								getServlet().fillTemplate(new AnimatorsTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

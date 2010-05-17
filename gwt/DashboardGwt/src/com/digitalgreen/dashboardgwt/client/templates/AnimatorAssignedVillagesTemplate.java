@@ -166,7 +166,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 										"</div>" +
 									"</fieldset>" +
 									"<div class='submit-row' >" +
-										"<input id='save' value='Save' class='default' name='_save' />" +
+										"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 									"</div>" +
 									"<script type='text/javascript'>document.getElementById('id_animator').focus();</script>" +
 									"<script type='text/javascript'>" +

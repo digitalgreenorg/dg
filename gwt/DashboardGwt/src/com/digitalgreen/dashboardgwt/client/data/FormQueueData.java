@@ -58,8 +58,9 @@ public class FormQueueData extends BaseData {
 										  "sync_status BOOLEAN, " +
 										  "action CHAR(1) NOT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `formqueue`;";
-	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 LIMIT 1";
-	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE global_pk_id=?";
+	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 ORDER BY id LIMIT 1";
+	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE id=?" ;
+	protected static String getMaxGlobalPkId = "SELECT MAX(global_pk_id) FROM `formqueue`;";
 	protected String table_name = "formqueue";
 	protected String[] fields = {"id", "table_id", "global_pk_id", "querystring", "sync_status", "action"};
 	

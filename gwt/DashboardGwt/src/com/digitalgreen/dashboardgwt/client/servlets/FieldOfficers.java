@@ -88,8 +88,10 @@ public class FieldOfficers extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								FieldOfficersData fieldOfficersData = new FieldOfficersData();
-								List fieldOfficers = fieldOfficersData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", fieldOfficers);
+								if(!results.equals("EOF")){
+									List fieldOfficers = fieldOfficersData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", fieldOfficers);
+								}
 								getServlet().fillTemplate(new FieldOfficerTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

@@ -88,8 +88,10 @@ public class Blocks extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								BlocksData blocksData = new BlocksData();
-								List blocks = blocksData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", blocks);
+								if(!results.equals("EOF")){
+									List blocks = blocksData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", blocks);
+								}
 								getServlet().fillTemplate(new BlocksTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

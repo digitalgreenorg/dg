@@ -79,6 +79,7 @@ public class LanguagesData extends BaseData {
 			uniqueName.add(language_name);
 			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new LanguagesData());
 			uniqueNameValidator.setError("The Language is already in the system.  Please make sure it is unique.");
+			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(languageName);
 			validatorList.add(uniqueNameValidator);
@@ -257,9 +258,7 @@ public class LanguagesData extends BaseData {
 		}
 		else{
 			if(this.validate()) {
-				Window.alert("here1");
 				this.save();
-				Window.alert("here2");
 				return true;
 			}
 		}

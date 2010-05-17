@@ -93,6 +93,10 @@ public class TrainingsData extends BaseData {
 			return this.training_start_date;
 		}
 		
+		public String getTrainingEndDate() {
+			return this.training_end_date;
+		}
+		
 		public VillagesData.Data getVillage() {
 			return this.village;
 		}
@@ -459,7 +463,7 @@ public class TrainingsData extends BaseData {
 		FieldOfficersData fieldofficerData = new FieldOfficersData();
 		List fieldofficers = fieldofficerData.getFieldOfficersListingOffline();
 		FieldOfficersData.Data fieldofficer;
-		String htmlFO = "<select name=\"field_officer_present\" id=\"id_field_officer_present\""+ 
+		String htmlFO = "<select name=\"fieldofficer\" id=\"id_fieldofficer\""+ 
 		"<option value='' selected='selected'>---------</option>";
 		for(int i=0; i < fieldofficers.size(); i++){
 			fieldofficer = (FieldOfficersData.Data)fieldofficers.get(i);

@@ -295,7 +295,6 @@ public class PartnersData extends BaseData {
 			this.post(RequestContext.SERVER_HOST + this.savePartnerOnlineURL + id + "/", this.form.getQueryString());
 		}
 		else{
-			Window.alert("THE ID = " + id);
 			if(this.validate()) {
 				this.save();
 				return true;

@@ -90,8 +90,10 @@ public class Villages extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								VillagesData villageData = new VillagesData();
-								List villages = villageData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", villages);
+								if(!results.equals("EOF")){
+									List villages = villageData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", villages);
+								}
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

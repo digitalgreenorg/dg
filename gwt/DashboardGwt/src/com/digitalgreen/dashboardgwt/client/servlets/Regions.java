@@ -88,8 +88,10 @@ public class Regions extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								RegionsData regionData = new RegionsData();
-								List regions = regionData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", regions);
+								if(!results.equals("EOF")){
+									List regions = regionData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", regions);
+								}
 								getServlet().fillTemplate(new RegionsTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

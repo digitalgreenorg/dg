@@ -92,6 +92,7 @@ public class RegionsData extends BaseData {
 			uniqueRegionName.add(region_name);
 			UniqueConstraintValidator regionName = new UniqueConstraintValidator(uniqueRegionName, new RegionsData());
 			regionName.setError("The 'Region name' is already in the system.  Please make sure it is unique.");
+			regionName.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);
 			validatorList.add(dateValidator);

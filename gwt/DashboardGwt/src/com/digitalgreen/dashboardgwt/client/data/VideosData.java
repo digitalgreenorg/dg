@@ -340,7 +340,7 @@ public class VideosData extends BaseData {
 			
 			UniqueConstraintValidator uniqueTitleStartEndDateVillageID = new UniqueConstraintValidator(uniqueTogether, new VideosData());
 			uniqueTitleStartEndDateVillageID.setError("The Title, video production start date, video production end date, and village are already in the system.  Please make sure they are unique.");
-
+			uniqueTitleStartEndDateVillageID.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(title);
 			validatorList.add(videoType);
@@ -370,11 +370,7 @@ public class VideosData extends BaseData {
 		
 		@Override
 		public void save() {
-			
-			if(this.id == null){
-				this.last_modified = BaseData.getCurrentDateAndTime();
-			}
-				
+			this.last_modified = BaseData.getCurrentDateAndTime();
 			VideosData videosDataDbApis = new VideosData();		
 			this.id = videosDataDbApis.autoInsert(this.id,
 						this.title, 
@@ -425,10 +421,10 @@ public class VideosData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `video` " +
 												"(id INTEGER PRIMARY KEY  NOT NULL ," +
 												"TITLE VARCHAR(200)  NOT NULL ," +
-												"VIDEO_TYPE INT  NOT NULL DEFAULT 0," +
+												"VIDEO_TYPE INT  NOT NULL," +
 												"DURATION TIME  NULL DEFAULT NULL," +
-												"language_id INT  NOT NULL DEFAULT 0," +
-												"SUMMARY TEXT  NULL ," +
+												"language_id INT  NOT NULL ," +
+												"SUMMARY TEXT  NULL DEFAULT NULL ," +
 												"PICTURE_QUALITY VARCHAR(200) NULL DEFAULT NULL," +
 												"AUDIO_QUALITY VARCHAR(200)  NULL DEFAULT NULL," +
 												"EDITING_QUALITY VARCHAR(200)  NULL DEFAULT NULL," +
@@ -437,18 +433,18 @@ public class VideosData extends BaseData {
 												"THEMATIC_QUALITY VARCHAR(200)  NULL DEFAULT NULL ," +
 												"VIDEO_PRODUCTION_START_DATE DATE  NOT NULL ," +
 												"VIDEO_PRODUCTION_END_DATE DATE  NOT NULL ," +
-												"STORYBASE INT  NOT NULL DEFAULT 0," +
+												"STORYBASE INT  NOT NULL," +
 												"STORYBOARD_FILENAME VARCHAR(100)  NULL DEFAULT NULL ," +
 												"RAW_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
 												"MOVIE_MAKER_PROJECT_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
 												"FINAL_EDITED_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
-												"village_id INT NOT NULL DEFAULT 0," +
-												"facilitator_id INT  NOT NULL DEFAULT 0," +
-												"cameraoperator_id INT  NOT NULL DEFAULT 0," +
+												"village_id INT NOT NULL," +
+												"facilitator_id INT  NOT NULL," +
+												"cameraoperator_id INT  NOT NULL," +
 												"reviewer_id INT  NULL DEFAULT NULL," +
 												"APPROVAL_DATE DATE  NULL DEFAULT NULL," +
 												"supplementary_video_produced_id INT  NULL DEFAULT NULL," +
-												"VIDEO_SUITABLE_FOR INT NOT NULL DEFAULT 0," +
+												"VIDEO_SUITABLE_FOR INT NOT NULL," +
 												"REMARKS TEXT  NULL DEFAULT NULL," +
 												"ACTORS VARCHAR(1)  NOT NULL ," +
 												"last_modified DATETIME  NOT NULL, " +
@@ -468,10 +464,10 @@ public class VideosData extends BaseData {
 	protected static String getVideoOnlineURL = "/dashboard/getvideosonline/";
 	protected static String saveVideoOfflineURL = "/dashboard/savevideooffline/";
 	protected String table_name = "video";
-	protected String[] fields = {"id", "title", "video_type", "duration", "language", "summary", "picture_quality","audio_quality",
+	protected String[] fields = {"id", "title", "video_type", "duration", "language_id", "summary", "picture_quality","audio_quality",
 								"editing_quality", "edit_start_date", "edit_finish_date", "thematic_quality", "video_production_start_date", 
 								"video_production_end_date", "storybase","storyboard_filename", "raw_filename", "movie_maker_project_filename",
-								"final_edited_filename", "village", "facilitator", "cameraoperator", "reviewer", "approval_date", "supplementary_video_produced",
+								"final_edited_filename", "village_id", "facilitator_id", "cameraoperator_id", "reviewer_id", "approval_date", "supplementary_video_produced_id",
 								"video_suitable_for", "remarks","actors", "last_modified"}; 		
 	
 	public VideosData() {

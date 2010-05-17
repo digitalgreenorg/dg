@@ -88,8 +88,10 @@ public class DevelopmentManagers extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
-								List developmentManagers = developmentManagersData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", developmentManagers);
+								if(!results.equals("EOF")){
+									List developmentManagers = developmentManagersData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", developmentManagers);
+								}
 								getServlet().fillTemplate(new DevelopmentManagersTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

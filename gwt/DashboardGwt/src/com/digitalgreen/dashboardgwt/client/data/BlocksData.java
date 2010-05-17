@@ -116,6 +116,7 @@ public class BlocksData extends BaseData {
 			uniqueName.add(block_name);
 			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new BlocksData());
 			uniqueNameValidator.setError("The Block is already in the system.  Please make sure it is unique.");
+			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(blockName);
 			validatorList.add(startDate);

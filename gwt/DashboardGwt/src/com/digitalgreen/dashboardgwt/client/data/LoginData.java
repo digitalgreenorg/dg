@@ -42,7 +42,7 @@ public class LoginData extends BaseData {
 	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?);";
 	protected static String authenticateUser = "SELECT username FROM user WHERE username=? AND password = ?";
 	protected static String selectUser = "SELECT username FROM user WHERE username=?";
-	protected static String updateUser = "UPDATE `user` SET last_inserted_id=?,app_status=?, dirty_bit=? WHERE username = ? AND password = ?";
+	protected static String updateUser = "UPDATE `user` SET last_inserted_id=? WHERE username = ? AND password = ?";
 	protected static String getSyncStatus = "SELECT dirty_bit, last_sync_table_index FROM `user` WHERE username = ?";
 	protected static String updateSyncStatus = "UPDATE `user` SET dirty_bit=?, last_sync_table_index=? where username = ?;";
 	protected static String postURL = "/dashboard/login/"; 
@@ -78,8 +78,8 @@ public class LoginData extends BaseData {
 		this.delete(dropTable);
 	}
 	
-	public void update(String primaryKey, String app_status, String dirty_bit, String username, String password ){
-		this.update(updateUser,  primaryKey, app_status, dirty_bit, username, password);
+	public void update(String primaryKey, String username, String password ){
+		this.update(updateUser,  primaryKey,  username, password);
 	}
 	
 	public void updateSyncStatus(String dirty_bit, String last_sync_table_index, String username){

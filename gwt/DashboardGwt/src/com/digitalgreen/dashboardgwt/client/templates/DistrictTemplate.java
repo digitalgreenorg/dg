@@ -125,7 +125,7 @@ public class DistrictTemplate extends BaseTemplate{
 	
 	final private String districtListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 								"<div id='content' class='flex'>" +
-									"<h1>Select region to change</h1>" +
+									"<h1>Select district to change</h1>" +
 									"<div id='content-main'>" +
 										"<ul class='object-tools'>" +
 											"<li id='add-link'>" +                // Insert add link here
@@ -183,7 +183,7 @@ public class DistrictTemplate extends BaseTemplate{
 									"</div>" +
 								"</fieldset>" +
 								"<div class='submit-row' >" +
-									"<input id='save' value='Save' class='default' name='_save' />" +
+									"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 								"</div>" +
 								"<script type='text/javascript'>document.getElementById('id_district_name').focus();</script>" +
 							"</div>" +

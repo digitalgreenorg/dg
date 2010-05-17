@@ -88,8 +88,10 @@ public class Videos extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								VideosData videosData = new VideosData();
-								List videos = videosData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", videos);
+								if(!results.equals("EOF")){
+									List videos = videosData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", videos);
+								}
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

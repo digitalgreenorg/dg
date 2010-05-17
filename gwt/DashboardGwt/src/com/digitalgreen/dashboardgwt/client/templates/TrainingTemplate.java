@@ -21,7 +21,6 @@ public class TrainingTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
-
 		String templateType = "Training";
 		String templatePlainType = "dashboard/training/add/";
 		RequestContext requestContext = new RequestContext();
@@ -75,6 +74,7 @@ public class TrainingTemplate extends BaseTemplate{
 					tableRows += "<tr class='" +style+ "'>" +
 								  "<td><input type='checkbox' class='action-select' value='"+ training.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th>" +
+									"<td>" + training.getTrainingEndDate() + "</td>" + 
 									"<td>"+ training.getVillage().getVillageName() + "</td>" +
 								"</tr>";
 				}
@@ -84,7 +84,7 @@ public class TrainingTemplate extends BaseTemplate{
 		return links;
 	}
 	
-	final private String addDataToElementID[] = {"id_village","id_development_manager_present","id_field_officer_present","id_animators_trained"};
+	final private String addDataToElementID[] = {"id_village","id_development_manager_present","id_fieldofficer","id_animators_trained"};
 	
 	private String trainingListFormHtml = "<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
@@ -99,21 +99,21 @@ public class TrainingTemplate extends BaseTemplate{
 								"<tr>" +
 									"<th>" +
 										"<input type='checkbox' id='action-toggle' />" +
-									"</th>" +
-									"<th>" +
-										"<a href='?ot=asc&amp;o=1'>" +
-											"Date" +
-										"</a>" +
-									"</th>" +
-									"<th>" +
-										"<a href='?ot=asc&amp;o=2'>" +
-											"Village" +
-										"</a>" +
-									"</th>" +
-									"<th>" +
-										"<a href='?ot=asc&amp;o=3'>" +
-											"Location" +
-										"</a>" +
+									 "</th>"+ 
+									 "<th>" +
+									 	"<a href='?ot=asc&amp;o=1'>" +
+									 		"Training start date" +
+									 	"</a>" +
+									 "</th>" + 
+									 "<th>" +
+									 	"<a href='?ot=asc&amp;o=2'>" +
+									 		"Training end date" +
+									 	"</a>" + 
+									 "</th>" + 
+									 "<th>" + 
+									 	"<a href='?ot=asc&amp;o=3'>" +
+									 		"Village" + 
+									 	"</a>" + 
 									"</th>" +
 								"</tr>" +
 							"</thead>" +
@@ -220,7 +220,7 @@ public class TrainingTemplate extends BaseTemplate{
         											"</div>" +
         											"<div class='form-row field_officer_present  '>" +
         												"<div>" +
-        													"<label for='id_field_officer_present' class='required'>Field officer present:</label><select name='fieldofficer' id='id_field_officer_present'>" +
+        													"<label for='id_field_officer_present' class='required'>Field officer present:</label><select name='fieldofficer' id='id_fieldofficer'>" +
         														"<option value='' selected='selected'>---------</option>" +
         													"</select>" +
         												"</div>" +
@@ -233,7 +233,7 @@ public class TrainingTemplate extends BaseTemplate{
         											"</div>" +
         										"</fieldset>" +
         										"<div class='submit-row' >" +
-        										"<input id='save' value='Save' class='default' name='_save' />" +
+        										"<input id='save' type='button' value='Save' class='default' name='_save' />" +
         										"</div>" +
         										"<script type='text/javascript'>document.getElementById('id_training_purpose').focus();</script>" +
         										"<script type='text/javascript'>" +

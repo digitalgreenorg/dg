@@ -38,7 +38,7 @@ public class Syncronisation {
 						}
 				} else if(results =="0") {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("Validation Error : Form cannot be verified on the main server");
+					requestContext.setErrorMessage("Validation Error : Form cannot be verified on the main server");
 					getServlet().redirectTo(new Index(requestContext));		
 				}else if(results=="synced"){
 					setGlobalIDInLocalUserTable();
@@ -52,11 +52,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessage("Problem in the connection with the server.");
+					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessage("Unknown error.  Please contact support.");
+					requestContext.setErrorMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
@@ -78,7 +78,7 @@ public class Syncronisation {
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("You do not have a valid account.Please contact support. ");
+					requestContext.setErrorMessage("You do not have a valid account.Please contact support. ");
 					getServlet().redirectTo(new Index(requestContext));				
 				}
 			}
@@ -87,11 +87,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessage("Problem in the connection with the server.");
+					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessage("Unknown error.  Please contact support.");
+					requestContext.setErrorMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 			
@@ -129,11 +129,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessage("Problem in the connection with the server.");
+					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessage("Unknown error.  Please contact support.");
+					requestContext.setErrorMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
@@ -170,20 +170,19 @@ public class Syncronisation {
 		formQueue.select(FormQueueData.getUnsyncTableRow);
 		if(formQueue.getResultSet().isValidRow()){
 			try {
-				if(formQueue.getResultSet().getFieldAsInt(3) == 0){
-					//String queryString = "id="+formQueue.getResultSet().getFieldAsString(1)+"&"+formQueue.getResultSet().getFieldAsString(2);
-					String queryString = formQueue.getResultSet().getFieldAsString(2);
-					if(formQueue.getResultSet().getFieldAsChar(4) == 'A'){
-						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
+				if(formQueue.getResultSet().getFieldAsInt(4) == 0){
+					String queryString = formQueue.getResultSet().getFieldAsString(3);
+					if(formQueue.getResultSet().getFieldAsChar(5) == 'A'){
+						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(0);
 						formQueue.post(RequestContext.SERVER_HOST + 
-								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL(), 
+								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(1))).getSaveOfflineURL(), 
 								queryString);
 						BaseData.dbClose();
 					}
-					else if(formQueue.getResultSet().getFieldAsChar(4) == 'E'){
-						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(1);
+					else if(formQueue.getResultSet().getFieldAsChar(5) == 'E'){
+						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(0);
 						formQueue.post(RequestContext.SERVER_HOST + 
-								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(0))).getSaveOfflineURL() + formQueue.getResultSet().getFieldAsString(1) +"/" , 
+								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(1))).getSaveOfflineURL() + formQueue.getResultSet().getFieldAsString(2) +"/" , 
 								queryString);
 						BaseData.dbClose();
 					}
@@ -209,8 +208,22 @@ public class Syncronisation {
 	}
 	
 	public void updateGlobalPkIDOnMainServer(){
-		String queryString = "id="+this.lastSyncedId+"&username="+ApplicationConstants.getUsernameCookie();
-		formQueue.post(this.setGlobalKeyURL, queryString);
+		BaseData.dbOpen();
+		formQueue.select(FormQueueData.getMaxGlobalPkId);
+		if(formQueue.getResultSet().isValidRow()){
+			String queryString;
+			try {
+				queryString = "id="+formQueue.getResultSet().getFieldAsInt(0)+"&username="+ApplicationConstants.getUsernameCookie();
+				formQueue.post(this.setGlobalKeyURL, queryString);
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		else{
+			Window.alert("Caught unexpected error in the local database.");
+		}
+		BaseData.dbClose();
 	}
 	
 	private void setGlobalIDInLocalUserTable(){
@@ -218,13 +231,13 @@ public class Syncronisation {
 			public void onlineSuccessCallback(String results) {
 				if(results != "0") {
 					LoginData user = new LoginData();
-					user.update(results, "1", "0", ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie());
+					user.update(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie());
 					RequestContext requestContext = new RequestContext();
 					requestContext.setMessage("Local database is in sync with the main server");
 					getServlet().redirectTo(new Index(requestContext));
 				} else {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("You do not have a valid account.Please contact support. ");
+					requestContext.setErrorMessage("You do not have a valid account.Please contact support. ");
 					getServlet().redirectTo(new Index(requestContext));				
 				}
 			}
@@ -233,11 +246,11 @@ public class Syncronisation {
 				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setMessage("Problem in the connection with the server.");
+					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
-					requestContext.setMessage("Unknown error.  Please contact support.");
+					requestContext.setErrorMessage("Unknown error.  Please contact support.");
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 			

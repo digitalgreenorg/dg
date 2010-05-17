@@ -151,7 +151,7 @@ public class BlocksTemplate extends BaseTemplate{
 										"</div>" +
 									"</fieldset>" +
 									"<div class='submit-row' >" +
-										"<input id='save' value='Save' class='default' name='_save' />" +
+										"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 									"</div>" +
 									"<script type='text/javascript'>document.getElementById('id_block_name').focus();</script>" +
 								"</div>" +

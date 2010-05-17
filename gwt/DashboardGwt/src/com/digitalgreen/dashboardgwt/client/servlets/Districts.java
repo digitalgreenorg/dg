@@ -88,8 +88,10 @@ public class Districts extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								DistrictsData districtsData = new DistrictsData();
-								List districts = districtsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", districts);
+								if(!results.equals("EOF")){
+									List districts = districtsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", districts);
+								}
 								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

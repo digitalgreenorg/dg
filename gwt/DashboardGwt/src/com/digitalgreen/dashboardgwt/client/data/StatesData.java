@@ -111,6 +111,7 @@ public class StatesData extends BaseData {
 			stateName.add(state_name);
 			UniqueConstraintValidator uniqueStateName = new UniqueConstraintValidator(stateName, new StatesData());
 			uniqueStateName.setError("The State Name is already in the system.  Please make sure it is unique.");
+			uniqueStateName.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(stateValidator);
 			validatorList.add(regionValidator);

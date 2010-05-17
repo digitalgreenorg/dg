@@ -88,8 +88,10 @@ public class Equipments extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								EquipmentsData equipmentsData = new EquipmentsData();
-								List equipments = equipmentsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", equipments);
+								if(!results.equals("EOF")){
+									List equipments = equipmentsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", equipments);
+								}
 								getServlet().fillTemplate(new EquipmentsTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

@@ -88,9 +88,11 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
-								List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", animatorAssignedVillages);
-								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));						
+								if(!results.equals("EOF")){
+									List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", animatorAssignedVillages);
+								}
+								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");

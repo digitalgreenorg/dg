@@ -144,6 +144,7 @@ public class DistrictsData extends BaseData {
 			uniqueName.add(district_name);
 			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new DistrictsData());
 			uniqueNameValidator.setError("The District is already in the system.  Please make sure it is unique.");
+			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(districtNameValidator);
 			validatorList.add(startDateValidator);

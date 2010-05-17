@@ -88,8 +88,10 @@ public class Languages extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								LanguagesData languagesData = new LanguagesData();
-								List languages = languagesData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", languages);
+								if(!results.equals("EOF")){
+									List languages = languagesData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", languages);
+								}
 								getServlet().fillTemplate(new LanguagesTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();

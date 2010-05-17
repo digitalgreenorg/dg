@@ -88,8 +88,10 @@ public class Screenings extends BaseServlet {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								ScreeningsData screeningsData = new ScreeningsData();
-								List screenings = screeningsData.getListingOnline(results);
-								getServlet().getRequestContext().getArgs().put("listing", screenings);
+								if(!results.equals("EOF")){
+									List screenings = screeningsData.getListingOnline(results);
+									getServlet().getRequestContext().getArgs().put("listing", screenings);
+								}
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));						
 							} else {
 								RequestContext requestContext = new RequestContext();
