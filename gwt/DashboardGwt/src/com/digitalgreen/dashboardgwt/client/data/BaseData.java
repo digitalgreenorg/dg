@@ -410,7 +410,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				db.open(BaseData.databaseName);
 			}
 			return true;
-		}catch (Exception e){
+		} catch (Exception e){
 			return false;
 		}
 	}
@@ -449,15 +449,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	}
 
 	public static void dbStartTransaction() throws DatabaseException {
-		//BaseData.dbOpen();
 		db.execute("BEGIN TRANSACTION;");
-		//BaseData.dbClose();
 	}
 	
 	public static void dbCommit() throws DatabaseException {
-		//BaseData.dbOpen();
 		db.execute("COMMIT;");
-		//BaseData.dbClose();
 	}
 	
 	public void create(String createSql, String ...args){
@@ -555,8 +551,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	/* Cannot close the database after a select statement. 
 	 * Closing the database will delete the Result Set */
-	public void select(String selectSql, String ...args) {
-		this.execute(selectSql, args);
+	public boolean select(String selectSql, String ...args) {
+		return this.execute(selectSql, args);
 	}
 	
 	public String getNextRowId(){
@@ -623,13 +619,15 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		return this.lastResultSet;
 	}
 	
-	public void execute(String sql, String ...args) {
+	public boolean execute(String sql, String ...args) {
 		this.lastResultSet = null;
 		try {
 			this.lastResultSet = BaseData.db.execute(sql, args);
 		} catch (DatabaseException e) {
-			Window.alert("Database execute error:" + e.toString());
+			//Window.alert("Database execute error:" + e.toString());
+			return false;
 		}
+		return true;
 	}
 	
 	//Override this

@@ -1,6 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
-
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.DashboardGwt;
@@ -19,6 +18,7 @@ import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
 import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+
 public class Index extends BaseServlet {	
 	public Index(){
 		super();
@@ -37,30 +37,42 @@ public class Index extends BaseServlet {
 			super.redirectTo(new Login());
 		} 
 		else {
+			boolean showOnlineOfflineButton = true;
+			IndexData indexData = new IndexData();
+			if(!indexData.checkIfUserEntryExistsInTable(ApplicationConstants.getUsernameCookie())) {
+				showOnlineOfflineButton = false;
+			}
 			if(method.equals(RequestContext.METHOD_POST)) {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg.equals("gooffline")) {
-					try{
-						BaseData.dbCheck();
-						LoginData user = new LoginData();
-						user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
-						ApplicationConstants.toggleConnection(false);
+					if(!showOnlineOfflineButton) {
 						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
+								"Please click on the 'Download' button before going offline");
 						this.redirectTo(new Index(requestContext));
-					}catch (Exception e){
-						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-									+ "and reload the application.");
-						this.redirectTo(new Index(requestContext));
+					} else {
+						try{
+							BaseData.dbCheck();
+							LoginData user = new LoginData();
+							user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+							ApplicationConstants.toggleConnection(false);
+							RequestContext requestContext = new RequestContext();
+							this.redirectTo(new Index(requestContext));
+						} catch (Exception e) {
+							RequestContext requestContext = new RequestContext();
+							requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+										+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+										+ "and reload the application.");
+							this.redirectTo(new Index(requestContext));
+						}
 					}
 				}
 				else if (queryArg.equals("goonline")) {
 					try{
 						BaseData.dbCheck();
 						LoginData user = new LoginData();
-						user.updateAppStatus("1",ApplicationConstants.getUsernameCookie());
+						user.updateAppStatus("1", ApplicationConstants.getUsernameCookie());
 						ApplicationConstants.toggleConnection(true);
 						RequestContext requestContext = new RequestContext();
 						this.redirectTo(new Index(requestContext));
@@ -73,16 +85,23 @@ public class Index extends BaseServlet {
 					}
 				}
 				else if (queryArg.equals("sync")){
-					try{
-						BaseData.dbCheck();
-						Syncronisation syncronisation = new Syncronisation();
-						syncronisation.syncFromLocalToMain(this);
-					}catch (Exception e){
+					if(!showOnlineOfflineButton) {
 						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-									+ "and reload the application.");
+						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
+								"Please click on the 'Download' button and add/edit data before uploading.");
 						this.redirectTo(new Index(requestContext));
+					} else {
+						try {
+							BaseData.dbCheck();
+							Syncronisation syncronisation = new Syncronisation();
+							syncronisation.syncFromLocalToMain(this);
+						} catch (Exception e) {
+							RequestContext requestContext = new RequestContext();
+							requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
+										+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
+										+ "and reload the application.");
+							this.redirectTo(new Index(requestContext));
+						}
 					}
 				}
 				else if (queryArg.equals("resync")){
@@ -102,6 +121,7 @@ public class Index extends BaseServlet {
 			else{
 				BaseTemplate operationUi = new BaseTemplate();
 				operationUi.hideGlassDoorMessage();
+				this.requestContext.getArgs().put("showOnlineOfflineButton", showOnlineOfflineButton);
 				this.fillTemplate(new IndexTemplate(this.requestContext));
 			}
 		}

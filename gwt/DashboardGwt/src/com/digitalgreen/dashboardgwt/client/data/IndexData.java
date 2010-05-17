@@ -17,7 +17,6 @@ public class IndexData extends BaseData {
 
 	public IndexData() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void createTables(){
@@ -27,14 +26,17 @@ public class IndexData extends BaseData {
 	public Object getGlobalPrimaryKey(String username) {
 		// Make a call to the Django view and get the primary key
 		String postData = "username=" + username;
-		//Window.alert(postData);
 		this.post(RequestContext.SERVER_HOST + this.postURL, postData);
 		return true;
 	}
 	
 	public Boolean checkIfUserEntryExistsInTable(String username){
-			BaseData.dbOpen();
-			this.select(LoginData.selectUser , username);
+			if(!BaseData.dbOpen() || username == null || username.equals("")) {
+				return false;
+			}
+			if(!this.select(LoginData.selectUser , username)) {
+				return false;
+			}
 			ResultSet resultSet = this.getResultSet();
 			if(resultSet.isValidRow()) {		
 				BaseData.dbClose();
@@ -45,8 +47,4 @@ public class IndexData extends BaseData {
 				return false;
 			}
 	}
-	
-	
-	
-	
 }

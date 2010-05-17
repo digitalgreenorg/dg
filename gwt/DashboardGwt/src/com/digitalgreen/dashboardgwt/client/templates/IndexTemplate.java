@@ -99,12 +99,16 @@ public class IndexTemplate extends BaseTemplate {
 			uploadButton.setStyleName("buttonShowClass");
 			modeText = "Connected in online mode";
 		}
+		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
+		if(!(Boolean)this.requestContext.getArgs().get("showOnlineOfflineButton")) {
+			onlineOfflineButton.setStyleName("buttonHideClass");
+			uploadButton.setStyleName("buttonHideClass");
+		}
 		modeText += "<span id='dotsId'><img class='dotsClass' src='/media/img/admin/dots.gif' /></span>";
 		HTMLPanel modeTextHtml = new HTMLPanel(modeText);
 		modeTextHtml.getElement().setId("modeTextAndDotsId");
 		modeTextHtml.setStyleName("modeTextClass");
 		RootPanel.get("modeTextId").insert(modeTextHtml, 0);
-		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
 		onlineOfflineButton.setPixelSize(350, 80);
 		
 		Timer t = new Timer() {
