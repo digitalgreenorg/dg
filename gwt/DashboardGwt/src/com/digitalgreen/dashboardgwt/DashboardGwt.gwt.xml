@@ -16,7 +16,7 @@
   <inherits name="com.google.gwt.json.JSON" />
  
   
-  <stylesheet src='DashboardGwt.css' />
+ 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.digitalgreen.dashboardgwt.client.DashboardGwt'/>
   <!-- Specify the paths for translatable code                    -->

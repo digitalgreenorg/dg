@@ -46,7 +46,7 @@ public class DashboardGwt implements EntryPoint {
 		}catch(Exception e){
 			ApplicationConstants.toggleConnection(true);
 			ApplicationConstants.createMappingBetweenTableIDAndDataObject();
-			//Window.alert("here Exception caught");
+
 		}
 	}
 	

@@ -24,7 +24,7 @@
 }
 
 .messageStringClass {
-	background:url("media/img/admin/icon_success.gif") no-repeat scroll 5px 0.3em #FFFFCC;
+	background:url("/media/img/admin/icon_success.gif") no-repeat scroll 5px 0.3em #FFFFCC;
 	border-bottom:1px solid #DDDDDD;
 	color:#666666;
 	display:block;
