@@ -147,78 +147,115 @@ init :function() {
 			// 2) Retrive the person and practice fields from the local database 
 			// 3) Add new row template to the html
 				showStatus("Intializing the page. Please wait.");
-				//$("#id_farmer_groups_targeted").attr('disabled', 'true');
+				$("#id_farmer_groups_targeted").attr('disabled', 'true');
+				$("#save").hide();
+				$('<span style="color:Red">Editting of screening data is not allowed while you are offline</span>').insertBefore("#content-main");
 				var db = google.gears.factory.create('beta.database');
 				db.open('digitalgreen');
 				
 				var table = $('div.inline-group div.tabular').find('table');						
 				table.append('<tbody></tbody>');
 				
-				var person_meeting_attendance = db.execute("SELECT P.id, P.person_name, PMA.expressed_interest_practice_id, PMA.expressed_interest, PMA.expressed_adoption_practice_id, PMA.expressed_adoption, PMA.expressed_question_practice_id, PMA.expressed_question  FROM PERSON_MEETING_ATTENDANCE PMA JOIN PERSON P ON PMA.person_id = P.id WHERE PMA.screening_id="+id);
+				var person_meeting_attendance = db.execute("SELECT pma.id, pma.screening_id, p.id, p.person_name, "+
+										"pma.expressed_interest_practice_id, p1.practice_name, pma.expressed_interest, "+
+										"pma.expressed_adoption_practice_id, p2.practice_name, pma.expressed_adoption, "+
+										"pma.expressed_question_practice_id, p3.practice_name, pma.expressed_question "+
+										"FROM person_meeting_attendance pma "+
+										"LEFT JOIN practices p1 ON (pma.expressed_interest_practice_id = p1.id ) "+
+										"LEFT JOIN practices p2 ON (pma.expressed_adoption_practice_id = p2.id ) "+
+										"LEFT JOIN practices p3 ON (pma.expressed_question_practice_id = p3.id ) "+
+										"JOIN person p ON pma.person_id = p.id "+
+										"WHERE pma.screening_id="+id);
 				
 				var i = 0;
 				var row_class;
-				while(person_meeting_attendace.isValidRow()){
-					if(i%2==0)
-						row_class = row1;
-					else
-						row_class = row2;
+				var tot_form = 0;
+				while(person_meeting_attendance.isValidRow()){
+					if(i%2==0) {
+						row_class = "row1";
+					}
+					else {
+						row_class = "row2";
+					}
 					html =	"<tr class="+row_class+">"+
-								//"<td class='delete'></td>"+
-								//"<td class='original'> "+
-								//	"<input type='hidden' id='id_personmeetingattendance_set-"+i+"-id' name='personmeetingattendance_set-'+i+'-id'> "+
-								//	"<input type='hidden' id='id_personmeetingattendance_set-"+i+"-screening' name='personmeetingattendance_set-'+i+'-screening'> "+
-								//"</td>"+
+								"<td class='delete'> Delete not allowed </td>"+
+								"<td class='original'> "+
+									"<input type='hidden' id='id_personmeetingattendance_set-"+i+"-id' name='personmeetingattendance_set-'+i+'-id' value='"+person_meeting_attendance.field(0)+"'> "+
+									"<input type='hidden' id='id_personmeetingattendance_set-"+i+"-screening' name='personmeetingattendance_set-'+i+'-screening' value='"+person_meeting_attendance.field(1)+"'> "+
+								"</td>"+
+								
 								"<td class='person'>"+
 									"<select id='id_personmeetingattendance_set-"+i+"-person' name='personmeetingattendance_set-"+i+"-person'> "+
-										"<option selected='selected' value=''>---------</option> "+
+										"<option selected='selected' value='"+person_meeting_attendance.field(2)+"'>"+person_meeting_attendance.field(3)+"</option> "+
 									"</select>"+
 								"</td>"+
+								
 								"<td class='expressed_interest_practice'>"+
-									"<select id='id_personmeetingattendance_set-"+i+"-expressed_interest_practice' name='personmeetingattendance_set-"+i+"-expressed_interest_practice'>"+
-										"<option selected='selected' value=''>---------</option> "+
-									"</select>"+
+									"<select id='id_personmeetingattendance_set-"+i+"-expressed_interest_practice' name='personmeetingattendance_set-"+i+"-expressed_interest_practice'>";
+								
+					if(person_meeting_attendance.field(4))
+						html += "<option selected='selected' value='"+person_meeting_attendance.field(4)+"'>"+ person_meeting_attendance.field(5) +"</option> ";
+					else
+						html += "<option selected='selected' value=''>---------</option>";
+								
+					html +=	"</select>"+
 								"</td> "+
+								"<td class='expressed_interest'> ";
 								
-								"<td class='expressed_interest'> "+
-									"<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest'>"+
+					if(person_meeting_attendance.field(6))
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest' value='"+person_meeting_attendance.field(6)+"'>";
+					else
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest' value=''>";
+								
+					html += "</td> "+
+							"<td class='expressed_adoption_practice'> "+
+								"<select id='id_personmeetingattendance_set-"+i+"-expressed_adoption_practice' name='personmeetingattendance_set-"+i+"-expressed_adoption_practice'> ";
+					
+					if(person_meeting_attendance.field(7))
+						html += "<option selected='selected' value='"+person_meeting_attendance.field(7)+"'>"+person_meeting_attendance.field(8)+"</option>";
+					else
+						html += "<option selected='selected' value=''>---------</option>";
+									
+					html += "</select> "+
 								"</td> "+
+								"<td class='expressed_adoption'> ";
 								
-								"<td class='expressed_adoption_practice'> "+
-									"<select id='id_personmeetingattendance_set-"+i+"-expressed_adoption_practice' name='personmeetingattendance_set-"+i+"-expressed_adoption_practice'> "+
-										"<option selected='selected' value=''>---------</option>"+
-									"</select> "+
-								"</td> "+
+					if(person_meeting_attendance.field(9))
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_adoption' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_adoption' value='"+person_meeting_attendance.field(9)+"'> ";
+					else
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest' value=''>";
 								
-								"<td class='expressed_adoption'> "+
-									"<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_adoption' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_adoption'> "+
-								"</td>"+
-								
+					html += "</td>"+
 								"<td class='expressed_question_practice'> "+
-									"<select id='id_personmeetingattendance_set-"+i+"-expressed_question_practice' name='personmeetingattendance_set-"+i+"-expressed_question_practice'>"+
-										"<option selected='selected' value=''>---------</option> "+
-									"</select> "+
+									"<select id='id_personmeetingattendance_set-"+i+"-expressed_question_practice' name='personmeetingattendance_set-"+i+"-expressed_question_practice'>";
+					
+					if(person_meeting_attendance.field(10))
+						html += "<option selected='selected' value='"+person_meeting_attendance.field(10)+"'>"+person_meeting_attendance.field(11)+"</option> ";
+					else
+						html += "<option selected='selected' value=''>---------</option>";
+						
+					html += "</select> "+
 								"</td> "+
+								"<td class='expressed_question'> ";
 								
-								"<td class='expressed_question'> "+
-									"<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_question' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_question'> "+
-								"</td> "+
+					if(person_meeting_attendance.field(12))
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_question' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_question' value='"+person_meeting_attendance.field(12)+"'> ";
+					else
+						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest' value=''>";
+										
+					html += "</td> "+
 							"</tr>";
 							
+					table.find('tbody').append(html);
+					tot_form += 1;
+					i +=1;
 					person_meeting_attendance.next();
 				}
-				
-				
-				var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
-				var prac_options = [];
-				while(prac.isValidRow()) {
-					prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
-					prac.next();
-				}
-				// Add practice to add new row template
-				template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
-				
+				table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
+				person_meeting_attendance.close();
+				db.close();
 				hideStatus();
+				
 		}
 	}
 	else {
@@ -406,7 +443,8 @@ function filter_person() {
 		showStatus("Loading persons..");
 		var table = $('div.inline-group div.tabular').find('table');						
  		table.append('<tbody></tbody>');
-		
+		var db = google.gears.factory.create('beta.database');
+		db.open('digitalgreen');
 		var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
 		var prac_options = [];
 		while(prac.isValidRow()) {
@@ -446,7 +484,7 @@ function filter_person() {
 		});
 		update_positions(table, true);
 	 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
-		rs.close();
+		//rs.close();
 		prac.close();
 		persons.close();
 		db.close();
