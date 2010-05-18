@@ -10,7 +10,10 @@ import com.google.gwt.user.client.Window;
 public class IndexData extends BaseData {
 	
 	protected static String postURL = "/dashboard/getkey/";
-		
+	public final static int STATUS_READY = 0;
+	public final static int STATUS_DB_NOT_OPEN = 1;
+	public final static int STATUS_SCHEMA_NOT_READY = 2;
+	
 	public IndexData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
 	}
@@ -30,21 +33,19 @@ public class IndexData extends BaseData {
 		return true;
 	}
 	
-	public Boolean checkIfUserEntryExistsInTable(String username){
-			if(!BaseData.dbOpen() || username == null || username.equals("")) {
-				return false;
+	public int checkIfOfflineReady(String username){
+			if(!BaseData.dbOpen()) {
+				return IndexData.STATUS_DB_NOT_OPEN;
 			}
-			if(!this.select(LoginData.selectUser , username)) {
-				return false;
-			}
+			this.select(LoginData.selectUser , username);
 			ResultSet resultSet = this.getResultSet();
-			if(resultSet.isValidRow()) {		
+			if(this.isValidResultSet()) {		
 				BaseData.dbClose();
-				return true;
+				return IndexData.STATUS_READY;
 			}
 			else{
 				BaseData.dbClose();
-				return false;
+				return IndexData.STATUS_SCHEMA_NOT_READY;
 			}
 	}
 }

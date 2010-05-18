@@ -280,7 +280,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	private static String databaseName = ApplicationConstants.getDatabaseName();
 	
 	protected Form form = null;
-	protected ResultSet lastResultSet;
+	protected ResultSet lastResultSet = null;
 	protected String table_name = "";
 	protected String[] fields = {};
 	protected boolean systemAutoIncrement = false;
@@ -552,8 +552,8 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 
 	/* Cannot close the database after a select statement. 
 	 * Closing the database will delete the Result Set */
-	public boolean select(String selectSql, String ...args) {
-		return this.execute(selectSql, args);
+	public void select(String selectSql, String ...args) {
+		this.execute(selectSql, args);
 	}
 	
 	public String getNextRowId(){
@@ -618,6 +618,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	public ResultSet getResultSet() {
 		return this.lastResultSet;
+	}
+	
+	public boolean isValidResultSet() {
+		return this.lastResultSet != null && this.getResultSet().isValidRow();
 	}
 	
 	public boolean execute(String sql, String ...args) {

@@ -51,34 +51,7 @@ public class IndexTemplate extends BaseTemplate {
 		super(requestContext);
 	}
 	
-	 private void createManagedResourceStore() {
-		    try {
-		      final ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
-
-		      new Timer() {
-		        final String oldVersion = managedResourceStore.getCurrentVersion();
-		        String transferringData = "Transferring data";
-
-		        @Override
-		        public void run() {
-		          switch (managedResourceStore.getUpdateStatus()) {
-		            case ManagedResourceStore.UPDATE_OK:
-		              break;
-		            case ManagedResourceStore.UPDATE_CHECKING:
-		            case ManagedResourceStore.UPDATE_DOWNLOADING:
-		              transferringData += ".";
-		              schedule(500);
-		              break;
-		            case ManagedResourceStore.UPDATE_FAILED:
-		              break;
-		          }
-		        }
-		      }.schedule(500);
-
-		    } catch (GearsException e) {
-		    	Window.alert("Download of static content failed.");
-		    }
-		  }
+	 
 
 	
 	private void goOfflineOnline(){
@@ -100,7 +73,7 @@ public class IndexTemplate extends BaseTemplate {
 			modeText = "Connected in online mode";
 		}
 		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
-		if(!(Boolean)this.requestContext.getArgs().get("showOnlineOfflineButton")) {
+		if(!(Boolean)this.requestContext.getArgs().get("showOfflineReady")) {
 			onlineOfflineButton.setStyleName("buttonHideClass");
 			uploadButton.setStyleName("buttonHideClass");
 		}
@@ -135,8 +108,6 @@ public class IndexTemplate extends BaseTemplate {
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
 		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going offline");
 		    		   requestContext.getArgs().put("action", "gooffline");
-		    		   LocalServer server = Factory.getInstance().createLocalServer();
-		    		   createManagedResourceStore();
 		    	   }
 		    	   else{
 		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going online");
@@ -168,7 +139,6 @@ public class IndexTemplate extends BaseTemplate {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
-		    	  //Template.addLoadingMessage("Downloading data...");
 		    	  BaseTemplate operationUi = new BaseTemplate();
 		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);

@@ -41,7 +41,7 @@ public class Login extends BaseServlet {
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Invalid credentials, please try again.");
+							requestContext.setErrorMessage("Invalid credentials, please try again.");
 							getServlet().redirectTo(new Login(requestContext));				
 						}
 					}
@@ -49,11 +49,11 @@ public class Login extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setMessage("Unresponsive Server.  Please contact support.");
+							requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							requestContext.setMessage("Problem in the connection with the server.");
+							requestContext.setErrorMessage("Problem in the connection with the server.");
 						else
-							requestContext.setMessage("Unknown error.  Please contact support.");
+							requestContext.setErrorMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Login(requestContext));			
 						
 					}
@@ -66,20 +66,13 @@ public class Login extends BaseServlet {
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Invalid credentials, please try again");
+							requestContext.setErrorMessage("Invalid credentials, please try again");
 							getServlet().redirectTo(new Login(requestContext));	
 						}
 					}
 				});
 				    
-				// Comment the below line when you are not running the code form a hosted mode.   
 				loginData.apply(loginData.authenticate((String)this.form.get("username"),(String)this.form.get("password")));
-				 
-				// Comment the below line when you are running the code form a hosted mode.
-				// ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
-				// (String)getServlet().form.get("password"));
-				// this.redirectTo(new Index());
-
 			}
 		} else if (method.equals(RequestContext.METHOD_GET)) {
 			if(this.isLoggedIn()) {

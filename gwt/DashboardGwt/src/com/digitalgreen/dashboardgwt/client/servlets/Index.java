@@ -15,11 +15,21 @@ import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
+import com.google.gwt.gears.client.Factory;
+import com.google.gwt.gears.client.GearsException;
 import com.google.gwt.gears.client.database.ResultSet;
+import com.google.gwt.gears.client.localserver.LocalServer;
+import com.google.gwt.gears.client.localserver.ManagedResourceStore;
+import com.google.gwt.gears.offline.client.Offline;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
-public class Index extends BaseServlet {	
+public class Index extends BaseServlet {
+	public final static String pluginNotInstalled = "This browser does not have the Gears plugin. " +
+		" Please <a href=\"http://gears.google.com/\" target=\"_blank\">install Gears</a> " +
+		"and reload the application.";
+	
 	public Index(){
 		super();
 	}
@@ -27,7 +37,36 @@ public class Index extends BaseServlet {
 	public Index(RequestContext requestContext) {
 		super(requestContext);
 	}
+	
+	private boolean createManagedResourceStore() {
+		try {
+			final ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
 
+			new Timer() {
+				final String oldVersion = managedResourceStore.getCurrentVersion();
+				String transferringData = "Transferring data";
+
+				@Override
+				public void run() {
+					switch (managedResourceStore.getUpdateStatus()) {
+					case ManagedResourceStore.UPDATE_OK:
+						break;
+					case ManagedResourceStore.UPDATE_CHECKING:
+					case ManagedResourceStore.UPDATE_DOWNLOADING:
+						transferringData += ".";
+						schedule(500);
+						break;
+					case ManagedResourceStore.UPDATE_FAILED:
+						break;
+					}
+				}
+			}.schedule(500);
+	    } catch (GearsException e) {
+	    	return false;
+	    }
+	    return true;
+	}
+	
 	@Override
 	public void response () {
 		super.response();
@@ -37,91 +76,68 @@ public class Index extends BaseServlet {
 			super.redirectTo(new Login());
 		} 
 		else {
-			boolean showOnlineOfflineButton = true;
 			IndexData indexData = new IndexData();
-			if(!indexData.checkIfUserEntryExistsInTable(ApplicationConstants.getUsernameCookie())) {
-				showOnlineOfflineButton = false;
-			}
+			int offlineReadyState = indexData.checkIfOfflineReady(ApplicationConstants.getUsernameCookie());
 			if(method.equals(RequestContext.METHOD_POST)) {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				if(queryArg.equals("gooffline")) {
-					if(!showOnlineOfflineButton) {
-						RequestContext requestContext = new RequestContext();
+					RequestContext requestContext = new RequestContext();
+					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
+						requestContext.setErrorMessage(Index.pluginNotInstalled);
+					} else if(offlineReadyState == IndexData.STATUS_SCHEMA_NOT_READY) {
+						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
+								"Please click on the 'Download' button before going offline");
+					} else {
+						LocalServer server = Factory.getInstance().createLocalServer();
+				    	if(!createManagedResourceStore()) {
+				    		requestContext.setErrorMessage("Downloading of manifest file and static contents failed.");
+				    	} else {
+				    		LoginData user = new LoginData();
+							user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+							ApplicationConstants.toggleConnection(false);
+				    	}
+					}
+					this.redirectTo(new Index(requestContext));
+				}
+				else if (queryArg.equals("goonline")) {
+					if(offlineReadyState == IndexData.STATUS_READY) {
+						LoginData user = new LoginData();
+						user.updateAppStatus("1", ApplicationConstants.getUsernameCookie());
+					}
+					ApplicationConstants.toggleConnection(true);
+					RequestContext requestContext = new RequestContext();
+					this.redirectTo(new Index(requestContext));
+				}
+				else if (queryArg.equals("sync")){
+					RequestContext requestContext = new RequestContext();
+					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
+						requestContext.setErrorMessage(Index.pluginNotInstalled);
+						this.redirectTo(new Index(requestContext));
+					} else if(offlineReadyState == IndexData.STATUS_SCHEMA_NOT_READY) {
 						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
 								"Please click on the 'Download' button before going offline");
 						this.redirectTo(new Index(requestContext));
 					} else {
-						try{
-							BaseData.dbCheck();
-							LoginData user = new LoginData();
-							user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
-							ApplicationConstants.toggleConnection(false);
-							RequestContext requestContext = new RequestContext();
-							this.redirectTo(new Index(requestContext));
-						} catch (Exception e) {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-										+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-										+ "and reload the application.");
-							this.redirectTo(new Index(requestContext));
-						}
+						Syncronisation syncronisation = new Syncronisation();
+						syncronisation.syncFromLocalToMain(this);
 					}
 				}
-				else if (queryArg.equals("goonline")) {
-					try{
-						BaseData.dbCheck();
-						LoginData user = new LoginData();
-						user.updateAppStatus("1", ApplicationConstants.getUsernameCookie());
-						ApplicationConstants.toggleConnection(true);
-						RequestContext requestContext = new RequestContext();
-						this.redirectTo(new Index(requestContext));
-					}catch (Exception e){
-						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-									+ "and reload the application.");
-						this.redirectTo(new Index(requestContext));
-					}
-				}
-				else if (queryArg.equals("sync")){
-					if(!showOnlineOfflineButton) {
-						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
-								"Please click on the 'Download' button and add/edit data before uploading.");
+				else if (queryArg.equals("resync")) {
+					RequestContext requestContext = new RequestContext();
+					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
+						requestContext.setErrorMessage(Index.pluginNotInstalled);
 						this.redirectTo(new Index(requestContext));
 					} else {
-						try {
-							BaseData.dbCheck();
-							Syncronisation syncronisation = new Syncronisation();
-							syncronisation.syncFromLocalToMain(this);
-						} catch (Exception e) {
-							RequestContext requestContext = new RequestContext();
-							requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-										+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-										+ "and reload the application.");
-							this.redirectTo(new Index(requestContext));
-						}
-					}
-				}
-				else if (queryArg.equals("resync")){
-					try{
-						BaseData.dbCheck();
 						Syncronisation syncronisation = new Syncronisation();
 						syncronisation.syncFromMainToLocal(this);
-					}catch (Exception e){
-						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("ERROR: This browser does not support Gears. "
-									+ " Please <a href=\"http://gears.google.com/\">install Gears</a> " 
-									+ "and reload the application.");
-						this.redirectTo(new Index(requestContext));
 					}
 				}
 			}
-			else{
+			else {
 				BaseTemplate operationUi = new BaseTemplate();
 				operationUi.hideGlassDoorMessage();
-				this.requestContext.getArgs().put("showOnlineOfflineButton", showOnlineOfflineButton);
+				this.requestContext.getArgs().put("showOfflineReady", offlineReadyState == IndexData.STATUS_READY);
 				this.fillTemplate(new IndexTemplate(this.requestContext));
 			}
 		}
