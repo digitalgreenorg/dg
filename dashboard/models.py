@@ -298,7 +298,7 @@ class Training(models.Model):
     training_end_date = models.DateField(db_column='TRAINING_END_DATE') 
     village = models.ForeignKey(Village)
     development_manager_present = models.ForeignKey(DevelopmentManager, null=True, blank=True, db_column='dm_id') 
-    field_officer_present = models.ForeignKey(FieldOfficer, db_column='fieldofficer_id')
+    fieldofficer = models.ForeignKey(FieldOfficer, verbose_name="field officer present", db_column='fieldofficer_id')
     animators_trained = models.ManyToManyField(Animator)
     class Meta:
         db_table = u'TRAINING'
