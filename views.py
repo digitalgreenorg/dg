@@ -344,24 +344,25 @@ def get_regions_online(request, offset, limit):
 	
 def save_region_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = RegionForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			region = Region.objects.get(id=id)
-       	  	form = RegionForm(request.POST, instance = region)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = RegionForm(request.POST)
-		    if form.is_valid():
-			   new_form  = form.save(commit=False)
-			   new_form.id = request.POST['id']
-			   new_form.save()
-			   return HttpResponse("1")
-		    else:
-			   return HttpResponse("0")
-		
+			form = RegionForm(request.POST, instance = region)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+
+		    		
 def save_state_online(request,id):
 	if request.method == 'POST':
 		if(id):
@@ -395,23 +396,24 @@ def get_states_online(request, offset, limit):
 
 def save_state_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = StateForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			state = State.objects.get(id=id)
-       	  	form = StateForm(request.POST, instance = state)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = StateForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = StateForm(request.POST, instance = state)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_fieldofficer_online(request,id):
 	if request.method == 'POST':
@@ -433,6 +435,7 @@ def save_fieldofficer_online(request,id):
 			form  = FieldOfficerForm()
 		return HttpResponse(form)
 
+
 def get_fieldofficers_online(request, offset, limit ):
     if request.method == 'POST':
         return redirect('fieldofficer')
@@ -446,23 +449,24 @@ def get_fieldofficers_online(request, offset, limit ):
        
 def save_fieldofficer_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = FieldOfficerForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			fieldofficer = FieldOfficer.objects.get(id=id)
-       	  	form = FieldOfficerForm(request.POST, instance = fieldofficer)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = FieldOfficerForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")       
+			form = FieldOfficerForm(request.POST, instance = fieldofficer)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		           
 
 def save_practice_online(request,id):
 	if request.method == 'POST':
@@ -497,27 +501,29 @@ def get_practices_online(request, offset, limit):
        
 def save_practice_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PracticeForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			practice = Practices.objects.get(id=id)
-       	  	form = PracticeForm(request.POST, instance = practice)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PracticeForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")          
+			form = PracticeForm(request.POST, instance = practice)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		              
 
 def save_language_online(request,id):
 	if request.method == 'POST':
 		if(id):
+			
 			language = Language.objects.get(id = id)
 			form = LanguageForm(request.POST, instance = language)
 		else:
@@ -547,25 +553,27 @@ def get_languages_online(request, offset, limit):
          json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
        
-def save_language_offline(request ,id):
+def save_language_offline(request,id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = LanguageForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			language = Language.objects.get(id=id)
-       	  	form = LanguageForm(request.POST, instance = language)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = LanguageForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")       
+			form = LanguageForm(request.POST, instance = language)
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+       		
+       		
 
 def save_partner_online(request,id):
 	if request.method == 'POST':
@@ -600,23 +608,24 @@ def get_partners_online(request, offset, limit):
        
 def save_partner_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PartnerForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			partner = Partners.objects.get(id=id)
-       	  	form = PartnerForm(request.POST, instance = partner)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PartnerForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = PartnerForm(request.POST, instance = partner)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_video_online(request,id):
     if request.method == 'POST':
@@ -655,31 +664,29 @@ def get_videos_online(request, offset, limit):
          json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
          json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+	return HttpResponse(json_subcat, mimetype="application/javascript")
        
 def save_video_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = VideoForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				form.save_m2m();
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			video = Video.objects.get(id=id)
-       	  	form = VideoForm(request.POST, instance = video)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		form.save_m2m();
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = VideoForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    form.save_m2m();
-			    return HttpResponse("1")
- 		    else:
-			    return HttpResponse("0")    
-
-
+			form = VideoForm(request.POST, instance = video)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		        
 def save_videoagriculturalpractices_online(request,id):
     if request.method == 'POST':
     	if(id):
@@ -718,25 +725,24 @@ def get_videoagriculturalpractices_online(request, offset, limit):
 
 def save_videoagriculturalpractices_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = VideoAgriculturalPracticesForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			videoagriculturalpractice = VideoAgriculturalPractices.objects.get(id=id)
-       	  	form = VideoAgriculturalPracticesForm(request.POST, instance = videoagriculturalpractice)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = VideoAgriculturalPracticesForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")    
-
-
+			form = VideoAgriculturalPracticesForm(request.POST, instance = videoagriculturalpractice)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		        
 def save_personshowninvideo_online(request,id):
     if request.method == 'POST':
     	if(id):
@@ -775,23 +781,24 @@ def get_personshowninvideo_online(request, offset, limit):
 
 def save_personshowninvideo_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PersonShownInVideoForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			personshowninvideo = PersonShownInVideo.objects.get(id=id)
-       	  	form = PersonShownInVideoForm(request.POST, instance = personshowninvideo)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonShownInVideoForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")    
+			form = PersonShownInVideoForm(request.POST, instance = personshowninvideo)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		        
 	
 def save_district_online(request,id):
 	if request.method == 'POST':
@@ -827,23 +834,24 @@ def get_districts_online(request, offset, limit):
 
 def save_district_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = DistrictForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			district = District.objects.get(id=id)
-       	  	form = DistrictForm(request.POST, instance = district)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = DistrictForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = DistrictForm(request.POST, instance = district)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 		
 def save_block_online(request,id):
 	if request.method == 'POST':
@@ -868,20 +876,30 @@ def save_block_online(request,id):
         return HttpResponse(form)
    
 def get_blocks_online(request, offset, limit):
-    if request.method == 'POST':
-        return redirect('blocks')
-    else:
-        districts = get_user_districts(request);
-        blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
-        if(blocks):
-         json_subcat = serializers.serialize("json", blocks,  relations=('district'))
-        else:
-         json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+	if request.method == 'POST':
+		return redirect('blocks')
+	else:
+		districts = get_user_districts(request);
+		blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
+		if(blocks):
+			json_subcat = serializers.serialize("json", blocks,  relations=('district'))
+		else:
+			json_subcat = 'EOF'
+		return HttpResponse(json_subcat, mimetype="application/javascript")
 
 def save_block_offline(request, id):
-    if request.method == 'POST':
-    	if(id):
+	if request.method == 'POST':
+		if(not id):
+			form = BlockForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+           	
+		else:
 			block = Block.objects.get(id=id)
 			form = BlockForm(request.POST, instance = block)       	  	
 			if form.is_valid():
@@ -889,15 +907,7 @@ def save_block_offline(request, id):
 				return HttpResponse("1")
 			else:
 				return HttpResponse("0")
-       	else:
-            form = BlockForm(request.POST)
-            if form.is_valid():
-                new_form  = form.save(commit=False)
-                new_form.id = request.POST['id']
-                new_form.save()
-                return HttpResponse("1")
-            else:
-                return HttpResponse("0")
+            
 
 def save_developmentmanager_online(request,id):
 	if request.method == 'POST':
@@ -932,23 +942,24 @@ def get_developmentmanagers_online(request, offset, limit):
 
 def save_developmentmanager_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = DevelopmentManagerForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			developmentmanager = DevelopmentManager.objects.get(id=id)
-       	  	form = DevelopmentManagerForm(request.POST, instance = developmentmanager)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = DevelopmentManagerForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")		
+			form = DevelopmentManagerForm(request.POST, instance = developmentmanager)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    		
 		  
 def save_equipment_online(request,id):
 	if request.method == 'POST':
@@ -984,23 +995,24 @@ def get_equipments_online(request, offset, limit):
 
 def save_equipment_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = EquipmentForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			equipment = Equipment.objects.get(id=id)
-       	  	form = EquipmentForm(request.POST, instance = equipment)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = EquipmentForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")		
+			form = EquipmentForm(request.POST, instance = equipment)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    		
 
 def save_village_online(request, id):
        PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
@@ -1063,23 +1075,24 @@ def get_villages_online(request, offset, limit):
 				
 def save_village_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = VillageForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			village = Village.objects.get(id=id)
-       	  	form = VillageForm(request.POST, instance = village)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = VillageForm(request.POST)
-		    if form.is_valid():
-		    	new_form  = form.save(commit=False)
-		    	new_form.id = request.POST['id']
-		    	new_form.save()
-		    	return HttpResponse("1")
-		    else:
-		    	return HttpResponse("0")								
+			form = VillageForm(request.POST, instance = village)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    								
 				
 		
 def save_animator_online(request, id):
@@ -1135,24 +1148,23 @@ def get_animators_online(request, offset, limit):
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
+	
 def save_animator_offline(request, id):
 	if request.method == 'POST':
-		if id:
-			print "IN EDIT CASE " + str(id)
-			animator = Animator.objects.get(id=id)
-			form = AnimatorForm(request.POST, instance = animator)       	  	
-			if form.is_valid():
-				form.save()
-				return HttpResponse("1")
-			else:
-				return HttpResponse("0")
-		else:
-			print "IN ADD CASE "
+		if(not id):
 			form = AnimatorForm(request.POST)
 			if form.is_valid():
 				new_form  = form.save(commit=False)
 				new_form.id = request.POST['id']
 				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
+			animator = Animator.objects.get(id=id)
+			form = AnimatorForm(request.POST, instance = animator)       	  	
+			if form.is_valid():
+				form.save()
 				return HttpResponse("1")
 			else:
 				return HttpResponse("0")
@@ -1190,31 +1202,28 @@ def get_animatorassignedvillages_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
 		else:
 			json_subcat = 'EOF'
+		print json_subcat
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 
 def save_animatorassignedvillage_offline(request, id):
 	if request.method == 'POST':
-		if id:
-			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
-			form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)       	  	
-			if form.is_valid():
-				form.save()
-				return HttpResponse("1")
-			else:
-				print form.errors
-				return HttpResponse("0")
-		else:
+		if(not id):
 			form = AnimatorAssignedVillageForm(request.POST)
 			if form.is_valid():
 				new_form  = form.save(commit=False)
 				new_form.id = request.POST['id']
 				new_form.save()
 				return HttpResponse("1")
-			else:
-				print form.errors
-				return HttpResponse("0")
-
+			return HttpResponse("0")
+		else:
+			animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
+			form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			return HttpResponse("0")
+       		
 def save_persongroup_online(request,id):
 	PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=30)
 	if request.method == 'POST':
@@ -1267,24 +1276,23 @@ def get_persongroups_online(request, offset, limit):
 
 def save_persongroup_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PersonGroupsForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			persongroup = PersonGroups.objects.get(id=id)
-       	  	form = PersonGroupsForm(request.POST, instance = persongroup)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonGroupsForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
-
+			form = PersonGroupsForm(request.POST, instance = persongroup)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
 
 def save_person_online(request, id):
 	PersonAdoptPracticeFormSet = inlineformset_factory( Person,PersonAdoptPractice,extra=3)
@@ -1335,23 +1343,24 @@ def get_persons_online(request, offset, limit):
 	
 def save_person_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PersonForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			person = Person.objects.get(id=id)
-       	  	form = PersonForm(request.POST, instance = person)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = PersonForm(request.POST, instance = person)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_screening_online(request,id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
@@ -1416,25 +1425,25 @@ def get_screenings_online(request, offset, limit):
 	
 def save_screening_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = ScreeningForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				form.save_m2m();
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			screening = Screening.objects.get(id=id)
-       	  	form = ScreeningForm(request.POST, instance = screening)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		form.save_m2m();
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = ScreeningForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    form.save_m2m();
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = ScreeningForm(request.POST, instance = screening)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_groupstargetedinscreening_online(request):
     if request.method == 'POST':
@@ -1467,23 +1476,24 @@ def get_groupstargetedinscreening_online(request, offset, limit):
 
 def save_groupstargetedinscreening_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = GroupsTargetedInScreeningForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			grouptargeted = GroupsTargetedInScreening.objects.get(id=id)
-       	  	form = GroupsTargetedInScreeningForm(request.POST, instance = grouptargeted)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = GroupsTargetedInScreeningForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = GroupsTargetedInScreeningForm(request.POST, instance = grouptargeted)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 		
 def save_videosscreenedinscreening_online(request):
     if request.method == 'POST':
@@ -1516,23 +1526,24 @@ def get_videosscreenedinscreening_online(request, offset, limit):
 
 def save_videosscreenedinscreening_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = VideosScreenedInScreeningForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			videoscreened = VideosScreenedInScreening.objects.get(id=id)
-       	  	form = VideosScreenedInScreeningForm(request.POST, instance = videoscreened)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = VideosScreenedInScreeningForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")       
+			form = VideosScreenedInScreeningForm(request.POST, instance = videoscreened)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		           
 
 def save_training_online(request,id):
 	if request.method == 'POST':
@@ -1553,9 +1564,9 @@ def save_training_online(request,id):
 		else:
 			form = TrainingForm()
 		villages = get_user_villages(request)
-        form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        return HttpResponse(form);
+		form.fields['village'].queryset = villages.order_by('village_name')
+		form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
+		return HttpResponse(form);
 
 def get_trainings_online(request, offset, limit):
     if request.method == 'POST':
@@ -1572,26 +1583,29 @@ def get_trainings_online(request, offset, limit):
        
 def save_training_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = TrainingForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				form.save_m2m();
+				return HttpResponse("1")
+			else:
+				print form.errors
+				return HttpResponse("0")
+		else:
 			training = Training.objects.get(id=id)
-       	  	form = TrainingForm(request.POST, instance = training)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		form.save_m2m()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = TrainingForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    form.save_m2m();
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
-		
+			form = TrainingForm(request.POST, instance = training)       	  	
+			if form.is_valid():
+				form.save()
+				#form.save_m2m()
+				return HttpResponse("1")
+			else:
+				print form.errors
+				return HttpResponse("0")
+
+
 def save_traininganimatorstrained_online(request):
     if request.method == 'POST':
         form = TrainingAnimatorsTrainedForm(request.POST)
@@ -1622,25 +1636,24 @@ def get_traininganimatorstrained_online(request, offset, limit):
 
 def save_traininganimatorstrained_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = TrainingAnimatorsTrainedForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			traininganimatortrained = TrainingAnimatorsTrained.objects.get(id=id)
-       	  	form = TrainingAnimatorsTrainedForm(request.POST, instance = traininganimatortrained)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		form.save_m2m();
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = TrainingAnimatorsTrainedForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    form.save_m2m();
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = TrainingAnimatorsTrainedForm(request.POST, instance = traininganimatortrained)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 		
 def save_monthlycostpervillage_online(request):
     if request.method == 'POST':
@@ -1670,23 +1683,24 @@ def get_monthlycostpervillages_online(request, offset, limit):
        
 def save_monthlycostpervillage_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = MonthlyCostPerVillageForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			monthlycostpervillage = MonthlyCostPerVillage.objects.get(id=id)
-       	  	form = MonthlyCostPerVillageForm(request.POST, instance = monthlycostpervillage)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = MonthlyCostPerVillageForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = MonthlyCostPerVillageForm(request.POST, instance = monthlycostpervillage)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 
 def save_personrelation_online(request):
@@ -1720,23 +1734,24 @@ def get_personrelations_online(request, offset, limit):
 
 def save_personrelation_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PersonRelationsForm(request.POST)
+			if form.is_valid():				
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			personrelations = PersonRelations.objects.get(id=id)
-       	  	form = PersonRelationsForm(request.POST, instance = personrelations)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonRelationsForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = PersonRelationsForm(request.POST, instance = personrelations)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 		
 def save_animatorsalarypermonth_online(request):
 	if request.method == 'POST':
@@ -1768,23 +1783,24 @@ def get_animatorsalarypermonths_online(request, offset, limit):
 
 def save_animatorsalarypermonth_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = AnimatorSalaryPerMonthForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			animatorsalarypermonth = AnimatorSalaryPerMonth.objects.get(id=id)
-       	  	form = AnimatorSalaryPerMonthForm(request.POST, instance = animatorsalarypermonth)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = AnimatorSalaryPerMonthForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = AnimatorSalaryPerMonthForm(request.POST, instance = animatorsalarypermonth)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_personmeetingattendance_online(request):
 	if request.method == 'POST':
@@ -1816,23 +1832,24 @@ def get_personmeetingattendances_online(request, offset, limit):
 
 def save_personmeetingattendance_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = PersonMeetingAttendanceForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			personmeetingattendance = PersonMeetingAttendance.objects.get(id=id)
-       	  	form = PersonMeetingAttendanceForm(request.POST, instance = personmeetingattendance)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonMeetingAttendanceForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = PersonMeetingAttendanceForm(request.POST, instance = personmeetingattendance)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 		
 def save_personadoptpractice_online(request):
 	if request.method == 'POST':
@@ -1863,23 +1880,24 @@ def get_personadoptpractices_online(request, offset, limit):
 
 def save_personadoptpractice_offline(request, id):
 	if request.method == 'POST':
-		if(id):
-			personadoptpractice = PersonAdoptPractice.objects.get(id=id)
-       	  	form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = PersonAdoptPracticeForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
+		if(not id):
+			form = PersonAdoptPracticeForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
 			    return HttpResponse("0")
+		else:
+			personadoptpractice = PersonAdoptPractice.objects.get(id=id)
+			form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_equipmentholder_online(request):
 	if request.method == 'POST':
@@ -1906,23 +1924,24 @@ def get_equipmentholders_online(request, offset, limit):
 
 def save_equipmentholder_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = EquipmentHolderForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			equipmentholder = EquipmentHolder.objects.get(id=id)
-       	  	form = EquipmentHolderForm(request.POST, instance = equipmentholder)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = EquipmentHolderForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
+			form = EquipmentHolderForm(request.POST, instance = equipmentholder)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 def save_reviewer_online(request):
 	if request.method == 'POST':
@@ -1949,25 +1968,24 @@ def get_reviewers_online(request, offset, limit):
 
 def save_reviewer_offline(request, id):
 	if request.method == 'POST':
-		if(id):
+		if(not id):
+			form = ReviewerForm(request.POST)
+			if form.is_valid():
+				new_form  = form.save(commit=False)
+				new_form.id = request.POST['id']
+				new_form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		else:
 			reviewer = Reviewer.objects.get(id=id)
-       	  	form = ReviewerForm(request.POST, instance = reviewer)       	  	
-       	  	if form.is_valid():
-       	  		form.save()
-       	  		return HttpResponse("1")
-       	  	else:
-       	  		return HttpResponse("0")
-       	else:
-		    form = ReviewerForm(request.POST)
-		    if form.is_valid():
-			    new_form  = form.save(commit=False)
-			    new_form.id = request.POST['id']
-			    new_form.save()
-			    return HttpResponse("1")
-		    else:
-			    return HttpResponse("0")
-		
-		
+			form = ReviewerForm(request.POST, instance = reviewer)       	  	
+			if form.is_valid():
+				form.save()
+				return HttpResponse("1")
+			else:
+				return HttpResponse("0")
+		    
 
 # Old functions, Will be deprecated once the online / offline functionality is created
 def add_language(request):
