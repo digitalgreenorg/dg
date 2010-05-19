@@ -209,6 +209,8 @@ def feeds_persons_village(request, village_id):
 # 
 #  Functions for online offline application
 #
+def redirect_to(request):
+	return HttpResponseRedirect('http://127.0.0.1:8000/media/war/DashboardGwt.html');
 
 def login_view(request):
     if request.method == 'POST':
@@ -1096,8 +1098,6 @@ def save_village_offline(request, id):
 				
 		
 def save_animator_online(request, id):
-	print id
-	print request.POST
 	AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
 	if request.method == "POST":
 		if(id):
@@ -1202,7 +1202,6 @@ def get_animatorassignedvillages_online(request, offset, limit):
 			json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
 		else:
 			json_subcat = 'EOF'
-		print json_subcat
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 	
 
@@ -1409,7 +1408,6 @@ def get_attendance(request, id):
 	for form_person_meeting_attendance in formset.forms:
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
 	return render_to_response('feeds/attendance.html',{'formset':formset})
-	#return HttpResponse(get_template('feeds/attendance.html'))
 	
 def get_screenings_online(request, offset, limit):
 	if request.method == 'POST':
@@ -1592,7 +1590,6 @@ def save_training_offline(request, id):
 				form.save_m2m();
 				return HttpResponse("1")
 			else:
-				print form.errors
 				return HttpResponse("0")
 		else:
 			training = Training.objects.get(id=id)
@@ -1602,7 +1599,6 @@ def save_training_offline(request, id):
 				#form.save_m2m()
 				return HttpResponse("1")
 			else:
-				print form.errors
 				return HttpResponse("0")
 
 
