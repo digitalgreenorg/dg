@@ -49,11 +49,11 @@ public class Languages extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setErrorMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setErrorMessage("Problem in the connection with the server.");
 						else
-							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+							getServlet().getRequestContext().setErrorMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Languages(getServlet().getRequestContext()));	
 					}
 					
@@ -103,11 +103,11 @@ public class Languages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessage("Problem in the connection with the server.");
+								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessage("Unknown error.  Please contact support.");
+								requestContext.setErrorMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Index(requestContext));
 						}
 						
@@ -119,7 +119,7 @@ public class Languages extends BaseServlet {
 								getServlet().fillTemplate(new LanguagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Unexpected local error. Please contact support");
+								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
@@ -148,25 +148,26 @@ public class Languages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessage("Problem in the connection with the server.");
+								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessage("Unknown error.  Please contact support.");
+								requestContext.setErrorMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
 						public void offlineSuccessCallback(Object addData) {
-							if((String)addData != null) {
-								// Got whatever info we need to display for this GET request, so go ahead
-								// and display it by filling in the template.  No need to redirect.
+							RequestContext requestContext = new RequestContext();
+							requestContext.setErrorMessage("Adding / Editing of language is not allowed in offline mode");
+							getServlet().redirectTo(new Index(requestContext));
+							/*if((String)addData != null) {
 								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
 								getServlet().fillTemplate(new LanguagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Unexpected local error. Please contact support");
+								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
-							}	
+							}	*/
 						}
 					}, form);
 					if(queryArg.equals("add")) {

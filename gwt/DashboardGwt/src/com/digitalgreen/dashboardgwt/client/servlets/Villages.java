@@ -51,11 +51,11 @@ public class Villages extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							getServlet().getRequestContext().setMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setErrorMessage("Unresponsive Server.  Please contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
-							getServlet().getRequestContext().setMessage("Problem in the connection with the server.");
+							getServlet().getRequestContext().setErrorMessage("Problem in the connection with the server.");
 						else
-							getServlet().getRequestContext().setMessage("Unknown error.  Please contact support.");
+							getServlet().getRequestContext().setErrorMessage("Unknown error.  Please contact support.");
 						getServlet().redirectTo(new Villages(getServlet().getRequestContext()));	
 					}
 					
@@ -105,11 +105,11 @@ public class Villages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessage("Problem in the connection with the server.");
+								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessage("Unknown error.  Please contact support.");
+								requestContext.setErrorMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Index(requestContext));
 						}
 						
@@ -121,7 +121,7 @@ public class Villages extends BaseServlet {
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Unexpected local error. Please contact support");
+								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
@@ -150,11 +150,11 @@ public class Villages extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
-								requestContext.setMessage("Problem in the connection with the server.");
+								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
-								requestContext.setMessage("Unknown error.  Please contact support.");
+								requestContext.setErrorMessage("Unknown error.  Please contact support.");
 							getServlet().redirectTo(new Index(requestContext));	
 						}
 						
@@ -166,7 +166,7 @@ public class Villages extends BaseServlet {
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
-								requestContext.setMessage("Unexpected local error. Please contact support");
+								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
 							}	
 						}
