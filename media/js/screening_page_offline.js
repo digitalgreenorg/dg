@@ -115,7 +115,7 @@ init :function() {
 				// Get the person meeting attendance data, requires the screening id.
 				$.ajax({ type: "GET", 
 					dataType: 'html',
-					url: "/dashboard/getattendance/"+id+"/", 
+					url: "/technology/dashboard/getattendance/"+id+"/", 
 					success: function(obj) {		
 						$('div.inline-group div.tabular').html('')
 						$('div.inline-group div.tabular').append(obj)
@@ -123,7 +123,7 @@ init :function() {
 						// Set the practice and person list for the "add new row"
 						$.ajax({ type: "GET", 
 							dataType: 'json',
-							url: "/feeds/person_pract/", 
+							url: "/technology/feeds/person_pract/", 
 							data:{vil_id:vil_id,mode:2},
 							success: function(obj) {		
 								//storing practice_list			
@@ -149,7 +149,7 @@ init :function() {
 				showStatus("Intializing the page. Please wait.");
 				$("#id_farmer_groups_targeted").attr('disabled', 'true');
 				$("#save").hide();
-				$('<span style="color:Red">Editting of screening data is not allowed while you are offline</span>').insertBefore("#content-main");
+				$('<span style="color:Red">Editing of screening data is not allowed while you are offline</span>').insertBefore("#content-main");
 				var db = google.gears.factory.create('beta.database');
 				db.open('digitalgreen');
 				
@@ -502,7 +502,7 @@ function filter_person() {
 		// This person list will be used for "add-new row" template
 		$.ajax({ type: "GET", 
 			dataType: 'json',
-			url: "/get/person/", 
+			url: "/technology/get/person/", 
 			data:{groups:grps,},
 			success: function(obj) {		
 				//For "Add new Row" template, replacing ther person list of block of the village
@@ -515,7 +515,7 @@ function filter_person() {
 		// Also get the list of the practices for "add new row" template
 		$.ajax({ type: "GET", 
 			dataType: 'json',
-			url: "/feeds/persons/modified/", 
+			url: "/technology/feeds/persons/modified/", 
 			data:{groups:grps, init:init_form,mode:1},
 			success: function(obj){
 				if(obj.html=='Error') {
