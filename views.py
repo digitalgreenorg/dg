@@ -213,21 +213,21 @@ def redirect_to(request):
 	return HttpResponseRedirect('http://www.digitalgreen.org/media/coco/DashboardGwt.html');
 
 def login_view(request):
-    if request.method == 'POST':
-	    username = request.POST.get('username', '')
-	    password = request.POST.get('password', '')
-	    user = auth.authenticate(username=username, password=password)
-	    if user is not None and user.is_active:
-	        # Correct password, and the user is marked "active"
-	        #auth.login(request, user)
-	        request.session['username'] = user.username
-	        request.session['user_id'] = user.id
-	        return HttpResponse("1")
-	    else:
-	        # Show an error page
-        	return HttpResponse("0")
-    else:
-	    return HttpResponse("error")
+	if request.method == 'POST':
+		username = request.POST.get('username', '')
+		password = request.POST.get('password', '')
+		user = auth.authenticate(username=username, password=password)
+		if user is not None and user.is_active:
+			# Correct password, and the user is marked "active"
+			#auth.login(request, user)
+			request.session['username'] = user.username
+			request.session['user_id'] = user.id
+			return HttpResponse("1")
+		else:
+			# Show an error page
+			return HttpResponse("0")
+	else:
+		return HttpResponse("error")
 
 def get_key_for_user(request):
 	if request.method == 'POST':
@@ -298,17 +298,23 @@ def get_user_blocks(request):
 
 
 def get_user_districts(request):
+	print 'here1'
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
+	print 'here2'
 	districts = District.objects.none()
+	print 'here3'
 	for user_permission in user_permissions:
 		if(user_permission.role=='A'):
+			print 'here4'
 			districts = districts | District.objects.all()
 		if(user_permission.role=='D'):
+			print 'here5'
 			states = State.objects.filter(region = user_permission.region_operated)
 			districts = districts | District.objects.filter(state__in = states)			
 		if(user_permission.role=='F'):
+			print 'here6'
 			districts = districts | District.objects.filter(district_name = user_permission.district_operated)
-        		
+        print districts		
 	return districts   
 		
 		        		
@@ -827,10 +833,14 @@ def get_districts_online(request, offset, limit):
 		return redirect('districts')
 	else:
 		district_objects = get_user_districts(request);
+		print 'dist1'
 		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")[offset:limit]
+		print 'dist2'
 		if(districts):
+			print 'dist3'
 			json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
 		else:
+			print 'dist4'
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
