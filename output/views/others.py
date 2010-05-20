@@ -60,6 +60,6 @@ def base_career_immediate(request):
     
     return render_to_response('base_career_immediate.html')
 
-def technology(request):
+def tech(request):
     
     return render_to_response('technology.html')
