@@ -231,7 +231,7 @@ def login_view(request):
 
 def get_key_for_user(request):
 	if request.method == 'POST':
-		MILLION_CONSTANT = 1000000
+		MILLION_CONSTANT = 100000
 		username = request.POST.get('username', '')
 		user_id = run_query("Select id from auth_user where username = %s", username)
 		if len(user_id) > 0 :
@@ -298,24 +298,16 @@ def get_user_blocks(request):
 
 
 def get_user_districts(request):
-	print 'here1'
-	print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
-	print 'here2'
 	districts = District.objects.none()
-	print 'here3'
 	for user_permission in user_permissions:
 		if(user_permission.role=='A'):
-			print 'here4'
 			districts = districts | District.objects.all()
 		if(user_permission.role=='D'):
-			print 'here5'
 			states = State.objects.filter(region = user_permission.region_operated)
 			districts = districts | District.objects.filter(state__in = states)			
 		if(user_permission.role=='F'):
-			print 'here6'
 			districts = districts | District.objects.filter(district_name = user_permission.district_operated)
-        print districts		
 	return districts   
 		
 		        		
@@ -834,14 +826,10 @@ def get_districts_online(request, offset, limit):
 		return redirect('districts')
 	else:
 		district_objects = get_user_districts(request);
-		print 'dist1'
 		districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")[offset:limit]
-		print 'dist2'
 		if(districts):
-			print 'dist3'
 			json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
 		else:
-			print 'dist4'
 			json_subcat = 'EOF'
 		return HttpResponse(json_subcat, mimetype="application/javascript")
 
