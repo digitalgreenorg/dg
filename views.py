@@ -299,6 +299,7 @@ def get_user_blocks(request):
 
 def get_user_districts(request):
 	print 'here1'
+	print request.session.get('user_id')
 	user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
 	print 'here2'
 	districts = District.objects.none()
