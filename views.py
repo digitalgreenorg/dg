@@ -210,7 +210,7 @@ def feeds_persons_village(request, village_id):
 #  Functions for online offline application
 #
 def redirect_to(request):
-	return HttpResponseRedirect('http://www.digitalgreen.org/media/coco/DashboardGwt.html');
+	return HttpResponseRedirect('/media/coco/DashboardGwt.html');
 
 def login_view(request):
 	if request.method == 'POST':
