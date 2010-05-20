@@ -78,11 +78,7 @@ init :function() {
 		$('#box').css("display") == 'block'?showStatus(null):"";
 	});
 
-	var w  = window.location.href.split('/')
-	var id = w[w.length-2]
-	
-	if(id > 0) {
-		try {
+	try {
 			var db = google.gears.factory.create('beta.database');
 			db.open('digitalgreen');
 			var rs = db.execute('select u.app_status from user u');
@@ -96,13 +92,20 @@ init :function() {
 			}
 			rs.close();
 			db.close();
-		}
-		catch(err) {
+	}
+	catch(err) {
 			// If an exception is caught, assume online case
 			app_status = 1;
 			db.close();
-		}
+	}
 		
+	var w  = window.location.href.split('/')
+	var id = w[w.length-2]
+	
+	// Edit case
+	if(id > 0) {
+	
+		// Edit Online case
 		if (app_status == 1){						
 			is_edit = true;		
 			vil_id = $("#id_village").val()
@@ -257,7 +260,7 @@ init :function() {
 				hideStatus();
 				
 		}
-	}
+	} // Add case 
 	else {
 		is_edit = false;
 		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
@@ -439,111 +442,114 @@ function update_id_fields(row, new_position)
 //Function called on Person Group Selection
 function filter_person() {
 	var grps = $("#id_farmer_groups_targeted").val() || [];
-	if(app_status == 0 && grps.length > 0 ) {
-		showStatus("Loading persons..");
-		var table = $('div.inline-group div.tabular').find('table');						
- 		table.append('<tbody></tbody>');
-		var db = google.gears.factory.create('beta.database');
-		db.open('digitalgreen');
-		var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
-		var prac_options = [];
-		while(prac.isValidRow()) {
-			prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
-			prac.next();
-		}
+	if( grps.length > 0) {
+		if(app_status == 0 ) {
+			showStatus("Loading persons..");
+			var table = $('div.inline-group div.tabular').find('table');						
+			table.append('<tbody></tbody>');
+			var db = google.gears.factory.create('beta.database');
+			db.open('digitalgreen');
+			var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
+			var prac_options = [];
+			while(prac.isValidRow()) {
+				prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
+				prac.next();
+			}
 		
-		// Add practice to add new row template
-		template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
+			// Add practice to add new row template
+			template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
 		
-		var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
-		var person_options = [];
-		while(persons_list_for_add_new_row.isValidRow()) {
-			person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +'(' + persons_list_for_add_new_row.field(2) + ')'+'</option>');
-			persons_list_for_add_new_row.next();
-		}
+			var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
+			var person_options = [];
+			while(persons_list_for_add_new_row.isValidRow()) {
+				person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +'(' + persons_list_for_add_new_row.field(2) + ')'+'</option>');
+				persons_list_for_add_new_row.next();
+			}	
 
-		// Add person to add new row template 
-		_new_template = (template).replace(/--per_list--/g, person_options.join('\n'));
+			// Add person to add new row template 
+			_new_template = (template).replace(/--per_list--/g, person_options.join('\n'));
+			
+			// Add "add new row" button
+			initialize_add_screening();
 		
-		// Add "add new row" button
-		initialize_add_screening();
-		
-		var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
-		var tot_form = 0;
-		while (persons.isValidRow()) {
-				var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
-				//var row = (off_template).replace(/--per_list--/g, per);
-				var row = (template).replace(/--per_list--/g, per);
-				table.find('tbody').append(row);
-				tot_form += 1;
-				persons.next();
-		}
-		table.find('tr:not(.add_template) td.delete').each(
-		function() {
-		    create_delete_button($(this));
-		});
-		update_positions(table, true);
-	 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
-		//rs.close();
-		prac.close();
-		persons.close();
-		db.close();
-		hideStatus();
-	}	
-	else {
-		showStatus("Loading persons..");
-		//Get the Value of 'Initial-forms' and Person Group selected.
-		grps = $('#id_farmer_groups_targeted').val();
-		tabu = $('div.inline-group div.tabular');
-		table = tabu.find('table');
-		init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
+			var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
+			var tot_form = 0;
+			while (persons.isValidRow()) {
+					var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
+					//var row = (off_template).replace(/--per_list--/g, per);
+					var row = (template).replace(/--per_list--/g, per);
+					table.find('tbody').append(row);
+					tot_form += 1;
+					persons.next();
+			}	
+			table.find('tr:not(.add_template) td.delete').each(
+			function() {
+				create_delete_button($(this));
+			});
+			update_positions(table, true);
+			table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
+			//rs.close();
+			prac.close();
+			persons.close();
+			db.close();
+			hideStatus();
+		}	
+		else {
+			// Online case
+			showStatus("Loading persons..");
+			//Get the Value of 'Initial-forms' and Person Group selected.
+			grps = $('#id_farmer_groups_targeted').val();
+			tabu = $('div.inline-group div.tabular');
+			table = tabu.find('table');
+			init_form = table.parent().parent('div.tabular').find("input[id$='INITIAL_FORMS']").val();
 	
-		// Get all the person of the block to which the group belongs.
-		// This person list will be used for "add-new row" template
-		$.ajax({ type: "GET", 
-			dataType: 'json',
-			url: "/technology/get/person/", 
-			data:{groups:grps,},
-			success: function(obj) {		
-				//For "Add new Row" template, replacing ther person list of block of the village
-				template = (template).replace(/--per_list--/g, obj.per_list);			
-				initialize_add_screening();
-			} 
-		});	
+			// Get all the person of the block to which the group belongs.
+			// This person list will be used for "add-new row" template
+			$.ajax({ type: "GET", 
+				dataType: 'json',
+				url: "/technology/get/person/", 
+				data:{groups:grps,},
+				success: function(obj) {		
+					//For "Add new Row" template, replacing ther person list of block of the village
+					template = (template).replace(/--per_list--/g, obj.per_list);			
+					initialize_add_screening();
+				} 	
+			});	
 	
-		// Get the list of the person belonging to the selected person group
-		// Also get the list of the practices for "add new row" template
-		$.ajax({ type: "GET", 
-			dataType: 'json',
-			url: "/technology/feeds/persons/modified/", 
-			data:{groups:grps, init:init_form,mode:1},
-			success: function(obj){
-				if(obj.html=='Error') {
-					alert('Sorry, some error Occured. Please notify Systems Team.');
-					return;
-				}
+			// Get the list of the person belonging to the selected person group
+			// Also get the list of the practices for "add new row" template
+			$.ajax({ type: "GET", 
+				dataType: 'json',
+				url: "/technology/feeds/persons/modified/", 
+				data:{groups:grps, init:init_form,mode:1},
+				success: function(obj){
+					if(obj.html=='Error') {
+						alert('Sorry, some error Occured. Please notify Systems Team.');
+						return;
+					}
 					
-				//Case when No Person is present in the person groups.
-				if(obj.tot_val == init_form) {
-					alert("Selected Group has no Person registered.");
+					//Case when No Person is present in the person groups.
+					if(obj.tot_val == init_form) {
+						alert("Selected Group has no Person registered.");
+						clear_table(table);
+						table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
+						hideStatus();
+						return;
+					}
+						
+					//Create & append the list of persons 
+					_new_template = (template).replace(/--prac_list--/g, obj.prac);
+					_prac_list = obj.prac;
+					
+					new_html = (obj.html).replace(/--prac_list--/g, _prac_list);
+					table = $('div.inline-group div.tabular').find('table');						
 					clear_table(table);
+					table.append(new_html);			
+					//Set Total forms
 					table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
 					hideStatus();
-					return;
-				}
-						
-				//Create & append the list of persons 
-				_new_template = (template).replace(/--prac_list--/g, obj.prac);
-				_prac_list = obj.prac;
-				
-				new_html = (obj.html).replace(/--prac_list--/g, _prac_list);
-				table = $('div.inline-group div.tabular').find('table');						
-				clear_table(table);
-			    table.append(new_html);			
-			  	//Set Total forms
-			 	table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(obj.tot_val);
-			 	hideStatus();
-			}
-		});
+				}	
+			});
+		}
 	}
 }
