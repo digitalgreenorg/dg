@@ -59,3 +59,7 @@ def base_partnerselection(request):
 def base_career_immediate(request):
     
     return render_to_response('base_career_immediate.html')
+
+def technology(request):
+    
+    return render_to_response('technology.html')
