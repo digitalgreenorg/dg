@@ -269,6 +269,11 @@ init :function() {
 		if(pg_selected.length >0) {
 			filter_person()
 		}
+		
+		if(app_status==0) {
+			var table = $('div.inline-group div.tabular').find('table');						
+			table.append('<tbody></tbody>');
+		}
 		//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 	}
 	$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
@@ -445,8 +450,8 @@ function filter_person() {
 	if( grps.length > 0) {
 		if(app_status == 0 ) {
 			showStatus("Loading persons..");
-			var table = $('div.inline-group div.tabular').find('table');						
-			table.append('<tbody></tbody>');
+			var table = $('div.inline-group div.tabular').find('table');			
+			//table.append('<tbody></tbody>');
 			var db = google.gears.factory.create('beta.database');
 			db.open('digitalgreen');
 			var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
@@ -471,17 +476,20 @@ function filter_person() {
 			
 			// Add "add new row" button
 			initialize_add_screening();
-		
+			
 			var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
 			var tot_form = 0;
+			var row ='';
 			while (persons.isValidRow()) {
 					var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
 					//var row = (off_template).replace(/--per_list--/g, per);
-					var row = (template).replace(/--per_list--/g, per);
-					table.find('tbody').append(row);
+					row = row  + (template).replace(/--per_list--/g, per);
+					//table.find('tbody').append(row);
 					tot_form += 1;
 					persons.next();
 			}	
+			clear_table(table);
+			table.find('tbody').append(row);
 			table.find('tr:not(.add_template) td.delete').each(
 			function() {
 				create_delete_button($(this));
