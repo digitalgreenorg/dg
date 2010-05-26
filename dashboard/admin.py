@@ -20,7 +20,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str
 
-from dg.dashboard.widgets import ForeignKeySearchInput
+from dg.dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
 from django.conf.urls.defaults import *
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
@@ -510,10 +510,45 @@ class TrainingAdmin(admin.ModelAdmin):
         )
 
 class EquipmentAdmin(admin.ModelAdmin):
-        list_display = ('equipment_type', 'model_no', 'serial_no')
+    list_display = ('equipment_type', 'model_no', 'serial_no')
 
 class PracticesAdmin(admin.ModelAdmin):
 	search_fields = ['practice_name']
+
+class TargetAdmin(admin.ModelAdmin):
+	
+	formfield_overrides = {
+        models.DateField: {'widget': MonthYearWidget},
+    }
+	fieldsets = [
+        (None, {
+            'fields': ['month_year', 'district']
+        }),
+        ('New Villages', {
+           'fields': ['clusters_identification', 'dg_concept_sharing', 'dissemination_set_deployment']
+        }),
+        (None, {
+           'fields': ['village_operationalization']
+        }),
+        ('Videos', {
+           'fields': ['video_uploading', 'video_production', 'storyboard_preparation', 'video_shooting', 'video_editing', 'video_quality_checking']
+        }),
+        ('Disseminations', {
+           'fields': ['disseminations', 'avg_attendance_per_dissemination', 'exp_interest_per_dissemination', 'adoption_per_dissemination']
+        }),
+        ('Training', {
+           'fields': ['crp_training', 'crp_refresher_training', 'csp_training', 'csp_refresher_training', 'editor_training', 'editor_refresher_training']
+        }),
+        (None, {
+           'fields': ['villages_certification']
+        }),
+        ('Qualitative Feedback', {
+           'fields': ['what_went_well', 'what_not_went_well', 'challenges', 'support_requested']
+        }),
+    ]
+	
+	list_display = ('month_year','district')
+	
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
@@ -533,6 +568,7 @@ admin.site.register(Practices, PracticesAdmin)
 admin.site.register(Screening, ScreeningAdmin)
 admin.site.register(Training, TrainingAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
+admin.site.register(Target, TargetAdmin)
 #admin.site.register(UserPermission)
 #admin.site.register(EquipmentHolder)
 #admin.site.register(Reviewer)
