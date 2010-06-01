@@ -15,50 +15,58 @@ import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 
 public class Syncronisation {
 	
-	public Syncronisation(){	
+	public Syncronisation() {	
 	}
 	
 	private FormQueueData formQueue;
+	private int totalRowsToSync = 0;
 	private LoginData loginData;
 	private int lastSyncedId;
-	private int currentIndex;
+	private int currentIndex = 0;
 	private String setGlobalKeyURL = "/dashboard/setkey/";
 	private BaseServlet servlet;
 	private int offset = 0;
 	
-	public void syncFromLocalToMain(BaseServlet servlet){
+	public void syncFromLocalToMain(BaseServlet servlet) {
 		this.servlet = servlet;
+		Window.alert("In syncing");
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results.equals("1")) {
+					Window.alert("Firing event");
+					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / totalRowsToSync) * 100)));
+					currentIndex++;
+					Window.alert("Fired event, and now incremented currentIndex = " + currentIndex + " and total = " + totalRowsToSync + " AND value = " + (int)(((float)currentIndex / totalRowsToSync) * 100));
 					updateSyncStatusOfLastSyncedRowInFormQueueTable();
 					if(!postRowOfFormQueueTable()) {
 						updateGlobalPkIDOnMainServer();
 					}
 				} else if(results.equals("0")) {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setErrorMessage("Validation Error : Form cannot be verified on the main server");
-					getServlet().redirectTo(new Index(requestContext));		
-				}else if(results.equals("synced")) {
+					requestContext.setErrorMessage("Validation Error.  Please contact support.");
+					getServlet().redirectTo(new Index(requestContext));
+				} else if(results.equals("synced")) {
 					setGlobalIDInLocalUserTable();
-				}
-				else{
+				} else{
 					Window.alert("Unkown Error.  Please contact support.");
 				}
 			}
-			
+
 			public void onlineErrorCallback(int errorCode) {
 				RequestContext requestContext = new RequestContext();
-				if (errorCode == BaseData.ERROR_RESPONSE)
+				if (errorCode == BaseData.ERROR_RESPONSE) {
 					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
-				else if (errorCode == BaseData.ERROR_SERVER)
+				} else if (errorCode == BaseData.ERROR_SERVER) {
 					requestContext.setErrorMessage("Problem in the connection with the server.");
-				else
+				} else {
 					requestContext.setErrorMessage("Unknown error.  Please contact support.");
+				}
 				getServlet().redirectTo(new Index(requestContext));	
 			}
 		});
 		
+		this.totalRowsToSync = formQueue.getUnsyncCount();
+		Window.alert("Gota  count of = " + this.totalRowsToSync);
 		if(!postRowOfFormQueueTable()){
 			RequestContext requestContext = new RequestContext();
 			requestContext.setMessage("Local database is in sync with the main server ");
@@ -97,8 +105,8 @@ public class Syncronisation {
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
-					EventBus.get().fireEvent(new ProgressEvent(currentIndex));
-					if(!results.equals("EOF")){
+					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
+					if(!results.equals("EOF")) {
 						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 						BaseData.Data object;
 						for (int i = 0; i < objects.size(); ++i) {
@@ -165,7 +173,7 @@ public class Syncronisation {
 		formQueue.select(FormQueueData.getUnsyncTableRow);
 		if(formQueue.getResultSet().isValidRow()){
 			try {
-				if(formQueue.getResultSet().getFieldAsInt(4) == 0){
+				if(formQueue.getResultSet().getFieldAsInt(4) == 0) {
 					String queryString = formQueue.getResultSet().getFieldAsString(3);
 					if(formQueue.getResultSet().getFieldAsChar(5) == 'A'){
 						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(0);

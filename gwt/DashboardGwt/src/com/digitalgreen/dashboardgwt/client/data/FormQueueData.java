@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
@@ -59,6 +60,7 @@ public class FormQueueData extends BaseData {
 										  "action CHAR(1) NOT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `formqueue`;";
 	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 ORDER BY id LIMIT 1";
+	protected static String countUnsyncTableRow = "SELECT COUNT(1) FROM `formqueue` WHERE sync_status=0";
 	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE id=?" ;
 	protected static String getMaxGlobalPkId = "SELECT MAX(global_pk_id) FROM `formqueue`;";
 	protected String table_name = "formqueue";
@@ -110,6 +112,23 @@ public class FormQueueData extends BaseData {
 		for(int i=0; i < this.formQueryStringList.size(); i++) {
 			((BaseData.Data)this.formQueryStringList.get(i)).save();
 		}
+	}
+	
+	public int getUnsyncCount() {
+		int totalUnsyncRows = 0;
+		FormQueueData formQueueDbApi = new FormQueueData();
+		BaseData.dbOpen();
+		formQueueDbApi.select(FormQueueData.countUnsyncTableRow);
+		if(formQueueDbApi.getResultSet().isValidRow()){
+			try {
+				Window.alert("It's a valid row");
+				totalUnsyncRows = formQueueDbApi.getResultSet().getFieldAsInt(0);
+			} catch(DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		return totalUnsyncRows;
 	}
 	
 	public Object postPageData() {	

@@ -47,9 +47,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 	
 	@Override
 	public void onProgressEvent(ProgressEvent progressEvent) {
-		int value = (int)(((float)progressEvent.getProgressMark() / 
-				ApplicationConstants.tableIDs.length) * 100);
-		IndexTemplate.progressBar(value);
+		IndexTemplate.progressBar(progressEvent.getProgressMark());
 	}
 	
 	private void goOfflineOnline(){
@@ -116,14 +114,17 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    	   index.response();
 		      }
 	    });
-	
+		
+		final IndexTemplate template = this;
 		uploadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
 		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Uploading to main server");
+		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
+		    	  		"<br /><div id='progressBar'></div>");
+		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "sync");
 		    	  Index index = new Index(requestContext);
@@ -131,7 +132,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		      }
 	    });
 		
-		final IndexTemplate template = this;
 		downloadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
