@@ -103,11 +103,11 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   BaseTemplate operationUi = new BaseTemplate();
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
-		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded.");
+		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded.");
 		    		   requestContext.getArgs().put("action", "gooffline");
 		    	   }
 		    	   else{
-		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going online");
+		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going online");
 		    		   requestContext.getArgs().put("action", "goonline");
 		    	   }
 		    		   
@@ -123,7 +123,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    		  return;
 		    	  }
 		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
+		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
 		    	  		"<br /><div id='progressBar'></div>");
 		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
@@ -139,7 +139,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    		  return;
 		    	  }
 		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
+		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
 		    	  		"<br /><div id='progressBar'></div>");
 		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
