@@ -1,7 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
@@ -9,10 +8,10 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
-import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.google.gwt.gears.client.database.DatabaseException;
-import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.user.client.Window;
+import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
+import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 
 public class Syncronisation {
 	
@@ -31,28 +30,27 @@ public class Syncronisation {
 		this.servlet = servlet;
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
-				if(results == "1") {
-						updateSyncStatusOfLastSyncedRowInFormQueueTable();
-						if(!postRowOfFormQueueTable()){
-								updateGlobalPkIDOnMainServer();
-						}
-				} else if(results =="0") {
+				if(results.equals("1")) {
+					updateSyncStatusOfLastSyncedRowInFormQueueTable();
+					if(!postRowOfFormQueueTable()) {
+						updateGlobalPkIDOnMainServer();
+					}
+				} else if(results.equals("0")) {
 					RequestContext requestContext = new RequestContext();
 					requestContext.setErrorMessage("Validation Error : Form cannot be verified on the main server");
 					getServlet().redirectTo(new Index(requestContext));		
-				}else if(results=="synced"){
+				}else if(results.equals("synced")) {
 					setGlobalIDInLocalUserTable();
 				}
 				else{
-					Window.alert("Unkown Error!");
+					Window.alert("Unkown Error.  Please contact support.");
 				}
 			}
 			
 			public void onlineErrorCallback(int errorCode) {
-				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
 					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
@@ -72,22 +70,21 @@ public class Syncronisation {
 		loginData = new LoginData();
 		IndexData indexData = new IndexData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
-				if(results != "0") {
+				if(!results.equals("0")) {
 					LoginData user = new LoginData();
 					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0");
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
-					requestContext.setErrorMessage("You do not have a valid account.Please contact support. ");
+					requestContext.setErrorMessage("You do not have a valid account.  Please contact support. ");
 					getServlet().redirectTo(new Index(requestContext));				
 				}
 			}
 			
 			public void onlineErrorCallback(int errorCode) {
-				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
 					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
@@ -100,6 +97,7 @@ public class Syncronisation {
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
+					EventBus.get().fireEvent(new ProgressEvent(currentIndex));
 					if(!results.equals("EOF")){
 						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 						BaseData.Data object;
@@ -109,7 +107,7 @@ public class Syncronisation {
 						}
 						offset = offset + ApplicationConstants.PAGESIZE;
 						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
-					}else{
+					} else {
 						currentIndex++;
 						offset = 0;
 						if(currentIndex == ApplicationConstants.tableIDs.length){
@@ -126,10 +124,9 @@ public class Syncronisation {
 			}
 			
 			public void onlineErrorCallback(int errorCode) {
-				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
 					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else
@@ -161,9 +158,7 @@ public class Syncronisation {
 			this.currentIndex = 0;
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
 		}
-		
 	}
-	
 	
 	public Boolean postRowOfFormQueueTable(){
 		BaseData.dbOpen();
@@ -243,10 +238,9 @@ public class Syncronisation {
 			}
 			
 			public void onlineErrorCallback(int errorCode) {
-				Window.alert("GOT AN ERROR connecting to server");
 				RequestContext requestContext = new RequestContext();
 				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 				else if (errorCode == BaseData.ERROR_SERVER)
 					requestContext.setErrorMessage("Problem in the connection with the server.");
 				else

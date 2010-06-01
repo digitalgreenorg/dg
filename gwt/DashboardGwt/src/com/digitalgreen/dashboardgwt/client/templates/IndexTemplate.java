@@ -25,34 +25,32 @@ import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
+import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 
-
-import com.google.gwt.gears.client.Factory;
-import com.google.gwt.gears.client.GearsException;
-import com.google.gwt.gears.client.localserver.LocalServer;
-import com.google.gwt.gears.client.localserver.ManagedResourceStore;
-import com.google.gwt.gears.offline.client.Offline;
-import com.google.gwt.user.client.ui.HTML;
-
-
-public class IndexTemplate extends BaseTemplate {
+// Our Index page has some added event properties to listen for progress events 
+// dispatched from Synchronisation.  Since Download/Upload both spawn from Index,  
+// it seems reasonable to have an IndexTemplate object listen for these progress events.
+public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler {
 	
 	public IndexTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
-	
-	 
 
+	private static native void progressBar(int value) /*-{
+		return $wnd.progressBarSet(value);
+	}-*/;
+	
+	@Override
+	public void onProgressEvent(ProgressEvent progressEvent) {
+		int value = (int)(((float)progressEvent.getProgressMark() / 
+				ApplicationConstants.tableIDs.length) * 100);
+		IndexTemplate.progressBar(value);
+	}
 	
 	private void goOfflineOnline(){
 		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
@@ -106,7 +104,7 @@ public class IndexTemplate extends BaseTemplate {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   BaseTemplate operationUi = new BaseTemplate();
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
-		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going offline");
+		    		   operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded.");
 		    		   requestContext.getArgs().put("action", "gooffline");
 		    	   }
 		    	   else{
@@ -116,15 +114,14 @@ public class IndexTemplate extends BaseTemplate {
 		    		   
 		    	   Index index = new Index(requestContext);
 		    	   index.response();
-		      }		      
+		      }
 	    });
-				
+	
 		uploadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
-		    	  //Template.addLoadingMessage("Uploading data...");
 		    	  BaseTemplate operationUi = new BaseTemplate();
 		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Uploading to main server");
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
@@ -134,13 +131,16 @@ public class IndexTemplate extends BaseTemplate {
 		      }
 	    });
 		
+		final IndexTemplate template = this;
 		downloadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
 		    		  return;
 		    	  }
 		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server");
+		    	  operationUi.showGlassDoorMessage("<img src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
+		    	  		"<br /><div id='progressBar'></div>");
+		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "resync");
 		    	  Index index = new Index(requestContext);
@@ -501,4 +501,5 @@ public class IndexTemplate extends BaseTemplate {
      									"</table>" +
      								"</div>" +
      							"</div>";
+
 }

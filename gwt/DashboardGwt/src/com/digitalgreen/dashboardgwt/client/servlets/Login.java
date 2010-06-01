@@ -41,7 +41,7 @@ public class Login extends BaseServlet {
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setErrorMessage("Invalid credentials, please try again.");
+							requestContext.setErrorMessage("Invalid credentials.  You may have left COCO in offline mode.  If so, login with your offline credentials.");
 							getServlet().redirectTo(new Login(requestContext));				
 						}
 					}
@@ -49,7 +49,7 @@ public class Login extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						RequestContext requestContext = new RequestContext();
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+							requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
 							requestContext.setErrorMessage("Problem in the connection with the server.");
 						else

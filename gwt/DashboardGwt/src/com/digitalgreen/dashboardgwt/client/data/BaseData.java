@@ -370,21 +370,27 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	private void request(RequestBuilder.Method method, String url, String postData) {
 		RequestBuilder builder = new RequestBuilder(method, URL.encode(url));
+		builder.setTimeoutMillis(5000);
 		try {
 			if(method == RequestBuilder.POST) {
 				builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			}
 			Request request = builder.sendRequest(postData, new RequestCallback() {
-			public void onResponseReceived(Request request, Response response) {
-				if(response.getStatusCode() == 200 || response.getStatusCode() == 201) {
-					dataOnlineCallbacks.setStatusCode(response.getStatusCode());
-					dataOnlineCallbacks.onlineSuccessCallback(response.getText());
+				@Override
+				public void onError(Request request, Throwable exception) {
+					dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
 				}
-			}
-			public void onError(Request request, Throwable exception) {
-				dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
-			}		           
-		});
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if(response.getStatusCode() == 200 || response.getStatusCode() == 201) {
+						dataOnlineCallbacks.setStatusCode(response.getStatusCode());
+						dataOnlineCallbacks.onlineSuccessCallback(response.getText());
+					} else {
+						dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
+					}
+				}
+			});
 		} catch (RequestException e) {
 			// Couldn't connect to server
 			dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_SERVER);

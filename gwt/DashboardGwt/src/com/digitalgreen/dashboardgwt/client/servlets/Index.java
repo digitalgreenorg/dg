@@ -20,6 +20,8 @@ import com.google.gwt.gears.client.GearsException;
 import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
+import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;
+import com.google.gwt.gears.client.localserver.ManagedResourceStoreErrorHandler;
 import com.google.gwt.gears.offline.client.Offline;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
@@ -40,27 +42,22 @@ public class Index extends BaseServlet {
 	
 	private boolean createManagedResourceStore() {
 		try {
-			final ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
-
-			new Timer() {
-				final String oldVersion = managedResourceStore.getCurrentVersion();
-				String transferringData = "Transferring data";
-
-				@Override
-				public void run() {
-					switch (managedResourceStore.getUpdateStatus()) {
-					case ManagedResourceStore.UPDATE_OK:
-						break;
-					case ManagedResourceStore.UPDATE_CHECKING:
-					case ManagedResourceStore.UPDATE_DOWNLOADING:
-						transferringData += ".";
-						schedule(500);
-						break;
-					case ManagedResourceStore.UPDATE_FAILED:
-						break;
-					}
+			final RequestContext requestContext = new RequestContext();
+			final BaseServlet servlet = this;
+			ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
+			managedResourceStore.setOnCompleteHandler(new ManagedResourceStoreCompleteHandler() {
+				public void onComplete(ManagedResourceStoreCompleteHandler.ManagedResourceStoreCompleteEvent event) {
+					requestContext.setMessage("Donwloaded all offline contents successfully.  You can now proceed with any offline activities.");
+					servlet.redirectTo(new Index(requestContext));
 				}
-			}.schedule(500);
+			});
+			managedResourceStore.setOnErrorHandler(new ManagedResourceStoreErrorHandler() {
+				public void onError(ManagedResourceStoreErrorHandler.ManagedResourceStoreErrorEvent error) {
+					requestContext.setMessage("There was an error while downloading some offline contents.  " +
+							"Please either try again by refreshing your page and clicking 'Go Offline, or contact support.");
+					servlet.redirectTo(new Index(requestContext));
+				}
+			});
 	    } catch (GearsException e) {
 	    	return false;
 	    }

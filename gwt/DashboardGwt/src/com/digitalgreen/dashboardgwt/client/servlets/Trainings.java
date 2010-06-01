@@ -50,7 +50,7 @@ public class Trainings extends BaseServlet {
 					public void onlineErrorCallback(int errorCode) {
 						getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 						if (errorCode == BaseData.ERROR_RESPONSE)
-							getServlet().getRequestContext().setErrorMessage("Unresponsive Server.  Please contact support.");
+							getServlet().getRequestContext().setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 						else if (errorCode == BaseData.ERROR_SERVER)
 							getServlet().getRequestContext().setErrorMessage("Problem in the connection with the server.");
 						else
@@ -104,7 +104,7 @@ public class Trainings extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
 								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
@@ -149,7 +149,7 @@ public class Trainings extends BaseServlet {
 						public void onlineErrorCallback(int errorCode) {
 							RequestContext requestContext = new RequestContext();
 							if (errorCode == BaseData.ERROR_RESPONSE)
-								requestContext.setErrorMessage("Unresponsive Server.  Please contact support.");
+								requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 							else if (errorCode == BaseData.ERROR_SERVER)
 								requestContext.setErrorMessage("Problem in the connection with the server.");
 							else
