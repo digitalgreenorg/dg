@@ -29,14 +29,11 @@ public class Syncronisation {
 	
 	public void syncFromLocalToMain(BaseServlet servlet) {
 		this.servlet = servlet;
-		Window.alert("In syncing");
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results.equals("1")) {
-					Window.alert("Firing event");
-					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / totalRowsToSync) * 100)));
 					currentIndex++;
-					Window.alert("Fired event, and now incremented currentIndex = " + currentIndex + " and total = " + totalRowsToSync + " AND value = " + (int)(((float)currentIndex / totalRowsToSync) * 100));
+					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / totalRowsToSync) * 100)));
 					updateSyncStatusOfLastSyncedRowInFormQueueTable();
 					if(!postRowOfFormQueueTable()) {
 						updateGlobalPkIDOnMainServer();
@@ -66,7 +63,6 @@ public class Syncronisation {
 		});
 		
 		this.totalRowsToSync = formQueue.getUnsyncCount();
-		Window.alert("Gota  count of = " + this.totalRowsToSync);
 		if(!postRowOfFormQueueTable()){
 			RequestContext requestContext = new RequestContext();
 			requestContext.setMessage("Local database is in sync with the main server ");

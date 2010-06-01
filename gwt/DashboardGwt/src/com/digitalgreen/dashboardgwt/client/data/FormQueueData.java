@@ -121,7 +121,6 @@ public class FormQueueData extends BaseData {
 		formQueueDbApi.select(FormQueueData.countUnsyncTableRow);
 		if(formQueueDbApi.getResultSet().isValidRow()){
 			try {
-				Window.alert("It's a valid row");
 				totalUnsyncRows = formQueueDbApi.getResultSet().getFieldAsInt(0);
 			} catch(DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());
