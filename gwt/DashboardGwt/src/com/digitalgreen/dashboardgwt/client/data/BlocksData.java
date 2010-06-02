@@ -103,7 +103,7 @@ public class BlocksData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator blockName = new StringValidator(this.block_name, false, false, 1, 100);
+			StringValidator blockName = new StringValidator(this.block_name, false, false, 1, 100, true);
 			blockName.setError("Please make sure that 'Block Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
 			startDate.setError("Please make sure 'Start date' is formatted as 'YYYY-MM-DD'.");

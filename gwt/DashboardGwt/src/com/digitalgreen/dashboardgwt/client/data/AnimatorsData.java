@@ -210,7 +210,7 @@ public class AnimatorsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator name = new StringValidator(this.name, false, false,	0, 100);
+			StringValidator name = new StringValidator(this.name, false, false,	0, 100, true);
 			name.setError("Name is a required field and please make sure 'name' is less than 100 characters.");
 			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
 			age.setError("Please enter a valid age");

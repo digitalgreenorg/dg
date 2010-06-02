@@ -201,25 +201,25 @@ public class PersonsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100);
+			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
 			personName.setError("Person Name is a required field and is less than 100 characters");
 			
-			StringValidator fatherName = new StringValidator(this.father_name, true, true, 0, 100);
+			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
 			fatherName.setError("Please make sure that Father Name is less than 100 characters");
 			
-			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
+			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
 			age.setError("Please enter a valid age");
 			
 			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
 			gender.setError("Please select gender");
 			
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100);
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100);
 			phoneNo.setError("Please make sure that phone number is valid");
 			
-			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
+			StringValidator address = new StringValidator(this.address, true, false, 0, 500);
 			address.setError("Please make sure that Address is less than 500 characters");
 			
-			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, true, 0, 200);
+			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
 			landHoldings.setError("Please enter a valid Land holdings data");
 			
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);

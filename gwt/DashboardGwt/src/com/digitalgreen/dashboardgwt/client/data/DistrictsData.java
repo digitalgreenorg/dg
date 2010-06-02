@@ -125,7 +125,7 @@ public class DistrictsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator districtNameValidator = new StringValidator(this.district_name, false, false, 1, 100);
+			StringValidator districtNameValidator = new StringValidator(this.district_name, false, false, 1, 100, true);
 			districtNameValidator.setError("Please make sure that 'District Name' is NOT EMPTY and not more than 100 characters.");
 			DateValidator startDateValidator = new DateValidator(this.start_date, true, true);
 			startDateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");

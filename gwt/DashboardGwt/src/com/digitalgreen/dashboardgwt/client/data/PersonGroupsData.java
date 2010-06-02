@@ -138,7 +138,7 @@ public class PersonGroupsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100);
+			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100, true);
 			groupName.setError("Group name is a required field and is less than 100 characters");
 			TimeValidator timings = new TimeValidator(this.timings, true, true);
 			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");

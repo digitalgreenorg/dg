@@ -98,7 +98,7 @@ public class PracticesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator nameValidator = new StringValidator(this.practice_name, false, false, 1, 200);
+			StringValidator nameValidator = new StringValidator(this.practice_name, false, false, 1, 200, true);
 			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 200 characters.");
 			StringValidator seasonalityValidator = new StringValidator(this.seasonality, false, false, 3, 3);
 			seasonalityValidator.setError("Please make sure you choose a Season for 'Seasonality'.");

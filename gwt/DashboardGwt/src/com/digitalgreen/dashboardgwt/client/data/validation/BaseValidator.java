@@ -25,6 +25,15 @@ public class BaseValidator {
 		return this.nullable;
 	}
 	
+	public boolean isBlankable() {
+		return this.blank;
+	}
+	
+	public boolean isNotEmpty() {
+		String valueTrim = new String((String)value);
+		return !valueTrim.isEmpty();
+	}
+	
 	public Object getValue() {
 		return this.value;
 	}
@@ -36,7 +45,7 @@ public class BaseValidator {
 		}
 		if(value != null && value instanceof String) {
 			String valueTrim = new String((String)value);
-			if(!blank && valueTrim.trim().isEmpty()){
+			if(!blank && valueTrim.isEmpty()){
 				return false;
 			}
 		}

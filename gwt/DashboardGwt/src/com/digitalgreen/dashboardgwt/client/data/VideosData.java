@@ -271,7 +271,7 @@ public class VideosData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator title = new StringValidator(this.title, false, false, 1, 200);
+			StringValidator title = new StringValidator(this.title, false, false, 1, 200, true);
 			title.setError("Please make sure that 'Title' is NOT EMPTY and not more than 200 characters.");
 			StringValidator videoType = new StringValidator(this.video_type, false, false, 1, 1);;
 			videoType.setError("Please make sure you choose a video type for 'Video type'.");

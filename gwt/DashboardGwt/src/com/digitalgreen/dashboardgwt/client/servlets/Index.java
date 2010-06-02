@@ -32,7 +32,10 @@ public class Index extends BaseServlet {
 		" Please <a href=\"http://gears.google.com/\" target=\"_blank\">install Gears</a> " +
 		"and reload the application.";
 	
-	public Index(){
+	public final static String unsyncedRowsMessage = "You have unsynced rows that are pending " +
+			"upload to the main server.  Please click on the 'Upload' button to start the upload.";
+	
+	public Index() {
 		super();
 	}
 	
@@ -122,12 +125,18 @@ public class Index extends BaseServlet {
 				}
 				else if (queryArg.equals("resync")) {
 					RequestContext requestContext = new RequestContext();
-					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
-						requestContext.setErrorMessage(Index.pluginNotInstalled);
+					FormQueueData formQueueDataDbApi = new FormQueueData();
+					if(formQueueDataDbApi.getUnsyncCount() > 0) {
+						requestContext.setErrorMessage(Index.unsyncedRowsMessage);
 						this.redirectTo(new Index(requestContext));
 					} else {
-						Syncronisation syncronisation = new Syncronisation();
-						syncronisation.syncFromMainToLocal(this);
+						if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
+							requestContext.setErrorMessage(Index.pluginNotInstalled);
+							this.redirectTo(new Index(requestContext));
+						} else {
+							Syncronisation syncronisation = new Syncronisation();
+							syncronisation.syncFromMainToLocal(this);
+						}
 					}
 				}
 			}
