@@ -130,7 +130,7 @@ public class Index extends BaseServlet {
 						this.redirectTo(new Index(requestContext));
 					} else {
 						FormQueueData formQueueDataDbApi = new FormQueueData();
-						if(formQueueDataDbApi.getUnsyncCount() > 0) {
+						if(offlineReadyState == IndexData.STATUS_READY && formQueueDataDbApi.getUnsyncCount() > 0) {
 							requestContext.setErrorMessage(Index.unsyncedRowsMessage);
 							this.redirectTo(new Index(requestContext));
 						} else {
