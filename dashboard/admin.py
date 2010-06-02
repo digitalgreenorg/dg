@@ -12,7 +12,7 @@ from ajax_filtered_fields.forms import FilteredSelect
 
 
 
-# autocomplete widget 
+# autocomplete widget
 import operator
 from django.db import models
 from django.contrib.auth.models import Message
@@ -27,20 +27,20 @@ class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
     class Meta:
         model = PersonMeetingAttendance
-    
+
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
     raw_id_fields = ("person",)
     extra = 0
 
 class ScreeningForm(forms.ModelForm):
-    class DynamicChoiceField(forms.ChoiceField):     
-		def clean(self, value):         
-			return value      
+    class DynamicChoiceField(forms.ChoiceField):
+        def clean(self, value):
+            return value
 
     class DynamicMultipleChoiceField(forms.MultipleChoiceField):
-		def clean(self, value):
-			return value
+        def clean(self, value):
+            return value
 
 
     #village  = AjaxForeignKeyField(Village, (('village_name',{}),),default_index=0, select_related= None, widget=FilteredSelect(attrs={'onchange':'temp();'}))
@@ -51,17 +51,17 @@ class ScreeningForm(forms.ModelForm):
     #farmer_groups_targeted = forms.ModelMultipleChoiceField(queryset=PersonGroups.objects.none())
     #animator = forms.ModelChoiceField(Animator.objects, widget=forms.Select(attrs={'disabled': 'true'}))
     animator = forms.ModelChoiceField(Animator.objects)
-    
+
     #farmers_groups_targeted = forms.ModelChoiceField(PersonGroups.objects, widget=forms.SelectMultiple(attrs={'onchange':'filter_person();'}))
 
 
     class Meta:
-	    model = Screening
+        model = Screening
 
-		
 
-   
-	 	
+
+
+
 class ScreeningAdmin(admin.ModelAdmin):
     fields = ('date','start_time','end_time','location','village','animator','videoes_screened','target_person_attendance','target_audience_interest','target_adoptions','fieldofficer','farmer_groups_targeted')
     inlines = [FarmerAttendanceInline]
@@ -70,9 +70,9 @@ class ScreeningAdmin(admin.ModelAdmin):
     search_fields = ['village__village_name']
     #form = ScreeningForm
     related_search_fields = {
-       	'village': ('village_name',),
+        'village': ('village_name',),
     }
-        
+
     def __call__(self, request, url):
         if url is None:
             pass
@@ -81,15 +81,15 @@ class ScreeningAdmin(admin.ModelAdmin):
         return super(ScreeningAdmin, self).__call__(request, url)
 
     def get_urls(self):
-	urls = super(ScreeningAdmin,self).get_urls()
-	search_url = patterns('',
-	(r'^search/$', self.search)
-	)
-	return search_url + urls
+        urls = super(ScreeningAdmin,self).get_urls()
+        search_url = patterns('',
+        (r'^search/$', self.search)
+        )
+        return search_url + urls
 
     def search(self, request):
         """
-        Searches in the fields of the given related model and returns the 
+        Searches in the fields of the given related model and returns the
         result as a simple string to be used by the jQuery Autocomplete plugin
         """
         query = request.GET.get('q', None)
@@ -99,7 +99,7 @@ class ScreeningAdmin(admin.ModelAdmin):
 
         if search_fields and app_label and model_name and query:
             def construct_search(field_name):
-                # use different lookup methods depending on the notation
+        # use different lookup methods depending on the notation
                 if field_name.startswith('^'):
                     return "%s__istartswith" % field_name[1:]
                 elif field_name.startswith('='):
@@ -133,51 +133,51 @@ class ScreeningAdmin(admin.ModelAdmin):
             kwargs['widget'] = ForeignKeySearchInput(db_field.rel,
                                     self.related_search_fields[db_field.name])
         return super(ScreeningAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-    
-    form = ScreeningForm
-   
-    class Media:
-	js = (
-		settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-				settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/screening_page.js",
-		#settings.ADMIN_MEDIA_PREFIX + "js/dynamicinline.js",
-		
-	)
 
-	css = {
-		'all':('/media/css/screening_page.css',)
-	}
-   	
+    form = ScreeningForm
+
+    class Media:
+        js = (
+                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
+                                settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
+                settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
+                settings.ADMIN_MEDIA_PREFIX + "js/screening_page.js",
+                #settings.ADMIN_MEDIA_PREFIX + "js/dynamicinline.js",
+
+        )
+
+        css = {
+                'all':('/media/css/screening_page.css',)
+        }
+
 class ReviewerInline(generic.GenericTabularInline):
-	model = Reviewer
+    model = Reviewer
 
 
 class DevelopmentManagerAdmin(admin.ModelAdmin):
-	exclude = ('salary',)
-	list_display = ('name','region')
-	#inlines = [ReviewerInline, ]
+    exclude = ('salary',)
+    list_display = ('name','region')
+    #inlines = [ReviewerInline, ]
 
 class VideoForm(forms.ModelForm):
-	class DynamicChoiceField(forms.ChoiceField):     
-		def clean(self, value):         
-			return value      
+    class DynamicChoiceField(forms.ChoiceField):
+        def clean(self, value):
+            return value
 
-        facilitator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
-    	cameraoperator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
+    facilitator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
+    cameraoperator = forms.ModelChoiceField(Animator.objects, widget=forms.Select())
 
-	class Meta:
-		model = Video
+    class Meta:
+        model = Video
 
 
 class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
-		(None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary']}),
-		('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
-		(None,{'fields':['village','facilitator','cameraoperator','related_agricultural_practices','farmers_shown','actors']}),
-		('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
-		('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks']}),
+                (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary']}),
+                ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
+                (None,{'fields':['village','facilitator','cameraoperator','related_agricultural_practices','farmers_shown','actors']}),
+                ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
+                ('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks']}),
     ]
     filter_horizontal = ('related_agricultural_practices','farmers_shown',)
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
@@ -185,9 +185,9 @@ class VideoAdmin(admin.ModelAdmin):
     #raw_id_fields = ('village',)
     #form = VideoForm
     related_search_fields = {
-       	'village': ('village_name',),
+        'village': ('village_name',),
     }
-        
+
     def __call__(self, request, url):
         if url is None:
             pass
@@ -196,15 +196,15 @@ class VideoAdmin(admin.ModelAdmin):
         return super(VideoAdmin, self).__call__(request, url)
 
     def get_urls(self):
-	urls = super(VideoAdmin,self).get_urls()
-	search_url = patterns('',
-	(r'^search/$', self.search)
-	)
-	return search_url + urls
+        urls = super(VideoAdmin,self).get_urls()
+        search_url = patterns('',
+        (r'^search/$', self.search)
+        )
+        return search_url + urls
 
     def search(self, request):
         """
-        Searches in the fields of the given related model and returns the 
+        Searches in the fields of the given related model and returns the
         result as a simple string to be used by the jQuery Autocomplete plugin
         """
         query = request.GET.get('q', None)
@@ -214,7 +214,7 @@ class VideoAdmin(admin.ModelAdmin):
 
         if search_fields and app_label and model_name and query:
             def construct_search(field_name):
-                # use different lookup methods depending on the notation
+        # use different lookup methods depending on the notation
                 if field_name.startswith('^'):
                     return "%s__istartswith" % field_name[1:]
                 elif field_name.startswith('='):
@@ -248,98 +248,98 @@ class VideoAdmin(admin.ModelAdmin):
             kwargs['widget'] = ForeignKeySearchInput(db_field.rel,
                                     self.related_search_fields[db_field.name])
         return super(VideoAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-    
+
     form = VideoForm
-   
+
     class Media:
-	js = (
-		settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/video_filter.js",
-	)
+        js = (
+                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
+                settings.ADMIN_MEDIA_PREFIX + "js/video_filter.js",
+        )
 
 
 
 class AnimatorAssignedVillages(admin.StackedInline):
-	model = AnimatorAssignedVillage
-	
+    model = AnimatorAssignedVillage
+
 class AnimatorAdmin(admin.ModelAdmin):
-	fields = ('name','age','gender','csp_flag','camera_operator_flag','facilitator_flag','phone_no','address','partner','village')
-	inlines = [AnimatorAssignedVillages]
-	list_display = ('name', 'partner', 'village',)
-	search_fields = ['name','village__village_name', 'partner__partner_name']
+    fields = ('name','age','gender','csp_flag','camera_operator_flag','facilitator_flag','phone_no','address','partner','village')
+    inlines = [AnimatorAssignedVillages]
+    list_display = ('name', 'partner', 'village',)
+    search_fields = ['name','village__village_name', 'partner__partner_name']
 
 
 
 class PersonGroupsInline(admin.TabularInline):
-	model = PersonGroups
-	extra = 5  
+    model = PersonGroups
+    extra = 5
 
 class AnimatorInline(admin.TabularInline):
-	model = Animator
-	extra = 5
-	exclude = ('assigned_villages',)
+    model = Animator
+    extra = 5
+    exclude = ('assigned_villages',)
 
 class VillageAdmin(admin.ModelAdmin):
-	list_display = ('village_name', 'block')
-	search_fields = ['village_name', 'block__block_name']
-	inlines = [PersonGroupsInline, AnimatorInline]
-	
+    list_display = ('village_name', 'block')
+    search_fields = ['village_name', 'block__block_name']
+    inlines = [PersonGroupsInline, AnimatorInline]
+
 
 class PersonInline(admin.TabularInline):
     model = Person
-    extra = 30 
+    extra = 30
 
 
 class PersonGroupsForm(forms.ModelForm):
-	class Meta:
-		model = PersonGroups
-	
-	class Media:
-		js = (
-			settings.ADMIN_MEDIA_PREFIX + "js/filter_village.js",
-			#settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-                	#settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
-	                #settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
-	                #settings.ADMIN_MEDIA_PREFIX + "js/dynamic_inlines_with_sort.js",
-		)
+    class Meta:
+        model = PersonGroups
 
-        	#css = {
-	        #        'all':('/media/css/dynamic_inlines_with_sort.css',)
-	        #}
+    class Media:
+        js = (
+                settings.ADMIN_MEDIA_PREFIX + "js/filter_village.js",
+                #settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
+                #settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.core.js",
+                #settings.ADMIN_MEDIA_PREFIX + "js/ui/ui.sortable.js",
+                #settings.ADMIN_MEDIA_PREFIX + "js/dynamic_inlines_with_sort.js",
+        )
+
+        #css = {
+        #        'all':('/media/css/dynamic_inlines_with_sort.css',)
+        #}
 
 
 
 class PersonGroupsAdmin(admin.ModelAdmin):
-	inlines = [PersonInline]
-	list_display = ('group_name','village')
-	search_fields = ['group_name','village__village_name']
-	form = PersonGroupsForm
+    inlines = [PersonInline]
+    list_display = ('group_name','village')
+    search_fields = ['group_name','village__village_name']
+    form = PersonGroupsForm
 
 
 class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
-	list_display = ('animator','village')
-	search_fields = ['animator__name','village__village_name']
+    list_display = ('animator','village')
+    search_fields = ['animator__name','village__village_name']
 
 class FieldOfficerAdmin(admin.ModelAdmin):
-	exclude = ('salary',)
+    exclude = ('salary',)
 
 
 
 class PersonAdoptPracticeInline(admin.StackedInline):
-	model = PersonAdoptPractice
-	extra = 3
+    model = PersonAdoptPractice
+    extra = 3
 
 class PersonForm(forms.ModelForm):
-    class DynamicChoiceField(forms.ChoiceField):     
-		def clean(self, value):         
-			return value      
+    class DynamicChoiceField(forms.ChoiceField):
+        def clean(self, value):
+            return value
 
     #group = DynamicChoiceField(widget=forms.Select(attrs={'disabled': 'true'}))
 
     #group = forms.ModelChoiceField(PersonGroups.objects, widget=forms.Select(attrs={'disabled': 'true'}))
-    
+
     class Meta:
-	    model = Person
+        model = Person
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -347,9 +347,9 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ('person_name','group','village')
     search_fields = ['person_name','village__village_name','group__group_name']
     related_search_fields = {
-       	'village': ('village_name',),
+        'village': ('village_name',),
     }
-        
+
     def __call__(self, request, url):
         if url is None:
             pass
@@ -358,15 +358,15 @@ class PersonAdmin(admin.ModelAdmin):
         return super(PersonAdmin, self).__call__(request, url)
 
     def get_urls(self):
-	urls = super(PersonAdmin,self).get_urls()
-	search_url = patterns('',
-	(r'^search/$', self.search)
-	)
-	return search_url + urls
+        urls = super(PersonAdmin,self).get_urls()
+        search_url = patterns('',
+        (r'^search/$', self.search)
+        )
+        return search_url + urls
 
     def search(self, request):
         """
-        Searches in the fields of the given related model and returns the 
+        Searches in the fields of the given related model and returns the
         result as a simple string to be used by the jQuery Autocomplete plugin
         """
         query = request.GET.get('q', None)
@@ -376,7 +376,7 @@ class PersonAdmin(admin.ModelAdmin):
 
         if search_fields and app_label and model_name and query:
             def construct_search(field_name):
-                # use different lookup methods depending on the notation
+        # use different lookup methods depending on the notation
                 if field_name.startswith('^'):
                     return "%s__istartswith" % field_name[1:]
                 elif field_name.startswith('='):
@@ -410,29 +410,29 @@ class PersonAdmin(admin.ModelAdmin):
             kwargs['widget'] = ForeignKeySearchInput(db_field.rel,
                                     self.related_search_fields[db_field.name])
         return super(PersonAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-    
+
     form = PersonForm
-   
+
     class Media:
-	js = (
-		settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
-		settings.ADMIN_MEDIA_PREFIX + "js/person_filter.js",
-	)
+        js = (
+                settings.ADMIN_MEDIA_PREFIX + "js/jquery-1.3.2.min.js",
+                settings.ADMIN_MEDIA_PREFIX + "js/person_filter.js",
+        )
 
 
 class BlockAdmin(admin.ModelAdmin):
-	list_display = ('block_name', 'district')
+    list_display = ('block_name', 'district')
 
 class DistrictAdmin(admin.ModelAdmin):
-	list_display = ('district_name', 'state','fieldofficer', 'partner')
+    list_display = ('district_name', 'state','fieldofficer', 'partner')
 
 class StateAdmin(admin.ModelAdmin):
-	list_display = ('state_name', 'region')
+    list_display = ('state_name', 'region')
 
 class TrainingForm(forms.ModelForm):
     animators_trained = forms.ModelMultipleChoiceField(Animator.objects, widget=forms.SelectMultiple())
     class Meta:
-            model = Training
+        model = Training
 
 class TrainingAdmin(admin.ModelAdmin):
     list_display = ('training_start_date', 'training_end_date', 'village')
@@ -513,42 +513,42 @@ class EquipmentAdmin(admin.ModelAdmin):
     list_display = ('equipment_type', 'model_no', 'serial_no')
 
 class PracticesAdmin(admin.ModelAdmin):
-	search_fields = ['practice_name']
+    search_fields = ['practice_name']
 
 class TargetAdmin(admin.ModelAdmin):
-	
-	formfield_overrides = {
-        models.DateField: {'widget': MonthYearWidget},
-    }
-	fieldsets = [
-        (None, {
-            'fields': ['month_year', 'district']
-        }),
-        ('New Villages', {
-           'fields': ['clusters_identification', 'dg_concept_sharing', 'dissemination_set_deployment']
-        }),
-        (None, {
-           'fields': ['village_operationalization']
-        }),
-        ('Videos', {
-           'fields': ['video_uploading', 'video_production', 'storyboard_preparation', 'video_shooting', 'video_editing', 'video_quality_checking']
-        }),
-        ('Disseminations', {
-           'fields': ['disseminations', 'avg_attendance_per_dissemination', 'exp_interest_per_dissemination', 'adoption_per_dissemination']
-        }),
-        ('Training', {
-           'fields': ['crp_training', 'crp_refresher_training', 'csp_training', 'csp_refresher_training', 'editor_training', 'editor_refresher_training']
-        }),
-        (None, {
-           'fields': ['villages_certification']
-        }),
-        ('Qualitative Feedback', {
-           'fields': ['what_went_well', 'what_not_went_well', 'challenges', 'support_requested']
-        }),
-    ]
-	
-	list_display = ('month_year','district')
-	
+
+    formfield_overrides = {
+    models.DateField: {'widget': MonthYearWidget},
+}
+    fieldsets = [
+    (None, {
+        'fields': ['month_year', 'district']
+    }),
+    ('New Villages', {
+       'fields': ['clusters_identification', 'dg_concept_sharing', 'dissemination_set_deployment']
+    }),
+    (None, {
+       'fields': ['village_operationalization']
+    }),
+    ('Videos', {
+       'fields': ['video_uploading', 'video_production', 'storyboard_preparation', 'video_shooting', 'video_editing', 'video_quality_checking']
+    }),
+    ('Disseminations', {
+       'fields': ['disseminations', 'avg_attendance_per_dissemination', 'exp_interest_per_dissemination', 'adoption_per_dissemination']
+    }),
+    ('Training', {
+       'fields': ['crp_training', 'crp_refresher_training', 'csp_training', 'csp_refresher_training', 'editor_training', 'editor_refresher_training']
+    }),
+    (None, {
+       'fields': ['villages_certification']
+    }),
+    ('Qualitative Feedback', {
+       'fields': ['what_went_well', 'what_not_went_well', 'challenges', 'support_requested']
+    }),
+]
+
+    list_display = ('month_year','district')
+
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
@@ -574,4 +574,3 @@ admin.site.register(Target, TargetAdmin)
 #admin.site.register(Reviewer)
 #admin.site.register(Random)
 #admin.site.register(Message, MessageAdmin)
-
