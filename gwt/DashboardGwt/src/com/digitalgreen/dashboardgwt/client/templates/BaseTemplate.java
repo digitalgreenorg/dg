@@ -233,7 +233,7 @@ public class BaseTemplate extends Template {
 		"<!-- Content -->" +                 // Content gets added by subclasses
 		"<!-- Submit Button -->" +           // For now gets added by subclasses
 		"<!-- END Content -->" +
-		"<div id='sub-container'>" +
+		"<div id='sub-container' style='margin-top: 20px;'>" +
 		"</div>" +
 		"<div id='footer'></div>" +
 		"<div id='box'></div>" +
