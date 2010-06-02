@@ -11,14 +11,12 @@
 	<select id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-person" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-person">
 		<option value="{{person.id}}">{{person.person_name}} ({{person.village}})</option>		
 	</select>
-	<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-person" class="add-another" href="/admin/dashboard/person/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a>
 </td>
 <td class="expressed_interest_practice">
     <select id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_interest_practice" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_interest_practice">
 		<option selected="selected" value="">---------</option>
 		--prac_list--
 	</select>
-	<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_interest_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a>
 </td>
 <td class="expressed_interest">
     <input type="text" maxlength="500" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_interest">
@@ -28,7 +26,6 @@
     	<option selected="selected" value="">---------</option>
 		--prac_list--
 	</select>
-	<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_adoption_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a>
 </td>
 <td class="expressed_adoption">
 	<input type="text" maxlength="500" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_adoption">
@@ -38,7 +35,6 @@
 		<option selected="selected" value="">---------</option>
 		--prac_list--
 	</select>
-	<a onclick="return showAddAnotherPopup(this);" id="add_id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_question_practice" class="add-another" href="/admin/dashboard/practices/add/"> <img width="10" height="10" alt="Add Another" src="/media/img/admin/icon_addlink.gif"></a>
 </td>
 <td class="expressed_question">
 	<input type="text" maxlength="500" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_question" class="vTextField" id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-expressed_question">
