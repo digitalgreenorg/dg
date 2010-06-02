@@ -298,16 +298,17 @@ public class PersonMeetingAttendanceData extends BaseData {
 		ScreeningsData screening = new ScreeningsData();
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
-		PracticesData.Data interest_pr = practice.new Data();
-		PracticesData.Data adoption_pr = practice.new Data();
-		PracticesData.Data question_pr = practice.new Data();
 		
 		for(int i = 0; i < personMeetingAttendanceObjects.length(); i++){
+			PracticesData.Data interest_pr = practice.new Data();
+			PracticesData.Data adoption_pr = practice.new Data();
+			PracticesData.Data question_pr = practice.new Data();
 			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening());
 			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson());
 			if(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice()!=null){
 				interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice());
 			}
+			
 			if(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice()!=null){
 				adoption_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice());
 			}
@@ -315,8 +316,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 			if(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice()!=null){
 				question_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice());
 			}
-			
-			
 			Data personMeetingAttendance = new Data(personMeetingAttendanceObjects.get(i).getPk(),sc,p,
 					interest_pr,personMeetingAttendanceObjects.get(i).getExpressedInterest(),
 					adoption_pr,personMeetingAttendanceObjects.get(i).getExpressedAdoption(),

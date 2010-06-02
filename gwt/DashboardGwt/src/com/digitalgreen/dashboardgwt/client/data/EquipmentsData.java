@@ -268,8 +268,8 @@ public class EquipmentsData extends BaseData {
 	public List serialize(JsArray<Type> equipmentObjects){
 		List equipments = new ArrayList();
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
-		EquipmentHoldersData.Data e = equipmentholder.new Data();
 		for(int i = 0; i < equipmentObjects.length(); i++){
+			EquipmentHoldersData.Data e = equipmentholder.new Data();
 			if(equipmentObjects.get(i).getEquipmentHolder() != null){
 				e = equipmentholder.new Data(equipmentObjects.get(i).getEquipmentHolder().getPk());
 			}

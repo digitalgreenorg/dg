@@ -538,13 +538,14 @@ public class VideosData extends BaseData {
 		AnimatorsData facilitator = new AnimatorsData();
 		AnimatorsData cameraoperator = new AnimatorsData();
 		ReviewersData reviewer = new ReviewersData();
-		ReviewersData.Data r = reviewer.new Data();
 		VideosData video1 = new VideosData();
-		VideosData.Data vd1 = video1.new Data();
 		PracticesData practice = new PracticesData();
 		PersonsData person = new PersonsData();
 		
 		for(int i = 0; i < videoObjects.length(); i++){
+			ReviewersData.Data r = reviewer.new Data();
+			VideosData.Data vd1 = video1.new Data();
+			
 			LanguagesData.Data l = language.new Data(videoObjects.get(i).getLanguage());
 			
 			VillagesData.Data vl = village.new Data(videoObjects.get(i).getVillage().getPk(), 

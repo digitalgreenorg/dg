@@ -314,12 +314,11 @@ public class TrainingsData extends BaseData {
 	public List serialize(JsArray<Type> trainingObjects) {
 		List trainings = new ArrayList();
 		VillagesData village = new VillagesData();
-
 		DevelopmentManagersData developmentManager = new DevelopmentManagersData();
-		DevelopmentManagersData.Data dm = developmentManager.new Data();
 		FieldOfficersData fieldOfficer = new FieldOfficersData();
 
 		for(int i = 0; i < trainingObjects.length(); i++){
+			DevelopmentManagersData.Data dm = developmentManager.new Data();
 			VillagesData.Data	v = village. new Data(trainingObjects.get(i).getVillage().getPk(), trainingObjects.get(i).getVillage().getVillageName());
 			if(trainingObjects.get(i).getDevelopmentManager()!=null){
 				dm = developmentManager.new Data(trainingObjects.get(i).getDevelopmentManager());

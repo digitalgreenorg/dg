@@ -407,8 +407,8 @@ public class PersonsData extends BaseData {
 		VillagesData village = new VillagesData();
 		PersonGroupsData group = new PersonGroupsData();
 		VillagesData.Data vil = null;
-		PersonGroupsData.Data pg = group.new Data();
 		for (int i = 0; i < personObjects.length(); i++) {
+			PersonGroupsData.Data pg = group.new Data();
 			vil = village.new Data(personObjects.get(i).getVillage().getPk(),
 					personObjects.get(i).getVillage().getVillageName());
 

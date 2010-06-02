@@ -398,11 +398,10 @@ public class ScreeningsData extends BaseData {
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
 		FieldOfficersData fieldOfficer = new FieldOfficersData();
-		FieldOfficersData.Data fo = fieldOfficer.new Data();
 		AnimatorsData animator = new AnimatorsData();
 
 		for(int i = 0; i < screeningObjects.length(); i++){
-			
+			FieldOfficersData.Data fo = fieldOfficer.new Data();
 			VillagesData.Data v = village.new Data(screeningObjects.get(i).getVillage().getPk(), 
 										screeningObjects.get(i).getVillage().getVillageName());
 						

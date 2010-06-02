@@ -153,9 +153,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	final private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' />" +
+							"<script src='/media/coco/dashboardgwt/gears_init.js' type='text/javascript'></script>"+
 							"<script src='/media/js/jquery.js' type='text/javascript'></script>" +
-							"<script src='/media/js/screening_page_offline.js' type='text/javascript'></script>" +
-							"<script type='text/javascript'>screening_page_offline.init()</script>" +
 							"<div id='content' class='colM'>" +
 							"<h1>Add screening</h1>" +
 						    "<div id='content-main'>" +
@@ -316,12 +315,11 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 								"</div>" +
 								"<script type='text/javascript'>document.getElementById('id_date').focus();</script>" +
-								"<script type='text/javascript'>" +
-								"</script>" +
 							"</div>" +
 							"<br class='clear' />" +
 						"</div>" +
 						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
 						"<script type='text/javascript'>DateTimeShortcuts.init()</script>"+						
-						"<script src='/media/coco/dashboardgwt/gears_init.js' type='text/javascript'></script>";
+						"<script src='/media/js/screening_page_offline.js' type='text/javascript'></script>" +
+						"<script type='text/javascript'>screening_page_offline.init()</script>" ;
 }
