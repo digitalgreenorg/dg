@@ -77,7 +77,6 @@ init :function() {
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
 	});
-
 	try {
 			var db = google.gears.factory.create('beta.database');
 			db.open('digitalgreen');
@@ -104,7 +103,6 @@ init :function() {
 	
 	// Edit case
 	if(id > 0) {
-	
 		// Edit Online case
 		if (app_status == 1){						
 			is_edit = true;		
@@ -246,7 +244,7 @@ init :function() {
 					else
 						html += "<input type='text' maxlength='500' name='personmeetingattendance_set-"+i+"-expressed_interest' class='vTextField' id='id_personmeetingattendance_set-"+i+"-expressed_interest' value=''>";
 										
-					html += "</td> "+
+					html += "</td > "+
 							"</tr>";
 							
 					table.find('tbody').append(html);
@@ -449,9 +447,8 @@ function filter_person() {
 	var grps = $("#id_farmer_groups_targeted").val() || [];
 	if( grps.length > 0) {
 		if(app_status == 0 ) {
-			showStatus("Loading persons..");
+			showStatus("Loading persons..");	
 			var table = $('div.inline-group div.tabular').find('table');			
-			//table.append('<tbody></tbody>');
 			var db = google.gears.factory.create('beta.database');
 			db.open('digitalgreen');
 			var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
@@ -460,33 +457,29 @@ function filter_person() {
 				prac_options.push('<option value="'+prac.field(0)+'">'+prac.field(1)+'</option>');
 				prac.next();
 			}
-		
 			// Add practice to add new row template
 			template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
-		
 			var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
 			var person_options = [];
 			while(persons_list_for_add_new_row.isValidRow()) {
 				person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +'(' + persons_list_for_add_new_row.field(2) + ')'+'</option>');
 				persons_list_for_add_new_row.next();
 			}	
-
 			// Add person to add new row template 
 			_new_template = (template).replace(/--per_list--/g, person_options.join('\n'));
-			
 			// Add "add new row" button
 			initialize_add_screening();
-			
+			//alert('before sql execute');
 			var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
 			var tot_form = 0;
 			var row ='';
 			while (persons.isValidRow()) {
-					var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
-					//var row = (off_template).replace(/--per_list--/g, per);
-					row = row  + (template).replace(/--per_list--/g, per);
-					//table.find('tbody').append(row);
-					tot_form += 1;
-					persons.next();
+				var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
+				//var row = (off_template).replace(/--per_list--/g, per);
+				row = row  + (template).replace(/--per_list--/g, per);
+				//table.find('tbody').append(row);
+				tot_form += 1;
+				persons.next();
 			}	
 			clear_table(table);
 			table.find('tbody').append(row);
@@ -496,7 +489,6 @@ function filter_person() {
 			});
 			update_positions(table, true);
 			table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(tot_form);
-			//rs.close();
 			prac.close();
 			persons.close();
 			db.close();
