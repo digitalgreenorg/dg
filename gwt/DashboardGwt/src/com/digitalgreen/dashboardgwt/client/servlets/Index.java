@@ -125,13 +125,13 @@ public class Index extends BaseServlet {
 				}
 				else if (queryArg.equals("resync")) {
 					RequestContext requestContext = new RequestContext();
-					FormQueueData formQueueDataDbApi = new FormQueueData();
-					if(formQueueDataDbApi.getUnsyncCount() > 0) {
-						requestContext.setErrorMessage(Index.unsyncedRowsMessage);
+					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
+						requestContext.setErrorMessage(Index.pluginNotInstalled);
 						this.redirectTo(new Index(requestContext));
 					} else {
-						if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
-							requestContext.setErrorMessage(Index.pluginNotInstalled);
+						FormQueueData formQueueDataDbApi = new FormQueueData();
+						if(formQueueDataDbApi.getUnsyncCount() > 0) {
+							requestContext.setErrorMessage(Index.unsyncedRowsMessage);
 							this.redirectTo(new Index(requestContext));
 						} else {
 							Syncronisation syncronisation = new Syncronisation();
