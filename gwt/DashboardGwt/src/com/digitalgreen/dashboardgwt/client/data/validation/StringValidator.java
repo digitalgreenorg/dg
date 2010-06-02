@@ -2,6 +2,8 @@ package com.digitalgreen.dashboardgwt.client.data.validation;
 
 import java.util.HashMap;
 
+import com.google.gwt.user.client.Window;
+
 public class StringValidator extends BaseValidator {
 	
 	final static private String strictChars = "[a-zA-Z0-9][a-zA-Z0-9 ]*";

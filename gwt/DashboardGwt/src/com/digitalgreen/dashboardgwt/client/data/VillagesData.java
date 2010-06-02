@@ -120,7 +120,7 @@ public class VillagesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator villageName = new StringValidator(this.village_name, false, false, 0, 100, true);
+			StringValidator villageName = new StringValidator(this.village_name, false, false, 1, 100, true);
 			villageName.setError("Village Name is a required field and is less than 100 characters.");
 			StringValidator blockValidator = new StringValidator(this.block.getId(), false, false, 1, 100);
 			blockValidator.setError("Please make sure you choose a block for 'Block'.");
@@ -128,7 +128,7 @@ public class VillagesData extends BaseData {
 			noOfHouseHolds.setError("Please enter integer for the number of households");
 			IntegerValidator population = new IntegerValidator(this.population, true, false);
 			population.setError("Please enter integer for population");
-			StringValidator roadConnectivity = new StringValidator(this.road_connectivity, true, false, 0, 100);
+			StringValidator roadConnectivity = new StringValidator(this.road_connectivity, true, false, 1, 100);
 			roadConnectivity.setError("Please make sure that road connectivity is less than 100 characters.");
 			DateValidator startDate = new DateValidator(this.start_date, true, false);
 			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
