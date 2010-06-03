@@ -67,7 +67,7 @@ public class Syncronisation {
 		EventBus.get().fireEvent(new ProgressEvent(0));
 		if(!postRowOfFormQueueTable()){
 			RequestContext requestContext = new RequestContext();
-			requestContext.setMessage("Local database is in sync with the main server ");
+			requestContext.setMessage("Your data has been uploaded.  Local database is in sync with the main server.");
 			servlet.redirectTo(new Index(requestContext));
 		}
 	}
@@ -119,10 +119,12 @@ public class Syncronisation {
 						if(currentIndex == ApplicationConstants.tableIDs.length){
 							updateSyncStatusInUserTable("0", "0");
 							RequestContext requestContext = new RequestContext();
-							requestContext.setMessage("Local database is in sync with the main server");
+							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");
+							// This is to clear out anythin left over in the progress bar the next time the operation is run.
+							EventBus.get().fireEvent(new ProgressEvent(0));
 							getServlet().redirectTo(new Index(requestContext));	
 						}else{
-							updateSyncStatusInUserTable("1", ""+currentIndex);
+							updateSyncStatusInUserTable("1", "" + currentIndex);
 							formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 						}
 					}
@@ -156,15 +158,16 @@ public class Syncronisation {
 			// Delete the table on which the sync got interrupted.
 			baseData.delete(baseData.getDeleteTableSql());
 			baseData.create(baseData.getCreateTableSql());
+			EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 		}else{
 			//Delete the complete schema
 			Schema.dropSchema();
 			Schema.createSchema();
 			this.currentIndex = 0;
+			EventBus.get().fireEvent(new ProgressEvent(0));
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
 		}
-		EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 	}
 	
 	public Boolean postRowOfFormQueueTable(){
