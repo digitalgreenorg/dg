@@ -43,6 +43,7 @@ public class Syncronisation {
 					requestContext.setErrorMessage("Validation Error.  Please contact support.");
 					getServlet().redirectTo(new Index(requestContext));
 				} else if(results.equals("synced")) {
+					EventBus.get().fireEvent(new ProgressEvent(100));
 					setGlobalIDInLocalUserTable();
 				} else{
 					Window.alert("Unkown Error.  Please contact support.");
@@ -63,6 +64,7 @@ public class Syncronisation {
 		});
 		
 		this.totalRowsToSync = formQueue.getUnsyncCount();
+		EventBus.get().fireEvent(new ProgressEvent(0));
 		if(!postRowOfFormQueueTable()){
 			RequestContext requestContext = new RequestContext();
 			requestContext.setMessage("Local database is in sync with the main server ");
@@ -101,7 +103,6 @@ public class Syncronisation {
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
-					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 					if(!results.equals("EOF")) {
 						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 						BaseData.Data object;
@@ -113,6 +114,7 @@ public class Syncronisation {
 						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 					} else {
 						currentIndex++;
+						EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 						offset = 0;
 						if(currentIndex == ApplicationConstants.tableIDs.length){
 							updateSyncStatusInUserTable("0", "0");
@@ -162,6 +164,7 @@ public class Syncronisation {
 			this.currentIndex = 0;
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
 		}
+		EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 	}
 	
 	public Boolean postRowOfFormQueueTable(){

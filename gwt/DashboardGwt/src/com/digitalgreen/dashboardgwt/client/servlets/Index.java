@@ -1,18 +1,14 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
-import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 
 import java.util.HashMap;
 
-import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
 import com.digitalgreen.dashboardgwt.client.data.Syncronisation;
-import com.digitalgreen.dashboardgwt.client.data.UsersData;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
@@ -20,16 +16,12 @@ import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.GearsException;
-import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreErrorHandler;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreProgressHandler;
 import com.google.gwt.gears.offline.client.Offline;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
 public class Index extends BaseServlet {
 	public final static String pluginNotInstalled = "This browser does not have the Gears plugin. " +
@@ -38,6 +30,9 @@ public class Index extends BaseServlet {
 	
 	public final static String unsyncedRowsMessage = "You have unsynced rows that are pending " +
 			"upload to the main server.  Please click on the 'Upload' button to start the upload.";
+	
+	public final static String databaseNotReady = "We did not detect a database on your browser.  " +
+	"Please click on the 'Download' button before going offline";
 	
 	public Index() {
 		super();
@@ -63,7 +58,7 @@ public class Index extends BaseServlet {
 			});
 			managedResourceStore.setOnErrorHandler(new ManagedResourceStoreErrorHandler() {
 				public void onError(ManagedResourceStoreErrorHandler.ManagedResourceStoreErrorEvent error) {
-					requestContext.setErrorMessage(error.getMessage() + "  There was an error while downloading some offline contents.  " +
+					requestContext.setErrorMessage(error.getMessage() + "  There was an error while downloading some offline content.  " +
 							"Please try again by either refreshing your page and clicking the 'Go Offline' button, or contact support.");
 					servlet.redirectTo(new Index(requestContext));
 				}
@@ -73,7 +68,7 @@ public class Index extends BaseServlet {
 					EventBus.get().fireEvent(new ProgressEvent((int)((event.getFilesComplete() / event.getFilesTotal()) * 100)));
 				}
 			});
-	    } catch (GearsException e) {
+		} catch (GearsException e) {
 	    	return false;
 	    }
 	    return true;
@@ -99,8 +94,7 @@ public class Index extends BaseServlet {
 						requestContext.setErrorMessage(Index.pluginNotInstalled);
 						this.redirectTo(new Index(requestContext));
 					} else if(offlineReadyState == IndexData.STATUS_SCHEMA_NOT_READY) {
-						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
-								"Please click on the 'Download' button before going offline");
+						requestContext.setErrorMessage(Index.databaseNotReady);
 						this.redirectTo(new Index(requestContext));
 					} else {
 						LocalServer server = Factory.getInstance().createLocalServer();
@@ -125,8 +119,7 @@ public class Index extends BaseServlet {
 						requestContext.setErrorMessage(Index.pluginNotInstalled);
 						this.redirectTo(new Index(requestContext));
 					} else if(offlineReadyState == IndexData.STATUS_SCHEMA_NOT_READY) {
-						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
-								"Please click on the 'Download' button before going offline");
+						requestContext.setErrorMessage(Index.databaseNotReady);
 						this.redirectTo(new Index(requestContext));
 					} else {
 						Syncronisation syncronisation = new Syncronisation();
