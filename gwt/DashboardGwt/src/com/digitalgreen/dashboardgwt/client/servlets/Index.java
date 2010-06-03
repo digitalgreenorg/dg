@@ -64,7 +64,7 @@ public class Index extends BaseServlet {
 			managedResourceStore.setOnErrorHandler(new ManagedResourceStoreErrorHandler() {
 				public void onError(ManagedResourceStoreErrorHandler.ManagedResourceStoreErrorEvent error) {
 					requestContext.setErrorMessage(error.getMessage() + "  There was an error while downloading some offline contents.  " +
-							"Please either try again by refreshing your page and clicking 'Go Offline, or contact support.");
+							"Please try again by either refreshing your page and clicking the 'Go Offline' button, or contact support.");
 					servlet.redirectTo(new Index(requestContext));
 				}
 			});
