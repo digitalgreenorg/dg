@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 // Emulating a marshalled HTTP request object
 public class RequestContext {
-	final static private String DEFAULT_USERNAME_ARG_NAME = "loggedin_user";
-	
 	static public String METHOD_GET = "GET";
 	static public String METHOD_POST = "POST";
 	static public String SERVER_HOST = "http://www.digitalgreen.org/technology";
