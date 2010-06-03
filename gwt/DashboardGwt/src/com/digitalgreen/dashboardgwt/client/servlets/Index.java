@@ -14,14 +14,13 @@ import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
-import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.GearsException;
-import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreErrorHandler;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreProgressHandler;
 import com.google.gwt.gears.offline.client.Offline;
+import com.google.gwt.user.client.Window;
 
 public class Index extends BaseServlet {
 	public final static String pluginNotInstalled = "This browser does not have the Gears plugin. " +
@@ -52,8 +51,7 @@ public class Index extends BaseServlet {
 					LoginData user = new LoginData();
 					user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
 					ApplicationConstants.toggleConnection(false);
-					requestContext.setMessage("Downloaded all offline contents successfully.  You can now proceed with any offline activities.");
-					servlet.redirectTo(new Index(requestContext));
+					Window.Location.reload();
 				}
 			});
 			managedResourceStore.setOnErrorHandler(new ManagedResourceStoreErrorHandler() {
@@ -97,8 +95,7 @@ public class Index extends BaseServlet {
 						requestContext.setErrorMessage(Index.databaseNotReady);
 						this.redirectTo(new Index(requestContext));
 					} else {
-						LocalServer server = Factory.getInstance().createLocalServer();
-				    	if(!createManagedResourceStore()) {
+						if(!createManagedResourceStore()) {
 				    		requestContext.setErrorMessage("Downloading of manifest file and static contents failed.");
 				    		this.redirectTo(new Index(requestContext));
 				    	}
