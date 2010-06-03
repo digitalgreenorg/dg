@@ -50,7 +50,10 @@ public class Index extends BaseServlet {
 			ManagedResourceStore managedResourceStore = Offline.getManagedResourceStore();
 			managedResourceStore.setOnCompleteHandler(new ManagedResourceStoreCompleteHandler() {
 				public void onComplete(ManagedResourceStoreCompleteHandler.ManagedResourceStoreCompleteEvent event) {
-					requestContext.setMessage("Donwloaded all offline contents successfully.  You can now proceed with any offline activities.");
+					LoginData user = new LoginData();
+					user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
+					ApplicationConstants.toggleConnection(false);
+					requestContext.setMessage("Downloaded all offline contents successfully.  You can now proceed with any offline activities.");
 					servlet.redirectTo(new Index(requestContext));
 				}
 			});
@@ -85,20 +88,18 @@ public class Index extends BaseServlet {
 					RequestContext requestContext = new RequestContext();
 					if(offlineReadyState == IndexData.STATUS_DB_NOT_OPEN) {
 						requestContext.setErrorMessage(Index.pluginNotInstalled);
+						this.redirectTo(new Index(requestContext));
 					} else if(offlineReadyState == IndexData.STATUS_SCHEMA_NOT_READY) {
 						requestContext.setErrorMessage("We did not detect a database on your browser.  " +
 								"Please click on the 'Download' button before going offline");
+						this.redirectTo(new Index(requestContext));
 					} else {
 						LocalServer server = Factory.getInstance().createLocalServer();
 				    	if(!createManagedResourceStore()) {
 				    		requestContext.setErrorMessage("Downloading of manifest file and static contents failed.");
-				    	} else {
-				    		LoginData user = new LoginData();
-							user.updateAppStatus("0",ApplicationConstants.getUsernameCookie());
-							ApplicationConstants.toggleConnection(false);
+				    		this.redirectTo(new Index(requestContext));
 				    	}
 					}
-					this.redirectTo(new Index(requestContext));
 				}
 				else if (queryArg.equals("goonline")) {
 					if(offlineReadyState == IndexData.STATUS_READY) {
