@@ -38,6 +38,10 @@ import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 // it seems reasonable to have an IndexTemplate object listen for these progress events.
 public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler {
 	
+	public IndexTemplate() {
+		super();
+	}
+	
 	public IndexTemplate(RequestContext requestContext) {
 		super(requestContext);
 	}
@@ -98,7 +102,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		};
 		t.schedule(1000);
 		
-		final IndexTemplate template = this;
 		onlineOfflineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
@@ -106,7 +109,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
 		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
 		    		   		"<br /><div id='progressBar'></div>");
-		    		   EventBus.get().addHandler(ProgressEvent.TYPE, template);
+		    		   EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
 		    		   requestContext.getArgs().put("action", "gooffline");
 		    	   }
 		    	   else{
@@ -127,7 +130,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    	  BaseTemplate operationUi = new BaseTemplate();
 		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
 		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
+		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "sync");
 		    	  Index index = new Index(requestContext);
@@ -143,7 +146,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		    	  BaseTemplate operationUi = new BaseTemplate();
 		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
 		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, template);
+		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
 		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	  requestContext.getArgs().put("action", "resync");
 		    	  Index index = new Index(requestContext);
