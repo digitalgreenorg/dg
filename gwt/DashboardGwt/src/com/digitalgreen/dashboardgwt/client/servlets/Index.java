@@ -95,6 +95,7 @@ public class Index extends BaseServlet {
 						requestContext.setErrorMessage(Index.databaseNotReady);
 						this.redirectTo(new Index(requestContext));
 					} else {
+
 						if(!createManagedResourceStore()) {
 				    		requestContext.setErrorMessage("Downloading of manifest file and static contents failed.");
 				    		this.redirectTo(new Index(requestContext));

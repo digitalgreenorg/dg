@@ -19,7 +19,8 @@ public class Template implements TemplateInterface {
 	}
 	
 	private HTMLPanel getFormattedErrors() {
-		String errorStartHtml = "<pre class='errornote'>";
+		String errorStartHtml = "<pre class='errornote' style='white-space: -moz-pre-wrap; white-space: -pre-wrap; " +
+				"white-space: -o-pre-wrap; white-space: pre-wrap; word-wrap: break-word;'>";
 		String errorEndHtml = "</pre>";
 		HTMLPanel errorPanel = new HTMLPanel(errorStartHtml + this.getRequestContext().getErrorMessage() + errorEndHtml);
 		return errorPanel;
