@@ -97,13 +97,16 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			}
 		};
 		t.schedule(1000);
-
+		
+		final IndexTemplate template = this;
 		onlineOfflineButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
 		    	   BaseTemplate operationUi = new BaseTemplate();
 		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
-		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded.");
+		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
+		    		   		"<br /><div id='progressBar'></div>");
+		    		   EventBus.get().addHandler(ProgressEvent.TYPE, template);
 		    		   requestContext.getArgs().put("action", "gooffline");
 		    	   }
 		    	   else{
@@ -116,7 +119,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		      }
 	    });
 		
-		final IndexTemplate template = this;
 		uploadButton.addClickHandler(new ClickHandler() {
 		      public void onClick(ClickEvent event) {
 		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {

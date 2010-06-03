@@ -4,6 +4,9 @@ import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.DashboardGwt;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
+import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
+
 import java.util.HashMap;
 
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
@@ -22,6 +25,7 @@ import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreErrorHandler;
+import com.google.gwt.gears.client.localserver.ManagedResourceStoreProgressHandler;
 import com.google.gwt.gears.offline.client.Offline;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
@@ -59,9 +63,14 @@ public class Index extends BaseServlet {
 			});
 			managedResourceStore.setOnErrorHandler(new ManagedResourceStoreErrorHandler() {
 				public void onError(ManagedResourceStoreErrorHandler.ManagedResourceStoreErrorEvent error) {
-					requestContext.setMessage("There was an error while downloading some offline contents.  " +
+					requestContext.setErrorMessage(error.getMessage() + "  There was an error while downloading some offline contents.  " +
 							"Please either try again by refreshing your page and clicking 'Go Offline, or contact support.");
 					servlet.redirectTo(new Index(requestContext));
+				}
+			});
+			managedResourceStore.setOnProgressHandler(new ManagedResourceStoreProgressHandler() {
+				public void onProgress(ManagedResourceStoreProgressHandler.ManagedResourceStoreProgressEvent event) {
+					EventBus.get().fireEvent(new ProgressEvent((int)((event.getFilesComplete() / event.getFilesTotal()) * 100)));
 				}
 			});
 	    } catch (GearsException e) {
