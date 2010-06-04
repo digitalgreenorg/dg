@@ -221,7 +221,7 @@ public class BaseTemplate extends Template {
 		"<!-- Header -->" +
 		"<div id='header'>" +
 			"<div id='branding'>" +
-				"<h1 id='site-name'><a href='/media/coco/DashboardGwt.html'><img src='/media/img/admin/coco-logo.png' /></a></h1>" +
+				"<h1 id='site-name'><a href='/coco/home.html'><img src='/media/img/admin/coco-logo.png' /></a></h1>" +
 			"</div>" +
 			"<div id='user-tools'>Welcome, <span id='user-name'></span>" +
 			"<span id='logout'></span>" +

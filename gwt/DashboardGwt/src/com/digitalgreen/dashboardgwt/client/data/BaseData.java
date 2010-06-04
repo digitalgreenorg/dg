@@ -370,7 +370,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	private void request(RequestBuilder.Method method, String url, String postData) {
 		RequestBuilder builder = new RequestBuilder(method, URL.encode(url));
-		builder.setTimeoutMillis(5000);
+		builder.setTimeoutMillis(60000);
 		try {
 			if(method == RequestBuilder.POST) {
 				builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -378,7 +378,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			Request request = builder.sendRequest(postData, new RequestCallback() {
 				@Override
 				public void onError(Request request, Throwable exception) {
-					dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
+					dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_SERVER);
 				}
 				
 				@Override
