@@ -38,7 +38,7 @@ def search(request):
     if search_fields and app_label and model_name and query:
         def construct_search(field_name):
             # use different lookup methods depending on the notation
-            if field_name.startswith('^'):
+	    if field_name.startswith('^'):
                 return "%s__istartswith" % field_name[1:]
             elif field_name.startswith('='):
                 return "%s__iexact" % field_name[1:]
@@ -1176,7 +1176,7 @@ def save_animatorassignedvillage_online(request,id):
             form = AnimatorAssignedVillageForm()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['animator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
+        form.fields['animator'].queryset = Animator.objects.filter(home_village_id__in = villages).distinct().order_by('name')
         return HttpResponse(form)
 
 def get_animatorassignedvillages_online(request, offset, limit):
