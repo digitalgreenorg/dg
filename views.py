@@ -1176,7 +1176,7 @@ def save_animatorassignedvillage_online(request,id):
             form = AnimatorAssignedVillageForm()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['animator'].queryset = Animator.objects.filter(home_village_id__in = villages).distinct().order_by('name')
+        form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         return HttpResponse(form)
 
 def get_animatorassignedvillages_online(request, offset, limit):
