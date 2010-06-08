@@ -1388,13 +1388,17 @@ def save_screening_online(request,id):
 
 
 def get_attendance(request, id):
-    PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
-    screening = Screening.objects.get(id = id)
-    formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
-    personInMeeting = Person.objects.filter(id__in = PersonMeetingAttendance.objects.filter(screening = id).distinct().values('person'))
-    for form_person_meeting_attendance in formset.forms:
-        form_person_meeting_attendance.fields['person'].queryset = personInMeeting
-    return render_to_response('feeds/attendance.html',{'formset':formset})
+	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
+	screening = Screening.objects.get(id = id)
+	formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
+	personInMeeting = Person.objects.filter(id__in = PersonMeetingAttendance.objects.filter(screening = id).distinct().values('person'))
+	practices = Practices.objects.all()
+	for form_person_meeting_attendance in formset.forms:
+		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
+		form_person_meeting_attendance.fields['expressed_interest_practice'].queryset = practices
+		form_person_meeting_attendance.fields['expressed_adoption_practice'].queryset = practices
+		form_person_meeting_attendance.fields['expressed_question_practice'].queryset = practices
+	return render_to_response('feeds/attendance.html',{'formset':formset})
 
 def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
