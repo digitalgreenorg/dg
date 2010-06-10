@@ -42,53 +42,38 @@
     </div>
     
 	<div id='contentdiv1'>
-		<div style='margin-left:10px; width:100%; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
-			<div style='float:left; width:300px;'> 
+		<div style='margin-left:10px; width:900px; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
 				COCO is a highly sophisticated data input system that forms the base of DigitalGreen's software stack. 
 				The creation of this system was inspired by persistent and at times debilitating issues at the field level, specifically technical issues in gathering and storing information.  
 				To alleviate these problems, DigitalGreen's software team conceived of a highly flexible and robust alternative that sought to make information gathering and input at DigitalGreen 
 				less error prone, fast, and resilient to persistent data connectivity issues in remote locations. <br/><br/>
-				
-				Most applicable to NGOs with a sizeable field operation, COCO's singular usp is the ability to take the application offline in low and limited bandwidth locations, 
-				with uninterrupted usage in the browser. Moreover, COCO's offline mode allows DigitalGreen and partner team members to access data partitioned based on their role and location and allows them to input data as if they were online.  
-				COCO is designed to support up to 100,000 users located anywhere in the world and only requires internet connectivity whenever a user is ready to synchronize their data with our global repository.  
-				Of course, users can always access COCO in online mode where inputted data updates our DigitalGreen Analytics system in real-time.  Built as a robust standalone application in the Internet browser, 
-				COCO requires no additional software installation or maintenance.  The system has been designed in an open-source, customizable framework that can be deployed without the need of IT/engineering staff. <br/><br/>
-				
-			</div>
-			
-			<div style='width:456px; float:left; margin-left:10px;'>
-				<img  style='padding-top:5px; padding-left:10px; ' src='/media/Output/Images/s-5.png' align='left'>
-				<div style='margin-top:5px; margin-bottom:50px; padding-left:10px;  font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  COCO Home Page  </div> 
-				<img  style='padding-top:5px; padding-left:10px; ' src='/media/Output/Images/s-4.jpg' align='left'>
-				<div style='margin-top:5px; margin-bottom:5px; padding-left:10px; font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  DownLoad Progress bar(downloading the data from the main server) </div> 
-			</div>
-		</div>
-		<div style='margin-left:10px; width:75%; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px; clear:both;'>
-			
-				Going forward, we're looking at the possibility of supporting other NGOs by hosting their data and giving them the benefit of not having to invest in and manage onerous infrastructure like servers and other third party systems. <br/><br/>
-				<span style='text-decoration:underline;font-weight:bold;'>Why COCO ?</span> <br/>
-				COCO stands apart by addressing experiential pain points most common to NGOs with advanced field operations, and further differentiates itself from a variety of expense and feature laden commercial products.   
-				A few highlights:   
-				<ul>
-					<li> Data gathering and analysis using technically advanced tools have escaped many NGOs primarily due to costs, access to technical resources/staff, and a clear data collection strategy. </li>
-					<li> Most NGOs have a decentralized operation, with a majority of field staff located in remote locations.  These locations tend to have limited to no data/internet connectivity, making data input and access almost impossible. </li>
-					<li> Even by assuming continuous low bandwidth data/internet connectivity, archaic devices deployed in the fields still consume a lot of time, creating potential opportunity costs for a field worker. </li>
-					<li> While a few solutions similar to COCO exist in the realm of B2B (business to business) software, pioneered by companies such as Oracle and SalesForce, some are hard to customize, and others require maintenance and engineering staff whose high recurring costs and management time defeat the purpose of such an investment.  Further exacerbating matters, most of these companies charge a per-user, per-annum license fee for input and access to data (graphs/charts) that run into thousands of dollars. </li>
-				</ul> 
-				<span style='text-decoration:underline;font-weight:bold;'>Where is Offline COCO being used?</span> <br/>
-				
-				A map of DigitalGreen's present COCO deployments best describes where COCO is being used. 
-				<div style='margin-top:2px; margin-left:0px; padding:5px; border:1px solid Gray; width:350px; margin-bottom:10px; '>
-					<iframe width="350" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=5&amp;output=embed"></iframe><br /><small>View <a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=5" style="color:#0000FF;text-align:left">Digital Green Locations</a> in a larger map</small>
+			<div style='width: 900px;'>
+				<div style='float:left; width: 380px;'> 
+					Most applicable to NGOs with a sizeable field operation, COCO's singular usp is the ability to take the application offline in low and limited bandwidth locations, 
+					with uninterrupted usage in the browser.
+					COCO is designed to support up to 100,000 users located anywhere in the world and only requires internet connectivity whenever a user is ready to synchronize their data with our global repository.  
+					Built as a robust standalone application in the Internet browser, 
+					COCO requires no additional software installation or maintenance.  The system has been designed in an open-source, customizable framework that can be deployed without the need of IT/engineering staff. <br/><br/>
+					Going forward, we're looking at the possibility of supporting other NGOs by hosting their data and giving them the benefit of not having to invest in and manage onerous infrastructure like servers and other third party systems. <br/><br/>
+
+					<span style='text-decoration:underline; font-weight:bold;'>COCO Technology</span> <br/>
+					COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails.  The core of COCO's framework comprises of a variety of open source technologies.  In light of achieving maximum speed as a browser application, COCO is developed using the GWT 2.0 (Google Web Toolkit) Java-Javascript framework.  
+					To enable offline mode, COCO employs the use of Google Gears, a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content.  For deployment in offline mode, a compiled Javascript file is generated and made available in Google Gear's local cache for access by the browser; COCO in online mode operates as any other web application.
+					More details on our architecture will be available later.  In the meantime, please send questions or comments to <a href='mailto:labs@digitalgreen.org'> labs@digitalgreen.org </a>.
 				</div>
+				<div style='width:456px; float:right; margin-right: 30px;'>
+					<img  style='padding-top:5px;' src='/media/Output/Images/s-5.png' align='left'>
+					<div style='margin-top:5px; margin-bottom: 20px; padding-left:10px;  font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  A screenshot of COCO.  Aligned center, a control panel enables the user to toggle between online/offline mode.</div>
+
+					<span style='text-decoration:underline;font-weight:bold;'>Where is COCO deployed?</span> <br/>
 				
-				<span style='text-decoration:underline; font-weight:bold;'>COCO Technology</span> <br/>
-				COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails.  The core of COCO's framework comprises of a variety of open source technologies.  In light of achieving maximum speed as a browser application, COCO is architected using the GWT 2.0 (Google Web Toolkit) Java framework.  
-				To enable offline mode, COCO employs the use of Google Gears, a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content.  A compiled and obfuscated Javascript file of the COCO framework is stored in the Google Gears local cache for access in offline mode.   In online mode, the same compiled Javascript file and other static contents are accessed from the main DigitalGreen server.  
-				More details on our architecture should come later, but in the meantime, please contact <a href='mailto:labs@digitalgreen.org'> labs@digitalgreen.org </a> for questions.
+					A map of DigitalGreen's present COCO deployments best describes where COCO is being used. 
+					<div style='margin-top: 2px; margin-left: 0px; border:1px solid Gray; width:456px;'>
+						<iframe width="456" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=4&amp;output=embed"></iframe><br /><small>View <a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=4" style="color:#0000FF;text-align:left">Digital Green Locations</a> in a larger map</small>
+					</div>
+				</div>
+			</div>
 		</div>
-		
 	</div>
    
      
