@@ -370,12 +370,16 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	
 	private void request(RequestBuilder.Method method, String url, String postData) {
 		RequestBuilder builder = new RequestBuilder(method, URL.encode(url));
-		builder.setTimeoutMillis(60000);
+		// Wait for a response max 10 minutes.
+		builder.setTimeoutMillis(600000);
 		try {
 			if(method == RequestBuilder.POST) {
 				builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			}
 			Request request = builder.sendRequest(postData, new RequestCallback() {
+				// I think we saw this to fire on download when response times took longer 
+				// than 5 seconds.  This was when we set the timeout to 5000 milliseconds 
+				// (5 seconds).  Maybe this has to do with the "response not being received".
 				@Override
 				public void onError(Request request, Throwable exception) {
 					dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_SERVER);
