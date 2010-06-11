@@ -33,7 +33,10 @@
     	<table id='table2' cellspacing='0' cellpadding='5'>						
 			<tr>												
 				<td class='content2td' cellspacing='0' cellpadding='0' > 
-					<div id='content2tdtitle1'></div>			
+					<div id='content2tdtitle1'>
+						<a href='' target=_blank  style='color:Gray; font-weight:bold; font-size:1.4em; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c';this.style.textDecoration='underline'" onmouseout="this.style.color='Gray';this.style.textDecoration='none'">Click here to try it out </a>
+						<br/><span style='color:Gray; font-size:0.8em;'>[Please use the following username and password to login to COCO - username: kevin and password: !kevin] </span>
+					</div>			
 				</td>													
 			</tr>
 							
@@ -58,7 +61,7 @@
 					<span style='text-decoration:underline; font-weight:bold;'>COCO Technology</span> <br/>
 					COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails.  The core of COCO's framework comprises of a variety of open source technologies.  In light of achieving maximum speed as a browser application, COCO is developed using the GWT 2.0 (Google Web Toolkit) Java-Javascript framework.  
 					To enable offline mode, COCO employs the use of Google Gears, a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content.  For deployment in offline mode, a compiled Javascript file is generated and made available in Google Gear's local cache for access by the browser; COCO in online mode operates as any other web application.
-					More details on our architecture will be available later.  In the meantime, please send questions or comments to labs@digitalgreen.org.
+					More details on our architecture will be available later.  In the meantime, please send questions or comments to <a href='mailto:labs@digitalgreen.org' style='color:Gray; font-weight:normal; font-size:1.0em; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c'" onmouseout="this.style.color='Gray'">labs@digitalgreen.org</a>
 				</div>
 				<div style='width:456px; float:right; margin-right: 30px;'>
 					<img  style='padding-top:5px;' src='/media/Output/Images/s-5.png' align='left'>
@@ -86,7 +89,8 @@
 
 	<div id='contentdiv1'>
 		<div style='margin-left:10px; width:900px; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
-                                The Analytics System forms the second layer on DigitalGreen's software stack.  Built on the COCO foundation, the Analytics System provides day-to-day business intelligence on field operations, performance targets, and basic ROI (return on investment) metrics relevant to the organization.  The system is freely available and accessible online -- by clicking on the Analytics dropdown in the menu bar -- without the need of onerous technical infrastructure and expensive commerical licenses.  We welcome NGOs willing to reuse and repurpose this system as per their requirements.  Please contact labs@digitalgreen.org for questions or comments.<br/><br/>
+                                The Analytics System forms the second layer on DigitalGreen's software stack.  Built on the COCO foundation, the Analytics System provides day-to-day business intelligence on field operations, performance targets, and basic ROI (return on investment) metrics relevant to the organization.  
+                                The system is freely available and accessible online -- <span style='font-weight:bold'>by clicking on the  <a href="{% if search_box_params %}{% url dg.output.views.overviewAnalytics.overview_module geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url}}{%else%}{% url dg.output.views.overviewAnalytics.overview_module geog='country' id=1 %}{%endif%}" style='color:Gray; font-weight:bold; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c'" onmouseout="this.style.color='Gray'">Analytics</a> dropdown in the menu bar</span> -- without the need of onerous technical infrastructure and expensive commerical licenses.  We welcome NGOs willing to reuse and repurpose this system as per their requirements.  Please contact <a href='mailto:labs@digitalgreen.org' style='color:Gray; font-weight:normal; font-size:1.0em; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c'" onmouseout="this.style.color='Gray'">labs@digitalgreen.org</a> for questions or comments.<br/><br/>
 		</div>
 
 		<div style='width: 900px; text-align: center;'>
