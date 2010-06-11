@@ -36,11 +36,12 @@ public class LoginData extends BaseData {
 	  " password VARCHAR(100)," +
 	  " app_status CHAR(1)," +
 	  " dirty_bit CHAR(1)," +
-	  " last_sync_table_index INT);";
+	  " last_sync_table_index INT," +
+	  " user_role CHAR(1));";
 
 	protected static String dropTable = "DROP TABLE IF EXISTS `user`;";
-	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?);";
-	protected static String authenticateUser = "SELECT username FROM user WHERE username=? AND password = ?";
+	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?, ?);";
+	protected static String authenticateUser = "SELECT username, user_role FROM user WHERE username=? AND password = ?";
 	protected static String selectUser = "SELECT username FROM user WHERE username=?";
 	protected static String updateUser = "UPDATE `user` SET last_inserted_id=? WHERE username = ? AND password = ?";
 	protected static String getSyncStatus = "SELECT dirty_bit, last_sync_table_index FROM `user` WHERE username = ?";
@@ -86,8 +87,8 @@ public class LoginData extends BaseData {
 		this.update(updateSyncStatus, dirty_bit, last_sync_table_index, username);
 	}
 	
-	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index) {
-		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index);
+	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index, String user_role) {
+		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index, user_role);
 	}
 	
 	public Object authenticate(String username, String password) {
@@ -101,9 +102,11 @@ public class LoginData extends BaseData {
 				this.select(authenticateUser, username, password);
 				ResultSet resultSet = this.getResultSet();
 				if(resultSet.isValidRow()) {
+					String role = new String();
+					role = resultSet.getFieldAsString(1);
 					resultSet.close();
 					LoginData.dbClose();
-					return true;
+					return role;
 				}
 				else{
 					LoginData.dbClose();
@@ -113,7 +116,7 @@ public class LoginData extends BaseData {
 				Window.alert("Database Exception : " + e.toString());
 			}
 		}
-		return false;
+		return "false";
 	}
 	
 	public ArrayList checkDirtyBitStatusInTheUserTable(String username){

@@ -35,13 +35,14 @@ public class Login extends BaseServlet {
 			} else {
 				    LoginData loginData = new LoginData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
-						if(results.equals("1")) {
+						if(!results.equals("0")) {
 							ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
 									(String)getServlet().form.get("password"));
+							ApplicationConstants.setUserRoleCookie(results);
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setErrorMessage("Invalid credentials.  You may have left COCO in offline mode.  If so, login with your offline credentials.");
+							requestContext.setErrorMessage("Invalid credentials, please try again.");
 							getServlet().redirectTo(new Login(requestContext));				
 						}
 					}
@@ -60,13 +61,15 @@ public class Login extends BaseServlet {
 					
 					public void offlineSuccessCallback(Object results) {
 						// If login success in the offline case
-						if((Boolean)results) {
+						String r = (String)results;
+						if(!r.equals("false")) {
 							ApplicationConstants.setLoginCookies((String)getServlet().form.get("username"),
 									(String)getServlet().form.get("password"));
+							ApplicationConstants.setUserRoleCookie(r);
 							getServlet().redirectTo(new Index());
 						} else {
 							RequestContext requestContext = new RequestContext();
-							requestContext.setErrorMessage("Invalid credentials, please try again");
+							requestContext.setErrorMessage("Invalid credentials. You may have left COCO in offline mode. If so, login with your offline credentials.");
 							getServlet().redirectTo(new Login(requestContext));	
 						}
 					}

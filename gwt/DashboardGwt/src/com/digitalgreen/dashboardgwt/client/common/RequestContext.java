@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class RequestContext {
 	static public String METHOD_GET = "GET";
 	static public String METHOD_POST = "POST";
-	static public String SERVER_HOST = "http://www.digitalgreen.org/technology";
+	static public String SERVER_HOST = "http://127.0.0.1:8000"; //"http://www.digitalgreen.org/technology";
 	
 	private String methodTypeCtx = null;
 	private String formAction = null;

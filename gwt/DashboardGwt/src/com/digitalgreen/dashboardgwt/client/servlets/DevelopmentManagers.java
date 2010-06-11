@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -169,13 +170,21 @@ public class DevelopmentManagers extends BaseServlet {
 							}	
 						}
 					}, form);
-					if(queryArg.equals("add")) {
-						developmentManagersData.apply(developmentManagersData.getAddPageData());
+					if(ApplicationConstants.getUserRoleCookie().equals("A")){
+						if(queryArg.equals("add")) {
+							developmentManagersData.apply(developmentManagersData.getAddPageData());
+						}
+						else{
+							form.setId((String)this.requestContext.getArgs().get("id"));
+							developmentManagersData.apply(developmentManagersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+						}
 					}
-					else{
-						form.setId((String)this.requestContext.getArgs().get("id"));
-						developmentManagersData.apply(developmentManagersData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("You do not have permission to add / edit a Development manager.");
+						this.redirectTo(new Index(requestContext));
 					}
+						
 				}
 			}
 		}

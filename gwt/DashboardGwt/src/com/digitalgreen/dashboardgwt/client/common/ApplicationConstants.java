@@ -66,9 +66,18 @@ public class ApplicationConstants {
 		Cookies.setCookie("password", password);
 	}
 	
+	public static String getUserRoleCookie() {
+		return Cookies.getCookie("userrole");
+	}
+	
+	public static void setUserRoleCookie(String userrole) {
+		Cookies.setCookie("userrole", userrole);
+	}
+	
 	public static void deleteCookies() {
 		Cookies.removeCookie("username");
 		Cookies.removeCookie("password");
+		Cookies.removeCookie("userrole");
 	}
 	
 	public static void setLoginCookies(String username, String password) {

@@ -78,7 +78,7 @@ public class Syncronisation {
 			public void onlineSuccessCallback(String results) {
 				if(!results.equals("0")) {
 					LoginData user = new LoginData();
-					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0");
+					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0", ApplicationConstants.getUserRoleCookie());
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();

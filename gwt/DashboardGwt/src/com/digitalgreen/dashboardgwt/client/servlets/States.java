@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -169,12 +170,19 @@ public class States extends BaseServlet {
 							}	
 						}
 					}, form);
-					if(queryArg.equals("add")) {
-						statesData.apply(statesData.getAddPageData());
+					if(ApplicationConstants.getUserRoleCookie().equals("A")){
+						if(queryArg.equals("add")) {
+							statesData.apply(statesData.getAddPageData());
+						}
+						else{
+							form.setId((String)this.requestContext.getArgs().get("id"));
+							statesData.apply(statesData.getAddPageData(form.getId()));
+						}
 					}
-					else{
-						form.setId((String)this.requestContext.getArgs().get("id"));
-						statesData.apply(statesData.getAddPageData(form.getId()));
+					else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("You do not have permission to add a State.");
+						this.redirectTo(new Index(requestContext));			
 					}
 				}
 			}

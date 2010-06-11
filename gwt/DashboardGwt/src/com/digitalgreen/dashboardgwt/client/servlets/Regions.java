@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -169,12 +170,19 @@ public class Regions extends BaseServlet {
 							}	
 						}
 					}, form);
-					if(queryArg.equals("add")) {
-						regionData.apply(regionData.getAddPageData());
+					if(ApplicationConstants.getUserRoleCookie().equals("A")){
+						if(queryArg.equals("add")) {
+							regionData.apply(regionData.getAddPageData());
+						}
+						else{
+							form.setId((String)this.requestContext.getArgs().get("id"));
+							regionData.apply(regionData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+						}
 					}
-					else{
-						form.setId((String)this.requestContext.getArgs().get("id"));
-						regionData.apply(regionData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
+					else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("You do not have permission to add a Region.");
+						this.redirectTo(new Index(requestContext));			
 					}
 				}
 			}
