@@ -221,7 +221,8 @@ def login_view(request):
             #auth.login(request, user)
             request.session['username'] = user.username
             request.session['user_id'] = user.id
-            return HttpResponse("1")
+	    user = UserPermission.objects.get(id=user.id)
+            return HttpResponse(user.role)
         else:
             # Show an error page
             return HttpResponse("0")
@@ -230,7 +231,7 @@ def login_view(request):
 
 def get_key_for_user(request):
     if request.method == 'POST':
-        MILLION_CONSTANT = 100000
+        MILLION_CONSTANT = 10000000
         username = request.POST.get('username', '')
         user_id = run_query("Select id from auth_user where username = %s", username)
         if len(user_id) > 0 :
