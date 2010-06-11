@@ -14,10 +14,9 @@
 
 <div id='careerbody'>
 
-<div id='careerbodydiv1' style='border-right:0px solid'>
-	
-</div>
 
+<div id='careerbodydiv1' style='border: 0px;'>
+</div>
 
 <div id='careerbodydiv2'>
 {% block careerbody %}
@@ -53,13 +52,13 @@
 					with uninterrupted usage in the browser.
 					COCO is designed to support up to 100,000 users located anywhere in the world and only requires internet connectivity whenever a user is ready to synchronize their data with our global repository.  
 					Built as a robust standalone application in the Internet browser, 
-					COCO requires no additional software installation or maintenance.  The system has been designed in an open-source, customizable framework that can be deployed without the need of IT/engineering staff. <br/><br/>
+					COCO requires no additional software installation or maintenance.  The system is designed in an open-source, customizable framework that can be deployed without the need of IT/engineering staff. <br/><br/>
 					Going forward, we're looking at the possibility of supporting other NGOs by hosting their data and giving them the benefit of not having to invest in and manage onerous infrastructure like servers and other third party systems. <br/><br/>
 
 					<span style='text-decoration:underline; font-weight:bold;'>COCO Technology</span> <br/>
 					COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails.  The core of COCO's framework comprises of a variety of open source technologies.  In light of achieving maximum speed as a browser application, COCO is developed using the GWT 2.0 (Google Web Toolkit) Java-Javascript framework.  
 					To enable offline mode, COCO employs the use of Google Gears, a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content.  For deployment in offline mode, a compiled Javascript file is generated and made available in Google Gear's local cache for access by the browser; COCO in online mode operates as any other web application.
-					More details on our architecture will be available later.  In the meantime, please send questions or comments to <a href='mailto:labs@digitalgreen.org'> labs@digitalgreen.org </a>.
+					More details on our architecture will be available later.  In the meantime, please send questions or comments to labs@digitalgreen.org.
 				</div>
 				<div style='width:456px; float:right; margin-right: 30px;'>
 					<img  style='padding-top:5px;' src='/media/Output/Images/s-5.png' align='left'>
@@ -75,7 +74,26 @@
 			</div>
 		</div>
 	</div>
-   
+	<div style='clear: both; margin-bottom: 30px;'></div>
+	<div id='divstattitle'>
+		<table id='divtitletable'  cellspacing='0' cellpadding='0'>                                                                          <tr>
+				<td class='divtitletablename'> <div id='divstattitlename'>
+					Analytics System</div> </td>
+				<td class='divtitletableimg'>   </td>
+       			</tr>
+		</table>
+	</div>
+
+	<div id='contentdiv1'>
+		<div style='margin-left:10px; width:900px; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
+                                The Analytics System forms the second layer on DigitalGreen's software stack.  Built on the COCO foundation, the Analytics System provides day-to-day business intelligence on field operations, performance targets, and basic ROI (return on investment) metrics relevant to the organization.  The system is freely available and accessible online -- by clicking on the Analytics dropdown in the menu bar -- without the need of onerous technical infrastructure and expensive commerical licenses.  We welcome NGOs willing to reuse and repurpose this system as per their requirements.  Please contact labs@digitalgreen.org for questions or comments.<br/><br/>
+		</div>
+
+		<div style='width: 900px; text-align: center;'>
+			<img  style='padding-top:5px;' src='/media/Output/Images/analyticsscreenshot1.jpg' align='center'>
+		</div>
+		<div style='margin-top:5px; margin-bottom: 20px; padding-left:10px;  font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  An example of graphs tracking our operations.</div>
+	</div>
      
 {% endblock careerbody %}
 </div>
