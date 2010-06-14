@@ -474,6 +474,7 @@ class Target(models.Model):
 
     clusters_identification = models.IntegerField(null=True, blank=True)
     dg_concept_sharing = models.IntegerField("DG Concept Sharing", null=True, blank=True)
+    csp_identification = models.IntegerField("CSP Identified", null=True, blank=True)
     dissemination_set_deployment = models.IntegerField(null=True, blank=True)
     village_operationalization = models.IntegerField(null=True, blank=True)
     video_uploading = models.IntegerField(null=True, blank=True)

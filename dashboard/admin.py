@@ -525,7 +525,7 @@ class TargetAdmin(admin.ModelAdmin):
         'fields': ['month_year', 'district']
     }),
     ('New Villages', {
-       'fields': ['clusters_identification', 'dg_concept_sharing', 'dissemination_set_deployment']
+       'fields': ['clusters_identification', 'dg_concept_sharing', 'csp_identification', 'dissemination_set_deployment']
     }),
     (None, {
        'fields': ['village_operationalization']
