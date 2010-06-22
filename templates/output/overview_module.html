@@ -156,7 +156,7 @@
 								<td class='table2statdesc2'>
 									{% ifnotequal item.id None %}
 										{% ifnotequal item.geog None %}
-											<a href='{% url dg.output.views.overviewAnalytics.overview_module geog=item.geog id=item.id %}{{get_req_url}}'>
+											<a href='/analytics/overview_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
 											{{ item.name }} </a>
 										{% else %}
 											{{ item.name }}
@@ -167,7 +167,7 @@
 								</td>
 								<td class='table2statdesc2'> 
 										{% ifnotequal item.geog None %}
-											<a href='{% url dg.output.views.videoAnalytics.video_module geog=item.geog id=item.id %}{{get_req_url}}'>
+											<a href='/analytics/video_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
 											{{ item.tot_pro }} </a>
 										{% else %}
 											{{ item.tot_pro }}
@@ -175,7 +175,7 @@
 								</td>
 								<td class='table2statdesc2'> 
 									{% ifnotequal item.geog None %}
-										<a href='{% url dg.output.views.screeningAnalytics.screening_module geog=item.geog id=item.id %}{{get_req_url}}'>
+										<a href='/analytics/screening_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
 										{{ item.tot_scr }} </a>
 									{% else %}
 										{{ item.tot_scr }}
@@ -199,7 +199,7 @@
 			        <tr>			            
 					    <td class='table2statdesc2'>
 					    	{% if par_geog_data.geog %}
-					    		<a href='{% url dg.output.views.overviewAnalytics.overview_module geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}'>
+					    		<a href='/analytics/overview_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
 								{{ par_geog_data.name }} </a>
 							{% else %}
 								{{par_geog_data.name}}
@@ -208,15 +208,20 @@
 					    </td>
 					    <td class='table2statdesc2'>
 					    	{% if par_geog_data.geog %}
-					    		<a href='{% url dg.output.views.videoAnalytics.video_module geog=par_geog_data.geog id=par_geog_data.id %}{{get_req_url}}' target="_blank">
+					    		<a href='/analytics/video_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
 							    {{par_geog_data.tot_vid}}</a>
 							{% else %}
 								{{par_geog_data.tot_vid}}
 							{% endif %}
 					    </td>
 					    
-					    <td class='table2statdesc2'> 
-					        {{ par_geog_data.tot_scr }}
+					    <td class='table2statdesc2'>
+					    	{% if par_geog_data.geog %}
+                                <a href='/analytics/screening_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
+                                {{ par_geog_data.tot_scr }}</a>
+                            {% else %}
+                                {{ par_geog_data.tot_scr }}
+                            {% endif %} 
 					    </td>
 					    
 					    <td class='table2statdesc2'> 
@@ -276,34 +281,33 @@
 	
 <!-- amline script--> 
 	
-	<script type="text/javascript">	 		 
+	<script type="text/javascript">
+		var line_data = '';
+		var line_settings = '';
+		$.ajax({ type: "GET", 
+				dataType: 'json',
+				async: false,
+				url: "/analytics/overview_line_graph?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}", 
+				data:{type:['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']},
+				success: function(obj) {
+						line_data = obj.data;
+						line_settings = obj.settings;
+						
+				}
+		});	 
 		var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
 		so2.addParam("wmode", "transparent");
 		so2.addVariable("path", "/media/Output/amline/");
 		so2.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so2.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
-		so2.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
-						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						</graphs></settings>'));
-	 </script>
-	
-	<script type="text/javascript">	 		 
+		so2.addVariable("chart_data",escape(line_data));
+		so2.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
+	 
 		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", tchartwidth, tchartheight, "8", "#FFFFFF");
 		so1.addParam("wmode", "transparent");
 		so1.addVariable("path", "/media/Output/amline/");
 		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so1.addVariable("data_file",escape('{% url dg.output.views.common.overview_line_graph geog=search_box_params.cur_geog id=search_box_params.cur_id %}{{get_req_url|safe}}'));
-		so1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
-						<graph gid="1"><title>Total Videos Produced</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="2"><title>Total Disseminations</title><color>#999999</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="3"><title>Total Adoptions</title><color>#3366FF</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="4"><title>Total Practices</title><color>#FF0000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						<graph gid="5"><title>Total Farmers</title><color>#000000</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
-						</graphs></settings>'));
+		so1.addVariable("chart_data",escape(line_data));
+		so1.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
 		so1.write("flashcontent");				
 
 	 </script>

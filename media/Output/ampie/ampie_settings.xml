@@ -59,7 +59,7 @@
   </animation>
   
   <data_labels>
-    <radius></radius>                                         <!-- [20%] (Number / Number%) distance of the labels from the pie. Use negative value to place labels on the pie -->
+    <radius>5%</radius>                                         <!-- [20%] (Number / Number%) distance of the labels from the pie. Use negative value to place labels on the pie -->
     <text_color></text_color>                                 <!-- [text_color] (hex color code) -->
     <text_size></text_size>                                   <!-- [text_size] (Number) -->
     <max_width></max_width>                                   <!-- [120] (Number) -->

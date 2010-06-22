@@ -3,6 +3,7 @@
   <data_type>csv</data_type>
   <decimals_separator>.</decimals_separator>
   <digits_after_decimal>0</digits_after_decimal>
+  <colors>[#FFCC00,#999999,#3366FF,#FF0000,#996633,#FF9900,#333333,#000066,#CC0033,#663300]</colors>
   <legend>
   	<values>          
       <enabled>true</enabled>

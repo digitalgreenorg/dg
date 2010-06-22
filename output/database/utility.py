@@ -9,6 +9,8 @@ def construct_query(var, context_dict):
 #This abstracts away sql part to return everything by cursor.fetchall()
 #which is a tuple of tuples containing row-values
 def run_query_raw(query_string, *query_args):
+    if(not query_string):
+        return ()
     return_list = []
     cursor = connection.cursor()
     cursor.execute(query_string, query_args)
@@ -17,6 +19,8 @@ def run_query_raw(query_string, *query_args):
 
 #This generates a list of dictionaries of key=column_header_name, value = row_value
 def run_query(query_string, *query_args):
+    if(not query_string):
+        return []
     return_list = []
     cursor = connection.cursor()
     cursor.execute(query_string, query_args)
@@ -26,10 +30,12 @@ def run_query(query_string, *query_args):
         return_list.append(dict(zip(col_names,row)))
     return return_list
 
-#this returns 
+#this returns
 #{ dict_key : (tuple of remaing columns), ...}
 #dict_key should be the first column in returned value.
 def run_query_dict(query_string, dict_key, *query_args):
+    if(not query_string):
+        return {}
     return_list = {}
     cursor = connection.cursor()
     cursor.execute(query_string,query_args)
@@ -39,13 +45,15 @@ def run_query_dict(query_string, dict_key, *query_args):
         raise Exception, dict_key+" is not the first column in returned query's column list"
     for row in rows:
         return_list[row[0]] = row[1:]
-        
+
     return return_list
 
-#this returns 
+#this returns
 #{ dict_key : [list of remaing columns], ...}
 #dict_key should be the first column in returned value.
 def run_query_dict_list(query_string, dict_key, *query_args):
+    if(not query_string):
+        return {}
     return_list = {}
     cursor = connection.cursor()
     cursor.execute(query_string,query_args)
@@ -55,11 +63,11 @@ def run_query_dict_list(query_string, dict_key, *query_args):
         raise Exception, dict_key+" is not the first column in returned query's column list"
     for row in rows:
         return_list[row[0]] = list(row[1:])
-        
+
     return return_list
 
 
-def getInitSQLds():
+def get_init_sql_ds():
     sql = {}
     sql['select'] = []; sql['from'] = []; sql['where'] = []; sql['join'] = [];
     sql['lojoin'] = []; sql['group by'] = []; sql['order by'] = []; sql['having'] = [];
@@ -67,21 +75,20 @@ def getInitSQLds():
 
 #Attaches geography tables to filter the pass 'geog' with given 'id'
 #If Modified, shoudl use the first letter of table names( e.g B for BLOCK). Other functions depend on this.
-    #sql_ds = datastructure of sql that will be modified (see getInitSQLds() above)
+    #sql_ds = datastructure of sql that will be modified (see get_init_sql_ds() above)
     #par_table_id = table's alias in the query, which has village foreign key
     #date_filter_field = field which will be use to attached date filter in case 'from_date' and 'to_date' is not None
-def attachGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date):
-    geog = geog.upper();
-    if(from_date is not None and to_date is not None):
+def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date):
+    if(from_date and to_date):
         sql_ds['where'].append(date_filter_field +" BETWEEN '"+from_date+"' AND '"+to_date+"'")
     geog_list = ["VILLAGE","BLOCK","DISTRICT","STATE"];
     if(geog=="COUNTRY" or geog not in geog_list):
         return
-    
+
     if(geog=="VILLAGE"):
         sql_ds['where'].append(par_table_id+".village_id = "+str(id))
         return
-    
+
     sql_ds['lojoin'].append(["VILLAGE V","V.id = "+par_table_id+".village_id"])
     for g in geog_list[1:]:
         prev_geog = geog_list[geog_list.index(g)-1];
@@ -91,10 +98,10 @@ def attachGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_da
             else:
                 sql_ds['where'].append(prev_geog[0]+"."+geog.lower()+"_id = "+str(id))
             break;
-        sql_ds['lojoin'].append([g+" "+g[0],prev_geog[0]+"."+g.lower()+"_id = "+g[0]+".id"])   
-        
-#Function to get from_date and to_date from Request object      
-def getDatesPartners(request):
+        sql_ds['lojoin'].append([g+" "+g[0],prev_geog[0]+"."+g.lower()+"_id = "+g[0]+".id"])
+
+#Function to get from_date and to_date from Request object
+def get_dates_partners(request):
     if(not request):
         return None, None, None
     if 'from_date' in request.GET and request.GET['from_date'] \
@@ -104,30 +111,30 @@ def getDatesPartners(request):
     else:
         from_date = None;
         to_date = None;
-    
+
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
 
-def filterPartnerGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partner_id):
+def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partner_id):
     if(partner_id):
-        if(geog.upper()=="COUNTRY"):
+        if(geog=="COUNTRY"):
             partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partner_id)+")"]
-            attachGeogDate(sql_ds,par_table_id,date_filter_field,'district',partner_sql,from_date,to_date)
+            attach_geog_date(sql_ds,par_table_id,date_filter_field,'DISTRICT',partner_sql,from_date,to_date)
             return
-        elif(geog.upper()=="STATE"):
+        elif(geog=="STATE"):
             dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
             if(dist_part_list):
                 partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
                 sql_ds['where'].append("D.id in ("+partner_sql[0]+")")
-            
-    attachGeogDate(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
+
+    attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
 
 
-def joinSQLds(sql_ds):
+def join_sql_ds(sql_ds):
     return_val = [];
     return_val.append("SELECT " + ', '.join(sql_ds['select']) \
-           +"\nFROM " + ', '.join(sql_ds['from']))
+               +"\nFROM " + ', '.join(sql_ds['from']))
     if(sql_ds['join']):
         return_val.append("JOIN "+"\nJOIN ".join([' ON '.join(x) for x in sql_ds['join']]))
     if(sql_ds['lojoin']):
@@ -140,7 +147,5 @@ def joinSQLds(sql_ds):
         return_val.append("ORDER BY "+", ".join(sql_ds['order by']))
     if(sql_ds['having']):
         return_val.append("HAVING "+" AND ".join(sql_ds['having']))
-    
-    return '\n'.join(return_val)    
-               
 
+    return '\n'.join(return_val)

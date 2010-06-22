@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "static_site/base.html" %}
 
 {% block title %} Analytics Dashboard  {% endblock %}
 
@@ -27,7 +27,7 @@
 		}		
     			
 		function reset(){	        
-			window.location.href = '{{search_box_params.base_url}}{{search_box_params.cur_geog}}/{{search_box_params.cur_id}}/';
+			window.location.href = '{{search_box_params.base_url}}?geog=country&id=1';
 		}
 		
 		function go(){
@@ -56,17 +56,16 @@
 				geog = $(this).attr('name');
 				id = $(this).val();
 			});
+			url.push("geog="+geog);
+			url.push("id="+id);
+			window.location.href = base_url+'?'+url.join('&');
 			
-			if(url.length)
-				window.location.href = base_url+geog+'/'+id+'/?'+url.join('&');
-			else
-				window.location.href = base_url+geog+'/'+id+'/';
 		}
     		
 		//Function to enable/disable and fill option in Selects for region select drop downs
     	function dochange(src, val) {
 			$.ajax({ type: "GET", 
-					url: "/output/dropdownval/?geog="+src+"&id="+val,
+					url: "/analytics/drop_down_val?geog="+src+"&id="+val,
 					success: function(html) {                    
               		var flag = false;
 					$(".select").each(function() {
