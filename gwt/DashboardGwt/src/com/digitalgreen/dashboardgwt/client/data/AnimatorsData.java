@@ -91,6 +91,13 @@ public class AnimatorsData extends BaseData {
 			this.id = id;
 			this.name = name;
 		}
+		
+		public Data(String id, String name, VillagesData.Data village) {
+			super();
+			this.id = id;
+			this.name = name;
+			this.village = village;
+		}
 
 		public Data(String id, String name, PartnersData.Data partner,
 				VillagesData.Data village) {
@@ -367,6 +374,9 @@ public class AnimatorsData extends BaseData {
 											"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
+	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.name, village.id, village.village_name " +
+											"FROM animator JOIN village ON animator.village_id = village.id" +
+											"ORDER BY (animator.name);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
 			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY (-a.id)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
@@ -515,6 +525,30 @@ public class AnimatorsData extends BaseData {
 					Data animator = new Data(this.getResultSet()
 							.getFieldAsString(0), this.getResultSet()
 							.getFieldAsString(1));
+					animators.add(animator);
+				}
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return animators;
+	}
+	
+	public List getAllAnimatorsWithVillageOffline() {
+		BaseData.dbOpen();
+		List animators = new ArrayList();
+		this.select(selectAnimatorsWithVillage);
+		if (this.getResultSet().isValidRow()) {
+			try {
+				VillagesData v = new VillagesData();
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
+						.getResultSet().next()) {
+					VillagesData.Data village = v.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					Data animator = new Data(this.getResultSet()
+							.getFieldAsString(0), this.getResultSet()
+							.getFieldAsString(1), village);
 					animators.add(animator);
 				}
 			} catch (DatabaseException e) {

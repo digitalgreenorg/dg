@@ -238,6 +238,9 @@ public class PersonGroupsData extends BaseData {
 			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
 
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
+	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.village_name" +
+															"FROM person_groups JOIN village on person_groups.village_id = village.id" +
+															"ORDER BY (person_groups.GROUP_NAME);";
 	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg "
 			+ "JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
 	protected static String savePersonGroupOfflineURL = "/dashboard/savepersongroupoffline/";
@@ -370,6 +373,31 @@ public class PersonGroupsData extends BaseData {
 					Data personGroup = new Data(this.getResultSet()
 							.getFieldAsString(0), this.getResultSet()
 							.getFieldAsString(1));
+					personGroups.add(personGroup);
+				}
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+
+		}
+		BaseData.dbClose();
+		return personGroups;
+	}
+	
+	public List getAllPersonGroupsWithVillageOffline() {
+		BaseData.dbOpen();
+		List personGroups = new ArrayList();
+		this.select(selectPersonGroupsWithVillage);
+		if (this.getResultSet().isValidRow()) {
+			try {
+				VillagesData v = new VillagesData();
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
+						.getResultSet().next()) {
+					VillagesData.Data village = v.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					Data personGroup = new Data(this.getResultSet()
+							.getFieldAsString(0), this.getResultSet()
+							.getFieldAsString(1), village);
 					personGroups.add(personGroup);
 				}
 			} catch (DatabaseException e) {
