@@ -498,6 +498,7 @@ class Target(models.Model):
     what_not_went_well =  models.TextField("What did NOT go well and why?", blank=True)
     challenges =  models.TextField(blank=True)
     support_requested =  models.TextField(blank=True)
+    last_modified = models.DateTimeField(auto_now=True)
     
     class Meta:
         unique_together = ("district","month_year")
