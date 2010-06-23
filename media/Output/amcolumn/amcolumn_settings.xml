@@ -2,6 +2,7 @@
 
 <settings>
 	<data_type>csv</data_type>
+	<thousands_separator>none</thousands_separator>
 	<depth>15</depth>
 	<angle>30</angle>
 

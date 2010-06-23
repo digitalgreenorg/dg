@@ -13,7 +13,7 @@
   <text_size></text_size>                                     <!-- [11] (Number) text size of all texts. Every text size can be set individually in the settings below -->
   <text_color></text_color>                                   <!-- [#000000] (hex color code) main text color. Every text color can be set individually in the settings below-->
   <decimals_separator>.</decimals_separator>                   <!-- [,] (string) decimal separator. Note, that this is for displaying data only. Decimals in data xml file must be separated with a dot -->
-  <thousands_separator></thousands_separator>                 <!-- [ ] (string) thousand separator. use "none" if you don't want to separate -->
+  <thousands_separator>none</thousands_separator>                 <!-- [ ] (string) thousand separator. use "none" if you don't want to separate -->
   <digits_after_decimal></digits_after_decimal>               <!-- [] (Number) if your value has less digits after decimal then is set here, zeroes will be added -->
   <scientific_min></scientific_min>                           <!-- [0.000001] If absolute value of your number is equal or less then scientific_min, this number will be formatted using scientific notation, for example: 0.0000023 -> 2.3e-6 -->
   <scientific_max></scientific_max>                           <!-- [1000000000000000] If absolute value of your number is equal or bigger then scientific_max, this number will be formatted using scientific notation, for example: 15000000000000000 -> 1.5e16 -->
@@ -64,7 +64,7 @@
     <text_size></text_size>                                   <!-- [text_size] (Number) -->
     <max_width></max_width>                                   <!-- [120] (Number) -->
     <show>
-       <![CDATA[{title}: {value}[{percents}%]]]>                       <!-- [] ({value} {title} {percents} {description}) You can format any data label: {value} - will be replaced with value and so on. You can add your own text or html code too. -->
+       <![CDATA[{title}:<br/>{value}[{percents}%]]]>                       <!-- [] ({value} {title} {percents} {description}) You can format any data label: {value} - will be replaced with value and so on. You can add your own text or html code too. -->
     </show>
     <show_lines></show_lines>                                 <!-- [true] (true / false) whether to show lines from slices to data labels or not -->                                                                                              
     <line_color></line_color>                                 <!-- [#000000] (hex color code) -->

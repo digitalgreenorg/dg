@@ -2,6 +2,7 @@
   <redraw>1</redraw>
   <data_type>csv</data_type>
   <skip_rows>1</skip_rows>
+  <thousands_separator>none</thousands_separator> 
   <background>
     <alpha>100</alpha>
     <border_color></border_color>
