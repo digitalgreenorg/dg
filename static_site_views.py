@@ -1,4 +1,6 @@
 from django.shortcuts import *
+from django.http import HttpResponseRedirect
+
 
 #Mindless views for plain HTML pages on the main website
 
@@ -46,3 +48,9 @@ def partnerselection(request):
 
 def tech(request):
     return render_to_response('technology.html')
+
+def updates(request):
+    return HttpResponseRedirect('http://sites.digitalgreen.org/inside-digital-green/updates')
+
+def nexus(request):
+    return HttpResponseRedirect('http://sites.digitalgreen.org/inside-digital-green/nexus')

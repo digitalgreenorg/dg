@@ -4,6 +4,7 @@ from django.conf.urls.defaults import *
 from dg.views import *
 from django.contrib.auth.views import login, logout
 from django.conf import settings
+from dg.static_site_views import home
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -121,7 +122,8 @@ urlpatterns = patterns('',
     (r'^dashboard/getreviewersonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_reviewers_online),
     (r'^dashboard/saverevieweroffline/((?P<id>\d*)/)?$', save_reviewer_offline),
     (r'^dashboard/language/add/$', add_language),
-    (r'^(?P<func_name>.*)$',route),  #Routing call
+    (r'^$',home),
+    (r'^(?P<func_name>.*)/$',route),  #Routing call
 )
 
 """
