@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Edited by XMLSpy® -->
-<!--  If there is no entry for any CHILD NODE then LEAVE THE CHILD NODE WITH A SPACE -->
+
 <CATALOG>
+	<TEAM>
+        <TITLE>Fortune</TITLE>
+        <HEADLINE>The Fortune Global Forum Visionaries</HEADLINE>
+        <REFERENCE>http://money.cnn.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html</REFERENCE>
+        <PRESSDATE> Thurs, 17 June 2010</PRESSDATE>
+        <PLACE>New Delhi</PLACE>    
+        <DESC>"Rikin Gandhi features in the prestigious -  The Fortune Global Forum Visionaries" </DESC>
+        <COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+        <IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>
+        <VIDEOLINK>NULL</VIDEOLINK>
+        <VIDEOREFERENCE>NULL</VIDEOREFERENCE>       
+    </TEAM>
+	<TEAM>
+        <TITLE>Asoka</TITLE>
+        <HEADLINE>Asoka Fellowship 2010</HEADLINE>
+        <REFERENCE>http://www.ashoka.org/fellows/Rikin_Gandhi</REFERENCE>
+        <PRESSDATE> 2010</PRESSDATE>
+        <PLACE>New Delhi</PLACE>    
+        <DESC>"Rikin Gandhi was elected to the Ashoka Fellowship in 2010" </DESC>
+        <COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+        <IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>
+        <VIDEOLINK>NULL</VIDEOLINK>
+        <VIDEOREFERENCE>NULL</VIDEOREFERENCE>       
+    </TEAM>
 	<TEAM>
 		<TITLE>The Financial Express</TITLE>
 		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
@@ -11,8 +34,8 @@
     	<DESC>"Supported more recently by Deshpande Foundation and Bill &amp; Melinda Gates Foundation, Delhi-based Digital Green collaborates with local organisations to use videos of best agricultural practices to enhance the environmental and economic sustainability of small and marginal farmers in 200 villages in Karnataka, Jharkhand, Madhya Pradesh and Orissa. Digital Green CEO Gandhi, an Indian expat from the US , says "We do not follow the usual top-down model. Our working model is driven by people and for people" </DESC>
 		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
 	</TEAM>	
 	<TEAM>
 		<TITLE>Harvard Business Review</TITLE>
@@ -23,8 +46,8 @@
 		<DESC>"My personal favourite is Digital Green (which I nicknamed 'American Idol for Farmers'), a Web 2.0 initiative which tapes progressive farmers to disseminate their best practices across agricultural communities. Digital Green just won the 2008 Stockholm Challenge Award in the Culture category."</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>CTA </TITLE>
@@ -33,10 +56,10 @@
 		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
 		<PLACE>India</PLACE>
 		<DESC>"Video can [show] long natural or agricultural processes in a short period of time, ideally in the local setting, as in the case of Digital Green."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Hindustan Times </TITLE>
@@ -45,10 +68,10 @@
 		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"Philanthropy should then address not just the financial needs, but also the physical, human, social, and technological."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Hindustan Times </TITLE>
@@ -57,34 +80,34 @@
 		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"They had a new perspective of the world from space and became do-gooders on Earth."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Technology Review </TITLE>
 		<HEADLINE>TR35 2010 Social Innovator </HEADLINE>
 		<REFERENCE>http://www.technologyreview.in/TR35/Profile.aspx?Cand=T&amp;TRID=852</REFERENCE>
-		<PRESSDATE> </PRESSDATE>
+		<PRESSDATE>2010</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"They had a new perspective of the world from space and became do-gooders on Earth."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Press Trust of India </TITLE>
 		<HEADLINE> Digital tech to help farmers improve livelihood  </HEADLINE>
 		<REFERENCE>http://in.news.yahoo.com/20/20100311/1416/tnl-digital-technology-to-help-farmers-i.html</REFERENCE>
-		<PRESSDATE> </PRESSDATE>
+		<PRESSDATE>Thurs, 11 March 2010 </PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"We anticipate that with support from the Gates Foundation, Rikin and his team at Digital Green will have impact over 1,000 villages, each consisting of 1,000-2,000 people. Indeed, they are already on the way there."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Sify </TITLE>
@@ -93,10 +116,10 @@
 		<PRESSDATE> Fri, Mar 5 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Bangalore's Digital Green founder Rikin B. Gandhi is the social innovator of the year."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>StockWatch </TITLE>
@@ -105,10 +128,10 @@
 		<PRESSDATE> Tues, Mar 9 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>SiliconIndia </TITLE>
@@ -117,10 +140,10 @@
 		<PRESSDATE> Tues, Mar 9 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>CIOL </TITLE>
@@ -129,10 +152,10 @@
 		<PRESSDATE>Mon, Mar 8 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Sify Business </TITLE>
@@ -141,10 +164,10 @@
 		<PRESSDATE> Fri, Mar 5 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"From crop rotation to organic farming practices, local farmers are always interested in learning the latest agricultural practices. The trouble is how to transfer this information in a language and medium they can understand. And more important, convince them to adopt better farming practices."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>POP City </TITLE>
@@ -153,10 +176,10 @@
 		<PRESSDATE> Wed, Feb 10 2010</PRESSDATE>
 		<PLACE>Pittsburgh</PLACE>
 		<DESC>"Sima (a global consumer electronics company based here) began supplying Digital Green with incredibly lightweight, battery-powered projectors that are easy to transport and use. Until now they had to carry these heavy projectors," says Sima's CEO Ilana Diamond. "Ours, you can put in your pocket. So they can go to more places, they're not dependent on electricity. If you're riding a bicycle, the weight makes a huge difference."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Asia Times </TITLE>
@@ -165,10 +188,10 @@
 		<PRESSDATE> Fri, Jan 29 2010</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"Digital Green helps increase the productivity of small farmers through low-cost information exchange, such as personal interactions among farmers and with experts. Digital Green videotapes agricultural improvements by farmers in a village and shares the innovations with other villages. The You-Tube-like information sharing aims to help small farmers across the developing world."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Live Mint </TITLE>
@@ -177,10 +200,10 @@
 		<PRESSDATE> Sun, Jan 24 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Digital Green is a project that applies commodity video hardware or real time three dimensional video to step up awareness and spread the use of sustainable agriculture practices among small farmers. It is active in some northern states of India, and has now been spun off as a separate non-government entity."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>EE Times India </TITLE>
@@ -189,10 +212,10 @@
 		<PRESSDATE> Sun, Jan 24 2010</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Digital Green - In order to help farmers improve their agriculture practices, leveraged the use of a regular camcorder to record best agriculture practices and disseminated to other farmers through mediator-based screenings."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>CXO Today </TITLE>
@@ -201,10 +224,10 @@
 		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"We are going Digital Green, getting videos that can facilitate local farmers, and disseminate information and farming technology through DVDs. We can impact the life of people through the usage of technology."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Science / AAAS </TITLE>
@@ -213,10 +236,10 @@
 		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
 		<PLACE>Bangalore</PLACE>
 		<DESC>"Within the next 3 months, Digital Green will leave the fold and become an independent nonprofit organization. Gandhi's goal is to reach 3000 villages with farming techniques that can help villagers out of poverty."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>New York Times </TITLE>
@@ -225,34 +248,34 @@
 		<PRESSDATE> Sun, Oct 26 2008</PRESSDATE>
 		<PLACE>New York</PLACE>
 		<DESC>"'The farmers love being on TV,' said Kentaro Toyama, assistant managing director of Microsoft Research India and the head of the Technology for Emerging Markets research group. 'This gives us some core knowledge about what works in this particular environment."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE> The Guadrain </TITLE>
 		<HEADLINE>Gadgets help draw world's poorest into global economy </HEADLINE>
 		<REFERENCE>http://www.guardian.co.uk/alloutonpoverty/gadgets</REFERENCE>
-		<PRESSDATE> </PRESSDATE>
+		<PRESSDATE>NA</PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"The Indian government also has nightly broadcasts about this, but we wanted to form local bases of knowledge, featuring local farmers sharing techniques and testimonials, which other farmers can identify with. Seeing their peers demonstrate the techniques also makes other farmers more likely to be persuaded, the film project has seen 70 to 80%amp; of farmers adopting new methods, compared with 10 to 15%amp; during the Green Foundation's previous outreach work, which didn't have ICT resources"</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>			
 	<TEAM>
 		<TITLE>The Forbes</TITLE>
 		<HEADLINE>Computing at the Bottom of the Pyramid </HEADLINE>
 		<REFERENCE>http://www.forbes.com/forbes/2008/0929/074a.html</REFERENCE>
-		<PRESSDATE>  </PRESSDATE>
+		<PRESSDATE>Wed 9 April, 2008</PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Digital Green, which has now been spun off as a not-for-profit, is being implemented in 29 villages in three Indian states. On a recent day in May two dozen residents of the village of Banihalli, 50 miles southeast of Bangalore, were gathered in a courtyard to watch and discuss a DVD on worm composting."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>	
 	<TEAM>
 		<TITLE>The Economic Times</TITLE>
@@ -261,10 +284,10 @@
 		<PRESSDATE> Aug 4 2008 </PRESSDATE>
 		<PLACE> ET Bureau</PLACE>
 		<DESC>"Bill Gates may have stepped down from an active role at Microsoft, but he has been pursuing his passion to serve the world through his outreach programmes. During his tour of universities recently, he happened to talk about a 'Digital Green' programme initiated by the Microsoft Research Lab, India, in Kanakapura villages."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>The Times of India</TITLE>
@@ -273,10 +296,10 @@
 		<PRESSDATE> Sun, Jul 20 2008 </PRESSDATE>
 		<PLACE> Bangalore</PLACE>
 		<DESC>"We differentiate farming techniques with good results and those without and communicate the difference to farmers. An example is seeding technique. Random versus systematic seeding shows that the latter consumes less water, increases yield and occupies less space. The same is communicated to farmers."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>The Hindu Business Line</TITLE>
@@ -285,10 +308,10 @@
 		<PRESSDATE> Mon, Jul 7 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"The project has helped to extend the efforts of GREEN Foundation. Raghavendra Rao, Chief Executive, GREEN Foundation, says they were doing it in the traditional way. They had field managers who went from farmer to farmer. But since they did not have too many staff, their reach was limited. But now because of Digital Green, they can reach out to more farmers. Rao says the response from the farmers has been good and the project has taken off well."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Stockholm Challenge Winner</TITLE>
@@ -297,10 +320,10 @@
 		<PRESSDATE> Mon, May 19 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Digital Green won a Stockholm Challenge award! Digital Green was selected for a this year in the "Culture" category. The winners were not announced until the ceremony itself, on May 22, 2008. The Stockholm Challenge 2008 features a six category Award for ICT for Development projects. The best projects will win the prestigious Stockholm Challenge trophies and receive a 5.000 Euro stipend. Visit the Stockholm Challenge winners website for more details on the prize and check out Digital Green's Stockholm Challege entry submission."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>SciDev.net </TITLE>
@@ -309,10 +332,10 @@
 		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Digital Green aims to use the Stockholm Challenge money to extend the reach of the project. They hope to establish a network of partnerships with other grassroots extension programmes."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>NextBillion.net </TITLE>
@@ -321,10 +344,10 @@
 		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Digital Green aims to use the Stockholm Challenge money to extend the reach of the project. They hope to establish a network of partnerships with other grassroots extension programmes."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>FARA </TITLE>
@@ -333,10 +356,10 @@
 		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"The video based approach has several important advantages to traditional forms of agricultural content, which is typically not in the local language, intended for a literate audience, uses expert terminology, lacks grassroots level practicalities, and remains inaccessible in a sea of scattered media. Farmers, by the nature of their occupation, rely on their auditory and visual senses and video, though not perfect, comes closest to capturing the scene in detail. Video creation tends to be faster and less expensive than other types of media, as advanced preparation in "lesson"-planning can minimize post-production editing. Video can compress the time needed to reveal the change. Video provides a means of bringing relevant demonstrations into the homes of farmers. Video also reduces the human resources required to follow-up with individual farmers and demonstrate time-consuming methods in the field."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Microsoft Unlimited Potential Group </TITLE>
@@ -345,10 +368,10 @@
 		<PRESSDATE> Thu, Jul 3 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"We jokingly call the project 'Farmer Idol,' because the farmers almost compete to appear in future videos."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Rising Voices </TITLE>
@@ -357,10 +380,10 @@
 		<PRESSDATE> Thu, April 10 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Digital Green is a project of Microsoft Research that seeks to disseminate targeted agricultural information to small-scale, rural farmers in India through digital video. The system includes a digital video database, which is produced by farmers and experts. The content within this repository is meant to enable farmers to progressively improve their trade."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Think Change India </TITLE>
@@ -369,10 +392,10 @@
 		<PRESSDATE> Thu, May 29 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Essentially, the project is a way to spread useful information to even illiterate farmers, using networks that they can trust (i.e. other villages, farmers in similar situations)."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Carnegie Mellon </TITLE>
@@ -381,34 +404,34 @@
 		<PRESSDATE> Thu, Feb 21 2008 </PRESSDATE>
 		<PLACE> Carnegie Mellon</PLACE>
 		<DESC>"Sometimes the solutions aren't cool because of the technology. They're really cool because of the impact. One that I'll cite, we call Digital Green, which was done by our Indian research lab which has a particular focus on the needs of the 2 billion people at the bottom of the pyramid. They went out to the farmers and saw that a direct use of computing wouldn't be possible: no cell phone network and no electricity. The real problem is farming productivity. If you have a drought and didn't grow enough during the season before, you literally suffer malnutrition."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>UN-FAO</TITLE>
 		<HEADLINE>UN-FAO e-Agriculture.org Global Example </HEADLINE>
 		<REFERENCE>http://www.e-agriculture.org/106.html</REFERENCE>
-		<PRESSDATE> </PRESSDATE>
+		<PRESSDATE>NA</PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"E-Agriculture is one of the action lines identified in the declaration and plan of action of the World Summit on the Information Society (WSIS). The Food and Agriculture Organization of the United Nations (FAO) has been assigned the responsibility of organizing activities related to the action line under C.7 ICT Applications on E-Agriculture. In 2006, a multi-stakeholder working group was set up to guide efforts in this area."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Gourmet's Diary of a Foodie</TITLE>
 		<HEADLINE>Southern India:The spice of Life </HEADLINE>
 		<REFERENCE>http://www.youtube.com/watch?v=alWcgRLI9GY</REFERENCE>
-		<PRESSDATE> </PRESSDATE>
+		<PRESSDATE>NA</PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"Visit a tiny farming community where local farmers cultivate indigenous ragi grain using sustainable agricultural practices and make some gooey ragi mudde. This excerpt is from Gourmet's Diary of a Foodie "Southern India: The Spice of Life."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>University of Waterloo</TITLE>
@@ -417,10 +440,10 @@
 		<PRESSDATE>Thurs, Feb 21 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"This one thing we did with farmers, called Digital Green, was to take a camera and film farmers doing best practices, take those back for experts to look at and edit them, and then create DVDs that are carried out."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>University of Chicago</TITLE>
@@ -429,10 +452,10 @@
 		<PRESSDATE>Wed, Feb 20 2008 </PRESSDATE>
 		<PLACE> From Web</PLACE>
 		<DESC>"It's kind of like American Idol except this is about not starving."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Stanford University </TITLE>
@@ -441,10 +464,10 @@
 		<PRESSDATE>Tues, Feb 19 2008 </PRESSDATE>
 		<PLACE> California</PLACE>
 		<DESC>"When our India lab opened up this research group about the poorest, the very poorest, who won't directly touch a personal computer, they were overwhelmed with people who were interested in joining it, and now they're spinning off NGOs like for this farmer training thing."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Chicago Tribune  </TITLE>
@@ -453,10 +476,10 @@
 		<PRESSDATE>Tues, Feb 19 2008 </PRESSDATE>
 		<PLACE> Chicago</PLACE>
 		<DESC>"using "DVD players that can be carried in and are battery operated is about as high-tech as you need in order to take to farmers and show them best practices," Gates said. With DVDs, "the adoption rate is three times what it was when we weren't using this approach."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Chicago Tribune  </TITLE>
@@ -465,10 +488,10 @@
 		<PRESSDATE>Fri, Feb 22 2008 </PRESSDATE>
 		<PLACE> Pittsburgh</PLACE>
 		<DESC>"But a project supported by the Gates Foundation produced a DVD showing how some farmers were able to improve their yields with better practices, and workers could take a battery-powered DVD player and TV set to different villages to show that video."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Post Gazzette </TITLE>
@@ -477,10 +500,10 @@
 		<PRESSDATE>Fri, Feb 22 2008 </PRESSDATE>
 		<PLACE> Pittsburgh</PLACE>
 		<DESC>"But a project supported by the Gates Foundation produced a DVD showing how some farmers were able to improve their yields with better practices, and workers could take a battery-powered DVD player and TV set to different villages to show that video."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>The Record </TITLE>
@@ -489,10 +512,10 @@
 		<PRESSDATE>Fri, Feb 22 2008 </PRESSDATE>
 		<PLACE> Waterloo</PLACE>
 		<DESC>"described a project where farmers' best practices were filmed. A DVD of their practices was made and taken, with a DVD player, for other farmers to see. Local farmers adopted the practices more frequently than they had before, and were anxious for their own techniques to be recorded. "It was doing better than American Idol, except it was Farmer Idol."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>Imprint </TITLE>
@@ -501,21 +524,21 @@
 		<PRESSDATE>Thurs, Feb 21 2008 </PRESSDATE>
 		<PLACE> Waterloo</PLACE>
 		<DESC>"Bill Gates discussed the power of technology to assist in developing nations, using an initiative from the Bill and Melinda Gates Foundation to illustrate his point. The foundation, which has a focus on improving global health, development and education, used portable DVD players and videos made by the top farmers in the world to help educate farmers in Africa and so improve the yield of their crops."</DESC>
-		<COMPANY> </COMPANY>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>University of Texas at Austin</TITLE>
 		<HEADLINE> Bill Gates - On Software, Innovation, Entrepreneurship and Giving Back  </HEADLINE>
-		<REFERENCE> </REFERENCE>
-		<PRESSDATE> </PRESSDATE>
-		<PLACE> From Web</PLACE>
-		<DESC>".What we've done in farming communities, through a system called Digital Green, is to film farmers who are doing things right."</DESC>
-		<COMPANY> </COMPANY>
+		<REFERENCE>http://www.cs.utexas.edu/oea/press_desk/utcs_spotlights/2008/gates/</REFERENCE>
+		<PRESSDATE>2008</PRESSDATE>
+		<PLACE>From Web</PLACE>
+		<DESC>"What we've done in farming communities, through a system called Digital Green, is to film farmers who are doing things right."</DESC>
+		<COMPANY>NULL</COMPANY>
 		<IMGLINK>/media/Output/Images/fullcoverageicon2.png</IMGLINK>		
-		<VIDEOLINK> </VIDEOLINK>
-		<VIDEOREFERENCE> </VIDEOREFERENCE>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
 	</TEAM>		
 </CATALOG>

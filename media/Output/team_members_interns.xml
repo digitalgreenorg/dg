@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Edited by XMLSpy® -->
+<!-- Edited by XMLSpyï¿½ -->
 <CATALOG>
 	<TEAM>
 		<NAME>Nishi Jha</NAME>
 		<POSITION>Field Officer</POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> MSC in ICT-ARD</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 		
 	</TEAM>	
 	<TEAM>
 		<NAME>Rashmi Kanthi</NAME>
 		<POSITION>Field Officer</POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> MSC in ICT-ARD</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 	</TEAM>
 	<TEAM>
 		<NAME>Shweta Pareek</NAME>
 		<POSITION> Field Officer </POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> MSC in ICT-ARD</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 	</TEAM>
 	<TEAM>
 		<NAME>G. Sreenivasula Reddy</NAME>
 		<POSITION> System Engineer </POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> Undergraduate Student</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 	</TEAM>
 	<TEAM>
 		<NAME>Parth Nagar</NAME>
 		<POSITION> System Engineer </POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> MSC in ICT-ARD</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 	</TEAM>
 	<TEAM>
 		<NAME>Sweta Panwar</NAME>
 		<POSITION> User Interface Designer </POSITION>    
-    	<COUNTRY> </COUNTRY>
+    	<COUNTRY>NULL</COUNTRY>
     	<MAJOR> MSC in ICT-ARD</MAJOR>
 		<COMPANY>Dhirubhai Ambani Institute of Information &amp; Communication Technology </COMPANY>
-		<PAGELINK> </PAGELINK>
-		<PERIOD> </PERIOD>
+		<PAGELINK>NULL</PAGELINK>
+		<PERIOD>NULL</PERIOD>
 	</TEAM>
 </CATALOG>

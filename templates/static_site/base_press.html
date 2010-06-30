@@ -51,6 +51,17 @@
 		
 		<script type="text/javascript">
 			var xmlDoc=null;
+			var xmlDoc=null;
+            if (window.XMLHttpRequest){
+             xhttp=new XMLHttpRequest();
+            }
+            else {
+             xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xhttp.open("GET","/media/Output/press.xml",false);
+            xhttp.send();
+            xmlDoc=xhttp.responseXML;
+			/*
 			if (window.ActiveXObject)
 			{// code for IE
     			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
@@ -62,11 +73,11 @@
 			else
 			{
 				alert('Your browser cannot handle this script');
-			}
+			}*/
 			if (xmlDoc!=null) 
 			{
-				xmlDoc.async=false;
-				xmlDoc.load("/media/Output/press.xml");
+				//xmlDoc.async=false;
+				//xmlDoc.load("/media/Output/press.xml");
 				//alert("hello");
 				var x=xmlDoc.getElementsByTagName("TEAM");
 
@@ -111,7 +122,7 @@
   									document.write("</a>"); 
   								document.write("</li>");
   								 
-  								if( (x[i].getElementsByTagName("VIDEOREFERENCE")[0].childNodes[0].nodeValue)!=" " )
+  								if( (x[i].getElementsByTagName("VIDEOREFERENCE")[0].childNodes[0].nodeValue)!="NULL" )
   									{   											  											
   											document.write("<li>");
   												document.write("|");
