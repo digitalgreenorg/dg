@@ -10,7 +10,7 @@
     <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
     <script type ='text/javascript'>
         
-        //Function to set the default dates when the page loads
+        //Function to set the default_if_none dates when the page loads
         window.onload = function(){
             var from_date = '{{search_box_params.from_date}}';
 			var to_date = '{{search_box_params.to_date}}';
@@ -45,10 +45,10 @@
             var orig_to_date = '{{search_box_params.to_date}}';
             
 			var cur_from_date = $("select[name='from_year']").val()+'-'+$("select[name='from_month']").val()+'-'+'01';
-			var cur_to_date = new Date();
+			
 			var cur_to_month = parseInt($("select[name='to_month']").val(),10);
 			var cur_to_year = parseInt($("select[name='to_year']").val(),10);
-			cur_to_date.setFullYear(cur_to_year+parseInt((cur_to_month+1)/12), parseInt((cur_to_month+1)%12)-1,1);
+			var cur_to_date = new Date(cur_to_year+parseInt((cur_to_month+1)/12), parseInt((cur_to_month+1)%12)-1,1);
 			cur_to_date.setDate(cur_to_date.getDate() - 1);
 			cur_to_date = cur_to_date.getFullYear()+'-'+(cur_to_date.getMonth()+1)+'-'+cur_to_date.getDate();
             
@@ -252,7 +252,7 @@
             <div id='contentheader'>
                 <table id='contentheadertable'>                     
                     <tr>                                                
-                        <td class='contentheadertitle'> Analytics >{% block contentheadertitle %} {% endblock contentheadertitle %}  </td>
+                        <td class='contentheadertitle'> Targets{% block contentheadertitle %} {% endblock contentheadertitle %}  </td>
                         <td class='contentheadertitle'>  </td>
                         <td class='contentheadertitle'> {% block datepick1 %} {% endblock datepick1 %} </td>
                         <td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>                   
@@ -260,11 +260,11 @@
                 </table>                    
             </div>
             <div>   
-
+<div>
+	<br></br>
+</div>
 <div style="float:left;">
 <table id="target_table" border=1>
-
-    <caption>Targets</caption>
     <tr>
         <td colspan='3'>Location Name: {{achieved_vals.geog_name}}</td>
     </tr>
@@ -275,63 +275,63 @@
     </tr>
     <tr>
         <td>Clusters Identified</td>
-        <td>{{target_vals.tot_clusters|default:"NA"}}</td>
-        <td>{{achieved_vals.vil_identified|default:"NA"}}</td>
+        <td>{{target_vals.tot_clusters|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.vil_identified|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>DG Concept shared with community</td>
-        <td>{{target_vals.tot_dg_sharing|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_dg_sharing|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
     <tr>
         <td>CSP Identified</td>
-        <td>{{target_vals.tot_csp_identified|default:"NA"}}</td>
-        <td>{{achieved_vals.csp_identified|default:"NA"}}</td>
+        <td>{{target_vals.tot_csp_identified|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.csp_identified|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Dissemination Set Deployed</td>
-        <td>{{target_vals.tot_deployment|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_deployment|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
     <tr>
         <td>Village operationalized</td>
-        <td>{{target_vals.tot_vil_op|default:"NA"}}</td>
-        <td>{{achieved_vals.village_operational|default:"NA"}}</td>
+        <td>{{target_vals.tot_vil_op|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.village_operational|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Videos Uploaded</td>
-        <td>{{target_vals.tot_vid_upl|default:"NA"}}</td>
-        <td>{{achieved_vals.vids_uploaded|default:"NA"}}</td>
+        <td>{{target_vals.tot_vid_upl|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.vids_uploaded|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Video Produced</td>
-        <td>{{target_vals.tot_vid_pro|default:"NA"}}</td>
-        <td>{{achieved_vals.video_production|default:"NA"}}</td>
+        <td>{{target_vals.tot_vid_pro|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.video_production|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Storyboard Prepared</td>
-        <td>{{target_vals.tot_story|default:"NA"}}</td>
-        <td>{{achieved_vals.storyboard|default:"NA"}}</td>
+        <td>{{target_vals.tot_story|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.storyboard|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Number of Videos shot</td>
-        <td>{{target_vals.tot_vid_shoot|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_vid_shoot|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
     <tr>
         <td>Number of Videos edited</td>
-        <td>{{target_vals.tot_vid_edit|default:"NA"}}</td>
-        <td>{{achieved_vals.video_edited|default:"NA"}}</td>
+        <td>{{target_vals.tot_vid_edit|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.video_edited|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Video Quality Check</td>
-        <td>{{target_vals.tot_vid_qual|default:"NA"}}</td>
-        <td>{{achieved_vals.quality_check|default:"NA"}}</td>
+        <td>{{target_vals.tot_vid_qual|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.quality_check|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Total Disseminations</td>
-        <td>{{target_vals.tot_diss|default:"NA"}}</td>
-        <td>{{achieved_vals.disseminations|default:"NA"}}</td>
+        <td>{{target_vals.tot_diss|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.disseminations|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Average Attendance per Dissemination</td>
@@ -350,43 +350,43 @@
     </tr>
     <tr>
         <td>Total Disseminations</td>
-        <td>{{target_vals.tot_diss|default:"NA"}}</td>
-        <td>{{achieved_vals.disseminations|default:"NA"}}</td>
+        <td>{{target_vals.tot_diss|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.disseminations|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>CRPs Training</td>
-        <td>{{target_vals.tot_crp|default:"NA"}}</td>
-        <td>{{achieved_vals.new_crp_training|default:"NA"}}</td>
+        <td>{{target_vals.tot_crp|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.new_crp_training|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>CRPs Refresher Training</td>
-        <td>{{target_vals.tot_crp_ref|default:"NA"}}</td>
-        <td>{{achieved_vals.refresher_crp_traing|default:"NA"}}</td>
+        <td>{{target_vals.tot_crp_ref|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.refresher_crp_traing|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>CSPs Training</td>
-        <td>{{target_vals.tot_csp|default:"NA"}}</td>
-        <td>{{achieved_vals.new_csp_training|default:"NA"}}</td>
+        <td>{{target_vals.tot_csp|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.new_csp_training|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>CSPs Refreshing Training</td>
-        <td>{{target_vals.tot_csp_ref|default:"NA"}}</td>
-        <td>{{achieved_vals.refresher_csp_traing|default:"NA"}}</td>
+        <td>{{target_vals.tot_csp_ref|default_if_none:"NA"}}</td>
+        <td>{{achieved_vals.refresher_csp_traing|default_if_none:"NA"}}</td>
     </tr>
     <tr>
         <td>Editors Training</td>
-        <td>{{target_vals.tot_editor|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_editor|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
     <tr>
         <td>Editors Refresher Training</td>
-        <td>{{target_vals.tot_editor_ref|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_editor_ref|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
 	<tr>
         <td>Village Certification</td>
-        <td>{{target_vals.tot_vil_cert|default:"NA"}}</td>
-        <td>NA</td>
+        <td>{{target_vals.tot_vil_cert|default_if_none:"NA"}}</td>
+        <td>--</td>
     </tr>
 </table>
 </div>

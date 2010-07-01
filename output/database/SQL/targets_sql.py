@@ -8,12 +8,12 @@ def get_csp_identified(geog, id, from_date, to_date, partners):
     filter_partner_geog_date(sql_ds,"AAV","AAV.START_DATE",geog,id,from_date,to_date,partners)
     return join_sql_ds(sql_ds);
 
-def get_village_operational(geog,id, from_date, to_date, partners):
+def get_village_operational(geog, id, date_var, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT village_id) as count")
     sql_ds['from'].append("SCREENING SC")
-    new_from_date = str(datetime.date(*[int(i) for i in str(from_date).split('-')]) - datetime.timedelta(days=60))
-    filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,new_from_date,to_date,partners)
+    prev_date = str(datetime.date(*[int(i) for i in str(date_var).split('-')]) - datetime.timedelta(days=60))
+    filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,prev_date,date_var,partners)
     return join_sql_ds(sql_ds);
 
 def get_storyboard_prepared(geog, id, from_date, to_date, partners):
@@ -111,6 +111,18 @@ def get_village_identified(geog, id, from_date, to_date, partners):
         sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
         sql_ds['where'].append("B.district_id = "+str(id))
 
+    if(partners):
+        partner_sql = "SELECT id FROM DISTRICT WHERE partner_id IN ("+','.join(partners)+")"
+        if(geog == "COUNTRY"):
+            sql_ds['join'].append(["BLOCK B", "B.id = VIL.block_id"])
+            sql_ds['where'].append("B.district_id IN ("+partner_sql+")")
+        elif(geog == 'STATE'):
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
+            dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
+            if(dist_part_list):
+                partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
+                sql_ds['where'].append("D.id in ("+partner_sql[0]+")")
+                
     return join_sql_ds(sql_ds);
 
 def get_videos_uploaded(geog, id, from_date, to_date, partners):
@@ -147,6 +159,10 @@ def get_targets(geog, id, from_date, to_date, partners):
     sql_ds['select'].append('SUM(editor_refresher_training) AS tot_editor_ref')
     sql_ds['select'].append('SUM(villages_certification) AS tot_vil_cert')
     sql_ds['from'].append('dashboard_target DT')
+    
+    if(from_date and to_date):
+        sql_ds['where'].append("month_year BETWEEN '"+from_date+"' AND '"+to_date+"'")
+        
     if(geog == 'STATE'):
         sql_ds['join'].append(['DISTRICT D', "D.id = DT.district_id"])
         sql_ds['where'].append('D.state_id = '+str(id))
@@ -164,7 +180,7 @@ def get_targets(geog, id, from_date, to_date, partners):
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(dist_part_list):
                 partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
-                sql_ds['where'].append("DT.id in ("+partner_sql[0]+")")
+                sql_ds['where'].append("DT.district_id in ("+partner_sql[0]+")")
     
     return join_sql_ds(sql_ds)
             

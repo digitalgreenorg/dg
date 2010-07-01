@@ -21,7 +21,12 @@ def target_table(request):
         raise Http404; 
     achieved_vals = {}
     achieved_vals['csp_identified'] = run_query(get_csp_identified(geog, id, from_date, to_date, partners))[0]['count']
-    achieved_vals['village_operational'] = run_query(get_village_operational(geog, id, from_date, to_date, partners))[0]['count']
+    
+    vil_operation_from_date = run_query(get_village_operational(geog, id, from_date, partners))[0]['count']
+    vil_operation_to_date = run_query(get_village_operational(geog, id, to_date, partners))[0]['count'] 
+    if(vil_operation_from_date and vil_operation_to_date):
+        achieved_vals['village_operational'] = vil_operation_to_date - vil_operation_from_date
+    
     achieved_vals['storyboard'] = run_query(get_storyboard_prepared(geog, id, from_date, to_date, partners))[0]['count']
     achieved_vals['video_edited'] = run_query(get_video_edited(geog, id, from_date, to_date, partners))[0]['count']
     achieved_vals['quality_check'] = run_query(get_quality_check(geog, id, from_date, to_date, partners))[0]['count']
@@ -37,15 +42,12 @@ def target_table(request):
     
     tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners))[0];
     achieved_vals['disseminations'] = tot_val['tot_scr']
-    if(tot_val['tot_dist_per']):
-        achieved_vals['att_per_diss'] = float(tot_val['tot_dist_per'])/tot_val['tot_scr']
+    if(tot_val['tot_scr']):
+        achieved_vals['att_per_diss'] = float(tot_val['tot_per'])/tot_val['tot_scr']
+        achieved_vals['avg_adoption'] = float(overview_vals['tot_ado'])/tot_val['tot_scr']
     else:
         achieved_vals['att_per_diss'] = 0
-        
-    if(tot_val['tot_scr'] == 0):
         achieved_vals['avg_adoption'] = 0
-    else:
-        achieved_vals['avg_adoption'] = float(overview_vals['tot_ado'])/tot_val['tot_scr']
         
     achieved_vals['vids_uploaded'] = run_query(get_videos_uploaded(geog, id, from_date, to_date, partners))[0]['count']
     achieved_vals['csp_identified'] = run_query(get_csp_identified(geog, id, from_date, to_date, partners))[0]['count']
