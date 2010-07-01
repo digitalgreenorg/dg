@@ -116,7 +116,7 @@ init :function() {
 				// Get the person meeting attendance data, requires the screening id.
 				$.ajax({ type: "GET", 
 					dataType: 'html',
-					url: "/technology/dashboard/getattendance/"+id+"/", 
+					url: "/dashboard/getattendance/"+id+"/", 
 					success: function(obj) {		
 						$('div.inline-group div.tabular').html('')
 						$('div.inline-group div.tabular').append(obj)
@@ -124,7 +124,7 @@ init :function() {
 						// Set the practice and person list for the "add new row"
 						$.ajax({ type: "GET", 
 							dataType: 'json',
-							url: "/technology/feeds/person_pract/", 
+							url: "/feeds/person_pract/", 
 							data:{vil_id:vil_id,mode:2},
 							success: function(obj) {		
 								//storing practice_list			
@@ -274,7 +274,11 @@ init :function() {
 		}
 		//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 	}
-	$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+	//Commented .attr as it is not working in chrome
+	//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
+	//below line is added by sreenivas to select persongroups based on village
+	$("#id_village").change(function(){filter_persongroup()});
+	$("#id_farmer_groups_targeted").change(function(){filter_person()});
 	
 }
 };
@@ -507,7 +511,7 @@ function filter_person() {
 			// This person list will be used for "add-new row" template
 			$.ajax({ type: "GET", 
 				dataType: 'json',
-				url: "/technology/get/person/", 
+				url: "/get/person/", 
 				data:{groups:grps,},
 				success: function(obj) {		
 					//For "Add new Row" template, replacing ther person list of block of the village
@@ -520,7 +524,7 @@ function filter_person() {
 			// Also get the list of the practices for "add new row" template
 			$.ajax({ type: "GET", 
 				dataType: 'json',
-				url: "/technology/feeds/persons/modified/", 
+				url: "/feeds/persons/modified/", 
 				data:{groups:grps, init:init_form,mode:1},
 				success: function(obj){
 					if(obj.html=='Error') {
@@ -552,4 +556,60 @@ function filter_person() {
 			});
 		}
 	}
+}
+
+//below function is added by sreenivas to select persongroups based on village
+
+function filter_persongroup()
+{
+	var vil_id = $("#id_village").val();
+	if(vil_id > 0)
+	{
+		if(app_status == 0 ) {
+			showStatus("Loading persongroups..");	
+			var db = google.gears.factory.create('beta.database');
+			db.open('digitalgreen');
+			initialize_add_screening();
+			//alert('before sql execute');
+			var persongroups = db.execute("SELECT DISTINCT P.id, P.group_name FROM PERSON_GROUPS P where P.village_id ="+vil_id);	
+			var pg_options = '<option value="">---------- </option>';
+			while(persongroups.isValidRow()) {
+				pg_options = pg_options + '<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>'
+				//pg_options.push('<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>');
+				persongroups.next();
+			}
+			$("#id_farmer_groups_targeted").html(pg_options);
+			persongroups.close();
+			db.close();
+			hideStatus();
+		}
+		
+		//online case
+		else {
+			//Storing the already selected animator & Person Groups
+			var pg_selected = $("#id_farmer_groups_targeted").val() || [];
+			$.ajax({ type: "GET", 
+					dataType: 'json',
+					url: "/feeds/person_pract/", 
+					data:{vil_id:vil_id,mode:2},
+					success: function(obj) {		
+						//updating farmer group list and Animator_list
+						update_farmer_groups(eval('('+obj.pg+')'));
+						//Restoring the already selected animator and Person Group	
+						$("#id_farmer_groups_targeted").val(pg_selected);			
+						initialize_add_screening();
+						hideStatus();
+					}
+			});
+		}		
+	}
+}
+
+//Function to Update Farmer Group in Widget in online case
+function update_farmer_groups(j){
+	var options = '<option value="">---------- </option>';
+    for (var i = 0; i < j.length; i++) 
+		options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['group_name'] + '</option>';
+	$("#id_farmer_groups_targeted").html(options);
+    
 }
