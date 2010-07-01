@@ -293,7 +293,5 @@ public class AnimatorsTemplate extends BaseTemplate {
 										"</div>" +
 									//"</form>" +
 								"</div>" +
-							"</div>"+
-							"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-							"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+							"</div>";
 }

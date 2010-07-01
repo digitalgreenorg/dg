@@ -144,7 +144,5 @@ public class RegionsTemplate extends BaseTemplate {
 					"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 				"</div>" +
 			"</div>" +
-		"</div>" +
-		"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-		"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+		"</div>" ;
 	}

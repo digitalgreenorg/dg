@@ -44,15 +44,18 @@ public class ScreeningsTemplate extends BaseTemplate {
 		saveRequestContext.setForm(this.formTemplate);
 		Screenings saveScreening = new Screenings(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
+		
+		
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		//Now add listings
 		List<Hyperlink> links =  this.fillListings();
 		// Add it to the rootpanel
 		super.fill();
+		ScreeningsTemplate.loadPerson();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveScreening);	
+		super.fillDgFormPage(saveScreening);		
 	}
 	
 	public List<Hyperlink> fillListings(){
@@ -92,6 +95,11 @@ public class ScreeningsTemplate extends BaseTemplate {
 		}
 		return links;
 	}
+	
+	public static native void loadPerson() /*-{
+		$wnd.screening_page_offline.init();
+		
+	}-*/;
 	
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};
 	
@@ -153,8 +161,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	final private String screeningsAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' />" +
-							"<script src='/media/coco/dashboardgwt/gears_init.js' type='text/javascript'></script>"+
-							"<script src='/media/js/jquery.js' type='text/javascript'></script>" +
+							//"<script src='/media/coco/dashboardgwt/gears_init.js' type='text/javascript'></script>"+
+							//"<script src='/media/js/jquery.js' type='text/javascript'></script>" +
 							"<div id='content' class='colM'>" +
 							"<h1>Add screening</h1>" +
 						    "<div id='content-main'>" +
@@ -246,8 +254,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 											"<label for='id_videoes_screened' class='required'>Videoes screened:</label>" +
 											"<select multiple='multiple' name='videoes_screened' id='id_videoes_screened'>" +
 											"</select>" +
-											"<script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_videoes_screened', 'videoes screened', 0, '/media/'); });" +
-											"</script>" +
+											//"<script type='text/javascript'>addEvent(window, 'load', function(e) {SelectFilter.init('id_videoes_screened', 'videoes screened', 0, '/media/'); });" +
+											//"</script>" +
 											"</a>" +
 											"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 										"</div>" +
@@ -283,7 +291,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 										"<div>" +
 											"<label for='id_farmer_groups_targeted' class='required'>Farmer groups targeted:</label>" +
 											//"<select multiple='multiple' onchange='filter_person();' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
-											"<select multiple='multiple' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
+											"<select id='id_farmer_groups_targeted' name='farmer_groups_targeted' multiple='multiple'>" +
 											"</select>" +
 										"</div>" +
 									"</div>" +
@@ -317,9 +325,5 @@ public class ScreeningsTemplate extends BaseTemplate {
 								"<script type='text/javascript'>document.getElementById('id_date').focus();</script>" +
 							"</div>" +
 							"<br class='clear' />" +
-						"</div>" +
-						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-						"<script type='text/javascript'>DateTimeShortcuts.init()</script>"+						
-						"<script src='/media/js/screening_page_offline.js' type='text/javascript'></script>" +
-						"<script type='text/javascript'>screening_page_offline.init()</script>" ;
+						"</div>"  ;
 }

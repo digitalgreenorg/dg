@@ -639,7 +639,5 @@ public class VillagesTemplate extends BaseTemplate {
 											"</div>" +
 									"</div>" +
 									"<br class='clear' />" +
-								"</div>" +
-								"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-								"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+								"</div>" ;
 }

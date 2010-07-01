@@ -151,6 +151,7 @@ public class BaseTemplate extends Template {
 		String queryArg = (String)queryArgs.get("action");
 		if(this.getRequestContext().getMethodTypeCtx().equals(RequestContext.METHOD_GET) && 
 				(queryArg.equals("add") || queryArg.equals("edit"))) {
+			BaseTemplate.displayCalender();
 			if(this.requestContext.getArgs().get("action").equals("edit")) {
 				servlet.getRequestContext().getArgs().put("id", this.requestContext.getArgs().get("id"));
 			}
@@ -214,7 +215,12 @@ public class BaseTemplate extends Template {
 	// Query string -> HTML form
 	public static native String putFormString(String queryString, String formId) /*-{
 		return $wnd.putFormString(queryString, formId);
-	}-*/;	
+	}-*/;
+	
+	//Javascript loading for displaying calender
+	public static native void displayCalender() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final String BaseContentHtml = "<!-- Container -->" +
 	"<div id='container'>" +

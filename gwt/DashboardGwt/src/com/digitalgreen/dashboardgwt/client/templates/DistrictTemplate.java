@@ -188,7 +188,5 @@ public class DistrictTemplate extends BaseTemplate{
 								"<script type='text/javascript'>document.getElementById('id_district_name').focus();</script>" +
 							"</div>" +
 							"<br class='clear' />" +
-						"</div>" +
-						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+						"</div>";
 }

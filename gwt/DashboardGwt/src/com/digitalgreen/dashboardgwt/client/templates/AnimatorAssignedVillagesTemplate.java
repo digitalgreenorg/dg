@@ -172,7 +172,5 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 									"<script type='text/javascript'>" +
 									"</script>" +
 							"</div>" +
-						"</div>"+
-						"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-						"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+						"</div>";
 }

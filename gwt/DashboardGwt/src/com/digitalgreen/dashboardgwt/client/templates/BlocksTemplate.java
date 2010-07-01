@@ -155,7 +155,5 @@ public class BlocksTemplate extends BaseTemplate{
 									"</div>" +
 									"<script type='text/javascript'>document.getElementById('id_block_name').focus();</script>" +
 								"</div>" +
-							"</div>" +
-							"<script src='/media/js/admin/DateTimeShortcuts.js' type='text/javascript'></script>" +	
-							"<script type='text/javascript'>DateTimeShortcuts.init()</script>";
+							"</div>" ;
 }
