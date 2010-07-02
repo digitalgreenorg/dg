@@ -244,7 +244,8 @@ class PersonGroups(models.Model):
         unique_together = ("group_name", "village")
 
     def __unicode__(self):
-        return self.group_name
+        return  u'%s (%s)' % (self.group_name, self.village)
+        #return self.group_name
 
 class Person(models.Model):
     person_name = models.CharField(max_length=100, db_column='PERSON_NAME')
@@ -288,7 +289,8 @@ class Animator(models.Model):
         db_table = u'ANIMATOR'
         unique_together = ("name", "gender", "partner","village")
     def __unicode__(self):
-        return self.name
+        return  u'%s (%s)' % (self.name, self.village)
+        #return self.name
 
 
 class Training(models.Model):
