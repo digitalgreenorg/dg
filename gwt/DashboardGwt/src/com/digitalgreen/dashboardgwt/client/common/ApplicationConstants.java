@@ -48,7 +48,7 @@ public class ApplicationConstants {
 
 	public static HashMap mappingBetweenTableIDAndDataObject;
 	
-	public final static int PAGESIZE = 50;
+	public final static int PAGESIZE = 30;
 	
 	public static String getUsernameCookie() {
 		return Cookies.getCookie("username");

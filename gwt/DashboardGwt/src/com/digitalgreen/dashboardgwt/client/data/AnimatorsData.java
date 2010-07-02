@@ -374,9 +374,8 @@ public class AnimatorsData extends BaseData {
 											"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.name);";
-	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.name, village.id, village.village_name " +
-											"FROM animator JOIN village ON animator.village_id = village.id" +
-											"ORDER BY (animator.name);";
+	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.NAME, village.id, village.VILLAGE_NAME " +
+			"FROM animator JOIN village ON animator.village_id = village.id ORDER BY (animator.NAME);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
 			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY (-a.id)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
@@ -520,11 +519,9 @@ public class AnimatorsData extends BaseData {
 		this.select(selectAnimators);
 		if (this.getResultSet().isValidRow()) {
 			try {
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
-						.getResultSet().next()) {
-					Data animator = new Data(this.getResultSet()
-							.getFieldAsString(0), this.getResultSet()
-							.getFieldAsString(1));
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data animator = new Data(this.getResultSet().getFieldAsString(0), 
+							this.getResultSet().getFieldAsString(1));
 					animators.add(animator);
 				}
 			} catch (DatabaseException e) {
@@ -543,12 +540,9 @@ public class AnimatorsData extends BaseData {
 		if (this.getResultSet().isValidRow()) {
 			try {
 				VillagesData v = new VillagesData();
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
-						.getResultSet().next()) {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					VillagesData.Data village = v.new Data(this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
-					Data animator = new Data(this.getResultSet()
-							.getFieldAsString(0), this.getResultSet()
-							.getFieldAsString(1), village);
+					Data animator = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), village);
 					animators.add(animator);
 				}
 			} catch (DatabaseException e) {

@@ -238,9 +238,8 @@ public class PersonGroupsData extends BaseData {
 			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
 
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
-	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.village_name" +
-															"FROM person_groups JOIN village on person_groups.village_id = village.id" +
-															"ORDER BY (person_groups.GROUP_NAME);";
+	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.VILLAGE_NAME " +
+			"FROM person_groups JOIN village ON person_groups.village_id = village.id ORDER BY (person_groups.GROUP_NAME)";
 	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg "
 			+ "JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
 	protected static String savePersonGroupOfflineURL = "/dashboard/savepersongroupoffline/";

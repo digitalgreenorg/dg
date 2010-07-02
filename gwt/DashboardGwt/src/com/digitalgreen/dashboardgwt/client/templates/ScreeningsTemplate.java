@@ -54,7 +54,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 		if(!this.getRequestContext().getArgs().get("action").equals("list")) {
 			String id ="0";
 			if(this.requestContext.getArgs().get("action").equals("edit")) {
-				Window.alert("In edit case after fill is called");
 				id = (String) this.requestContext.getArgs().get("id");
 			}
 			ScreeningsTemplate.loadPerson(Integer.parseInt(id));
@@ -62,7 +61,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
-		super.fillDgFormPage(saveScreening);		
+		super.fillDgFormPage(saveScreening);	
+		
 	}
 	
 	public List<Hyperlink> fillListings(){

@@ -518,7 +518,6 @@ public class ScreeningsData extends BaseData {
 	}
 	
 	public String retrieveDataAndConvertResultIntoHtml(){
-		
 		StringBuilder sbHtml = new StringBuilder();
 		
 		VillagesData villageData = new VillagesData();
@@ -533,13 +532,13 @@ public class ScreeningsData extends BaseData {
 		sbHtml.append("</select>");		
 		
 		AnimatorsData animatorData = new AnimatorsData();
-		List animators = animatorData.getAllAnimatorsOffline();
+		List animators = animatorData.getAllAnimatorsWithVillageOffline();
 		AnimatorsData.Data animator;
 		sbHtml.append("<select name=\"animator\" id=\"id_animator\">" + 
 						"<option value='' >---------</option>");
 		for(int i = 0; i < animators.size(); i++){
 			animator = (AnimatorsData.Data)animators.get(i);
-			sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>");
+			sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + " ("+ animator.getVillage().getVillageName() +")" + "</option>");
 		}
 		sbHtml.append("</select>");
 		
@@ -566,13 +565,14 @@ public class ScreeningsData extends BaseData {
 		sbHtml.append("</select>");
 		
 		PersonGroupsData personGroupData = new PersonGroupsData();
-		List personGroups = personGroupData.getAllPersonGroupsOffline();
+		List personGroups = personGroupData.getAllPersonGroupsWithVillageOffline();
 		PersonGroupsData.Data personGroup;
 		sbHtml.append("<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
 						"<option value=''>---------</option>");
+
 		for(int i = 0; i < personGroups.size(); i++){
 			personGroup = (PersonGroupsData.Data)personGroups.get(i);
-			sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + "</option>");
+			sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + " ("+ personGroup.getVillage().getVillageName() + ")" +"</option>");
 		}
 		sbHtml.append("</select>");
 		
