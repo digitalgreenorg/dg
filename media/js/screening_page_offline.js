@@ -136,7 +136,6 @@ init :function(id) {
 								hideStatus();
 							}
 						});
-						//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 					}
 				});
 			}
@@ -308,16 +307,15 @@ function clear_table(tab) {
 
 //Function to perform some more initialized functions on load	
 function initialize_add_screening() {
-	if(is_inited)
+	/*if(is_inited)
 		return;
 	else
-		is_inited = true;
+		is_inited = true;*/
 	
 	tabu = $('div.inline-group div.tabular');
 	table = tabu.find('table');
 	// Hide initial deleted rows
 	table.find('td.delete input:checkbox:checked').parent('td').parent('tr').addClass('deleted_row').hide();
-	
 	// "Add"-button in bottom of inline for adding new rows
 	tabu.find('fieldset').after('<a class="add" href="#">' + add_link_html + '</a>');
 	tabu.find('a.add').click(function(){
@@ -575,13 +573,10 @@ function filter_persongroup()
 				showStatus("Loading persongroups..");	
 				var db = google.gears.factory.create('beta.database');
 				db.open('digitalgreen');
-				initialize_add_screening();
-				//alert('before sql execute');
 				var persongroups = db.execute("SELECT DISTINCT P.id, P.group_name FROM PERSON_GROUPS P where P.village_id ="+vil_id);	
 				var pg_options = '<option value="">---------- </option>';
 				while(persongroups.isValidRow()) {
 					pg_options = pg_options + '<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>'
-					//pg_options.push('<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>');
 					persongroups.next();
 				}
 				$("#id_farmer_groups_targeted").html(pg_options);
@@ -603,7 +598,6 @@ function filter_persongroup()
 						update_farmer_groups(eval('('+obj.pg+')'));
 						//Restoring the already selected animator and Person Group	
 						$("#id_farmer_groups_targeted").val(pg_selected);			
-						initialize_add_screening();
 						hideStatus();
 					}
 			});
