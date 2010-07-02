@@ -51,7 +51,14 @@ public class ScreeningsTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Add it to the rootpanel
 		super.fill();
-		ScreeningsTemplate.loadPerson();
+		if(!this.getRequestContext().getArgs().get("action").equals("list")) {
+			String id ="0";
+			if(this.requestContext.getArgs().get("action").equals("edit")) {
+				Window.alert("In edit case after fill is called");
+				id = (String) this.requestContext.getArgs().get("id");
+			}
+			ScreeningsTemplate.loadPerson(Integer.parseInt(id));
+		}
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
@@ -96,9 +103,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 		return links;
 	}
 	
-	public static native void loadPerson() /*-{
-		$wnd.screening_page_offline.init();
-		
+	public static native void loadPerson(int id) /*-{
+			$wnd.screening_page_offline.init(id);
 	}-*/;
 	
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};
