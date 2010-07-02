@@ -100,12 +100,11 @@ init :function(id) {
 		
 	//var w  = window.location.href.split('/')
 	//var id = w[w.length-2]
-	
 	// Edit case
 	if(id > 0) {
 		// Edit Online case
+		is_edit = true;	
 		if (app_status == 1){						
-			is_edit = true;		
 			vil_id = $("#id_village").val()
 			var pg_selected = $("#id_farmer_groups_targeted").val() || [];
 		
@@ -448,6 +447,7 @@ function update_id_fields(row, new_position)
 
 //Function called on Person Group Selection
 function filter_person() {
+	if(!is_edit){
 	var grps = $("#id_farmer_groups_targeted").val() || [];
 	if( grps.length > 0) {
 		if(app_status == 0 ) {
@@ -556,6 +556,10 @@ function filter_person() {
 			});
 		}
 	}
+	}
+	else {
+		is_edit = false;
+	}
 }
 
 //below function is added by sreenivas to select persongroups based on village
@@ -566,24 +570,26 @@ function filter_persongroup()
 	if(vil_id > 0)
 	{
 		if(app_status == 0 ) {
-			showStatus("Loading persongroups..");	
-			var db = google.gears.factory.create('beta.database');
-			db.open('digitalgreen');
-			initialize_add_screening();
-			//alert('before sql execute');
-			var persongroups = db.execute("SELECT DISTINCT P.id, P.group_name FROM PERSON_GROUPS P where P.village_id ="+vil_id);	
-			var pg_options = '<option value="">---------- </option>';
-			while(persongroups.isValidRow()) {
-				pg_options = pg_options + '<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>'
-				//pg_options.push('<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>');
-				persongroups.next();
+			if(!is_edit)
+			{
+				showStatus("Loading persongroups..");	
+				var db = google.gears.factory.create('beta.database');
+				db.open('digitalgreen');
+				initialize_add_screening();
+				//alert('before sql execute');
+				var persongroups = db.execute("SELECT DISTINCT P.id, P.group_name FROM PERSON_GROUPS P where P.village_id ="+vil_id);	
+				var pg_options = '<option value="">---------- </option>';
+				while(persongroups.isValidRow()) {
+					pg_options = pg_options + '<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>'
+					//pg_options.push('<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>');
+					persongroups.next();
+				}
+				$("#id_farmer_groups_targeted").html(pg_options);
+				persongroups.close();
+				db.close();
+				hideStatus();
 			}
-			$("#id_farmer_groups_targeted").html(pg_options);
-			persongroups.close();
-			db.close();
-			hideStatus();
 		}
-		
 		//online case
 		else {
 			//Storing the already selected animator & Person Groups
