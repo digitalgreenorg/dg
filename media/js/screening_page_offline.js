@@ -72,7 +72,7 @@ function hideStatus() {
 }
 
 var screening_page_offline = {
-init :function() {
+init :function(id) {
 	$('body').append('<div id="box"></div><div id="screen"></div>');
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
@@ -98,8 +98,8 @@ init :function() {
 			db.close();
 	}
 		
-	var w  = window.location.href.split('/')
-	var id = w[w.length-2]
+	//var w  = window.location.href.split('/')
+	//var id = w[w.length-2]
 	
 	// Edit case
 	if(id > 0) {
