@@ -73,6 +73,7 @@ function hideStatus() {
 
 var screening_page_offline = {
 init :function(id) {
+	is_inited = false;
 	$('body').append('<div id="box"></div><div id="screen"></div>');
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
@@ -97,9 +98,7 @@ init :function(id) {
 			app_status = 1;
 			db.close();
 	}
-		
-	//var w  = window.location.href.split('/')
-	//var id = w[w.length-2]
+
 	// Edit case
 	if(id > 0) {
 		// Edit Online case
@@ -270,12 +269,8 @@ init :function(id) {
 			var table = $('div.inline-group div.tabular').find('table');						
 			table.append('<tbody></tbody>');
 		}
-		//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
 	}
-	//Commented .attr as it is not working in chrome
-	//$("#id_farmer_groups_targeted").attr('onchange', 'filter_person()');
-	//below line is added by sreenivas to select persongroups based on village
-	$("#id_village").change(function(){filter_persongroup()});
+
 	$("#id_farmer_groups_targeted").change(function(){filter_person()});
 	
 }
@@ -284,7 +279,6 @@ init :function(id) {
 
 //Function to clear section of Person-Meeting-Attendance
 function clear_table(tab) {
-
 	//IF village was not selected on load, means that there aren't presaved rows
 	if(!is_edit) {	
 		if(tab.find('tbody').length > 0)
@@ -307,10 +301,10 @@ function clear_table(tab) {
 
 //Function to perform some more initialized functions on load	
 function initialize_add_screening() {
-	/*if(is_inited)
+	if(is_inited)
 		return;
 	else
-		is_inited = true;*/
+		is_inited = true;
 	
 	tabu = $('div.inline-group div.tabular');
 	table = tabu.find('table');
@@ -445,7 +439,7 @@ function update_id_fields(row, new_position)
 
 //Function called on Person Group Selection
 function filter_person() {
-	if(!is_edit){
+	if(is_inited || !is_edit) {
 	var grps = $("#id_farmer_groups_targeted").val() || [];
 	if( grps.length > 0) {
 		if(app_status == 0 ) {
@@ -555,61 +549,6 @@ function filter_person() {
 		}
 	}
 	}
-	else {
-		is_edit = false;
-	}
+	
 }
 
-//below function is added by sreenivas to select persongroups based on village
-
-function filter_persongroup()
-{
-	var vil_id = $("#id_village").val();
-	if(vil_id > 0)
-	{
-		if(app_status == 0 ) {
-			if(!is_edit)
-			{
-				showStatus("Loading persongroups..");	
-				var db = google.gears.factory.create('beta.database');
-				db.open('digitalgreen');
-				var persongroups = db.execute("SELECT DISTINCT P.id, P.group_name FROM PERSON_GROUPS P where P.village_id ="+vil_id);	
-				var pg_options = '<option value="">---------- </option>';
-				while(persongroups.isValidRow()) {
-					pg_options = pg_options + '<option value="'+persongroups.field(0)+'">'+persongroups.field(1)+'</option>'
-					persongroups.next();
-				}
-				$("#id_farmer_groups_targeted").html(pg_options);
-				persongroups.close();
-				db.close();
-				hideStatus();
-			}
-		}
-		//online case
-		else {
-			//Storing the already selected animator & Person Groups
-			var pg_selected = $("#id_farmer_groups_targeted").val() || [];
-			$.ajax({ type: "GET", 
-					dataType: 'json',
-					url: "/feeds/person_pract/", 
-					data:{vil_id:vil_id,mode:2},
-					success: function(obj) {		
-						//updating farmer group list and Animator_list
-						update_farmer_groups(eval('('+obj.pg+')'));
-						//Restoring the already selected animator and Person Group	
-						$("#id_farmer_groups_targeted").val(pg_selected);			
-						hideStatus();
-					}
-			});
-		}		
-	}
-}
-
-//Function to Update Farmer Group in Widget in online case
-function update_farmer_groups(j){
-	var options = '<option value="">---------- </option>';
-    for (var i = 0; i < j.length; i++) 
-		options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['group_name'] + '</option>';
-	$("#id_farmer_groups_targeted").html(options);
-    
-}
