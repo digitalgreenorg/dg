@@ -22,7 +22,7 @@
 				<div id='divstattitle'>
 					<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
 						<tr>
-							<td class='divtitletablename'> <div id='divstattitlename'>National Statistics</div> </td>
+							<td class='divtitletablename'> <div id='divstattitlename'>Key Statistics</div> </td>
 							<td class='divtitletableimg'>  </td>
 						</tr>
 					</table>								
@@ -31,82 +31,58 @@
 					<tr>
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Farmer Groups / Villages	</div>
+								<div class='statdescname'>	Farmer Groups attending Disseminations</div>
 								<div id='statdescimg'> 	
 									<div id='statdescimg1'>	
-										The total number of farmer groups and villages in a chosen geography						
+										The total number of group of farmers, who have attended a screening.						
 									</div>								
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.tot_pg}} / {{country_data.tot_vil}}	</div>
+								<div class='statdesnumber'>	{{country_data.tot_pg}} 	</div>
 							</div>																				
 						</td>
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Videos Produced	</div>
+								<div class='statdescname'>	Interest Expressed per Dissemination </div>
 								<div id='statdescimg'> 
 									<div id='statdescimg1'>	
-										The total number of videos produced in a given location						
+										Average number of attendees who expressed interest in the shown Video					
 									</div>								
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.tot_vid}}	</div>
+								<div class='statdesnumber'>	{{country_data.avg_int|floatformat:2|default:"0"}}	</div>
 							</div>													
 						</td>
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Disseminations	</div>
+								<div class='statdescname'>	Average Attendance per Dissemination </div>
 								<div id='statdescimg'>
 									<div id='statdescimg1'>	
-										The total number of videos that have been screened						
+										Average number of persons who attended a dissemination of Video.						
 									</div>									 									
 								</div>																
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.tot_scr}}	</div>
+								<div class='statdesnumber'>	{{country_data.avg_att|floatformat:2}}</div>
 							</div>																			
 						</td>
 						
-						<td class='table1statdesc'>
-							<div class='statdesc'>
-								<div class='statdescname'>	Adoptions	</div>
-								<div id='statdescimg'> 	
-									<div id='statdescimg1'>	
-										Total number of farmers following or taking up practice as shown in DG video						
-									</div>									
-								</div>
-							</div>
-							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.tot_ado}}	</div>
-							</div>													
-						</td>
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Agricultural Practices	</div>
-								<div id='statdescimg'> 	
-									<div id='statdescimg1'>	
-										The total number of agricultural practices followed						
-									</div>
-								</div>
+								<div class='statdescname'>	Villages with disseminations in past 2 months </div>
+								<div id='statdescimg'>  
+                                    <div id='statdescimg1'> 
+                                        Total number of Villages that had atleast one dissemination in the past 2 months from {{search_box_params.to_date}}                     
+                                    </div>
+                                </div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.tot_pra}}	</div>
-							</div>													
-						</td>
-						
-						<td class='table1statdesc'>
-							<div class='statdesc'>
-								<div class='statdescname'>	<br/>	</div>
-								
-								</div>
-							</div>
-							<div class='statnumber'>
-								<div class='statdesnumber'>	<br/> </div>
+								<div class='statdesnumber'>	{{country_data.vil_oper}} </div>
 							</div>													
 						</td>
 					</tr>
@@ -121,33 +97,34 @@
 							<tr>					    
 								<th class='table2statdesc1'>
 									<div id='table2tddiv0'>
-										<div id='table2tdhead'>	{{geography|title}}	</div>
+										<div id='table2tdhead'>	{{header_geog|title}}	</div>
 										<div id='table2tddiv1'>    </div>
 									</div>					
 								</th>
 								<th class='table2statdesc1'>
+                                    <div id='table2tddiv'> Farmers  </div>
+                                    <div id='table2tddiv1'>    </div>
+                                </th>
+								<th class='table2statdesc1'>
+                                    <div id='table2tddiv'> Villages  </div>
+                                    <div id='table2tddiv1'>    </div>                                   
+                                </th>
+								<th class='table2statdesc1'>
 									<div id='table2tddiv'> Videos Produced   </div>
 									<div id='table2tddiv1'>    </div>									
 								</th>
-						
 								<th class='table2statdesc1'>
 						    		<div id='table2tddiv'> Disseminations    </div>
 						    		<div id='table2tddiv1'>    </div>													
 								</th>
-						
 								<th class='table2statdesc1'>
 						    		<div id='table2tddiv'> Farmer Adoptions	</div>
 						    		<div id='table2tddiv1'>    </div>														
 								</th>
-						
 								<th class='table2statdesc1'>
 									<div id='table2tddiv'> Agricultural Practices  </div>
 									<div id='table2tddiv1'>    </div>									
 								</th>
-								<th class='table2statdesc11'>
-									<div id='table2tddiv'> Farmers 	</div>
-									<div id='table2tddiv1'>    </div>
-								</th>					
 							</tr>				 
 				 		</thead>
 				 		<tbody>
@@ -165,6 +142,12 @@
 										{{ item.name }}
 									{% endifnotequal  %}
 								</td>
+								<td class='table2statdesc2'>
+                                    {{ item.tot_per }} 
+                                </td>
+								<td class='table2statdesc2'>
+                                    {{ item.tot_vil }}
+                                </td>
 								<td class='table2statdesc2'> 
 										{% ifnotequal item.geog None %}
 											<a href='/analytics/video_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
@@ -187,9 +170,6 @@
 								<td class='table2statdesc2'>
 									{{ item.tot_pra }}
 								</td>
-								<td class='table2statdesc21'>
-									{{ item.tot_per }} 
-								</td>																
 						 	</tr>				 					 	
 				 			{% endfor %}
 				 		</tbody>		 							
@@ -206,6 +186,12 @@
 							{% endif %}
 					       	        
 					    </td>
+						<td class='table2statdesc2'>
+                            {{ par_geog_data.tot_per }} 
+                        </td>
+						<td class='table2statdesc2'>
+                            {{ par_geog_data.tot_vil }} 
+                        </td> 
 					    <td class='table2statdesc2'>
 					    	{% if par_geog_data.geog %}
 					    		<a href='/analytics/video_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
@@ -228,13 +214,9 @@
 						    {{ par_geog_data.tot_ado }} 
 					    </td>
 					    
-					    <td class='table2statdesc2'>
+					    <td class='table2statdesc21'>
 					        {{ par_geog_data.tot_pra }} 
 					    </td>
-					    
-					    <td class='table2statdesc21'>
-					        {{ par_geog_data.tot_per }} 
-					    </td>										
 		            </tr>
 			    </table>
 		</div>

@@ -1,11 +1,16 @@
 from dg.output.database.utility import *
 
 #Query for extra data for country in Overview page
-def overview_nation_pg_vil_total():
-    return """SELECT * FROM
-          (SELECT COUNT(*) AS tot_vil FROM VILLAGE) t1,
-          (SELECT COUNT(*) AS tot_pg FROM PERSON_GROUPS) t2"""
-#Type is an list which can have 'production', 'screening','person', 'adoption', 'practice'
+def overview_tot_pg(geog, id, from_date, to_date, partners):
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append("COUNT(DISTINCT persongroups_id) AS tot_pg")
+    sql_ds['from'].append("SCREENING_farmer_groups_targeted SFGT")
+    sql_ds['join'].append(["SCREENING SC","SC.id = SFGT.screening_id"])
+    filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners);
+    
+    return join_sql_ds(sql_ds)
+          
+#Type is an list which can have 'production', 'screening','person', 'adoption', 'practice', 'village'
 def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
     geog_list = [None,"COUNTRY","STATE","DISTRICT","BLOCK","VILLAGE"]
     geog_par = geog_list[geog_list.index(geog)-1]
@@ -15,6 +20,12 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
     sc_sql['from'].append("SCREENING SC");
     filter_partner_geog_date(sc_sql,"SC","SC.DATE",geog,id,from_date,to_date,partner_id);
 
+    #Total villages which have had screening in given time period.
+    vil_sql = get_init_sql_ds()
+    vil_sql['select'].append("COUNT(DISTINCT village_id) as tot_vil");
+    vil_sql['from'].append("SCREENING SC");
+    filter_partner_geog_date(vil_sql,"SC","SC.DATE",geog,id,from_date,to_date,partner_id);
+    
     vid_sql = get_init_sql_ds()
     vid_sql['select'].append("COUNT(VID.id) as tot_vid");
     vid_sql['from'].append("VIDEO VID");
@@ -33,10 +44,8 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
     filter_partner_geog_date(pra_sql,"VID","VIDEO_PRODUCTION_END_DATE",geog,id,from_date,to_date,partner_id);
 
     per_sql = get_init_sql_ds()
-    per_sql['select'].append('COUNT(DISTINCT P.id) as tot_per')
-    per_sql['from'].append('PERSON P')
-    if(from_date is not None and to_date is not None):
-        per_sql['join'].append(["""(
+    per_sql['select'].append('COUNT(DISTINCT TAB.person_id) as tot_per')
+    per_sql['from'].append("""(
         SELECT person_id, min(date) as DATE
         FROM (
             SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
@@ -45,18 +54,12 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
 
             UNION
 
-            SELECT  person_id , DATE_OF_ADOPTION AS date
-            FROM PERSON_ADOPT_PRACTICE pa
-
-            UNION
-
             SELECT  pa.person_id, DATE
             FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
             WHERE pa.screening_id = sc.id ) TMP
             GROUP BY person_id
-        )AS TAB""", "TAB.person_id = P.id"])
-        date_field = "TAB.DATE"
-
+        )AS TAB""")
+    per_sql['join'].append(['PERSON P', "TAB.person_id = P.id"])
     filter_partner_geog_date(per_sql,"P","TAB.DATE",geog,id,from_date,to_date,partner_id);
 
     if(type):
@@ -71,17 +74,19 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
             combined_sql.append(join_sql_ds(per_sql))
         if('practice' in type):
             combined_sql.append(join_sql_ds(pra_sql))
+        if('village' in type):
+            combined_sql.append(join_sql_ds(vil_sql))
     else:
-        combined_sql =  [join_sql_ds(sc_sql), join_sql_ds(vid_sql), join_sql_ds(ado_sql), join_sql_ds(pra_sql), join_sql_ds(per_sql)]
+        combined_sql =  [join_sql_ds(sc_sql), join_sql_ds(vid_sql), join_sql_ds(ado_sql), join_sql_ds(pra_sql), join_sql_ds(per_sql), join_sql_ds(vil_sql)]
     
-    
-    combined_sql = ['('+combined_sql[i]+') t'+str(i) for i in range(0,len(combined_sql))]
+    arr_len = len(combined_sql);
+    combined_sql = ['('+combined_sql[i]+') t'+str(i) for i in range(0,arr_len)]
     if(geog=='COUNTRY'):
-        combined_sql.append("(SELECT 'India' as name) t5")
+        combined_sql.append("(SELECT 'India' as name) t"+str(arr_len))
     elif(geog=='STATE'):
-        combined_sql.append("(SELECT " + geog + "_NAME as name, 1 as id FROM " + geog + " WHERE id = " +str(id) + ") t5")
+        combined_sql.append("(SELECT " + geog + "_NAME as name, 1 as id FROM " + geog + " WHERE id = " +str(id) + ") t"+str(arr_len))
     else:
-        combined_sql.append("(SELECT " + geog + "_NAME as name, "+geog_par.lower()+"_id as id FROM " + geog + " WHERE id = " +str(id) + ") t5")
+        combined_sql.append("(SELECT " + geog + "_NAME as name, "+geog_par.lower()+"_id as id FROM " + geog + " WHERE id = " +str(id) + ") t"+str(arr_len))
     combined_sql = ',\n'.join(combined_sql)
 
     return 'SELECT * FROM ( '+combined_sql+')'

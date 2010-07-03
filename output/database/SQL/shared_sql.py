@@ -81,8 +81,8 @@ def child_geog_list(request, geog, id):
 
     return sql;
 
-
-#Parameter Required:'type' can be (production/screening/adoption/practice/person)
+#Query for the table in overview module and pie graphs.
+#Parameter Required:'type' can be (production/screening/adoption/practice/person/village)
 def overview(request, geog,id, type):
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     from_date, to_date, partners = get_dates_partners(request)
@@ -108,6 +108,11 @@ def overview(request, geog,id, type):
         sql_ds['from'].append('SCREENING SC')
         main_tab_abb = "SC"
         date_field = "SC.DATE"
+    elif(type=='village'):
+        sql_ds['select'].append('COUNT(DISTINCT SC.village_id) as tot_vil')
+        sql_ds['from'].append('SCREENING SC')
+        main_tab_abb = "SC"
+        date_field = "SC.DATE"
     elif(type=='adoption'):
         sql_ds['select'].append('COUNT(DISTINCT PAP.id) as tot_ado')
         sql_ds['from'].append('PERSON_ADOPT_PRACTICE PAP')
@@ -121,32 +126,24 @@ def overview(request, geog,id, type):
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
     elif(type=='person'):
-        sql_ds['select'].append('COUNT(DISTINCT P.id) as tot_per')
-        sql_ds['from'].append('PERSON P')
+        sql_ds['select'].append('COUNT(DISTINCT TAB.person_id) as tot_per')
+        sql_ds['from'].append("""(
+        SELECT person_id, min(date) as DATE
+        FROM (
+                SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
+                FROM VIDEO_farmers_shown vs, VIDEO vid
+                WHERE vs.video_id = vid.id
+
+                UNION
+
+                SELECT  pa.person_id, DATE
+                FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
+                WHERE pa.screening_id = sc.id ) TMP
+                GROUP BY person_id
+        )AS TAB""")
+        sql_ds['join'].append(['PERSON P',"TAB.person_id = P.id"])
         main_tab_abb = 'P'
-        if(from_date is not None and to_date is not None):
-            sql_ds['join'].append(["""(
-            SELECT person_id, min(date) as DATE
-            FROM (
-                    SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
-                    FROM VIDEO_farmers_shown vs, VIDEO vid
-                    WHERE vs.video_id = vid.id
-
-                    UNION
-
-                    SELECT  person_id , DATE_OF_ADOPTION AS date
-                    FROM PERSON_ADOPT_PRACTICE pa
-
-                    UNION
-
-                    SELECT  pa.person_id, DATE
-                    FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
-                    WHERE pa.screening_id = sc.id ) TMP
-                    GROUP BY person_id
-            )AS TAB""", "TAB.person_id = P.id"])
-            date_field = "TAB.DATE"
-
-
+        date_field = "TAB.DATE"
     if(geog=="COUNTRY"):
         #Hacking attach_geog_date for attaching geography till state in country case.
         attach_geog_date(sql_ds,main_tab_abb,date_field,'STATE',0, from_date,to_date)
@@ -193,11 +190,6 @@ def overview_line_chart(request,geog,id,type):
 
                 UNION
 
-                SELECT  person_id , DATE_OF_ADOPTION AS date
-                FROM PERSON_ADOPT_PRACTICE pa
-
-                UNION
-
                 SELECT  pa.person_id, DATE
                 FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
                 WHERE pa.screening_id = sc.id
@@ -227,6 +219,13 @@ def overview_line_chart(request,geog,id,type):
             sql_ds['join'].append(["PERSON P","P.id = PAP.person_id"])
             filter_partner_geog_date(sql_ds,'P','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("DATE_OF_ADOPTION");
+    elif(type=='village'):
+        if(geog not in ["COUNTRY", "STATE", "DISTRICT"]):
+            return ""
+        sql_ds['select'].extend(["DISTINCT DATE as date, village_id"])
+        sql_ds['from'].append("SCREENING SC")
+        filter_partner_geog_date(sql_ds,'SC','dummy',geog,id,None,None,partners)
+        
 
     if(from_date is not None and to_date is not None):
         sql_ds['having'].append("date between '"+from_date+"' and '"+to_date+"'")

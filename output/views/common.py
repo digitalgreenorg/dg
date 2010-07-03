@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 from dg.output.database  import utility
 from dg.output.database.SQL import shared_sql
-from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, construct_query
+from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query
 import datetime
 import django
 import re, random, cjson
@@ -124,10 +124,9 @@ def drop_down_val(request):
 
 
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
-#Takes 'type' GET param which can be 'prod','screen','prac','person','adopt'
+#type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
 #       Based on the 'type', it generates the data for that set only
 #       If 'type' is not specified, it generates for all.
-#type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
 def overview_line_graph(request):
     geog, id = get_geog_id(request)
     id = int(id)
@@ -160,6 +159,11 @@ def overview_line_graph(request):
         person_rs = run_query_dict(shared_sql.overview_line_chart(type='person',geog=geog,id=id, request=request),'date');
     else:
         person_rs = []
+    
+    if('village' in type):
+        village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id, request=request));
+    else:
+        village_rs = []
 
     if('prod_tar' in type):
         prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, request=request),'date')
@@ -194,6 +198,44 @@ def overview_line_graph(request):
         start_date = min(start_date,*(adopt_tar_rs.keys()))
     if prod_tar_rs:
         start_date = min(start_date,*(prod_tar_rs.keys()))
+        
+    
+   ###Calculating village operational on each day.
+    
+    #village_rs -> temp. temp is a dictionary of date vs list of village IDS
+    temp = {}
+    for i in village_rs:
+        if i[0] in temp:
+            temp[i[0]].append(i[1])
+        else:
+            temp[i[0]] = [i[1]]
+          
+   #vil_vals is cumulatively added list of villages for every date.
+   #i.e. vil_vals is a dictionary of date to list of villages that had screening on any date before that.  
+    vil_vals = {}
+    min_date = start_date;
+    max_date = today
+    if(min_date in temp):
+    	vil_vals[min_date] = temp[min_date]
+    else:
+    	vil_vals[min_date] = []
+    min_date = min_date + datetime.timedelta(days=1)
+    while min_date <= max_date:
+    	vil_vals[min_date] = vil_vals[min_date - datetime.timedelta(days=1)][:]
+    	if min_date in temp:
+    		vil_vals[min_date].extend(temp[min_date])
+    	min_date = min_date + datetime.timedelta(days=1)
+    	
+    min_date =  start_date + datetime.timedelta(days=61)
+    
+    while min_date <= max_date:
+    	vil_vals[max_date] = len(set(vil_vals[max_date][len(vil_vals[(max_date - datetime.timedelta(days=61))]):]))
+    	max_date = max_date - datetime.timedelta(days=1)	
+    while start_date <= max_date:
+    	vil_vals[max_date]  = len(set(vil_vals[max_date]))
+    	max_date = max_date - datetime.timedelta(days=1)
+		
+    #End of Village Operational calculation
 
     diff = (today - start_date).days
 
@@ -226,13 +268,15 @@ def overview_line_graph(request):
         if('prac' in type): append_str +=  str(sum_prac)+';'
         if('person' in type): append_str += str(sum_person)+';'
         if(geog in ["COUNTRY","STATE","DISTRICT"]):
-            if('prod_tar' in type): append_str += str(sum_vid_tar)+';'
-            if('screen_tar' in type): append_str += str(sum_sc_tar)+';'
-            if('adopt_tar' in type): append_str += str(sum_adopt_tar)+';'
+        	if('village' in type): append_str += str(vil_vals[iter_date])+';'
+        	if('prod_tar' in type): append_str += str(sum_vid_tar)+';'
+        	if('screen_tar' in type): append_str += str(sum_sc_tar)+';'
+        	if('adopt_tar' in type): append_str += str(sum_adopt_tar)+';'
 
 
         str_list.append(append_str[:-1])
 
+	#If no data, changing the values so that Flash Charts show proper Errro Msg
     if(len(str_list)==1):
         m = re.search("^\d\d\d\d-\d\d-\d\d((;0)*)$",str_list[0]);
         if(m!=None): data = re.sub(r'0','',m.group(1));
@@ -258,6 +302,9 @@ def overview_line_graph(request):
         settings.append("<graph gid='"+str(i)+"'><title>Total Farmers</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
         i= i+1
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
+    	if('village' in type):
+			settings.append("<graph gid='"+str(i)+"'><title>Operational Villages</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
+			i= i+1
         if('prod_tar' in type):
             settings.append("<graph gid='"+str(i)+"'><title>Video Production Target</title><hidden>true</hidden><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
             i= i+1

@@ -13,7 +13,7 @@
 .statdesc							{ float:none; width:98%; margin-left:2px; margin-top:2px; height:20px; background-color:White; }
 .statdescname						{ float:left; width:88%; height:20px; margin-top:1px; margin-left:0px; padding-top:2px; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; text-align:center; }
 #statdescimg						{ float:left; width:12%; height:20px; margin-top:3px; text-align:center; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
-#statdescimg1						{ position:absolute; z-index:900; padding:10px; max-height:30px; min-width:200px; margin-top:-40px; margin-left:-150px; text-align:center; background-color:#f2f8d8;  font-size:0.8em; font-family:Calibri; font-weight:normal; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
+#statdescimg1						{ position:absolute; z-index:900; padding:10px; max-height:40px; min-width:200px; margin-top:-40px; margin-left:-150px; text-align:center; background-color:#f2f8d8;  font-size:0.8em; font-family:Calibri; font-weight:normal; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
 .statnumber							{ float:none; width:98%; padding-top:8px;  margin-left:2px; margin-top:0px; margin-bottom:2px; background-color:White;  }
 .statdesnumber						{ margin-left:2px; font-size:1.8em; font-family:Calibri; font-weight:bold; color:#b5b5b5; text-align:center }
 
@@ -22,12 +22,12 @@
 /* content table for displaying number statistics in table */
 #contenttable						{ margin-top:5px; width:100%; }
 #table2								{ width:99%; margin-bottom:5px; border-width:1px; border-style:solid; border-color:#59af04; background-color:#e8f7ba; }
-.table2statdesc1					{ width:15%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#59af04;}
-.table2statdesc11					{ width:15%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green;}
-.table2statdesc2					{ width:15%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
+.table2statdesc1					{ width:13%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#59af04;}
+.table2statdesc11					{ width:13%; padding-left:5px; z-index:500; font-size:0.85em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green;}
+.table2statdesc2					{ width:13%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; border-right-width:1px; border-right-style:solid; border-right-color:#59af04; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
 .table2statdesc2 a					{ color:#5b6e1d; font-weight:normal; text-decoration:none}
 .table2statdesc2 a:hover			{ color:Black; font-weight:normal; text-decoration:underline}
-.table2statdesc21					{ width:15%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
+.table2statdesc21					{ width:13%; padding-left:5px; z-index:500; font-size:1em; font-family:Calibri; font-weight:normal; color:#5b6e1d; text-align:center; height:30px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:Green; background-color:#f3fdd5}
 #table2tddiv						{ float:left; width:90%; margin-top:0px; padding-top:6px; cursor:pointer; }
 
 /* for sorting table2 styles for all sorting order(ascending, descending and none) */

@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 import datetime
-from dg.output.database.SQL  import overview_analytics_sql, shared_sql
+from dg.output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, screening_analytics_sql
 from dg.output import views
 from dg.output.views.common import get_geog_id
 from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
@@ -24,6 +24,7 @@ def overview_module(request):
     adoption = run_query_dict(shared_sql.overview(type='adoption',geog=geog,id=id,request=request),'id');
     tot_prac = run_query_dict(shared_sql.overview(type='practice',geog=geog,id=id,request=request),'id');
     tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,request=request),'id');
+    tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,request=request),'id');
 
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
     table_data = run_query(shared_sql.child_geog_list(request, geog, id))
@@ -52,6 +53,11 @@ def overview_module(request):
             i['tot_per'] = tot_per[i['id']][0]
         else:
             i['tot_per'] = 0
+            
+        if i['id'] in tot_vil:
+            i['tot_vil'] = tot_vil[i['id']][0]
+        else:
+            i['tot_vil'] = 0
 
         i['geog'] =  geog_child
 
@@ -61,9 +67,20 @@ def overview_module(request):
     par_geog_data['geog'] = geog_par
 
 
-#country data is the top-data
-    country_data = run_query(overview_analytics_sql.overview_sum_geog('COUNTRY', 1, None, None, None))[0]
-    country_data.update(run_query(overview_analytics_sql.overview_nation_pg_vil_total())[0])
+#country data is the top-data    
+    country_data = dict(avg_int = run_query(targets_sql.get_interest_per_dissemination(geog, id, from_date, to_date, partners))[0]['count'])
+    country_data.update(run_query(overview_analytics_sql.overview_tot_pg(geog, id, from_date, to_date, partners))[0])
+    
+    if(to_date):
+        date_var = to_date
+    else:
+        date_var = str(datetime.date.today())
+    country_data.update(vil_oper = run_query(targets_sql.get_village_operational(geog, id, date_var, partners))[0]['count'])
+    tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners))[0];
+    if(tot_val['tot_scr']):
+        country_data.update(avg_att = float(tot_val['tot_per'])/tot_val['tot_scr'])
+    else:
+        country_data.update(avg_att = 0)
 
 #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any
     search_box_params = views.common.get_search_box(request, overview_analytics_sql.overview_min_date)
@@ -72,10 +89,15 @@ def overview_module(request):
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
     if(get_req_url): get_req_url = '&'+get_req_url
 
+    if(geog_child):
+        header_geog = geog_child
+    else:
+        header_geog = "Village"
 
     return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
                                                                                                        country_data = country_data, \
                                                                                                        table_data = table_data, \
                                                                                                        par_geog_data = par_geog_data, \
-                                                                                                       get_req_url = get_req_url \
+                                                                                                       get_req_url = get_req_url, \
+                                                                                                       header_geog = header_geog \
                                                                                                        ))
