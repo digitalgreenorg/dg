@@ -68,7 +68,7 @@ def video_tot_video(request, geog, id):
 
     return join_sql_ds(sql_ds)
 
-# Query constructor for generating total screenings.
+# Query constructor for generating total distinct videos screened.
 #arguments (geod, id) and (from_date, to_date) optional
 def video_tot_scr(request, geog, id):
     from_date, to_date, partners = get_dates_partners(request)

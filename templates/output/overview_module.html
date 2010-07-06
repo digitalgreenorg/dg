@@ -42,27 +42,52 @@
 								<div class='statdesnumber'>	{{country_data.tot_pg}} 	</div>
 							</div>																				
 						</td>
-						
+						<td class='table1statdesc'>
+                            <div class='statdesc'>
+                                <div class='statdescname'> Number of videos shown </div>
+                                <div id='statdescimg'> 
+                                    <div id='statdescimg1'> 
+                                        Total number of videos that were shown in any dissemination
+                                    </div>                              
+                                </div>
+                            </div>
+                            <div class='statnumber'>
+                                <div class='statdesnumber'> {{country_data.vid_screened}}   </div>
+                            </div>                                                  
+                        </td>
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Interest Expressed per Dissemination </div>
+								<div class='statdescname'>	Adoption Rate </div>
 								<div id='statdescimg'> 
 									<div id='statdescimg1'>	
-										Average number of attendees who expressed interest in the shown Video					
+										Number of persons who adopted any practice divided by number of persons who have watched videos.
 									</div>								
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>	{{country_data.avg_int|floatformat:2|default:"0"}}	</div>
+								<div class='statdesnumber'>	{{country_data.adopt_rate|floatformat:2|default:"0"}} %	</div>
 							</div>													
 						</td>
+						<td class='table1statdesc'>
+                            <div class='statdesc'>
+                                <div class='statdescname'>  Average Disseminations per day </div>
+                                <div id='statdescimg'>
+                                    <div id='statdescimg1'> 
+                                        Average number of disseminations taking place in a day.                        
+                                    </div>                                                                      
+                                </div>                                                              
+                            </div>
+                            <div class='statnumber'>
+                                <div class='statdesnumber'> {{country_data.avg_scr|floatformat:2}}</div>
+                            </div>                                                                          
+                        </td>
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
 								<div class='statdescname'>	Average Attendance per Dissemination </div>
 								<div id='statdescimg'>
 									<div id='statdescimg1'>	
-										Average number of persons who attended a dissemination of Video.						
+										Average number of persons who attended a dissemination session.						
 									</div>									 									
 								</div>																
 							</div>
@@ -74,7 +99,7 @@
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Villages with disseminations in past 2 months </div>
+								<div class='statdescname'>	Villages with recent disseminations </div>
 								<div id='statdescimg'>  
                                     <div id='statdescimg1'> 
                                         Total number of Villages that had atleast one dissemination in the past 2 months from {{search_box_params.to_date}}                     

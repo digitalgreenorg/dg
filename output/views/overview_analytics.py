@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 import datetime
-from dg.output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, screening_analytics_sql
+from dg.output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, video_analytics_sql, screening_analytics_sql
 from dg.output import views
 from dg.output.views.common import get_geog_id
 from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
@@ -68,19 +68,30 @@ def overview_module(request):
 
 
 #country data is the top-data    
-    country_data = dict(avg_int = run_query(targets_sql.get_interest_per_dissemination(geog, id, from_date, to_date, partners))[0]['count'])
+    country_data = {}
+    #Total Person Group
     country_data.update(run_query(overview_analytics_sql.overview_tot_pg(geog, id, from_date, to_date, partners))[0])
     
     if(to_date):
         date_var = to_date
     else:
         date_var = str(datetime.date.today())
+    #Operational Village (Last 60 days)
     country_data.update(vil_oper = run_query(targets_sql.get_village_operational(geog, id, date_var, partners))[0]['count'])
     tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners))[0];
     if(tot_val['tot_scr']):
+        #Average attendance 
+        #Average Screening
         country_data.update(avg_att = float(tot_val['tot_per'])/tot_val['tot_scr'])
+        country_data.update(avg_scr = float(tot_val['tot_scr'])/tot_val['tot_days'])
     else:
         country_data.update(avg_att = 0)
+        country_data.update(avg_scr_per_day = 0)
+    #Adoption Rate    
+    country_data.update(adopt_rate = float(run_query(shared_sql.tot_dist_adopt_60_days(geog,id, date_var, partners))[0]['tot_adop_per'])*100/float(run_query(shared_sql.tot_dist_attendees_60_days(geog, id, date_var, partners))[0]['tot_per']))
+    #Distinct videos screened
+    country_data.update(vid_screened = run_query(video_analytics_sql.video_tot_scr(request,geog=geog,id=id))[0]['count'])
+    
 
 #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any
     search_box_params = views.common.get_search_box(request, overview_analytics_sql.overview_min_date)
