@@ -474,7 +474,7 @@ class Target(models.Model):
     district = models.ForeignKey(District)
     month_year = models.DateField("Month & Year")
 
-    clusters_identification = models.IntegerField(null=True, blank=True)
+    clusters_identification = models.IntegerField("Villages Identification", null=True, blank=True)
     dg_concept_sharing = models.IntegerField("DG Concept Sharing", null=True, blank=True)
     csp_identification = models.IntegerField("CSP Identified", null=True, blank=True)
     dissemination_set_deployment = models.IntegerField(null=True, blank=True)
