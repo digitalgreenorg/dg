@@ -195,7 +195,7 @@ public class EquipmentsData extends BaseData {
 												"FOREIGN KEY(equipmentholder_id) REFERENCES equipment_holder(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_id`;";
 	protected static String selectEquipments = "SELECT id, EQUIPMENT_TYPE FROM equipment_id  ORDER BY (EQUIPMENT_TYPE);";
-	protected static String listEquipments = "SELECT * FROM equipment_id ORDER BY (-id);";
+	protected static String listEquipments = "SELECT * FROM equipment_id ORDER BY (-id)";
 	protected static String saveEquipmentOfflineURL = "/dashboard/saveequipmentoffline/";
 	protected static String saveEquipmentOnlineURL = "/dashboard/saveequipmentonline/";
 	protected static String getEquipmentOnlineURL = "/dashboard/getequipmentsonline/";
@@ -288,11 +288,20 @@ public class EquipmentsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getEquipmentsListingOffline(){
+	public List getEquipmentsListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		EquipmentHoldersData equipmentholder = new EquipmentHoldersData();
 		List equipments = new ArrayList();
-		this.select(listEquipments);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listEquipments;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listEquipments + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				EquipmentHoldersData.Data e = equipmentholder.new Data(this.getResultSet().getFieldAsString(7));
@@ -362,9 +371,11 @@ public class EquipmentsData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL + Integer.toString(offset)+ "/"+ Integer.toString(limit));
 		}
 		else{
 			return true;

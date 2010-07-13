@@ -597,11 +597,19 @@ public class VideosData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getVideosListingOffline(){
+	public List getVideosListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List videos = new ArrayList();
 		VillagesData village = new VillagesData();
-		this.select(listVideos);
+		String listTemp;
+		if(pageNum.length == 0) {
+			listTemp = listVideos;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listVideos + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -667,9 +675,11 @@ public class VideosData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + VideosData.getVideoOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + VideosData.getVideoOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		}
 		else{
 			return true;

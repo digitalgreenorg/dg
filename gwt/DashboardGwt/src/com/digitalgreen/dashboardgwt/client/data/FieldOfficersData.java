@@ -272,10 +272,19 @@ public class FieldOfficersData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
-	public List getFieldOfficersListingOffline(){
+	public List getFieldOfficersListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List fieldOfficers = new ArrayList();
-		this.select(listFieldOfficers);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listFieldOfficers;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listFieldOfficers + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
@@ -346,9 +355,11 @@ public class FieldOfficersData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersOnlineURL + Integer.toString(offset)+"/"+Integer.toString(limit));
 		}
 		else{
 			return true;

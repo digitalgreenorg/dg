@@ -176,6 +176,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("aa-1", "<a  href='#dashboard/animatorassignedvillage/'>Animator assigned villages</a>", "dashboard/animatorassignedvillage", new AnimatorAssignedVillages(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -183,6 +184,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("a-1", "<a href='#dashboard/animator/'>Animators</a>", "dashboard/animator", new Animators(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -190,6 +192,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("b-1", "<a href='#dashboard/block/'>Blocks</a>", "dashboard/block", new Blocks(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -197,6 +200,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("d-1", "<a href='#dashboard/developmentmanager/'>Development managers</a>", "dashboard/developmentmanager", new DevelopmentManagers(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -204,6 +208,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("di-1", "<a href='#dashboard/district/'>Districts</a>", "dashboard/district", new Districts(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -211,6 +216,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("e-1", "<a href='#dashboard/equipment/'>Equipments</a>", "dashboard/equipment", new Equipments(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -218,6 +224,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("f-1", "<a href='#dashboard/fieldofficer/'>Field officers</a>", "dashboard/fieldofficer", new FieldOfficers(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -225,6 +232,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("l-1", "<a href='#dashboard/language/'>Languages</a>", "dashboard/language", new Languages(requestContext));
 		requestContext = new RequestContext();	
 		requestContext.getArgs().put("action", "add");
@@ -232,6 +240,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("p-1", "<a href='#dashboard/partners/'>Partners</a>", "dashboard/partners", new Partners(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -239,6 +248,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("pg-1","<a href='#dashboard/persongroups/'>Person groups</a>", "dashboard/persongroups", new PersonGroups(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -246,6 +256,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("pe-1", "<a href='#dashboard/person/'>Persons</a>", "dashboard/person", new Persons(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -253,6 +264,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 	
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("pr-1", "<a href='#dashboard/practices/'>Practices</a>", "dashboard/practices", new Practices(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -260,6 +272,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("r-1", "<a href='#dashboard/region/'>Regions</a>", "dashboard/region", new Regions(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -267,12 +280,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("s-1", "<a href='#dashboard/screening/'>Screenings</a>", "dashboard/screening", new Screenings(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("s-2", "<a href='#dashboard/screening/add' class='addlink'>Add</a>", "dashboard/screening/add", new Screenings(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("st-1", "<a id='st-1' href='#dashboard/state/'>States</a>", "dashboard/state", new States(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -280,6 +295,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("t-1", "<a href='#dashboard/training/'>Trainings</a>", "dashboard/training", new Trainings(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -287,6 +303,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("v-1", "<a href='#dashboard/video/'>Videos</a>", "dashboard/video", new Videos(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -294,6 +311,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("vi-1", "<a href='#dashboard/village/'>Villages</a>", "dashboard/village", new Villages(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");

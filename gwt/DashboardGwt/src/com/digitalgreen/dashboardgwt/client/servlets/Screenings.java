@@ -38,6 +38,7 @@ public class Screenings extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Screenings successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Screenings(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Screenings extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Screenings successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Screenings(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,12 +85,15 @@ public class Screenings extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								ScreeningsData screeningsData = new ScreeningsData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List screenings = screeningsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", screenings);
 								}
@@ -114,7 +119,10 @@ public class Screenings extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								ScreeningsData screeningsData = new ScreeningsData();
-								List screenings = screeningsData.getScreeningsListingOffline();
+								String totalRows = screeningsData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List screenings = screeningsData.getScreeningsListingOffline(pageNum);
 								requestContext.getArgs().put("listing", screenings);
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class Screenings extends BaseServlet {
 							}	
 						}
 					});
-					screeningsData.apply(screeningsData.getListPageData());
+					screeningsData.apply(screeningsData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

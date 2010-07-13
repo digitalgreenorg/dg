@@ -10,12 +10,12 @@ import com.digitalgreen.dashboardgwt.client.templates.Template;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
-public class BaseServlet implements ServletInterface {
+public class BaseServlet implements ServletInterface{
 	
 	protected RequestContext requestContext = null;	
 	protected HashMap form = null;
 	private static boolean isLoggedInCtx = false;
-
+	
 	// Slightly breaks abstraction since the RequestContext should be 
 	// created in the template as a GET request, similar to how 
 	// POSTs work.
@@ -39,6 +39,10 @@ public class BaseServlet implements ServletInterface {
 	
 	public RequestContext getRequestContext() {
 		return this.requestContext;
+	}
+	
+	public void setRequestContext(RequestContext requestContext) {
+		this.requestContext = requestContext;
 	}
 	
 	public boolean isLoggedIn() {

@@ -150,7 +150,7 @@ public class PracticesData extends BaseData {
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
 												"SUMMARY TEXT NULL DEFAULT NULL );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `practices`;";
-	protected static String selectPractices = "SELECT id, practice_name FROM practices ORDER BY(practice_name)";
+	protected static String selectPractices = "SELECT id, practice_name FROM practices ORDER BY(-id)";
 	protected static String listPractices = "SELECT * FROM practices ORDER BY(-id)";
 	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
 	protected static String getPracticeOnlineURL = "/dashboard/getpracticesonline/";
@@ -235,10 +235,19 @@ public class PracticesData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));
 	}
 	
-	public List getPracticesListingOffline(){
+	public List getPracticesListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List practices = new ArrayList();
-		this.select(listPractices);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listPractices;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listPractices + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if(this.getResultSet().isValidRow()){
 			try {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
@@ -304,9 +313,11 @@ public class PracticesData extends BaseData {
 	}
 	
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + PracticesData.getPracticeOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + PracticesData.getPracticeOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		}
 		else {
 			return true;

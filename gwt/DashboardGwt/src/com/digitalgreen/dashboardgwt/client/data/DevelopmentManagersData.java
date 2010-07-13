@@ -249,7 +249,7 @@ public class DevelopmentManagersData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `development_manager`;";
 	protected static String selectDevelopmentManagers = "SELECT id, NAME FROM development_manager  ORDER BY (NAME);";
 	protected static String getDevelopmentManagerByID = "SELECT id, NAME FROM development_manager WHERE id = ?;";
-	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id);";
+	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id)";
 	protected static String saveDevelopmentManagerOfflineURL = "/dashboard/savedevelopmentmanageroffline/";
 	protected static String saveDevelopmentManagerOnlineURL = "/dashboard/savedevelopmentmanageronline/";
 	protected static String getDevelopmentManagerOnlineURL = "/dashboard/getdevelopmentmanagersonline/";
@@ -345,12 +345,20 @@ public class DevelopmentManagersData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getDevelopmentManagersListingOffline(){
+	public List getDevelopmentManagersListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List developmentmanagers = new ArrayList();
 		RegionsData region = new RegionsData();
-		this.select(listDevelopmentManagers);
-		
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listDevelopmentManagers;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listDevelopmentManagers + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -423,9 +431,11 @@ public class DevelopmentManagersData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + DevelopmentManagersData.getDevelopmentManagerOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + DevelopmentManagersData.getDevelopmentManagerOnlineURL + Integer.toString(offset) + "/" + Integer.toString(limit));
 		}
 		else{
 			return true;

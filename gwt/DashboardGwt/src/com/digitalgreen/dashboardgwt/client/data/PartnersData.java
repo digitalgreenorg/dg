@@ -231,10 +231,19 @@ public class PartnersData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getPartnersListingOffline(){
+	public List getPartnersListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List partners = new ArrayList();
-		this.select(listPartners);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listPartners;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listPartners + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -303,9 +312,11 @@ public class PartnersData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + PartnersData.getPartnerOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + PartnersData.getPartnerOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		}
 		else{
 			return true;

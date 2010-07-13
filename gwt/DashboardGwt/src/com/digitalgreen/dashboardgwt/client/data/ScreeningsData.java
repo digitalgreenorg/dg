@@ -325,7 +325,7 @@ public class ScreeningsData extends BaseData {
 	protected static String selectScreenings = "SELECT sc.id, sc.DATE, sc.location FROM screening sc ORDER BY (sc.DATE);";
 	protected static String listScreenings = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
 			"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name FROM screening sc JOIN village vil " +
-			"ON sc.village_id = vil.id ORDER BY (-sc.id);";
+			"ON sc.village_id = vil.id ORDER BY (-sc.id) ";
 	protected static String saveScreeningOnlineURL = "/dashboard/savescreeningonline/";
 	protected static String getScreeningOnlineURL = "/dashboard/getscreeningsonline/";
 	protected static String saveScreeningOfflineURL = "/dashboard/savescreeningoffline/";
@@ -432,11 +432,20 @@ public class ScreeningsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getScreeningsListingOffline(){
+	public List getScreeningsListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
-		this.select(listScreenings);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listScreenings;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listScreenings + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -508,9 +517,11 @@ public class ScreeningsData extends BaseData {
 	}
 	
 	// Get all information/data to displayt he screening list page.
-	public Object getListPageData() {
+	public Object getListPageData(String pageNum) {
 		if(BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		} else {
 			return true;
 		}

@@ -38,6 +38,7 @@ public class Languages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Language successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Languages(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Languages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Language successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Languages(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,12 +85,15 @@ public class Languages extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					LanguagesData languagesData = new LanguagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								LanguagesData languagesData = new LanguagesData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List languages = languagesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", languages);
 								}
@@ -114,7 +119,10 @@ public class Languages extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								LanguagesData languagesData = new LanguagesData();
-								List languages = languagesData.getLanguagesListingOffline();
+								String totalRows = languagesData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List languages = languagesData.getLanguagesListingOffline(pageNum);
 								requestContext.getArgs().put("listing", languages);
 								getServlet().fillTemplate(new LanguagesTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class Languages extends BaseServlet {
 							}	
 						}
 					});
-					languagesData.apply(languagesData.getListPageData());
+					languagesData.apply(languagesData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

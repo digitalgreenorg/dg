@@ -39,6 +39,7 @@ public class Districts extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("District successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Districts(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Districts extends BaseServlet {
 						if((Boolean)results) {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("District successfully saved");
+							requestContext.getArgs().put("pageNum", "1");
 							requestContext.getArgs().put("action", "list");
 							getServlet().redirectTo(new Districts(requestContext));
 						} else {
@@ -84,12 +86,15 @@ public class Districts extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					DistrictsData districtsData = new DistrictsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								DistrictsData districtsData = new DistrictsData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List districts = districtsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", districts);
 								}
@@ -115,7 +120,10 @@ public class Districts extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								DistrictsData districtsData = new DistrictsData();
-								List districts = districtsData.getDistrictsListingsOffline();
+								String totalRows = districtsData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List districts = districtsData.getDistrictsListingsOffline(pageNum);
 								requestContext.getArgs().put("listing", districts);
 								getServlet().fillTemplate(new DistrictTemplate(getServlet().getRequestContext()));
 							} else {
@@ -125,7 +133,7 @@ public class Districts extends BaseServlet {
 							}	
 						}
 					});
-					districtsData.apply(districtsData.getListPageData());
+					districtsData.apply(districtsData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

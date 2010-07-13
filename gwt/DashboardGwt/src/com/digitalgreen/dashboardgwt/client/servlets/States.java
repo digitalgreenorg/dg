@@ -39,6 +39,7 @@ public class States extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("State successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new States(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -63,6 +64,7 @@ public class States extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("State successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new States(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -84,12 +86,15 @@ public class States extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					StatesData statesData = new StatesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								StatesData statesData = new StatesData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List states = statesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", states);
 								}
@@ -115,7 +120,10 @@ public class States extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								StatesData statesData = new StatesData();
-								List states = statesData.getStatesListingOffline();
+								String totalRows = statesData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List states = statesData.getStatesListingOffline(pageNum);
 								requestContext.getArgs().put("listing", states);
 								getServlet().fillTemplate(new StatesTemplate(getServlet().getRequestContext()));
 							} else {
@@ -125,7 +133,7 @@ public class States extends BaseServlet {
 							}	
 						}
 					});
-					statesData.apply(statesData.getListPageData());
+					statesData.apply(statesData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

@@ -197,7 +197,7 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `district`;";
 	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (district_name)";
-	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id);";
+	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id)";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
 	protected static String getDistrictsOnlineURL = "/dashboard/getdistrictsonline/";
 	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";
@@ -293,13 +293,22 @@ public class DistrictsData extends BaseData {
 	}
 	
 	// for listing districts for district page
-	public List getDistrictsListingsOffline() {
+	public List getDistrictsListingsOffline(String... pageNum) {
 		BaseData.dbOpen();
 		List districts = new ArrayList();
 		StatesData state = new StatesData();
 		FieldOfficersData fieldofficer = new FieldOfficersData();
 		PartnersData partner = new PartnersData();
-		this.select(listDistricts);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listDistricts;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listDistricts + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if(this.getResultSet().isValidRow()){
 			try{
 				
@@ -379,9 +388,11 @@ public class DistrictsData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + DistrictsData.getDistrictsOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + DistrictsData.getDistrictsOnlineURL + Integer.toString(offset) + "/" + Integer.toString(limit));
 		}
 		else{
 			return true;

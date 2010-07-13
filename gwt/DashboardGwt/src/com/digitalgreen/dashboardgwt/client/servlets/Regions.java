@@ -40,6 +40,7 @@ public class Regions extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Region successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Regions(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -64,6 +65,7 @@ public class Regions extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Region successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Regions(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -84,6 +86,7 @@ public class Regions extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
@@ -91,6 +94,8 @@ public class Regions extends BaseServlet {
 								RegionsData regionData = new RegionsData();
 								if(!results.equals("EOF")){
 									List regions = regionData.getListingOnline(results);
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									getServlet().getRequestContext().getArgs().put("listing", regions);
 								}
 								getServlet().fillTemplate(new RegionsTemplate(getServlet().getRequestContext()));						
@@ -115,7 +120,10 @@ public class Regions extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								RegionsData regionData = new RegionsData();
-								List regions = regionData.getRegionsListingOffline();
+								String totalRows = regionData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List regions = regionData.getRegionsListingOffline(pageNum);
 								requestContext.getArgs().put("listing", regions);
 								getServlet().fillTemplate(new RegionsTemplate(getServlet().getRequestContext()));
 							} else {
@@ -125,7 +133,7 @@ public class Regions extends BaseServlet {
 							}	
 						}
 					});
-					regionData.apply(regionData.getListPageData());
+					regionData.apply(regionData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

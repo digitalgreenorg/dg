@@ -2,10 +2,11 @@ package com.digitalgreen.dashboardgwt.client.common;
 
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
+import com.google.gwt.http.client.Response;
 
 public class OnlineOfflineCallbacks {
 	private BaseServlet servlet;
-	private int statusCode;
+	private Response response;
 	public OnlineOfflineCallbacks(BaseServlet servlet) {
 		this.servlet = servlet;
 	}
@@ -18,11 +19,16 @@ public class OnlineOfflineCallbacks {
 	public void onlineErrorCallback(int errorCode) {}
 	public void offlineSuccessCallback(Object results) {}
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public void setResponse(Response response) {
+		this.response = response;
+	}
+	
+	public Response getResponse() {
+		return this.response;
 	}
 	
 	public int getStatusCode() {
-		return this.statusCode;
+		return this.response.getStatusCode();
 	}
+	
 }

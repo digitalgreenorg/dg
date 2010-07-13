@@ -241,7 +241,7 @@ public class PersonGroupsData extends BaseData {
 	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.VILLAGE_NAME " +
 			"FROM person_groups JOIN village ON person_groups.village_id = village.id ORDER BY (person_groups.GROUP_NAME)";
 	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg "
-			+ "JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id);";
+			+ "JOIN village vil ON pg.village_id = vil.id ORDER BY (-pg.id)";
 	protected static String savePersonGroupOfflineURL = "/dashboard/savepersongroupoffline/";
 	protected static String savePersonGroupOnlineURL = "/dashboard/savepersongrouponline/";
 	protected static String getPersonGroupOnlineURL = "/dashboard/getpersongroupsonline/";
@@ -334,11 +334,20 @@ public class PersonGroupsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));
 	}
 
-	public List getPersonGroupsListingOffline() {
+	public List getPersonGroupsListingOffline(String... pageNum) {
 		BaseData.dbOpen();
 		List personGroups = new ArrayList();
 		VillagesData village = new VillagesData();
-		this.select(listPersonGroups);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listPersonGroups;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listPersonGroups + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()) {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
@@ -439,10 +448,11 @@ public class PersonGroupsData extends BaseData {
 		return false;
 	}
 
-	public Object getListPageData() {
+	public Object getListPageData(String pageNum) {
 		if (BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST
-					+ PersonGroupsData.getPersonGroupOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + PersonGroupsData.getPersonGroupOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		} else {
 			return true;
 		}

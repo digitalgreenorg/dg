@@ -38,6 +38,7 @@ public class Practices extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Practices successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Practices(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Practices extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Practice successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Practices(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,12 +85,15 @@ public class Practices extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					PracticesData practicesData = new PracticesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								PracticesData practicesData = new PracticesData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List practices = practicesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", practices);
 								}
@@ -114,7 +119,10 @@ public class Practices extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								PracticesData practicesData = new PracticesData();
-								List practices = practicesData.getPracticesListingOffline();
+								String totalRows = practicesData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List practices = practicesData.getPracticesListingOffline(pageNum);
 								requestContext.getArgs().put("listing", practices);
 								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class Practices extends BaseServlet {
 							}	
 						}
 					});
-					practicesData.apply(practicesData.getListPageData());
+					practicesData.apply(practicesData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

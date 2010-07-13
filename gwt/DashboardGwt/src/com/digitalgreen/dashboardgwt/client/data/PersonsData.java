@@ -330,7 +330,7 @@ public class PersonsData extends BaseData {
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
 			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
-			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id);";
+			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id) ";
 
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	protected static String savePersonOnlineURL = "/dashboard/savepersononline/";
@@ -435,14 +435,22 @@ public class PersonsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));
 	}
 
-	public List getPersonsListingOffline() {
+	public List getPersonsListingOffline(String... pageNum) {
 		BaseData.dbOpen();
 		List persons = new ArrayList();
 		VillagesData village = new VillagesData();
 		PersonGroupsData group = new PersonGroupsData();
-		this.select(listPersons);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listPersons;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listPersons + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()) {
-
 			try {
 				int i;
 				for (i = 0; this.getResultSet().isValidRow(); ++i, this
@@ -532,10 +540,11 @@ public class PersonsData extends BaseData {
 		return false;
 	}
 
-	public Object getListPageData() {
+	public Object getListPageData(String pageNum) {
 		if (BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST
-					+ PersonsData.getPersonOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + PersonsData.getPersonOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		} else {
 			return true;
 		}

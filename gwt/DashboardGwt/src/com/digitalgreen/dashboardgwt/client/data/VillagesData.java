@@ -291,12 +291,22 @@ public class VillagesData extends BaseData {
 	public List getListingOnline(String json){
 		return this.serialize(this.asArrayOfData(json));		
 	}
-
-	public List getVillagesListingOffline(){
+	
+	//passinig variable length arguments
+	public List getVillagesListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List villages = new ArrayList();
 		BlocksData block = new BlocksData();
-		this.select(listVillages);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listVillages;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -360,16 +370,17 @@ public class VillagesData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(){
-		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL);
-		}
-		else{
+	public Object getListPageData(String pageNum) {
+		if (BaseData.isOnline()) {
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+		} else {
 			return true;
 		}
 		return false;
 	}
-	
+		
 	public String retrieveDataAndConvertResultIntoHtml(){
 		BlocksData blockData = new BlocksData();
 		List blocks = blockData.getAllBlocksOffline();

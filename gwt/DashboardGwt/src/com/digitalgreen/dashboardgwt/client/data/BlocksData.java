@@ -2,6 +2,8 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -156,7 +158,8 @@ public class BlocksData extends BaseData {
 			+ "FOREIGN KEY(district_id) REFERENCES district(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";
-	protected static String listBlocks = "SELECT block.id, block.BLOCK_NAME, block.START_DATE, district.id, district.DISTRICT_NAME FROM block JOIN district ON block.district_id = district.id ORDER BY (-block.id);";
+	protected static String listBlocks = "SELECT b.id, b.BLOCK_NAME, b.START_DATE, d.id, d.DISTRICT_NAME" +
+			" FROM block b, district d where b.district_id = d.id ORDER BY (-b.id) ";
 	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
 	protected static String getBlockOnlineURL = "/dashboard/getblocksonline/";
 	protected static String saveBlockOfflineURL = "/dashboard/saveblockoffline/";
@@ -248,11 +251,20 @@ public class BlocksData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));
 	}
 
-	public List getBlocksListingOffline() {
+	public List getBlocksListingOffline(String... pageNum) {
 		BaseData.dbOpen();
 		List blocks = new ArrayList();
-		DistrictsData district = new DistrictsData();
-		this.select(listBlocks);
+		DistrictsData district = new DistrictsData();		
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listBlocks;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listBlocks + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()) {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
@@ -326,9 +338,11 @@ public class BlocksData extends BaseData {
 		return false;
 	}
 
-	public Object getListPageData() {
+	public Object getListPageData(String pageNum) {
 		if (BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*ApplicationConstants.getPageSize();
+			int limit = offset+ApplicationConstants.getPageSize();
+			this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		} else {
 			return true;
 		}

@@ -198,10 +198,19 @@ public class LanguagesData extends BaseData {
 	
 	
 	
-	public List getLanguagesListingOffline(){
+	public List getLanguagesListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List languages = new ArrayList();
-		this.select(listLanguages);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listLanguages;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listLanguages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -266,9 +275,11 @@ public class LanguagesData extends BaseData {
 	}
 	
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + LanguagesData.getLanguageOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + LanguagesData.getLanguageOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
 		}
 		else{
 			return true;

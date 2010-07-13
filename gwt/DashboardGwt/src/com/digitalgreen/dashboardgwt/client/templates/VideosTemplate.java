@@ -68,7 +68,7 @@ public class VideosTemplate extends BaseTemplate {
 					requestContext.getArgs().put("id", video.getId());
 					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/video/" + video.getId() + "/'>" + 
-							video.getTitle() + "</a>",
+							video.getId() + "</a>",
 							"dashboard/video/" + video.getId() + "/",
 							new Videos(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +

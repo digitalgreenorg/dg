@@ -38,6 +38,7 @@ public class Persons extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Person successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Persons(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Persons extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Person successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Persons(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,12 +85,15 @@ public class Persons extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					PersonsData personsData = new PersonsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								PersonsData personsData = new PersonsData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List persons = personsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", persons);
 								}
@@ -114,7 +119,10 @@ public class Persons extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								PersonsData personsData = new PersonsData();
-								List persons = personsData.getPersonsListingOffline();
+								String totalRows = personsData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List persons = personsData.getPersonsListingOffline(pageNum);
 								requestContext.getArgs().put("listing", persons);
 								getServlet().fillTemplate(new PersonsTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class Persons extends BaseServlet {
 							}	
 						}
 					});
-					personsData.apply(personsData.getListPageData());
+					personsData.apply(personsData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

@@ -38,6 +38,7 @@ public class Videos extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Video successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Videos(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class Videos extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Video successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Videos(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,6 +85,7 @@ public class Videos extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					VideosData videosData = new VideosData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
@@ -90,6 +93,8 @@ public class Videos extends BaseServlet {
 								VideosData videosData = new VideosData();
 								if(!results.equals("EOF")){
 									List videos = videosData.getListingOnline(results);
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									getServlet().getRequestContext().getArgs().put("listing", videos);
 								}
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));						
@@ -114,7 +119,10 @@ public class Videos extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								VideosData videosData = new VideosData();
-								List videos = videosData.getVideosListingOffline();
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List videos = videosData.getVideosListingOffline(pageNum);
+								String totalRows = videosData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
 								requestContext.getArgs().put("listing", videos);
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class Videos extends BaseServlet {
 							}	
 						}
 					});
-					videosData.apply(videosData.getListPageData());
+					videosData.apply(videosData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

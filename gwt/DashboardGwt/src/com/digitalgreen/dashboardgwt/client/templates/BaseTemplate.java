@@ -1,5 +1,6 @@
 package com.digitalgreen.dashboardgwt.client.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,11 +18,16 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
@@ -70,6 +76,45 @@ public class BaseTemplate extends Template {
 		if(queryArg.equals("list")) {
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
+			//Calculating number of pages to display
+			int numberOfPages;
+			List<Hyperlink> pageLinks = new ArrayList<Hyperlink>();
+			int totalRows = Integer.parseInt((String)queryArgs.get("totalRows"));
+			int pageSize = ApplicationConstants.getPageSize();
+			numberOfPages = ((totalRows%pageSize) > 0)?(totalRows/pageSize)+1:(totalRows/pageSize);
+			//For displaying total number of rows of child class
+			String totalCountHtml = "<b>"+Integer.toString(totalRows)+" "+ templatePlainType+"s</b>" ;
+			VerticalPanel vPanel = new VerticalPanel();
+			//Need Paging if number of pages are greater than 1
+			if(numberOfPages > 1) {
+				//create Links for number of pages
+				for(int i=1; i <= numberOfPages ; i++){
+					pageLinks.add(createPageHyperlink("<a href='#page/"+ Integer.toString(i) +"/'>" + Integer.toString(i) + "</a>",
+							"page/"+ Integer.toString(i) +"/",
+							servlet,Integer.toString(i)));
+				}				
+				//Adding links to Html by horizontal panel and vertical panel
+				//Maximum number of pages in single horizontal row is 49
+				int numberOfHpanels = (pageLinks.size()/ApplicationConstants.getMaxPagesToDisplayPerRow())+1;
+				for(int j=0; j< numberOfHpanels; j++) {
+					HorizontalPanel hpanel = new HorizontalPanel();
+					hpanel.setBorderWidth(1);
+					for(int i = 0; i < pageSize; i++){
+						if(j == 0 && i == 0) {
+							hpanel.add(new HTML(totalCountHtml));
+						}
+						int linkIndex = (j*pageSize)+i;
+						if(linkIndex < pageLinks.size()) {
+							hpanel.add((Hyperlink)pageLinks.get(linkIndex));
+						}
+					}
+					vPanel.add(hpanel);
+				}
+			}
+			else {
+				vPanel.add(new HTML(totalCountHtml));
+			}
+			
 			Hyperlink addLink = new Hyperlink();
 			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
@@ -84,21 +129,34 @@ public class BaseTemplate extends Template {
 			RootPanel.get("add-link").add(addLink);
 			for(int i = 0; i < links.size(); i++){
 				RootPanel.get("row"+i).add(links.get(i));
-			}
+			}			
+			RootPanel.get("pagination-footer").add(vPanel);
 		}
-	}	
+	}
 	
-	public Hyperlink createHyperlink(String linkText, String tokenText, final BaseServlet servlet){
-		Hyperlink addLink = new Hyperlink(linkText, true, tokenText); 
-		//Hyperlink addLink = new Hyperlink();
-		//addLink.setHTML(linkText);
+	public Hyperlink createPageHyperlink(String linkText, String tokenText, final BaseServlet servlet, final String pageNum) {
+		Hyperlink addLink = new Hyperlink(linkText, true, tokenText);
 		addLink.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Template.addLoadingMessage();
+				RequestContext paginationRequestContext = new RequestContext();
+				paginationRequestContext.getArgs().put("action","list");
+				paginationRequestContext.getArgs().put("pageNum",pageNum);
+				servlet.setRequestContext(paginationRequestContext);
 				servlet.response();
 			}
 		});
-		
+		return addLink;
+	}
+	
+	public Hyperlink createHyperlink(String linkText, String tokenText, final BaseServlet servlet){
+		Hyperlink addLink = new Hyperlink(linkText, true, tokenText); 
+		addLink.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Template.addLoadingMessage();
+					servlet.response();
+				}
+			});
 		return addLink;
 	}
 	
@@ -241,6 +299,7 @@ public class BaseTemplate extends Template {
 		"<!-- END Content -->" +
 		"<div id='sub-container' style='clear: both;'>" +
 		"</div>" +
+		"<div id='pagination-footer'></div>" +
 		"<div id='footer'></div>" +
 		"<div id='box'></div>" +
 		"<div id='screen'></div>" +

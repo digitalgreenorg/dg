@@ -40,6 +40,7 @@ public class Villages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Village successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -64,6 +65,7 @@ public class Villages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Village successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Villages(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -85,6 +87,7 @@ public class Villages extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					VillagesData villageData = new VillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
@@ -92,6 +95,8 @@ public class Villages extends BaseServlet {
 								VillagesData villageData = new VillagesData();
 								if(!results.equals("EOF")){
 									List villages = villageData.getListingOnline(results);
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									getServlet().getRequestContext().getArgs().put("listing", villages);
 								}
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));						
@@ -116,7 +121,10 @@ public class Villages extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								VillagesData villageData = new VillagesData();
-								List villages = villageData.getVillagesListingOffline();
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List villages = villageData.getVillagesListingOffline(pageNum);
+								String totalRows = villageData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
 								requestContext.getArgs().put("listing", villages);
 								getServlet().fillTemplate(new VillagesTemplate(getServlet().getRequestContext()));
 							} else {
@@ -126,7 +134,7 @@ public class Villages extends BaseServlet {
 							}	
 						}
 					});
-					villageData.apply(villageData.getListPageData());
+					villageData.apply(villageData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

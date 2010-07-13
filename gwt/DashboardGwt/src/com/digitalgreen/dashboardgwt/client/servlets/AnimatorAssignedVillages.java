@@ -38,6 +38,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Animator Assigned Village successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -62,6 +63,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Animator Assigned Village successfully saved");
 							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new AnimatorAssignedVillages(requestContext));
 						} else {
 							// It's no longer a POST because there was an error, so start again.
@@ -83,12 +85,15 @@ public class AnimatorAssignedVillages extends BaseServlet {
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
+				String pageNum = (String)queryArgs.get("pageNum");
 				if(queryArg.equals("list")){
 					AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							if(this.getStatusCode() == 200) {
 								AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
 								if(!results.equals("EOF")){
+									String count = this.getResponse().getHeader("X-COUNT");
+									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", animatorAssignedVillages);
 								}
@@ -114,7 +119,10 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
-								List animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline();
+								String totalRows = animatorAssignedVillagesData.getCount();
+								requestContext.getArgs().put("totalRows", totalRows);
+								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
+								List animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline(pageNum);
 								requestContext.getArgs().put("listing", animatorAssignedVillages);
 								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
@@ -124,7 +132,7 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							}	
 						}
 					});
-					animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData());
+					animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData(pageNum));
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

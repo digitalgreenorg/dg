@@ -283,6 +283,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected ResultSet lastResultSet = null;
 	protected String table_name = "";
 	protected String[] fields = {};
+	protected int pageSize = ApplicationConstants.getPageSize();
 	protected boolean systemAutoIncrement = false;
 
 	final static public int ERROR_RESPONSE = 1;
@@ -294,8 +295,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected static String updateApplicationStatus = "UPDATE `user` SET app_status=? WHERE username = ?;";
 	protected static String userTableExists = "SELECT * FROM sqlite_master where type='table' and name = 'user';";
 	protected static String createTable = "";
-	protected static String dropTable = "";
-	
+	protected static String dropTable = "";	
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
 	public BaseData() {}
@@ -388,7 +388,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					if(response.getStatusCode() == 200 || response.getStatusCode() == 201) {
-						dataOnlineCallbacks.setStatusCode(response.getStatusCode());
+						dataOnlineCallbacks.setResponse(response);
 						dataOnlineCallbacks.onlineSuccessCallback(response.getText());
 					} else {
 						dataOnlineCallbacks.onlineErrorCallback(BaseData.ERROR_RESPONSE);
@@ -678,5 +678,23 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			this.dataOnlineCallbacks.offlineSuccessCallback(methodResponse);
 		}
 	}
-
+	
+	//Returns total number of rows retrieved in Listing case for Pagination
+	//count is used to determine number of pages to display
+	public String getCount() {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*) AS count FROM "+ this.getTableName();
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
+	}
 }

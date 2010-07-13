@@ -50,6 +50,19 @@ public class ApplicationConstants {
 	
 	public final static int PAGESIZE = 30;
 	
+	//Below Constants and their getter methods are for pagination
+	public final static int pageSize = 100;
+	//Maximum number of pages in single horizontal row is 49
+	public final static int maxPagesToDisplayPerRow = 49;
+	
+	public static int getPageSize() {
+		return ApplicationConstants.pageSize;
+	}
+	
+	public static int getMaxPagesToDisplayPerRow() {
+		return ApplicationConstants.maxPagesToDisplayPerRow;
+	}
+	
 	public static String getUsernameCookie() {
 		return Cookies.getCookie("username");
 	}
@@ -161,5 +174,5 @@ public class ApplicationConstants {
 		EquipmentsData equipmentsData = new EquipmentsData();
 		mappingBetweenTableIDAndDataObject.put(EquipmentsData.tableID, equipmentsData);
 	}
-	
+		
 }

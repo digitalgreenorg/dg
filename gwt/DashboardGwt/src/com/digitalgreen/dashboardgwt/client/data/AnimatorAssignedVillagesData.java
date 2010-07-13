@@ -2,6 +2,8 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -180,7 +182,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 	protected static String saveAnimatorAssignedVillageOfflineURL = "/dashboard/saveanimatorassignedvillageoffline/";
 	protected String table_name = "animator_assigned_village";
 	protected String[] fields = {"id", "animator_id", "village_id", "start_date"};
-
+	
 	public AnimatorAssignedVillagesData(){
 		super();
 	}
@@ -266,12 +268,21 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getAnimatorsAssignedVillagesListingOffline(){
+	public List getAnimatorsAssignedVillagesListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List animatorsAssignedVillages = new ArrayList();
 		AnimatorsData animator = new AnimatorsData();
 		VillagesData village = new VillagesData();
-		this.select(listAnimatorsAssignedVillages);
+		String listTemp;
+		// Checking whether to return all villages or only limited number of villages
+		if(pageNum.length == 0) {
+			listTemp = listAnimatorsAssignedVillages;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			listTemp = listAnimatorsAssignedVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+		}
+		this.select(listTemp);
 		if(this.getResultSet().isValidRow()){
 			try{				
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {					
@@ -339,9 +350,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String pageNum){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL);
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL + Integer.toString(offset) + "/" + Integer.toString(limit));		
 		}
 		else {
 			return true;
