@@ -335,11 +335,14 @@ def get_regions_online(request, offset, limit):
         return redirect('region')
     else:
         regions = Region.objects.order_by("-id")[offset:limit]
+        count = Region.objects.count()
         if(regions):
             json_subcat = serializers.serialize("json", regions)
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 def save_region_offline(request, id):
@@ -387,11 +390,14 @@ def get_states_online(request, offset, limit):
         return redirect('states')
     else:
         states = State.objects.select_related('region').order_by("-id")[offset:limit]
+        count = State.objects.select_related('region').count()
         if(states):
             json_subcat = serializers.serialize("json", states,  relations=('region',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_state_offline(request, id):
     if request.method == 'POST':
@@ -439,12 +445,15 @@ def get_fieldofficers_online(request, offset, limit ):
     if request.method == 'POST':
         return redirect('fieldofficer')
     else:
+        count = FieldOfficer.objects.count()
         fieldofficers = FieldOfficer.objects.order_by("-id")[offset:limit]
         if(fieldofficers):
             json_subcat = serializers.serialize("json", fieldofficers)
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_fieldofficer_offline(request, id):
     if request.method == 'POST':
@@ -492,11 +501,14 @@ def get_practices_online(request, offset, limit):
         return redirect('practice')
     else:
         practices = Practices.objects.order_by("-id")[offset:limit]
+        count = Practices.objects.count()
         if(practices):
             json_subcat = serializers.serialize("json", practices)
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_practice_offline(request, id):
     if request.method == 'POST':
@@ -543,12 +555,15 @@ def get_languages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('language')
     else:
+        count = Language.objects.count()
         languages = Language.objects.order_by("-id")[offset:limit]
         if(languages):
             json_subcat = serializers.serialize("json", languages)
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_language_offline(request,id):
     if request.method == 'POST':
@@ -594,12 +609,15 @@ def get_partners_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('partner')
     else:
+        count = Partners.objects.count()
         partners = Partners.objects.order_by("-id")[offset:limit]
         if(partners):
             json_subcat = serializers.serialize("json", partners)
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_partner_offline(request, id):
     if request.method == 'POST':
@@ -653,12 +671,15 @@ def get_videos_online(request, offset, limit):
         return redirect('video')
     else:
         villages = get_user_villages(request)
+        count = Video.objects.filter(village__in = villages).distinct().count()
         videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_video_offline(request, id):
     if request.method == 'POST':
@@ -819,12 +840,15 @@ def get_districts_online(request, offset, limit):
         return redirect('districts')
     else:
         district_objects = get_user_districts(request)
+        count = District.objects.filter(id__in = district_objects).distinct().count()
         districts = District.objects.filter(id__in = district_objects).distinct().order_by("-id")[offset:limit]
         if(districts):
             json_subcat = serializers.serialize("json", districts,  relations=('state','fieldofficer', 'partner'))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_district_offline(request, id):
     if request.method == 'POST':
@@ -875,11 +899,14 @@ def get_blocks_online(request, offset, limit):
     else:
         districts = get_user_districts(request)
         blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
+        count = Block.objects.filter(district__in = districts).distinct().count()
         if(blocks):
-            json_subcat = serializers.serialize("json", blocks,  relations=('district'))
+            json_subcat = serializers.serialize("json", blocks, relations=('district'))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_block_offline(request, id):
     if request.method == 'POST':
@@ -927,12 +954,15 @@ def get_developmentmanagers_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('developmentmanagers')
     else:
+        count = DevelopmentManager.objects.select_related('region').count()
         developmentmanagers = DevelopmentManager.objects.select_related('region').order_by("-id")[offset:limit]
         if(developmentmanagers):
             json_subcat = serializers.serialize("json", developmentmanagers,  relations=('region',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_developmentmanager_offline(request, id):
     if request.method == 'POST':
@@ -980,12 +1010,15 @@ def get_equipments_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('equipments')
     else:
+        count = Equipment.objects.select_related('region').count()
         equipments = Equipment.objects.select_related('region').order_by("-id")[offset:limit]
         if(equipments):
             json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_equipment_offline(request, id):
     if request.method == 'POST':
@@ -1058,11 +1091,14 @@ def get_villages_online(request, offset, limit):
     else:
         village_objects = get_user_villages(request)
         villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")[offset:limit]
+        count = Village.objects.filter(id__in = village_objects).distinct().count()
         if(villages):
             json_subcat = serializers.serialize("json", villages,  relations=('block',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 def save_village_offline(request, id):
@@ -1129,12 +1165,15 @@ def get_animators_online(request, offset, limit):
         return redirect('animators')
     else:
         villages = get_user_villages(request)
+        count = Animator.objects.filter(village__in = villages).distinct().count()
         animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(animators):
             json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 def save_animator_offline(request, id):
@@ -1185,12 +1224,15 @@ def get_animatorassignedvillages_online(request, offset, limit):
         return redirect('animatorassignedvillages')
     else:
         villages = get_user_villages(request)
+        count = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().count()
         animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(animatorassignedvillages):
             json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 def save_animatorassignedvillage_offline(request, id):
@@ -1252,12 +1294,15 @@ def get_persongroups_online(request, offset, limit):
         return redirect('persongroups')
     else:
         villages = get_user_villages(request)
+        count = PersonGroups.objects.filter(village__in = villages).distinct().count()
         persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persongroups):
             json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 
@@ -1321,12 +1366,15 @@ def get_persons_online(request, offset, limit):
         return redirect('persons')
     else:
         villages = get_user_villages(request)
+        count = Person.objects.filter(village__in = villages).distinct().count()
         persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persons):
             json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_person_offline(request, id):
     if request.method == 'POST':
@@ -1406,12 +1454,15 @@ def get_screenings_online(request, offset, limit):
         return redirect('screenings')
     else:
         villages = get_user_villages(request)
+        count = Screening.objects.filter(village__in = villages).distinct().count()
         screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(screenings):
             json_subcat = serializers.serialize("json", screenings, relations=('village',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 def save_screening_offline(request, id):
     if request.method == 'POST':
@@ -1562,12 +1613,15 @@ def get_trainings_online(request, offset, limit):
         return redirect('training')
     else:
         villages = get_user_villages(request)
+        count = Training.objects.filter(village__in = villages).distinct().count()
         trainings = Training.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(trainings):
             json_subcat = serializers.serialize("json", trainings, relations=('village',))
         else:
             json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
 
 
 def save_training_offline(request, id):
