@@ -139,3 +139,8 @@
 #progressBar {
 	margin-top: 10px;
 }
+
+#pagination-footer {
+	clear:both;
+	margin: 15px;
+}
