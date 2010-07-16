@@ -510,7 +510,12 @@ class TrainingAdmin(admin.ModelAdmin):
         )
 
 class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ('equipment_type', 'model_no', 'serial_no')
+    list_display = ('equipment_type', 'model_no', 'serial_no', 'village', 'district_name', 'remarks')
+    
+    def district_name(self, obj):
+      return ("%s" % (obj.village.block.district.district_name)).title()
+    district_name.short_description = 'District'
+
 
 class PracticesAdmin(admin.ModelAdmin):
     search_fields = ['practice_name']
