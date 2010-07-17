@@ -1,10 +1,12 @@
 
-{% extends "static_site/base.html" %}
+{% extends "base_all_analytics.html" %}
 
-{% block title %} Analytics Dashboard  {% endblock %}
+{% block title %} Progress Dashboard:: DigitalGreen {% endblock %}
 
-{% block cssfile %}  
-    <link type='text/css' rel='stylesheet' href='/media/Output/CSS/analytics.css' />
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/analytics.css' />       
 {% endblock cssfile %}
 
 {% block jsfile %}  
@@ -84,7 +86,45 @@
 {% endblock jsfile %}
 
 
+{% block bodytitle %}  {% endblock bodytitle %}
+
+{% block mainbodycontent %} {% endblock mainbodycontent %}
+
+
 {% block content %}  
+<div id='analyticsheader'> 
+
+	<div id='analyticslogo'> 
+		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/analyticslogo3.png" alt='Analytics Logo'> </a>
+	</div>
+	
+	<div id='analyticsnav'>
+		<div class='analyticsnavlink' id='analyticsnavdiv'>
+			<a id='analyticsnavlink' href="#">Dashboard &nbsp; <img src="/media/Output/Images/navbtn1.png" alt=""></a>
+			<div id='analyticsnav1'>
+				<ul>
+					<li> <a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/analytics/video_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/analytics/screening_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+				</ul>
+			</div>
+		</div>
+		<div class='analyticsnavlink'>
+			<a href='/'>Home</a>
+		</div>
+						
+	</div>	
+	
+</div>
+<div id='analyticspagetitle'> 
+	&nbsp; 
+	{% block analyticsbreadcrums %}
+		<a href='/'>Home</a> /
+		<a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
+	{% endblock analyticsbreadcrums %}
+
+</div>
+<div id='content'>
 	<div id='customize'>
 		<div id='customizetitle'>
 			<div id='customizetitlename'>  </div>			
@@ -217,9 +257,7 @@
 		{% block contentbody %}
 			<div id='contentheader'>
 				<table id='contentheadertable'>						
-					<tr>												
-						<td class='contentheadertitle'> Analytics >{% block contentheadertitle %} {% endblock contentheadertitle %}  </td>
-						<td class='contentheadertitle'>  </td>
+					<tr>
 						<td class='contentheadertitle'> {% block datepick1 %} {% endblock datepick1 %} </td>
 						<td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>					
 					</tr>
@@ -228,4 +266,5 @@
 			
 		{% endblock contentbody %}
 	</div> 
+</div>
 {% endblock content %}

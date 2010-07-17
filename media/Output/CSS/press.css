@@ -1,4 +1,6 @@
 
+
+.subheaders							{ color:#CDBF5E; font-size:1.2em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; }
 #careernavpanel						{ margin-left:5%; margin-top:0%; width:100%; background-color:none; height:100% }
 #careertitleimg						{ margin-left:0%; top:10px; width:95%; height:5%; text-align:right }
 #careertitledesc					{ margin-left:0%; margin-top:10px; width:95%; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; }
@@ -7,27 +9,28 @@
 .careertitledesca	a:hover			{ color:Black; }	 
 
 #careerbody							{ width:100%; margin:0%; padding:0%; }
-#careerbodydiv1						{ float:left; width:12.5%; min-height:1000px; margin:0%; padding:0%; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
-#careerbodydiv2						{ float:left; width:75%; margin:0%; padding:0%; }
-#careerbodydiv3						{ float:left; width:12.5%; margin:0%; padding:0%; }
+#careerbodydiv1						{ float:left; width:0%; min-height:1000px; margin:0%; padding:0%; border-right-width:0px; border-right-style:solid; border-right-color:#bbd569; text-align:top}
+#careerbodydiv2						{ float:left; width:1024px; margin-top:10px; padding:0%; }
+#careerbodydiv3						{ float:left; width:0%; margin:0%; padding:0%; }
 
 #contentheader						{ width:100%; margin-top:10px; text-align:center; margin-left:0%; margin-right:0%; }
 #contentheadertable					{ width:100%; margin-top:5px; background-color:none; }
 .contentheadertitlediv				{ width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; align:center; padding-bottom:2px; }
 .contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
 
-#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
-#table1								{ margin-left:0px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:100%; padding:0px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; background-color:none; margin-bottom:10px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
-.contenttd1div1						{ float:none; width:100%; margin-top:0px; padding:0px; background-color:#f2f2f2; }
+.mainbodycontentleftimg				{ margin-top:3px; width:620px; height:277px; }
+#presscontent						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
+#table1								{ margin-left:0px; width:620px; margin-top:5px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+.contenttd1							{ width:620px; padding-bottom:0px; background-color:none; margin-bottom:10px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
+.contenttd1div1						{ clear:both; width:100%; margin-bottom:0px; padding:0px; background-color:#f2f2f2; }
 .contenttd1div1 img					{ position:absolute; z-index:0; width:123px; height:147px;}
-.contenttd1div1name					{ width:122px; position:absolute; z-index:1; margin-top:122px; text-align:center; font-size:1.0em; font-family:Calibri; font-weight:bold; color:#5b6e1d;  }
+.contenttd1div1name					{ width:122px; position:absolute; z-index:1; margin-top:122px; text-align:center; font-family:Calibri; font-weight:bold; color:#5b6e1d;  }
 
-.contenttd1div2						{ float:none; width:100%; padding:0px; background-color:none; }
+.contenttd1div2						{ width:100%; padding:0px; background-color:none; }
 .contenttd1div2title				{ float:none; width:100%; margin-top:0px; padding-left:0px; height:40px; }
 
-.contenttd1div2titleul				{ padding-top:2px; padding-bottom:2px; margin-top:0px; margin-left:0px; margin-bottom:0px; text-decoration:none; }
-.contenttd1div2titleul li			{ margin-top:10px; display:inline; color:#5B6E1D; font-weight:bold; font-size:1.4em; margin-right:45px; margin-left:-35px }	
+.contenttd1div2titleul				{ padding-top:2px; padding-bottom:2px; margin-top:0px; margin-left:-35px; margin-bottom:0px; text-decoration:none; }
+.contenttd1div2titleul li			{ text-align:left; margin-top:10px; display:inline; color:#5B6E1D; font-weight:normal; font-size:1.0em; font-family:Georgia,'Times New Roman',Serif; margin-right:0px; margin-left:0px }	
 .contenttd1div2titleul li a			{ color:#5B6E1D; text-decoration:none; }
 .contenttd1div2titleul li a:hover	{ color:#5B6E1D; text-decoration:underline; }
 
@@ -37,16 +40,14 @@
 .contenttd1div1descul li a:hover	{ color:#5B6E1D; text-decoration:underline; }
 
 .contenttd1div2desc					{ float:none; width:100%; margin-top:0px; padding-left:0px; align:top; }
-.contenttd1div2desc p 				{ padding:5px 5px 0px; margin-top:0px; margin-bottom:10px }
+.contenttd1div2desc p 				{ padding:5px 5px 0px; margin-top:0px; margin-bottom:10px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Black; font-size:0.8em; text-align:left; }
 
 
-.contenttd1div3						{ float:none; width:100%; padding-top:0px; padding-bottom:0px; background-color:none;  margin-top:0px; }
+.contenttd1div3						{ float:none; width:100%; padding-top:0px; padding-bottom:0px; background-color:none;  margin-bottom:10px; }
 .contenttd1div3descul				{ padding-top:0px; padding-bottom:5px; margin-top:0px; margin-left:0px; margin-bottom:0px; text-decoration:none; }
 .contenttd1div3descul li			{ margin-top:0px; display:inline; color:#5B6E1D; font-weight:normal; font-size:0.8em; margin-right:45px; margin-left:-35px }	
 .contenttd1div3descul li a			{ color:#5B6E1D; text-decoration:none; }
 .contenttd1div3descul li a:hover	{ color:Black; text-decoration:underline; }
-
-
 
 
 
@@ -55,10 +56,10 @@
 .contenttd2div3						{ margin-top:0px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:1px; border-style:solid; border-color:Gray; }
 
 
-
-#divstattitle						{ margin-left:5px; width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:5px; background-color:none; }
-#divtitletable						{ float:none; margin-left:0px; }
-.divtitletablename					{ float:none; margin-left:0px; }
+#contentdiv2						{ margin-bottom:10px; text-align:left; font-family:Sans-Serif; font-size:0.8em; font-weight:normal; color:Black; }
+#divstattitle						{ text-align:left; margin-left:0px; width:100%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
+#divtitletable						{ margin-left:0px; }
+.divtitletablename					{ text-align:left; margin-left:0px; margin-bottom:0px; }
 .divtitletableimg					{ float:none; padding-left:10px; padding-top:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray;}
 #divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:6px; border-left-style:solid; border-left-color:#fbae0c; }
 #divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
@@ -97,3 +98,13 @@
 .statdesnumber						{ margin-left:2px; font-size:1.5em; font-family:Calibri; font-weight:bold; color:Gray; text-align:center }
 
 
+/* Marginright */
+.pressvideo							{ margin-left:2px; margin-top:3px; width:266px; height:277px; border-width:0px; border-style:solid; border-color:#59af04; }
+.maillist							{ margin-left:2px; margin-top:20px; width:266px; height:89px; }
+.maillistdesc						{ padding-top:65px; width:230px; height:30px; padding-left:20px; text-align:right; }
+.maillistdesc a						{ font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; text-decoration:none; }
+.maillistdesc a:hover				{ text-decoration:underline; }
+
+/* COCO Trial (Technology page)*/
+.cocotrial							{ margin-left:1px; margin-top:20px; width:266px;}
+.cocotrialdesc						{ }

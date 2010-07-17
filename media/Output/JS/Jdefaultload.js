@@ -28,7 +28,7 @@ function defaultload(){
 // the help bubbles for different titles on the analytics and overview pages
                     
             $("div#headermenutitlename").mouseover(function() {            	
-            	$(this).css('color','#e0f3a8');            	
+            	$(this).css('color','#ffffff');            	
             	//$(this).css('border-bottom-width','3px');            	
             	//$(this).css('background-color','#ffffff');
             	$(this).find('#subheadmenutop').show();
@@ -51,7 +51,7 @@ function defaultload(){
             
             $("#subheadmenulist li a").mouseleave(function() {            	
             	$(this).css('color','#000000');
-            	$(this).css('background-color','#ffffff');
+            	$(this).css('background-color','#ecf3c9');
             });
             
             

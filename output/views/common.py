@@ -2,12 +2,16 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 from dg.output.database  import utility
-from dg.output.database.SQL import shared_sql
+from dg.output.database.SQL import shared_sql, overview_analytics_sql
 from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query
 import datetime
 import django
 import re, random, cjson
 
+
+def home_with_analytics():
+    analytics_data= run_query(overview_analytics_sql.overview_sum_geog('COUNTRY', 1, None, None, None))[0]
+    return render_to_response('base_home.html', dict(analytics_data = analytics_data))
 
 def test_output(request,geog,id=None):
 

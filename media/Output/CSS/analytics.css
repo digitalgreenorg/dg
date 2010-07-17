@@ -1,6 +1,25 @@
+
+#analyticsheader			{ clear:both; margin-top:0px; margin-left:0%; width:100%; height:60px; margin-bottom:0px; background-color:#6D9D30; text-align:center; }
+#analyticslogo				{ margin-top:5px; margin-left:5px; float:left; }
+#analyticsnav				{ position:relative; margin-top:20px; margin-right:0px; float:right; color:White; font-weight:bold; }
+.analyticsnavlink			{ text-align:left; margin-left:10px; margin-right:10px; float:left; display:block; height:30px; min-width:60px; }
+.analyticsnavlink a			{ text-decoration:none; font-size:1.0em; font-family:Sans-Serif; font-weight:normal; color:White; }
+.analyticsnavlink a:hover	{ text-decoration:none; color:White; }	
+#analyticsnavlink	img		{ float:right; margin-right:0px; }
+#analyticsnav1				{ clear:both; display:none; position:absolute; z-index:2; width:200px; top:20px; left:-95px; border:2px solid #BBD569; background-color:#F3FDD5; color:Gray; }
+#analyticsnav1	ul			{ margin-left:-20px; list-style:square; clear:both; }
+#analyticsnav1	ul li		{ }	
+#analyticsnav1	ul li a		{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
+#analyticsnav1	a:hover		{ text-decoration:none; color:#fbae0c; }
+#analyticspagetitle			{ width:100%; background-color:#E7F7CF; color:Gray; text-align:left; }
+#analyticspagetitle	a		{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
+#analyticspagetitle	a:hover { text-decoration:underline; color:#fbae0c; }
+
+#content					{ margin-top:30px; padding:0; margin-left:0%; width:99.9%; margin-bottom:20px; background-color:Gray; }
+
 /* CSS Document */
 
-#customize					{ float:left; margin-top:-30px; margin-left:0px; width:14%; min-height:850px; background-color:none; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; }
+#customize					{ float:left; margin-top:0px; margin-left:0px; width:14%; min-height:850px; background-color:none; border-right-width:1px; border-right-style:solid; border-right-color:#bbd569; }
 
 #customizetitle				{ float:none; margin-top:0px; margin-left:0px; width:100%; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#c9caca; background-color:none; height:0px; }
 #customizebody				{ margin-top:0px; margin-left:0px; width:100%; background-color:none; }
@@ -28,7 +47,7 @@ div.inputdiv				{ padding:2px; width:91%; height:15px; border-style:solid; borde
 
 /* SELECT BODY */
 #selectbody					{ margin-top:0px; width:100%; background-color:none; }
-.searchbody1				{ margin-top:0px; width:100%; padding-left:5px; padding-top:5px; padding-bottom:5px; }
+.searchbody1				{ margin-top:0px; width:100%; padding-left:0px; padding-top:5px; padding-bottom:5px; }
 select						{ padding:2px; width:93%; border-style:solid; size:1px; border-color:Green; border-width:1px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; background-color:#f3fdd5}
 
 #submitdiv					{ margin-top:10px; width:100%; }
@@ -46,7 +65,7 @@ select						{ padding:2px; width:93%; border-style:solid; size:1px; border-color
 .partnercheckbox			{ float:left; padding:1px; width:12%; margin-right:0px;  }
 
 /* content header defined */
-#contentbody				{ float:right; margin-top:-30px; margin-right:0px; width:85%; background-color:none; }					
+#contentbody				{ float:right; margin-top:-42px; margin-left:0px; width:85%; background-color:none;  }					
 #contentheader				{ width:99%; height:32px; margin-top:0px; }
 #datepicker1				{ width:300px; }
 

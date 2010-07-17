@@ -16,16 +16,17 @@
 .contentheadertitlediv				{ font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; margin-left:2px; }
 .contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
 
-#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
+#contentdiv1						{ width:626px; margin-top:0px; text-align:left; margin-left:0; margin-right:0%; font-family:Arial,Helvitica,Sans-Serif; font-size:0.8em; }
 #table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:75%; padding:5px 5px 0px 5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; }
-.contenttd2							{ width:25%; }	
-.contenttd1div						{ margin-top:0px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; }
-.contenttd1div ul					{ list-style-type:square; }
+.contenttd1							{ width:616px; font-size:0.8em; font-family:Sans-Serif; font-weight:normal; color:Black; text-align:left; }
+.contenttd1div						{ clear:both; margin-top:10px; font-size:0.8em; font-family:Sans-Serif; font-weight:normal; color:Black; text-align:left; }
+
 .contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding-top:2px; padding-right:2px; padding-left:2px; }
 .contenttd2div3						{ margin-bottom:2px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:0px; border-style:solid; border-color:Gray; }
-
-
+#careerrole							{ clear:both; margin-left:0px; margin-top:4px; width:620px; margin-bottom:10px; font-family:Arial,Helvitica,Sans-Serif; font-size:0.8em; text-align:left; }
+.keyrole							{ color:#3f270b; float:left; width:204px; height:300px; border-bottom:4px solid #f5a11e; background-color:#f9fcd2; margin-bottom:10px;  }
+.keyrole img						{ width:204px; height:196px; margin-bottom:5px;}
+.keyrolegap							{ float:left; width:4px; height:100px; }
 
 #divstattitle						{ margin-left:5px; width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:5px; background-color:none; }
 #divtitletable						{ float:none; margin-left:0px; }
@@ -39,7 +40,7 @@
 #content2tdtitle1					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
 #content2tdtitle2					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
 #content2tdtitle3					{ float:none; margin-left:0px; margin-top:0px; width:100%; }
-#content2tdtitle4					{ float:none; margin-left:0px; margin-top:10px; width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; border-width:0px; border-style:solid; border-color:#59af04; padding:2px; }
+#content2tdtitle4					{ float:none; margin-left:0px; margin-top:10px; width:620px; font-size:0.9em; font-family:Sans-Serif; font-weight:normal; color:Black; text-align:left; border-width:0px; border-style:solid; border-color:#59af04; padding:2px; }
 #content2tdtitle4	a				{ color:Gray; font-weight:bold; text-decoration:none; }
 #content2tdtitle4	a:hover			{ color:#fbae0c; font-weight:bold; text-decoration:underline; }
 
@@ -54,7 +55,7 @@
 #content2desc3						{ display:none; margin-left:0px; width:100%; background-color:#E8F7BA; border-width:1px; border-style:solid; border-color:#59af04;}
 
 #content2descclose					{ float:right; margin-top:2px; width:18px; height:20px; text-align:right; background:url("/media/Output/Images/applybtn3.png"); background-repeat:no-repeat; cursor:pointer; }
-#content2descdiv					{ float:none; padding:0px 5px 5px 5px; font-size:1.0em; font-family:Calibri; font-weight:normal; color:Black; text-align:justify; }
+#content2descdiv					{ clear:both; padding:0px 5px 5px 0px; font-size:0.8em; font-family:Sans-Serif; font-weight:normal; color:Black; text-align:left; }
 #content2descdiv ul					{ margin-top:5px; list-style-type:square; color:#5b6e1d; }
 
 
@@ -71,3 +72,11 @@
 .statnumber							{ float:none; width:98%; padding-bottom:2px;  margin-left:2px; margin-top:0px; margin-bottom:2px; height:30px; background-color:White;  }
 .statdesnumber						{ margin-left:2px; font-size:1.5em; font-family:Calibri; font-weight:bold; color:Gray; text-align:center }
 
+
+/*   Mainbodyleft*/
+
+.mainbodycontentleftimg				{ margin-top:3px; width:620px; height:277px; }
+
+
+/* Marginright */
+.pressvideo							{ margin-left:2px; margin-top:3px; width:266px; height:277px; border-width:0px; border-style:solid; border-color:#59af04; }

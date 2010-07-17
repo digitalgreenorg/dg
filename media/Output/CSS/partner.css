@@ -16,17 +16,18 @@
 .contentheadertitlediv				{ width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; align:center; padding-bottom:2px; }
 .contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
 
-#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
-#table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:100%; padding:0px; font-size:0.8em; font-family:Calibri; font-weight:normal;  text-align:justify; background-color:none; margin-bottom:10px; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#59af04; }
-.contenttd1div1						{ float:left; width:433px; min-height:140px; margin-bottom:20px; padding:0px; background-color:#f2f2f2; margin-right:20px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
+.mainbodycontentleftimg				{ margin-top:4px; width:620px; height:277px; }
+#contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%;}
+#table1								{ margin-left:3px; width:99%; margin-top:3px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+.contenttd1							{ width:100%; padding:0px; font-weight:normal;  text-align:justify; background-color:none; margin-bottom:10px; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#59af04; }
+.contenttd1div1						{ width:620px; min-height:145px; margin-bottom:20px; padding:0px; background-color:#f2f2f2; margin-right:0px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
 .contenttd1div1left					{ float:left; width:149px; height:116px; margin-right:5px; margin-left:4px; margin-top:5px; margin-bottom:5px; border-width:0px; border-style:solid; border-color:Gray; }
-.contenttd1div1right				{ float:left; margin-right:5px; width:270px;  background-color:none; margin-top:5px; margin-bottom:5px;}
-.contenttd1div1lidiv2title			{ float:none; padding:5px; background-color:none; }	
-.contenttd1div1lidiv2desc			{ float:none; padding:5px; padding-bottom:10px; background-color:none; color:#5B6E1D; }
+.contenttd1div1right				{ float:left; margin-left:10px; width:450px; min-height:140px; background-color:none; margin-top:5px; margin-bottom:5px;}
+.contenttd1div1lidiv2title			{ clear:both; background-color:none; color:#CDBF5E; }	
+.contenttd1div1lidiv2desc			{ clear:both; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; margin-top:5px; margin-right:5px; margin-bottom:10px; background-color:none; color:Black; text-align:left; }
 
-.contenttd1div1lidiv2title a		{ font-size:1em; font-family:Calibri; color:Black; font-weight:bold; text-decoration:none; }
-.contenttd1div1lidiv2title a:hover	{ color:Black; text-decoration:underline; }
+.contenttd1div1lidiv2title a		{ font-size:1.2em; font-family:Georgia,'Times New Roman',Serif; color:#5B6E1D; font-weight:normal; text-decoration:none; }
+.contenttd1div1lidiv2title a:hover	{ text-decoration:underline; }
 
 
 .contenttd1div2						{ float:left; width:85%; margin-top:0px; }
@@ -39,11 +40,9 @@
 .contenttd1div2desc p 				{ padding:2px; margin-top:0px}
 
 
-
 .contenttd1div ul					{ list-style-type:square; }
 .contenttd2div						{ margin-top:0px; border-width:1px; border-style:solid; border-color:#59af04; padding-top:2px; padding-right:2px; padding-left:2px; }
 .contenttd2div3						{ margin-top:0px; padding:5px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; background-color:#f3fdd5; text-align:justify; border-width:1px; border-style:solid; border-color:Gray; }
-
 
 
 #divstattitle						{ margin-left:5px; width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:5px; background-color:none; }
@@ -86,4 +85,7 @@
 .statnumber							{ float:none; width:98%; padding-bottom:2px;  margin-left:2px; margin-top:0px; margin-bottom:2px; height:30px; background-color:White;  }
 .statdesnumber						{ margin-left:2px; font-size:1.5em; font-family:Calibri; font-weight:bold; color:Gray; text-align:center }
 
+
+/* Marginright */
+.pressvideo							{ margin-left:2px; margin-top:20px; width:266px; height:277px; border-width:0px; border-style:solid; border-color:#59af04; }
 

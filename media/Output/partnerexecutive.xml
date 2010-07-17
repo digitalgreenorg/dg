@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<TITLE>Access Development Services</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/access_logo1.PNG</IMAGESRC>    
+    	<DESC>An India-based NGO working in the areas of livelihood and microfinance development in six Indian states.  Digital Green is currently working with ACCESS in Madhya Pradesh state. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.accessdev.org/</REFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>ASA: Action for Social Advancement</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/asa_logo1.PNG</IMAGESRC>    
+    	<DESC>An India-based NGO working with 120,000 families across 1,000 villages in 15 districts of Madhya Pradesh and Bihar in the area of ensuring of improving livelihoods on a sustainable basis with linkages to the Government of India's Agriculture Technology Management Agency (ATMA) initiative. Digital Green is currently working ASA in Madhya Pradesh state.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.asaindia.org/</REFERENCE>
+	</TEAM>	
+	<TEAM>
+		<TITLE>BAIF Development Research Foundation</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/baif_logo1.PNG</IMAGESRC>
+		<DESC>An India-based NGO working in more than 47,000 villages in 12 states in India focused on the areas of livestock, watershed, and land resources development.  Digital Green is currently working with BAIF in Karnataka state.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.baif.org.in/aspx_pages/index.asp</REFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Professional Assistance for Development Action</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/pradan_logo1.PNG</IMAGESRC>    
+    	<DESC>An India-based NGO that works across 7 of India's poorest states and that promotes self-help groups (SHGs), develops locally suitable economic activities, mobilizes finances, and introduces systems to improve livelihoods of the rural poor.  Digital Green is currently working with PRADAN in Madhya Pradesh, Jharkhand, and Orissa states.  </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.pradan.net/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Samaj Pragati Sahayog</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/samaj_logo1.PNG</IMAGESRC>    
+    	<DESC>An India-based NGO that works through its partners in 72 of India's most backward districts to ensure water and livelihood security for the tribal communities living there.  Digital Green is currently working with SPS in the Dewas District of Madhya Pradesh state.  </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.samprag.org/</REFERENCE>	
+	</TEAM>	
+</CATALOG>

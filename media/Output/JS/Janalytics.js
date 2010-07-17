@@ -5,6 +5,17 @@ var tchartheight  = 400;
 /* This is run when the page is fully loaded */
 $(document).ready(function(){	   
 	
+	// Analytics Navigation
+	
+	$("div#analyticsnavdiv").mouseover(function() {            	
+       	$(this).find("div#analyticsnav1").show();            	
+     });
+     
+     $("div#analyticsnavdiv").mouseleave(function() {            	
+       	$(this).find("div#analyticsnav1").hide();            	
+     });
+     
+     	
 	// the analytics -> overview part
 	 $("div#statdescimg").mouseover(function() {            	
        	$(this).find("div#statdescimg1").show();            	

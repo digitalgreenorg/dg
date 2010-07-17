@@ -1,31 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Edited by XMLSpyï¿½ -->
+<!-- Edited by XMLSpy® -->
 <CATALOG>
 	<TEAM>
 		<NAME>K. Archana</NAME>
-		<POSITION></POSITION>    
-    	<COUNTRY>India</COUNTRY>
-    	<MAJOR></MAJOR>
-		<COMPANY></COMPANY>
-		<PAGELINK>NULL</PAGELINK>
-		<PERIOD> February 2010 </PERIOD>		
+		<PERIOD>May, 2009 - February, 2010</PERIOD>		
 	</TEAM>	
 	<TEAM>
 		<NAME>Ramchandrappa</NAME>
-		<POSITION></POSITION>    
-    	<COUNTRY>India</COUNTRY>
-    	<MAJOR> </MAJOR>
-		<COMPANY> </COMPANY>
-		<PAGELINK>NULL</PAGELINK>
-		<PERIOD> December 2009</PERIOD>
+		<PERIOD>May, 2009 - December, 2009</PERIOD>
 	</TEAM>
 	<TEAM>
 		<NAME>Ravi Singh</NAME>
-		<POSITION> </POSITION>    
-    	<COUNTRY>India </COUNTRY>
-    	<MAJOR> </MAJOR>
-		<COMPANY> </COMPANY>
-		<PAGELINK>NULL</PAGELINK>
-		<PERIOD> February 2010</PERIOD>
+		<PERIOD>March, 2009 - February, 2010</PERIOD>
 	</TEAM>
 </CATALOG>

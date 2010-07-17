@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<TITLE>Sima Products</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/sima_logo1.PNG</IMAGESRC>    
+    	<DESC>A global consumer electronics company that supplies the portable pico projectors that are used by Digital Green for screening videos among many of the rural communities that we work with in India.  Please check out the news on this partnership.  One Media Player per Teacher  provides technical support on video production and the use of portable media players in the development context.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.simaproducts.com/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Amarchand Mangaldas</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/amarchand_logo1.PNG</IMAGESRC>    
+    	<DESC>Advocates and solicitors based in New Delhi, India who provided pro-bono legal services in establishing Digital Green as an independent, not-for-profit organization in India.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.legal500.com/firms/30275/offices/32582</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>OMPT: One Media Player per Teacher</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/ompt_logo1.jpg</IMAGESRC>    
+    	<DESC>One Media Player per Teacher (OMPT) is a collaborative initiative with several non government organizations (NGOs) to select portable media players, speakers, battery powered video projectors and power generators (solar and human kinetic) for possible deployment to international educational development projects. OMPT specifically targets teachers and students in remote areas in the third world, many of whom are far away from the reach of the Internet.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://dsh.cs.washington.edu/</REFERENCE>	
+	</TEAM>	
+</CATALOG>

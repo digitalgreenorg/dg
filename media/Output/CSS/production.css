@@ -1,11 +1,11 @@
 
 
 #table1								{ width:99%;}
-#divstattitle						{ width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
+#divstattitle						{ text-align:left; width:100%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
 #divtitletable						{ float:none; margin-left:0px; }
 .divtitletablename					{ float:none; margin-left:0px; }
 .divtitletableimg					{ float:none; padding-left:10px; padding-top:5px}
-#divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:6px; border-left-style:solid; border-left-color:#fbae0c; }
+#divstattitlename					{ width:100%; text-align:left; margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:0px; border-left-style:solid; border-left-color:#fbae0c; }
 #divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
 
 /* Total Statistics in numbers */ 
@@ -31,7 +31,7 @@
 /*Graph table video module*/
 #graphtable							{ width:100%; background-color:none; margin-left:0px; margin-top:0px; margin-bottom:5px; border-top-width:0px; border-top-style:solid; border-top-color:#59af04;  }
 #graphtabletd						{ width:100%; }
-#graphdiv1							{ float:left; width:49%; margin-top:0px; margin-bottom:5px;  margin-right:5px; border-width:1px; border-style:solid; border-color:#59af04; }
+#graphdiv1							{ float:left; width:49%; margin-top:0px; margin-bottom:5px;  margin-left:5px; border-width:1px; border-style:solid; border-color:#59af04; }
 #graphdiv1title						{ width:100%; margin-top:0px;}
 .graphdiv1desc						{ width:100%; margin-top:0px; min-height:410px; text-align:center; background-color:White; padding-left:0px }
 #graphdiv1titledesc					{ float:none; width:100%; margin-top:0px; background-color:#e8f7ba; height:30px; }
@@ -41,7 +41,7 @@
 
 /* Graph for the last row (two div graphs combined into one) */
 
-#graphdiv0					{ margin-top:5px; float:none; width:98.7%; margin-left:0px; margin-bottom:10px; }
+#graphdiv0					{ margin-top:5px; float:none; width:98.7%; margin-left:5px; margin-bottom:10px; }
 #graphdiv0title				{ margin-top:1px; margin-left:0px; float:none; width:100%; height: 30px; border-style: solid; border-color: #59AF04; border-width:1px; background-color:#E8F7BA; border-bottom-width:0px  }
 #graphdiv0desc				{ margin-top:0px; margin-left:0px; float:none; margin-right:0px; width:100%; border-style: solid; border-color: #59AF04; border-width:1px; border-top-width:0px; padding-top:10px; min-height:350px }
 

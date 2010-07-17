@@ -37,127 +37,139 @@
 
 <body>
 <div id='fullbody'>
-	<div id='navclass'>
-		<div id='navclass1'>
-			<div id='toplinks'>
-				<table id='toprightlinks' cellspacing='0' cellpadding='0'>
-					<tr>
-						<td class='toprightlinks1'></td>
-						<td class='toprightlinks2'>
-							<div class='topheadermenu'> <a href="/contact"> Contact us </a>&nbsp;&nbsp; </div>
-							<div class='topheadermenu'> | </div>
-							<div class='topheadermenu'> <a href="/career"> Careers </a> </div>
-						</td>						
-					</tr>				
-				</table>
-			</div>	
-			<div id='navheaderleft'> <a href="/"> <img src="/media/Output/Images/dglogo11.png" alt='Digital Green Logo' title="Logo"> </a>   </div>
-			<div id='navheaderright'>
-				<div id='navhelp'>					  
-				</div>			 
-				<form>
-				<div id='navsearch'>  			
-					<input id='navsearchinput' value='Search...' type='text' >						
-				</div>
-				<div id='navsearchbtn'>
-					<img src="/media/Output/Images/searchgobtn2.png" alt='temp' title='Go'>
-				</div>
-				</form>			
-			</div>					
-		</div>
-	</div>		
-
+	
 	<table cellspacing='0' cellpadding='0' id='mainbodytable'>
 		<tr>
-			<td class='mainbodytd1' colspan='2' cellspacing='0' cellpadding='0'>
+			<td class='mainbodytd' colspan='2' cellspacing='0' cellpadding='0' align='center'>
+				
+			{% block mainbody %}
+				
 				<div id='navpanel'>
-					<div id='headermenulist' class='headermenulist'>									
+					<div id='headermenulist' class='headermenulist'>				
+										
 						<div id='headermenu' class='headermenu'> 
 							<div id='headermenutitle' class='headermenutitleclass'> 
 								<div id='headermenutitlename' class='headermenutitlenameclass'> 
-									Home
+									Our Work
 									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										<a href="/">Home</a>
-									</div>								 
-								</div>
-							</div>
-						</div>
-						
-						<div id='headermenu' class='headermenu'> 
-							<div id='headermenutitle' class='headermenutitleclass'> 
-								<div id='headermenutitlename' class='headermenutitlenameclass'> 
-									About									
-									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										About
+										Our Work
 									</div>
 									<div id='subheadmenu' class='subheadmenuclass'>
 										<ul id='subheadmenulist'>
-											<li> <a href="/aboutus" title='Team'> Overview </a>  </li>
-											<li> <a href="/team" title='Team'> Team </a>  </li>															
-											<li> <a href="/partner" title='Partners'> Partners </a> </li>
-										</ul>										
-									</div> 
-								</div>
-							</div>
-						</div>
-					
-						<div id='headermenu' class='headermenu'> 
-							<div id='headermenutitle' class='headermenutitleclass'> 
-								<div id='headermenutitlename' class='headermenutitlenameclass'> 
-									Analytics
-									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										Analytics
-									</div>
-									<div id='subheadmenu' class='subheadmenuclass'>
-										<ul id='subheadmenulist'>
-											<li> <a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'> Progress Dashboard</a></li>
-											<li> <a href="{% if search_box_params %}/analytics/video_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Video Production Statistics </a></li>
-											<li> <a href="{% if search_box_params %}/analytics/screening_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Video Screening Statistics </a> </li>
+											<li> <a href="/overviewfarmer" title='Farmers'> Farmers</a></li>
+											<li> <a href="/overviewdatabase" title='Database'> Database</a></li>
+											<li> <a href="/overviewproduction" title='Production'> Production</a></li>
+											<li> <a href="/overviewdistribution" title='Distribution'> Distribution</a></li>
+											<li> <a href="/overviewsequence" title='Sequencing'> Sequencing</a></li>
+											<li> <a href="/overviewdiffusion" title='Diffusion'> Diffusion</a></li>											
+											<li> <a href="/overviewscalability" title='Scalability'> Scalability</a></li>
+											
 										</ul>										
 									</div> 									 
 								</div>
 							</div>	
-						</div>	
-										
+						</div>
+						
+						<div id='headermenugap'>  </div>
+						
 						<div id='headermenu' class='headermenu'> 
 							<div id='headermenutitle' class='headermenutitleclass'> 
 								<div id='headermenutitlename' class='headermenutitlenameclass'> 
 									Technology
 									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										<a href="/tech">Technology</a>
-									</div>								 
+										Technology
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/tech" title='Software we build'> Software </a></li>
+											<li> <a href="/analytics/overview_module?geog=country&id=1" title='Progress Dashboard' target='_blank'>Analytics</a></li>											
+										</ul>										
+									</div> 									 
 								</div>
-							</div>
+							</div>	
 						</div>
+						
+						<div id='headermenugap'>  </div>
 						
 						<div id='headermenu' class='headermenu'> 
 							<div id='headermenutitle' class='headermenutitleclass'> 
 								<div id='headermenutitlename' class='headermenutitlenameclass'> 
-									News
+									Press Room
 									<div id='subheadmenutop' class='subheadmenuclasstop'>
-										News
+										Press Room
 									</div>
 									<div id='subheadmenu' class='subheadmenuclass'>
 										<ul id='subheadmenulist'>
-											<li> <a href="/updates" title='Updates' target=_blank> Updates </a>  </li>				
-											<li> <a href="/press" title='Press'> Press </a> </li>
-											<li> <a href="/nexus" title='Nexus: The Monthly Newsletter' target=_blank> Nexus </a> </li>
+											<li> <a href="/update" title='Updates' target=_blank> Progress Reports </a>  </li>				
+											<li> <a href="/press" title='Press'> Media Coverage </a> </li>
+											<li> <a href="/nexus" title='Nexus: The Monthly Newsletter' target=_blank> Nexus Newsletter </a> </li>
 										</ul>										
 									</div> 
 								</div>
 							</div>	
 						</div>
-										
+						
+						<div id='headermenugap'>  </div>
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									About Us									
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										About Us
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/aboutus" title='Team'> Overview </a>  </li>																										
+											<li> <a href="/partnerexecutive" title='Partners'> Partners </a> </li>
+											<li> <a href="/team" title='Team'> Team </a>  </li>											
+										</ul>										
+									</div> 
+								</div>
+							</div>
+						</div>
+						
+						<div id='headermenugap'>  </div>
+						
+						<div id='headermenu' class='headermenu'> 
+							<div id='headermenutitle' class='headermenutitleclass'> 
+								<div id='headermenutitlename' class='headermenutitlenameclass'> 
+									Get Involved
+									<div id='subheadmenutop' class='subheadmenuclasstop'>
+										Get Involved
+									</div>
+									<div id='subheadmenu' class='subheadmenuclass'>
+										<ul id='subheadmenulist'>
+											<li> <a href="/career" title='Hunt for jobs'> Careers </a> </li>
+											<li> <a href="/donate" title='Donate us'> Donate </a> </li>
+											<li> <a href="/contact" title='Contact Us'> Contact Us </a> </li>											
+										</ul>										
+									</div> 
+								</div>
+							</div>	
+						</div>						
+															
 					</div>
-				</div>		
+				</div>
+				
+				<div id='logosearchdiv'>				
+					<div id='navheaderleft'> <a href="/"> <img src="/media/Output/Images/dglogo11.png" alt='Digital Green Logo' title="Logo"> </a>   </div>
+					<div id='navheaderright'>
+						<a href='/donate' title='Donate to us'><img src="/media/Output/Images/donatebtn1.png" alt='temp' title='Donate to Us'> </a>
+					</div>
+				</div>
+				
+			{% endblock mainbody %}		
+						
 			</td>
 		</tr>
+		
 		<tr>
 			<td class='mainbodytd' colspan='2' cellspacing='0px' cellpadding='0px'>
-				<div id='content'>
-					<div id='contentdesc'>
-						{% block content %}
-						{% endblock content %}	
+				<div id='analyticscontent'>
+					<div id='analyticscontentdesc'>
+						{% block analyticscontent %}
+						{% endblock analyticscontent %}	
 					</div>				
 				</div>			
 			</td>
@@ -169,23 +181,7 @@
 				<br/>		
 			</td>
 		</tr>
-		<tr>	
-			<td id='footertd21'>
-				<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.5/in/80x15.png"/></a>				
-			</td>
-			<td id='footertd22'>
-				<div id='footernavlist'>					
-					
-					<div class='footermenu'> Follow us on: </div>
-					<div class='footermenu'> <a href='http://www.facebook.com/digitalgreenorg' title='Follow us on Facebook' target='_blank'> <img src="/media/Output/Images/facebook-icon3.gif" alt='Follow on Facebook'> </a> </div>
-					
-					<div class='footermenu'> <a href='http://twitter.com/digitalgreenorg' title='Follow us on Twitter' target='_blank'> <img src="/media/Output/Images/twitter-icon3.gif" alt='Follow on Twitter' target='_blank'> </a> </div>
-					
-					<div class='footermenu'> <a href='http://www.youtube.com/digitalgreenorg' title='Follow us on youtube' target='_blank'> <img src="/media/Output/Images/youtube-icon3.png" alt='Follow on You Tube' target='_blank'> </a> </div>
-										
-				</div>
-			</td>
-		</tr>
+		
 		<tr>	
 			<td id='footertd31'>				
 			</td>

@@ -1,9 +1,10 @@
 
-{% extends "base.html" %}
+{% extends "base_all.html" %}
 
-{% block title %} Partners:: Digital Green {% endblock %}
+{% block title %} Partners:: DigitalGreen {% endblock %}
 
 {% block cssfile %}
+	{{ block.super }}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/partner.css' />       
 {% endblock cssfile %}
 
@@ -11,107 +12,48 @@
        <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
 {% endblock jsfile %}
 
-{% block content %}
 
-<div id='careerbody'>
+{% block pagetitle %} {{ block.super }}Partners {% endblock pagetitle %}
 
-<div id='careerbodydiv1'>
-	<div id='careernavpanel'>
-		<div id='careertitleimg'> <img alt="Logo Partners" src="/media/Output/Images/teamlogo2.png"/>  </div>
-		<div id='careertitledesc'>			
-			<div class='careertitledesca'> <a href="../partner"> Our Partners </a>  </div>
-			<div class='careertitledesca'> 
-				<a href="/partnerselection"> Apply to be a Partner </a>  
-			</div>		
-		</div>
-	</div>	
-</div>
+{% block breadcrums %}  
+
+	{{ block.super }}
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Partners </span>
+	{% endblock partnerbreadcrums %}
+	  
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+    		    
+	{% block mainbodycontentleftdesc %}			
+	{% endblock mainbodycontentleftdesc %}
+
+{% endblock mainbodycontentleft %}	
 
 
-<div id='careerbodydiv2'>
-{% block careerbody %}
-    	
-	<div id='contentdiv2'>
-    	<div id='divstattitle'>
-			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-				<tr>
-					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} Partners {% endblock teampagetitle %}</div> </td>
-					<td class='divtitletableimg'>  </td>
-				</tr>
-			</table>								
-		</div>
-    	<table id='table2' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='content2td' cellspacing='0' cellpadding='0' > 
-					<div id='content2tdtitle1'> 
-						We have been honored to partner with a variety of world-class organizations that have supported the research, development, and expansion of the Digital Green system.  These organizations have served as champions, investors, advisers, executors, and friends. 
-					</div>			
-				</td>													
-			</tr>
-							
-		</table>
-    </div>
-    
-	<div id='contentdiv1'>
+
+
+{% block mainbodycontentright %}
+	
+	<div id='explorediv'>
 		
-		<script type="text/javascript">
-			var xmlDoc=null;
-			if (window.ActiveXObject)
-			{// code for IE
-    			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-			}
-			else if (document.implementation.createDocument)
-			{// code for Mozilla, Firefox, Opera, etc.
-    			xmlDoc=document.implementation.createDocument("","",null);
-			}
-			else
-			{
-				alert('Your browser cannot handle this script');
-			}
-			if (xmlDoc!=null) 
-			{
-				xmlDoc.async=false;
-				xmlDoc.load("/media/Output/partner.xml");
-				//alert("hello");
-				var x=xmlDoc.getElementsByTagName("TEAM");
-
-				//alert(x.length);				
-				document.write("<table id='table1' cellspacing='8px' cellpadding='0'>");	
-				
-  				
-  				document.write("<tr><td class='contenttd1' cellspacing='5px' cellpadding='0'>");			
-				for (i=0;i<x.length;i++)
- 					{				  							
-  								  					
-  								document.write("<div class='contenttd1div1'>"); 
-  								 									 
-  										document.write("<div class='contenttd1div1left'>");
-  											document.write("<img src='" + (x[i].getElementsByTagName("IMAGESRC")[0].childNodes[0].nodeValue)+"'>");
-  										document.write("</div>");
-  										
-  										document.write("<div class='contenttd1div1right'>");
-  											document.write("<div class='contenttd1div1lidiv2title'>");
-  												document.write("<a href=" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + " target=_blank>" + (x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue) + "</a>");  								
-  											document.write("</div>");
-  											document.write("<div class='contenttd1div1lidiv2desc'>");
-  												document.write(x[i].getElementsByTagName("DESC")[0].childNodes[0].nodeValue);  								
-  											document.write("</div>");  											  											  											
-  										document.write("</div>");
-  										
-  								document.write("</div>");	
-  														
-  					}
-  				  											
-  				document.write("</td></tr>");	
-  				document.write("</table>");	
-  			}		
-				
-		</script>					
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Partners </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/partnerexecutive"><img src="/media/Output/Images/linkimg2.png" alt="">Executive Partners</a>
+				<a class="exploredescmainlink" href="/partnerresearch"><img src="/media/Output/Images/linkimg2.png" alt="">Research Partners</a>
+				<a class="exploredescmainlink" href="/partnerinvestor"><img src="/media/Output/Images/linkimg2.png" alt="">Investors</a>
+				<a class="exploredescmainlink" href="/partnersupporter"><img src="/media/Output/Images/linkimg2.png" alt="">Supporters</a>				
+			</div> 
+		</div>
+			
 	</div>
-    
-     
-{% endblock careerbody %}
-</div>
-<div id='careerbodydiv3'> </div> 
-</div>   
-{% endblock content %}
+	
+	{% block mainbodycontentrightquote %}
+		<div class='pressvideo'>
+			<a href='/media/PartnerSelectionDG.pdf' target='_blank'> <img src="/media/Output/Images/partnerselectionimg2.png" alt='Rikin Gandhi Message'> </a>
+		</div>
+	{% endblock mainbodycontentrightquote %}
+	
+{% endblock mainbodycontentright %}	

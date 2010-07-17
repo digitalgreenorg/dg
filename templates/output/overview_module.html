@@ -12,7 +12,10 @@
     <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>
 {% endblock jsfile %}
 
-{% block contentheadertitle %} Progress Metrics {% endblock contentheadertitle %}
+{% block analyticsbreadcrums %} 	
+	{{block.super}}
+	/ <span style='font-weight:bold;'> Overall Statistics </span>	
+{% endblock analyticsbreadcrums %}
 
 
 	{% block contentbody %}

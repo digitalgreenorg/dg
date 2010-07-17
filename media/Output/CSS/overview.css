@@ -1,10 +1,10 @@
 
 #table1								{ width:99%;}
-#divstattitle						{ width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
+#divstattitle						{ text-align:left; width:100%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:0px; background-color:none; }
 #divtitletable						{ float:none; margin-left:0px; }
 .divtitletablename					{ float:none; margin-left:0px; }
 .divtitletableimg					{ float:none; padding-left:10px; padding-top:5px}
-#divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:6px; border-left-style:solid; border-left-color:#fbae0c; }
+#divstattitlename					{ margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:0px; border-left-style:solid; border-left-color:#fbae0c; }
 #divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
 
 

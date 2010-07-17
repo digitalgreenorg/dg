@@ -1,0 +1,91 @@
+
+{% extends "static_site/base.html" %}
+
+{% block cssfile %}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/base_all_analytics.css'/>       
+{% endblock cssfile %}
+
+{% block mainbody %}
+			
+			{% block bodytitle %}
+				<div id='maintitlediv'>
+					<div id='titlediv'>	
+						<div id='title'>
+							{% block pagetitle %}&nbsp; {% endblock pagetitle %}
+						</div>				
+					</div> 
+					<div id='breadcrums'>
+						{% block breadcrums %}
+							<a href='/'> Home</a> /
+						{% endblock breadcrums %}					
+					</div>					
+				</div>
+			{% endblock bodytitle %}
+			
+			{% block mainbodycontent %}	
+				<div id='mainbodycontent'>
+					<div id='mainbodycontentleft'>
+						{% block mainbodycontentleft %}
+							<div class='mainbodycontentleftimg'>
+								{% block mainbodycontentleftimg %} 
+									<img src="/media/Output/Images/img1.jpg" alt='Women on the field'>
+								{% endblock mainbodycontentleftimg %}
+							</div>						
+						{% endblock mainbodycontentleft %}
+					</div>
+					
+					<div id='mainbodycontentright'>
+						{% block mainbodycontentright %}
+							vdpkefbmvnf
+						{% endblock mainbodycontentright %}	
+					</div>				
+				</div>			
+			{% endblock mainbodycontent %}
+				 
+			
+			{% block content %}			
+			{% endblock content %}	
+				
+				<div id='footertop'>  </div>
+				<div id='footerdivleft'>
+					<div id='footerquicklinkdiv'>
+						<ul>
+							<li>
+								&nbsp;&nbsp;
+							</li>
+							<li>
+								<a class="footerquicklink" href="/career" title="">About Us</a>
+							</li>
+							<li class='footerquicklinkgap'> | </li>
+							<li>
+								<a class="footerquicklink" href="/partnerexecutive" title="">Partners</a>
+							</li>							
+							<li class='footerquicklinkgap'> | </li>
+							<li>
+								<a class="footerquicklink" href="/press" title="">Media Coverage</a>
+							</li>							
+							<li class='footerquicklinkgap'> | </li>
+							<li>
+								<a class="footerquicklink" href="/career" title="">Careers</a>
+							</li>
+							<li class='footerquicklinkgap'> | </li>
+							<li>
+								<a class="footerquicklink" href="/contact" title="">Contact Us</a>
+							</li>
+							<li class='footerquicklinkgap'> | </li>
+							<li>
+								Follow Us -&nbsp;
+								<a class="footerquicklink" href="http://www.youtube.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/youtube-icon4.png" alt=""></a>
+								<a class="footerquicklink" href="http://www.twitter.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/twitter-icon3.gif" alt=""></a>
+								<a class="footerquicklink" href="http://www.facebook.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/facebook-icon3.gif" alt=""></a>
+							</li>
+						</ul>																											
+					</div>					
+					<div id='footerdivright'> <a class="exploredescmainlink1" href="http://digitalgreen.org/coco/home.html" title="" target="_blank"><img src="/media/Output/Images/cocoicon1.png" title="Login to COCO">COCO</a> </div>								
+					<div id="footerdivlicence">
+						<a target="_blank" title="Creative Commons Licence" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/" rel="license" class="footerquicklink"> <span style="font-weight: bold;">(cc)</span> &nbsp;Digital Green 2010</a>
+					</div>
+					
+				</div>
+							
+{% endblock mainbody %}

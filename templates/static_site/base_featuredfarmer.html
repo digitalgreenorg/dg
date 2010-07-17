@@ -1,0 +1,74 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Featured Farmer:: DigitalGreen {% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />  
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+
+{% block pagetitle %} {{ block.super }}Featured Farmer {% endblock pagetitle %}
+
+{% block breadcrums %}  
+
+	{{ block.super }}
+	 {% block breadcrumsmore %}  <span style='font-size:0.9em; font-weight:bold;'> Featured Farmer </span> {% endblock breadcrumsmore %} 
+	 
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+		
+	<div class='pagetitle'>
+		Featured Farmer
+	</div>
+	
+	<div class='teamcontent'>
+		Gauravva Channappa Morabad is a hard working woman who resides in Kamplikoppa village in the Dharwad district of Karnataka.  
+		She is involved in field activities of all types and is a member of the Shri. Kariyamma Devi Self Help Group (SHG). 
+		Gauravva has attentively attended every Digital Green screening conducted in the SHG.  
+		She has taken up many of the agriculture- and livestock-related practices that she has learned through the videos  on her farm.   
+		<br/><br/>
+		As one example, Gauravva learned and took up a practice to produce vermicompost in a low-cost manner that allows for its harvesting every 1.5 months. 
+		She notes that this spread-based method "reduces dampness and accelerates the multiplication of worms that consume organic matter. 
+		Within a short period of time, the method converts waste material into vermicompost and a large number of worms.
+		"Within six months, she has harvested 17 quintals of vermicompost and sold it for Rs. 3910.  						
+		<br/><br/> 
+		She says, "many television programs broadcast information on vermicomposting, but those methods involve high-cost inputs. 
+		The Digital Green video taught me a much lower-cost, easy-to-implement method for vermicomposting that is much more useful." 
+		We estimate that the technology has enhanced her vermicompost production by 8.5 times over the previous pit-based method that she was following. 
+		And, apart from the production of vermicompost, she is also producing huge quantity of valuable worms.
+		<br/><br/> 
+		As another example, Gauravva had known about the use of Adasal tappala (Adhatoda vasica) and Amrita balli (Tinospora cordifolia) as medicines but had never used them. 
+		After watching videos on the benefits of these medicines, she started to prepare decoctions of Adhatoda leaves with Tulasi leaves along with a pinch of pepper and jaggery.		
+		<br/>
+		She now uses it to reduce symptoms of cough and asthama. She also uses decoction of Tinospora leaves combined with tulsi leaves, pepper powder and jaggery to reduce symptoms of fever. 
+		Now, whenever Gauravva or any of her family members suffer from cough, cold, or fever, she prepares the decoctions and serves. 
+		<br/><br/>
+		Gauravva has been successful in acquiring returns from the videos that have been disseminated in her SHG. She notes that she is grateful to both Digital Green and BAIF for bringing 
+		such a "beautiful program" to her village.
+		<br/><br/>
+	</div>
+{% endblock mainbodycontentleft %}	
+
+
+{% block mainbodycontentright %}
+		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>			
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/overviewfarmer"><img src="/media/Output/Images/searchimg2.png" alt="">EXPLORE<br/>How are we related with the farmers?</a>						
+			</div> 
+			<br/>
+		</div>			
+	</div>
+	
+	
+{% endblock mainbodycontentright %}		
+	

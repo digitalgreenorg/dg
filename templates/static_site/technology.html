@@ -1,8 +1,10 @@
-{% extends "base.html" %}
+
+{% extends "base_all.html" %}
 
 {% block title %} Technology:: DigitalGreen {% endblock %}
 
 {% block cssfile %}
+	{{ block.super }}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/press.css' />       
 {% endblock cssfile %}
 
@@ -10,97 +12,70 @@
        
 {% endblock jsfile %}
 
-{% block content %}
-
-<div id='careerbody'>
 
 
-<div id='careerbodydiv1' style='border: 0px;'>
-</div>
+{% block pagetitle %} {{ block.super }}Software {% endblock pagetitle %}
 
-<div id='careerbodydiv2'>
-{% block careerbody %}
-    	
-	<div id='contentdiv2'>
-    	<div id='divstattitle'>
-			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-				<tr>
-					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} COCO - Connect Online | Connect Offline {% endblock teampagetitle %}</div> </td>
-					<td class='divtitletableimg'>   </td>
-				</tr>
-			</table>								
-		</div>
-    	<table id='table2' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='content2td' cellspacing='0' cellpadding='0' > 
-					<div id='content2tdtitle1'>
-						<a href='http://www.digitalgreen.org/coco/home.html' target=_blank  style='color:Gray; font-weight:bold; font-size:1.4em; text-decoration:underline; font-family:Calibri' onmouseover="this.style.color='#fbae0c';this.style.textDecoration='none'" onmouseout="this.style.color='Gray';this.style.textDecoration='underline'">Click here to try it out </a>
-						<br/><span style='color:Gray; font-size:0.8em;'>[Please use the following username and password to login to COCO - username: kevin and password: !kevin] </span>
-					</div>			
-				</td>													
-			</tr>
-							
-		</table>
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Software </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+	{% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<img src="/media/Output/Images/technologyimg5.png" alt='Dr. Nagagouda giving Lessons'>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Software 
+	</div>
+	
+    <div id='contentdiv2'>
+    	<span class='subheaders'>COCO, Connect Online | Connect Offline </span><br/> 
+    	COCO is a highly sophisticated data input system that forms the base of Digital Green's software stack. 
+    	The creation of this system was inspired by persistent and at times debilitating issues at the field level, specifically technical issues in gathering and storing information. 
+    	To alleviate these problems, Digital Green's software team conceived of a highly flexible and robust alternative that sought to make information gathering and input at 
+    	Digital Green less error prone, fast, and resilient to persistent data connectivity issues in remote locations.
+    	<br> <br/>
+    	Most applicable to NGOs with a sizeable field operation, COCO's singular unique selling proposition is the ability to take the application offline in low and limited bandwidth locations, with uninterrupted usage in the browser. 
+    	COCO is designed to support up to 100,000 users located anywhere in the world and only requires internet connectivity whenever a user is ready to synchronize their data with our global repository. 
+    	Built as a robust standalone application in the Internet browser, COCO requires no additional software installation or maintenance. The system is designed in an open-source, customizable 
+    	framework that can be deployed without the need of IT/engineering staff. 
+    	<br> <br/>
+    	COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails. The core of COCO's framework comprises of a variety of open source technologies.
+    	In light of achieving maximum speed as a browser application, COCO is developed using the GWT 2.0 (Google Web Toolkit) Java-Javascript framework. To enable offline mode, COCO employs the use of Google Gears, 
+    	a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content. For deployment in offline mode, a compiled Javascript file is generated and 
+    	made available in Google Gear's local cache for access by the browser; COCO in online mode operates as any other web application. More details on our architecture will be available later. 
+    	<br> <br/>
+		<br/> 
+		<span class='subheaders'>Analytics System</span><br/>
+		Analytics System forms the second layer on Digital Green software stack. Built on the COCO foundation, the Analytics System provides day-to-day business intelligence on field operations, performance targets, and basic 
+		ROI (return on investment) metrics relevant to the organization. The system is freely available and accessible online -- by clicking on the Analytics dropdown in the menu bar -- without the need of onerous technical 
+		infrastructure and expensive commerical licenses. We welcome NGOs willing to reuse and repurpose this system as per their requirements.     
     </div>
-    
-	<div id='contentdiv1'>
-		<div style='margin-left:10px; width:900px; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
-				COCO is a highly sophisticated data input system that forms the base of DigitalGreen's software stack. 
-				The creation of this system was inspired by persistent and at times debilitating issues at the field level, specifically technical issues in gathering and storing information.  
-				To alleviate these problems, DigitalGreen's software team conceived of a highly flexible and robust alternative that sought to make information gathering and input at DigitalGreen 
-				less error prone, fast, and resilient to persistent data connectivity issues in remote locations. <br/><br/>
-			<div style='width: 900px;'>
-				<div style='float:left; width: 380px;'> 
-					Most applicable to NGOs with a sizeable field operation, COCO's singular usp is the ability to take the application offline in low and limited bandwidth locations, 
-					with uninterrupted usage in the browser.
-					COCO is designed to support up to 100,000 users located anywhere in the world and only requires internet connectivity whenever a user is ready to synchronize their data with our global repository.  
-					Built as a robust standalone application in the Internet browser, 
-					COCO requires no additional software installation or maintenance.  The system is designed in an open-source, customizable framework that can be deployed without the need of IT/engineering staff. <br/><br/>
-					Going forward, we're looking at the possibility of supporting other NGOs by hosting their data and giving them the benefit of not having to invest in and manage onerous infrastructure like servers and other third party systems. <br/><br/>
-
-					<span style='text-decoration:underline; font-weight:bold;'>COCO Technology</span> <br/>
-					COCO is architected as a Java web-framework, similar to and in proximate feature parity with popular frameworks such as Django or Ruby on Rails.  The core of COCO's framework comprises of a variety of open source technologies.  In light of achieving maximum speed as a browser application, COCO is developed using the GWT 2.0 (Google Web Toolkit) Java-Javascript framework.  
-					To enable offline mode, COCO employs the use of Google Gears, a browser plug-in that provides a persistent Sqlite database to store data relationally and a local cache to access all requisite static content.  For deployment in offline mode, a compiled Javascript file is generated and made available in Google Gear's local cache for access by the browser; COCO in online mode operates as any other web application.
-					More details on our architecture will be available later.  In the meantime, please send questions or comments to <a href='mailto:labs@digitalgreen.org' style='color:Gray; font-weight:normal; font-size:1.0em; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c'" onmouseout="this.style.color='Gray'">labs@digitalgreen.org</a>.
-				</div>
-				<div style='width:456px; float:right; margin-right: 30px;'>
-					<img  style='padding-top:5px;' src='/media/Output/Images/s-5.png' align='left'>
-					<div style='margin-top:5px; margin-bottom: 20px; padding-left:10px;  font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  A screenshot of COCO.  Aligned center, a control panel enables the user to toggle between online/offline mode.</div>
-
-					<span style='text-decoration:underline;font-weight:bold;'>Where is COCO deployed?</span> <br/>
-				
-					A map of DigitalGreen's present COCO deployments best describes where COCO is being used. 
-					<div style='margin-top: 2px; margin-left: 0px; border:1px solid Gray; width:456px;'>
-						<iframe width="456" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=4&amp;output=embed"></iframe><br /><small>View <a href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=22.755921,80.332031&amp;spn=14.153836,15.380859&amp;z=4" style="color:#0000FF;text-align:left">Digital Green Locations</a> in a larger map</small>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div style='clear: both; margin-bottom: 30px;'></div>
-	<div id='divstattitle'>
-		<table id='divtitletable'  cellspacing='0' cellpadding='0'>                                                                          <tr>
-				<td class='divtitletablename'> <div id='divstattitlename'>
-					Analytics System</div> </td>
-				<td class='divtitletableimg'>   </td>
-       			</tr>
-		</table>
-	</div>
-
-	<div id='contentdiv1'>
-		<div style='margin-left:10px; width:900px; text-align:left; margin-top:5px; font-family:Calibri; font-weight:normal; font-size:14px;'>
-                                The Analytics System forms the second layer on DigitalGreen's software stack.  Built on the COCO foundation, the Analytics System provides day-to-day business intelligence on field operations, performance targets, and basic ROI (return on investment) metrics relevant to the organization.  
-                                The system is freely available and accessible online -- <span style='font-weight:bold'>by clicking on the  <a href="/analytics/overview_module?geog=country&id=1" style='color:Black; font-weight:bold; text-decoration:underline; font-family:Calibri' onmouseover="this.style.color='Gray'" onmouseout="this.style.color='Black'">Analytics</a> dropdown in the menu bar</span> -- without the need of onerous technical infrastructure and expensive commerical licenses.  We welcome NGOs willing to reuse and repurpose this system as per their requirements.  Please contact <a href='mailto:labs@digitalgreen.org' style='color:Gray; font-weight:normal; font-size:1.0em; text-decoration:none; font-family:Calibri' onmouseover="this.style.color='#fbae0c'" onmouseout="this.style.color='Gray'">labs@digitalgreen.org</a> for questions or comments.<br/><br/>
-		</div>
-
-		<div style='width: 900px; text-align: center;'>
-			<img  style='padding-top:5px;' src='/media/Output/Images/analyticsscreenshot1.jpg' align='center'>
-		</div>
-		<div style='margin-top:5px; margin-bottom: 20px; padding-left:10px;  font-family:Calibri; font-weight:normal; font-size:11px; font-style:italic;'>  An example of graphs tracking our operations.</div>
-	</div>
      
-{% endblock careerbody %}
-</div>
-<div id='careerbodydiv3'> </div> 
-</div>   
-{% endblock content %}
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Software </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="mailto:labs@digitalgreen.org"><img src="/media/Output/Images/linkimg2.png" alt="">Contact Technology Team</a>
+				<a class="exploredescmainlink" href="/analytics/overview_module?geog=country&id=1" title='Progress Dashboard'><img src="/media/Output/Images/linkimg2.png" alt="">Analytics Dashboard</a>
+			</div> 
+		</div>			
+	</div>
+	
+	<div class='cocotrial'>
+		<div class='cocotrialdesc'>
+			 <a href='http://digitalgreen.org/coco/home.html' target='_blank'><img src="/media/Output/Images/cocotrialimg2.jpg" alt=""></a>		 
+		</div>	
+	</div>
+{% endblock mainbodycontentright %}	

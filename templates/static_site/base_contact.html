@@ -1,9 +1,10 @@
 
-{% extends "base.html" %}
+{% extends "base_all.html" %}
 
-{% block title %} Contact Us:: Digital Green  {% endblock %}
+{% block title %} Contact Us:: DigitalGreen {% endblock %}
 
 {% block cssfile %}
+	{{ block.super }}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/contact.css' />       
 {% endblock cssfile %}
 
@@ -11,113 +12,109 @@
        <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
 {% endblock jsfile %}
 
-{% block content %}
 
-<div id='careerbody'>
+{% block pagetitle %} {{ block.super }}Contact Us {% endblock pagetitle %}
 
-<div id='careerbodydiv1'>
-	<div id='careernavpanel'>
-		<div id='careertitleimg'>  </div>
-		<div id='careertitledesc'>
-			<div class='contacttitledesca'> 
-		   		Digital Green Trust <br/>
-				Flat No. T4, <br/>
-				4th Floor,	<br/>
-				#33, Race Course Road, <br/>
-				Swiss Complex, <br/>
-				Bangalore - 560001 <br/>
-				India	<br/>
-		   	</div>
-		   	<div class='contacttitledesca'> 
-		   		Digital Green Trust <br/>
-				Second Floor, <br/>
-				Building 2A, <br/>
-				Corner Market, <br/>
-				Malviya Nagar, <br/>
-				New Delhi - 110017 <br/>
-				India	<br/>
-		   	</div>			
-		</div>
+{% block breadcrums %}  
+
+	{{ block.super }}
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Contact Us </span>
+	{% endblock partnerbreadcrums %}
+	  
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+	<div id='sitemapdiv'>	
+		<iframe width="620" height="277" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;source=embed&amp;ll=24.327077,80.068359&amp;spn=11.076499,27.202148&amp;z=5&amp;output=embed"></iframe>
+		<br />		
 	</div>	
-</div>
-
-
-<div id='careerbodydiv2'>
-{% block careerbody %}
-    
-    <div id='contentheader'>
-		<table id='contentheadertable'>						
-			<tr>
-				<td class='contentheadertitle'> 
-					<div id='divstattitle'>
-						<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-							<tr>
-								<td class='divtitletablename'> <div id='divstattitlename'> Contact Us </div> </td>
-								<td class='divtitletableimg'>  </td>
-							</tr>
-						</table>								
-					</div>					 
-				</td>									
-			</tr>
-		</table>					
-	</div>
-	<div id='contentdiv1'>
-		<table id='table1' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
-					<div class='contenttd1divtext'>						
-						Do connect with us!
-						You can help us identify and set up collaborations with partners.  
-						You can help set up the Digital Green system in other places. 
-						You can help contribute content. 
-						You can help with other technical aspects of Digital work (such as setting up a community radio extension of Digital Green, or developing software, or working on novel electricity-generation solutions). 
-						You can experiment with applying the similar Digital Green approach to other areas of work (such as education, health care, and political activism). 
-						You can contribute money. You can help connect us with funders. You can help spread awareness of Digital Green by word of mouth. 
-						If you're a student, you can apply for an internship position. You can contact the Digital Green team at <a href="mailto:team@digitalgreen.org">team@digitalgreen.org</a>.
-					</div>
-					<div class='contenttd1divtextimg'>
-						<img src="/media/Output/Images/pic2.png" alt='temp' title="DG team talking to villagers" align='center'>
-					</div>
-				</td>												
-			</tr>
-    	</table>
-    </div>
-	<div id='contentdiv1'>
-		<table id='table1' cellspacing='0' cellpadding='0'>			
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
-					<div class='contenttd1div'>
-						<br/>
-					    Subscribe to our 'Friends of Digital Green' mailing list by sending a request to <a href="mailto:team@digitalgreen.org">team@digitalgreen.org</a>.  
-						Updates are sent once a quarter. We encourage you to join our mailing list to learn more about our activities and participate in a global exchange of ideas on how we can better design and develop the Digital Green system.
-                        <br/> Our offices in India are located at:		
-					</div>
-				</td>												
-			</tr>
-			
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
-					<div id='contentsitemap'>
-						<table id='sitemaptable'  cellspacing='0' cellpadding='0'>						
-							<tr>
-								<td id='sitemaptablename'> <div id='sitemaptitlename'> Where we work </div>  </td>								
-							</tr>
-						</table>
-						
-					    <div id='sitemapdiv'>					    						    						    			
-					    	<iframe frameborder='0' class="map_embed" src="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106808336718977769759.00047f50e369b043ed32d&amp;ll=20.756114,77.387695&amp;spn=19.641649,28.125&amp;z=5&amp;output=embed">					    		
-					    	</iframe>					    	
-					    </div>
-					    <br/>					    		
-					</div>
-				</td>												
-			</tr>
-		</table>					
+		
+	<div class='pagetitle'>
+		Contact Us 
 	</div>
 	
+	<div class='mainbodycontentleftdesc'>	
+				
+		Do connect with us! You can help us identify and set up collaborations with partners. You can help set up the Digital Green system in other places. 
+		You can help contribute content. You can help with other technical aspects of Digital work (such as setting up a community radio extension of Digital Green, or developing software, or working on novel electricity-generation solutions). 
+		<br/><br/>
+		You can experiment with applying the similar Digital Green approach to other areas of work (such as education, health care, and political activism). You can contribute money. You can help connect us with funders. 
+		You can help spread awareness of Digital Green by word of mouth.
+		<br/><br/>
+		Subscribe to our 'Friends of Digital Green' mailing list by sending a request to <a class='maillinks' href='mailto:contact@digitalgreen.org'> contact@digitalgreen.org </a> Updates are sent once a quarter. We encourage you to join our mailing list to learn more about our activities 
+		and participate in a global exchange of ideas on how we can better design and develop the Digital Green system. 
+	</div>
 	
-{% endblock careerbody %}
-</div>
-<div id='careerbodydiv3'> </div> 
-</div>   
-{% endblock content %}
+	<div class='contactaddress'>
+		<div class='contactaddressleft'>
+			<span class='contactaddresstitle'> Head Office </span> <br/>
+			Digital Green <br/>
+			Second Floor, Building 2A, <br/>
+			Corner Market, Malviya Nagar  <br/>
+			New Delhi - 110017 <br/> 
+			India <br/>
+		</div>
+	</div>
+	
+	<div class='contactaddress'>
+		<div class='contactaddressleft'>
+			<span class='contactaddresstitle'> US Address (Registered) </span> <br/>
+			Digital Green <br/>
+			2342 Shattuck Ave., #151 <br/>
+			Berkeley, CA 94704 <br/>
+			USA <br/>
+		</div>
+		<div class='contactaddressright'>
+			<span class='contactaddresstitle'> India Address (Registered) </span> <br/>
+			Digital Green <br/>
+			Flat No. T4, 4th Floor, <br/>
+			#33	Race Course Road, <br/>
+			Swiss Complex, <br/>
+			Bangalore - 560001, <br/> 
+			India  <br/>
+		</div>
+	</div>
+	
+	<div class='contactaddress'>
+		<div class='contactaddressleft'>
+			<span class='contactaddresstitle'> Central India Office </span> <br/>
+			Digital Green <br/>
+			Akash Ganga Colony, <br/>
+			E-8, Arera Colony, <br/>
+			Bhopal - 462039, <br/>
+			Madhya Pradesh, <br/>
+			India <br/>
+		</div>
+		<div class='contactaddressright'>
+			<span class='contactaddresstitle'> Eastern India Office </span> <br/>
+			Digital Green <br/>
+			Plot No-13/ 760, <br/>
+			Ground Floor, Jayadev Vihar, <br/>			
+			Prakash Book depot Lane <br/>
+			(Jayadev Vihar to Nandan Kanan Road), <br/>
+			Bhubaneswar-751013, <br/>
+			India <br/>
+		</div>
+	</div>
+	
+{% endblock mainbodycontentleft %}
+
+
+
+{% block mainbodycontentright %}
+	
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>			
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/career"><img src="/media/Output/Images/searchimg2.png" alt="">Search for Jobs and Opportunities in Digital Green</a>						
+			</div> 
+			<br/>
+		</div>			
+	</div>
+	
+	<div class='maillist'>
+		<a href='mailto:contact@digitalgreen.org'><img src="/media/Output/Images/mailingimg1.jpg" alt='Become Friends of Digital Green'></a>
+	</div>
+	
+{% endblock mainbodycontentright %}

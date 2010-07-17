@@ -1,115 +1,335 @@
 
-{% extends "base.html" %}
+{% extends "base_all.html" %}
 
 {% block title %} Home:: Digital Green  {% endblock %}
 
 {% block cssfile %}
+	{{ block.super }}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/home.css' />       
 {% endblock cssfile %}
 
 {% block jsfile %}
-       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+    <script type="text/javascript" src="/media/Output/JS/Jhome.js"></script>
 {% endblock jsfile %}
 
+
+{% block bodytitle %}
+{% endblock bodytitle %}
+
 {% block content %}
-
-<div id='careerbody'>
-
-<div id='careerbodydiv1'>
-		
-</div>
-
-
-<div id='careerbodydiv2'>
-{% block careerbody %}
-    
-    <div id='contentdiv2'>
-    	<div id='divstattitle'>
-			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-				<tr>
-					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} Welcome  {% endblock teampagetitle %}</div> </td>
-					<td class='divtitletableimg'>  </td>
-				</tr>
-			</table>								
-		</div>
-    	<table id='table2' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='content2td' cellspacing='0' cellpadding='0' > 
-					<div id='content2tdtitle1'></div>			
-				</td>													
-			</tr>							
-		</table>
-    </div>   
-
-	
-	<div id='contentdiv1'>
-		<table id='table1' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
-					<div class='contenttd1div'>
-							Digital Green is a young and dynamic organization that uses tools of information and communication technology for social change. 
-							It creates enabling environments for communities to adopt new and better behaviors to bring about sustainable change in the 
-							quality of life among populations living at the base of social pyramid. 
-							In its first intervention, it demonstrated immense potential in improving the lives of small and 
-							marginal farmers in a highly cost effective manner.
-							<br>
-							<br>
-							This outcome has added a totally new dimension to existing behavior change communication approaches. 
-							Encouraged by such an impressive outcome, Digital Green is now set to apply this approach to select locations in 
-							various parts of the developing world.  Digital Green's technology and approach has also elicited interest in other 
-							social domains like public health, education and livelihood.	
-							<br>
-							<br>
-							We're currently exploring additional partnerships and recruiting new members to our team.  
-							Please see our partners and careers pages to apply.  
-							Find out more in the about section and see our blog  for the latest quarterly updates.  
-							Also, check out The Nexus, a monthly newsletter produced by members of the Digital Green team, and the buzz about our work in the press.													
-					</div>					
-				</td>													
-			</tr>
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0'>
-					<div class='contenttd1div'>
-						<img alt="Video Production going on in a village" src="/media/Output/Images/homephoto2.png"/> 
-					</div> 					
-				</td>													
-			</tr>
-		</table>					
-	</div>
-    
-    <div id='contentdiv2'>
-    	
-    	<table id='table2' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='content2td'cellspacing='0' cellpadding='0'>
-					<div id='content2tdtitle4'>												
-					</div>				 
-				</td>
-			</tr>							
-		</table>
-    </div>   
-{% endblock careerbody %}
-</div>
-<div id='careerbodydiv3'> 
-
-	<div class='contenttd2div'>			
-		<object width="300" height="200">
-			<param name="movie" value="http://www.youtube.com/v/7yHHRworSgU&hl=en_US&fs=1&"></param>
-			<param name="allowFullScreen" value="true"></param>
-			<param name="allowscriptaccess" value="always"></param>
-			<embed src="http://www.youtube.com/v/7yHHRworSgU&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="200"></embed>
-		</object>			
-		<div class='contenttd2divdesc'>
-			<a href="http://www.youtube.com/digitalgreenorg" target=_blank>Check more of the videos here</a>
-		</div>
-	</div>
-	
-	<div class='contenttd2div1'>			
-		<div class='contenttd2divanalytics'>
-			<a href="/analytics/overview_module?geog=country&id=1"><img src="/media/Output/Images/analyticsbg4.png" alt='Check out the Analytics Dashboard'></a>
-		<div>	
-	</div>
-	
-</div> 
-</div>   
 {% endblock content %}
+
+
+{% block mainbodycontentleft %}
+
+								<script type="text/javascript">
+									var xmlDoc=null;
+           				 			if (window.XMLHttpRequest){
+             							xhttp=new XMLHttpRequest();
+            						}
+            						else {
+            	 						xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            						}
+            						xhttp.open("GET","/media/Output/homeimg.xml",false);
+            						xhttp.send();
+            						xmlDoc=xhttp.responseXML;
+									/*
+									if (window.ActiveXObject)
+									{// code for IE
+    									xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+									}
+									else if (document.implementation.createDocument)
+									{// code for Mozilla, Firefox, Opera, etc.
+    									xmlDoc=document.implementation.createDocument("","",null);
+									}
+									else
+									{
+										alert('Your browser cannot handle this script');
+									}
+									*/
+									if (xmlDoc!=null) 
+									{
+										//xmlDoc.async=false;
+										//xmlDoc.load("/media/Output/homeimg.xml");
+										//alert("hello");
+										var x=xmlDoc.getElementsByTagName("TEAM");
+										//alert(x.length);
+
+										//alert(x.length);				
+										
+										document.write("<table id='table1' cellspacing='0' cellpadding='0' align='center'>");
+										document.write("<tr>");
+											document.write("<td colspan=7 class='contenttd1empty'>");												
+											document.write("</td>");
+										document.write("</tr>");
+										A = new Array(4);
+										var m = 0;
+										var today = new Date();
+										var seed = 0;
+									
+										for (i=0; i<4; i++)
+					 					{ 	
+					 						A[i] = new Array(5);
+					 														
+  											document.write("<tr>");
+  											for (j=0; j<5; j++)
+  												{																							
+  													
+  													var seed = today.getSeconds();
+													var n = Math.floor( Math.random(seed) * 48 ); //generates the randomn number from 38 nodes
+  													//alert(n);
+  													
+  													
+  													//var m = Math.ceil( Math.random() * 48 ); //generates the randomn number from 38 nodes
+  													//alert(m);
+  																							
+  													
+  													//alert(A[i][j]);
+  													
+  													document.write("<td class='contendtd1' cellspacing='0px' cellpadding='0'>");
+													document.write("<div class='contendtd1div'>");
+  														document.write("<img  id='toptableimg' src='" + (x[n].getElementsByTagName("IMGLINK")[0].childNodes[0].nodeValue)+"'>");
+  																												
+														document.write("<a id='contendtd1divsub1link' href='" + (x[n].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + "'>");
+															document.write(x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue);
+														document.write("</a>");													
+														
+  													document.write("</div>");
+													document.write("</td>");												
+  													m = m + 1;
+  													 
+  												}	  													
+  													
+  												document.write("</tr>"); 
+  												document.write("<tr>");
+													document.write("<td colspan='7' class='contenttd1empty'>");												
+													document.write("</td>");
+												document.write("</tr>"); 												
+  										}
+  										 		
+										document.write("</table>");
+										
+  									}			
+								</script>
+		<div class='contenttd1empty2'>	
+			<a href='http://www.youtube.com/digitalgreenorg' target=_blank> View more videos <img style='float:right;' src='/media/Output/Images/videoicon6.png' alt='View All Videos'> </a>
+		</div>
+		
+		<div id='featuredfarmerdiv'>
+			<div id='featuredfarmertitle'>
+				Featured Farmer
+			</div>
+			<div id='featuredfarmerdesc'>			
+				<div id='featuredfarmerimg'>
+					<img src='/media/Output/Images/gauravva1.png' alt='Gauravvamma'>
+				</div>				
+				<div id='featuredfarmerstory'>
+					<div id='featuredfarmername'>
+						Gauravva Channappa Morabad
+					</div>					
+					<div id='featuredfarmerstorydesc'>
+						She is a hard working woman who resides in Kamplikoppa village in the Dharwad district of Karnataka. 
+						She is involved in field activities of all types and is a member of the Shri. Kariyamma Devi Self Help Group (SHG). 
+						Gauravva has attentively attended every Digital Green screening conducted in the SHG.
+					</div>					
+					<div class='learnmorediv'>
+						<a class='learnmore' href="/featuredfarmer">Learn more <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>
+					</div>
+				</div>
+			</div>	
+		</div>
+		
+		<div id='featuredfarmerdiv'>
+			<div id='featuredfarmertitle'>
+				In the Spotlight
+			</div>
+			<div id='featuredfarmerdesc'>						
+				<div id='spotlightstory'>										
+					<div id='spotlightstorydiv'>
+												
+						<script type="text/javascript">
+							var xmlDoc=null;
+           				 	if (window.XMLHttpRequest){
+             					xhttp=new XMLHttpRequest();
+            				}
+            				else {
+            	 				xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            				}
+            				xhttp.open("GET","/media/Output/press.xml",false);
+            				xhttp.send();
+            				xmlDoc=xhttp.responseXML;
+							/*
+							if (window.ActiveXObject)
+							{// code for IE
+    							xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+							}
+							else if (document.implementation.createDocument)
+							{// code for Mozilla, Firefox, Opera, etc.
+    							xmlDoc=document.implementation.createDocument("","",null);
+							}
+							else
+							{
+								alert('Your browser cannot handle this script');
+							}
+							*/
+							if (xmlDoc!=null) 
+							{
+								//xmlDoc.async=false;
+								//xmlDoc.load("/media/Output/press.xml");
+								//alert("hello");
+								
+								var PressString = new Array();							
+								var x=xmlDoc.getElementsByTagName("TEAM");
+								
+								document.write("<div id='divmainheader'>");
+									document.write("Media Coverage");
+								document.write("</div>");
+								
+								document.write("<table id='spotlighttable' cellspacing='0px' cellpadding='0'>");				
+								for (i=0;i<3;i++)
+ 								{
+ 									PressString[i] = (x[i].getElementsByTagName("DESC")[0].childNodes[0].nodeValue);
+ 									//alert(PressString[i]);
+ 									
+  									document.write("<tr><td class='spotlighttd' cellspacing='0px' cellpadding='0'>");  					
+  									
+  									document.write("<div class='spotlightdivtitle'>");
+  										document.write("<span style='font-family:Georgia,Times New Roman,Serif; font-size:1.0em; color:#5B6E1D; font-weight:normal;'>"  + (x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue)+ ": " + "</span>"+ "<a class='mainlinks' href='" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + "'>" + (x[i].getElementsByTagName("HEADLINE")[0].childNodes[0].nodeValue) + "</a>");
+  										document.write("<br/>");
+  										document.write("<span style='font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; color:Gray;'>" +(x[i].getElementsByTagName("PRESSDATE")[0].childNodes[0].nodeValue) + "</span>");
+  									document.write("</div>");
+  									document.write("<div class='spotlightdivdesc'>");
+  										document.write(PressString[i].substring(1,120)+" ..." +"<a class='viewmore' href='" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue)  + "' target='_blank'>Read more</a>" );
+  										document.write("<br/>");
+  										//document.write("<a class='viewmore' style='margin-left:0px;' href='/press'> View more <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>");
+  									document.write("</div>"); 						
+  									document.write("</td></tr>");
+  								}
+  								
+  								document.write("<tr><td class='spotlighttd' cellspacing='0px' cellpadding='0'>");  					
+  									document.write("<div class='viewmorediv'>");
+  										document.write("<a class='viewmore' style='margin-left:0px;' href='/press'> View more Media Coverage <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>");
+  									document.write("</div>"); 						
+  								document.write("</td></tr>");
+  								
+  								document.write("</table>");	
+  							}		
+				
+						</script>
+						<br/>	
+						<div id='divmainheader'>
+							Progress Report Updates
+						</div>
+						<table id='spotlighttable' cellspacing='0px' cellpadding='0'>			
+							<tr><td class='spotlighttd' cellspacing='0px' cellpadding='0'>
+								<div class="spotlightdivtitle">
+									<a class='mainlinks' href="/latestupdate" target='_blank'>June 29, 2010 - Y1Q3: Transition </a>
+								</div> 
+								<div class='spotlightdivdesc'>
+									We have been building upon the traction from last quarter and are now transitioning our team members and strategy.  In close ... <a class='viewmore' href='/latestupdate' target='_blank'> Read more</a>
+								</div>
+								<div class='viewmorediv'>
+									<a class='viewmore' style='margin-left:0px;' href='/update' target='_blank'> View more Updates <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>						
+								</div>
+								<br/><br/>
+							</td></tr>
+						</table>
+					</div>					
+				</div>								
+			</div>				
+		</div>		
+	
+{% endblock mainbodycontentleft %}
+
+{% block mainbodycontentright %}
+	<div id='statdiv'>
+		<div id='divmainheader'>
+			Latest Progress Stats
+		</div>
+		
+		<div class='analyticsstatdiv'>
+			<div class='analyticsstatlink'>
+				<div class='analyticsstatlinkdesc1'> <a href='/analytics/video_module?geog=country&id=1'> {{analytics_data.tot_vid}} </a>  </div>
+				<div class='analyticsstatlinkdesc2'> Videos produced </div>
+			</div>
+			
+			<div class='analyticsstatfooter'>
+				<a href='/analytics/video_module?geog=country&id=1'> Check out the production statistics <img  style='padding-left:10px;' src='/media/Output/Images/arrow2.png'> </a>
+			</div>  	
+		</div>
+		
+		<div class='divgap'> </div>
+		
+		<div class='analyticsstatdiv'>
+			<div class='analyticsstatlink'>
+				<div class='analyticsstatlinkdesc1'> <a href='/analytics/screening_module?geog=country&id=1'> {{analytics_data.tot_scr}} </a>  </div>
+				<div class='analyticsstatlinkdesc2'> Video screenings </div>
+				
+			</div>
+			
+			<div class='analyticsstatfooter'>
+				<a href='/analytics/screening_module?geog=country&id=1'> Check out the screening statistics  <img  style='padding-left:10px;' src='/media/Output/Images/arrow2.png'> </a>
+			</div>
+		</div>
+		
+		<div class='divgap'> </div>
+				
+		<div class='analyticsstatdiv'>
+			<div class='analyticsstatlink'>
+				<div class='analyticsstatlinkdesc1'> <a href='/analytics/overview_module?geog=country&id=1'> {{analytics_data.tot_per}} </a>  </div>
+				<div class='analyticsstatlinkdesc2'> Farmers involved </div>
+			</div> 
+			
+			<div class='analyticsstatfooter'>
+				<a href='/analytics/overview_module?geog=country&id=1'> Check out the overall statistics <img  style='padding-left:10px;' src='/media/Output/Images/arrow2.png'> </a>
+			</div>			
+		</div>
+		
+		<div class='divgap'> </div>
+		
+		<div class='analyticsfooterspace'>
+			&nbsp; 
+		</div>
+	</div>
+		
+	<div id='explorediv'>		
+		<div id='divmainheader'>
+			Connect with Us
+		</div>
+					
+		<div class='exploredescdiv'>
+			<div class='navdesctitle'> 
+				Follow Us 
+			</div>
+			<div class='exploredescmain1'> 
+				<a class="exploredescmainlink1" href="http://www.facebook.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/facebook-icon3.gif" alt="">Facebook</a> 
+				<a class="exploredescmainlink1" href="http://www.twitter.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/twitter-icon3.gif" alt=""> Twitter</a>
+				<a class="exploredescmainlink1" href="http://www.youtube.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/youtube-icon4.png" alt="">YouTube</a>
+			</div>
+		</div>		
+			
+		<div class='exploredescdiv'>
+			<div class='navdesctitle'>
+				Start Exploring 
+			</div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/career" title="Search for Jobs, Internships"><img src="/media/Output/Images/linkimg2.png" alt="">Search for Jobs</a> 
+				<a class="exploredescmainlink" href="/press" title="See what's in the Media"><img src="/media/Output/Images/linkimg2.png" alt="">Visit the Press Room</a>
+				<a class="exploredescmainlink" href="mailto:contact@digitalgreen.org" title="Sign up for the NewLetter"><img src="/media/Output/Images/linkimg2.png" alt="">Sign up for Updates</a>
+			</div> 
+		</div>
+		
+	</div>
+		
+	<div id='mapdiv'>
+		
+		<div class='mapdescdiv'>
+			<div class='mapdesctitle'> &nbsp;Where we work </div>
+			<div class='mapdescmain'> 
+				<a href='/contact' title='Regions where DG works'><img src="/media/Output/Images/mapimg5.png" alt="DG Work Map"></a>				
+			</div> 
+		</div>			
+	</div>
+							
+{% endblock mainbodycontentright %}
+

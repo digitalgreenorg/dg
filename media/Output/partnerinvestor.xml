@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<TITLE>Bill &amp; Melinda Gates Foundation</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/bill_logo1.PNG</IMAGESRC>    
+    	<DESC>A philanthropic foundation that supports Digital Green's work to raise the incomes of smallholder farmers in South Asia and Africa through the targeted production and dissemination of agricultural information via participatory video and mediated instruction.  </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.gatesfoundation.org/Pages/home.aspx</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Deshpande Foundation</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/deshpande_logo1.PNG</IMAGESRC>    
+    	<DESC>A philanthropic foundation that has established a geographically-defined "sandbox" in the northwestern region of Karnataka state to to promote innovation and inter-organizational collaboration which supports Digital Green's work there.    </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.deshpandefoundation.org/</REFERENCE>	
+	</TEAM>	
+</CATALOG>

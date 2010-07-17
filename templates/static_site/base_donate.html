@@ -1,0 +1,68 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Donate Us:: DigitalGreen {% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />  
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+
+{% block pagetitle %} {{ block.super }}Donate to us {% endblock pagetitle %}
+
+{% block breadcrums %}  
+
+	{{ block.super }}
+	 {% block breadcrumsmore %}  <span style='font-size:0.9em; font-weight:bold;'> Donate </span> {% endblock breadcrumsmore %} 
+	 
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+	
+	{% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<img src="/media/Output/Images/donateimg1.jpg" alt='A village Woman'>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Donate to us
+	</div>
+	
+	<div class='teamcontent'>
+		Thanks for visiting the Digital Green website and learning more about us.  
+		<br><br>Digital Green is a work in progress and we would value you joining with us to achieve our shared vision for using the tools of technology and social organization to make poverty history.  
+		We would appreciate it if you would consider making a contribution from the button below.  
+		
+		<br/><br/>
+		<div class='donatelink'>
+			<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FJ82E82MVR4CS" target='_blank'><img src="/media/Output/Images/donatebtn3.png" alt=""></a> 		
+		</div>
+		<br/>
+		We are a registered 501(c)3 non-profit in the U.S. a Section 12A/80G charitable trust in India.  All donations are tax-deductible.  
+		We use PayPal so you can be assured that your contribution by credit card, debit card, or check will be processed safely. 
+		<br><br>
+		Your contribution will fund a variety of components in our system such as video cameras being used by community members to 
+		produce localized video content or pico projectors used in disseminating the videos produced.  
+		We value your help and support, and we hope you will keep track of our progress for the years to come.   
+		<br/><br/>
+	</div>
+{% endblock mainbodycontentleft %}	
+
+{% block mainbodycontentright %}		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Explore  </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/team"><img src="/media/Output/Images/linkimg2.png" alt="">Who we are</a>
+				<a class="exploredescmainlink" href="/aboutus"><img src="/media/Output/Images/linkimg2.png" alt="">What we do</a>			
+			</div> 
+		</div>			
+	</div>
+{% endblock mainbodycontentright %}	

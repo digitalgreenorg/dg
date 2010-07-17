@@ -1,6 +1,6 @@
 {% extends "base_analytics.html" %}
 
-{% block title %} Disseminations:: Digital Green  {% endblock %}
+{% block title %} Video Screening Statistics:: Digital Green  {% endblock %}
 
 {% block cssfile %}  
     {{block.super}}   
@@ -12,9 +12,15 @@
      <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>          
 {% endblock jsfile %}	
 
-{% block contentheadertitle %}Screening Statistics {% endblock contentheadertitle %}
-	{% block contentbody %}
-		{{block.super}}		
+
+{% block analyticsbreadcrums %} 	
+	{{block.super}}
+	/ <span style='font-size:0.9em; font-weight:bold;'> Video Screening Statistics </span>	
+{% endblock analyticsbreadcrums %}
+
+
+{% block contentbody %}
+	{{block.super}}		
 		<div id='contentstat'>	
 			<div id='table1'>
 				<div id='divstattitle'>

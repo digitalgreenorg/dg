@@ -1,9 +1,10 @@
 
-{% extends "base.html" %}
+{% extends "base_all.html" %}
 
-{% block title %} Careers:: Digital Green  {% endblock %}
+{% block title %} Careers:: DigitalGreen {% endblock %}
 
 {% block cssfile %}
+	{{ block.super }}
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/career.css' />       
 {% endblock cssfile %}
 
@@ -11,85 +12,75 @@
        <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
 {% endblock jsfile %}
 
-{% block content %}
 
-<div id='careerbody'>
+{% block pagetitle %} {{ block.super }}Careers {% endblock pagetitle %}
 
-<div id='careerbodydiv1'>
-	<div id='careernavpanel'>
-		<div id='careertitleimg'> <img alt="Careers" src="/media/Output/Images/careericon4.png"/> </div>
-		<div id='careertitledesc'>
-			<div class='careertitledesca'> <a href="../career"> Careers: Home </a>  </div>			
-			<div class='careertitledesca'> <a href="/career_immediate"> Immediate Openings  </a>  </div>					
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Careers </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+	<div id='careerrole'>
+		<div class='keyrole'>
+			<img src="/media/Output/Images/keyroleimg1.jpg">
+			You must have a genuine passion for rural development. Without passion, you will find what we're trying to do too difficult. There are much easier jobs.								
 		</div>
-	</div>	
-</div>
-
-
-<div id='careerbodydiv2'>
-{% block careerbody %}
-    <div id='contentdiv2'>
-    	<div id='divstattitle'>
-			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-				<tr>
-					<td class='divtitletablename'> <div id='divstattitlename'>{% block teampagetitle %} Careers {% endblock teampagetitle %}</div> </td>
-					<td class='divtitletableimg'>  </td>
-				</tr>
-			</table>								
+		<div class='keyrolegap'>								
+		</div>								
+		<div class='keyrole'>	
+			<img src="/media/Output/Images/keyroleimg2.jpg">
+			You must want to work in a small non-profit/NGO. 							
 		</div>
-    </div>
-	<div id='contentdiv1'>
-		<table id='table1' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='contenttd1'cellspacing='0' cellpadding='0' > 
-					<div class='contenttd1div'>
-							Digital Green wants you! Actually, Digital Green needs you and wants to hire you assuming you are a 
-							<span class='contentheadertitlediv1'>hard working, technically gifted, team-oriented, experienced rural development leader</span>. &nbsp; 
-							<br/>
-							If you might be interested in joining us, please keep reading.
-							Digital Green is actively hiring highly qualified and dedicated individuals. 
-							Our hiring bar is unabashedly extreme, and we insist on keeping our team size small. 
-							This means the person occupying each and every spot must be among the most gifted in his or her field. 
-							Other hiring criteria include: 
-							<ul>
-								<li> You must have a genuine passion for rural development. Without passion, you will find what we're trying to do too difficult. There are much easier jobs. </li>
-   								<li> You must want to work in a small non-profit/NGO. </li>
-   							    <li> We are building the capacities of real people and real organizations. This must excite you.</li>								
-							</ul>							
-					</div>
-				</td>
-				<td class='contenttd2'> 
-					<div class='contenttd2div'>
-						<object height="220" width="350">
-							<param value="http://www.youtube.com/v/_HTsrigrUQY?rel=1" name="movie">
-							<param value="transparent" name="wmode">
-							<embed height="220" width="350" wmode="transparent" type="application/x-shockwave-flash" src="http://www.youtube.com/v/_HTsrigrUQY?rel=1">
-						</object>
-						<div class='contenttd2div3'>
-							<span style="color:#5b6e1d; text-decoration:underline; ">An Orientation Boot Camp</span> that we organize to bring new team members on board
-						</div>
-					</div>  
-				</td>									
-			</tr>			
-		</table>					
+		<div class='keyrolegap'>								
+		</div>
+		<div class='keyrole'>
+			<img src="/media/Output/Images/keyroleimg3.jpg">
+			We are building the capacities of real people and real organizations. This must excite you.								
+		</div>						
 	</div>
-    
-    <div id='contentdiv2'>
-    	
-    	<table id='table2' cellspacing='0' cellpadding='5'>						
-			<tr>												
-				<td class='content2td'cellspacing='0' cellpadding='0'>
-					<div id='content2tdtitle4'>
-						Digital Green offers highly dynamic and enabling work environment and provides competitive compensation based on experience and background. 
-						Interested candidates should visit <a href="www.digitalgreen.org"> www.digitalgreen.org </a> to learn more about Digital Green and submit their application with a cover note, current CV 
-						and at least three references to <a href="mailto:jobs@digitalgreen.org">jobs@digitalgreen.org</a>. If you are student, you can apply for an internship position. 						
-					</div>				 
-				</td>
-			</tr>							
-		</table>
-    </div>   
-{% endblock careerbody %}
-</div>
-<div id='careerbodydiv3'> </div> 
-</div>   
-{% endblock content %}
+	
+	<div class='pagetitle'>
+		Careers 
+	</div>
+	
+	<div id='contentdiv1'>							
+			Digital Green wants you!  <br/><br/> 
+			Actually, Digital Green needs you and wants to hire you assuming you are a 
+			'hard working, technically gifted, team-oriented, experienced rural development leader' &nbsp; 
+			<br/> <br/>
+			If you are interested in joining us, please keep reading.
+			Digital Green is actively hiring highly qualified and dedicated individuals. 
+			Our hiring bar is unabashedly high, and we insist on keeping our team size small. 
+			This means the person occupying each and every spot must be among the most gifted in his or her field. 
+			<br/> <br/>					
+			Digital Green offers highly dynamic and enabling work environment, and provides competitive compensation based on experience and background. 
+			Interested candidates should visit <a class='maillinks' href="www.digitalgreen.org"> www.digitalgreen.org </a> to learn more about Digital Green and submit their application with a cover note, current CV 
+			and at least three references to <a class='maillinks' href="mailto:jobs@digitalgreen.org">jobs@digitalgreen.org</a>. If you are student, you can apply for an internship position.			
+			<br/><br/>								
+	</div>
+	
+{% endblock mainbodycontentleft %} 
+
+
+
+{% block mainbodycontentright %}
+		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Immediate Openings  </div>
+			<div class='exploredescmain'>
+				<a class="exploredescmainlink" href="/careeradm"><img src="/media/Output/Images/linkimg2.png" alt="">Assistant Development Manager</a>
+				<a class="exploredescmainlink" href="/careerid"><img src="/media/Output/Images/linkimg2.png" alt="">Interface Designers</a>
+				<a class="exploredescmainlink" href="/careerrse"><img src="/media/Output/Images/linkimg2.png" alt="">Research System Engineers</a>				
+			</div> 
+		</div>			
+	</div>
+	
+	<div class='pressvideo'>
+		
+	</div>
+	
+{% endblock mainbodycontentright %}		

@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<!--  If there is no entry for any CHILD NODE then LEAVE THE CHILD NODE WITH A SPACE -->
+<CATALOG>
+	<TEAM>
+		<TITLE>The Economic Times</TITLE>
+		<HEADLINE>India's a land of hope for some NRIs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/digitalgreenorg#p/a/f/0/7yHHRworSgU</REFERENCE>
+		<PRESSDATE> Fri, 14 May 2010</PRESSDATE>
+		<PLACE>Traditional Paddy vs SRI</PLACE>    
+    	<DESC>"Supported more recently by Deshpande Foundation and Bill &amp; Melinda Gates Foundation, Delhi-based Digital Green collaborates with local organisations to use videos of best agricultural practices to enhance the environmental and economic sustainability of small and marginal farmers in 200 villages in Karnataka, Jharkhand, Madhya Pradesh and Orissa. Digital Green CEO Gandhi, an Indian expat from the US , says "We do not follow the usual top-down model. Our working model is driven by people and for people" </DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img1.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>The Financial Express</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=brU-rlvZe8M</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Cauliflower POP</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img2.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Harvard Business Review</TITLE>
+		<HEADLINE>Microsoft Reinvents Its Global R&amp;D Model </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=HOzbe5sgNUA</REFERENCE>
+		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
+		<PLACE>Amruta Balli</PLACE>
+		<DESC>"My personal favourite is Digital Green (which I nicknamed 'American Idol for Farmers'), a Web 2.0 initiative which tapes progressive farmers to disseminate their best practices across agricultural communities. Digital Green just won the 2008 Stockholm Challenge Award in the Culture category."</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img3.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>CTA </TITLE>
+		<HEADLINE>Video in Development: Filming for Rural Change (Book) </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=KUXROvz13KY</REFERENCE>
+		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
+		<PLACE>Adusoge Khasahaya</PLACE>
+		<DESC>"Video can [show] long natural or agricultural processes in a short period of time, ideally in the local setting, as in the case of Digital Green."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img4.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Hindustan Times </TITLE>
+		<HEADLINE>'Giving circles' that goes beyond monetary funding  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=ZuXjZ_2OHwA</REFERENCE>
+		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
+		<PLACE>Mainfield operation of Paddy</PLACE>
+		<DESC>"Philanthropy should then address not just the financial needs, but also the physical, human, social, and technological."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img5.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Hindustan Times </TITLE>
+		<HEADLINE>Instead of space, he landed on farm land   </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=HqF0Zmqk068</REFERENCE>
+		<PRESSDATE> Thurs, 25 June 2009</PRESSDATE>
+		<PLACE>Sri Vedhi se Gehun ki Kheti</PLACE>
+		<DESC>"They had a new perspective of the world from space and became do-gooders on Earth."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img6.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Technology Review </TITLE>
+		<HEADLINE>TR35 2010 Social Innovator </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=haukgnfPzQI</REFERENCE>
+		<PRESSDATE> </PRESSDATE>
+		<PLACE>Vegetable Nursery bed Preparation</PLACE>
+		<DESC>"They had a new perspective of the world from space and became do-gooders on Earth."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img7.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Press Trust of India </TITLE>
+		<HEADLINE> Digital tech to help farmers improve livelihood  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=yBzLL4QFqo4</REFERENCE>
+		<PRESSDATE> </PRESSDATE>
+		<PLACE>Paddy Sapling Transplantation</PLACE>
+		<DESC>"We anticipate that with support from the Gates Foundation, Rikin and his team at Digital Green will have impact over 1,000 villages, each consisting of 1,000-2,000 people. Indeed, they are already on the way there."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img8.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Sify </TITLE>
+		<HEADLINE> 'Technology Review' identifies Top 20 Indian innovators under 35  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=lF6Y0PVHZAU</REFERENCE>
+		<PRESSDATE> Fri, Mar 5 2010</PRESSDATE>
+		<PLACE>Paddy Nursery bed</PLACE>
+		<DESC>"Bangalore's Digital Green founder Rikin B. Gandhi is the social innovator of the year."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img9.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>StockWatch </TITLE>
+		<HEADLINE> Many Indians honored at MIT's EmTech </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=hdy9VwzN8_g</REFERENCE>
+		<PRESSDATE> Tues, Mar 9 2010</PRESSDATE>
+		<PLACE>Humari saal bhar ki Karya Yojna</PLACE>
+		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img10.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>SiliconIndia </TITLE>
+		<HEADLINE> Indian academia not upto industry standard </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=oUz_A4ALt6Q</REFERENCE>
+		<PRESSDATE> Tues, Mar 9 2010</PRESSDATE>
+		<PLACE>SHG-Credit Disbursement</PLACE>
+		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img11.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>CIOL </TITLE>
+		<HEADLINE> 20 young Indians honoured at Em Tech 2010</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=E9EQB2bWU0Q</REFERENCE>
+		<PRESSDATE>Mon, Mar 8 2010</PRESSDATE>
+		<PLACE>Paddy Seed Treatment</PLACE>
+		<DESC>"Rikin B. Gandhi, 28, Founder of Digital Green, Bangalore was named the Social Innovator of the Year for finding a solution to help farmers adopt better farmer practices."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img12.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Sify Business </TITLE>
+		<HEADLINE> Digital Green to help Educate Farmers</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=IWVfbtT0mz0</REFERENCE>
+		<PRESSDATE> Fri, Mar 5 2010</PRESSDATE>
+		<PLACE>SHG Vision Building v1 0d</PLACE>
+		<DESC>"From crop rotation to organic farming practices, local farmers are always interested in learning the latest agricultural practices. The trouble is how to transfer this information in a language and medium they can understand. And more important, convince them to adopt better farming practices."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img13.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>POP City </TITLE>
+		<HEADLINE> Pittsburgh's Sima Products teams up with Digital Green to teach sustainable farming in India </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=NMR4cflX3LU</REFERENCE>
+		<PRESSDATE> Wed, Feb 10 2010</PRESSDATE>
+		<PLACE>Poi Nursery Bed_Karanjia_Oriya</PLACE>
+		<DESC>"Sima (a global consumer electronics company based here) began supplying Digital Green with incredibly lightweight, battery-powered projectors that are easy to transport and use. Until now they had to carry these heavy projectors," says Sima's CEO Ilana Diamond. "Ours, you can put in your pocket. So they can go to more places, they're not dependent on electricity. If you're riding a bicycle, the weight makes a huge difference."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img14.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Asia Times </TITLE>
+		<HEADLINE> India's rural inventors drive change </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=Lo1aTFPj2eg</REFERENCE>
+		<PRESSDATE> Fri, Jan 29 2010</PRESSDATE>
+		<PLACE>Application of Jeevamrutha</PLACE>
+		<DESC>"Digital Green helps increase the productivity of small farmers through low-cost information exchange, such as personal interactions among farmers and with experts. Digital Green videotapes agricultural improvements by farmers in a village and shares the innovations with other villages. The You-Tube-like information sharing aims to help small farmers across the developing world."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img15.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Live Mint </TITLE>
+		<HEADLINE> Local Research aids Microsoft in breaking new ground </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=cqM4lVNgv1M</REFERENCE>
+		<PRESSDATE> Sun, Jan 24 2010</PRESSDATE>
+		<PLACE>Bhindi Earthing Up Karanjia Oriya</PLACE>
+		<DESC>"Digital Green is a project that applies commodity video hardware or real time three dimensional video to step up awareness and spread the use of sustainable agriculture practices among small farmers. It is active in some northern states of India, and has now been spun off as a separate non-government entity."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img16.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>EE Times India </TITLE>
+		<HEADLINE>  ICT research to boost India socio-economic dev't  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=yk_yp3cHNJc</REFERENCE>
+		<PRESSDATE> Sun, Jan 24 2010</PRESSDATE>
+		<PLACE>Concept Video_Karanjia_Oriya</PLACE>
+		<DESC>"Digital Green - In order to help farmers improve their agriculture practices, leveraged the use of a regular camcorder to record best agriculture practices and disseminated to other farmers through mediator-based screenings."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img17.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>CXO Today </TITLE>
+		<HEADLINE>  Bill Gates on a free Wheel  </HEADLINE>
+		<REFERENCE>http://www.cxotoday.com/India/News/Bill_Gates_on_a_Free_Wheel/551-104769-913.html</REFERENCE>
+		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
+		<PLACE>Transplanting of Chilli</PLACE>
+		<DESC>"We are going Digital Green, getting videos that can facilitate local farmers, and disseminate information and farming technology through DVDs. We can impact the life of people through the usage of technology."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img18.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Science / AAAS </TITLE>
+		<HEADLINE> Science: Sustainable Goal  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=_tb1USoa2aM</REFERENCE>
+		<PRESSDATE> Fri, Jul 24 2009</PRESSDATE>
+		<PLACE>Beans Sowing</PLACE>
+		<DESC>"Within the next 3 months, Digital Green will leave the fold and become an independent nonprofit organization. Gandhi's goal is to reach 3000 villages with farming techniques that can help villagers out of poverty."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img19.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>New York Times </TITLE>
+		<HEADLINE>Microsoft Goes Far Afield to Study Emerging Markets </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=5rGeN90NhMc</REFERENCE>
+		<PRESSDATE> Sun, Oct 26 2008</PRESSDATE>
+		<PLACE>Low cost vermicompost</PLACE>
+		<DESC>"'The farmers love being on TV,' said Kentaro Toyama, assistant managing director of Microsoft Research India and the head of the Technology for Emerging Markets research group. 'This gives us some core knowledge about what works in this particular environment."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img20.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE> The Guadrain </TITLE>
+		<HEADLINE>Gadgets help draw world's poorest into global economy </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=u0WRWJneXzE</REFERENCE>
+		<PRESSDATE> </PRESSDATE>
+		<PLACE>Millets seeds Treatment</PLACE>
+		<DESC>"The Indian government also has nightly broadcasts about this, but we wanted to form local bases of knowledge, featuring local farmers sharing techniques and testimonials, which other farmers can identify with. Seeing their peers demonstrate the techniques also makes other farmers more likely to be persuaded, the film project has seen 70 to 80%amp; of farmers adopting new methods, compared with 10 to 15%amp; during the Green Foundation's previous outreach work, which didn't have ICT resources"</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img21.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>			
+	<TEAM>
+		<TITLE>The Forbes</TITLE>
+		<HEADLINE>Computing at the Bottom of the Pyramid </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=ATY76_Jp-Ck</REFERENCE>
+		<PRESSDATE>  </PRESSDATE>
+		<PLACE>Ragi seed Treatment</PLACE>
+		<DESC>"Digital Green, which has now been spun off as a not-for-profit, is being implemented in 29 villages in three Indian states. On a recent day in May two dozen residents of the village of Banihalli, 50 miles southeast of Bangalore, were gathered in a courtyard to watch and discuss a DVD on worm composting."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img22.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>	
+	<TEAM>
+		<TITLE>The Economic Times</TITLE>
+		<HEADLINE>Computer wizards join hands with sociologists  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=wmjd8SErJ04</REFERENCE>
+		<PRESSDATE> Aug 4 2008 </PRESSDATE>
+		<PLACE>Beans and Pulses seed storage with Caster Powder</PLACE>
+		<DESC>"Bill Gates may have stepped down from an active role at Microsoft, but he has been pursuing his passion to serve the world through his outreach programmes. During his tour of universities recently, he happened to talk about a 'Digital Green' programme initiated by the Microsoft Research Lab, India, in Kanakapura villages."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img23.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>The Times of India</TITLE>
+		<HEADLINE> Microsoft helps farmers by creating videos on best practices   </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=Af7lXVQSa50</REFERENCE>
+		<PRESSDATE> Sun, Jul 20 2008 </PRESSDATE>
+		<PLACE>Beans and Pulses seed storage with sand</PLACE>
+		<DESC>"We differentiate farming techniques with good results and those without and communicate the difference to farmers. An example is seeding technique. Random versus systematic seeding shows that the latter consumes less water, increases yield and occupies less space. The same is communicated to farmers."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img24.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>The Hindu Business Line</TITLE>
+		<HEADLINE> Spread the Farmers word </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=4QOcsyNHT7w</REFERENCE>
+		<PRESSDATE> Mon, Jul 7 2008 </PRESSDATE>
+		<PLACE>Horse gram improved Stepping</PLACE>
+		<DESC>"The project has helped to extend the efforts of GREEN Foundation. Raghavendra Rao, Chief Executive, GREEN Foundation, says they were doing it in the traditional way. They had field managers who went from farmer to farmer. But since they did not have too many staff, their reach was limited. But now because of Digital Green, they can reach out to more farmers. Rao says the response from the farmers has been good and the project has taken off well."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img25.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Stockholm Challenge Winner</TITLE>
+		<HEADLINE> Spread the Farmers word </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=TX6N7YRoXFA</REFERENCE>
+		<PRESSDATE> Mon, May 19 2008 </PRESSDATE>
+		<PLACE>Nursery bed Compositing</PLACE>
+		<DESC>"Digital Green won a Stockholm Challenge award! Digital Green was selected for a this year in the "Culture" category. The winners were not announced until the ceremony itself, on May 22, 2008. The Stockholm Challenge 2008 features a six category Award for ICT for Development projects. The best projects will win the prestigious Stockholm Challenge trophies and receive a 5.000 Euro stipend. Visit the Stockholm Challenge winners website for more details on the prize and check out Digital Green's Stockholm Challege entry submission."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img26.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>SciDev.net </TITLE>
+		<HEADLINE> ICT for development projects honoured in Swedish awards </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=DOLVaE-bq8s</REFERENCE>
+		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
+		<PLACE>Tomato Pest and Disease Management</PLACE>
+		<DESC>"Digital Green aims to use the Stockholm Challenge money to extend the reach of the project. They hope to establish a network of partnerships with other grassroots extension programmes."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img27.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>NextBillion.net </TITLE>
+		<HEADLINE> ICT for development projects honoured in Swedish awards </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=1C8tq6De8f4&amp;feature=related</REFERENCE>
+		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
+		<PLACE>Potato Transplantation</PLACE>
+		<DESC>"Digital Green aims to use the Stockholm Challenge money to extend the reach of the project. They hope to establish a network of partnerships with other grassroots extension programmes."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img28.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>FARA </TITLE>
+		<HEADLINE>Video based approach for agricultural learning content  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=8smOIMWuCv4</REFERENCE>
+		<PRESSDATE> Mon, May 29 2008 </PRESSDATE>
+		<PLACE>Marigold Farmer Experience</PLACE>
+		<DESC>"The video based approach has several important advantages to traditional forms of agricultural content, which is typically not in the local language, intended for a literate audience, uses expert terminology, lacks grassroots level practicalities, and remains inaccessible in a sea of scattered media. Farmers, by the nature of their occupation, rely on their auditory and visual senses and video, though not perfect, comes closest to capturing the scene in detail. Video creation tends to be faster and less expensive than other types of media, as advanced preparation in "lesson"-planning can minimize post-production editing. Video can compress the time needed to reveal the change. Video provides a means of bringing relevant demonstrations into the homes of farmers. Video also reduces the human resources required to follow-up with individual farmers and demonstrate time-consuming methods in the field."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img29.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Microsoft Unlimited Potential Group </TITLE>
+		<HEADLINE>The Human impact on Innovation  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=pmXiH9-12Sg</REFERENCE>
+		<PRESSDATE> Thu, Jul 3 2008 </PRESSDATE>
+		<PLACE>Staking in Mango</PLACE>
+		<DESC>"We jokingly call the project 'Farmer Idol,' because the farmers almost compete to appear in future videos."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img30.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Rising Voices </TITLE>
+		<HEADLINE>Video as a citizen Media Tool  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=tgyKFxVtqls</REFERENCE>
+		<PRESSDATE> Thu, April 10 2008 </PRESSDATE>
+		<PLACE>Weeding in Paddy</PLACE>
+		<DESC>"Digital Green is a project of Microsoft Research that seeks to disseminate targeted agricultural information to small-scale, rural farmers in India through digital video. The system includes a digital video database, which is produced by farmers and experts. The content within this repository is meant to enable farmers to progressively improve their trade."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img31.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Think Change India </TITLE>
+		<HEADLINE>Video as a citizen Media Tool  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=3VC1rPhatyM</REFERENCE>
+		<PRESSDATE> Thu, May 29 2008 </PRESSDATE>
+		<PLACE>Fertilizer Application in Paddy</PLACE>
+		<DESC>"Essentially, the project is a way to spread useful information to even illiterate farmers, using networks that they can trust (i.e. other villages, farmers in similar situations)."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img32.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Carnegie Mellon </TITLE>
+		<HEADLINE>Bill Gates - On Software, Innovation, Entrepreneurship and Giving Back </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=LKIzAjEZdMQ</REFERENCE>
+		<PRESSDATE> Thu, Feb 21 2008 </PRESSDATE>
+		<PLACE>Fermented Plant Extract</PLACE>
+		<DESC>"Sometimes the solutions aren't cool because of the technology. They're really cool because of the impact. One that I'll cite, we call Digital Green, which was done by our Indian research lab which has a particular focus on the needs of the 2 billion people at the bottom of the pyramid. They went out to the farmers and saw that a direct use of computing wouldn't be possible: no cell phone network and no electricity. The real problem is farming productivity. If you have a drought and didn't grow enough during the season before, you literally suffer malnutrition."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img33.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>UN-FAO</TITLE>
+		<HEADLINE>UN-FAO e-Agriculture.org Global Example </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=83SRwknzPwY</REFERENCE>
+		<PRESSDATE> </PRESSDATE>
+		<PLACE>Crop Sowing</PLACE>
+		<DESC>"E-Agriculture is one of the action lines identified in the declaration and plan of action of the World Summit on the Information Society (WSIS). The Food and Agriculture Organization of the United Nations (FAO) has been assigned the responsibility of organizing activities related to the action line under C.7 ICT Applications on E-Agriculture. In 2006, a multi-stakeholder working group was set up to guide efforts in this area."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img34.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Gourmet's Diary of a Foodie</TITLE>
+		<HEADLINE>Southern India:The spice of Life </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=83SRwknzPwY</REFERENCE>
+		<PRESSDATE> </PRESSDATE>
+		<PLACE>CPP Demonstration</PLACE>
+		<DESC>"Visit a tiny farming community where local farmers cultivate indigenous ragi grain using sustainable agricultural practices and make some gooey ragi mudde. This excerpt is from Gourmet's Diary of a Foodie "Southern India: The Spice of Life."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img35.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>University of Waterloo</TITLE>
+		<HEADLINE> Bill Gates - On Software, Innovation, Entrepreneurship and Giving Back  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=CWGWaBLFSXs</REFERENCE>
+		<PRESSDATE>Thurs, Feb 21 2008 </PRESSDATE>
+		<PLACE>Preparation of Activated EM</PLACE>
+		<DESC>"This one thing we did with farmers, called Digital Green, was to take a camera and film farmers doing best practices, take those back for experts to look at and edit them, and then create DVDs that are carried out."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img36.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>University of Chicago</TITLE>
+		<HEADLINE> Bill Gates - On Software, Innovation, Entrepreneurship and Giving Back  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=vWbQ37vMObk</REFERENCE>
+		<PRESSDATE>Wed, Feb 20 2008 </PRESSDATE>
+		<PLACE>Paddy Sowing Method Comparison</PLACE>
+		<DESC>"It's kind of like American Idol except this is about not starving."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img37.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
+		<TITLE>Stanford University </TITLE>
+		<HEADLINE> Bill Gates - On Software, Innovation, Entrepreneurship and Giving Back  </HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=pNmR3szc9So</REFERENCE>
+		<PRESSDATE>Tues, Feb 19 2008 </PRESSDATE>
+		<PLACE>Sowing SPI</PLACE>
+		<DESC>"When our India lab opened up this research group about the poorest, the very poorest, who won't directly touch a personal computer, they were overwhelmed with people who were interested in joining it, and now they're spinning off NGOs like for this farmer training thing."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img38.jpg</IMGLINK>		
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Image 39</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=ALF5SKvYMZ4</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Tomato Harvesting</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img39.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Image40</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=DgjCXsflSVA</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Tomato Nursery Bed Preparation</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img40.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image41</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=V740ktarS4I</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Paddy Seed Treatment</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img41.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image42</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=jToVu26q9Go</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Mulberry Mulching</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img42.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image43</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=EfeZ1ePSRL0</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Marigold Cultivation-Kootur</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img43.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image44</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=QiUhqSmcwlk</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Raised Bed sowing in kitchen garden</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img44.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image45</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=oKNQ77niZZg</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Pulses Grain storage</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img45.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image46</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=9m9rsUIM9Xk</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Varietal Purification Terubeedi</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img46.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image47</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=dj6kvcDqfO8</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Dry Bed nursery of Paddy</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img47.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Image48</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=eIlzheGvZ04</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Raise Bed nursery of Cauliflower</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img48.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image49</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=hRudw6WFEhc</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>Organic Farm Field Day</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img49.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Image50</TITLE>
+		<HEADLINE>India emerging as hub of eco-entrepreneurs</HEADLINE>
+		<REFERENCE>http://www.youtube.com/watch?v=cNY3gLb6T68</REFERENCE>
+		<PRESSDATE> Fri, 30 April 2010</PRESSDATE>
+		<PLACE>HYV versus Local Ragi</PLACE>    
+    	<DESC>"We are encouraging a large number of farmers to see and practise the novel ways of farming to increase their earnings," says Mr Gandhi, who instead of prattling away in American accent, is trying to brush up his Kannada so that he can interact with farmers better." </DESC>
+		<COMPANY>THE HEADER GOES THIS WAY</COMPANY>
+		<IMGLINK>/media/Output/Images/imgicons/img50.jpg</IMGLINK>
+		<VIDEOLINK> </VIDEOLINK>
+		<VIDEOREFERENCE> </VIDEOREFERENCE>		
+	</TEAM>
+</CATALOG>

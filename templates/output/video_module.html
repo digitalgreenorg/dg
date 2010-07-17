@@ -15,7 +15,11 @@
     <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>          
 {% endblock jsfile %}	
 
-{% block contentheadertitle %}Video Statistics {% endblock contentheadertitle %}
+{% block analyticsbreadcrums %} 	
+	{{block.super}}
+	/ <span style='font-size:0.9em; font-weight:bold;'> Production Statistics </span>	
+{% endblock analyticsbreadcrums %}
+
 	{% block contentbody %}
 		{{block.super}}		
 		<div id='contentstat'>	

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<TITLE>GREEN Foundation</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/green_logo1.PNG</IMAGESRC>    
+    	<DESC>A grassroots-level NGO based in Karnataka, India that focuses on the conservation of indigenous seed varieties and promotes sustainable agricultural practices with which we conducted the initial research and development of the Digital Green system.    </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://greenconserve.com/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Microsoft Research India</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/msri_logo1.PNG</IMAGESRC>    
+    	<DESC>Microsoft's Technology for Emerging Markets team incubated the Digital Green project as a pilot initiative that evolved from a research exploration to a controlled evaluation and into a spin-off, non-profit organization.  The research and development of the project are described on the original Digital Green website hosted by Microsoft Research.  Please check out our research news to learn more.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://research.microsoft.com/en-us/labs/india/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Digital Study Hall</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/dsh_logo1.PNG</IMAGESRC>    
+    	<DESC>A NGO based in Lucknow, India that uses innovative approaches to improve education for the poor children in slum and rural schools in India which inspired the conception of the Digital Green initiative.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://dsh.cs.washington.edu/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>University of California - Berkeley</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/berkeley_logo1.jpg</IMAGESRC>    
+    	<DESC>A NGO based in Lucknow, India that uses innovative approaches to improve education for the poor children in slum and rural schools in India which inspired the conception of the Digital Green initiative.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://berkeley.edu/</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Avaaj Otalo: A Stanford University Project</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/stanford_logo1.jpg</IMAGESRC>    
+    	<DESC>Avaaj Otalo("voice-based community forum") is a system for farmers to access relevant and timely agricultural information over the phone. The system was designed in the summer of 2008 as a collaboration between IBM India Research Laboratory  and Development Support Center (DSC), an NGO in Gujarat, India.   </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://hci.stanford.edu/research/otalo/</REFERENCE>	
+	</TEAM>	
+</CATALOG>

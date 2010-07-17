@@ -1,20 +1,18 @@
 
 #contentdiv1						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
-#table1								{ margin-left:5px; width:100%; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.boardtd1							{ width:100%; padding:2px 2px 0px 2px; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; text-align:justify; background-color:none; margin-bottom:10px; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#ececec; }
+#table1								{ margin-left:2px; width:624px; margin-top:0px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+.boardtd1							{ width:622px; padding:2px 2px 0px 2px;  text-align:left; background-color:none; margin-bottom:10px; border-top:1px solid #ececec; }
 .boardtd1div1						{ float:left; width:123px; margin-top:0px;  padding-top:5px;  }
-.boardtd1div1name					{ width:122px; text-align:left; font-size:1.0em; font-family:Calibri; font-weight:bold; color:#5b6e1d;  }
+.boardtd1div1name					{ width:122px; text-align:left; font-size:1.0em; font-family:Georgia,'Times New Roman',Serif; font-weight:normal; color:#5b6e1d;  }
 
-.boardtd1div2						{ float:left; width:85%; margin-top:0px; }
-.boardtd1div2title					{ float:none; width:100%; margin-left:40px; margin-top:0px; padding-left:0px; }
+.boardtd1div2						{ float:left; width:480px; margin-top:0px; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+.boardtd1div2title					{ float:none; width:440px; margin-left:40px; margin-top:0px; padding-left:0px; }
 .boardtd1div2ul						{ margin-top:5px; margin-left:2px; margin-bottom:0px; text-decoration:none; }
 .boardtd1div2ul li					{ display:inline; color:Black; font-weight:normal; margin-right:10px; margin-left:0px }	
 
 .boardtd1div2desc					{ float:none; width:100%; margin-left:40px; padding:0px; align:top; min-height:40px;  color:#5b6e1d; }
-.boardtd1div2desc a					{ color:Gray; font-size:0.8em; font-weight:bold; text-decoration:none; }
-.boardtd1div2desc a:hover			{ color:#fbae0c; font-weight:bold; text-decoration:underline; }
-
-
+.boardtd1div2desc a					{ color:Gray; font-size:13px; font-weight:normal; text-decoration:none; }
+.boardtd1div2desc a:hover			{ color:#fbae0c; text-decoration:underline; }
 
 #table2								{ margin-left:5px; width:100%; margin-top:10px; }
 .content2td							{ width:100%; }
