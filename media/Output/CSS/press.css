@@ -21,7 +21,7 @@
 .mainbodycontentleftimg				{ margin-top:3px; width:620px; height:277px; }
 #presscontent						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
 #table1								{ margin-left:0px; width:620px; margin-top:5px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
-.contenttd1							{ width:620px; padding-bottom:0px; background-color:none; margin-bottom:10px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
+.contenttd1							{ text-align:left; width:620px; padding-bottom:0px; background-color:none; margin-bottom:10px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
 .contenttd1div1						{ clear:both; width:100%; margin-bottom:0px; padding:0px; background-color:#f2f2f2; }
 .contenttd1div1 img					{ position:absolute; z-index:0; width:123px; height:147px;}
 .contenttd1div1name					{ width:122px; position:absolute; z-index:1; margin-top:122px; text-align:center; font-family:Calibri; font-weight:bold; color:#5b6e1d;  }
