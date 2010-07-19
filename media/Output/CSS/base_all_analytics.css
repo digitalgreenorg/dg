@@ -26,7 +26,7 @@
 #footertop									{ clear:both; margin-top:20px; width:59px; height:17px; background:url("/media/Output/Images/footertopbg5.png"); background-position:center; background-repeat:none; }
 #footerdivleft								{ clear:both; margin-top:0px; width:100%; border-top:10px solid #c0e481; height:100px; background:url("/media/Output/Images/footerbg2.png"); background-repeat:x-repeat; }		
 
-#footerdivlicence							{ clear:both; margin-top:15px; width:888px; text-align:left; margin-left:0px; }
+#footerdivlicence							{ clear:both; margin-top:15px; margin-left:185px; text-align:left; }
 #footerdivlicence	a						{ text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 #footerdivlicence	a:hover					{ text-decoration:underline; }						
 						
