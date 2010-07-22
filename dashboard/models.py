@@ -493,7 +493,7 @@ class Equipment(models.Model):
     model_no = models.CharField("Make / Model No ", max_length=300, db_column='MODEL_NO', blank=True)
     serial_no = models.CharField(max_length=300, db_column='SERIAL_NO', blank=True)
     cost = models.FloatField(null=True, db_column='COST', blank=True)
-    purpose = models.IntegerField(choices=EQUIPMENT_PURPOSE, db_column='purpose')
+    purpose = models.IntegerField(choices=EQUIPMENT_PURPOSE, db_column='purpose', null=True, blank=True)
     additional_accessories = models.CharField("Additional Accessories Supplied", max_length=500, blank=True)
     is_reserve = models.BooleanField("Is the equipment in Reserve?")
     procurement_date = models.DateField(null=True, db_column='PROCUREMENT_DATE', blank=True)
