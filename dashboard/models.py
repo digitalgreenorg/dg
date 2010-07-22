@@ -62,6 +62,40 @@ ROLE = (
         ('A', 'Administrator'),
 )
 
+EQUIPMENT = (
+             (1,'Pico Projector'),
+             (2,'Speaker'),
+             (3,'Camera'),
+             (4,'Tripod'),
+             (5,'Battery'),
+             (6,'Battery Charger'),
+             (7,'Laptop'),
+             (8,'Computer'),
+             (9,'Television set'),
+             (10,'DVD player'),
+             (11,'Headphone'),
+             (12,'Microphone'),
+             (13,'Hard disk'),
+             (14,'Pen drive'),
+             (15,'UPS'),
+             (16,'Cycle'),
+             (17,'Chair'),
+             (18,'Table'),
+             (19,'Almirah'),
+             (20,'Bag'),
+             (21,'Other'),
+)
+
+EQUIPMENT_PURPOSE = (
+                     (1,'DG Delhi office'),
+                     (2,'DG Bangalore office'),
+                     (3,'DG Bhopal office'),
+                     (4,'DG Bhubaneswar office'),
+                     (5,'Partners office'),
+                     (6,'Field'),
+                     (7,'Individual'),
+)
+
 
 class RegionTest(models.Model):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
@@ -454,10 +488,12 @@ class PersonAdoptPractice(models.Model):
         db_table = u'PERSON_ADOPT_PRACTICE'
 
 class Equipment(models.Model):
-    equipment_type = models.CharField(max_length=300, db_column='EQUIPMENT_TYPE')
-    model_no = models.CharField("Make", max_length=300, db_column='MODEL_NO', blank=True)
+    equipment_type = models.IntegerField(choices=EQUIPMENT, db_column='EQUIPMENT_TYPE')
+    other_equipment = models.CharField("Specify the equipment if 'Other' equipment type has been selected ", max_length=300, db_column='OTHER_EQUIPMENT', null = True, blank=True)
+    model_no = models.CharField("Make / Model No ", max_length=300, db_column='MODEL_NO', blank=True)
     serial_no = models.CharField(max_length=300, db_column='SERIAL_NO', blank=True)
     cost = models.FloatField(null=True, db_column='COST', blank=True)
+    purpose = models.IntegerField(choices=EQUIPMENT_PURPOSE, db_column='purpose')
     additional_accessories = models.CharField("Additional Accessories Supplied", max_length=500, blank=True)
     is_reserve = models.BooleanField("Is the equipment in Reserve?")
     procurement_date = models.DateField(null=True, db_column='PROCUREMENT_DATE', blank=True)
