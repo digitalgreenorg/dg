@@ -19,6 +19,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.Practices;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.digitalgreen.dashboardgwt.client.servlets.States;
+import com.digitalgreen.dashboardgwt.client.servlets.Targets;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
@@ -316,6 +317,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("vi-2", "<a href='#dashboard/village/add' class='addlink'>Add</a>", "dashboard/village/add", new Villages(requestContext));
+		
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
+		addHyperlink("tar-1", "<a href='#dashboard/target/'>Targets</a>", "dashboard/target", new Targets(requestContext));
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("tar-2", "<a href='#dashboard/target/add' class='addlink'>Add</a>", "dashboard/target/add", new Targets(requestContext));
 
 		HTMLPanel h = new HTMLPanel("<div id='controlPanel'></div>");
 		h.setStyleName("mainControlPanelArea");
@@ -414,12 +423,12 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 									"<div class='module'>" +
      								"<table summary='Models available in the Dashboard application.'>" +
      									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
-     										"<tr>" +
-     											"<th id='aa-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='aa-2'>" +
-     											"</td>" +
-     										"</tr>" +
+     										"<th id='aa-1' scope='row'>" +
+ 											"</th>" +
+ 											"<td id='aa-2'>" +
+ 											"</td>" +
+ 										"</tr>" +
+ 											"<tr>" +     										
      										"<tr>" +
      											"<th id='a-1' scope='row'>" +
      											"</th>" +
@@ -427,6 +436,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
+ 											
      											"<th id='b-1' scope='row'>" +
      											"</th>" +
      											"<td id='b-2'>" +
@@ -522,6 +532,12 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"<td id='vi-2'>" +
      											"</td>" +
      										"</tr>" +
+     										"<tr>" +
+ 											"<th id='tar-1' scope='row'>" +
+ 											"</th>" +
+ 											"<td id='tar-2'>" +
+ 											"</td>" +
+ 										"</tr>" +
      									"</table>" +
      								"</div>" +
      							"</div>";
