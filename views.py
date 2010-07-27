@@ -1,5 +1,5 @@
 from django.shortcuts import *
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, QueryDict
 from dg.dashboard.models import *
 from dg.views import *
 from dg.forms import *
@@ -10,6 +10,7 @@ from django.template.loader import get_template
 from django.template import Context, Template
 from django.shortcuts import render_to_response
 from django.db import connection, transaction
+from django.db.models import Q
 from dg.output.database.utility import run_query, run_query_dict
 import datetime
 import cjson
@@ -29,7 +30,7 @@ def search(request):
     """
     Searches in the fields of the given related model and returns the
     result as a simple string to be used by the jQuery Autocomplete plugin
-    """
+    """    
     query = request.GET.get('q', None)
     app_label = request.GET.get('app_label', None)
     model_name = request.GET.get('model_name', None)
@@ -919,7 +920,6 @@ def save_block_offline(request, id):
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
-
         else:
             block = Block.objects.get(id=id)
             form = BlockForm(request.POST, instance = block)
@@ -2027,6 +2027,71 @@ def save_reviewer_offline(request, id):
             else:
                 return HttpResponse("0")
 
+def save_target_online(request,id):
+    if request.method == 'POST':
+        obj = QueryDict.__copy__(request.POST)
+        month_year_year = request.POST.get('month_year_year')
+        month_year_month = request.POST.get('month_year_month')
+        if(month_year_year == "0") or (month_year_month == "0"):
+            obj['month_year'] = ""
+        else:
+            obj['month_year'] = datetime.date(int(month_year_year), int(month_year_month), 1)
+        if(id):
+            target = Target.objects.get(id = id)
+            form = TargetForm(obj, instance = target)
+        else:
+            form = TargetForm(obj)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('')
+        else:
+            return HttpResponse(form.errors.as_text(),status = 201)
+    else:
+        if(id):
+            target = Target.objects.get(id = id)
+            form = TargetForm(instance = target)
+        else:
+            form = TargetForm()
+        districts = get_user_districts(request)
+        form.fields['district'].queryset = districts.order_by('district_name')
+        return HttpResponse(form)
+
+def get_targets_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('target')
+    else:
+        districts = get_user_districts(request)
+        count = Target.objects.filter(district__in = districts).distinct().count()
+        targets = Target.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
+        if(targets):
+            json_subcat = serializers.serialize("json", targets, relations=('district',))
+        else:
+            json_subcat = 'EOF'
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
+
+def save_target_offline(request, id):
+    if request.method == 'POST':
+        if(not id):
+            form = TargetForm(request.POST)
+            if form.is_valid():
+                new_form  = form.save(commit=False)
+                new_form.id = request.POST['id']
+                new_form.save()
+                form.save_m2m()
+                return HttpResponse("1")
+            else:
+                return HttpResponse("0")
+        else:
+            target = Target.objects.get(id=id)
+            form = TargetForm(request.POST, instance = target)
+            if form.is_valid():
+                form.save()
+                #form.save_m2m()
+                return HttpResponse("1")
+            else:
+                return HttpResponse("0")
 
 # Old functions, Will be deprecated once the online / offline functionality is created
 def add_language(request):

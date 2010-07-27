@@ -131,3 +131,7 @@ class EquipmentHolderForm(forms.ModelForm):
 class ReviewerForm(forms.ModelForm):
 	class Meta:
 		model = Reviewer
+
+class TargetForm(forms.ModelForm):
+    class Meta:
+        model = Target
