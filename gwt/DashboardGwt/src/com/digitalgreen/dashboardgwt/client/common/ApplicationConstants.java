@@ -26,6 +26,7 @@ import com.digitalgreen.dashboardgwt.client.data.ScreeningFarmerGroupsTargetedDa
 import com.digitalgreen.dashboardgwt.client.data.ScreeningVideosScreenedData;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData;
 import com.digitalgreen.dashboardgwt.client.data.StatesData;
+import com.digitalgreen.dashboardgwt.client.data.TargetsData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingAnimatorsTrainedData;
 import com.digitalgreen.dashboardgwt.client.data.TrainingsData;
 import com.digitalgreen.dashboardgwt.client.data.VideoFarmersShownData;
@@ -44,7 +45,7 @@ public class ApplicationConstants {
 	public static String[] tableIDs = {	"8","9","10","11","12","13",
 										"14","15","16", "17","18", "19","20","21",
 										"22","23","37","24", "25","26", "28","27",
-										"38","39","29","40","41","30","31","34"};
+										"38","39","29","40","41","30","31","34","42"};
 
 	public static HashMap mappingBetweenTableIDAndDataObject;
 	
@@ -173,6 +174,8 @@ public class ApplicationConstants {
 		mappingBetweenTableIDAndDataObject.put(PersonAdoptPracticeData.tableID, personAdoptPracticeData);
 		EquipmentsData equipmentsData = new EquipmentsData();
 		mappingBetweenTableIDAndDataObject.put(EquipmentsData.tableID, equipmentsData);
+		TargetsData targetsData = new TargetsData();
+		mappingBetweenTableIDAndDataObject.put(TargetsData.tableID, targetsData);
 	}
 		
 }
