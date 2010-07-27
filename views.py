@@ -1010,10 +1010,10 @@ def get_equipments_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('equipments')
     else:
-        count = Equipment.objects.select_related('region').count()
-        equipments = Equipment.objects.select_related('region').order_by("-id")[offset:limit]
+        count = Equipment.objects.count()
+        equipments = Equipment.objects.order_by("-id")[offset:limit]
         if(equipments):
-            json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder',))
+            json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder','village',))
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")
