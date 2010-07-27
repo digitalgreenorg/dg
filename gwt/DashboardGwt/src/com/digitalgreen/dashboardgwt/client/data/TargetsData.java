@@ -327,12 +327,6 @@ public class TargetsData extends BaseData {
 		
 		@Override
 		public void save() {
-			Window.alert("In save meethod of target data "+"  dist id is"+this.district.getId()+"  month_year is"+
-					this.month_year+" other"+
-					this.clusters_identification+ 
-					this.dg_concept_sharing+
-					this.csp_identification 
-					);
 			TargetsData targetsDataDbApis = new TargetsData();		
 			this.id = targetsDataDbApis.autoInsert(this.id,
 						this.district.getId(),
