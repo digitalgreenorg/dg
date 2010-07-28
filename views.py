@@ -232,7 +232,7 @@ def login_view(request):
 
 def get_key_for_user(request):
     if request.method == 'POST':
-        MILLION_CONSTANT = 10000000
+        MILLION_CONSTANT = 1000000000
         username = request.POST.get('username', '')
         user_id = run_query("Select id from auth_user where username = %s", username)
         if len(user_id) > 0 :
