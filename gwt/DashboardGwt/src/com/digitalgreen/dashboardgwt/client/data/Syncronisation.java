@@ -120,7 +120,7 @@ public class Syncronisation {
 							updateSyncStatusInUserTable("0", "0");
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");
-							// This is to clear out anythin left over in the progress bar the next time the operation is run.
+							// This is to clear out anything left over in the progress bar the next time the operation is run.
 							EventBus.get().fireEvent(new ProgressEvent(0));
 							getServlet().redirectTo(new Index(requestContext));	
 						}else{
