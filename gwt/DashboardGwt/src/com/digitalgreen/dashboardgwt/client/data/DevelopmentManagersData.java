@@ -234,7 +234,7 @@ public class DevelopmentManagersData extends BaseData {
 	
 	public static String tableID = "11";
 	protected static String createTable = "CREATE TABLE  IF NOT EXISTS `development_manager` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"NAME VARCHAR(100)  NOT NULL ," +
 												"AGE INT  NULL DEFAULT NULL," +
 												"GENDER VARCHAR(1)  NOT NULL ," +
@@ -242,7 +242,7 @@ public class DevelopmentManagersData extends BaseData {
 												"PHONE_NO VARCHAR(100)  NULL DEFAULT NULL, " +
 												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL ," +
 												"SPECIALITY TEXT  NULL DEFAULT NULL ," +
-												"region_id INT  NOT NULL DEFAULT 0," +
+												"region_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"START_DAY DATE  NULL DEFAULT NULL," +
 												"SALARY FLOAT(0,0)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) REFERENCES region(id));";

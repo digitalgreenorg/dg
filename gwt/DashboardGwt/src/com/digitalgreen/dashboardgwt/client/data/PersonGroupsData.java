@@ -229,12 +229,12 @@ public class PersonGroupsData extends BaseData {
 
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_groups`;";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_groups` "
-			+ "(id INTEGER PRIMARY KEY  NOT NULL ,"
+			+ "(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ,"
 			+ "GROUP_NAME VARCHAR(100)  NOT NULL ,"
 			+ "DAYS VARCHAR(9) NULL DEFAULT NULL ,"
 			+ "TIMINGS TIME  NULL DEFAULT NULL,"
 			+ "TIME_UPDATED DATETIME  NULL DEFAULT NULL ,"
-			+ "village_id INT  NOT NULL DEFAULT 0, "
+			+ "village_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, "
 			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
 
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";

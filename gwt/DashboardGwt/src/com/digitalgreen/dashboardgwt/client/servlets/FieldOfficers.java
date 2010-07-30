@@ -189,7 +189,7 @@ public class FieldOfficers extends BaseServlet {
 					}
 					else {
 						RequestContext requestContext = new RequestContext();
-						requestContext.setErrorMessage("You do not have permission to add a Field officer.");
+						requestContext.setErrorMessage("You do not have permission to add / edit a Field officer.");
 						this.redirectTo(new Index(requestContext));			
 					}
 				}

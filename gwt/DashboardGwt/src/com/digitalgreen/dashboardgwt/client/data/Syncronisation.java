@@ -218,7 +218,7 @@ public class Syncronisation {
 		if(formQueue.getResultSet().isValidRow()){
 			String queryString;
 			try {
-				queryString = "id=" + formQueue.getResultSet().getFieldAsInt(0) + "&username=" + ApplicationConstants.getUsernameCookie();
+				queryString = "id=" + formQueue.getResultSet().getFieldAsLong(0) + "&username=" + ApplicationConstants.getUsernameCookie();
 				formQueue.post(RequestContext.SERVER_HOST + this.setGlobalKeyURL, queryString);
 			} catch (DatabaseException e) {
 				Window.alert("Database Exception : " + e.toString());

@@ -359,7 +359,7 @@ public class AnimatorsData extends BaseData {
 
 	public static String tableID = "22";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `animator` " +
-											"(id INTEGER PRIMARY KEY  NOT NULL ," +
+											"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 											"NAME VARCHAR(100)  NOT NULL ," +
 											"AGE INT  NULL DEFAULT NULL," +
 											"GENDER VARCHAR(1)  NOT NULL ," +
@@ -368,8 +368,8 @@ public class AnimatorsData extends BaseData {
 											"FACILITATOR_FLAG SMALLINT  NULL DEFAULT NULL," +
 											"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
 											"ADDRESS VARCHAR(500)  NULL DEFAULT NULL," +
-											"partner_id INT  NOT NULL DEFAULT 0," +
-											"village_id INT  NOT NULL DEFAULT 0," +
+											"partner_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+											"village_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 											"FOREIGN KEY(partner_id) REFERENCES partners(id), " +
 											"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";

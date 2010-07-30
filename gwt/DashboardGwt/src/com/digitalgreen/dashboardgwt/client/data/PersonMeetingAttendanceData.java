@@ -203,14 +203,14 @@ public class PersonMeetingAttendanceData extends BaseData {
 		
 	public static String tableID = "30";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_meeting_attendance` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"screening_id INT  NOT NULL DEFAULT 0," +
-												"person_id INT  NOT NULL DEFAULT 0," +
-												"expressed_interest_practice_id INT  NULL DEFAULT NULL," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"screening_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"expressed_interest_practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"EXPRESSED_INTEREST TEXT NULL DEFAULT NULL ," +
-												"expressed_adoption_practice_id INT  NULL DEFAULT NULL," +
+												"expressed_adoption_practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"EXPRESSED_ADOPTION TEXT NULL DEFAULT NULL," +
-												"expressed_question_practice_id INT  NULL DEFAULT NULL," +
+												"expressed_question_practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"EXPRESSED_QUESTION TEXT NULL DEFAULT NULL, " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +

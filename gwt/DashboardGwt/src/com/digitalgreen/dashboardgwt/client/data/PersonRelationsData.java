@@ -113,9 +113,9 @@ public class Data extends BaseData.Data {
 	
 	public static String tableID = "21";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_relations` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"person_id INT  NOT NULL DEFAULT 0," +
-												"relative_id INT  NOT NULL DEFAULT 0," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"relative_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"TYPE_OF_RELATIONSHIP VARCHAR(100)  NOT NULL, " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(relative_id) REFERENCES person(id));" ;

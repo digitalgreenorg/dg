@@ -56,7 +56,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 			if(this.requestContext.getArgs().get("action").equals("edit")) {
 				id = (String) this.requestContext.getArgs().get("id");
 			}
-			ScreeningsTemplate.loadPerson(Integer.parseInt(id));
+			ScreeningsTemplate.loadPerson(id);
 		}
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
@@ -103,7 +103,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		return links;
 	}
 	
-	public static native void loadPerson(int id) /*-{
+	public static native void loadPerson(String id) /*-{
 			$wnd.screening_page_offline.init(id);
 	}-*/;
 	

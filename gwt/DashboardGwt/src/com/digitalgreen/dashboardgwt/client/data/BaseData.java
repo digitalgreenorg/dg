@@ -571,9 +571,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			BaseData.dbOpen();
 			this.select(getLastInsertedID, ApplicationConstants.getUsernameCookie());
 			if (this.getResultSet().isValidRow()){
-				int id = this.getResultSet().getFieldAsInt(0);
+				long id = this.getResultSet().getFieldAsLong(0);
 				BaseData.dbClose();
-				return (new Integer(++id)).toString();
+				return (new Long(++id)).toString();
 			} 
 		} catch (DatabaseException e) {
 				Window.alert("Database exception error : " +  e.toString());

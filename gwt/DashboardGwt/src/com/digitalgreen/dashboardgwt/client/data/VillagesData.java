@@ -187,9 +187,9 @@ public class VillagesData extends BaseData {
 	
 	public static String tableID = "17";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `village` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"VILLAGE_NAME VARCHAR(100)  NOT NULL ," +
-												"block_id INT  NOT NULL DEFAULT 0," +
+												"block_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"NO_OF_HOUSEHOLDS INT  NULL DEFAULT NULL," +
 												"POPULATION INT  NULL DEFAULT NULL," +
 												"ROAD_CONNECTIVITY VARCHAR(100)  NULL ," +

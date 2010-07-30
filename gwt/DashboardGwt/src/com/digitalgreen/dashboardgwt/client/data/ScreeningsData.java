@@ -213,7 +213,7 @@ public class ScreeningsData extends BaseData {
 			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
 			
 			ManyToManyValidator videoScreenedValidator = new ManyToManyValidator(videoes_screened, false);
-			videoScreenedValidator.setError("Please make sure you add some animators for 'Videoes screened'.");
+			videoScreenedValidator.setError("Please make sure you add some videos for 'Videoes screened'.");
 			
 			IntegerValidator targetPersonAttendanceValidator = new IntegerValidator(this.target_person_attendance, true, false);
 			targetPersonAttendanceValidator.setError("Please make sure that 'Target person attendance' is a number.");
@@ -307,7 +307,7 @@ public class ScreeningsData extends BaseData {
 	
 	public static String tableID = "29";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"DATE DATE  NOT NULL ," +
 												"START_TIME TIME  NOT NULL ," +
 												"END_TIME TIME  NOT NULL ," +
@@ -315,9 +315,9 @@ public class ScreeningsData extends BaseData {
 												"TARGET_PERSON_ATTENDANCE INT  NULL DEFAULT NULL," +
 												"TARGET_AUDIENCE_INTEREST INT  NULL DEFAULT NULL," +
 												"TARGET_ADOPTIONS INT  NULL DEFAULT NULL," +
-												"village_id INT  NOT NULL DEFAULT 0," +
-												"fieldofficer_id INT  NULL DEFAULT NULL," +
-												"animator_id INT  NOT NULL DEFAULT 0, " +
+												"village_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"fieldofficer_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
+												"animator_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";

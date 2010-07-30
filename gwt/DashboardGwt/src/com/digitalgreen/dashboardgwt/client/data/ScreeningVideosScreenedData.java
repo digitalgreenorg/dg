@@ -118,9 +118,9 @@ public class ScreeningVideosScreenedData extends BaseData {
 		
 	public static String tableID = "41";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening_videos_screened` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"screening_id INT  NOT NULL DEFAULT 0," +
-												"video_id INT  NOT NULL DEFAULT 0,  " +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"screening_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"video_id BIGINT UNSIGNED  NOT NULL DEFAULT 0,  " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(video_id) REFERENCES video(id));";
 	

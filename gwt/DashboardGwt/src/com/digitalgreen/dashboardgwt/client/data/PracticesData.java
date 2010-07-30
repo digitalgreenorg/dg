@@ -145,7 +145,7 @@ public class PracticesData extends BaseData {
 	
 	public static String tableID = "28";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `practices` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"PRACTICE_NAME VARCHAR(200)  NOT NULL ," +
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
 												"SUMMARY TEXT NULL DEFAULT NULL );";

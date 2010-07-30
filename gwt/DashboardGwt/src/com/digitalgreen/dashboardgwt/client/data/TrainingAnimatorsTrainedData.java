@@ -106,9 +106,9 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 	
 	public static String tableID = "37";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `training_animators_trained` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"training_id INT  NOT NULL DEFAULT 0," +
-												"animator_id INT  NOT NULL DEFAULT 0, " +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"training_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"animator_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(training_id) REFERENCES training(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `training_animators_trained`;";

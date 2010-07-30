@@ -170,7 +170,7 @@ public class FieldOfficersData extends BaseData {
 	
 	public static String tableID = "14";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `field_officer` " +
-												"(id INTEGER PRIMARY KEY NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY NOT NULL ," +
 												"NAME VARCHAR(100) NOT NULL ," +
 												"AGE INT NULL DEFAULT NULL," +
 												"GENDER VARCHAR(1) NOT NULL ," +

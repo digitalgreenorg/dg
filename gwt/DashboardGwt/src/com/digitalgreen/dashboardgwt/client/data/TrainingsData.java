@@ -230,14 +230,14 @@ public class TrainingsData extends BaseData {
 
 	public static String tableID = "23";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `training` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"TRAINING_PURPOSE TEXT NULL ," +
 												"TRAINING_OUTCOME TEXT NULL ," +
 												"TRAINING_START_DATE DATE  NOT NULL," +
 												"TRAINING_END_DATE DATE  NOT NULL," +
-												"village_id INT NOT NULL DEFAULT 0," +
-												"dm_id INT NULL DEFAULT 0," +
-												"fieldofficer_id INT NOT NULL DEFAULT 0, " +
+												"village_id BIGINT UNSIGNED NOT NULL DEFAULT 0," +
+												"dm_id BIGINT UNSIGNED NULL DEFAULT 0," +
+												"fieldofficer_id BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(dm_id) REFERENCES development_manager(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id));" ;  

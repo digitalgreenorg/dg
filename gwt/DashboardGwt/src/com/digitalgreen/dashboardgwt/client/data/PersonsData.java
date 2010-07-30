@@ -313,7 +313,7 @@ public class PersonsData extends BaseData {
 
 	public static String tableID = "20";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"PERSON_NAME VARCHAR(100)  NOT NULL ," +
 												"FATHER_NAME VARCHAR(100)  NULL DEFAULT NULL ," +
 												"AGE INT  NULL DEFAULT NULL," +
@@ -321,8 +321,8 @@ public class PersonsData extends BaseData {
 												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL," +
 												"ADDRESS VARCHAR(500) NULL DEFAULT NULL," +
 												"LAND_HOLDINGS INT  NULL DEFAULT NULL," +
-												"village_id INT NOT NULL DEFAULT 0," +
-												"group_id INT  NULL DEFAULT NULL," +
+												"village_id BIGINT UNSIGNED NOT NULL DEFAULT 0," +
+												"group_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(group_id) REFERENCES person_groups(id)); " ; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `person`;";

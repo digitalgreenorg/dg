@@ -376,7 +376,8 @@ public class TargetsData extends BaseData {
 	
 	public static String tableID = "42";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `dashboard_target` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL , district_id INT NOT NULL," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL , " +
+												"district_id BIGINT UNSIGNED NOT NULL," +
 												"month_year DATE NOT NULL," +
 												"clusters_identification INT  NULL DEFAULT NULL," +
 												"dg_concept_sharing INT  NULL DEFAULT NULL," +

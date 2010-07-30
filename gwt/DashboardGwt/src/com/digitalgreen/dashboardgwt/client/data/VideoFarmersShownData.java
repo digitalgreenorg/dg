@@ -114,9 +114,9 @@ public class VideoFarmersShownData extends BaseData {
 
 	public static String tableID = "39";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `video_farmers_shown` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"video_id INT  NOT NULL DEFAULT 0," +
-												"person_id INT  NOT NULL DEFAULT 0, " +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"video_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(video_id) REFERENCES video(id), " +
 												"FOREIGN KEY(person_id) REFERENCES person(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `video_farmers_shown`;";

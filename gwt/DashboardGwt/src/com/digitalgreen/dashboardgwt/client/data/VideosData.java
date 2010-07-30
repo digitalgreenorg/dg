@@ -419,11 +419,11 @@ public class VideosData extends BaseData {
 	
 	public static String tableID = "27";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `video` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"TITLE VARCHAR(200)  NOT NULL ," +
 												"VIDEO_TYPE INT  NOT NULL," +
 												"DURATION TIME  NULL DEFAULT NULL," +
-												"language_id INT  NOT NULL ," +
+												"language_id BIGINT UNSIGNED  NOT NULL ," +
 												"SUMMARY TEXT  NULL DEFAULT NULL ," +
 												"PICTURE_QUALITY VARCHAR(200) NULL DEFAULT NULL," +
 												"AUDIO_QUALITY VARCHAR(200)  NULL DEFAULT NULL," +
@@ -438,12 +438,12 @@ public class VideosData extends BaseData {
 												"RAW_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
 												"MOVIE_MAKER_PROJECT_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
 												"FINAL_EDITED_FILENAME VARCHAR(100)  NULL DEFAULT NULL," +
-												"village_id INT NOT NULL," +
-												"facilitator_id INT  NOT NULL," +
-												"cameraoperator_id INT  NOT NULL," +
-												"reviewer_id INT  NULL DEFAULT NULL," +
+												"village_id BIGINT UNSIGNED NOT NULL," +
+												"facilitator_id BIGINT UNSIGNED  NOT NULL," +
+												"cameraoperator_id BIGINT UNSIGNED  NOT NULL," +
+												"reviewer_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"APPROVAL_DATE DATE  NULL DEFAULT NULL," +
-												"supplementary_video_produced_id INT  NULL DEFAULT NULL," +
+												"supplementary_video_produced_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"VIDEO_SUITABLE_FOR INT NOT NULL," +
 												"REMARKS TEXT  NULL DEFAULT NULL," +
 												"ACTORS VARCHAR(1)  NOT NULL ," +

@@ -151,10 +151,10 @@ public class BlocksData extends BaseData {
 
 	public static String tableID = "16";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `block` "
-			+ "(id INTEGER PRIMARY KEY  NOT NULL ,"
+			+ "(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ,"
 			+ "BLOCK_NAME VARCHAR(100)  NOT NULL ,"
 			+ "START_DATE DATE  NULL DEFAULT NULL,"
-			+ "district_id INT  NOT NULL DEFAULT 0, "
+			+ "district_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, "
 			+ "FOREIGN KEY(district_id) REFERENCES district(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";

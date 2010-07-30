@@ -113,9 +113,9 @@ public class EquipmentHoldersData extends BaseData {
 	
 	public static String tableID = "9";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_holder` " +
-												"(id INTEGER PRIMARY KEY NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
-												"object_id INT NOT NULL DEFAULT 0);"; 
+												"object_id BIGINT UNSIGNED NOT NULL DEFAULT 0);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_holder`;";
 	protected static String selectEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String listEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";

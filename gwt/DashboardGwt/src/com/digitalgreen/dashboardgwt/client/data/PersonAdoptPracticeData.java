@@ -200,9 +200,9 @@ public class Data extends BaseData.Data {
 
 	public static String tableID = "31";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_adopt_practice` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"person_id INT  NOT NULL DEFAULT 0," +
-												"practice_id INT  NOT NULL DEFAULT 0," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"practice_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"PRIOR_ADOPTION_FLAG SMALLINT  NULL DEFAULT NULL," +
 												"DATE_OF_ADOPTION DATE NOT NULL," +
 												"QUALITY VARCHAR(200)  NULL DEFAULT NULL ," +

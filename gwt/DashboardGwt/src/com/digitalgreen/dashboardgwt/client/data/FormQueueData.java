@@ -54,7 +54,7 @@ public class FormQueueData extends BaseData {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `formqueue` " +
 										  "(id INTEGER PRIMARY KEY, " +
 										  "table_id INTEGER NOT NULL, " +
-										  "global_pk_id INTEGER NOT NULL, " +
+										  "global_pk_id BIGINT UNSIGNED NOT NULL, " +
 										  "querystring VARCHAR NOT NULL, " +
 										  "sync_status BOOLEAN, " +
 										  "action CHAR(1) NOT NULL);";

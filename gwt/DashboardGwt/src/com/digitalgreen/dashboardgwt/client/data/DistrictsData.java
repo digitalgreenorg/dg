@@ -185,13 +185,13 @@ public class DistrictsData extends BaseData {
 	
 	public static String tableID = "15";
 	final protected static String createTable = "CREATE TABLE IF NOT EXISTS `district` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"DISTRICT_NAME VARCHAR(100)  NOT NULL ," +
 												"START_DATE DATE  NULL DEFAULT NULL," +
-												"state_id INT  NOT NULL DEFAULT 0," +
-												"fieldofficer_id INT  NOT NULL DEFAULT 0," +
+												"state_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"fieldofficer_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"FIELDOFFICER_STARTDAY DATE  NULL DEFAULT NULL," +
-												"partner_id INT  NOT NULL DEFAULT 0, " +
+												"partner_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(state_id) REFERENCES state(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  

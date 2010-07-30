@@ -124,7 +124,7 @@ public class RegionsData extends BaseData {
 
 	public static String tableID = "8";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `region` " +
-												"(id INTEGER PRIMARY KEY NOT NULL," +
+												"(id BIGINT UNSIGNED PRIMARY KEY NOT NULL," +
 												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `region`;";

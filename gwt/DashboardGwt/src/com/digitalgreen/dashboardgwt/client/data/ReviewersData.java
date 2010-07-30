@@ -111,9 +111,9 @@ public class ReviewersData extends BaseData {
 
 	public static String tableID = "10";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `reviewer` " +
-												"(id INTEGER PRIMARY KEY NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY NOT NULL ," +
 												"content_type_id INT NOT NULL DEFAULT 0," +
-												"object_id INT NOT NULL DEFAULT 0);"; 
+												"object_id BIGINT UNSIGNED NOT NULL DEFAULT 0);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `reviewer`;";
 	protected static String selectReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String listReviewers = "SELECT * FROM reviewer ORDER BY(-id)";

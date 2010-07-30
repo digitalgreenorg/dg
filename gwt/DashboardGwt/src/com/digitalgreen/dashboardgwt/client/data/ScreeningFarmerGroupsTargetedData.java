@@ -119,9 +119,9 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 	
 	public static String tableID = "40";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `screening_farmer_groups_targeted` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"screening_id INT  NOT NULL DEFAULT 0," +
-												"persongroups_id INT  NOT NULL DEFAULT 0, " +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"screening_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
+												"persongroups_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(persongroups_id) REFERENCES person_groups(id));" ;
 	protected static String dropTable = "DROP TABLE IF EXISTS `screening_farmer_groups_targeted`;";

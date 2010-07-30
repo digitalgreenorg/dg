@@ -293,8 +293,8 @@ public class EquipmentsData extends BaseData {
 	
 	public static String tableID = "34";
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `equipment_id` " +
-												"(id INTEGER PRIMARY KEY  NOT NULL ," +
-												"EQUIPMENT_TYPE VARCHAR(300)  NOT NULL ," +
+												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
+												"EQUIPMENT_TYPE INT  NOT NULL ," +
 												"OTHER_EQUIPMENT VARCHAR(300) DEFAULT NULL," +
 												"MODEL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
 												"SERIAL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
@@ -306,8 +306,8 @@ public class EquipmentsData extends BaseData {
 												"TRANSFER_DATE DATE NULL DEFAULT NULL," +
 												"INSTALLATION_DATE NULL DEFAULT NULL," +
 												"WARRANTY_EXPIRATION_DATE DATE  NULL DEFAULT NULL," +
-												"VILLAGE_ID INT NULL DEFAULT NULL," + 
-												"EQUIPMENTHOLDER_ID INT  NULL DEFAULT NULL, " +
+												"VILLAGE_ID BIGINT UNSIGNED NULL DEFAULT NULL," + 
+												"EQUIPMENTHOLDER_ID BIGINT UNSIGNED  NULL DEFAULT NULL, " +
 												"REMARKS TEXT  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(VILLAGE_ID) REFERENCES village(id)," +
 												"FOREIGN KEY(EQUIPMENTHOLDER_ID) REFERENCES equipment_holder(id));";
