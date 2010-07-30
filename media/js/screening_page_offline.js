@@ -100,7 +100,7 @@ init :function(id) {
 	}
 
 	// Edit case
-	if(id > 0) {
+	if(parseFloat(id) > 0) {
 		// Edit Online case
 		is_edit = true;	
 		if (app_status == 1){						
