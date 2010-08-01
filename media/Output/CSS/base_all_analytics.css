@@ -35,7 +35,7 @@
 #footerquicklinkdiv ul li					{ float:left; list-style:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 .footerlicence 								{ clear:both; margin-left:140px; }
 .footerquicklinkgap							{ margin-left:10px; margin-right:10px; }
-.footerquicklink							{ margin-right:0px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
+.footerquicklink							{ margin-left:5px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
 .footerquicklink:hover						{ text-decoration:underline; color:#fbae0c; }
 .footerquicklink img						{ float:right; margin-right:15px; }	
 .licenselink								{ text-align:right; width:230px;}

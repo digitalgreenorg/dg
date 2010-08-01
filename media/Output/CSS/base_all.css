@@ -30,7 +30,7 @@
 #footerquicklinkdiv ul						{ margin-top:-10px; margin-left:-32px; }
 #footerquicklinkdiv ul li					{ float:left; list-style:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 .footerquicklinkgap							{ margin-left:10px; margin-right:10px; }
-.footerquicklink							{ margin-right:0px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
+.footerquicklink							{ margin-left:5px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
 .footerquicklink:hover						{ text-decoration:underline; color:#fbae0c; }
 .footerquicklink img						{ float:right; margin-right:15px; }	
 .licenselink								{ text-align:right; width:230px;}
@@ -67,4 +67,12 @@ a.exploredescmainlink1 img			{ float:left; display:block; border:none; margin-ri
 
 .exploredescdivgap					{ margin:10px; margin-top:20px; width:238px; height:1px; border-top:1px solid #e1cf53  }
 
-		
+
+/* Updates Sign Up  */
+.signupdiv							{ margin-left:0px; width:99%; margin-top:10px; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; color:Black; }
+
+
+/* Quote Div  */
+.quotediv							{ width:266px; height:277px; margin-top:20px; background:url("/media/Output/Images/quotebg1.jpg"); background-repeat:no-repeat; }
+.quotedivdesc1						{ padding-top:10px; width:240px; margin-left:8px; font-size:1.2em; font-family:Cambria Math; font-weight:normal; color:#3f270b; text-align:left; line-height:24px; }	
+.quotedivdesc2						{ width:240px; margin-left:8px; margin-top:20px; text-align:left; font-size:1.0em; font-family:Cambria Math; font-weight:normal; color:#3f270b; line-height:20px; }		

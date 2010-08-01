@@ -11,7 +11,7 @@
 	</TEAM>	
 	<TEAM>
 		<TITLE>Chief Strategist</TITLE>
-		<ARTIST>/media/Output/Images/vinay3.png</ARTIST>
+		<ARTIST>/media/Output/Images/vinay4.png</ARTIST>
 		<DESC>Vinay Kumar brings several years of senior management experience in public, private and non profit sectors.  His expertise lies in assuring and managing exponential growth in organizations.  He just completed over eight years with PATH as its India Operations Director where he was responsible for transforming it from a four person organization to nearly hundred persons and establishing it as a prominent international organization in India. He managed the Asia/Near East operations of IntraHealth International Inc. an affiliate of University of North Carolina at Chapel Hill, USA in eight countries.  Vinay ensured a ten-fold growth in JPS Associates during his tenure as Vice President. He served as Manager at Reserve Bank of India and was a journalist with United News of India and Editor of Indian Management. He was honored by Mrs. Indira Gandhi as the best youngest journalist.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>vinay@digitalgreen.org</MAILID>
@@ -26,12 +26,20 @@
 		<NAME>Saureen Shah</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Regional Program Coordinator, Madhya Pradesh</TITLE>
+		<TITLE>Regional Program Coordinator</TITLE>
+		<ARTIST>/media/Output/Images/avinash3.png</ARTIST>    
+    	<DESC>Hi, I am Avinash Upadhyay. I have over 8 years of involvement in the development sector. In these years I have primarily worked with 2 leading Indian organizations SRIJAN and RCDC- Centre for forestry and Governance apart from short stints at PRAXIS and Admax in the middle level management positions. I have worked in many of the Indian states in areas of research, advocacy, campaigning and trade development and linkage. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>avinash@digitalgreen.org</MAILID>
+		<NAME>Avinash Upadhyay</NAME>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Regional Program Coordinator</TITLE>
 		<ARTIST>/media/Output/Images/shivaji1.png</ARTIST>    
-    	<DESC>Shivaji compleetd his Masters program in Social Work.  Initially very unsure, he decided to work in the domain of rural development after two years of his association with the FICCI Foundation. He later moved to work with PRADAN where he found many opportunities to learn while implementing huge livelihood programs. He looks at Digital Green  as an opportunity to help communities take charge of their own lives. Apart from work, he has been as avid sports person since schooldays representing State level athletics and cricket. </DESC>
+    	<DESC>Shivaji completed his Masters program in Social Work.  Initially very unsure, he decided to work in the domain of rural development after two years of his association with the FICCI Foundation. He later moved to work with PRADAN where he found many opportunities to learn while implementing huge livelihood programs. He looks at Digital Green  as an opportunity to help communities take charge of their own lives. Apart from work, he has been as avid sports person since schooldays representing State level athletics and cricket. </DESC>
     	<COMPANY>Digital Green</COMPANY>
 		<MAILID>shivaji@digitalgreen.org</MAILID>
-		<NAME>Shivaji Chaudhary</NAME>		
+		<NAME>Shivaji Choudhary</NAME>		
 	</TEAM>
 	<TEAM>
 		<TITLE>Development Manager</TITLE>
@@ -43,15 +51,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/avinash3.png</ARTIST>    
-    	<DESC>Hi, I am Avinash Upadhyay. I have over 8 years of involvement in the development sector. In these years I have primarily worked with 2 leading Indian organizations SRIJAN and RCDC- Centre for forestry and Governance apart from short stints at PRAXIS and Admax in the middle level management positions. I have worked in many of the Indian states in areas of research, advocacy, campaigning and trade development and linkage. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>avinash@digitalgreen.org</MAILID>
-		<NAME>Avinash Upadhyay</NAME>		
-	</TEAM>
-	<TEAM>
-		<TITLE>Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/photonone2.png</ARTIST>    
+		<ARTIST>/media/Output/Images/nadagouda1.png</ARTIST>    
     	<DESC>Hi, I am Dr. Nadagouda.  I am a development professional with over two decades of experience of working with farmers. I am a veterinarian by profession with a post-graduate diploma in rural management from IRMA.  I have worked in cooperative, developmental and business sectors at various management levels.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>nadagouda@digitalgreen.org</MAILID>
@@ -67,7 +67,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/photonone2.png</ARTIST>    
+		<ARTIST>/media/Output/Images/shekhar1.png</ARTIST>    
     	<DESC>Hi, This is Chandra Shekhar from Jharkhand.  I pursued my Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar.  My career interest is working for rural development through which small and marginal farmers will better their livelihoods in a manner that is socially, economically and environmentally sustainable.  Joining Digital Green has given me a new strategy in my thinking process to work with the rural community and a new methodology to address the rural concern through efficient extension system.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>shekhar@digitalgreen.org</MAILID>
@@ -95,7 +95,7 @@
     	<DESC>I am Kumar Satyam Salil. I was born on 21st Nov in Dhanbad, Jharkhand. I did my schooling from Banka, Bihar and completed my Intermediate from Patna. I did my graduation from Dr.PDKV Akola, Maharashtra, majoring in Horticulture. After completing my graduation, I studied Master of Business Administration(Agri and Food business) from Amity University, Noida in 2009. I came in digitalGREEN in the month of October with a noble aim of working for Indian poor farmers at a grass root level. My vision for digitalGREEN is to create revolution in Indian farming community by motivating them to adopt good practices of farming and other livelihood programmes. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>satyam@digitalgreen.org</MAILID>
-		<NAME>K. S. Salil</NAME>		
+		<NAME>Satyam Salil</NAME>		
 	</TEAM>
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
@@ -107,30 +107,30 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/photonone2.png</ARTIST>    
+		<ARTIST>/media/Output/Images/sudha1.png</ARTIST>    
     	<DESC>Hello, I am Sudha Jha.  I joined the Digital Green team at the Partners Meeting and National Retreat of Digital Green in Karnataka.  I officially joined at the Torpa block in Jharkhand and from there I'm coming to know the real challenges and work that Digital Green does. I am a native of Madubani, Bihar but my family now lives in Dehradun, Uttarakhand.  I like to read books, listen to music, watch movies, dance and travel.  </DESC>    	
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sudha@digitalgreen.org</MAILID>
 		<NAME>Sudha Jha</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Research Software Development Engineer</TITLE>
+		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/apurva2.png</ARTIST>    
-    	<DESC>Hi, I am Apurva. I have just graduated from Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT) with Bachelor of Technology in ICT. Being an ICT engineer, I have always been fascinated by technology and I strongly believe that it has enough potential toaddress the problems of disadvantaged sections of the society. It is my great pleasure to be a part of Digital Green which is a perfect example of how technology is making an impact on the lives of the people.  </DESC>
+    	<DESC>His interest lies in building technologies for socio-economic development. He received his bachelors in Computer Science from Dhirubhai Ambani Institute of Information and Communication Technology. Prior to Digital Green, Apurva was a Research Intern at Microsoft Research India, where he worked on various socially relevant technology intensive projects like Multipoint, Cloze, wikiBabel and Digital Green. In his spare time, Apurva likes brainstorming and developing cool technological applications. He also has a deep interest in Sanskrit language and loves reading and discussing philosophy. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>apurva@digitalgreen.org</MAILID>
 		<NAME>Apurva Joshi</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Research Software Development Engineer</TITLE>
-		<ARTIST>/media/Output/Images/photonone2.png</ARTIST>    
+		<TITLE>Systems Engineer</TITLE>
+		<ARTIST>/media/Output/Images/rahul1.png</ARTIST>    
     	<DESC>About my past, I have completed my dual-degree program ( M.Sc.(Hons.) Economics and B.E. (Hons.) Computer Science) from BITS, Pilani. Prior to Digital Green, I have had the opportunity to intern at Microsoft Research, India and work, for a brief time, at D. E Shaw India Software Pvt Ltd. Since my college days, I have found writing good programs and solving problems through programming very enjoyable, which I hope to pursue throughout my career. Digital Green has shown to be effective. I believe that, Digital Green, when applied on a larger scale, will show significant results in improving the livelihood of innumerable small farmers. As a part of its Systems team, I hope to contribute to the technology and help Digital Green achieve this noble cause.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>rahul@digitalgreen.org</MAILID>
 		<NAME>Rahul Agarwal</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Assistant Research Software Development Engineer</TITLE>
+		<TITLE>Assistant Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/sreenu1.png</ARTIST>    
     	<DESC>Hi, My name is G.Sreenivasula Reddy. My home town is kadapa, Andhra Pradesh. I joined Digital Green as an intern in Systems Department and later joined as an Assistant Research Software Development Engineer. I pursued my graduation in ICT at Dhirubhai Ambani Institute of Infomation and Communication Technology (DA-IICT) Gandhinagar, Gujarat. I firmly believe that ICT has a key role to play in developing the disadvantaged sections of the society.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
@@ -140,7 +140,7 @@
 	<TEAM>
 		<TITLE>User Experience Designer</TITLE>
 		<ARTIST>/media/Output/Images/praveen2.png</ARTIST>    
-    	<DESC>His interest lies in designing and developing user-centered applications in areas of Entertainment, Education and Healthcare. He completed his undergraduate in Information and Communication Technology (ICT) from Dhirubhai Ambani Institute of Information &amp; Communication Technology (DA-IICT). Being an ICT engineer and driven by his passion for design, he looks forward to an entrusted relationship with Digital Green solving the challenging problems through simple yet interactive design solutions with an understanding to the current technological interventions. He envisions Digital Green en-rooting its presence in every sect of a developing region in the coming years becoming the cause for its development using simple yet effective solutions not only in the areas of Agriculture, but touching others avenues as well. His hobbies include sketching, painting, playing soccer, watching movies and sleeping  </DESC>
+    	<DESC>His interest lies in designing and developing user-centered applications in areas of Entertainment, Education and Healthcare. He completed his undergraduate in Information and Communication Technology (ICT) from Dhirubhai Ambani Institute of Information &amp; Communication Technology (DA-IICT). Being an ICT engineer and driven by his passion for design, he looks forward to an entrusted relationship with Digital Green solving the challenging problems through simple yet interactive design solutions with an understanding to the current technological interventions. He envisions Digital Green en-rooting its presence in every sect of a developing region in the coming years becoming the cause for its development using simple yet effective solutions not only in the areas of Agriculture, but touching others avenues as well. His hobbies include sketching, painting, playing soccer, watching movies and sleeping.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>praveen@digitalgreen.org</MAILID>
 		<NAME>Praveen Shekhar</NAME>		

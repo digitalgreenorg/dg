@@ -1,7 +1,7 @@
 
 {% extends "base_all.html" %}
 
-{% block title %} Overview:: Digital Green {% endblock %}
+{% block title %} Digital Green - Overview{% endblock %}
 
 {% block cssfile %}
 	{{ block.super }}
@@ -29,8 +29,9 @@
 		</div>	
 	{% endblock mainbodycontentleftimg %}
 	
+    
     <div class='pagetitle'>
-		Overview 
+		Overview  
 	</div>
 	
 	<div id='contentdiv1'>		
@@ -51,18 +52,9 @@
 
 {% block mainbodycontentright %}
 	
- {% block overviewrightlink %}
-	<div id='explorediv'>		
-		<div class='exploredescdiv'>
-			<div class='exploredesctitle'> &nbsp;About Us </div>
-			<div class='exploredescmain'> 
-				<a class="exploredescmainlink" href="/overviewkeyprinciple"><img src="/media/Output/Images/linkimg2.png" alt="">Key Principles</a>
-				<a class="exploredescmainlink" href="/overviewcorevalue"><img src="/media/Output/Images/linkimg2.png" alt="">Core Values</a>				
-			</div> 
-		</div>			
-	</div>		
+ {% block overviewrightlink %}			
  {% endblock overviewrightlink %}
- 
+   
 	<div id='explorediv'>		
 		<div class='exploredescdiv'>
 			<div class='exploredesctitle'> &nbsp;Related Links </div>

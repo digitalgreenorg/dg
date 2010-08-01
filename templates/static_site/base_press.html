@@ -1,7 +1,7 @@
 
 {% extends "base_all.html" %}
 
-{% block title %} Press:: DigitalGreen {% endblock %}
+{% block title %} DigitalGreen  - Media Coverage{% endblock %}
 
 {% block cssfile %}
 	{{ block.super }}
@@ -13,12 +13,12 @@
 {% endblock jsfile %}
 
 
-{% block pagetitle %} {{ block.super }}Press Room {% endblock pagetitle %}
+{% block pagetitle %} {{ block.super }}Media Coverage {% endblock pagetitle %}
 
 {% block breadcrums %}  
 
 	{{ block.super }}
-	 <span style='font-size:0.9em; font-weight:bold;'> Press Room - Media Coverage </span>
+	 <span style='font-size:0.9em; font-weight:bold;'> Media Coverage </span>
 	 
 {% endblock breadcrums %}
 
@@ -122,12 +122,34 @@
 
 {% block mainbodycontentright %}	
 	
-	<div class='pressvideo'>
-		<img src="/media/Output/Images/quoteimg7.jpg" alt='Rikin Gandhi Message'>
-	</div>
-		
-	<div class='maillist'>
-		<a href='mailto:contact@digitalgreen.org'><img src="/media/Output/Images/mailingimg1.JPG" alt='Become Friends of Digital Green'></a>
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Sign Up for Updates </div>
+			<div class='signupdiv'> 
+				<table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>   					
+		    		<form action="http://groups.google.co.in/group/digitalgreenfriends/boxsubscribe">
+            			<tr><td style="padding-left: 5px;"> 
+            				<input type=text name=email value='Email Address' onfocus="this.value=''"> <input type=submit name="sub" value="Subscribe">
+            			</td></tr>
+            		</form>					
+				</table>
+			</div> 
+		</div>			
 	</div>
 	
+	<div class='pressvideo'>
+		<div class='quotediv'>						
+			<div class='quotedivdesc1'>
+				<br/> 
+				"Our effort is <br/> ten times more effective  <br/>per dollar spent in converting farmers to better farming practices than more traditional approaches"
+			</div>
+			<div class='quotedivdesc2'> 
+				Rikin Gandhi
+				<br/>
+				CEO
+			</div>	
+		</div>		
+	</div>
+	
+		
 {% endblock mainbodycontentright %}	

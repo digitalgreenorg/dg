@@ -1,7 +1,8 @@
 body										{ background-color:none; font-size:100%;}
 img											{ border-style:none; }
-/* Navigation for logo and help/search*/
 
+
+/* Navigation for logo and help/search*/
 #fullbody									{ width:99.92%; left:0%; top:0%; margin:0%; padding:0%; position:absolute; z-index:100;  border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; }
 #toplinks									{ float:none; width:100%; margin:0%; padding-top:3px; z-index:100; }	
 #toprightlinks								{ width:100%; font-size:0.8em; font-family:Calibri; font-weight:normal; padding-top:0px }
@@ -16,7 +17,6 @@ img											{ border-style:none; }
 
 
 /* header Navigation */
-
 #navpanel									{ background-color:#6d9d30; margin-top:0px; width:900px; float:none; background-color:none; height:30px; border-top-width:0px; border-top-style:solid; border-top-color:#64970c; border-bottom-width:2px; border-bottom-style:solid; border-bottom-color:#64970c;}
 #headermenulist								{ margin-right:0px; margin-left:110px; text-align:center; }
 .headermenu									{ float:left; text-align:center; }
@@ -26,24 +26,21 @@ img											{ border-style:none; }
 #subheadmenutop a							{ font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#6c9108; text-decoration:none; }	
 
 #subheadmenutop								{ filter: alpha(opacity = 95); opacity:0.95; padding-bottom:10px; position:absolute; background-color:#ecf3c9; margin-top:-25px; margin-left:-10px; z-index:+20; font-size:1.0em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#6c9108; padding-top:1px; padding-left:10px; padding-bottom:0px; padding-right:10px; border-top-width:2px; border-top-style:solid; border-top-color:#93d83c; border-right-width:0px; border-right-style:solid; border-right-color:#64970c; border-left-width:0px; border-left-style:solid; border-left-color:#64970c; display:none  }
-#subheadmenu								{ filter: alpha(opacity = 95); opacity:0.95; position:absolute; background-color:#ecf3c9; margin-top:-2px; margin-left:-10px; z-index:+10; width:250px; min-height:40px; border-bottom-width:2px; border-bottom-style:solid; border-bottom-color:#93d83c; display:none; cursor:pointer; }
+#subheadmenu								{ filter: alpha(opacity = 95); opacity:0.95; position:absolute; background-color:#ecf3c9; margin-top:-2px; margin-left:-10px; z-index:+16; width:215px; min-height:40px; border-bottom-width:2px; border-bottom-style:solid; border-bottom-color:#93d83c; display:none; cursor:pointer; }
 #subheadmenulist							{ list-tyle-type:none; margin-top:9px; margin-bottom:5px}
-#subheadmenulist li							{ float:none; display:block; width:245px; list-tyle-type:none; margin-left:-40px; }
-#subheadmenulist li  a					    { float:none; display:block; background-color:#ecf3c9; color:Black; width:98%; text-align:left; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; padding-left:10px; margin-top:2px; text-decoration:none}
+#subheadmenulist li							{ float:none; display:block; width:210px; list-tyle-type:none; margin-left:-40px; }
+#subheadmenulist li  a					    { float:none; display:block; background-color:#ecf3c9; color:Black; width:205px; text-align:left; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; padding-left:10px; margin-top:2px; text-decoration:none}
 
 /* Dg logo and the Search bar   */
-
-#logosearchdiv								{ margin-top:10px; width:900px; }
-#navheaderleft								{ float:left; margin-top:0px; margin-left:0px; font-size:1.8em; font-family:Cambria; font-weight:bold; color:White;}
+#logosearchdiv								{ margin-top:20px; width:900px; }
+#navheaderleft								{ float:left; margin-bottom:3px; margin-left:0px; font-size:1.8em; font-family:Cambria; font-weight:bold; color:White;}
 #navheaderright								{ float:right; margin-top:5px; margin-right:4px; cursor:pointer; }
 #navsearch									{ margin-top:0px; float:left; font-size:1em; font-family:Calibri; font-weight:normal;}
 #navsearchinput								{ background-color:White; border-width:1px; border-style:solid; border-color:#64970c; font-size:0.8em; font-family:Calibri; font-weight:normal; height:16px; color:#5b6e1d}
 #navsearchbtn								{ margin-top:0px; float:left; border-top-width:1px; border-top-style:solid; border-top-color:#59AF04; border-bottom-width:1px; border-bottom-style:solid; border-bottom-color:#59AF04; border-right-width:1px; border-right-style:solid; border-right-color:#59AF04;  }
 
 
-
 /* Main body Content*/
-
 #contentdiv									{ margin-top:0px; background-color:none; width:100%; left:0%; }
 #mainbodytable								{ margin-top:0px; background-color:none; width:100%; left:0%; border:0; min-width:1024px; }
 .mainbodytd1								{ margin-top:0px; width:100%; margin-left:0%; padding-top:0px; }
@@ -58,7 +55,6 @@ img											{ border-style:none; }
 
 
 /* footer section */
-
 #contentfoot1								{ float:none; margin-left:0px; margin-bottom:0px; width:90%; height:60px; background-color:none; }
 #contentfoot								{ float:none; margin-left:0%; margin-bottom:0px; width:90%; height:60px; background-color:none; }
 #footertable								{ margin-top:70px; margin-left:5%; width:90%; height:40px; background-color:none; position:absolute }

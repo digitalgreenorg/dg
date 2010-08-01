@@ -1,5 +1,7 @@
 {% extends "base_team.html" %}
 
+{% block title %}DigitalGreen - Team - Alumni {% endblock %}
+
 {% block breadcrumsmore %} 	
 	<a href='/team'> Team </a>/ 
 	<span style='font-size:0.9em; font-weight:bold;'> Alumni </span>	
@@ -58,9 +60,16 @@
   									document.write("<li>"); 
   										document.write(x[i].getElementsByTagName("PERIOD")[0].childNodes[0].nodeValue);	
   									document.write("</li>");  									 									
-  								document.write("</ul>");
-  								  								
-  							document.write("</div>");  							
+  								document.write("</ul>");  								  								
+  							document.write("</div>");  	
+  							
+  							document.write("<div class='boardtd1div2desc'>");
+  								document.write("<ul class='boardtd1div2ul'>");
+  									document.write("<li>");  											
+  									document.write("</li>");  									 									
+  								document.write("</ul>");  								  								
+  							document.write("</div>"); 
+  							 							
   						document.write("</div>");
   						document.write("</td></tr>");
   					}

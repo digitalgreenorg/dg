@@ -1,7 +1,7 @@
 
 {% extends "base_all.html" %}
 
-{% block title %} Home:: Digital Green  {% endblock %}
+{% block title %} Digital Green - Home  {% endblock %}
 
 {% block cssfile %}
 	{{ block.super }}
@@ -10,6 +10,7 @@
 
 {% block jsfile %}
     <script type="text/javascript" src="/media/Output/JS/Jhome.js"></script>
+    
 {% endblock jsfile %}
 
 
@@ -21,8 +22,43 @@
 
 
 {% block mainbodycontentleft %}
-
+								
 								<script type="text/javascript">
+									var random_num,i,temp,A_temp,index;
+									var A = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50];
+									var B = new Array();																	
+									var lastindex;
+									var m = 0;								
+									var n;
+									for(i=0; i<20; i++)
+									{
+										random_num = Math.floor( Math.random() * (A.length) ); //generates the randomn number from 38 nodes
+										
+										lastindex = A.length - 1;  // length of the Array A
+								 		
+								 		if(random_num == 0)
+								 		{
+								 			random_num = 2;
+								 		}
+								 		
+								 		index = random_num - 1;	
+								 								 		
+								 		temp = A[index];
+								 		
+								 		//swapping the number to the last position in Array A
+								 		A_temp = A[index];
+										A[index] = A[lastindex];
+										A[lastindex] = A_temp;
+										A.pop();
+																				
+										B.push(temp);  //adding the new element to array B																					
+																													
+									} // i loop ends
+									//alert(B.length);
+									
+									
+									// generating random thumbnails of the youtube video embeds
+									
 									var xmlDoc=null;
            				 			if (window.XMLHttpRequest){
              							xhttp=new XMLHttpRequest();
@@ -33,70 +69,51 @@
             						xhttp.open("GET","/media/Output/homeimg.xml",false);
             						xhttp.send();
             						xmlDoc=xhttp.responseXML;
-									/*
-									if (window.ActiveXObject)
-									{// code for IE
-    									xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-									}
-									else if (document.implementation.createDocument)
-									{// code for Mozilla, Firefox, Opera, etc.
-    									xmlDoc=document.implementation.createDocument("","",null);
-									}
-									else
-									{
-										alert('Your browser cannot handle this script');
-									}
-									*/
+									
 									if (xmlDoc!=null) 
 									{
-										//xmlDoc.async=false;
-										//xmlDoc.load("/media/Output/homeimg.xml");
-										//alert("hello");
 										var x=xmlDoc.getElementsByTagName("TEAM");
-										//alert(x.length);
-
-										//alert(x.length);				
+										document.write("<div id='videoicon'>");										
+											document.write("<table id='table1' cellspacing='0' cellpadding='0' align='center'>");
+												document.write("<tr>");
+													document.write("<td colspan='7' class='contenttd1empty'>");												
+												document.write("</td>");
+											document.write("</tr>");
 										
-										document.write("<table id='table1' cellspacing='0' cellpadding='0' align='center'>");
-										document.write("<tr>");
-											document.write("<td colspan=7 class='contenttd1empty'>");												
-											document.write("</td>");
-										document.write("</tr>");
-										A = new Array(4);
-										var m = 0;
-										var today = new Date();
-										var seed = 0;
-									
+											document.write("<tr>");
+												document.write("<td colspan='7' id='overlaytd'>");
+													document.write("<div id='overlaydiv'>");
+														document.write("<div id='overlaydivvideoembed'>");
+														document.write("</div>");
+														
+														document.write("<div id='overlaydivvideodesc'>");	
+															document.write("<div id='overlaydivvideodesc1'>");
+															document.write("</div>");
+															document.write("<div id='overlaydivvideodesc2'>");
+															document.write("</div>");																															
+														document.write("</div>");	
+													document.write("</div>");												
+												document.write("</td>");
+											document.write("</tr>");
+										
 										for (i=0; i<4; i++)
-					 					{ 	
-					 						A[i] = new Array(5);
-					 														
+					 					{ 				
   											document.write("<tr>");
   											for (j=0; j<5; j++)
-  												{																							
-  													
-  													var seed = today.getSeconds();
-													var n = Math.floor( Math.random(seed) * 48 ); //generates the randomn number from 38 nodes
-  													//alert(n);
-  													
-  													
-  													//var m = Math.ceil( Math.random() * 48 ); //generates the randomn number from 38 nodes
-  													//alert(m);
-  																							
-  													
-  													//alert(A[i][j]);
-  													
+  												{
+  													n = B[m];  // storing the values of the array B that has the random numbers
+  													  													
   													document.write("<td class='contendtd1' cellspacing='0px' cellpadding='0'>");
 													document.write("<div class='contendtd1div'>");
   														document.write("<img  id='toptableimg' src='" + (x[n].getElementsByTagName("IMGLINK")[0].childNodes[0].nodeValue)+"'>");
-  																												
-														document.write("<a id='contendtd1divsub1link' href='" + (x[n].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + "'>");
+  														var link = x[n].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue;
+  														var title = x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue;	  																										
+														document.write("<a id='contendtd1divsub1link' href='javascript:displayvideo("+ n + ")'>");
 															document.write(x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue);
-														document.write("</a>");													
-														
+														document.write("</a>");	
   													document.write("</div>");
 													document.write("</td>");												
-  													m = m + 1;
+  													m = m+1;
   													 
   												}	  													
   													
@@ -108,11 +125,14 @@
   										}
   										 		
 										document.write("</table>");
-										
-  									}			
+										document.write("</div>");
+  									}
+									
 								</script>
+								
+								
 		<div class='contenttd1empty2'>	
-			<a href='http://www.youtube.com/digitalgreenorg' target=_blank> View more videos <img style='float:right;' src='/media/Output/Images/videoicon6.png' alt='View All Videos'> </a>
+			<a href='http://www.youtube.com/digitalgreenorg' target=_blank> View more videos&nbsp; <img style='float:right;' src='/media/Output/Images/videoicon6.png' alt='View All Videos'> </a>
 		</div>
 		
 		<div id='featuredfarmerdiv'>
@@ -239,6 +259,7 @@
 			</div>				
 		</div>		
 	
+	
 {% endblock mainbodycontentleft %}
 
 {% block mainbodycontentright %}
@@ -248,9 +269,9 @@
 		</div>
 		
 		<div class='analyticsstatdiv'>
-			<div class='analyticsstatlink'>
-				<div class='analyticsstatlinkdesc1'> <a href='/analytics/video_module?geog=country&id=1'> {{analytics_data.tot_vid}} </a>  </div>
+			<div class='analyticsstatlink'>				
 				<div class='analyticsstatlinkdesc2'> Videos produced </div>
+				<div class='analyticsstatlinkdesc1'> <a href='/analytics/video_module?geog=country&id=1'> {{analytics_data.tot_vid}} </a>  </div>
 			</div>
 			
 			<div class='analyticsstatfooter'>
@@ -261,9 +282,9 @@
 		<div class='divgap'> </div>
 		
 		<div class='analyticsstatdiv'>
-			<div class='analyticsstatlink'>
+			<div class='analyticsstatlink'>				
+				<div class='analyticsstatlinkdesc2'> Videos screened </div>
 				<div class='analyticsstatlinkdesc1'> <a href='/analytics/screening_module?geog=country&id=1'> {{analytics_data.tot_scr}} </a>  </div>
-				<div class='analyticsstatlinkdesc2'> Video screenings </div>
 				
 			</div>
 			
@@ -275,9 +296,9 @@
 		<div class='divgap'> </div>
 				
 		<div class='analyticsstatdiv'>
-			<div class='analyticsstatlink'>
-				<div class='analyticsstatlinkdesc1'> <a href='/analytics/overview_module?geog=country&id=1'> {{analytics_data.tot_per}} </a>  </div>
+			<div class='analyticsstatlink'>				
 				<div class='analyticsstatlinkdesc2'> Farmers involved </div>
+				<div class='analyticsstatlinkdesc1'> <a href='/analytics/overview_module?geog=country&id=1'> {{analytics_data.tot_per}} </a>  </div>
 			</div> 
 			
 			<div class='analyticsstatfooter'>
@@ -315,14 +336,28 @@
 			<div class='exploredescmain'> 
 				<a class="exploredescmainlink" href="/career" title="Search for Jobs, Internships"><img src="/media/Output/Images/linkimg2.png" alt="">Search for Jobs</a> 
 				<a class="exploredescmainlink" href="/press" title="See what's in the Media"><img src="/media/Output/Images/linkimg2.png" alt="">Visit the Press Room</a>
-				<a class="exploredescmainlink" href="mailto:contact@digitalgreen.org" title="Sign up for the NewLetter"><img src="/media/Output/Images/linkimg2.png" alt="">Sign up for Updates</a>
 			</div> 
 		</div>
 		
 	</div>
+	
+	<div id='mapdiv'>		
+		<div class='mapdescdiv'>
+			<div class='mapdesctitle'> &nbsp;Sign Up for Updates </div>
+			<div class='mapdescmain'> 
+				<table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>   					
+		    		<form action="http://groups.google.co.in/group/digitalgreenfriends/boxsubscribe">
+            			<tr><td> 
+            				<input type=text name=email value='Email Address' onfocus="this.value=''"> <input type=submit name="sub" value="Subscribe">
+            			</td></tr>
+            		</form>					
+				</table>		
+			</div> 
+		</div>			
+	</div>
+	
 		
-	<div id='mapdiv'>
-		
+	<div id='mapdiv'>		
 		<div class='mapdescdiv'>
 			<div class='mapdesctitle'> &nbsp;Where we work </div>
 			<div class='mapdescmain'> 
@@ -330,6 +365,8 @@
 			</div> 
 		</div>			
 	</div>
+	
+	
 							
 {% endblock mainbodycontentright %}
 

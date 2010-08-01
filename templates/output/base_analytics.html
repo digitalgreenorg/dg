@@ -1,7 +1,7 @@
 
 {% extends "base_all_analytics.html" %}
 
-{% block title %} Progress Dashboard:: DigitalGreen {% endblock %}
+{% block title %} DigitalGreen - Progress Dashboard{% endblock %}
 
 
 {% block cssfile %}
@@ -100,7 +100,7 @@
 	
 	<div id='analyticsnav'>
 		<div class='analyticsnavlink' id='analyticsnavdiv'>
-			<a id='analyticsnavlink' href="#">Dashboard &nbsp; <img src="/media/Output/Images/navbtn1.png" alt=""></a>
+			<a id='analyticsnavlink' href="#">Select Dashboard &nbsp; <img src="/media/Output/Images/navbtn1.png" alt=""></a>
 			<div id='analyticsnav1'>
 				<ul>
 					<li> <a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>

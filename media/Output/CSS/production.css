@@ -5,18 +5,18 @@
 #divtitletable						{ float:none; margin-left:0px; }
 .divtitletablename					{ float:none; margin-left:0px; }
 .divtitletableimg					{ float:none; padding-left:10px; padding-top:5px}
-#divstattitlename					{ width:100%; text-align:left; margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Calibri; font-weight:bold; color:#5b6e1d; border-left-width:0px; border-left-style:solid; border-left-color:#fbae0c; }
+#divstattitlename					{ width:100%; text-align:left; margin-top:0px; padding-left:5px; font-size:1.4em; font-family:Georgia,'Times New Roman',Serif;; font-weight:normal; color:#5b6e1d; border-left-width:0px; border-left-style:solid; border-left-color:#fbae0c; }
 #divtitleimg						{ width:14px; height:15px; margin-top:0px; padding-bottom:0px; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
 
 /* Total Statistics in numbers */ 
 #table1stat							{ width:100%; margin-top:2px; background-color:#bbd569; border-top-width:2px; border-top-style:solid; border-top-color:#59af04;}
 .table1statdesc						{ width:33.1%; margin-top:0px; z-index:500; }
 .statdesc							{ float:none; width:99%; margin-left:1px; margin-top:2px; background-color:White; }
-.statdescname						{ float:left; width:92%; height:20px; margin-top:1px; margin-left:0px; padding-top:2px; font-size:0.9em; font-family:Calibri; font-weight:bold; color:#5b6e1d; text-align:center; }
+.statdescname						{ float:left; width:92%; height:20px; margin-top:1px; margin-left:0px; padding-top:2px; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#5b6e1d; text-align:center; }
 #statdescimg						{ float:left; width:8%; height:20px; margin-top:3px; text-align:center; background:url("/media/Output/Images/helpicon5.png"); background-repeat:no-repeat; cursor:pointer }
-#statdescimg1						{ position:absolute; z-index:900; padding:10px; max-height:30px; min-width:180px; margin-top:-40px; margin-left:-180px; text-align:center; background-color:#f2f8d8;  font-size:0.8em; font-family:Calibri; font-weight:normal; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
+#statdescimg1						{ position:absolute; z-index:900; padding:5px; min-width:200px; margin-top:-40px; margin-left:-200px; text-align:left; background-color:#f2f8d8;  font-size:0.7em; font-family:Arial,Helvetica,Sans-Serif; color:#5b6e1d; border-width:1px; border-style:solid; border-color:Green; display:none}
 .statnumber							{ float:none; width:99%; padding-bottom:2px;  margin-left:1px; margin-top:0px; margin-bottom:2px; background-color:White;  }
-.statdesnumber						{ margin-left:2px; font-size:1.8em; font-family:Calibri; font-weight:bold; color:#b5b5b5; text-align:center }
+.statdesnumber						{ margin-left:2px; font-size:1.6em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#b5b5b5; text-align:center }
 
 
 
@@ -35,7 +35,7 @@
 #graphdiv1title						{ width:100%; margin-top:0px;}
 .graphdiv1desc						{ width:100%; margin-top:0px; min-height:410px; text-align:center; background-color:White; padding-left:0px }
 #graphdiv1titledesc					{ float:none; width:100%; margin-top:0px; background-color:#e8f7ba; height:30px; }
-#subgraphdiv1titledesc1				{ float:left; width:90%; margin-top:4px; font-size:1.2em; font-family:Calibri; font-weight:bold; color:#5b6e1d; text-align:center; }
+#subgraphdiv1titledesc1				{ float:left; width:90%; margin-top:4px; font-size:1.0em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#5b6e1d; text-align:center; }
 #subgraphdiv1titledesc2				{ float:left; width:10%; margin-top:4px; text-align:right; margin-right:0px; border-width:0px; border-style:solid; border-color:#59af04;  }
 
 
@@ -45,9 +45,9 @@
 #graphdiv0title				{ margin-top:1px; margin-left:0px; float:none; width:100%; height: 30px; border-style: solid; border-color: #59AF04; border-width:1px; background-color:#E8F7BA; border-bottom-width:0px  }
 #graphdiv0desc				{ margin-top:0px; margin-left:0px; float:none; margin-right:0px; width:100%; border-style: solid; border-color: #59AF04; border-width:1px; border-top-width:0px; padding-top:10px; min-height:350px }
 
-#graphdiv0titledesc1		{ margin-top:5px; text-align:center; font-family:Calibri; font-weight:bold; font-size:1.2em; color:#5B6E1D; float:left; width:48%}
+#graphdiv0titledesc1		{ margin-top:5px; text-align:center; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:1.2em; color:#5B6E1D; float:left; width:48%}
 #graphdiv0titledesc2		{ margin-top:5px; text-align:center; float:left; width:3px; height:20px}
-#graphdiv0titledesc3		{ margin-top:5px; text-align:center; font-family:Calibri; font-weight:bold; font-size:1.2em; color:#5B6E1D; float:left; width:48%}
+#graphdiv0titledesc3		{ margin-top:5px; text-align:center; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:1.2em; color:#5B6E1D; float:left; width:48%}
 
 .subgraphdiv0desc1			{ min-height:300px; margin-top:0px; margin-left:2px; margin-right:2px; float:left; width:49.2%; padding-top:20px; background-color:White; text-align:center; }
 .subgraphdiv0desc2			{ min-height:300px; margin-top:10px; margin-left:2px; margin-right:2px; float:left; width:2px; padding-top:20px; background-color:#e6e7e5; }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<CATALOG>
+	<TEAM>
+		<TITLE>Systems Engineer Intern</TITLE>
+		<ARTIST>/media/Output/Images/rikin4.png</ARTIST>    
+    	<DESC>His interests include sustainable agriculture and technology for socioeconomic development. Gandhi received a master's in aeronautical and astronautical engineering from the Massachusetts Institute of Technology and a bachelor's in computer science from Carnegie Mellon University. Prior to his days in rural India, Gandhi was a software engineer at Oracle and a pilot with ambitions for joining the astronaut program. Born and raised in the U.S., Gandhi "reverse-migrated" to India to help start a biodiesel venture on the wastelands of Maharashtra.</DESC>
+		<TENURE>Digital Green</TENURE>
+		<MAILID>rikin@digitalgreen.org</MAILID>
+		<NAME>Parth Nagar</NAME>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Chief Strategist</TITLE>
+		<ARTIST>/media/Output/Images/vinay3.png</ARTIST>
+		<DESC>Vinay Kumar brings several years of senior management experience in public, private and non profit sectors.  His expertise lies in assuring and managing exponential growth in organizations.  He just completed over eight years with PATH as its India Operations Director where he was responsible for transforming it from a four person organization to nearly hundred persons and establishing it as a prominent international organization in India. He managed the Asia/Near East operations of IntraHealth International Inc. an affiliate of University of North Carolina at Chapel Hill, USA in eight countries.  Vinay ensured a ten-fold growth in JPS Associates during his tenure as Vice President. He served as Manager at Reserve Bank of India and was a journalist with United News of India and Editor of Indian Management. He was honored by Mrs. Indira Gandhi as the best youngest journalist.</DESC>
+		<TENURE>Digital Green</TENURE>
+		<MAILID>vinay@digitalgreen.org</MAILID>
+		<NAME>Vinay Kumar</NAME>
+	</TEAM>
+	<TEAM>
+		<TITLE>Chief Technology Officer</TITLE>
+		<ARTIST>/media/Output/Images/saureen3.png</ARTIST>    
+    	<DESC>Saureen Shah comes to Digital Green in the capacity of Chief Technology Officer.  His interests include operations and technology in sustainable development.  He received a bachelor's in business administration and computer science from Carnegie Mellon University in 2003.  Prior to DigitalGreen, Saureen was part of the early software engineering team at YouTube, where he worked on numerous projects, both pre and post acquisition, contributing to YouTube's unprecedented growth on the upwards of one billion video views a day. Before his work at YouTube, Saureen worked at Oracle Corporation, where he helped support and re-architect a key component of the database kernel. In his spare time, Saureen enjoys consulting for fledgling technology startups; brainstorming technology use cases for sustainable development; and building partnerships with complementary organizations. He is also an avid reader and follower of politics pertaining primarily to the South Asian littoral. </DESC>
+		<TENURE>Digital Green</TENURE>
+		<MAILID>saureen@digitalgreen.org</MAILID>
+		<NAME>Saureen Shah</NAME>		
+	</TEAM>
+</CATALOG>

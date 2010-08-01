@@ -100,6 +100,8 @@
 
 /* Marginright */
 .pressvideo							{ margin-left:2px; margin-top:3px; width:266px; height:277px; border-width:0px; border-style:solid; border-color:#59af04; }
+
+
 .maillist							{ margin-left:2px; margin-top:20px; width:266px; height:89px; }
 .maillistdesc						{ padding-top:65px; width:230px; height:30px; padding-left:20px; text-align:right; }
 .maillistdesc a						{ font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; text-decoration:none; }

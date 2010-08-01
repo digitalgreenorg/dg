@@ -6,13 +6,13 @@
 .analyticsnavlink a			{ text-decoration:none; font-size:1.0em; font-family:Sans-Serif; font-weight:normal; color:White; }
 .analyticsnavlink a:hover	{ text-decoration:none; color:White; }	
 #analyticsnavlink	img		{ float:right; margin-right:0px; }
-#analyticsnav1				{ clear:both; display:none; position:absolute; z-index:2; width:200px; top:20px; left:-95px; border:2px solid #BBD569; background-color:#F3FDD5; color:Gray; }
+#analyticsnav1				{ clear:both; display:none; position:absolute; z-index:2; width:200px; top:20px; left:-45px; border:2px solid #BBD569; background-color:#F3FDD5; color:Gray; }
 #analyticsnav1	ul			{ margin-left:-20px; list-style:square; clear:both; }
 #analyticsnav1	ul li		{ }	
 #analyticsnav1	ul li a		{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
 #analyticsnav1	a:hover		{ text-decoration:none; color:#fbae0c; }
-#analyticspagetitle			{ width:100%; background-color:#E7F7CF; color:Gray; text-align:left; }
-#analyticspagetitle	a		{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
+#analyticspagetitle			{ width:100%; background-color:#E7F7CF; color:Gray; text-align:left; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; color:Gray;}
+#analyticspagetitle	a		{ text-decoration:none; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 #analyticspagetitle	a:hover { text-decoration:underline; color:#fbae0c; }
 
 #content					{ margin-top:30px; padding:0; margin-left:0%; width:99.9%; margin-bottom:20px; background-color:Gray; }
@@ -32,7 +32,7 @@
 .custombodytd2				{ width:76%; }
 
 .customdiv					{ float:none; margin-top:0px; margin-right:0px; width:100%; background-color:none; }
-.customtitle				{ float:none; margin-top:0px; margin-left:0px; width:100%; font-size:0.8em; font-family:Calibri; font-weight:bold; color:#5b6e1d; background-color:none; height:30px; border-bottom-width:3px; border-bottom-style:solid; border-bottom-color:#e8f7ba; }
+.customtitle				{ float:none; margin-top:0px; margin-left:0px; width:100%; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#5b6e1d; background-color:none; height:30px; border-bottom-width:3px; border-bottom-style:solid; border-bottom-color:#e8f7ba; }
 #calenderbody				{ float:none; margin-top:0px; margin-left:0px; width:100%; background-color:#none; }
 .customtitletable			{ float:none; margin-top:0px; padding-left:0px; width:100%;}
 #calenderbodytable			{ float:none; margin-top:0px; padding-left:0px; width:100%; padding-bottom:5px}
