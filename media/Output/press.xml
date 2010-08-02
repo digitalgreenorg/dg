@@ -2,6 +2,18 @@
 
 <CATALOG>
 	<TEAM>
+		<TITLE>The Ecomomic Times</TITLE>
+		<HEADLINE>Young Entrepreneurs making the most of opportunities in Rural India </HEADLINE>
+		<REFERENCE>http://economictimes.indiatimes.com/articleshow/6212498.cms</REFERENCE>
+		<PRESSDATE>Sun, 25 July 2010</PRESSDATE>
+		<PLACE>New Delhi</PLACE>    
+    	<DESC>"In a quirk of fate, his friend's venture failed to take off and Gandhi too grounded his plans to fly fighter jets; instead he worked upon a rural venture that would educate farmers about crop-patterns, climatic conditions and market pricing, through visual medium."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Business Standard</TITLE>
 		<HEADLINE>Mittal, two other Indians in Fortune's visionary list </HEADLINE>
 		<REFERENCE>http://www.business-standard.com/india/news/mittal-two-other-indians-in-fortunes-visionary-list/98566/on</REFERENCE>
