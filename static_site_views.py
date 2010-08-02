@@ -13,11 +13,11 @@ def aboutus(request):
     
     return render_to_response('base_aboutusoverview.html')
 
-def overviewkeyprinciple(request):
+def keyprinciple(request):
     
     return render_to_response('base_overviewkeyprinciple.html')
 
-def overviewcorevalue(request):
+def corevalue(request):
     
     return render_to_response('base_overviewcorevalue.html')
 
