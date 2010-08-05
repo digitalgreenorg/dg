@@ -291,7 +291,7 @@ public class RegionsData extends BaseData {
 		if(BaseData.isOnline()){
 			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+			this.get(RequestContext.SERVER_HOST + RegionsData.getRegionOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit)+ "/");
 		}
 		else{
 			return true;

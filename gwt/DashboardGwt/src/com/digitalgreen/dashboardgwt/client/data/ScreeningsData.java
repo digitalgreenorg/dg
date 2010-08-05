@@ -443,20 +443,25 @@ public class ScreeningsData extends BaseData {
 		}
 		else {
 			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
-			listTemp = listScreenings + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			if(pageNum.length == 1) {
+				listTemp = listScreenings + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
+						"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name " +
+						"FROM screening sc, village vil " +
+						"WHERE sc.village_id = vil.id AND vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%'" +" ORDER BY(sc.date) " 
+									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
 		}
 		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					
-					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(8),  this.getResultSet().getFieldAsString(9));
-					
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {					
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9));					
 					Data screening = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 											this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), 
 											this.getResultSet().getFieldAsString(4),this.getResultSet().getFieldAsString(5),
-											this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7), v);
-					
+											this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7), v);					
 					screenings.add(screening);
 				}
 			}
@@ -517,11 +522,17 @@ public class ScreeningsData extends BaseData {
 	}
 	
 	// Get all information/data to displayt he screening list page.
-	public Object getListPageData(String pageNum) {
+	public Object getListPageData(String... pageNum) {
 		if(BaseData.isOnline()) {
-			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+ Integer.toString(offset) + "/" 
+						+ Integer.toString(limit)+ "/");
+			}
 		} else {
 			return true;
 		}
@@ -610,6 +621,24 @@ public class ScreeningsData extends BaseData {
 		}
 		return false;
 	}
-
 	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*) " +
+			"FROM screening sc, village vil " +
+			"WHERE sc.village_id = vil.id AND vil.VILLAGE_NAME" +" LIKE '%"+searchText+"%' ;" ;
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
+	}
+
 }

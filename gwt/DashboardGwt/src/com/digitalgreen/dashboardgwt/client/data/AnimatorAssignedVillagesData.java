@@ -280,7 +280,15 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 		else {
 			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
-			listTemp = listAnimatorsAssignedVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			if(pageNum.length == 1) {
+				listTemp = listAnimatorsAssignedVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT aav.id, a.id, a.name, vil.id,vil.VILLAGE_NAME,aav.start_date" +
+							" FROM animator_assigned_village aav,animator a,village vil " +
+							"WHERE aav.animator_id = a.id AND aav.village_id = vil.id AND (a.name LIKE '%"+pageNum[1]+"%' " +
+									"OR vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%')" +" ORDER BY(a.name) " 
+									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
 		}
 		this.select(listTemp);
 		if(this.getResultSet().isValidRow()){
@@ -307,10 +315,8 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		this.select(selectAnimatorsAssignedVillages);
 		if(this.getResultSet().isValidRow()){
 			try {
-				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-				
-					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
-					
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {				
+					Data animatorassignedvillage = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));					
 					animatorsAssignedVillages.add(animatorassignedvillage);
 				}
 			}
@@ -350,13 +356,18 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		return false;
 	}
 	
-	public Object getListPageData(String pageNum){
+	public Object getListPageData(String... pageNum){
 		if(BaseData.isOnline()){
-			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL + Integer.toString(offset) + "/" + Integer.toString(limit));		
-		}
-		else {
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL +
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + AnimatorAssignedVillagesData.getAnimatorAssignedVillageOnlineURL 
+						+ Integer.toString(offset) + "/" + Integer.toString(limit) + "/");
+			}					
+		} else {
 			return true;
 		}
 		return false;
@@ -408,4 +419,24 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		}
 		return false;
 	}
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*)" +
+						" FROM animator_assigned_village aav,animator a,village vil " +
+						"WHERE aav.animator_id = a.id AND aav.village_id = vil.id AND (a.name LIKE '%"+searchText+"%' " +
+						"OR vil.VILLAGE_NAME" +	" LIKE '%"+searchText+"%');";
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
+	}
+
 }

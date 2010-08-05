@@ -447,7 +447,14 @@ public class PersonsData extends BaseData {
 		}
 		else {
 			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
-			listTemp = listPersons + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			if(pageNum.length == 1) {
+				listTemp = listPersons + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
+					"FROM person p, village vil, person_groups pg WHERE p.village_id = vil.id and p.group_id = pg.id " +
+					"AND (p.PERSON_NAME LIKE '%"+pageNum[1]+"%' OR pg.GROUP_NAME LIKE '%"+pageNum[1]+"%' OR vil.VILLAGE_NAME LIKE '%"
+					+pageNum[1]+"%') ORDER BY(p.PERSON_NAME)" +	" LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			}
 		}
 		this.select(listTemp);
 		if (this.getResultSet().isValidRow()) {
@@ -523,7 +530,6 @@ public class PersonsData extends BaseData {
 				return true;
 			}
 		}
-
 		return false;
 	}
 	
@@ -540,11 +546,16 @@ public class PersonsData extends BaseData {
 		return false;
 	}
 
-	public Object getListPageData(String pageNum) {
+	public Object getListPageData(String... pageNum) {
 		if (BaseData.isOnline()) {
-			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + PersonsData.getPersonOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + PersonsData.getPersonOnlineURL +Integer.toString(offset)+"/"+Integer.toString(limit)+"/"
+						+ "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + PersonsData.getPersonOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit)+"/");
+			}
 		} else {
 			return true;
 		}
@@ -591,7 +602,6 @@ public class PersonsData extends BaseData {
 			}
 			html = html + "</select>";
 		}
-
 		return html;
 	}
 
@@ -615,6 +625,23 @@ public class PersonsData extends BaseData {
 		}
 		return false;
 	}
-
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*) FROM person p, village vil, person_groups pg where p.village_id = vil.id and p.group_id = pg.id " +
+		"AND (p.PERSON_NAME LIKE '%"+searchText+"%' OR pg.GROUP_NAME LIKE '%"+searchText+"%' OR vil.VILLAGE_NAME LIKE '%"+searchText+"%')";
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
+	}
 
 }

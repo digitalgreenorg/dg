@@ -43,6 +43,11 @@ public class VillagesData extends BaseData {
 		public Data() {
 			super();
 		}
+		
+		public Data(String id) {
+			super();
+			this.id = id;
+		}
 
 		public Data(String id, String village_name) {
 			super();
@@ -304,7 +309,15 @@ public class VillagesData extends BaseData {
 		}
 		else {
 			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
-			listTemp = listVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			if(pageNum.length == 1) {
+				listTemp = listVillages + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT vil.id, vil.village_name, b.id, b.block_name " +
+							"FROM village vil, block b " +
+							"WHERE vil.block_id = b.id AND (b.block_name LIKE '%"+pageNum[1]+"%' " +
+									"OR vil.village_name" +	" LIKE '%"+pageNum[1]+"%' )" +" ORDER BY(vil.village_name) " 
+									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
 		}
 		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
@@ -370,11 +383,16 @@ public class VillagesData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(String pageNum) {
+	public Object getListPageData(String... pageNum) {
 		if (BaseData.isOnline()) {
-			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL +
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + this.getVillageOnlineURL + Integer.toString(offset) + "/"	+ Integer.toString(limit)+ "/");
+			}
 		} else {
 			return true;
 		}
@@ -428,4 +446,25 @@ public class VillagesData extends BaseData {
 		}
 		return false;
 	}
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*)" +
+						"FROM village vil, block b " +
+						"WHERE vil.block_id = b.id AND (b.block_name LIKE '%"+searchText+"%' " +
+						"OR vil.village_name" +	" LIKE '%"+searchText+"%' )"  ;
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
+	}
+
 }

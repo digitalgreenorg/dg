@@ -359,7 +359,7 @@ public class FieldOfficersData extends BaseData {
 		if(BaseData.isOnline()){
 			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersOnlineURL + Integer.toString(offset)+"/"+Integer.toString(limit));
+			this.get(RequestContext.SERVER_HOST + FieldOfficersData.getFieldOfficersOnlineURL + Integer.toString(offset)+"/"+Integer.toString(limit)+ "/");
 		}
 		else{
 			return true;

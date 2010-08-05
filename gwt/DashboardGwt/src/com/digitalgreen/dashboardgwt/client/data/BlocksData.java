@@ -259,10 +259,16 @@ public class BlocksData extends BaseData {
 		// Checking whether to return all villages or only limited number of villages
 		if(pageNum.length == 0) {
 			listTemp = listBlocks;
-		}
-		else {
+		} else {
 			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
-			listTemp = listBlocks + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			if(pageNum.length == 1) {
+				listTemp = listBlocks + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT b.id, b.BLOCK_NAME, b.START_DATE, d.id, d.DISTRICT_NAME " +
+						"FROM block b, district d where b.district_id = d.id AND b.BLOCK_NAME LIKE '%" +pageNum[1]+
+						"%' OR d.DISTRICT_NAME LIKE '%" +pageNum[1]+"%'ORDER BY (-b.BLOCK_NAME)"+
+						" LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
 		}
 		this.select(listTemp);
 		if (this.getResultSet().isValidRow()) {
@@ -338,11 +344,17 @@ public class BlocksData extends BaseData {
 		return false;
 	}
 
-	public Object getListPageData(String pageNum) {
+	public Object getListPageData(String... pageNum) {
 		if (BaseData.isOnline()) {
-			int offset = (Integer.parseInt(pageNum)-1)*ApplicationConstants.getPageSize();
-			int limit = offset+ApplicationConstants.getPageSize();
-			this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL+Integer.toString(offset)+"/"+Integer.toString(limit));
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
+			int limit = offset+pageSize;
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL +
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + BlocksData.getBlockOnlineURL + Integer.toString(offset) + "/" 
+						+ Integer.toString(limit)+ "/");
+			}
 		} else {
 			return true;
 		}
@@ -384,6 +396,25 @@ public class BlocksData extends BaseData {
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
+	}
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*) " +
+				"FROM block b, district d where b.district_id = d.id AND b.BLOCK_NAME LIKE '%" +searchText+
+				"%' OR d.DISTRICT_NAME LIKE '%" +searchText+"%' ;";
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
 	}
 
 }
