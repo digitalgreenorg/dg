@@ -501,8 +501,13 @@ def get_practices_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('practice')
     else:
-        practices = Practices.objects.order_by("-id")[offset:limit]
+        searchText = request.GET.get('searchText')
         count = Practices.objects.count()
+        if(searchText):
+            count = Practices.objects.filter(Q(practice_name__icontains = searchText)).count()
+            practices = Practices.objects.filter(Q(practice_name__icontains = searchText)).order_by("practice_name")[offset:limit]
+        else:
+             practices = Practices.objects.order_by("-id")[offset:limit]
         if(practices):
             json_subcat = serializers.serialize("json", practices)
         else:
@@ -550,7 +555,6 @@ def save_language_online(request,id):
         else:
             form  = LanguageForm()
         return HttpResponse(form)
-
 
 def get_languages_online(request, offset, limit):
     if request.method == 'POST':
@@ -671,9 +675,16 @@ def get_videos_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('video')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = Video.objects.filter(village__in = villages).distinct().count()
-        videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        videos = Video.objects.filter(village__in = villages)
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            count = videos.filter(Q(title__icontains = searchText) | Q(village__in = vil)).count()
+            videos = videos.filter(Q(title__icontains = searchText) | Q(village__in = vil)).order_by("title")[offset:limit]
+        else:
+            videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
@@ -898,9 +909,16 @@ def get_blocks_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('blocks')
     else:
+        searchText = request.GET.get('searchText')
         districts = get_user_districts(request)
-        blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
         count = Block.objects.filter(district__in = districts).distinct().count()
+        if(searchText):
+            dist = District.objects.filter(district_name__icontains = searchText)
+            blocks = Block.objects.filter(district__in = districts)
+            count = blocks.filter(Q(block_name__icontains = searchText) | Q(district__in = dist)).count()
+            blocks = blocks.filter(Q(block_name__icontains = searchText) | Q(district__in = dist)).order_by("block_name")[offset:limit]
+        else:
+             blocks = Block.objects.filter(district__in = districts).distinct().order_by("-id")[offset:limit]
         if(blocks):
             json_subcat = serializers.serialize("json", blocks, relations=('district'))
         else:
@@ -1089,9 +1107,17 @@ def get_villages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('villages')
     else:
+        searchText = request.GET.get('searchText')
         village_objects = get_user_villages(request)
-        villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")[offset:limit]
+        blocks = get_user_blocks(request)
         count = Village.objects.filter(id__in = village_objects).distinct().count()
+        villages = Village.objects.filter(id__in = village_objects).distinct()
+        if(searchText):
+            blocks = blocks.filter(block_name__icontains = searchText)
+            count = villages.filter(Q(village_name__icontains = searchText) | Q(block__in = blocks)).count()
+            villages = villages.filter(Q(village_name__icontains = searchText) | Q(block__in = blocks)).order_by("village_name")[offset:limit]
+        else:
+            villages = Village.objects.filter(id__in = village_objects).distinct().order_by("-id")[offset:limit]
         if(villages):
             json_subcat = serializers.serialize("json", villages,  relations=('block',))
         else:
@@ -1164,9 +1190,17 @@ def get_animators_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('animators')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = Animator.objects.filter(village__in = villages).distinct().count()
-        animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        animators = Animator.objects.filter(village__in = villages).distinct()
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            partners = Partners.objects.filter(partner_name__icontains = searchText)
+            count = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).count()
+            animators = animators.filter(Q(village__in = vil) | Q(name__icontains = searchText) | Q(partner__in = partners)).distinct().order_by("name")[offset:limit]
+        else:
+            animators = Animator.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(animators):
             json_subcat = serializers.serialize("json", animators,  relations=('partner','village'))
         else:
@@ -1223,9 +1257,18 @@ def get_animatorassignedvillages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('animatorassignedvillages')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().count()
-        animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            animators = Animator.objects.filter(Q(village__in = villages) & Q(name__icontains = searchText))
+            count = AnimatorAssignedVillage.objects.filter(Q(village__in = vil) | Q(animator__in = animators) ).count()
+            animatorassignedvillages = animatorassignedvillages.filter(Q(village__in = vil) | Q(animator__in = animators) )\
+            .order_by("animator__name")[offset:limit]
+        else:
+            animatorassignedvillages = AnimatorAssignedVillage.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(animatorassignedvillages):
             json_subcat = serializers.serialize("json", animatorassignedvillages,  relations=('animator','village'))
         else:
@@ -1293,9 +1336,16 @@ def get_persongroups_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('persongroups')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = PersonGroups.objects.filter(village__in = villages).distinct().count()
-        persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        persongroups = PersonGroups.objects.filter(village__in = villages)
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            count = persongroups.filter(Q(village__in = vil) | Q(group_name__icontains = searchText)).count()
+            persongroups = persongroups.filter(Q(village__in = vil) | Q(group_name__icontains = searchText)).order_by("group_name")[offset:limit]
+        else:
+            persongroups = PersonGroups.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persongroups):
             json_subcat = serializers.serialize("json", persongroups,  relations=('village'))
         else:
@@ -1365,9 +1415,17 @@ def get_persons_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('persons')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = Person.objects.filter(village__in = villages).distinct().count()
-        persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        persons = Person.objects.filter(village__in = villages)
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            personGroups = PersonGroups.objects.filter(Q(village__in = villages) & Q(group_name__icontains = searchText))
+            count = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = personGroups) ).count()
+            persons = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = personGroups) ).order_by("person_name")[offset:limit]
+        else:
+            persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persons):
             json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
         else:
@@ -1395,6 +1453,73 @@ def save_person_offline(request, id):
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
+
+def save_personadoptpractice_online(request,id):
+    if request.method == 'POST':
+        if id:
+            personadoptpractice = PersonAdoptPractice.objects.get(id=id)
+            form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)
+        else:
+            form = PersonAdoptPracticeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('')
+        else:
+            return HttpResponse(form.errors.as_text(), status=201)
+    else:
+        if id:
+            personadoptpractice = PersonAdoptPractice.objects.get(id=id)
+            form = PersonAdoptPracticeForm(instance = personadoptpractice)
+        else:
+            form = PersonAdoptPracticeForm()
+        villages = get_user_villages(request)
+        form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+        form.fields['practice'].queryset = Practices.objects.all().distinct().order_by('practice_name')
+        return HttpResponse(form)
+
+def get_personadoptpractices_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('personadoptpractices')
+    else:
+        searchText = request.GET.get('searchText')
+        villages = get_user_villages(request)
+        persons = Person.objects.filter(village__in = villages)
+        count = PersonAdoptPractice.objects.filter(person__in = persons).distinct().count()
+        personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")
+        if(searchText):
+            per = persons.filter(person_name__icontains = searchText)
+            practices = Practices.objects.filter(practice_name__icontains = searchText)
+            count = PersonAdoptPractice.objects.filter(Q(person__in = per) | Q(practice__in = practices) ).count()
+            personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(practice__in = practices) )\
+            .order_by("person__person_name")[offset:limit]
+        else:
+            personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
+        if(personadoptpractices):
+            json_subcat = serializers.serialize("json", personadoptpractices,  relations=('person','practice'))
+        else:
+            json_subcat = 'EOF'
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
+
+
+def save_personadoptpractice_offline(request, id):
+    if request.method == 'POST':
+        if(not id):
+            form = PersonAdoptPracticeForm(request.POST)
+            if form.is_valid():
+                new_form  = form.save(commit=False)
+                new_form.id = request.POST['id']
+                new_form.save()
+                return HttpResponse("1")
+            return HttpResponse("0")
+        else:
+            personadoptpractice = PersonAdoptPractice.objects.get(id=id)
+            form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)
+            if form.is_valid():
+                form.save()
+                return HttpResponse("1")
+            return HttpResponse("0")
 
 
 def save_screening_online(request,id):
@@ -1453,9 +1578,16 @@ def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('screenings')
     else:
+        searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = Screening.objects.filter(village__in = villages).distinct().count()
-        screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+        screenings = Screening.objects.filter(village__in = villages)
+        if(searchText):
+            vil = villages.filter(village_name__icontains = searchText)
+            count = screenings.filter(village__in = vil).count()
+            screenings = screenings.filter(village__in = vil).distinct().order_by("date")[offset:limit]
+        else:
+            screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(screenings):
             json_subcat = serializers.serialize("json", screenings, relations=('village',))
         else:
@@ -1622,7 +1754,6 @@ def get_trainings_online(request, offset, limit):
         response = HttpResponse(json_subcat, mimetype="application/javascript")
         response['X-COUNT'] = count
         return response
-
 
 def save_training_offline(request, id):
     if request.method == 'POST':
@@ -1890,55 +2021,6 @@ def save_personmeetingattendance_offline(request, id):
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
-
-
-def save_personadoptpractice_online(request):
-    if request.method == 'POST':
-        form = PersonAdoptPracticeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse('')
-        else:
-            return HttpResponse(form.errors.as_text(), status=201)
-    else:
-        form = PersonAdoptPracticeForm()
-        villages = get_user_villages(request)
-        form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-        return HttpResponse(form)
-
-def get_personadoptpractices_online(request, offset, limit):
-    if request.method == 'POST':
-        return redirect('personadoptpractices')
-    else:
-        villages = get_user_villages(request)
-        persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")
-        personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
-        if(personadoptpractices):
-            json_subcat = serializers.serialize("json", personadoptpractices)
-        else:
-            json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-
-def save_personadoptpractice_offline(request, id):
-    if request.method == 'POST':
-        if(not id):
-            form = PersonAdoptPracticeForm(request.POST)
-            if form.is_valid():
-                new_form  = form.save(commit=False)
-                new_form.id = request.POST['id']
-                new_form.save()
-                return HttpResponse("1")
-            else:
-                return HttpResponse("0")
-        else:
-            personadoptpractice = PersonAdoptPractice.objects.get(id=id)
-            form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)
-            if form.is_valid():
-                form.save()
-                return HttpResponse("1")
-            else:
-                return HttpResponse("0")
-
 
 def save_equipmentholder_online(request):
     if request.method == 'POST':
