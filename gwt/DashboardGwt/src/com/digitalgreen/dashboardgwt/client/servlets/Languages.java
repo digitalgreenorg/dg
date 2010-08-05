@@ -89,11 +89,11 @@ public class Languages extends BaseServlet {
 				if(queryArg.equals("list")){
 					LanguagesData languagesData = new LanguagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								LanguagesData languagesData = new LanguagesData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List languages = languagesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", languages);
 								}

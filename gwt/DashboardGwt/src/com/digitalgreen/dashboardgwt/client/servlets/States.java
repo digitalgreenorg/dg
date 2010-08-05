@@ -90,11 +90,11 @@ public class States extends BaseServlet {
 				if(queryArg.equals("list")){
 					StatesData statesData = new StatesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								StatesData statesData = new StatesData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List states = statesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", states);
 								}

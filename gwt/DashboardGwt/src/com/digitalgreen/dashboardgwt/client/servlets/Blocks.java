@@ -86,17 +86,22 @@ public class Blocks extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					BlocksData blocksData = new BlocksData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
 							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								BlocksData blocksData = new BlocksData();
-								//String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
 								if(!results.equals("EOF")){
 									List blocks = blocksData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", blocks);
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
+									
 								}
 								getServlet().fillTemplate(new BlocksTemplate(getServlet().getRequestContext()));						
 							} else {
@@ -119,11 +124,19 @@ public class Blocks extends BaseServlet {
 						
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
-								BlocksData blocksData = new BlocksData();
-								String totalRows = blocksData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								BlocksData blocksData = new BlocksData();								
+								List blocks;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List blocks = blocksData.getBlocksListingOffline(pageNum);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									blocks = blocksData.getBlocksListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", blocksData.getCount(searchText));
+								}
+								else {
+									blocks = blocksData.getBlocksListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", blocksData.getCount());
+								}
 								requestContext.getArgs().put("listing", blocks);
 								getServlet().fillTemplate(new BlocksTemplate(getServlet().getRequestContext()));
 							} else {
@@ -133,7 +146,11 @@ public class Blocks extends BaseServlet {
 							}	
 						}
 					});
-					blocksData.apply(blocksData.getListPageData(pageNum));
+					if (operation == "search") {
+						blocksData.apply(blocksData.getListPageData(pageNum,searchText));
+					} else {
+						blocksData.apply(blocksData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

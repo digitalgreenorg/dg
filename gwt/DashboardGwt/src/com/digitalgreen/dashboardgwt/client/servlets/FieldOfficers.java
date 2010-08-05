@@ -90,11 +90,11 @@ public class FieldOfficers extends BaseServlet {
 				if(queryArg.equals("list")){
 					FieldOfficersData fieldOfficersData = new FieldOfficersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								FieldOfficersData fieldOfficersData = new FieldOfficersData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List fieldOfficers = fieldOfficersData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", fieldOfficers);
 								}

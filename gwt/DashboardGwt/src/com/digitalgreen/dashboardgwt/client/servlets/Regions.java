@@ -90,12 +90,12 @@ public class Regions extends BaseServlet {
 				if(queryArg.equals("list")){
 					RegionsData regionData = new RegionsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								RegionsData regionData = new RegionsData();
 								if(!results.equals("EOF")){
 									List regions = regionData.getListingOnline(results);
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									getServlet().getRequestContext().getArgs().put("listing", regions);
 								}
 								getServlet().fillTemplate(new RegionsTemplate(getServlet().getRequestContext()));						

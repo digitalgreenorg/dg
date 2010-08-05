@@ -86,15 +86,20 @@ public class Videos extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					VideosData videosData = new VideosData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								VideosData videosData = new VideosData();
 								if(!results.equals("EOF")){
 									List videos = videosData.getListingOnline(results);
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									getServlet().getRequestContext().getArgs().put("listing", videos);
 								}
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));						
@@ -119,10 +124,18 @@ public class Videos extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								VideosData videosData = new VideosData();
+								List videos;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List videos = videosData.getVideosListingOffline(pageNum);
-								String totalRows = videosData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									videos = videosData.getVideosListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", videosData.getCount(searchText));
+								}
+								else {
+									videos = videosData.getVideosListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", videosData.getCount());
+								}
 								requestContext.getArgs().put("listing", videos);
 								getServlet().fillTemplate(new VideosTemplate(getServlet().getRequestContext()));
 							} else {
@@ -132,7 +145,11 @@ public class Videos extends BaseServlet {
 							}	
 						}
 					});
-					videosData.apply(videosData.getListPageData(pageNum));
+					if (operation == "search") {
+						videosData.apply(videosData.getListPageData(pageNum, searchText));
+					} else {
+						videosData.apply(videosData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

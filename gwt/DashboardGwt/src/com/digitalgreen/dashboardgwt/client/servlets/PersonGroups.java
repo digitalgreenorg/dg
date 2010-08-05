@@ -85,14 +85,19 @@ public class PersonGroups extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					PersonGroupsData personGroupsData = new PersonGroupsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								PersonGroupsData personGroupsData = new PersonGroupsData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List personGroups = personGroupsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", personGroups);
 								}
@@ -118,10 +123,18 @@ public class PersonGroups extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								PersonGroupsData personGroupsData = new PersonGroupsData();
-								String totalRows = personGroupsData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								List personGroups;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List personGroups = personGroupsData.getPersonGroupsListingOffline(pageNum);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									personGroups = personGroupsData.getPersonGroupsListingOffline(pageNum,searchText);
+									requestContext.getArgs().put("totalRows", personGroupsData.getCount(searchText));
+								}
+								else {
+									personGroups = personGroupsData.getPersonGroupsListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", personGroupsData.getCount());
+								}
 								requestContext.getArgs().put("listing", personGroups);
 								getServlet().fillTemplate(new PersonGroupsTemplate(getServlet().getRequestContext()));
 							} else {
@@ -131,7 +144,11 @@ public class PersonGroups extends BaseServlet {
 							}	
 						}
 					});
-					personGroupsData.apply(personGroupsData.getListPageData(pageNum));
+					if (operation == "search") {
+						personGroupsData.apply(personGroupsData.getListPageData(pageNum, searchText));
+					} else {
+						personGroupsData.apply(personGroupsData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

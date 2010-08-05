@@ -90,11 +90,11 @@ public class Partners extends BaseServlet {
 				if(queryArg.equals("list")){
 					PartnersData partnersData = new PartnersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								PartnersData partnersData = new PartnersData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List partners = partnersData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", partners);
 								}

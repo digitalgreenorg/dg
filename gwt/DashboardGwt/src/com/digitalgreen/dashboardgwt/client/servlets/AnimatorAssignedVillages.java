@@ -86,14 +86,19 @@ public class AnimatorAssignedVillages extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								AnimatorAssignedVillagesData animatorAssignedVillageData = new AnimatorAssignedVillagesData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List animatorAssignedVillages = animatorAssignedVillageData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", animatorAssignedVillages);
 								}
@@ -119,10 +124,18 @@ public class AnimatorAssignedVillages extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								AnimatorAssignedVillagesData animatorAssignedVillagesData = new AnimatorAssignedVillagesData();
-								String totalRows = animatorAssignedVillagesData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								List animatorAssignedVillages;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline(pageNum);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", animatorAssignedVillagesData.getCount(searchText));
+								}
+								else {
+									animatorAssignedVillages = animatorAssignedVillagesData.getAnimatorsAssignedVillagesListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", animatorAssignedVillagesData.getCount());
+								}								
 								requestContext.getArgs().put("listing", animatorAssignedVillages);
 								getServlet().fillTemplate(new AnimatorAssignedVillagesTemplate(getServlet().getRequestContext()));
 							} else {
@@ -132,7 +145,11 @@ public class AnimatorAssignedVillages extends BaseServlet {
 							}	
 						}
 					});
-					animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData(pageNum));
+					if (operation == "search") {
+						animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData(pageNum, searchText));
+					} else {
+						animatorAssignedVillageData.apply(animatorAssignedVillageData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

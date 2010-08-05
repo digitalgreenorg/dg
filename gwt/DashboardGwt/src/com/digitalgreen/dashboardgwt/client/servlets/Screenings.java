@@ -86,14 +86,19 @@ public class Screenings extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								ScreeningsData screeningsData = new ScreeningsData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List screenings = screeningsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", screenings);
 								}
@@ -119,10 +124,18 @@ public class Screenings extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								ScreeningsData screeningsData = new ScreeningsData();
-								String totalRows = screeningsData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								List screenings;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List screenings = screeningsData.getScreeningsListingOffline(pageNum);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									screenings = screeningsData.getScreeningsListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", screeningsData.getCount(searchText));
+								}
+								else {
+									screenings = screeningsData.getScreeningsListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", screeningsData.getCount());
+								}
 								requestContext.getArgs().put("listing", screenings);
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
 							} else {
@@ -132,7 +145,11 @@ public class Screenings extends BaseServlet {
 							}	
 						}
 					});
-					screeningsData.apply(screeningsData.getListPageData(pageNum));
+					if (operation == "search") {
+						screeningsData.apply(screeningsData.getListPageData(pageNum, searchText));
+					} else {
+						screeningsData.apply(screeningsData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

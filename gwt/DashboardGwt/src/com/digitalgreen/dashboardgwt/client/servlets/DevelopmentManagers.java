@@ -90,11 +90,11 @@ public class DevelopmentManagers extends BaseServlet {
 				if(queryArg.equals("list")){
 					DevelopmentManagersData developmentManagersData = new DevelopmentManagersData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								DevelopmentManagersData developmentManagersData = new DevelopmentManagersData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List developmentManagers = developmentManagersData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", developmentManagers);
 								}

@@ -86,14 +86,19 @@ public class Practices extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					PracticesData practicesData = new PracticesData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								PracticesData practicesData = new PracticesData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List practices = practicesData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", practices);
 								}
@@ -119,10 +124,18 @@ public class Practices extends BaseServlet {
 						public void offlineSuccessCallback(Object results) {
 							if((Boolean)results) {
 								PracticesData practicesData = new PracticesData();
-								String totalRows = practicesData.getCount();
-								requestContext.getArgs().put("totalRows", totalRows);
+								List practices;
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List practices = practicesData.getPracticesListingOffline(pageNum);
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									practices = practicesData.getPracticesListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", practicesData.getCount(searchText));
+								}
+								else {
+									practices = practicesData.getPracticesListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", practicesData.getCount());
+								}
 								requestContext.getArgs().put("listing", practices);
 								getServlet().fillTemplate(new PracticeTemplate(getServlet().getRequestContext()));
 							} else {
@@ -132,7 +145,11 @@ public class Practices extends BaseServlet {
 							}	
 						}
 					});
-					practicesData.apply(practicesData.getListPageData(pageNum));
+					if (operation == "search") {
+						practicesData.apply(practicesData.getListPageData(pageNum, searchText));
+					} else {
+						practicesData.apply(practicesData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();

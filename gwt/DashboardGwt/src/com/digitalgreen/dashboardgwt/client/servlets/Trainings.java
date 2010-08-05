@@ -90,11 +90,11 @@ public class Trainings extends BaseServlet {
 				if(queryArg.equals("list")){
 					TrainingsData trainingsData = new TrainingsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								TrainingsData trainingsData = new TrainingsData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List trainings = trainingsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", trainings);
 								}

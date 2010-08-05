@@ -89,11 +89,11 @@ public class Equipments extends BaseServlet {
 				if(queryArg.equals("list")){
 					EquipmentsData equipmentsData = new EquipmentsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							String count = this.getResponse().getHeader("X-COUNT");
+							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								EquipmentsData equipmentsData = new EquipmentsData();
 								if(!results.equals("EOF")){
-									String count = this.getResponse().getHeader("X-COUNT");
-									getServlet().getRequestContext().getArgs().put("totalRows", count);
 									List equipments = equipmentsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", equipments);
 								}
