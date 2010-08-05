@@ -24,8 +24,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 	}
 	
 	@Override
-	public void fill(){
-		
+	public void fill(){		
 		String templateType = "Animator";
 		String templatePlainType = "dashboard/animators/add";
 		RequestContext requestContext = new RequestContext();
@@ -93,7 +92,12 @@ public class AnimatorsTemplate extends BaseTemplate {
 	final private String addDataToElementID [] = {"id_partner","id_village","id_animatorassignedvillage_set-0-village",
 			"id_animatorassignedvillage_set-1-village","id_animatorassignedvillage_set-2-village"};
 
-	private String animatorsListFormHtml = "<div class='actions'>" +
+	private String animatorsListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+									"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+									"<input id='search' type='button' value='Search'>" +
+								"</div>"+
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected animators</option>" +

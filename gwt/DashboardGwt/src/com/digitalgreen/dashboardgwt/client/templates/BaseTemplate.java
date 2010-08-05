@@ -20,7 +20,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
@@ -28,6 +31,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class BaseTemplate extends Template {
 	private Panel baseContentHtmlPanel;
@@ -81,6 +85,7 @@ public class BaseTemplate extends Template {
 			List<Hyperlink> pageLinks = new ArrayList<Hyperlink>();
 			int totalRows = Integer.parseInt((String)queryArgs.get("totalRows"));
 			int pageSize = ApplicationConstants.getPageSize();
+			int maxPagesToDisplayPerRow = ApplicationConstants.getMaxPagesToDisplayPerRow();
 			numberOfPages = ((totalRows%pageSize) > 0)?(totalRows/pageSize)+1:(totalRows/pageSize);
 			//For displaying total number of rows of child class
 			String totalCountHtml = "<b>"+Integer.toString(totalRows)+" "+ templatePlainType+"s</b>" ;
@@ -91,30 +96,29 @@ public class BaseTemplate extends Template {
 				for(int i=1; i <= numberOfPages ; i++){
 					pageLinks.add(createPageHyperlink("<a href='#page/"+ Integer.toString(i) +"/'>" + Integer.toString(i) + "</a>",
 							"page/"+ Integer.toString(i) +"/",
-							servlet,Integer.toString(i)));
+							servlet,Integer.toString(i),(String)queryArgs.get("operation"),(String)queryArgs.get("searchText")));
 				}				
 				//Adding links to Html by horizontal panel and vertical panel
 				//Maximum number of pages in single horizontal row is 49
-				int numberOfHpanels = (pageLinks.size()/ApplicationConstants.getMaxPagesToDisplayPerRow())+1;
+				int numberOfHpanels = (pageLinks.size()/maxPagesToDisplayPerRow)+1;
 				for(int j=0; j< numberOfHpanels; j++) {
 					HorizontalPanel hpanel = new HorizontalPanel();
 					hpanel.setBorderWidth(1);
-					for(int i = 0; i < pageSize; i++){
+					for(int i = 0; i < maxPagesToDisplayPerRow; i++){
 						if(j == 0 && i == 0) {
 							hpanel.add(new HTML(totalCountHtml));
 						}
-						int linkIndex = (j*pageSize)+i;
+						int linkIndex = (j*maxPagesToDisplayPerRow)+i;
 						if(linkIndex < pageLinks.size()) {
 							hpanel.add((Hyperlink)pageLinks.get(linkIndex));
-						}
+						}						
 					}
 					vPanel.add(hpanel);
 				}
 			}
 			else {
 				vPanel.add(new HTML(totalCountHtml));
-			}
-			
+			}			
 			Hyperlink addLink = new Hyperlink();
 			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
@@ -130,16 +134,51 @@ public class BaseTemplate extends Template {
 			for(int i = 0; i < links.size(); i++){
 				RootPanel.get("row"+i).add(links.get(i));
 			}			
-			RootPanel.get("pagination-footer").add(vPanel);
+			RootPanel.get("pagination-footer").add(vPanel);			
+			//SearchUI is Added only for some child templates
+			if(RootPanel.get("search") != null) {
+				final Button searchButton = Button.wrap(RootPanel.get("search").getElement());
+				final TextBox searchBox = TextBox.wrap(RootPanel.get("searchbar").getElement());
+				searchButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						searchResponse(servlet, searchBox.getValue());
+					}
+			    });
+				//To handle enter key for search text box
+				searchBox.addKeyboardListener(new KeyboardListenerAdapter() {
+				      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+				        if (keyCode == (char) KEY_ENTER) {
+				        	searchButton.click();
+				        	((TextBox)sender).cancelKey();
+				        }
+				      }
+				    });				
+			}
 		}
 	}
 	
-	public Hyperlink createPageHyperlink(String linkText, String tokenText, final BaseServlet servlet, final String pageNum) {
+	public void searchResponse(final BaseServlet servlet, final String searchVal) {
+		Template.addLoadingMessage();
+		RequestContext searchRequestContext = new RequestContext();
+		searchRequestContext.getArgs().put("action","list");
+		searchRequestContext.getArgs().put("operation","search");
+		searchRequestContext.getArgs().put("pageNum","1");
+		searchRequestContext.getArgs().put("searchText",searchVal);
+		servlet.setRequestContext(searchRequestContext);
+		servlet.response();
+	}
+	
+	public Hyperlink createPageHyperlink(String linkText, String tokenText, final BaseServlet servlet, 
+			final String pageNum, final String operation, final String searchText) {
 		Hyperlink addLink = new Hyperlink(linkText, true, tokenText);
 		addLink.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Template.addLoadingMessage();
 				RequestContext paginationRequestContext = new RequestContext();
+				if(operation == "search") {
+					paginationRequestContext.getArgs().put("operation","search");
+					paginationRequestContext.getArgs().put("searchText",searchText);
+				}
 				paginationRequestContext.getArgs().put("action","list");
 				paginationRequestContext.getArgs().put("pageNum",pageNum);
 				servlet.setRequestContext(paginationRequestContext);
@@ -299,6 +338,7 @@ public class BaseTemplate extends Template {
 		"<!-- END Content -->" +
 		"<div id='sub-container' style='clear: both;'>" +
 		"</div>" +
+		"<div id='toolbar'></div>" +
 		"<div id='pagination-footer'></div>" +
 		"<div id='footer'></div>" +
 		"<div id='box'></div>" +

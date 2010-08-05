@@ -110,7 +110,12 @@ public class ScreeningsTemplate extends BaseTemplate {
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};
 	
 	// Fill ids:  data-rows
-	private String screeningsListFormHtml = "<div class='actions'>" +
+	private String screeningsListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+							"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+							"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+							"<input id='search' type='button' value='Search'>" +
+						"</div>"+
+						"<div class='actions'>" +
 						"<label>Action: <select name='action'>" +
 							"<option value='' selected='selected'>---------</option>" +
 							"<option value='delete_selected'>Delete selected screenings</option>" +

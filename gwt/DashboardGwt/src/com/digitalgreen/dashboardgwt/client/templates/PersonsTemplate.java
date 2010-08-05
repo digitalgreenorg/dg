@@ -106,7 +106,12 @@ public class PersonsTemplate extends BaseTemplate{
 	final private String addDataToElementID[] = {"id_village","id_group","id_personadoptpractice_set-0-practice",
 			"id_personadoptpractice_set-1-practice", "id_personadoptpractice_set-2-practice"};
 	
-	private String personsListFormHtml = "<div class='actions'>" +
+	private String personsListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+								"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+								"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+								"<input id='search' type='button' value='Search'>" +
+							"</div>"+
+							"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected persons</option>" +

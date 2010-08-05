@@ -88,7 +88,12 @@ public class VideosTemplate extends BaseTemplate {
 	
 	final private String addDataToElementID[] = {"id_language", "id_village", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
 	
-	private String videosListFormHtml = "<div class='actions'>" +
+	private String videosListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+									"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+									"<input id='search' type='button' value='Search'>" +
+								"</div>"+
+								"<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
     								"<option value='' selected='selected'>---------</option>" +
     								"<option value='delete_selected'>Delete selected videos</option>" +

@@ -93,7 +93,12 @@ public class VillagesTemplate extends BaseTemplate {
 	final private String addDataToElementID[] = {"id_block", "id_animator_set-0-partner", "id_animator_set-1-partner", 
 			"id_animator_set-2-partner", "id_animator_set-3-partner", "id_animator_set-4-partner"};
 	
-	private String villagesListFormHtml = "<div class='actions'>" +
+	private String villagesListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+									"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+									"<input id='search' type='button' value='Search'>" +
+								"</div>"+
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected villages</option>" +

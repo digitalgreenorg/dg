@@ -91,7 +91,12 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 	
 	final private String addDataToElementID[] = {"id_animator","id_village"};
 	
-	private String animatorassignedvillageListFormHtml = "<div class='actions'>" +
+	private String animatorassignedvillageListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
+									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
+									"<input type='text' id='searchbar' value='' name='q' size='40'>" +
+									"<input id='search' type='button' value='Search'>" +
+								"</div>"+
+								"<div class='actions'>" +
 								"<label>Action: <select name='action'>" +
 									"<option value='' selected='selected'>---------</option>" +
 									"<option value='delete_selected'>Delete selected animator assigned villages</option>" +
