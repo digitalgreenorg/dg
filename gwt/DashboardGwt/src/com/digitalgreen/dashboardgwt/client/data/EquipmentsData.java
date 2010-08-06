@@ -314,7 +314,7 @@ public class EquipmentsData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_id`;";
 	protected static String selectEquipments = "SELECT id, EQUIPMENT_TYPE, model_no, serial_no FROM equipment_id  ORDER BY (EQUIPMENT_TYPE);";
 	protected static String listEquipments = "SELECT e.id, e.equipment_type, e.model_no, e.serial_no, v.id, v.village_name " +
-			"FROM equipment_id e LEFT JOIN village v ON e.village_id = v.id ORDER BY (-e.id);";
+			"FROM equipment_id e LEFT JOIN village v ON e.village_id = v.id ORDER BY (e.equipment_type);";
 	protected static String saveEquipmentOfflineURL = "/dashboard/saveequipmentoffline/";
 	protected static String saveEquipmentOnlineURL = "/dashboard/saveequipmentonline/";
 	protected static String getEquipmentOnlineURL = "/dashboard/getequipmentsonline/";

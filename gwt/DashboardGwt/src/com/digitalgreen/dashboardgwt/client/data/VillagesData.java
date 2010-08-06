@@ -203,7 +203,8 @@ public class VillagesData extends BaseData {
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `village`;";
 	protected static String selectVillages = "SELECT id, village_name FROM village ORDER BY(village_name)";
-	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name FROM village JOIN block ON village.block_id = block.id ORDER BY(-village.id)";
+	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name " +
+			"FROM village JOIN block ON village.block_id = block.id ORDER BY LOWER(village.village_name)";
 	protected static String saveVillageOnlineURL = "/dashboard/savevillageonline/";
 	protected static String getVillageOnlineURL = "/dashboard/getvillagesonline/";
 	protected static String saveVillageOfflineURL = "/dashboard/savevillageoffline/";

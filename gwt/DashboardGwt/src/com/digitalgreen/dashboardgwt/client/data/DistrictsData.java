@@ -197,7 +197,10 @@ public class DistrictsData extends BaseData {
 												"FOREIGN KEY(partner_id) REFERENCES partners(id));";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `district`;";
 	protected static String selectDistricts = "SELECT id, district_name FROM district ORDER BY (district_name)";
-	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id JOIN partners ON partners.id  = district.partner_id ORDER BY (-district.id)";
+	protected static String listDistricts = "SELECT district.id, district.district_name, district.start_date, state.id , state.state_name, " +
+			"field_officer.id , field_officer.name, district.fieldofficer_startday, partners.id, partners.partner_name " +
+			"FROM district JOIN state ON district.state_id  = state.id JOIN field_officer ON district.fieldofficer_id = field_officer.id " +
+			"JOIN partners ON partners.id  = district.partner_id ORDER BY LOWER(district.district_name)";
 	protected static String saveDistrictOnlineURL = "/dashboard/savedistrictonline/";
 	protected static String getDistrictsOnlineURL = "/dashboard/getdistrictsonline/";
 	protected static String saveDistrictOfflineURL = "/dashboard/savedistrictoffline/";

@@ -151,7 +151,7 @@ public class PracticesData extends BaseData {
 												"SUMMARY TEXT NULL DEFAULT NULL );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `practices`;";
 	protected static String selectPractices = "SELECT id, practice_name FROM practices ORDER BY(-id)";
-	protected static String listPractices = "SELECT * FROM practices ORDER BY(-id)";
+	protected static String listPractices = "SELECT * FROM practices ORDER BY LOWER(practice_name)";
 	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
 	protected static String getPracticeOnlineURL = "/dashboard/getpracticesonline/";
 	protected static String savePracticeOfflineURL = "/dashboard/savepracticeoffline/";

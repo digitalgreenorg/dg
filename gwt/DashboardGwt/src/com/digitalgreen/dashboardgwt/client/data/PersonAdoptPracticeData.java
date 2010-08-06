@@ -19,8 +19,8 @@ public class PersonAdoptPracticeData extends BaseData{
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
-		public final native String getPerson() /*-{ return this.fields.person }-*/;
-		public final native String getPractice() /*-{ return this.fields.practice }-*/;
+		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
+		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice }-*/;
 		public final native String getPriorAdoptionFlag() /*-{ return $wnd.checkForNullValues(this.fields.prior_adoption_flag); }-*/;
 		public final native String getDateOfAdoption() /*-{ return $wnd.checkForNullValues(this.fields.date_of_adoption); }-*/;
 		public final native String getQuality() /*-{ return $wnd.checkForNullValues(this.fields.quality); }-*/;
@@ -30,7 +30,7 @@ public class PersonAdoptPracticeData extends BaseData{
 	
 public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "personadoptpractice";			
+		final private static String COLLECTION_PREFIX = "personadoptpractice";
 		private PersonsData.Data person;
 		private PracticesData.Data practice;
 		private String prior_adoption_flag;
@@ -91,6 +91,8 @@ public class Data extends BaseData.Data {
 		
 		public BaseData.Data clone() {
 			Data obj = new Data();
+			obj.person = (new PersonsData()).new Data();
+			obj.practice = (new PracticesData()).new Data();
 			return obj;
 		}
 		
@@ -126,6 +128,30 @@ public class Data extends BaseData.Data {
 				return;
 			}
 			this.addNameValueToQueryString(key, val);	
+		}
+		
+		@Override
+		public boolean validate() {
+			StringValidator personValidator = new StringValidator(this.person.getId(), false, false, 1, 100);
+			personValidator.setError("Please make sure that you choose a person for 'Person'.");
+			StringValidator practiceValidator = new StringValidator(this.practice.getId(), false, false, 1, 100);
+			practiceValidator.setError("Please make sure that you choose a practice for 'Practice'.");
+			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
+			dateOfAdoption.setError("Please make sure 'DateOfAdoption' is formatted as YYYY-MM-DD.");
+			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100);
+			quality.setError("Please make sure quality is less than 100 characters");
+			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
+			quantity.setError("Please make sure quantity is integer");
+			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100);
+			quantityUnit.setError("Please make sure quantity unit is less than 100 characters");
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(personValidator);
+			validatorList.add(practiceValidator);
+			validatorList.add(dateOfAdoption);
+			validatorList.add(quality);
+			validatorList.add(quantity);
+			validatorList.add(quantityUnit);
+			return this.executeValidators(validatorList);
 		}
 		
 		@Override
@@ -214,7 +240,7 @@ public class Data extends BaseData.Data {
 	protected static String selectPersonAdoptPractices = "SELECT id, date_of_adoption FROM person_adopt_practice ORDER BY (date_of_adoption);";
 	protected static String listPersonAdoptPractices = "SELECT pap.id,p.id,p.person_name,pr.id,pr.practice_name, pap.DATE_OF_ADOPTION," +
 			"pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit FROM " +
-			"person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN practices pr ON pr.id = pap.practice_id ORDER BY (-pap.id);";
+			"person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN practices pr ON pr.id = pap.practice_id ORDER BY LOWER(p.PERSON_NAME) ";
 	protected static String savePersonAdoptPracticeOnlineURL = "/dashboard/savepersonadoptpracticeonline/";
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
@@ -290,25 +316,42 @@ public class Data extends BaseData.Data {
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
 		for(int i = 0; i < personAdoptPracticeObjects.length(); i++){
-			PersonsData.Data p = person.new Data(personAdoptPracticeObjects.get(i).getPerson());
-			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice());
-			
+			PersonsData.Data p=person.new Data(personAdoptPracticeObjects.get(i).getPerson().getPk(), 
+					personAdoptPracticeObjects.get(i).getPerson().getPersonName());
+			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice().getPk(), 
+					personAdoptPracticeObjects.get(i).getPractice().getPracticeName());
 			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p,pr, 
 					personAdoptPracticeObjects.get(i).getPriorAdoptionFlag(), personAdoptPracticeObjects.get(i).getDateOfAdoption(),
 					personAdoptPracticeObjects.get(i).getQuantity(),personAdoptPracticeObjects.get(i).getQuality(),
 					personAdoptPracticeObjects.get(i).getQuantityUnit());
 			personAdoptPractices.add(personAdoptPractice);
-		}
-		
+		}		
 		return personAdoptPractices;
 	}
 		
-	public List getPersonAdoptPracticesListingOffline(){
+	public List getPersonAdoptPracticesListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List personAdoptPractices = new ArrayList();
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
-		this.select(listPersonAdoptPractices);
+		String listTemp;
+		if(pageNum.length == 0) {
+			listTemp = listPersonAdoptPractices;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			if(pageNum.length == 1) {
+				listTemp = listPersonAdoptPractices + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT pap.id,p.id,p.person_name,pr.id,pr.practice_name, pap.DATE_OF_ADOPTION," +
+							"pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit " +
+							"FROM person_adopt_practice pap, person p, practices pr " +
+							"WHERE  p.id = pap.person_id AND pr.id = pap.practice_id AND (p.person_name LIKE '%"+pageNum[1]+"%' " +
+									"OR pr.practice_name" +	" LIKE '%"+pageNum[1]+"%')" +"ORDER BY (p.person_name) " 
+							+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
+		}
+		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
@@ -354,7 +397,6 @@ public class Data extends BaseData.Data {
 		return personAdoptPractices;
 	}
 	
-	
 	public Object postPageData() {
 		if(BaseData.isOnline()){
 			this.post(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL, this.form.getQueryString());
@@ -366,14 +408,34 @@ public class Data extends BaseData.Data {
 					return true;
 				}
 			}
+		}		
+		return false;
+	}
+
+	public Object postPageData(String id) {
+		if(BaseData.isOnline()){
+			this.post(RequestContext.SERVER_HOST + this.savePersonAdoptPracticeOnlineURL + id + "/", this.form.getQueryString());
 		}
-		
+		else{
+			if(this.validate()) {
+				this.save();
+				return true;
+			}
+		}
 		return false;
 	}
 	
-	public Object getListPageData(){
+	public Object getListPageData(String...pageNum ){
 		if(BaseData.isOnline()){
-			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL);
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
+			int limit = offset+pageSize;
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL +
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonAdoptPracticeOnlineURL 
+						+ Integer.toString(offset) + "/" + Integer.toString(limit) + "/");
+			}
 		}
 		else{
 			return true;
@@ -381,10 +443,71 @@ public class Data extends BaseData.Data {
 		return false;
 	}	
 	
-	public Object getAddPageData(){
-		if(BaseData.isOnline()){
+	public String retrieveDataAndConvertResultIntoHtml() {
+		
+		PersonsData personData = new PersonsData();
+		List persons = personData.getPersonsListingOffline();
+		PersonsData.Data person;
+		String htmlPerson = "<select name=\"person\" id=\"id_person\"" + 
+							"<option value='' selected='selected'>---------</option>";
+		for ( int i = 0; i < persons.size(); i++ ) {
+			person = (PersonsData.Data)persons.get(i);
+			htmlPerson = htmlPerson + "<option value=\"" + person.getId() + "\">" + person.getPersonName() + "</option>";
+		}
+		htmlPerson = htmlPerson + "</select>";
+		
+		PracticesData practiceData = new PracticesData();
+		List practices = practiceData.getPracticesListingOffline();
+		PracticesData.Data practice;
+		String htmlPractice = "<select name=\"practice\" id=\"id_practice\""  + 
+							"<option value='' selected='selected'>---------</option>";
+		for(int i = 0; i < practices.size(); i++ ) {
+			practice = (PracticesData.Data)practices.get(i);
+			htmlPractice = htmlPractice + "<option value=\"" + practice.getId() + "\">" + practice.getPracticeName() + "</option>";
+		}
+		htmlPractice = htmlPractice + "</select>";
+		
+		return htmlPerson + htmlPractice;
+	}
+	
+	public Object getAddPageData() {
+		if(BaseData.isOnline()) {
 			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL);
 		}
+		else{
+			return retrieveDataAndConvertResultIntoHtml();
+		}
 		return false;
+	}
+	
+	public Object getAddPageData(String id){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + this.savePersonAdoptPracticeOnlineURL + id + "/" );
+		}
+		else{
+			this.form.toQueryString(id);
+			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}	
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*)" +
+		"FROM person_adopt_practice pap, person p, practices pr " +
+		"WHERE  p.id = pap.person_id AND pr.id = pap.practice_id AND (p.person_name LIKE '%"+searchText+"%' " +
+				"OR pr.practice_name" +	" LIKE '%"+searchText+"%') ;";
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
 	}
 }

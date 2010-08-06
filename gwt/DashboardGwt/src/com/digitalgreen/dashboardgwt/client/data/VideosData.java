@@ -459,7 +459,7 @@ public class VideosData extends BaseData {
 										   " ORDER BY (video.title);";
 	protected static String listVideos = "SELECT video.id, video.title, video.video_production_start_date, " +
 										 "video.video_production_end_date, video.village_id, village.village_name " +
-										 "FROM video JOIN village ON video.village_id = village.id ORDER BY (-video.id);";
+										 "FROM video JOIN village ON video.village_id = village.id ORDER BY LOWER(video.title);";
 	protected static String saveVideoOnlineURL = "/dashboard/savevideoonline/";
 	protected static String getVideoOnlineURL = "/dashboard/getvideosonline/";
 	protected static String saveVideoOfflineURL = "/dashboard/savevideooffline/";

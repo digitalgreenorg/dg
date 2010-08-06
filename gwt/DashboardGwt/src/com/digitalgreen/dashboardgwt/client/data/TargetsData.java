@@ -411,7 +411,7 @@ public class TargetsData extends BaseData {
 	protected static String selectTargets = "SELECT t.id, t.month_year, t.district_id, d.district_name " +
 										   "FROM dashboard_target t, district d WHERE t.district_id = d.id ORDER BY (-t.month_year);";
 	protected static String listTargets = "SELECT t.id, t.month_year, t.district_id, d.district_name " +
-										 "FROM dashboard_target t, district d WHERE t.district_id = d.id ORDER BY (-t.id);";
+										 "FROM dashboard_target t, district d WHERE t.district_id = d.id ORDER BY LOWER(t.month_year);";
 	protected static String saveTargetOnlineURL = "/dashboard/savetargetonline/";
 	protected static String getTargetOnlineURL = "/dashboard/gettargetsonline/";
 	protected static String saveTargetOfflineURL = "/dashboard/savetargetoffline/";

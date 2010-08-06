@@ -176,7 +176,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator_assigned_village`;";
 	protected static String selectAnimatorsAssignedVillages = "SELECT id, start_date from animator_assigned_village ORDER BY(id);";
 	protected static String listAnimatorsAssignedVillages = "SELECT aav.id, a.id, a.name, vil.id,vil.VILLAGE_NAME,aav.start_date" +
-			" FROM animator_assigned_village aav,animator a,village vil WHERE aav.animator_id = a.id and aav.village_id = vil.id ORDER BY(-aav.id)";
+			" FROM animator_assigned_village aav,animator a,village vil WHERE aav.animator_id = a.id and aav.village_id = vil.id ORDER BY LOWER(a.name)";
 	protected static String saveAnimatorAssignedVillageOnlineURL = "/dashboard/saveanimatorassignedvillageonline/";
 	protected static String getAnimatorAssignedVillageOnlineURL = "/dashboard/getanimatorassignedvillagesonline/";
 	protected static String saveAnimatorAssignedVillageOfflineURL = "/dashboard/saveanimatorassignedvillageoffline/";

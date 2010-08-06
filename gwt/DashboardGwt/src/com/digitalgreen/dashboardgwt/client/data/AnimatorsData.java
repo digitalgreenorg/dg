@@ -377,7 +377,7 @@ public class AnimatorsData extends BaseData {
 	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.NAME, village.id, village.VILLAGE_NAME " +
 			"FROM animator JOIN village ON animator.village_id = village.id ORDER BY (animator.NAME);";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
-			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY (-a.id)";
+			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY LOWER(a.name)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
 	protected static String saveAnimatorOfflineURL = "/dashboard/saveanimatoroffline/";
 	protected static String getAnimatorsOnlineURL = "/dashboard/getanimatorsonline/";

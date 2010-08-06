@@ -325,7 +325,7 @@ public class ScreeningsData extends BaseData {
 	protected static String selectScreenings = "SELECT sc.id, sc.DATE, sc.location FROM screening sc ORDER BY (sc.DATE);";
 	protected static String listScreenings = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
 			"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name FROM screening sc JOIN village vil " +
-			"ON sc.village_id = vil.id ORDER BY (-sc.id) ";
+			"ON sc.village_id = vil.id ORDER BY LOWER(sc.DATE) ";
 	protected static String saveScreeningOnlineURL = "/dashboard/savescreeningonline/";
 	protected static String getScreeningOnlineURL = "/dashboard/getscreeningsonline/";
 	protected static String saveScreeningOfflineURL = "/dashboard/savescreeningoffline/";

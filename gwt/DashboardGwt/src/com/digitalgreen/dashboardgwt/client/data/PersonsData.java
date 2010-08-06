@@ -330,7 +330,7 @@ public class PersonsData extends BaseData {
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
 			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
-			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY (-p.id) ";
+			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY LOWER(p.PERSON_NAME) ";
 
 	protected static String savePersonOfflineURL = "/dashboard/savepersonoffline/";
 	protected static String savePersonOnlineURL = "/dashboard/savepersononline/";

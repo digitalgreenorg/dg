@@ -159,7 +159,7 @@ public class BlocksData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";
 	protected static String listBlocks = "SELECT b.id, b.BLOCK_NAME, b.START_DATE, d.id, d.DISTRICT_NAME" +
-			" FROM block b, district d where b.district_id = d.id ORDER BY (-b.id) ";
+			" FROM block b, district d where b.district_id = d.id ORDER BY LOWER(b.BLOCK_NAME) ";
 	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
 	protected static String getBlockOnlineURL = "/dashboard/getblocksonline/";
 	protected static String saveBlockOfflineURL = "/dashboard/saveblockoffline/";
