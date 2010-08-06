@@ -13,6 +13,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.FieldOfficers;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.digitalgreen.dashboardgwt.client.servlets.Languages;
 import com.digitalgreen.dashboardgwt.client.servlets.Partners;
+import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
 import com.digitalgreen.dashboardgwt.client.servlets.Practices;
@@ -325,6 +326,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("tar-2", "<a href='#dashboard/target/add' class='addlink'>Add</a>", "dashboard/target/add", new Targets(requestContext));
+		
+		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
+		addHyperlink("pap-1", "<a  href='#dashboard/personadoptpractice/'>Person Adopt Practice</a>", "dashboard/personadoptpractice", new PersonAdoptPractices(requestContext));
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
+
 
 		HTMLPanel h = new HTMLPanel("<div id='controlPanel'></div>");
 		h.setStyleName("mainControlPanelArea");
@@ -423,12 +432,37 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 									"<div class='module'>" +
      								"<table summary='Models available in the Dashboard application.'>" +
      									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
-     										"<th id='aa-1' scope='row'>" +
+     										"<th id='r-1' scope='row'>" +
  											"</th>" +
- 											"<td id='aa-2'>" +
+ 											"<td id='r-2'>" +
  											"</td>" +
  										"</tr>" +
  											"<tr>" +     										
+     										"<tr>" +
+     											"<th id='st-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='st-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+ 											
+     											"<th id='di-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='di-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+     											"<th id='b-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='b-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+     											"<th id='vi-1' scope='row'>" +
+     											"</th>"  +
+     											"<td id='vi-2'>" +
+     											"</td>" +
+     										"</tr>" +
      										"<tr>" +
      											"<th id='a-1' scope='row'>" +
      											"</th>" +
@@ -436,46 +470,9 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
- 											
-     											"<th id='b-1' scope='row'>" +
+     											"<th id='aa-1' scope='row'>" +
      											"</th>" +
-     											"<td id='b-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='d-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='d-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='di-1' scope='row'>" +
-     											"</th>"  +
-     											"<td id='di-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='e-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='e-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='f-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='f-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='l-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='l-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='p-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='p-2'>" +
+     											"<td id='aa-2'>" +
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
@@ -497,27 +494,15 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
-     											"<th id='r-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='r-2'>" +
-     											"</td>" +
-     										"</tr>" +
+	 											"<th id='pap-1'scope='row'>" +
+	 											"</th>" +
+	 											"<td id='pap-2'>" +
+	 											"</td>" +
+	 										"</tr>" +
      										"<tr>" +
-     											"<th id='s-1' scope='row'>" +
+     											"<th id='l-1' scope='row'>" +
      											"</th>" +
-     											"<td id='s-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='st-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='st-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='t-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='t-2'>" +
+     											"<td id='l-2'>" +
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
@@ -527,17 +512,47 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
-     											"<th id='vi-1' scope='row'>" +
+     											"<th id='s-1' scope='row'>" +
      											"</th>" +
-     											"<td id='vi-2'>" +
+     											"<td id='s-2'>" +
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
- 											"<th id='tar-1' scope='row'>" +
+     											"<th id='e-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='e-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+     											"<th id='t-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='t-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+     											"<th id='tar-1' scope='row'>" +
+     											"</th>" +
+     											"<td id='tar-2'>" +
+     											"</td>" +
+     										"</tr>" +
+     										"<tr>" +
+ 											"<th id='p-1' scope='row'>" +
  											"</th>" +
- 											"<td id='tar-2'>" +
+ 											"<td id='p-2'>" +
  											"</td>" +
  										"</tr>" +
+ 										"<tr>" +
+											"<th id='d-1' scope='row'>" +
+											"</th>" +
+											"<td id='d-2'>" +
+											"</td>" +
+										"</tr>" +
+										"<tr>" +
+											"<th id='f-1' scope='row'>" +
+											"</th>" +
+											"<td id='f-2'>" +
+											"</td>" +
+										"</tr>" +										
      									"</table>" +
      								"</div>" +
      							"</div>";
