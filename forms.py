@@ -135,3 +135,7 @@ class ReviewerForm(forms.ModelForm):
 class TargetForm(forms.ModelForm):
     class Meta:
         model = Target
+
+class PersonAdoptPracticeForm(forms.ModelForm):
+    class Meta:
+        model = PersonAdoptPractice

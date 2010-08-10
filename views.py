@@ -159,7 +159,7 @@ def feed_person_html_on_person_group_modified(request):
 
 #return Practices in Options <options ..>...</option>
 def get_prac():
-    pracs = Practices.objects.all()
+    pracs = Practices.objects.all().order_by('practice_name')
     prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
     return prac_list.render(Context(dict(practices=pracs)))
 
