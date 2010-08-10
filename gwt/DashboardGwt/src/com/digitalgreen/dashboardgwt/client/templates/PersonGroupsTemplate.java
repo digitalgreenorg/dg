@@ -26,7 +26,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 	
 	@Override
 	public void fill() {
-		String templateType = "person groups";
+		String templateType = "person group";
 		String templatePlainType = "dashboard/persongroup/add/";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
