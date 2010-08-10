@@ -159,7 +159,7 @@ def feed_person_html_on_person_group_modified(request):
 
 #return Practices in Options <options ..>...</option>
 def get_prac():
-    pracs = Practices.objects.all()
+    pracs = Practices.objects.all().order_by('practice_name')
     prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
     return prac_list.render(Context(dict(practices=pracs)))
 
@@ -1565,8 +1565,8 @@ def get_attendance(request, id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
 	screening = Screening.objects.get(id = id)
 	formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
-	personInMeeting = Person.objects.filter(id__in = PersonMeetingAttendance.objects.filter(screening = id).distinct().values('person'))
-	practices = Practices.objects.all()
+	personInMeeting = Person.objects.filter(id__in = PersonMeetingAttendance.objects.filter(screening = id).distinct().values('person')).order_by('person_name')
+	practices = Practices.objects.all().order_by('practice_name')
 	for form_person_meeting_attendance in formset.forms:
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
 		form_person_meeting_attendance.fields['expressed_interest_practice'].queryset = practices
