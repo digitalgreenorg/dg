@@ -151,7 +151,8 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 									"<fieldset class='module aligned '>" +
 										"<div class='form-row animator  '>" +
 											"<div>" +
-												"<label for='id_animator' class='required'>Animator:</label><select name='animator' id='id_animator'>" +
+												"<label for='id_animator' class='required'>Animator:</label>" +
+												"<select name='animator' id='id_animator'>" +
 												"<option value='' selected='selected'>---------</option>" +
 												"</select>" +
 											"</div>" +

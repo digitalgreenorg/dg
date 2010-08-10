@@ -80,13 +80,13 @@ public class TargetsTemplate extends BaseTemplate {
 						style = "row1";
 					target = (TargetsData.Data) targets.get(row);
 					Date d = new Date(target.getMonthYear());
-					String[] monthYear = d.toGMTString().split(" ");
+					String[] monthYear = d.toString().split(" ");
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", target.getId());
 					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/target/" + target.getId() + "/'>" + 
-							monthYear[1]+"  "+monthYear[2] + "</a>",
+							monthYear[1]+"  "+monthYear[5] + "</a>",
 							"dashboard/target/" + target.getId() + "/",
 							new Targets(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +

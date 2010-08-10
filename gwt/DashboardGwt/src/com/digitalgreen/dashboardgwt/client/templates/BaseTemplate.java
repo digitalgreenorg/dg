@@ -213,10 +213,8 @@ public class BaseTemplate extends Template {
 					templateType);
 			this.postForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 			this.postForm.setMethod(FormPanel.METHOD_POST);
-			this.displayHtml = new HTMLPanel(addHtml);
-				
+			this.displayHtml = new HTMLPanel(addHtml);				
 			String addData = (String)queryArgs.get("addPageData");
-
 			if(addData != null && addDataToElementID != null && addDataToElementID.length > 0  ){
 				HTMLPanel h = new HTMLPanel(addData);
 				for(int i = 0; i< addDataToElementID.length;i++){

@@ -327,6 +327,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("tar-2", "<a href='#dashboard/target/add' class='addlink'>Add</a>", "dashboard/target/add", new Targets(requestContext));
 		
+		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
 		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("pap-1", "<a  href='#dashboard/personadoptpractice/'>Person Adopt Practice</a>", "dashboard/personadoptpractice", new PersonAdoptPractices(requestContext));
@@ -530,11 +531,11 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
      											"</td>" +
      										"</tr>" +
      										"<tr>" +
-     											"<th id='tar-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='tar-2'>" +
-     											"</td>" +
-     										"</tr>" +
+ 												"<th id='tar-1' scope='row'>" +
+ 												"</th>" +
+ 												"<td id='tar-2'>" +
+ 												"</td>" +
+ 											"</tr>" +
      										"<tr>" +
  											"<th id='p-1' scope='row'>" +
  											"</th>" +
