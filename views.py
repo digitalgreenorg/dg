@@ -159,7 +159,7 @@ def feed_person_html_on_person_group_modified(request):
 
 #return Practices in Options <options ..>...</option>
 def get_prac():
-    pracs = Practices.objects.all().order_by('practice_name')
+    pracs = Practices.objects.all()
     prac_list = Template("""{% for p in practices %}<option value="{{p.id}}">{{p.practice_name}}</option>{% endfor %}""")
     return prac_list.render(Context(dict(practices=pracs)))
 
@@ -1987,6 +1987,7 @@ def save_personmeetingattendance_online(request):
         villages = get_user_villages(request)
         form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
         form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+        form.fields['expressed_interest_practice'].queryset = Practice.objects.all().distinct().order_by('practice_name')
         return HttpResponse(form)
 
 def get_personmeetingattendances_online(request, offset, limit):
