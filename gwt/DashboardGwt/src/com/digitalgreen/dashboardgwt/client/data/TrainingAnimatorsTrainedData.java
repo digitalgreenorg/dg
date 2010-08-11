@@ -81,6 +81,16 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 			this.addNameValueToQueryString(key, val);
 		}
 		
+
+		@Override
+		public void save(){
+			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();
+			this.id = trainingAnimatorsTrainedDataDbApis.autoInsert(this.id,
+					this.training.getId(), 
+					this.animator.getId());
+			this.addNameValueToQueryString("id", this.id);
+		}
+		
 		@Override
 		public void save(BaseData.Data foreignKey){
 			TrainingAnimatorsTrainedData trainingAnimatorsTrainedDataDbApis = new TrainingAnimatorsTrainedData();

@@ -24,7 +24,7 @@ public class TrainingsData extends BaseData {
 		public final native String getTrainingEndDate() /*-{ return $wnd.checkForNullValues(this.fields.training_end_date); }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
 		public final native String getDevelopmentManager() /*-{ return this.fields.development_manager_present }-*/;
-		public final native String getFieldOfficer() /*-{ return this.fields.field_officer_present; }-*/;
+		public final native String getFieldOfficer() /*-{ return this.fields.fieldofficer; }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
