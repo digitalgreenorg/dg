@@ -613,7 +613,7 @@ public class VideosData extends BaseData {
 				listTemp = "SELECT vid.id, vid.title, vid.video_production_start_date, " +
 				 				"vid.video_production_end_date, vid.village_id, vil.village_name " +
 							"FROM video vid, village vil " +
-							"WHERE  vid.village_id = vil.id AND (vid.title LIKE '%"+pageNum[1]+"%' " +
+							"WHERE  vid.village_id = vil.id AND ( vid.id LIKE '%"+pageNum[1]+"%' " + " OR vid.title LIKE '%"+pageNum[1]+"%' " +
 									"OR vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%' )" +" ORDER BY(vid.title) " 
 									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
 			}			
@@ -817,7 +817,7 @@ public class VideosData extends BaseData {
 		String count = "0";//stores number of rows in a resultset
 		String countSql = "SELECT COUNT(*) " +
 				"FROM video vid, village vil " +
-				"WHERE  vid.village_id = vil.id AND (vid.title LIKE '%"+searchText+"%' " +
+				"WHERE  vid.village_id = vil.id AND (vid.id LIKE '%"+searchText+"%' " + " OR vid.title LIKE '%"+searchText+"%' " +
 				"OR vil.VILLAGE_NAME" +	" LIKE '%"+searchText+"%' );" ;
 		BaseData.dbOpen();
 		this.select(countSql);
