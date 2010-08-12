@@ -681,8 +681,8 @@ def get_videos_online(request, offset, limit):
         videos = Video.objects.filter(village__in = villages)
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
-            count = videos.filter(Q(title__icontains = searchText) | Q(village__in = vil)).count()
-            videos = videos.filter(Q(title__icontains = searchText) | Q(village__in = vil)).order_by("title")[offset:limit]
+            count = videos.filter(Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil)).count()
+            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil)).order_by("title")[offset:limit]
         else:
             videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(videos):
