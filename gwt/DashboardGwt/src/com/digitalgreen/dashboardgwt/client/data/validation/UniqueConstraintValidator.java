@@ -27,7 +27,11 @@ public class UniqueConstraintValidator extends BaseValidator {
 		// For composite unique indexes
 		for(int i=0; i < whereClause.size(); i++) {
 			ArrayList whereClausePart = (ArrayList)whereClause.get(i);
-			query += (String)whereClausePart.get(0) + "='" + (String)whereClausePart.get(1) + "'"; 
+			if((String)whereClausePart.get(1) != null) {
+				query += (String)whereClausePart.get(0) + "='" + (String)whereClausePart.get(1) + "'";
+			} else {
+				query += (String)whereClausePart.get(0) + " is null" ;
+			}
 			if(i != whereClause.size() - 1) {
 					query += " AND ";
 			}
