@@ -451,9 +451,10 @@ public class PersonsData extends BaseData {
 				listTemp = listPersons + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
 			} else {
 				listTemp = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
-					"FROM person p, village vil, person_groups pg WHERE p.village_id = vil.id and p.group_id = pg.id " +
-					"AND (p.PERSON_NAME LIKE '%"+pageNum[1]+"%' OR pg.GROUP_NAME LIKE '%"+pageNum[1]+"%' OR vil.VILLAGE_NAME LIKE '%"
-					+pageNum[1]+"%') ORDER BY(p.PERSON_NAME)" +	" LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+						"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
+						"LEFT JOIN person_groups pg on p.group_id = pg.id " +
+						"WHERE p.PERSON_NAME  LIKE '%"+pageNum[1]+"%' OR pg.GROUP_NAME LIKE '%"+pageNum[1]+"%' OR vil.VILLAGE_NAME LIKE '%"
+					+pageNum[1]+"%' ORDER BY LOWER(p.PERSON_NAME)" + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
 			}
 		}
 		this.select(listTemp);
@@ -628,8 +629,10 @@ public class PersonsData extends BaseData {
 	
 	public String getCount(String searchText) {
 		String count = "0";//stores number of rows in a resultset
-		String countSql = "SELECT COUNT(*) FROM person p, village vil, person_groups pg where p.village_id = vil.id and p.group_id = pg.id " +
-		"AND (p.PERSON_NAME LIKE '%"+searchText+"%' OR pg.GROUP_NAME LIKE '%"+searchText+"%' OR vil.VILLAGE_NAME LIKE '%"+searchText+"%')";
+		String countSql = "SELECT COUNT(*) FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
+						"LEFT JOIN person_groups pg on p.group_id = pg.id " +
+						"WHERE p.PERSON_NAME  LIKE '%"+searchText+"%' OR pg.GROUP_NAME LIKE '%"+searchText+"%' " +
+								"OR vil.VILLAGE_NAME LIKE '%"+searchText+"%'";
 		BaseData.dbOpen();
 		this.select(countSql);
 		if(this.getResultSet().isValidRow()) {
