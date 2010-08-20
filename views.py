@@ -1484,18 +1484,21 @@ def get_personadoptpractices_online(request, offset, limit):
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         persons = Person.objects.filter(village__in = villages)
+        persongroups = PersonGroups.objects.filter(village__in = villages)
         count = PersonAdoptPractice.objects.filter(person__in = persons).distinct().count()
         personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")
         if(searchText):
-            per = persons.filter(person_name__icontains = searchText)
+            persongroups = PersonGroups.objects.filter(group_name__icontains = searchText)
+            vil = villages.filter(village_name__icontains = searchText)
+            per = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = persongroups) )                        
             practices = Practices.objects.filter(practice_name__icontains = searchText)
-            count = PersonAdoptPractice.objects.filter(Q(person__in = per) | Q(practice__in = practices) ).count()
+            count = personadoptpractices.filter(Q(person__in = per) | Q(practice__in = practices) ).count()
             personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(practice__in = practices) )\
             .order_by("person__person_name")[offset:limit]
         else:
             personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
         if(personadoptpractices):
-            json_subcat = serializers.serialize("json", personadoptpractices,  relations=('person','practice'))
+            json_subcat = serializers.serialize("json", personadoptpractices,indent=4,relations={'practice':{},'person':{'relations':('village','group')}})
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")
