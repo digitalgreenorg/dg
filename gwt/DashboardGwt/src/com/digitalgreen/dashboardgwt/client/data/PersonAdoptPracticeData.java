@@ -21,6 +21,8 @@ public class PersonAdoptPracticeData extends BaseData{
 		protected Type() {}
 		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
 		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice }-*/;
+		public final native PersonGroupsData.Type getGroup() /*-{ return this.fields.person.fields.group }-*/;
+		public final native VillagesData.Type getVillage() /*-{ return this.fields.person.fields.village }-*/;
 		public final native String getPriorAdoptionFlag() /*-{ return $wnd.checkForNullValues(this.fields.prior_adoption_flag); }-*/;
 		public final native String getDateOfAdoption() /*-{ return $wnd.checkForNullValues(this.fields.date_of_adoption); }-*/;
 		public final native String getQuality() /*-{ return $wnd.checkForNullValues(this.fields.quality); }-*/;
@@ -32,6 +34,8 @@ public class Data extends BaseData.Data {
 		
 		final private static String COLLECTION_PREFIX = "personadoptpractice";
 		private PersonsData.Data person;
+		private VillagesData.Data village;
+		private PersonGroupsData.Data group;
 		private PracticesData.Data practice;
 		private String prior_adoption_flag;
 		private String date_of_adoption;
@@ -49,17 +53,21 @@ public class Data extends BaseData.Data {
 			this.date_of_adoption = date_of_adoption;
 		}		
 
-		public Data(String id,PersonsData.Data person, PracticesData.Data practice, String prior_adoption_flag,String date_of_adoption,
+		public Data(String id,PersonsData.Data person, PracticesData.Data practice,PersonGroupsData.Data group, VillagesData.Data village, 
+				String prior_adoption_flag,String date_of_adoption,
 				String quality,String quantity,String quantity_unit) {
 			super();
 			this.id = id;
 			this.person = person;
 			this.practice = practice;
+			this.group = group;
+			this.village = village;
 			this.prior_adoption_flag = prior_adoption_flag;
 			this.date_of_adoption = date_of_adoption;
 			this.quality = quality;
 			this.quantity = quantity;
 			this.quantity_unit = quantity_unit;
+			
 			
 		}		
 		
@@ -69,6 +77,13 @@ public class Data extends BaseData.Data {
 		
 		public PracticesData.Data getPractice(){
 			return this.practice;
+		}
+		
+		public VillagesData.Data getVillage(){
+			return this.village;
+		}
+		public PersonGroupsData.Data getGroup(){
+			return this.group;
 		}
 		
 		public String getPriorAdoptionFlag(){
@@ -238,9 +253,11 @@ public class Data extends BaseData.Data {
 												"FOREIGN KEY(practice_id) REFERENCES practices(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_adopt_practice`;";
 	protected static String selectPersonAdoptPractices = "SELECT id, date_of_adoption FROM person_adopt_practice ORDER BY (date_of_adoption);";
-	protected static String listPersonAdoptPractices = "SELECT pap.id,p.id,p.person_name,pr.id,pr.practice_name, pap.DATE_OF_ADOPTION," +
-			"pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit FROM " +
-			"person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN practices pr ON pr.id = pap.practice_id ORDER BY LOWER(p.PERSON_NAME) ";
+	protected static String listPersonAdoptPractices = "SELECT pap.id, p.id, p.person_name," +
+			"pr.id,pr.practice_name, pap.DATE_OF_ADOPTION,pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit," +
+			" pg.id, pg.group_name, vil.id, vil.village_name " +
+			"FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN village vil ON p.village_id = vil.id " +
+			"LEFT JOIN person_groups pg on p.group_id = pg.id JOIN practices pr ON pr.id = pap.practice_id ORDER BY LOWER(p.PERSON_NAME) ";
 	protected static String savePersonAdoptPracticeOnlineURL = "/dashboard/savepersonadoptpracticeonline/";
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
@@ -314,13 +331,25 @@ public class Data extends BaseData.Data {
 	public List serialize(JsArray<Type> personAdoptPracticeObjects){
 		List personAdoptPractices = new ArrayList();
 		PersonsData person = new PersonsData();
+		VillagesData village = new VillagesData();
+		PersonGroupsData group = new PersonGroupsData();
 		PracticesData practice = new PracticesData();
+		VillagesData.Data vil = null;
 		for(int i = 0; i < personAdoptPracticeObjects.length(); i++){
+			PersonGroupsData.Data pg = group.new Data();
+			vil = village.new Data(personAdoptPracticeObjects.get(i).getVillage().getPk(),
+					personAdoptPracticeObjects.get(i).getVillage().getVillageName());
+
+			if (personAdoptPracticeObjects.get(i).getGroup() != null) {
+				pg = group.new Data(personAdoptPracticeObjects.get(i).getGroup()
+						.getPk(), personAdoptPracticeObjects.get(i).getGroup()
+						.getPersonGroupName());
+			}
 			PersonsData.Data p=person.new Data(personAdoptPracticeObjects.get(i).getPerson().getPk(), 
 					personAdoptPracticeObjects.get(i).getPerson().getPersonName());
 			PracticesData.Data pr = practice.new Data(personAdoptPracticeObjects.get(i).getPractice().getPk(), 
 					personAdoptPracticeObjects.get(i).getPractice().getPracticeName());
-			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p,pr, 
+			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p,pr,pg,vil, 
 					personAdoptPracticeObjects.get(i).getPriorAdoptionFlag(), personAdoptPracticeObjects.get(i).getDateOfAdoption(),
 					personAdoptPracticeObjects.get(i).getQuantity(),personAdoptPracticeObjects.get(i).getQuality(),
 					personAdoptPracticeObjects.get(i).getQuantityUnit());
@@ -333,6 +362,8 @@ public class Data extends BaseData.Data {
 		BaseData.dbOpen();
 		List personAdoptPractices = new ArrayList();
 		PersonsData person = new PersonsData();
+		PersonGroupsData group = new PersonGroupsData();
+		VillagesData vil = new VillagesData(); 
 		PracticesData practice = new PracticesData();
 		String listTemp;
 		if(pageNum.length == 0) {
@@ -343,11 +374,14 @@ public class Data extends BaseData.Data {
 			if(pageNum.length == 1) {
 				listTemp = listPersonAdoptPractices + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
 			} else {
-				listTemp = "SELECT pap.id,p.id,p.person_name,pr.id,pr.practice_name, pap.DATE_OF_ADOPTION," +
-							"pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit " +
-							"FROM person_adopt_practice pap, person p, practices pr " +
-							"WHERE  p.id = pap.person_id AND pr.id = pap.practice_id AND (p.person_name LIKE '%"+pageNum[1]+"%' " +
-									"OR pr.practice_name" +	" LIKE '%"+pageNum[1]+"%')" +"ORDER BY (p.person_name) " 
+				listTemp = "SELECT pap.id, p.id, p.person_name," +
+				"pr.id,pr.practice_name, pap.DATE_OF_ADOPTION,pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit," +
+				" pg.id, pg.group_name, vil.id, vil.village_name " +
+				"FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN village vil ON p.village_id = vil.id " +
+				"LEFT JOIN person_groups pg on p.group_id = pg.id JOIN practices pr ON pr.id = pap.practice_id " +
+				"WHERE (p.person_name LIKE '%"+pageNum[1]+"%' " +
+									"OR pr.practice_name" +	" LIKE '%"+pageNum[1]+"%' "+"OR pg.group_name" +" LIKE '%"+pageNum[1]+"%' "+
+									"OR vil.village_name" +	" LIKE '%"+pageNum[1]+"%') ORDER BY LOWER(p.PERSON_NAME) " 
 							+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
 			}
 		}
@@ -356,8 +390,19 @@ public class Data extends BaseData.Data {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					PersonsData.Data p = person.new Data(this.getResultSet().getFieldAsString(1),  this.getResultSet().getFieldAsString(2));
+					PersonGroupsData.Data pg;
+					if (this.getResultSet().getFieldAsString(4) == null) {
+						pg = null;
+					} else {
+						pg = group.new Data(this.getResultSet()
+								.getFieldAsString(10), this.getResultSet()
+								.getFieldAsString(11));
+					}
+					VillagesData.Data v = vil.new Data(this.getResultSet()
+							.getFieldAsString(12), this.getResultSet()
+							.getFieldAsString(13));
 					PracticesData.Data pr = practice.new Data(this.getResultSet().getFieldAsString(3),  this.getResultSet().getFieldAsString(4));
-					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), p,pr,this.getResultSet().getFieldAsString(5),
+					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), p,pr,pg,v,this.getResultSet().getFieldAsString(5),
 							this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7),this.getResultSet().getFieldAsString(8),
 							this.getResultSet().getFieldAsString(9));
 					personAdoptPractices.add(personAdoptPractice);
@@ -452,8 +497,9 @@ public class Data extends BaseData.Data {
 							"<option value='' selected='selected'>---------</option>";
 		for ( int i = 0; i < persons.size(); i++ ) {
 			person = (PersonsData.Data)persons.get(i);
-			htmlPerson = htmlPerson + "<option value=\"" + person.getId() + "\">" + person.getPersonName() + "</option>";
-		}
+			htmlPerson = htmlPerson + "<option value=\"" + person.getId() + "\">" + person.getPersonName() 
+					+ " ("+ person.getVillage().getVillageName() +")" + "</option>";
+			} 
 		htmlPerson = htmlPerson + "</select>";
 		
 		PracticesData practiceData = new PracticesData();
@@ -494,9 +540,11 @@ public class Data extends BaseData.Data {
 	public String getCount(String searchText) {
 		String count = "0";//stores number of rows in a resultset
 		String countSql = "SELECT COUNT(*)" +
-		"FROM person_adopt_practice pap, person p, practices pr " +
-		"WHERE  p.id = pap.person_id AND pr.id = pap.practice_id AND (p.person_name LIKE '%"+searchText+"%' " +
-				"OR pr.practice_name" +	" LIKE '%"+searchText+"%') ;";
+		"FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN village vil ON p.village_id = vil.id " +
+		"LEFT JOIN person_groups pg on p.group_id = pg.id JOIN practices pr ON pr.id = pap.practice_id " +
+		"WHERE (p.person_name LIKE '%"+searchText+"%' " +
+							"OR pr.practice_name" +	" LIKE '%"+searchText+"%' "+"OR pg.group_name" +" LIKE '%"+searchText+"%' "+
+							"OR vil.village_name" +	" LIKE '%"+searchText+"%') ;";
 		BaseData.dbOpen();
 		this.select(countSql);
 		if(this.getResultSet().isValidRow()) {

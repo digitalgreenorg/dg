@@ -57,12 +57,20 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 				String style;
 				PersonAdoptPracticeData.Data personAdoptPractice;
 				RequestContext requestContext = null;
+				String group="",village="";
 				for (int row = 0; row < personAdoptPractices.size(); ++row) {
 					if(row%2==0)
 						style= "row2";
 					else
 						style = "row1";
 					personAdoptPractice = (PersonAdoptPracticeData.Data) personAdoptPractices.get(row);
+					if(personAdoptPractice.getGroup() == null){
+						group = "null";
+					} else {
+						group = personAdoptPractice.getGroup().getPersonGroupName();
+					}
+						village = personAdoptPractice.getVillage().getVillageName();
+						
 					requestContext = new RequestContext();
 					requestContext.getArgs().put("action", "edit");
 					requestContext.getArgs().put("id", personAdoptPractice.getId());
@@ -72,10 +80,12 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 							"dashboard/personadoptpractice/" + personAdoptPractice.getId() +"/",
 							new PersonAdoptPractices(requestContext)));
 					tableRows += "<tr class='" + style + "'>" +
-								  "<td><input type='checkbox' class='action-select' value='" + personAdoptPractice.getId() + "' name='_selected_action' /></td>" +
-								  "<th id = 'row" + row + "'></th>" +
-									"<td>" + personAdoptPractice.getPractice().getPracticeName() + "</td>" +
-								"</tr>";
+									  "<td><input type='checkbox' class='action-select' value='" + personAdoptPractice.getId() + "' name='_selected_action' /></td>" +
+									  "<th id = 'row" + row + "'></th>" +
+									  "<td>"+ group + "</td>"+
+									  "<td>"+ village + "</td>" +
+										"<td>" + personAdoptPractice.getPractice().getPracticeName() + "</td>" +
+									"</tr>";
 				}
 				personadoptpracticeListFormHtml = personadoptpracticeListFormHtml + tableRows + "</tbody></table>";
 			}
@@ -109,6 +119,16 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 												"Person" +
 											"</a>" +
 										"</th>" +
+										"<th>" +
+										"<a href='?ot=asc&amp;o=2'>" +
+											"Group" +
+										"</a>" +
+									"</th>" +
+									"<th>" +
+										"<a href='?ot=asc&amp;o=3'>" +
+											"Village" +
+										"</a>" +
+									"</th>" +
 										"<th>" +
 											"<a href='?ot=asc&amp;o=2'>" +
 												"Practice" +
