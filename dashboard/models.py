@@ -54,6 +54,7 @@ SUITABLE_FOR = (
         (2,'Video Production Training'),
         (3,'Dissemination Training'),
         (4,'Nothing'),
+        (5,'Pending for Approval'),
 )
 
 ROLE = (
