@@ -218,13 +218,13 @@ public class AnimatorsData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator name = new StringValidator(this.name, false, false,	0, 100, true);
-			name.setError("Name is a required field and please make sure 'name' is less than 100 characters.");
+			name.setError("Name is a required field and please make sure 'name' is less than 100 characters and does not contain special characters.");
 			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
 			age.setError("Please enter a valid age");
 			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
 			gender.setError("Please select gender");
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100);
-			phoneNo.setError("Please make sure that phone number is valid");
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100, true);
+			phoneNo.setError("Please make sure that phone number is valid and does not contain special characters.");
 			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
 			address.setError("Please make sure that 'address' is less than 500 characters");
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
@@ -616,7 +616,7 @@ public class AnimatorsData extends BaseData {
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		PartnersData partnerData = new PartnersData();
-		List partners = partnerData.getPartnersListingOffline();
+		List partners = partnerData.getAllPartnersOffline();
 		PartnersData.Data partner;
 		String htmlPartner = "<select name=\"partner\" id=\"id_partner\""
 				+ "<option selected='selected' value=''>---------</option>";
@@ -625,9 +625,9 @@ public class AnimatorsData extends BaseData {
 			htmlPartner = htmlPartner + "<option value=\"" + partner.getId()
 					+ "\">" + partner.getPartnerName() + "</option>";
 		}
-
+		htmlPartner = htmlPartner + "</select>";
 		VillagesData villageData = new VillagesData();
-		List villages = villageData.getVillagesListingOffline();
+		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
 		String htmlVillage = "<select name=\"village\" id=\"id_village\""
 				+ "<option selected='selected' value=''>---------</option>";
@@ -636,9 +636,10 @@ public class AnimatorsData extends BaseData {
 			htmlVillage = htmlVillage + "<option value=\"" + village.getId()
 					+ "\">" + village.getVillageName() + "</option>";
 		}
-
+		htmlVillage = htmlVillage + "</select>";
+		
 		VillagesData villageData1 = new VillagesData();
-		List villages1 = villageData1.getVillagesListingOffline();
+		List villages1 = villageData1.getAllVillagesOffline();
 		VillagesData.Data village1;
 		String html = "";
 		for (int inline = 0; inline < 3; inline++) {
@@ -653,7 +654,6 @@ public class AnimatorsData extends BaseData {
 			}
 			html = html + "</select>";
 		}
-
 		return htmlPartner + htmlVillage + html;
 	}
 

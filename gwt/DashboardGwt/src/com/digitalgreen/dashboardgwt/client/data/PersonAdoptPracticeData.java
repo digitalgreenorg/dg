@@ -148,17 +148,17 @@ public class Data extends BaseData.Data {
 		@Override
 		public boolean validate() {
 			StringValidator personValidator = new StringValidator(this.person.getId(), false, false, 1, 100);
-			personValidator.setError("Please make sure that you choose a person for 'Person'.");
+			personValidator.setError("Please make sure that you choose a person for 'Person' field.");
 			StringValidator practiceValidator = new StringValidator(this.practice.getId(), false, false, 1, 100);
-			practiceValidator.setError("Please make sure that you choose a practice for 'Practice'.");
+			practiceValidator.setError("Please make sure that you choose a practice for 'Practice' field.");
 			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
 			dateOfAdoption.setError("Please make sure 'DateOfAdoption' is formatted as YYYY-MM-DD.");
-			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100);
-			quality.setError("Please make sure quality is less than 100 characters");
+			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100, true);
+			quality.setError("Please make sure quality is less than 100 characters and does not contain special characters.");
 			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
 			quantity.setError("Please make sure quantity is integer");
-			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100);
-			quantityUnit.setError("Please make sure quantity unit is less than 100 characters");
+			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100, true);
+			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters.");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personValidator);
 			validatorList.add(practiceValidator);
@@ -491,7 +491,7 @@ public class Data extends BaseData.Data {
 	public String retrieveDataAndConvertResultIntoHtml() {
 		
 		PersonsData personData = new PersonsData();
-		List persons = personData.getPersonsListingOffline();
+		List persons = personData.getAllPersonsOffline();
 		PersonsData.Data person;
 		String htmlPerson = "<select name=\"person\" id=\"id_person\"" + 
 							"<option value='' selected='selected'>---------</option>";
@@ -503,7 +503,7 @@ public class Data extends BaseData.Data {
 		htmlPerson = htmlPerson + "</select>";
 		
 		PracticesData practiceData = new PracticesData();
-		List practices = practiceData.getPracticesListingOffline();
+		List practices = practiceData.getAllPracticesOffline();
 		PracticesData.Data practice;
 		String htmlPractice = "<select name=\"practice\" id=\"id_practice\""  + 
 							"<option value='' selected='selected'>---------</option>";

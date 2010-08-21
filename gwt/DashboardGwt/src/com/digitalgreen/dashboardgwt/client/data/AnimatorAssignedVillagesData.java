@@ -375,7 +375,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 
 	public String retrieveDataAndConvertResultIntoHtml() {
 		AnimatorsData animatorData = new AnimatorsData();
-		List animators = animatorData.getAnimatorsListingOffline();
+		List animators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data animator;
 		String htmlAnimator = "<select name=\"animator\" id=\"id_animator\"" + 
 							"<option value='' selected='selected'>---------</option>";
@@ -386,7 +386,7 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		htmlAnimator = htmlAnimator + "</select>";
 		
 		VillagesData villageData = new VillagesData();
-		List villages = villageData.getVillagesListingOffline();
+		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
 		String htmlVillage = "<select name=\"village\" id=\"id_village\""  + 
 							"<option value='' selected='selected'>---------</option>";

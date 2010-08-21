@@ -387,6 +387,7 @@ public class VideosTemplate extends BaseTemplate {
 																"<option value='2'>Video Production Training</option>"+
 																"<option value='3'>Dissemination Training</option>"+
 																"<option value='4'>Nothing</option>"+
+																"<option value='4'>Pending for Approval</option>"+
 															"</select>" +
 														"</div>" +
 													"</div>" +

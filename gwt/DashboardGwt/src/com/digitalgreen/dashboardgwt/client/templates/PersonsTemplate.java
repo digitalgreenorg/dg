@@ -204,7 +204,7 @@ public class PersonsTemplate extends BaseTemplate{
 													"</div>" +
 													"<div class='form-row land_holdings  '>" +
 														"<div>" +
-															"<label for='id_land_holdings'>Land holdings:</label><input id='id_land_holdings' type='text' class='vIntegerField' name='land_holdings' />" +
+															"<label for='id_land_holdings'>Land holdings(in acres):</label><input id='id_land_holdings' type='text' class='vIntegerField' name='land_holdings' />" +
 														"</div>" +
 													"</div>" +
 													"<div class='form-row village  '>" +

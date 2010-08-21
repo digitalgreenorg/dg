@@ -6,7 +6,7 @@ import com.google.gwt.user.client.Window;
 
 public class StringValidator extends BaseValidator {
 	
-	final static private String strictChars = "[a-zA-Z0-9][a-zA-Z0-9 ]*";
+	final static private String strictChars = "[a-zA-Z0-9._, ]+";
 	private int minValue = Integer.MIN_VALUE;
 	private int maxValue = Integer.MAX_VALUE;
 	private HashMap choices = null;
@@ -37,7 +37,7 @@ public class StringValidator extends BaseValidator {
 	
 	@Override
 	public boolean validate() {
-		if(!super.validate()){ 
+		if(!super.validate()){
 			return false;
 		} else if(this.getValue() == null){
 			return true;
@@ -45,6 +45,7 @@ public class StringValidator extends BaseValidator {
 				((String)this.getValue()).length() <= this.maxValue)) {
 			return false;
 		}		
+		
 		if(this.getValue() != null && this.isNotEmpty() && this.strictCharSet && 
 				!((String)this.getValue()).matches(StringValidator.strictChars)) {
 			return false;

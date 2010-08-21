@@ -456,7 +456,7 @@ public class TrainingsData extends BaseData {
 	
 	public String retrieveDataAndConvertResultIntoHtml() {
 		VillagesData villageData = new VillagesData();
-		List villages = villageData.getVillagesListingOffline();
+		List villages = villageData.getAllVillagesOffline();
 		VillagesData.Data village;
 		String htmlVillage = "<select name=\"village\" id=\"id_village\""+ 
 		"<option value='' selected='selected'>---------</option>";
@@ -467,7 +467,7 @@ public class TrainingsData extends BaseData {
 		htmlVillage = htmlVillage + "</select>";
 		
 		DevelopmentManagersData developmentmanagerData = new DevelopmentManagersData();
-		List developmentmanagers = developmentmanagerData.getDevelopmentManagersListingOffline();
+		List developmentmanagers = developmentmanagerData.getAllDevelopmentManagersOffline();
 		DevelopmentManagersData.Data developmentmanager;
 		String htmlDevelopmentManager = "<select name=\"development_manager_present\" id=\"id_development_manager_present\""+ 
 		"<option value='' selected='selected'>---------</option>";
@@ -475,9 +475,10 @@ public class TrainingsData extends BaseData {
 			developmentmanager = (DevelopmentManagersData.Data)developmentmanagers.get(i);
 			htmlDevelopmentManager = htmlDevelopmentManager + "<option value=\"" + developmentmanager.getId() + "\">" + developmentmanager.getName() + "</option>";
 		}
+		htmlDevelopmentManager = htmlDevelopmentManager + "</select>";
 
 		FieldOfficersData fieldofficerData = new FieldOfficersData();
-		List fieldofficers = fieldofficerData.getFieldOfficersListingOffline();
+		List fieldofficers = fieldofficerData.getAllFieldOfficersOffline();
 		FieldOfficersData.Data fieldofficer;
 		String htmlFO = "<select name=\"fieldofficer\" id=\"id_fieldofficer\""+ 
 		"<option value='' selected='selected'>---------</option>";
@@ -488,7 +489,7 @@ public class TrainingsData extends BaseData {
 		htmlFO = htmlFO + "</select>";
 		
 		AnimatorsData animatorData = new AnimatorsData();
-		List animators = animatorData.getAnimatorsListingOffline();
+		List animators = animatorData.getAllAnimatorsOffline();
 		AnimatorsData.Data animator;
 		String htmlAnimator = "<select name=\"animators_trained\" id=\"id_animators_trained\""+ 
 		"<option value='' selected='selected'>---------</option>";

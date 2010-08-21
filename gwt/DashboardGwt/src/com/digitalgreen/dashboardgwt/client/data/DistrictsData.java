@@ -405,7 +405,7 @@ public class DistrictsData extends BaseData {
 		
 	public String retrieveDataAndConvertResultIntoHtml() {
 		StatesData stateData = new StatesData();
-		List states = stateData.getStatesListingOffline();
+		List states = stateData.getAllStatesOffline();
 		StatesData.Data state;
 		String htmlState = "<select name=\"state\" id=\"id_state\"" + 
 						"<option value='' selected='selected'>---------</option>";
@@ -416,7 +416,7 @@ public class DistrictsData extends BaseData {
 		htmlState = htmlState + "</select>";
 		
 		FieldOfficersData fieldofficerData = new FieldOfficersData();
-		List fieldofficers = fieldofficerData.getFieldOfficersListingOffline();
+		List fieldofficers = fieldofficerData.getAllFieldOfficersOffline();
 		FieldOfficersData.Data fieldofficer;
 		String htmlFO = "<select name=\"fieldofficer\" id=\"id_fieldofficer\"" + 
 						"<option value='' selected='selected'>---------</option>";
@@ -427,7 +427,7 @@ public class DistrictsData extends BaseData {
 		htmlState = htmlState + "</select>";
 		
 		PartnersData partnerData = new PartnersData();
-		List partners = partnerData.getPartnersListingOffline();
+		List partners = partnerData.getAllPartnersOffline();
 		PartnersData.Data partner;
 		String htmlPartner = "<select name=\"partner\" id=\"id_partner\"" + 
 							"<option value='' selected='selected'>---------</option>";
@@ -435,6 +435,7 @@ public class DistrictsData extends BaseData {
 			partner = (PartnersData.Data)partners.get(i);
 			htmlPartner = htmlPartner + "<option value=\"" + partner.getId() + "\">" + partner.getPartnerName() + "</option>";
 		}
+		htmlPartner = htmlPartner + "</select>";
 		
 		return htmlState + htmlFO + htmlPartner;
 	}
