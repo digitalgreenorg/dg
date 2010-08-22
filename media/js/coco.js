@@ -45,7 +45,7 @@
 					}
 					else
 					{
-						formValues[pair[0]] = decodeURIComponent(pair[1]);
+						formValues[pair[0]] = decodeURIComponent(encodeURIComponent(pair[1]));
 					}
 				}
 			}
