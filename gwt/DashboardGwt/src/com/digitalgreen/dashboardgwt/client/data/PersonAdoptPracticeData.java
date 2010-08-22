@@ -175,12 +175,12 @@ public class Data extends BaseData.Data {
 			practiceValidator.setError("Please make sure that you choose a practice for 'Practice'.");
 			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
 			dateOfAdoption.setError("Please make sure 'DateOfAdoption' is formatted as YYYY-MM-DD.");
-			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100);
-			quality.setError("Please make sure quality is less than 100 characters");
+			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100, true);
+			quality.setError("Please make sure quality is less than 100 characters and does not contain special characters");
 			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
 			quantity.setError("Please make sure quantity is integer");
-			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100);
-			quantityUnit.setError("Please make sure quantity unit is less than 100 characters");
+			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100,true);
+			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(practiceValidator);
 			validatorList.add(dateOfAdoption);

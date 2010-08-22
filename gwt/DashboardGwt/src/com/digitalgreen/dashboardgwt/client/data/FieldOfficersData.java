@@ -128,7 +128,7 @@ public class FieldOfficersData extends BaseData {
 			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
 			phoneNo.setError("Please make sure that 'Phone No' is not more than 100 characters and does not contain special characters.");
 			StringValidator address = new StringValidator(this.address, true, false, 0, 500);
-			address.setError("Please make sure that 'Address' is not more than 500 CHARACTERS.");
+			address.setError("Please make sure that 'Address' is not more than 500 CHARACTERS .");
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(name);
 			validatorList.add(age);

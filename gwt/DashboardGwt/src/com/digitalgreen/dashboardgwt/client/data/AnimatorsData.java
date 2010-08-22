@@ -269,16 +269,16 @@ public class AnimatorsData extends BaseData {
 
 		@Override
 		public boolean validate(BaseData.Data foreignkey) {
-			StringValidator name = new StringValidator(this.name, false, false,	0, 100);
-			name.setError("Name is a required field and please make sure 'name' is less than 100 characters.");
+			StringValidator name = new StringValidator(this.name, false, false,	0, 100, true);
+			name.setError("Name is a required field and please make sure 'name' is less than 100 characters and does not contain special characters.");
 			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
 			age.setError("Please enter a valid age");
 			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
 			gender.setError("Please select gender");
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100);
-			phoneNo.setError("Please make sure that phone number is valid");
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100, true);
+			phoneNo.setError("Please make sure that phone number is valid and deos not contain special charcters");
 			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
-			address.setError("Please make sure that 'address' is less than 500 characters");
+			address.setError("Please make sure that 'address' is less than 500 characters ");
 			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
 			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
 			

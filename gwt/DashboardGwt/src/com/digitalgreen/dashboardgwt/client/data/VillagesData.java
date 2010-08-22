@@ -339,11 +339,13 @@ public class VillagesData extends BaseData {
 	}
 	
 	public List getAllVillagesOffline(){
+		Window.alert("In get all villages offline");
 		BaseData.dbOpen();
 		List villages = new ArrayList();
 		this.select(selectVillages);
 		if (this.getResultSet().isValidRow()){
 			try {
+				Window.alert("In if");
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					Data village = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					villages.add(village);

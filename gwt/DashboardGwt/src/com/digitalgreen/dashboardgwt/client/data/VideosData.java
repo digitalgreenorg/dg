@@ -272,8 +272,8 @@ public class VideosData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator title = new StringValidator(this.title, false, false, 1, 200, true);
-			title.setError("Please make sure that 'Title' is NOT EMPTY and not more than 200 characters.");
-			StringValidator videoType = new StringValidator(this.video_type, false, false, 1, 1);;
+			title.setError("Please make sure that 'Title' is NOT EMPTY and not more than 200 characters and should not contain any special characters..");
+			StringValidator videoType = new StringValidator(this.video_type, false, false, 1, 1);
 			videoType.setError("Please make sure you choose a video type for 'Video type'.");
 			DateValidator videoProductionStartDate = new DateValidator(this.video_production_start_date, false, false);
 			videoProductionStartDate.setError("Please make sure 'Video production start date' is NOT EMPTY and id formatted as 'YYYY-MM-DD'.");
@@ -297,18 +297,18 @@ public class VideosData extends BaseData {
 			farmersShown.setError("Please make sure you add some farmers for 'Farmers shown'");
 			StringValidator actors = new StringValidator(this.actors, false, false, 1, 1);
 			actors.setError("Please make sure you choose a actor for 'Actors'.");
-			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, false, 0, 200);
-			pictureQuality.setError("Please make sure 'Picture quality' is less than 200 CHARACTERS.");
-			StringValidator audioQuality = new StringValidator(this.audio_quality, true, true, 0, 200);
-			audioQuality.setError("Please make sure 'Audio quality' is less than 200 CHARACTERS.");
-			StringValidator editingQuality = new StringValidator(this.editing_quality, true, true, 0, 200);
-			editingQuality.setError("Please make sure 'Editing quality' is less than 200 CHARACTERS.");
+			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, false, 0, 200,true);
+			pictureQuality.setError("Please make sure 'Picture quality' is less than 200 CHARACTERS and should not contain any special characters..");
+			StringValidator audioQuality = new StringValidator(this.audio_quality, true, true, 0, 200,true);
+			audioQuality.setError("Please make sure 'Audio quality' is less than 200 CHARACTERS and should not contain any special characters.");
+			StringValidator editingQuality = new StringValidator(this.editing_quality, true, true, 0, 200,true);
+			editingQuality.setError("Please make sure 'Editing quality' is less than 200 CHARACTERS and should not contain any special characters.");
 			DateValidator editStartDate = new DateValidator(this.edit_start_date, true, true);
 			editStartDate.setError("Please make sure 'Edit start date' is formatted as YYYY-MM-DD.");
 			DateValidator editFinishDate = new DateValidator(this.edit_finish_date, true, true);
 			editFinishDate.setError("Please make sure 'Edit finish date' is formatted as YYYY-MM-DD.");
-			StringValidator thematic_quality = new StringValidator(this.thematic_quality, true, true, 0, 200);
-			thematic_quality.setError("Please make sure 'Thematic quality' is less than 200 CHARACTERS.");
+			StringValidator thematic_quality = new StringValidator(this.thematic_quality, true, true, 0, 200,true);
+			thematic_quality.setError("Please make sure 'Thematic quality' is less than 200 CHARACTERS and should not contain any special characters.");
 			DateValidator approvalDate = new DateValidator(this.approval_date, true, true);
 			approvalDate.setError("Please make sure 'Approval date' is formatted as YYYY-MM-DD.");
 			StringValidator videoSuitableFor = new StringValidator(this.video_suitable_for, false, false, 1, 1);

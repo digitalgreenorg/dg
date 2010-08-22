@@ -202,10 +202,10 @@ public class PersonsData extends BaseData {
 		@Override
 		public boolean validate() {
 			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
-			personName.setError("Person Name is a required field and is less than 100 characters");
+			personName.setError("Person Name is a required field and is less than 100 characters and should not contain any special characters");
 			
 			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
-			fatherName.setError("Please make sure that Father Name is less than 100 characters");
+			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters");
 			
 			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
 			age.setError("Please enter a valid age");
@@ -213,11 +213,11 @@ public class PersonsData extends BaseData {
 			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
 			gender.setError("Please select gender");
 			
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100);
-			phoneNo.setError("Please make sure that phone number is valid");
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
+			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters");
 			
-			StringValidator address = new StringValidator(this.address, true, false, 0, 500);
-			address.setError("Please make sure that Address is less than 500 characters");
+			StringValidator address = new StringValidator(this.address, true, false, 0, 500, true);
+			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters");
 			
 			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
 			landHoldings.setError("Please enter a valid Land holdings data");

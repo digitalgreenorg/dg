@@ -82,7 +82,7 @@ public class RegionsData extends BaseData {
 		@Override
 		public boolean validate(){
 			StringValidator nameValidator = new StringValidator(this.region_name, false, false, 1, 100, true);
-			nameValidator.setError("Please make sure that 'Region Name' is NOT EMPTY and not more than 100 characters.");
+			nameValidator.setError("Please make sure that 'Region Name' is NOT EMPTY and not more than 100 characters and should not contain any special characters.");
 			DateValidator dateValidator = new DateValidator(this.start_date, true, false);
 			dateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
 			ArrayList region_name = new ArrayList();

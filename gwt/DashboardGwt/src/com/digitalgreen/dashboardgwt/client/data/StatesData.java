@@ -99,7 +99,8 @@ public class StatesData extends BaseData {
 		@Override
 		public boolean validate(){
 			StringValidator stateValidator = new StringValidator(this.state_name, false, false, 1, 100, true);
-			stateValidator.setError("Please make sure that 'State Name' is NOT EMPTY and not more than 100 characters.");
+			stateValidator.setError("Please make sure that 'State Name' is NOT EMPTY and not more than 100 characters " +
+					"and should not contain any special characters.");
 			StringValidator regionValidator = new StringValidator(this.region.getId(), false, false);
 			regionValidator.setError("Please make sure you choose a region for 'Region'.");
 			DateValidator dateValidator = new DateValidator(this.start_date, true, true);
