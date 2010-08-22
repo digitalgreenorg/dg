@@ -286,14 +286,14 @@ public class TargetsData extends BaseData {
 			editor_refresher_training.setError("Please enter a valid editor_refresher_training");
 			IntegerValidator villages_certification = new IntegerValidator(this.villages_certification, true, true);
 			villages_certification.setError("Please enter a valid villages_certification");
-			StringValidator what_went_well = new StringValidator(this.what_went_well, true, true, 1, 300);;
-			what_went_well.setError("Please make sure you choose a  valid what_went_well.");
-			StringValidator what_not_went_well = new StringValidator(this.what_not_went_well, true, true, 1, 300);;
-			what_not_went_well.setError("Please make sure you choose a  valid what_not_went_well.");
-			StringValidator challenges = new StringValidator(this.challenges, true, true, 1, 300);;
-			challenges.setError("Please make sure you choose a  valid challenges.");
-			StringValidator support_requested = new StringValidator(this.support_requested, true, true, 1, 300);;
-			support_requested.setError("Please make sure you choose a  valid support_requested.");
+			StringValidator what_went_well = new StringValidator(this.what_went_well, true, true, 1, 1024, true);
+			what_went_well.setError("Please make sure 'what went well and why' field is less than 1024 characters and does not contain special characters.");
+			StringValidator what_not_went_well = new StringValidator(this.what_not_went_well, true, true, 1, 1024, true);
+			what_not_went_well.setError("Please make sure 'what not went well and why' field is less than 1024 characters and does not contain special characters.");
+			StringValidator challenges = new StringValidator(this.challenges, true, true, 1, 300, true);
+			challenges.setError("Please make sure 'challenges' field is less than 300 characters and does not contain special characters.");
+			StringValidator support_requested = new StringValidator(this.support_requested, true, true, 1, 300, true);
+			support_requested.setError("Please make sure 'support requested' field is less than 300 characters and does not contain special characters.");
 			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(clusters_identification);

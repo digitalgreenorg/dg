@@ -158,10 +158,10 @@ public class TrainingsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator trainingPurpose = new StringValidator(this.training_purpose, true, false, 0, 1024);
-			trainingPurpose.setError("Please make sure 'Training purpose' is less than 1024 characters.");
-			StringValidator trainingOutcome = new StringValidator(this.training_outcome, true, false, 0, 1024);
-			trainingOutcome.setError("Please make sure 'Training outcome' is less than 1024 characters.");	
+			StringValidator trainingPurpose = new StringValidator(this.training_purpose, true, false, 0, 1024, true);
+			trainingPurpose.setError("Please make sure 'Training purpose' is less than 1024 characters and does not contain special characters.");
+			StringValidator trainingOutcome = new StringValidator(this.training_outcome, true, false, 0, 1024, true);
+			trainingOutcome.setError("Please make sure 'Training outcome' is less than 1024 characters and does not contain special characters.");	
 			DateValidator trainingStartDate = new DateValidator(this.training_start_date, false, false);
 			trainingStartDate.setError("Please make sure 'Training start date' is formatted as YYYY-MM-DD.");
 			DateValidator trainingEndDate = new DateValidator(this.training_end_date, false, false);

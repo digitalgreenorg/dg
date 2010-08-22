@@ -203,8 +203,8 @@ public class ScreeningsData extends BaseData {
 			TimeValidator endTimeValidator = new TimeValidator(this.end_time, false, false);
 			endTimeValidator.setError("Please make sure 'End time' is NOT EMPTY and is formatted as 'HH:MM:SS' and it must be in 24 HOUR format.");
 			
-			StringValidator locationValidator = new StringValidator(this.location, true, false, 0, 200);
-			locationValidator.setError("Please make sure that 'Location' in not nore than 200 CHARACTERS.");
+			StringValidator locationValidator = new StringValidator(this.location, true, false, 0, 200, true);
+			locationValidator.setError("Please make sure that 'Location' is not nore than 200 CHARACTERS and does not contain special characters.");
 			
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
