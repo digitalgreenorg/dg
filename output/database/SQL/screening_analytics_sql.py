@@ -23,7 +23,7 @@ def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners):
     sql_ds['select'].append("COUNT(DISTINCT PMA.person_id) as tot_dist_per");
     sql_ds['select'].append("COUNT(PMA.person_id) as tot_per");
     sql_ds['select'].append("COUNT(DISTINCT SC.id) as tot_scr");
-    sql_ds['select'].append("DATEDIFF(MAX(SC.DATE),MIN(SC.DATE)) as tot_days");
+    sql_ds['select'].append("DATEDIFF(MAX(SC.DATE),MIN(SC.DATE))+1 as tot_days");
     sql_ds['from'].append("SCREENING SC");
     sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"]);
     filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners);
