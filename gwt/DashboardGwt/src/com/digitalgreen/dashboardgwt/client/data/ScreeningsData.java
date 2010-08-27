@@ -437,7 +437,7 @@ public class ScreeningsData extends BaseData {
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
 		String listTemp;
-		// Checking whether to return all villages or only limited number of villages
+		// Checking whether to return all screenings or only limited number of screenings
 		if(pageNum.length == 0) {
 			listTemp = listScreenings;
 		}
@@ -449,7 +449,7 @@ public class ScreeningsData extends BaseData {
 				listTemp = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
 						"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name " +
 						"FROM screening sc, village vil " +
-						"WHERE sc.village_id = vil.id AND vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%'" +" ORDER BY(sc.date) " 
+						"WHERE sc.village_id = vil.id AND (vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%' OR sc.DATE LIKE '%"+pageNum[1]+"%')" +" ORDER BY(sc.date) " 
 									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
 			}
 		}
@@ -626,7 +626,7 @@ public class ScreeningsData extends BaseData {
 		String count = "0";//stores number of rows in a resultset
 		String countSql = "SELECT COUNT(*) " +
 			"FROM screening sc, village vil " +
-			"WHERE sc.village_id = vil.id AND vil.VILLAGE_NAME" +" LIKE '%"+searchText+"%' ;" ;
+			"WHERE sc.village_id = vil.id AND (vil.VILLAGE_NAME" +" LIKE '%"+searchText+"%' OR sc.DATE LIKE '%"+searchText+"%') ;" ;
 		BaseData.dbOpen();
 		this.select(countSql);
 		if(this.getResultSet().isValidRow()) {
