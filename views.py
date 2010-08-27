@@ -680,9 +680,11 @@ def get_videos_online(request, offset, limit):
         count = Video.objects.filter(village__in = villages).distinct().count()
         videos = Video.objects.filter(village__in = villages)
         if(searchText):
-            vil = villages.filter(village_name__icontains = searchText)
-            count = videos.filter(Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil)).count()
-            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil)).order_by("title")[offset:limit]
+            vil = villages.filter(village_name__icontains = searchText)            
+            count = videos.filter(Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
+                        Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText)).count()
+            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
+                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("title")[offset:limit]
         else:
             videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(videos):
@@ -1587,8 +1589,8 @@ def get_screenings_online(request, offset, limit):
         screenings = Screening.objects.filter(village__in = villages)
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)
-            count = screenings.filter(village__in = vil).count()
-            screenings = screenings.filter(village__in = vil).distinct().order_by("date")[offset:limit]
+            count = screenings.filter(Q(village__in = vil) | Q(date__icontains = searchText) ).count()
+            screenings = screenings.filter(Q(village__in = vil) | Q(date__icontains = searchText)).distinct().order_by("date")[offset:limit]
         else:
             screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(screenings):
