@@ -209,7 +209,7 @@ public class ScreeningsData extends BaseData {
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
 			
-			StringValidator animatorValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			StringValidator animatorValidator = new StringValidator(this.animator.getId(), false, false, 1, 100);
 			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
 			
 			ManyToManyValidator videoScreenedValidator = new ManyToManyValidator(videoes_screened, false);
