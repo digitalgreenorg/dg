@@ -69,16 +69,16 @@ a#contendtd1divsub1link:hover		{ filter: alpha(opacity = 60); opacity:0.6; text-
 
 /* Analytics Stat Div */
 #statdiv							{ width:258px; margin-top:4px; border:1px solid #abd268; background:url("/media/Output/Images/divbg3.png"); background-repeat:y-repeat; }
-.analyticsstatdiv					{ color:#cdbf5e; margin-top:4px; width:258px; background-color:none;  }
+.analyticsstatdiv					{ background-color:none; color:#cdbf5e; margin-top:4px; width:250px; margin-left:0px; }
 .analyticsstatlink					{ margin-top:10px; margin-bottom:0px }
 .analyticsstatlinkdesc1				{ padding-left:5px; float:left; width:160px; text-align:center; margin-left:10px; }
 .analyticsstatlinkdesc1	a			{ color:#6d9d30; font-size:3em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; text-decoration:none; }
 .analyticsstatlinkdesc1	a:hover		{ color:#5b6e1d; }
-.analyticsstatlinkdesc2				{ float:left; width:60px; margin-top:8px; text-align:left; margin-left:10px; }
+.analyticsstatlinkdesc2				{ float:left; width:60px; margin-top:10px; text-align:left; margin-left:6px; font-weight:bold; }
 .analyticsstatgap					{ clear:both; background:url("/media/Output/Images/analyticsstatgap.png"); width:244px; height:6px; }
-.analyticsstatfooter 				{ margin-bottom:2px; padding-top:2px; padding-bottom:2px; background-color:none; clear:both; width:238px; height:16px; text-align:left; border-top:0px solid #e1cf53 }
+.analyticsstatfooter 				{ padding-bottom:5px; padding-top:2px; background-color:none; clear:both; width:238px; height:16px; text-align:left; border-top:0px solid #e1cf53 }
 .analyticsstatfooter	a			{ text-decoration:none; font-family:Calibri; font-size:13px; font-weight:bold; color:#cdbf5e; }				
-.divgap								{ margin-left:2%; margin-top:1px; width:96%; height:1px; border-top:1px solid #e1cf53  }
+.divgap								{ margin-left:0px; margin-top:1px; width:96%; height:1px; border-top:1px solid #e1cf53  }
 
 
 /* Explore More */
@@ -87,7 +87,7 @@ a#contendtd1divsub1link:hover		{ filter: alpha(opacity = 60); opacity:0.6; text-
 
 #divmainheader		   				{ width:98%; padding-bottom:6px; text-align:left; margin:1%; font-size:1.0em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#C7A048; border-bottom:2px solid #e2d39a; }
 
-.exploredescdiv                     { clear:both; text-align:left; margin:10px; }
+.exploredescdiv                     { clear:both; text-align:left; margin-left:8px; width:250px; margin-top:10px; }
 .navdesctitle						{ width:100%; font-size:1.0em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#CDBF5E; background-color:none; }
 .exploredescmain1					{ margin-left:3px; width:238px; margin-top:10px; height:20px; }
 .exploredescmainlink1				{ float:left; margin-right:11px; text-decoration:none; font-size:13px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
@@ -112,7 +112,7 @@ a#contendtd1divsub1link:hover		{ filter: alpha(opacity = 60); opacity:0.6; text-
 .largeviewdiv						{ margin-top:0px; padding:4px; text-align:left; }
 
 
-/* Spotlight */
+/* In the Spotlight div*/
 #spotlightstory						{ text-align:left; width:620px;}
 #spotlightstorydiv					{ width:100%; }
 #spotlighttable						{ margin-left:5px; width:615px; }
@@ -121,3 +121,9 @@ a#contendtd1divsub1link:hover		{ filter: alpha(opacity = 60); opacity:0.6; text-
 .spotlightdivdesc					{ margin-left:0%; clear:both; padding-bottom:15px; width:98%; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; color:Black; }
 .spotlightdivtitle a				{ font-size:1.0em; font-family:Georgia,'Times New Roman',Serif; font-weight:normal; color:#C7A048; text-decoration:none; }
 .spotlightdivtitle a:hover			{ color:#fbae0c; }
+
+
+/* Twitter Update Div */
+#twitter_update_list	a			{ color:Gray;}
+#twitter_update_list	a:hover		{ color:#fbae0c; }
+#twitter_update_list	li			{ margin-top:10px; margin-left:0px; list-style-type:none; }

@@ -93,23 +93,3 @@
 .pressvideo							{ margin-left:2px; margin-top:3px; width:266px; height:277px; border-width:0px; border-style:solid; border-color:#59af04; }
 
 
-
-/* Site Map */
-#explorediv							{ clear:both; width:260px; margin-top:4px; border:1px solid #abd268; }
-#exploretitle						{ width:100%; height:8px; border-bottom:0px solid #abd268; font-size:1em; font-family:Serif; font-weight:bold; color:#cdbf5e; }
-#exploreheader      				{ padding-bottom:5px; text-align:left; margin-left:10px; margin-right:10px; margin-top:0px; width:238px; font-size:1.2em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#cdbf5e; border-bottom:2px solid #e2d39a; }
-.exploredescdiv                     { padding-bottom:5px; text-align:left; width:260px; }
-.exploredesctitle					{ width:100%; font-size:1.2em; font-family:Georgia,'Times New Roman',Serif; font-weight:normal; color:#E7F7CF; background-color:#62980C; }
-.exploredescmain1					{ margin-left:0px; width:238px; margin-top:10px; background-color:#e5edd8; }
-.exploredescmainlink1				{ float:left; margin-right:11px; text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
-.exploredescmainlink1:hover			{ text-decoration:underline; color:#fbae0c; }
-.exploredescmainlink1 img			{ float:left; display:block; border:none; margin-right:2px; }
-
-.exploredescmain					{ margin-left:0px; width:238px; margin-top:10px; background-color:none; }	
-.exploredescmainlink				{ margin-left:10px; margin-top:10px;  clear:both; line-height:15px; display:block; text-decoration:none; font-size:13px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
-.exploredescmainlink:hover			{ text-decoration:underline; color:#fbae0c; }
-
-.exploredescmainlink img			{ float:left; display:block; border:none; margin-right:10px; }	
-
-.exploredescdivgap					{ margin:10px; margin-top:20px; width:238px; height:1px; border-top:1px solid #e1cf53  }
-

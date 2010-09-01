@@ -3,8 +3,9 @@ var tchartwidth = 0.85*(0.9*(screen.width));
 var tchartheight  = 400;
 
 /* This is run when the page is fully loaded */
-$(document).ready(function(){	   
-	
+$(document).ready(function(){	
+     
+         
 	// Analytics Navigation
 	
 	$("div#analyticsnavdiv").mouseover(function() {            	

@@ -27,6 +27,8 @@
 .keyrole							{ color:#3f270b; float:left; width:204px; height:300px; border-bottom:4px solid #f5a11e; background-color:#f9fcd2; margin-bottom:10px;  }
 .keyrole img						{ width:204px; height:196px; margin-bottom:5px;}
 .keyrolegap							{ float:left; width:4px; height:100px; }
+.keyrolep							{ margin-top: 5px; padding-left: 3px; }
+
 
 #divstattitle						{ margin-left:5px; width:60%; margin-top:10px; margin-bottom:0px; padding-top:2px; padding-bottom:0px; padding-left:5px; background-color:none; }
 #divtitletable						{ float:none; margin-left:0px; }

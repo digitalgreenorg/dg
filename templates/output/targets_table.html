@@ -1,396 +1,142 @@
-{% extends "base_analytics.html" %}
+{% extends "base_analytics_target.html" %}
 
-{% block title %} Targets Form {% endblock %}
+{% block title %} Digital Green - Targets Table {% endblock %}
 
-{% block cssfile %}  
+{% block cssfile %}
+	{{block.super}}   
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/analytics.css' />
 {% endblock cssfile %}
 
-{% block jsfile %}
-    <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
-    <script type ='text/javascript'>
-        
-        //Function to set the default_if_none dates when the page loads
-        window.onload = function(){
-            var from_date = '{{search_box_params.from_date}}';
-			var to_date = '{{search_box_params.to_date}}';
-            from_date = from_date.split('-');
-            if(from_date[1][0]=='0') from_date[1] = from_date[1][1];
-			$("select[name='from_month']").val(from_date[1]);
-            $("select[name='from_year']").val(from_date[0]);
-			
-			to_date = to_date.split('-');
-			if(to_date[1][0]=='0') to_date[1] = to_date[1][1];
-			$("select[name='to_month']").val(to_date[1]);
-            $("select[name='to_year']").val(to_date[0]);             
-                
-            //Calling code for tablesorter
-            $('#table2').tablesorter({textExtraction: function(node) {  
-                if($(node).find("a").length)
-                    return $(node).find("a").html();
-                return node.innerHTML;
-                }
-            });
-        }
-
-        function reset(){           
-            window.location.href = '{{search_box_params.base_url}}?geog=country&id=1';
-        }
-        
-        function go(){
-            var base_url = '{{search_box_params.base_url}}';
-            var is_date_selected = {{search_box_params.is_date_selected}};
-            var url = new Array();
-            var orig_from_date = '{{search_box_params.from_date}}';
-            var orig_to_date = '{{search_box_params.to_date}}';
-            
-			var cur_from_date = $("select[name='from_year']").val()+'-'+$("select[name='from_month']").val()+'-'+'01';
-			
-			var cur_to_month = parseInt($("select[name='to_month']").val(),10);
-			var cur_to_year = parseInt($("select[name='to_year']").val(),10);
-			var cur_to_date = new Date(cur_to_year+parseInt((cur_to_month+1)/12), parseInt((cur_to_month+1)%12)-1,1);
-			cur_to_date.setDate(cur_to_date.getDate() - 1);
-			cur_to_date = cur_to_date.getFullYear()+'-'+(cur_to_date.getMonth()+1)+'-'+cur_to_date.getDate();
-            
-			if(is_date_selected || orig_from_date!=cur_from_date || orig_to_date!=cur_to_date) {
-                url.push('from_date='+cur_from_date);
-                url.push('to_date='+cur_to_date);
-            }
-                
-            if($("input:checkbox:not(:checked)").length > 0) {
-                $("input:checked").each(function() {
-                    url.push("partners="+$(this).val())
-                });
-            }
-            
-            var geog = 'country', id = '1';
-            $(".geog_select").each(function() {
-                if($(this).val()==-1)
-                    return false;
-                geog = $(this).attr('name');
-                id = $(this).val();
-            });
-            url.push("geog="+geog);
-            url.push("id="+id);
-            window.location.href = base_url+'?'+url.join('&');
-            
-        }
-            
-        //Function to enable/disable and fill option in Selects for region select drop downs
-        function dochange(src, val) {
-            $.ajax({ type: "GET", 
-                    url: "/analytics/drop_down_val?geog="+src+"&id="+val,
-                    success: function(html) {                    
-                    var flag = false;
-                    $(".geog_select").each(function() {
-                        if(flag == true)
-                            $(this).val(-1).attr('disabled','disabled');
-                        if (this.name == src)
-                            flag = true;                    
-                    });
-                    
-                   $("#"+src+"Id").html(html).removeAttr('disabled');                   
-              }
-         });
-        }       
-    
-    </script>
-{% endblock jsfile %}
+{% block analyticsbreadcrums %} 	
+	{{block.super}}
+	/ <span style='font-weight:bold;'> Targets Table </span>	
+{% endblock analyticsbreadcrums %}
 
 
-{% block content %}  
-    
-    <div id='customize'>
-        <div id='customizetitle'>
-            <div id='customizetitlename'>  </div>           
-        </div>
-        
-        <div id='customizebody'>                        
-            <div id='calender' class='customdiv'>
-                <div id='calendertitle' class='customtitle'>                                        
-                    <table id='calendertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>                        
-                        <tr>
-                            <td class='customtitlename'> Calender </td>
-                            <td class='customtitleimg'>  </td>
-                        </tr>
-                    </table>
-                </div>
-                <div id='arrowimg'>  </div>
-                <div id='calenderbody' class='custombody'>
-                    <table id='calenderbodytable' class='custombodytable'>
-                        <tr>
-                            <td id='calenderbodytitle' colspan='2'> date: 'yyyy-mm-dd' format  </td>
-                        </tr>
-                        <tr>
-                            <td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> from: </div>      </td>
-                            <td id='calenderbodytd2' class='custombodytd2'> <div> 
-							<select name="from_month">
-								<option value='1'>Jan</option>
-								<option value='2'>Feb</option>
-								<option value='3'>Mar</option>
-								<option value='4'>Apr</option>
-								<option value='5'>May</option>
-								<option value='6'>Jun</option>
-								<option value='7'>Jul</option>
-								<option value='8'>Aug</option>
-								<option value='9'>Sep</option>
-								<option value='10'>Oct</option>
-								<option value='11'>Nov</option>
-								<option value='12'>Dec</option>
-							</select>
-							<select name="from_year">
-								<option value='2008'>2008</option>
-								<option value='2009'>2009</option>
-								<option value='2010'>2010</option>
-							</select>
-						
-							</div> </td>
-                        </tr>
-                        <tr>
-                            <td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> to: </div>  </td>
-                            <td id='calenderbodytd2' class='custombodytd2'> <div>
-								<select name="to_month">
-	                                <option value='1'>Jan</option>
-	                                <option value='2'>Feb</option>
-	                                <option value='3'>Mar</option>
-	                                <option value='4'>Apr</option>
-	                                <option value='5'>May</option>
-	                                <option value='6'>Jun</option>
-	                                <option value='7'>Jul</option>
-	                                <option value='8'>Aug</option>
-	                                <option value='9'>Sep</option>
-	                                <option value='10'>Oct</option>
-	                                <option value='11'>Nov</option>
-	                                <option value='12'>Dec</option>
-	                            </select>
-	                            <select name="to_year">
-	                                <option value='2008'>2008</option>
-	                                <option value='2009'>2009</option>
-	                                <option value='2010'>2010</option>
-	                            </select>
-							</div> </td>
-                        </tr>
-                    </table>                
-                </div>
-            </div>              
-            
-             <div id='searchdiv' class='customdiv'>
-                <div id='searchtitle' class='customtitle'>                                      
-                    <table id='searchtitletable' class='customtitletable' cellspacing='0' cellpadding='0'>                      
-                        <tr>
-                            <td class='customtitlename'> Search by </td>
-                            <td class='customtitleimg'>  </td>
-                        </tr>
-                    </table>
-                </div>
-                <div id='selectbody'>               
-                            <div class='searchbody1' id='state'>
-                                <select class='select geog_select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-                                    <option value='-1'>Select State</option>
-                                        {% for key,item in search_box_params.geog_val.0.items %}
-                                            <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-                                        {%endfor%}
-                                </select>               
-                            </div>
-                            <div class='searchbody1' id='district'>
-                                <select class='select geog_select' name='district' id = 'districtId' {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
-                                    <option value='-1'>Select District</option>
-                                    {%if search_box_params.geog_val.1 %}
-                                        {% for key,item in search_box_params.geog_val.1.items %}
-                                            <option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
-                                        {%endfor%}
-                                    {%endif%}                       
-                                </select>   
-                            </div>
-                           
-                </div>                          
-            </div>
-                
-            {% if search_box_params.partners %}
-            <div id='partner' class='customdiv'>
-                <div id='partnertitle' class='customtitle'>                                     
-                    <table id='partnertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>                     
-                        <tr>
-                            <td class='customtitlename'> Partners </td>
-                            <td class='customtitleimg'>  </td>
-                        </tr>
-                    </table>
-                </div>
-                <div id='arrowimg'>  </div>
-                <div id='partnerbody' class='custombody'>
-                    <table id='partnerbodytable' class='custombodytable'>
-                    {% for partner in search_box_params.partners %}
-                        <tr>
-                            <td id='partnerbodytd2' class='custompartnerbodytd'> 
-                                <div id='partnername' class='partnerdiv'>{{partner.PARTNER_NAME}}</div> 
-                                <div class='partnercheckbox'> 
-                                    <input type="checkbox" name="partners" value="{{partner.id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
-                                </div> 
-                            </td>                                                       
-                        </tr>
-                    {% endfor %}                
-                    </table>                
-                </div>
-            </div>              
-            {% endif %}
-            
-            <div id='submitdiv'>                                        
-                    <table id='submittable' cellspacing='0' cellpadding='0'>                        
-                        <tr>
-                            <td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
-                            <td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
-                        </tr>
-                    </table>
-            </div>          
-            <br/>
-            <br/>   
-        </div>
-                
-    </div>
-    
-    <div id='contentbody'>      
-        {% block contentbody %}
-            <div id='contentheader'>
-                <table id='contentheadertable'>                     
-                    <tr>                                                
-                        <td class='contentheadertitle'> Targets{% block contentheadertitle %} {% endblock contentheadertitle %}  </td>
-                        <td class='contentheadertitle'>  </td>
-                        <td class='contentheadertitle'> {% block datepick1 %} {% endblock datepick1 %} </td>
-                        <td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>                   
-                    </tr>
-                </table>                    
-            </div>
-            <div>   
+{% block contentbody %}
+{{block.super}}  
+	
 <div>
-	<br></br>
-</div>
-<div style="float:left;">
-<table id="target_table" border=1>
+<table id="targettable" cellspacing='0' cellpadding='0'>
     <tr>
-        <td colspan='3'>Location Name: {{achieved_vals.geog_name}}</td>
+        <td colspan='3' id='targettableheader'> &nbsp;{{achieved_vals.geog_name}}</td>
     </tr>
     <tr>
-    	<th>Targets</th>
-        <th>Planned</th>
-        <th>Achieved</th>
+    	<th class='targettableth'>Targets</th>
+        <th class='targettableth'>Planned</th>
+        <th class='targettableth'>Achieved</th>
     </tr>
     <tr>
-        <td>Villages Identified</td>
-        <td>{{target_vals.tot_clusters|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.vil_identified|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Villages Identified</td>
+        <td class='targettabletd'>{{target_vals.tot_clusters|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.vil_identified|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>DG Concept shared with community</td>
-        <td>{{target_vals.tot_dg_sharing|default_if_none:"NA"}}</td>
-        <td>--</td>
+        <td class='targettabletd'>DG Concept shared with community</td>
+        <td class='targettabletd'>{{target_vals.tot_dg_sharing|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
     <tr>
-        <td>CSP Identified</td>
-        <td>{{target_vals.tot_csp_identified|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.csp_identified|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>CSP Identified</td>
+        <td class='targettabletd'>{{target_vals.tot_csp_identified|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.csp_identified|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Dissemination Set Deployed</td>
-        <td>{{target_vals.tot_deployment|default_if_none:"NA"}}</td>
-        <td>--</td>
+        <td class='targettabletd'>Dissemination Set Deployed</td>
+        <td class='targettabletd'>{{target_vals.tot_deployment|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
     <tr>
-        <td>Village operationalized</td>
-        <td>{{target_vals.tot_vil_op|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.village_operational|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Village operationalized</td>
+        <td class='targettabletd'>{{target_vals.tot_vil_op|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.village_operational|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Videos Uploaded</td>
-        <td>{{target_vals.tot_vid_upl|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.vids_uploaded|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Videos Uploaded</td>
+        <td class='targettabletd'>{{target_vals.tot_vid_upl|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.vids_uploaded|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Video Produced</td>
-        <td>{{target_vals.tot_vid_pro|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.video_production|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Video Produced</td>
+        <td class='targettabletd'>{{target_vals.tot_vid_pro|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.video_production|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Storyboard Prepared</td>
-        <td>{{target_vals.tot_story|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.storyboard|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Storyboard Prepared</td>
+        <td class='targettabletd'>{{target_vals.tot_story|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.storyboard|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Number of Videos shot</td>
-        <td>{{target_vals.tot_vid_shoot|default_if_none:"NA"}}</td>
-        <td>--</td>
+        <td class='targettabletd'>Number of Videos shot</td>
+        <td class='targettabletd'>{{target_vals.tot_vid_shoot|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
     <tr>
-        <td>Number of Videos edited</td>
-        <td>{{target_vals.tot_vid_edit|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.video_edited|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Number of Videos edited</td>
+        <td class='targettabletd'>{{target_vals.tot_vid_edit|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.video_edited|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Video Quality Check</td>
-        <td>{{target_vals.tot_vid_qual|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.quality_check|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Video Quality Check</td>
+        <td class='targettabletd'>{{target_vals.tot_vid_qual|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.quality_check|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Total Disseminations</td>
-        <td>{{target_vals.tot_diss|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.disseminations|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Total Disseminations</td>
+        <td class='targettabletd'>{{target_vals.tot_diss|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.disseminations|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>Average Attendance per Dissemination</td>
-        <td>{{target_vals.avg_att|floatformat:2|default:"NA"}}</td>
-        <td>{{achieved_vals.att_per_diss|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>Average Attendance per Dissemination</td>
+        <td class='targettabletd'>{{target_vals.avg_att|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.att_per_diss|floatformat:2|default:"NA"}}</td>
     </tr>
     <tr>
-        <td>Expressed Interest per Dissemination</td>
-        <td>{{target_vals.exp_int|floatformat:2|default:"NA"}}</td>
-        <td>{{achieved_vals.inter_per_dissemination|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>Expressed Interest per Dissemination</td>
+        <td class='targettabletd'>{{target_vals.exp_int|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.inter_per_dissemination|floatformat:2|default:"NA"}}</td>
     </tr>
     <tr>
-        <td>Adoption per Dissemination</td>
-        <td>{{target_vals.ado_dis|floatformat:2|default:"NA"}}</td>
-        <td>{{achieved_vals.avg_adoption|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>Adoption per Dissemination</td>
+        <td class='targettabletd'>{{target_vals.ado_dis|floatformat:2|default:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.avg_adoption|floatformat:2|default:"NA"}}</td>
     </tr>
     <tr>
-        <td>Total Disseminations</td>
-        <td>{{target_vals.tot_diss|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.disseminations|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>CRPs Training</td>
+        <td class='targettabletd'>{{target_vals.tot_crp|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.new_crp_training|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>CRPs Training</td>
-        <td>{{target_vals.tot_crp|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.new_crp_training|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>CRPs Refresher Training</td>
+        <td class='targettabletd'>{{target_vals.tot_crp_ref|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.refresher_crp_traing|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>CRPs Refresher Training</td>
-        <td>{{target_vals.tot_crp_ref|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.refresher_crp_traing|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>CSPs Training</td>
+        <td class='targettabletd'>{{target_vals.tot_csp|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.new_csp_training|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>CSPs Training</td>
-        <td>{{target_vals.tot_csp|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.new_csp_training|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>CSPs Refreshing Training</td>
+        <td class='targettabletd'>{{target_vals.tot_csp_ref|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>{{achieved_vals.refresher_csp_traing|default_if_none:"NA"}}</td>
     </tr>
     <tr>
-        <td>CSPs Refreshing Training</td>
-        <td>{{target_vals.tot_csp_ref|default_if_none:"NA"}}</td>
-        <td>{{achieved_vals.refresher_csp_traing|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>Editors Training</td>
+        <td class='targettabletd'>{{target_vals.tot_editor|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
     <tr>
-        <td>Editors Training</td>
-        <td>{{target_vals.tot_editor|default_if_none:"NA"}}</td>
-        <td>--</td>
-    </tr>
-    <tr>
-        <td>Editors Refresher Training</td>
-        <td>{{target_vals.tot_editor_ref|default_if_none:"NA"}}</td>
-        <td>--</td>
+        <td class='targettabletd'>Editors Refresher Training</td>
+        <td class='targettabletd'>{{target_vals.tot_editor_ref|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
 	<tr>
-        <td>Village Certification</td>
-        <td>{{target_vals.tot_vil_cert|default_if_none:"NA"}}</td>
-        <td>--</td>
+        <td class='targettabletd'>Village Certification</td>
+        <td class='targettabletd'>{{target_vals.tot_vil_cert|default_if_none:"NA"}}</td>
+        <td class='targettabletd'>--</td>
     </tr>
 </table>
 </div>
-        {% endblock contentbody %}
-    </div> 
-{% endblock content %}
+{% endblock contentbody %}
+    

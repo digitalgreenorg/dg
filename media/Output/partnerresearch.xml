@@ -2,9 +2,16 @@
 <!-- Edited by XMLSpy® -->
 <CATALOG>
 	<TEAM>
+		<TITLE>D-Rev</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/drev_logo1.png</IMAGESRC>    
+    	<DESC>D-Rev is working to build an affordable device that will enable farmers' ready access to suitable and value-adding agricultural practices. D-Rev is surveying "featherweight" devices that could complement Digital Green and the agriculture extension systems of our partners. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.d-rev.org/</REFERENCE>	
+	</TEAM>
+	<TEAM>
 		<TITLE>GREEN Foundation</TITLE>
 		<IMAGESRC>/media/Output/Images/partner/green_logo1.PNG</IMAGESRC>    
-    	<DESC>A grassroots-level NGO based in Karnataka, India that focuses on the conservation of indigenous seed varieties and promotes sustainable agricultural practices with which we conducted the initial research and development of the Digital Green system.    </DESC>
+    	<DESC>A grassroots-level NGO based in Karnataka, India that focuses on the conservation of indigenous seed varieties and promotes sustainable agricultural practices with which we conducted the initial research and development of the Digital Green system.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://greenconserve.com/</REFERENCE>	
 	</TEAM>

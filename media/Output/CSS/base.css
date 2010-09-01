@@ -1,9 +1,9 @@
-body										{ background-color:none; font-size:100%;}
+body										{ background-color:none; font-size:100%; }
 img											{ border-style:none; }
 
 
 /* Navigation for logo and help/search*/
-#fullbody									{ width:99.92%; left:0%; top:0%; margin:0%; padding:0%; position:absolute; z-index:100;  border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; }
+#fullbody									{ width:99.92%; left:0%; top:0%; margin:0%; padding:0%; position:absolute; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:Green; }
 #toplinks									{ float:none; width:100%; margin:0%; padding-top:3px; z-index:100; }	
 #toprightlinks								{ width:100%; font-size:0.8em; font-family:Calibri; font-weight:normal; padding-top:0px }
 .toprightlinks1								{ width:50%;}

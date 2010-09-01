@@ -23,11 +23,11 @@ function displayvideo(n){
 	
 	var xmlDoc=null;
     if (window.XMLHttpRequest)
-    {
+    { // code for IE7+, Firefox, Chrome, Opera, Safari
     	xhttp=new XMLHttpRequest();
     }
     else 
-    {
+    { // code for IE6, IE5
     	xhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
     xhttp.open("GET","/media/Output/homeimg.xml",false);
@@ -38,7 +38,7 @@ function displayvideo(n){
 	{
 		var x=xmlDoc.getElementsByTagName("TEAM");
 		var e = document.getElementById('overlaydivvideoembed');
-		e.innerHTML = "<object width='100%' height='100%'><param name='movie' value='" +  (x[n].getElementsByTagName('VIDEOLINK')[0].childNodes[0].nodeValue) + "'></param><param name='allowFullScreen' value='true'></param> <param name='allowscriptaccess' value='always'></param><param name='wmode' value='transparent'/><embed src='" + (x[n].getElementsByTagName('VIDEOLINK')[0].childNodes[0].nodeValue) + " type='application/x-shockwave-flash' allowscriptaccess='always' allowfullscreen='true' width='100%' height='100%' wmode='transparent'></embed></object>";
+		e.innerHTML = "<object width='100%' height='100%'><param name='movie' value='" +  (x[n].getElementsByTagName('VIDEOLINK')[0].childNodes[0].nodeValue) + "'></param><param name='wmode' value='transparent'></param><param name='allowFullScreen' value='true'></param> <param name='allowscriptaccess' value='always'></param><embed src='" + (x[n].getElementsByTagName('VIDEOLINK')[0].childNodes[0].nodeValue) + " type='application/x-shockwave-flash' allowscriptaccess='always' allowfullscreen='true' width='100%' height='100%' wmode='transparent'></embed></object>";
 						
 		e2.innerHTML = x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue;
 	}		

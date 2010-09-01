@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <CATALOG>
+	<TEAM>
+		<TITLE>Deccan Herald</TITLE>
+		<HEADLINE>3 Indians named in MIT's Technological Review </HEADLINE>
+		<REFERENCE>http://www.deccanherald.com/content/91658/3-indians-named-mits-technological.html</REFERENCE>
+		<PRESSDATE>Thu, 26 August 2010</PRESSDATE>
+		<PLACE>Boston</PLACE>    
+    	<DESC>"Gandhi demonstrated that for every dollar spent, the system persuaded seven times as many farmers to adopt new ideas as an existing programme of training and visits."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Technology Review</TITLE>
+		<HEADLINE>2010 Young Innovator</HEADLINE>
+		<REFERENCE>http://www.technologyreview.com/tr35/Profile.aspx?Cand=T&amp;TRID=969</REFERENCE>
+		<PRESSDATE>Thu, 26 August 2010</PRESSDATE>
+		<PLACE>TR35</PLACE>    
+    	<DESC>"Rikin Gandhi, founder of the nonprofit Digital Green, has developed a pilot project that offers a solution: simple videos starring local farmers themselves."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>		
+	<TEAM>
+		<TITLE>The Times of India</TITLE>
+		<HEADLINE>3 Indians appear in MIT's prestigious Technology Review list </HEADLINE>
+		<REFERENCE>http://timesofindia.indiatimes.com/india/2-Indians-appear-in-MITs-prestigious-Technology-Review-list/articleshow/6440512.cms</REFERENCE>
+		<PRESSDATE>Thu, 26 August 2010</PRESSDATE>
+		<PLACE>Boston</PLACE>    
+    	<DESC>"Gandhi is the founder of the nonprofit 'Digital Green' that focuses on educating farmers about farming techniques through locally produced videos, in which local farmers are featured"</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>The ICT4D Jester Blog</TITLE>
+		<HEADLINE>Digital Green is actually people Green</HEADLINE>
+		<REFERENCE>http://ict4djester.org/blog/?p=116</REFERENCE>
+		<PRESSDATE>Sun, 4 July 2010</PRESSDATE>
+		<PLACE>Blog</PLACE>    
+    	<DESC>"The video sessions are the heart of Digital Green, a system for agriculture extension for smallholder farmers. Digital Green uses a combination of locally produced digital video and mediated group instruction to teach farmers more productive, sustainable agricultural techniques."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
 	<TEAM>
 		<TITLE>The Ecomomic Times</TITLE>
 		<HEADLINE>Young Entrepreneurs making the most of opportunities in Rural India </HEADLINE>
