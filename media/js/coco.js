@@ -25,7 +25,9 @@
 				{
 					if (typeof formElements[pair[0]] == "undefined")
 					{
-					    var currInput = $("[name='" + pair[0] + "']", this);
+					    //var currInput = $("[name='" + pair[0] + "']", this);
+						var idSelect = "id_" + pair[0];
+						var currInput = $('#' + idSelect, this);
 					    if ( currInput.length == 0 ) continue;
 						formElements[pair[0]] = currInput;
 				    }
