@@ -286,7 +286,7 @@ public class PersonsData extends BaseData {
 					this.address, this.land_holdings, this.village.getId(),
 					foreignKey.getId());
 			this.addNameValueToQueryString("id", this.id);
-			this.addNameValueToQueryString("persongroup", foreignKey.getId());
+			this.addNameValueToQueryString("group", foreignKey.getId());
 		}
 		
 

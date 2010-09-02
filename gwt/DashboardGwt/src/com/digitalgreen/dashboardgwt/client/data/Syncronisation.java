@@ -44,7 +44,10 @@ public class Syncronisation {
 					getServlet().redirectTo(new Index(requestContext));
 				} else if(results.equals("synced")) {
 					EventBus.get().fireEvent(new ProgressEvent(100));
-					setGlobalIDInLocalUserTable();
+					RequestContext requestContext = new RequestContext();
+					requestContext.setMessage("Local database is in sync with the main server.");
+					getServlet().redirectTo(new Index(requestContext));
+					//setGlobalIDInLocalUserTable();
 				} else{
 					Window.alert("Unkown Error.  Please contact support.");
 				}
@@ -66,6 +69,7 @@ public class Syncronisation {
 		this.totalRowsToSync = formQueue.getUnsyncCount();
 		EventBus.get().fireEvent(new ProgressEvent(0));
 		if(!postRowOfFormQueueTable()){
+			updateGlobalPkIDOnMainServer();
 			RequestContext requestContext = new RequestContext();
 			requestContext.setMessage("Your data has been uploaded.  Local database is in sync with the main server.");
 			servlet.redirectTo(new Index(requestContext));
@@ -156,8 +160,9 @@ public class Syncronisation {
 			this.currentIndex = resultSet.get(1);
 			BaseData baseData = (BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex]);
 			// Delete the table on which the sync got interrupted.
-			baseData.delete(baseData.getDeleteTableSql());
-			baseData.create(baseData.getCreateTableSql());
+			offset = Integer.parseInt(baseData.getCount());
+			//baseData.delete(baseData.getDeleteTableSql());
+			//baseData.create(baseData.getCreateTableSql());
 			EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 		}else{
@@ -187,7 +192,8 @@ public class Syncronisation {
 					else if(formQueue.getResultSet().getFieldAsChar(5) == 'E'){
 						lastSyncedId  = formQueue.getResultSet().getFieldAsInt(0);
 						formQueue.post(RequestContext.SERVER_HOST + 
-								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(1))).getSaveOfflineURL() + formQueue.getResultSet().getFieldAsString(2) +"/" , 
+								(String)((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(formQueue.getResultSet().getFieldAsString(1))).getSaveOfflineURL()
+								+ formQueue.getResultSet().getFieldAsString(2) +"/" , 
 								queryString);
 						BaseData.dbClose();
 					}
@@ -214,7 +220,7 @@ public class Syncronisation {
 	
 	public void updateGlobalPkIDOnMainServer(){
 		BaseData.dbOpen();
-		formQueue.select(FormQueueData.getMaxGlobalPkId);
+		formQueue.select(FormQueueData.getLastInsertedID, ApplicationConstants.getUsernameCookie());
 		if(formQueue.getResultSet().isValidRow()){
 			String queryString;
 			try {
@@ -229,39 +235,6 @@ public class Syncronisation {
 			Window.alert("Caught unexpected error in the local database.");
 		}
 		BaseData.dbClose();
-	}
-	
-	private void setGlobalIDInLocalUserTable(){
-		IndexData indexData = new IndexData(new OnlineOfflineCallbacks(this.servlet) {
-			public void onlineSuccessCallback(String results) {
-				if(results != "0") {
-					LoginData user = new LoginData();
-					user.update(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie());
-					RequestContext requestContext = new RequestContext();
-					requestContext.setMessage("Local database is in sync with the main server");
-					getServlet().redirectTo(new Index(requestContext));
-				} else {
-					RequestContext requestContext = new RequestContext();
-					requestContext.setErrorMessage("You do not have a valid account.Please contact support. ");
-					getServlet().redirectTo(new Index(requestContext));				
-				}
-			}
-			
-			public void onlineErrorCallback(int errorCode) {
-				RequestContext requestContext = new RequestContext();
-				if (errorCode == BaseData.ERROR_RESPONSE)
-					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
-				else if (errorCode == BaseData.ERROR_SERVER)
-					requestContext.setErrorMessage("Problem in the connection with the server.");
-				else
-					requestContext.setErrorMessage("Unknown error.  Please contact support.");
-				getServlet().redirectTo(new Index(requestContext));	
-			}
-			
-		});
-		
-		indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
-
 	}
 	
 

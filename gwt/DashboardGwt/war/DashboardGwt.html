@@ -75,6 +75,7 @@
   		
  		function getFormString(formId) {
  			return $('#' + formId).serialize();
+ 			//return $("'#" + formId +" :input:not(:hidden)'").serialize();
  		}
 
  		function putFormString(queryString, formId) {

@@ -40,7 +40,7 @@ public class ApplicationConstants {
 	
 	private static boolean isOnline = true;
 	
-	public static String digitalgreenDatabaseName = "digitalgreen";
+	public static String digitalgreenDatabaseName = "digitalgreendatabase";
 	
 	public static String[] tableIDs = {	"8","9","10","11","12","13",
 										"14","15","16", "17","18", "19","20","21",
