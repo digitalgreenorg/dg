@@ -232,14 +232,14 @@ def login_view(request):
 
 def get_key_for_user(request):
     if request.method == 'POST':
-        MILLION_CONSTANT = 1000000000
+        BILLION_CONSTANT = 1000000000
         username = request.POST.get('username', '')
         user_id = run_query("Select id from auth_user where username = %s", username)
         if len(user_id) > 0 :
             result = run_query("Select id from user where user_id = %s", user_id[0].get('id'))
             if len(result) == 0:
                 query_string = "insert into user(id, user_id) values (%s, %s)"
-                id = int (user_id[0].get('id')) * MILLION_CONSTANT
+                id = (int (user_id[0].get('id')) * BILLION_CONSTANT) + 1000
                 query_args = [id, user_id[0].get('id')]
                 cursor = connection.cursor()
                 cursor.execute(query_string, query_args)
