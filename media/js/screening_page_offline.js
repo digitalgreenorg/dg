@@ -149,7 +149,7 @@ init :function(id) {
 				$("#save").hide();
 				$('<span style="color:Red">Editing of screening data is not allowed while you are offline</span>').insertBefore("#content-main");
 				var db = google.gears.factory.create('beta.database');
-				db.open('digitalgreen');
+				db.open('digitalgreendatabase');
 				
 				var table = $('div.inline-group div.tabular').find('table');						
 				table.append('<tbody></tbody>');
@@ -446,7 +446,7 @@ function filter_person() {
 			showStatus("Loading persons..");	
 			var table = $('div.inline-group div.tabular').find('table');			
 			var db = google.gears.factory.create('beta.database');
-			db.open('digitalgreen');
+			db.open('digitalgreendatabase');
 			var prac = db.execute("SELECT P.id , P.PRACTICE_NAME FROM PRACTICES P ORDER BY P.PRACTICE_NAME");
 			var prac_options = [];
 			while(prac.isValidRow()) {
