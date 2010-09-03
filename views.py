@@ -222,7 +222,7 @@ def login_view(request):
             #auth.login(request, user)
             request.session['username'] = user.username
             request.session['user_id'] = user.id
-	    user = UserPermission.objects.get(id=user.id)
+            user = UserPermission.objects.get(id=user.id)
             return HttpResponse(user.role)
         else:
             # Show an error page
