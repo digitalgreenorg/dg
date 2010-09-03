@@ -433,11 +433,9 @@ public class PersonGroupsData extends BaseData {
 					.getQueryString());
 		} else {
 			if (this.validate()) {
-				if (this.validate()) {
 					this.save();
 					return true;
 				}
-			}
 		}
 
 		return false;
