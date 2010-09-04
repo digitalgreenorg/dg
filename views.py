@@ -222,8 +222,8 @@ def login_view(request):
             #auth.login(request, user)
             request.session['username'] = user.username
             request.session['user_id'] = user.id
-            user = UserPermission.objects.get(username=user.id)
-            return HttpResponse(user.role)
+            user = UserPermission.objects.filter(username=user.id)
+            return HttpResponse(user[0].role)
         else:
             # Show an error page
             return HttpResponse("0")
@@ -1446,6 +1446,7 @@ def save_person_offline(request, id):
                 new_form.save()
                 return HttpResponse("1")
             else:
+                print form.errors
                 return HttpResponse("0")
         else:
             person = Person.objects.get(id=id)
@@ -1454,6 +1455,7 @@ def save_person_offline(request, id):
                 form.save()
                 return HttpResponse("1")
             else:
+                print form.errors
                 return HttpResponse("0")
 
 def save_personadoptpractice_online(request,id):
