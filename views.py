@@ -1446,7 +1446,6 @@ def save_person_offline(request, id):
                 new_form.save()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
         else:
             person = Person.objects.get(id=id)
@@ -1455,7 +1454,6 @@ def save_person_offline(request, id):
                 form.save()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
 
 def save_personadoptpractice_online(request,id):
