@@ -33,18 +33,18 @@ public class TargetsTemplate extends BaseTemplate {
 		Form saveForm = new Form((new TargetsData()).getNewData());
 		saveRequestContext.setForm(this.formTemplate);
 		String queryString = this.getRequestContext().getForm().getQueryString();
-		String modifiedQueryString = "";
-		String[] temp = queryString.split("&");
-		for(int i=0; i < temp.length ; i++ ) {
-			if(i==1) {
-				String[] st = temp[i].split("=");
-				String[] month_year = st[1].split("-");
-				modifiedQueryString += "month_year_year="+month_year[0]+"&month_year_month="+month_year[1]+"&";
-			} else {
-				modifiedQueryString = (i == temp.length-1)? modifiedQueryString+temp[i] : modifiedQueryString+temp[i]+"&";											
-			}
-		}
 		if(queryString != null ) {
+			String modifiedQueryString = "";
+			String[] temp = queryString.split("&");
+			for(int i=0; i < temp.length ; i++ ) {
+				if(i==1) {
+					String[] st = temp[i].split("=");
+					String[] month_year = st[1].split("-");
+					modifiedQueryString += "month_year_year="+month_year[0]+"&month_year_month="+month_year[1]+"&";
+				} else {
+					modifiedQueryString = (i == temp.length-1)? modifiedQueryString+temp[i] : modifiedQueryString+temp[i]+"&";											
+				}
+			}
 			this.getRequestContext().getForm().setQueryString(modifiedQueryString);
 		}		
 		Targets saveTarget = new Targets(saveRequestContext);
