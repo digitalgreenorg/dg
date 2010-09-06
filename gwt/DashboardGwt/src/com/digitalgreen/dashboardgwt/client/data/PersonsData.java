@@ -265,7 +265,61 @@ public class PersonsData extends BaseData {
 
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			return this.validate();
+			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
+			personName.setError("Person Name is a required field and is less than 100 characters and should not contain any special characters");
+			
+			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
+			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters");
+			
+			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
+			age.setError("Please enter a valid age");
+			
+			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
+			gender.setError("Please select gender");
+			
+			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
+			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters");
+			
+			StringValidator address = new StringValidator(this.address, true, false, 0, 500, true);
+			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters");
+			
+			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
+			landHoldings.setError("Please enter a valid Land holdings data");
+			
+			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
+			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			
+			ArrayList person_name = new ArrayList();
+			person_name.add("person_name");
+			person_name.add(this.person_name);
+			
+			ArrayList father_name = new ArrayList();
+			father_name.add("father_name");
+			father_name.add(this.father_name);
+			
+			ArrayList village_id = new ArrayList();
+			village_id.add("village_id");
+			village_id.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(person_name);
+			uniqueTogether.add(father_name);
+			uniqueTogether.add(village_id);
+			
+			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueTogether, new PersonsData());
+			uniquePersonFatherGroupVillage.setError("For "+this.person_name+" the Person, father and village are already in the system.  Please make sure they are unique.");
+			uniquePersonFatherGroupVillage.setCheckId(this.getId());
+			ArrayList validatorList = new ArrayList();
+			validatorList.add(personName);
+			validatorList.add(fatherName);
+			validatorList.add(age);
+			validatorList.add(gender);
+			validatorList.add(phoneNo);
+			validatorList.add(address);
+			validatorList.add(landHoldings);
+			validatorList.add(villageValidator);
+			validatorList.add(uniquePersonFatherGroupVillage);
+			return this.executeValidators(validatorList);
 		}
 
 		@Override
