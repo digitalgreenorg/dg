@@ -4,7 +4,7 @@ from dg.output.views.common import home_with_analytics
 #Mindless views for plain HTML pages on the main website
 def home(request):
     if request.get_host() == "sandbox.digitalgreen.org":
-        HttpResponseRedirect('/coco/home.html')
+        return HttpResponseRedirect('/coco/home.html')
     else:
         return home_with_analytics()
 
