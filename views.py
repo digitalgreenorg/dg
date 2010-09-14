@@ -209,7 +209,7 @@ def feeds_persons_village(request, village_id):
 #
 #  Functions for online offline application
 #
-def redirect_to(request):
+def redirect_url(request):
     return HttpResponseRedirect('/coco/home.html')
 
 def login_view(request):
