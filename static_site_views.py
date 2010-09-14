@@ -3,7 +3,10 @@ from django.http import HttpResponseRedirect
 from dg.output.views.common import home_with_analytics
 #Mindless views for plain HTML pages on the main website
 def home(request):
-    return home_with_analytics()
+    if request.get_host() == "sandbox.digitalgreen.org":
+        HttpResponseRedirect('/coco/home.html')
+    else:
+        return home_with_analytics()
 
 def featuredfarmer(request):
     
