@@ -75,22 +75,6 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/muthumari1.png</ARTIST>    
-    	<DESC>Hi, I am K. Muthumari. I was born and brought up in Madurai, Tamil Nadu. I graduated in the field of agriculture during 2003-2007 from Tamil Nadu Agriculture University (TNAU), Madurai.  Later, I pursued my post graduation in Information and Communication Technology in Agriculture and Rural Development (ICT-ARD) in 2009 in Dhirubhai Ambani Institute of Information and Communication Technology, Gujarat. I am very proud to be an agriculturist and have a high spirit to work for farming communities who are in need of information to improve their livelihood.  I feel I have the knowledge on agriculture which feeds world and have knowledge on ICT applications in Agriculture and Rural Development to feed the hunger for information.  </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>muthumari@digitalgreen.org</MAILID>
-		<NAME>K. Muthumari</NAME>		
-	</TEAM>
-	<TEAM>
-		<TITLE>Assistant Development Manager</TITLE>
-		<ARTIST>/media/Output/Images/kevin2.png</ARTIST>    
-    	<DESC>Hi, My name is Kevin Gandhi.  I recently graduated from Drexel University which is located in Philadelphia PA, USA.  I earned a Bachelors of Science in Economics and a Bachelors of Science in Business.  My interests include writing, oil painting, and travelling.  I was born in the States and grew up there, but I have made a few trips to India in my youth.  I have found India to be more interesting every time I come back.  For me, the poverty issue in India and in many developing countries was not only their issue but something to be addressed by the whole world. I did not want to just give money and have faith that it would be used well, I wanted to be involved.  Furthermore, as someone who studied Economic Development I wanted to work in something that focused on long term self-sufficient stability and not a quick fix.  The vision of Digital Green seems to fit that frame work, but it also shows the ability to change and mend with the myriad of differences that such a complex problem involves. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>kevin@digitalgreen.org</MAILID>
-		<NAME>Kevin Gandhi</NAME>		
-	</TEAM>
-	<TEAM>
-		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/salil1.png</ARTIST>    
     	<DESC>I am Kumar Satyam Salil. I was born on 21st Nov in Dhanbad, Jharkhand. I did my schooling from Banka, Bihar and completed my Intermediate from Patna. I did my graduation from Dr.PDKV Akola, Maharashtra, majoring in Horticulture. After completing my graduation, I studied Master of Business Administration(Agri and Food business) from Amity University, Noida in 2009. I came in digitalGREEN in the month of October with a noble aim of working for Indian poor farmers at a grass root level. My vision for digitalGREEN is to create revolution in Indian farming community by motivating them to adopt good practices of farming and other livelihood programmes. </DESC>
 		<COMPANY>Digital Green</COMPANY>
@@ -135,7 +119,7 @@
     	<DESC>Hi, My name is G.Sreenivasula Reddy. My home town is kadapa, Andhra Pradesh. I joined Digital Green as an intern in Systems Department and later joined as an Assistant Research Software Development Engineer. I pursued my graduation in ICT at Dhirubhai Ambani Institute of Infomation and Communication Technology (DA-IICT) Gandhinagar, Gujarat. I firmly believe that ICT has a key role to play in developing the disadvantaged sections of the society.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sreenivasula@digitalgreen.org</MAILID>
-		<NAME>G. Sreenivasula</NAME>		
+		<NAME>G S Reddy</NAME>		
 	</TEAM>
 	<TEAM>
 		<TITLE>User Experience Designer</TITLE>
@@ -144,5 +128,13 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>praveen@digitalgreen.org</MAILID>
 		<NAME>Praveen Shekhar</NAME>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Operations Executive</TITLE>
+		<ARTIST>/media/Output/Images/debika1.png</ARTIST>    
+    	<DESC>Debika holds a Bachelor's as well as a Master's degree in History (with a specialisation in Social History) from Presidency College, University of Calcutta. She has also received her Master's Degree on Rural Development in Developing Countries from the University of Rome, La Sapienza. Before joining Digital Green, she served as a Research and Documentation Executive in a Nonprofit, Udyogini, working for livelihood and enterprise promotion of the rural poor women in six states of the country. . She has also worked with an Italian Donor Agency, Pangeaonlus as a Focal Point and Research Liaison Officer in India. She hopes to have a long-term association with Digital Green's mission of coupling Rural Development and IT for the benefit of the farmer households. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>debika@digitalgreen.org</MAILID>
+		<NAME>Debika Goswami</NAME>		
 	</TEAM>
 </CATALOG>

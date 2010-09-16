@@ -9,8 +9,12 @@ def home(request):
         return home_with_analytics()
 
 def featuredfarmer(request):
-    
+   
     return render_to_response('base_featuredfarmer.html')
+
+def video(request):
+   
+    return render_to_response('base_video.html')
 
 def aboutus(request):
     

@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>The Telegraph</TITLE>
+		<HEADLINE>Videos that help farmers watch, learn and earn more</HEADLINE>
+		<REFERENCE>http://www.telegraphindia.com/1100915/jsp/jharkhand/story_12938098.jsp</REFERENCE>
+		<PRESSDATE>Tue, 14 September 2010</PRESSDATE>
+		<PLACE>Ranchi</PLACE>    
+    	<DESC>"An initiative of two NGOs, Delhi-based Digital Green and Jharkhand's Pradhan - the videos are bringing about a transformation in an environment where there is no electricity, let alone televisions."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>The Hindu</TITLE>
+		<HEADLINE>Starring Farmers, video goes 'grassroots' here</HEADLINE>
+		<REFERENCE>http://www.thehindu.com/sci-tech/technology/article642858.ece</REFERENCE>
+		<PRESSDATE>Tue, 14 September 2010</PRESSDATE>
+		<PLACE>Bangalore</PLACE>    
+    	<DESC>"Having grown up in the U.S., at 28, Gandhi says this was his first 'tryst with rural India'. After travelling and interacting with farmers for months, he found that romantic notions of ICT being used to transform the lot of Indian farmers were far from reality."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>NDTV</TITLE>
+		<HEADLINE>Digital Green catalyses a quiet revolution in India</HEADLINE>
+		<REFERENCE>http://www.ndtv.com/article/india/digital-green-catalyses-a-quiet-revolution-in-india-50977</REFERENCE>
+		<PRESSDATE>Thu, 09 September 2010</PRESSDATE>
+		<PLACE>Indo Asian News Service</PLACE>    
+    	<DESC>"Delhi-based Digital Green focuses on educating farmers about farming techniques through locally produced videos in which local cultivators are featured. The project works in over 200 villages across Jharkhand, Orissa, Karnataka and Madhya Pradesh with seven NGOs, helping famers improve their living standards and productivity."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Deccan Herald</TITLE>
+		<HEADLINE>A high-flier takes a Swadesh Trip</HEADLINE>
+		<REFERENCE>http://www.deccanherald.com/content/92351/a-high-flier-takes-swades.html</REFERENCE>
+		<PRESSDATE>Sat, 28 August 2010</PRESSDATE>
+		<PLACE>Bangalore</PLACE>    
+    	<DESC>"He trained farmers to make videos with handy cams about their innovative practices and share them with others. The solution is more complex than this in reality; it involves experts, NGOs, government officers, communities, all tied together in an expanding network and interacting with each other through a sophisticated technology platform."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Deccan Herald</TITLE>
 		<HEADLINE>3 Indians named in MIT's Technological Review </HEADLINE>
 		<REFERENCE>http://www.deccanherald.com/content/91658/3-indians-named-mits-technological.html</REFERENCE>

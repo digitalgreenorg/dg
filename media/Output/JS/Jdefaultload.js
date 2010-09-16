@@ -1,5 +1,6 @@
 // loading the default features of the web page
 
+
 function defaultload(){ 
 			
 			// navigation search bar
@@ -25,8 +26,8 @@ function defaultload(){
             	$(this).find("div#subheadmenu1").hide();
             });           
   
-// the help bubbles for different titles on the analytics and overview pages
-                    
+// the help bubbles for different titles on the analytics and overview pages 
+                   
             $("div#headermenutitlename").mouseover(function() {            	
             	$(this).css('color','#ffffff');            	
             	//$(this).css('border-bottom-width','3px');            	
@@ -64,8 +65,8 @@ function defaultload(){
 			$("div#inlinedatepicker2").calendar({	       		
 	       		dateFormat:"%Y-%m-%d",	
 			});			            
-                                   
-            
+      
+         
 } // function defaultload
 
 /* This is run when the page is fully loaded */
