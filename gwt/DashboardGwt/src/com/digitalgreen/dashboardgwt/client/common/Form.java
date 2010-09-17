@@ -81,6 +81,18 @@ public class Form {
 						this.baseDataErrorStack.add(dependentData);
 						hasErrors = true;
 					}
+					//Code to handle if user enters same data in two or more inlines
+					else {
+						//Comparing inline objects with previous objects
+						for(int k=j-1; k>=0; k--) {
+							BaseData.Data other = (BaseData.Data)((ArrayList)value).get(k);
+							//Return true if new object details are same as any previous object details for inlines
+							if(dependentData.compare(other)) {
+								this.baseDataErrorStack.add(dependentData);
+								hasErrors = true;
+							}
+						}
+					}
 				}
 			} else {
 				if(!((BaseData.Data)value).validate(this.parent)) {
