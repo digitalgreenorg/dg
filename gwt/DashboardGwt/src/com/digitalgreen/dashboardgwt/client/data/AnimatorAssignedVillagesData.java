@@ -9,6 +9,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -96,6 +97,19 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			}
 			this.addNameValueToQueryString(key, val);
 		}
+		//This method is to check for multiple inlines with  same data.
+		@Override
+		public boolean compare(BaseData.Data other) {
+			if(other instanceof AnimatorAssignedVillagesData.Data) {
+				AnimatorAssignedVillagesData.Data obj = (AnimatorAssignedVillagesData.Data) other;
+				if( this.village.getId().equals(obj.getVillage().getId()) ) {
+					errorStack.add("Animator assigned to two same villages");
+					return true;
+				} else
+					return false;
+			} else
+				return false;
+		}
 		
 		@Override
 		public boolean validate(){
@@ -105,10 +119,27 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			villageValidator.setError("Please make sure you choose a village for 'Village'.");
 			DateValidator startDate = new DateValidator(this.start_date, true, true);
 			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			
+			ArrayList unqName = new ArrayList();
+			unqName.add("animator_id");
+			unqName.add(this.animator.getId());
+			ArrayList unqVillage = new ArrayList();
+			unqVillage.add("village_id");
+			unqVillage.add(this.village.getId());
+			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(unqName);
+			uniqueTogether.add(unqVillage);
+			
+			UniqueConstraintValidator uniqueNameVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorAssignedVillagesData());
+			uniqueNameVillage.setError("The Animator and Village are already in the system.  Please make sure they are unique.");
+			uniqueNameVillage.setCheckId(this.getId());
+			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(animatorValidator);
 			validatorList.add(villageValidator);
 			validatorList.add(startDate);
+			validatorList.add(uniqueNameVillage);
 			return this.executeValidators(validatorList);
 		}
 		

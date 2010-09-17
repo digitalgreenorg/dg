@@ -124,6 +124,10 @@ public class PersonsData extends BaseData {
 		public String getPersonName() {
 			return this.person_name;
 		}
+		
+		public String getFatherName() {
+			return this.father_name;
+		}
 
 		public String getAge() {
 			return this.age;
@@ -198,7 +202,23 @@ public class PersonsData extends BaseData {
 			}
 			this.addNameValueToQueryString(key, val);
 		}
-
+		//This method is to check for multiple inlines with  same data.
+		@Override
+		public boolean compare(BaseData.Data other) {
+			if(other instanceof PersonsData.Data) {
+				PersonsData.Data obj = (PersonsData.Data) other;
+				String fatherName = (this.father_name == null)?"null":this.father_name;
+				String fatherNameOfFormObject = (obj.getFatherName() == null)?"null":obj.getFatherName();
+				if(this.person_name.equals(obj.getPersonName()) 
+						&& fatherName.equals(fatherNameOfFormObject)
+						&& this.village.getId().equals(obj.getVillage().getId()) ) {
+					errorStack.add(this.person_name+": Details entered twice");
+					return true;
+				} else
+					return false;
+			} else
+				return false;			
+		}
 		@Override
 		public boolean validate() {
 			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
@@ -262,32 +282,33 @@ public class PersonsData extends BaseData {
 			validatorList.add(uniquePersonFatherGroupVillage);
 			return this.executeValidators(validatorList);
 		}
-
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
 			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
 			personName.setError("Person Name is a required field and is less than 100 characters and should not contain any special characters");
 			
 			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
-			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters");
+			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters " +
+					"for "+this.person_name);
 			
 			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
-			age.setError("Please enter a valid age");
+			age.setError("Please enter a valid age for "+this.person_name);
 			
 			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
-			gender.setError("Please select gender");
+			gender.setError("Please select gender for "+this.person_name);
 			
 			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
-			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters");
+			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters for "+this.person_name);
 			
 			StringValidator address = new StringValidator(this.address, true, false, 0, 500, true);
-			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters");
+			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters " +
+					"for "+this.person_name);
 			
 			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
-			landHoldings.setError("Please enter a valid Land holdings data");
+			landHoldings.setError("Please enter a valid Land holdings data for "+this.person_name);
 			
 			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			villageValidator.setError("Please make sure you choose a village for 'Village' for "+this.person_name);
 			
 			ArrayList person_name = new ArrayList();
 			person_name.add("person_name");

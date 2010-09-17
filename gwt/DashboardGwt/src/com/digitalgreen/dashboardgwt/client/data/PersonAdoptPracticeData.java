@@ -11,6 +11,7 @@ import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Type;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
+import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
@@ -66,9 +67,7 @@ public class Data extends BaseData.Data {
 			this.date_of_adoption = date_of_adoption;
 			this.quality = quality;
 			this.quantity = quantity;
-			this.quantity_unit = quantity_unit;
-			
-			
+			this.quantity_unit = quantity_unit;			
 		}		
 		
 		public PersonsData.Data getPerson(){
@@ -145,6 +144,20 @@ public class Data extends BaseData.Data {
 			this.addNameValueToQueryString(key, val);	
 		}
 		
+		//This method is to check for multiple inlines with  same data.
+		@Override
+		public boolean compare(BaseData.Data other) {
+			if(other instanceof PersonAdoptPracticeData.Data) {
+				PersonAdoptPracticeData.Data obj = (PersonAdoptPracticeData.Data) other;
+				if(this.date_of_adoption.equals(obj.getDateOfAdoption()) 
+						&& this.practice.getId().equals(obj.getPractice().getId()) ) {
+					errorStack.add("Person adopted two same practices on same date");
+					return true;
+				} else
+					return false;
+			} else
+				return false;
+		}
 		@Override
 		public boolean validate() {
 			StringValidator personValidator = new StringValidator(this.person.getId(), false, false, 1, 100);
@@ -158,7 +171,24 @@ public class Data extends BaseData.Data {
 			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
 			quantity.setError("Please make sure quantity is integer");
 			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100, true);
-			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters.");
+			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters.");			
+			//Unique constraint validator
+			ArrayList unqPerson = new ArrayList();
+			unqPerson.add("person_id");
+			unqPerson.add(this.person.getId());			
+			ArrayList unqPractice = new ArrayList();
+			unqPractice.add("practice_id");
+			unqPractice.add(this.practice.getId());			
+			ArrayList unqDateOfAdoption = new ArrayList();
+			unqDateOfAdoption.add("date_of_adoption");
+			unqDateOfAdoption.add(this.date_of_adoption);			
+			ArrayList uniqueTogether = new ArrayList();
+			uniqueTogether.add(unqPerson);
+			uniqueTogether.add(unqPractice);
+			uniqueTogether.add(unqDateOfAdoption);			
+			UniqueConstraintValidator uniquePersonPractice = new UniqueConstraintValidator(uniqueTogether, new PersonAdoptPracticeData());
+			uniquePersonPractice.setError("The Person with same adoption date and practice is already in system.  Please make sure they are unique.");
+			uniquePersonPractice.setCheckId(this.getId());			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personValidator);
 			validatorList.add(practiceValidator);
@@ -166,7 +196,8 @@ public class Data extends BaseData.Data {
 			validatorList.add(quality);
 			validatorList.add(quantity);
 			validatorList.add(quantityUnit);
-			return this.executeValidators(validatorList);
+			validatorList.add(uniquePersonPractice);
+			return this.executeValidators(validatorList);		
 		}
 		
 		@Override

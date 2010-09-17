@@ -135,6 +135,19 @@ public class PersonGroupsData extends BaseData {
 			}
 			this.addNameValueToQueryString(key, val);
 		}
+		//This method is to check for multiple inlines with  same data. 
+		@Override
+		public boolean compare(BaseData.Data other) {
+			if(other instanceof PersonGroupsData.Data) {
+				PersonGroupsData.Data obj = (PersonGroupsData.Data) other;
+				if(this.group_name.equals(obj.getPersonGroupName())) {
+					errorStack.add(this.group_name+": Details entered twice");
+					return true;
+				} else
+					return false;
+			} else
+				return false;
+		}
 
 		@Override
 		public boolean validate() {
@@ -542,6 +555,5 @@ public class PersonGroupsData extends BaseData {
 		BaseData.dbClose();
 		return count;
 	}
-
-
+		
 }

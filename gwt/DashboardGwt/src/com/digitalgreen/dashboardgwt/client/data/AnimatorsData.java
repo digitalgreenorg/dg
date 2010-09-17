@@ -214,6 +214,22 @@ public class AnimatorsData extends BaseData {
 			}
 			this.addNameValueToQueryString(key, val);
 		}
+		
+		//This method is to check for multiple inlines with  same data.
+		@Override
+		public boolean compare(BaseData.Data other) {
+			if(other instanceof AnimatorsData.Data) {
+				AnimatorsData.Data obj = (AnimatorsData.Data) other;
+				if(this.name.equals(obj.getAnimatorName()) 
+						&& this.gender.equals(obj.getGender())
+						&& this.partner.getId().equals(obj.getPartner().getId()) ) {
+					errorStack.add(this.name+": Details entered twice");
+					return true;
+				} else
+					return false;
+			} else
+				return false;			
+		}
 
 		@Override
 		public boolean validate() {

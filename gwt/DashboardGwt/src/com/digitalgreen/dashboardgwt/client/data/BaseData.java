@@ -224,6 +224,11 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			return "";
 		}
 		
+		//Override this
+		public boolean compare(BaseData.Data other) {
+			return false;
+		}
+		
 		// Override this
 		public boolean validate() {
 			return true;
