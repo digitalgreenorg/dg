@@ -28,7 +28,6 @@ public class IntegerValidator extends BaseValidator {
 	@Override
 	public boolean validate() {
 		if (!super.validate()) {
-			Window.alert("exp valueInt: " + valueInt);
 			return false;
 		} else if (this.getValue() == null) {
 			return true;
