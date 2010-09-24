@@ -342,7 +342,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		requestContext.getArgs().put("pageNum", "1");
-		addHyperlink("der-1", "<a href='#dashboard/error/'>DashBoard Errors</a>", "dashboard/error", new DashboardError(requestContext));
+		addHyperlink("der-1", "<a href='#dashboard/error/'>Data Inconsistencies</a>", "dashboard/error", new DashboardError(requestContext));
 		String tot_errors = indexPageData.getDashboardErrorCount();
 		Label error_label = new Label();
 		//Determine style
