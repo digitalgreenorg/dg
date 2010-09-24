@@ -155,7 +155,7 @@ def rule4():
     rule = Rule.objects.get(pk=4)
     sql = """SELECT VID.id as content_object1, B.district_id
     FROM VIDEO VID
-    JOIN VILLAGE V ON V.id = vid.village_id
+    JOIN VILLAGE V ON V.id = VID.village_id
     JOIN BLOCK B ON B.id = V.block_id
     WHERE DATEDIFF(VIDEO_PRODUCTION_END_DATE , VIDEO_PRODUCTION_START_DATE) > 12"""
     
