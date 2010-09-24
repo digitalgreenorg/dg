@@ -6,6 +6,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
+import com.digitalgreen.dashboardgwt.client.servlets.DashboardError;
 import com.digitalgreen.dashboardgwt.client.servlets.DevelopmentManagers;
 import com.digitalgreen.dashboardgwt.client.servlets.Districts;
 import com.digitalgreen.dashboardgwt.client.servlets.Equipments;
@@ -27,13 +28,15 @@ import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
+import com.digitalgreen.dashboardgwt.client.data.IndexData;
+import com.digitalgreen.dashboardgwt.client.data.IndexData.Data;
 
 // Our Index page has some added event properties to listen for progress events 
 // dispatched from Synchronisation.  Since Download/Upload both spawn from Index,  
@@ -170,6 +173,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 	
 	@Override
 	public void fill() {
+		IndexData.Data indexPageData = (Data) this.requestContext.getArgs().get("index_page_data");
 		super.setBodyStyle("dashboard");
 		HTMLPanel indexHtml = new HTMLPanel(indexContentHtml);
 		super.setContentPanel(indexHtml);
@@ -334,8 +338,30 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
-
-
+		
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		requestContext.getArgs().put("pageNum", "1");
+		addHyperlink("der-1", "<a href='#dashboard/error/'>DashBoard Errors</a>", "dashboard/error", new DashboardError(requestContext));
+		String tot_errors = indexPageData.getDashboardErrorCount();
+		Label error_label = new Label();
+		//Determine style
+		if(tot_errors!=null && Integer.parseInt(tot_errors)!=0)
+			error_label.addStyleName("error");
+		else
+			error_label.addStyleName("noerror");
+		//Determine suffix
+		if(tot_errors==null)
+			tot_errors = "NA";
+		else if(Integer.parseInt(tot_errors) > 1)
+			tot_errors += " errors";
+		else
+			tot_errors += " error";
+		
+		error_label.setText(tot_errors);
+		RootPanel.get("der-2").add(error_label);
+		
+		
 		HTMLPanel h = new HTMLPanel("<div id='controlPanel'></div>");
 		h.setStyleName("mainControlPanelArea");
 		RootPanel.get("sub-container").add(h);
@@ -427,18 +453,18 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"</tbody>" +
 		"</table>";
 	
-	final static private String indexContentHtml = "<div id='content' class='colMS'>" +
+	final static private String indexContentHtml = "<div id='content' style='float:left;'>" +
 							"<h1>Administration</h1>" +
 								"<div id='content-main'>" +
 									"<div class='module'>" +
      								"<table summary='Models available in the Dashboard application.'>" +
      									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
-     										"<th id='r-1' scope='row'>" +
- 											"</th>" +
- 											"<td id='r-2'>" +
- 											"</td>" +
- 										"</tr>" +
- 											"<tr>" +     										
+     										"<tr>" +
+	     										"<th id='r-1' scope='row'>" +
+	 											"</th>" +
+	 											"<td id='r-2'>" +
+	 											"</td>" +
+	 										"</tr>" +
      										"<tr>" +
      											"<th id='st-1' scope='row'>" +
      											"</th>" +
@@ -553,9 +579,22 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 											"</th>" +
 											"<td id='f-2'>" +
 											"</td>" +
-										"</tr>" +										
+										"</tr>" +
      									"</table>" +
      								"</div>" +
-     							"</div>";
+     							"</div>" +
+     							"<div id='dashboard-tools' style='clear:both; width:100%;'>" +
+								"<div class='module'>" +
+ 								"<table summary='Tools available in the Dashboard application.'>" +
+ 									"<caption><a href='#' class='section'>Tools</a></caption>" +
+ 									"<tr>" +
+										"<th id='der-1' scope='row'>" +
+										"</th>" +
+										"<td id='der-2'>" +
+										"</td>" +
+									"</tr>" +
+										"</table>" +
+									"</div>" +
+								"</div>";
 
 }

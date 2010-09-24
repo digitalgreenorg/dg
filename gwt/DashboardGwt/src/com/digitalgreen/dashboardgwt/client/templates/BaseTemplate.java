@@ -130,10 +130,13 @@ public class BaseTemplate extends Template {
 					servlet.response();
 				}
 			});
-			RootPanel.get("add-link").add(addLink);
+			if(RootPanel.get("add-link")!=null)
+				RootPanel.get("add-link").add(addLink);
+			//End of Add new entity Link
 			for(int i = 0; i < links.size(); i++){
 				RootPanel.get("row"+i).add(links.get(i));
-			}			
+			}
+					
 			RootPanel.get("pagination-footer").add(vPanel);			
 			//SearchUI is Added only for some child templates
 			if(RootPanel.get("search") != null) {
@@ -222,7 +225,7 @@ public class BaseTemplate extends Template {
 				}
 			}
 			this.postForm.add(this.displayHtml);
-			super.setContentPanel(this.postForm);	
+			super.setContentPanel(this.postForm);
 		} else {
 			this.displayHtml = new HTMLPanel(listHtml);				
 			super.setContentPanel(this.displayHtml);

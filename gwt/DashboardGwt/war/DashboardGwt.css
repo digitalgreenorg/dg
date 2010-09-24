@@ -1,4 +1,4 @@
-/** Add css rules here for your application. */
+/* Add css rules here for your application. */
 .logoutClass {
 	margin-top: -3px;
 }
@@ -40,7 +40,7 @@
 
 .mainControlPanelArea {
 	float: left;
-	margin-top: -6px;
+	margin-top: 30px;
 	margin-left: 30px;
 }
 
@@ -73,7 +73,7 @@
 
 .bulletsClass {
 	float: left;
-	margin-top: -3px;
+	margin-top: 30px;
 	margin-left: 30px;
 	width: 375px;
 }
@@ -144,3 +144,43 @@
 	clear:both;
 	margin: 15px;
 }
+
+/* Dashboard Error Page */
+
+#dashboardErrorTable {
+	position: relative;
+    width: 100%;
+}
+#dashboardErrorTable table {
+    width: 100%;
+}
+#dashboardErrorTable table thead th {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+#dashboardErrorTable table thead th:first-child {
+    text-align: center;
+}
+#dashboardErrorTable table thead th:last-child {
+    width: 1.5em;
+}
+#dashboardErrorTable table tbody td {
+    border-left: 1px solid #ddd;
+}
+#dashboardErrorTable table tbody td:first-child {
+    border-left: 0;
+    border-right: 1px solid #ddd;
+    width: 800px;
+}
+#dashboardErrorTable table tfoot {
+    color: #666;
+}
+.gwt-Label.error {
+	font-size: 1.2em;
+	color: red;
+}
+.gwt-Label.noerror {
+	color: gray;
+}
+
+/* End of Dashboard Error Page */

@@ -1,19 +1,24 @@
 package com.digitalgreen.dashboardgwt.client.servlets;
 
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
+import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 
 import java.util.HashMap;
+import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
+import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.data.Syncronisation;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
+import com.digitalgreen.dashboardgwt.client.templates.StatesTemplate;
 import com.google.gwt.gears.client.GearsException;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;
@@ -145,7 +150,33 @@ public class Index extends BaseServlet {
 				BaseTemplate operationUi = new BaseTemplate();
 				operationUi.hideGlassDoorMessage();
 				this.requestContext.getArgs().put("showOfflineReady", offlineReadyState == IndexData.STATUS_READY);
-				this.fillTemplate(new IndexTemplate(this.requestContext));
+
+				IndexData indexData1 = new IndexData(new OnlineOfflineCallbacks(this) {
+					public void onlineSuccessCallback(String results) {
+						IndexData indexData = new IndexData();
+						IndexData.Data indexPageData = null;
+						if(this.getStatusCode() == 200 && !results.equals("EOF"))
+							indexPageData = indexData.getIndexPageDataOnline(results);
+						else
+							indexPageData = indexData.getIndexPageDataOffline();
+							
+						getServlet().getRequestContext().getArgs().put("index_page_data", indexPageData);
+						getServlet().fillTemplate(new IndexTemplate(getServlet().getRequestContext()));
+					}
+
+					public void onlineErrorCallback(int errorCode) {
+						IndexData.Data indexPageData = (new IndexData()).getIndexPageDataOffline();
+						getServlet().getRequestContext().getArgs().put("index_page_data", indexPageData);
+						getServlet().fillTemplate(new IndexTemplate(getServlet().getRequestContext()));
+					}
+					
+					public void offlineSuccessCallback(Object results) {
+						IndexData.Data indexPageData = (new IndexData()).getIndexPageDataOffline();
+						getServlet().getRequestContext().getArgs().put("index_page_data", indexPageData);
+						getServlet().fillTemplate(new IndexTemplate(getServlet().getRequestContext()));
+					}
+				});
+				indexData1.apply(indexData1.getIndexPageData());
 			}
 		}
 	}

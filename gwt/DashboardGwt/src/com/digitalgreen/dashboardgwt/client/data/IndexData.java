@@ -2,17 +2,81 @@ package com.digitalgreen.dashboardgwt.client.data;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 
 public class IndexData extends BaseData {
 	
 	protected static String postURL = "/dashboard/getkey/";
+	protected static String indexDataURL = "/dashboard/getindexdata/";
 	public final static int STATUS_READY = 0;
 	public final static int STATUS_DB_NOT_OPEN = 1;
 	public final static int STATUS_SCHEMA_NOT_READY = 2;
+	
+	
+	public static class Type extends BaseData.Type{
+		protected Type() {}
+		public final native String getDashboardErrorCount() /*-{ return $wnd.checkForNullValues(this.dashboard_error_count); }-*/;
+	}
+	
+	public class Data extends BaseData.Data {
+		
+		final private static String COLLECTION_PREFIX = "index";
+
+		private String dashboardErrorCount;
+		
+		public Data() {
+			super();
+		}
+		
+		public Data(String dashboardErrorCount) {
+			super();
+			this.dashboardErrorCount = dashboardErrorCount;
+		}
+		
+		public String getDashboardErrorCount(){
+			return this.dashboardErrorCount;
+		}
+		
+		public BaseData.Data clone() {
+			Data obj = new Data();
+			return obj;
+		}
+		
+		@Override
+		public String getPrefixName() {
+			return Data.COLLECTION_PREFIX;
+		}
+		
+	}
+	
+	public final native Type asArrayOfData(String json) /*-{
+		return eval('('+json+')');
+	}-*/;
+	
+	public Data serialize(Type indexData){
+		if(indexData!=null)
+			return  new Data(indexData.getDashboardErrorCount());
+		else 
+			return null;
+	}
+
+	public Data getIndexPageDataOnline(String json){
+		return this.serialize(this.asArrayOfData(json));		
+	}
+	
+	public Data getIndexPageDataOffline() {
+		return new Data(null);
+	}
+	
+	public Object getIndexPageData(){
+		if(BaseData.isOnline()){
+			this.get(RequestContext.SERVER_HOST + IndexData.indexDataURL);
+		}
+		else{
+			return true;
+		}
+		return false;
+	}
 	
 	public IndexData(OnlineOfflineCallbacks callbacks) {
 		super(callbacks);
