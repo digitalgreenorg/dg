@@ -74,15 +74,15 @@ def compareErrors(error1, error2):
 def rule1():
     rule = Rule.objects.all()[0]
     sql = """SELECT sc.id as object_id, b.district_id, sfgt.persongroups_id, sc.date
-        FROM screening_farmer_groups_targeted sfgt
-        JOIN screening sc on sc.id = sfgt.screening_id
-        JOIN (SELECT date, persongroups_id FROM screening_farmer_groups_targeted sfgt
-        join screening sc on sc.id = sfgt.screening_id
-        group by date, persongroups_id
-        having count(*) > 1) t on t.date = sc.date and t.persongroups_id = sfgt.persongroups_id
+        FROM SCREENING_farmer_groups_targeted sfgt
+        JOIN SCREENING sc ON sc.id = sfgt.screening_id
+        JOIN (SELECT date, persongroups_id FROM SCREENING_farmer_groups_targeted sfgt
+            JOIN SCREENING sc on sc.id = sfgt.screening_id
+            GROUP BY date, persongroups_id
+            HAVING COUNT(*) > 1) t ON t.date = sc.date and t.persongroups_id = sfgt.persongroups_id
         JOIN VILLAGE V ON V.id = sc.village_id
         JOIN BLOCK B ON B.id = V.block_id
-        order by sfgt.persongroups_id, sc.date, sc.id"""
+        ORDER BY sfgt.persongroups_id, sc.date, sc.id"""
     
     new_errors = [];
     if cursor.execute(sql):
