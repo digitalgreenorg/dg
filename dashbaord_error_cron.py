@@ -1,4 +1,19 @@
-
+#Python Script for calculating inconsistencies in database. It can be run as Cron
+# Requires Error and Rule models
+#
+#For adding new Rule
+# 1. Add a new entry in the Rule model
+# 2. Add a new function for the rule
+# General structure of def rule() ---
+#     def rule():
+#        rule = Rule.objects.get(pk= ID) ***ID is hard-coded***
+#        sql = sql for calculation the errors
+#        run sql on database
+#        new_errors = post processing on returned results from database. Create a list of Error objects
+#        old_errors = errors.objects.filter(rule = rule)
+#        syncErrors(new_errors, old_errors)
+#
+# 3. Add a call to the new rule at the bottom of this script
 from django.core.management import setup_environ
 import settings
 
@@ -8,7 +23,7 @@ from dashboard.models import *
 
 cursor = connection.cursor()
 
-#Function from syncing errors i.e. Add new errors and remove resolved errors
+#Function for syncing errors i.e. Add new errors and remove resolved errors
 #new_errors: list of actual errors
 #old_errors: list of errors in Errors table
 #Algo: Delete all the common errors from both the list. Then,
@@ -45,7 +60,8 @@ def syncErrors(new_errors, old_errors):
         error.save();
     for error in old_errors:
         error.delete();
-            
+
+#check equality of errors
 def compareErrors(error1, error2):
     return isinstance(error2, error1.__class__) \
                 and error1.rule == error2.rule \
@@ -53,7 +69,8 @@ def compareErrors(error1, error2):
                 and error1.content_type2 == error2.content_type2 \
                 and error1.object_id1 == error2.object_id1 \
                 and error1.object_id2 == error2.object_id2
-                
+            
+#rule Id:1; Name = Screening with same date and same PG
 def rule1():
     rule = Rule.objects.all()[0]
     sql = """SELECT sc.id as object_id, b.district_id, sfgt.persongroups_id, sc.date
@@ -83,6 +100,8 @@ def rule1():
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
     
+    
+#rule Id:2; Name = Screening date after today    
 def rule2():
     rule = Rule.objects.get(pk=2)
     sql = """SELECT SC.id as object_id, B.district_id 
@@ -104,6 +123,7 @@ def rule2():
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
 
+#rule Id:3; Name = Screening with videos from other state
 def rule3():
     rule = Rule.objects.get(pk=3)
     sql = """SELECT SC.id as content_object1, VID.id as content_object2, B.district_id
@@ -129,6 +149,7 @@ def rule3():
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
             
+#rule Id:4; Name = Video Production took long time
 def rule4():
     rule = Rule.objects.get(pk=4)
     sql = """SELECT VID.id as content_object1, B.district_id
@@ -148,7 +169,8 @@ def rule4():
     
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
-
+    
+#rule Id:5; Name = Video not shown in any screening
 def rule5():
     rule = Rule.objects.get(pk=5)
     sql = """SELECT VID.id as content_object1, B.district_id
