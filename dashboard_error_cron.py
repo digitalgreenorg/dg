@@ -73,10 +73,11 @@ def compareErrors(error1, error2):
 #rule Id:1; Name = Screening with same date and same PG
 def rule1():
     rule = Rule.objects.all()[0]
-    sql = """SELECT sc.id as object_id, b.district_id, sfgt.persongroups_id, sc.date
+    sql = """SELECT sc.id as object_id, B.district_id, sfgt.persongroups_id, sc.date
         FROM SCREENING_farmer_groups_targeted sfgt
         JOIN SCREENING sc ON sc.id = sfgt.screening_id
-        JOIN (SELECT date, persongroups_id FROM SCREENING_farmer_groups_targeted sfgt
+        JOIN (SELECT date, persongroups_id 
+            FROM SCREENING_farmer_groups_targeted sfgt
             JOIN SCREENING sc on sc.id = sfgt.screening_id
             GROUP BY date, persongroups_id
             HAVING COUNT(*) > 1) t ON t.date = sc.date and t.persongroups_id = sfgt.persongroups_id
