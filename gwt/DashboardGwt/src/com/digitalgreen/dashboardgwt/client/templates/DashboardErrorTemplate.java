@@ -211,10 +211,9 @@ public class DashboardErrorTemplate extends BaseTemplate{
 			"<link rel='stylesheet' type='text/css' href='/media/css/changelists.css'>" +
 				"<div id='container'>" +
 				"<div id='content' class='flex'>" +
-					"<h1>Possible Errors</h1>" +
-					"<b>Note:</b> If you think reported error is a valid case, mark it as 'Not an Error' and click 'Save'. Otherwise resolve the errors by modifying the data entries, the error entry will be removed from this page within 24 hours." +
-					"<br></br>" +
-					//"<form target='FormPanel_2' id='add-form' action='http:///add_State' enctype='multipart/form-data' method='post'>"+
+					"<h1>Data Inconsistencies</h1>" +
+					"<div id='incosistency-note'><b>Note:</b> If you think that the reported error is a valid case, mark it as 'Not an Error' and click 'Save'. Otherwise resolve the errors by modifying the data entries. The error entry will <b>NOT</b> be removed immediately. Please ignore it, it will be removed from this page within 24 hours.</div>" +
+					"<br>" +
 					"<div id='content-main'>" +
 						"<div class='module' id='dashboardErrorTable'>" +
 								"<div id='listing-form-body'>" +  // Insert form data here
@@ -223,7 +222,6 @@ public class DashboardErrorTemplate extends BaseTemplate{
 						"<div class='submit-row' >" +
 							"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 						"</div>"+
-					//"</form>" +
 					"</div>" +
 				"</div>";
 

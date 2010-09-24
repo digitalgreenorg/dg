@@ -182,5 +182,11 @@
 .gwt-Label.noerror {
 	color: gray;
 }
-
+#incosistency-note {
+	background-color:#F3F3F3;
+	border:2px solid #417690;
+	font-size:1em;
+	padding:2px;
+	width:100%;
+}
 /* End of Dashboard Error Page */
