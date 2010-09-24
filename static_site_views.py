@@ -12,9 +12,13 @@ def featuredfarmer(request):
    
     return render_to_response('base_featuredfarmer.html')
 
-def video(request):
+def videopage(request):
    
-    return render_to_response('base_video.html')
+    return render_to_response('videopage.html')
+
+def searchvideo_result(request):
+   
+    return render_to_response('searchvideo_result.html')
 
 def aboutus(request):
     

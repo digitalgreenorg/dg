@@ -47,20 +47,7 @@
             xhttp.open("GET","/media/Output/press.xml",false);
             xhttp.send();
             xmlDoc=xhttp.responseXML;
-			/*
-			if (window.ActiveXObject)
-			{// code for IE
-    			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-			}
-			else if (document.implementation.createDocument)
-			{// code for Mozilla, Firefox, Opera, etc.
-    			xmlDoc=document.implementation.createDocument("","",null);
-			}
-			else
-			{
-				alert('Your browser cannot handle this script');
-			}
-			*/
+			
 			if (xmlDoc!=null) 
 			{
 				//xmlDoc.async=false;

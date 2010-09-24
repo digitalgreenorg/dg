@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Mint ePaper</TITLE>
+		<HEADLINE>Videos by the farmers and for the farmers</HEADLINE>
+		<REFERENCE>http://epaper.livemint.com/ArticleImage.aspx?article=20_09_2010_026_004&amp;mode=1</REFERENCE>
+		<PRESSDATE>Mon, 20 September 2010</PRESSDATE>
+		<PLACE>New Delhi</PLACE>    
+    	<DESC>"Digital Green has partnered with non-governmental organizations to train youth farmers to shoot, edit and screen films."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>The Telegraph</TITLE>
 		<HEADLINE>Videos that help farmers watch, learn and earn more</HEADLINE>
 		<REFERENCE>http://www.telegraphindia.com/1100915/jsp/jharkhand/story_12938098.jsp</REFERENCE>
