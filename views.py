@@ -1574,7 +1574,7 @@ def save_screening_online(request,id):
         form.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
-        form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state = states).distinct().order_by('title')
+        form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state__in = states).distinct().order_by('title')
         return HttpResponse(form.as_table())
 
 
