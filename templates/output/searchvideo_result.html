@@ -1,0 +1,49 @@
+{% extends "searchvideo.html" %}
+
+{% block searchbodycontentright%}
+	<div id='searchdiv'>	
+		<input id='searchinput' name='query' value='search' type='text'>
+		<input id='searchbtn' value='Search' type='image' src='/media/Output/Images/searchbtn4.png'>
+	</div>
+	
+	<div id='searchresultdiv'>
+		<script type="text/javascript">
+			var count = 10;
+			var i;
+			document.write("<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>");
+			for(i=0;i<count;i++) 
+				{
+					document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
+						document.write("<div id='searchresultdivrighttddiv1'>");
+							document.write("<img src='/media/Output/Images/investorimg1.jpg' alt='' width='90px' height='70px'>");
+						document.write("</div>");
+						document.write("<div id='searchresultdivrighttddiv2'>");
+							document.write("<div class='searchresultdivrighttddiv21'>");
+								document.write("Vegetable Nursery Padding Cultivation");
+							document.write("</div>");											
+							document.write("<div class='searchresultdivrighttddiv22'>");
+								document.write("Practices Shown - ");
+								document.write("Vermipost Cultivation");								
+							document.write("</div>");
+							document.write("<div class='searchresultdivrighttddiv22'>");
+								document.write("Production Dates - ");
+								document.write("From:" + "23-01-2010");
+								document.write(" &nbsp;&nbsp; ");		
+								document.write("To:" + "31-01-2010");								
+							document.write("</div>");
+							document.write("<div class='searchresultdivrighttddiv22'>");
+								document.write("Region of Production - ");
+								document.write("Karanjia, Orissa");														
+							document.write("</div>");
+							document.write("<a href='/featuredfarmer' class='viewmore'>");
+								document.write("View Video <img float:right alt='Updates' src='/media/Output/Images/learnmoreicon2.png'>");
+							document.write("</a>");							
+						document.write("</div>");						
+					document.write("</td></tr>");
+				}
+			document.write("</table>");
+			//alert("HI");						
+		</script>
+	</div>	
+{% endblock searchbodycontentright%}
+			

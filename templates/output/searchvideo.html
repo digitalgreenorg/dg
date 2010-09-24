@@ -1,0 +1,213 @@
+{% extends "base_video.html" %}
+
+{% block title %} DigitalGreen - Search Videos{% endblock title%}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/searchvideo.css'/>       
+{% endblock cssfile %}
+
+{% block bodycontent%}
+			
+	<div id='searchcontentleft'>	
+		
+		<div class='searchleftdiv'>
+			<table class='advancedsearchtable' cellspacing='0' cellpadding='0'>
+				<tr>
+					<td class='advancedsearchtext'>
+						Advanced Search
+					</td>
+					<td id='advancedsearchopenbtn'>
+						<img src='/media/Output/Images/arrowdown3.png' alt=''>
+					</td>
+					<td id='advancedsearchclosebtn'>
+						<img src='/media/Output/Images/arrowhead3.png' alt=''>
+					</td>
+				</tr>		
+			</table>				
+			<div class='advancedsearchdiv'>
+				<div class='advancedsearchtitle'>
+					Video Suitable for:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2' id='language'>
+							<select class='select' id='videosuitable'>
+								<option value='-1'>Select Practices</option>
+								<option value="1">Disseminations</option>
+  								<option value="2">Video Production Training</option>
+  								<option value="3">Dissemination Training</option>
+  								<option value="4">Pending for Approval</option>
+  								<option value="5">None</option>
+							</select>				
+						</div>							
+					</div>
+				</div>
+				<div class='advancedsearchtitle'>
+					Video has been:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2' id='uploads'>
+							<select class='select' id='videosuitable'>
+								<option value='-1'>Uploaded</option>
+								<option value="1">Not Uploaded</option>
+  								<option value="2">All Videos</option>
+							</select>				
+						</div>							
+					</div>
+				</div>
+				<div class='advancedsearchtitle'>
+					Seasonality:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2' id='seasonality'>
+							<select class='select' id='videosuitable'>
+								<optgroup label="Months">	
+									<option value='1'>January</option>
+									<option value="2">February</option>
+  									<option value="3">March</option>
+  									<option value="4">April</option>
+  									<option value="5">May</option>
+  									<option value="6">June</option>
+  									<option value="7">July</option>
+  									<option value="8">August</option>
+  									<option value="9">September</option>
+  									<option value="10">October</option>
+  									<option value="11">November</option>
+  									<option value="12">December</option>
+  								</optgroup>
+  								<optgroup label="Seasons">	
+									<option value='Kha'>Kharif</option>
+									<option value="Rab">Rabi</option>
+  									<option value="Rou">Round the Year</option>
+  									<option value="Rai">Rainy Season</option>
+  									<option value="Sum">Summer Season</option>
+  									<option value="Win">Winter Season</option>
+  								</optgroup>	
+							</select>				
+						</div>							
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id='regionsearchdiv' class='searchleftdiv'>
+			<div class='searchtitle'>
+				Select Geography
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+							<div class='searchbody1' id='state'>
+				   				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+					    			<option value='-1'>Select State</option>
+										{% for key,item in search_box_params.geog_val.0.items %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+				    			</select>				
+							</div>
+							<div class='searchbody1' id='district'>
+				    			<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select District</option>
+					    			{%if search_box_params.geog_val.1 %}
+										{% for key,item in search_box_params.geog_val.1.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}						
+				    			</select>	
+							</div>
+							<div class='searchbody1' id='block'>
+				    			<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
+					   		 		<option value='-1'>Select Block</option>
+					   		 		{%if search_box_params.geog_val.2 %}
+										{% for key,item in search_box_params.geog_val.2.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}						
+				    			</select>				
+							</div>			
+							<div class='searchbody1' id='village'>
+				   	 			<select class='select' name='village' id = 'villageId'  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select Village</option>	
+										{%if search_box_params.geog_val.3 %}
+											{% for key,item in search_box_params.geog_val.3.items %}
+												<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+											{%endfor%}
+										{%endif%}					    								
+				    			</select>					
+							</div>
+				</div>				
+			</div>			
+		</div>
+		
+		<div class='searchleftdiv'>
+			<div class='searchtitle'>
+				Select Language
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='language'>
+				   		<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+					  		<option value='-1'>Select Language</option>
+								{% for key,item in search_box_params.geog_val.0.items %}
+									<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>				
+		</div>
+		
+		<div class='searchleftdiv'>
+			<div class='searchtitle'>
+				Select Practices
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='language'>
+				   		<select class='select' id='practice' multiple='multiple' size='2'>
+					  		<option value='-1'>Select Practices</option>
+							<option value="volvo">Vegetable Nursery</option>
+  							<option value="saab">Paddy Cultivation</option>
+  							<option value="mercedes">Sowing</option>
+  							<option value="audi">Seed Sapling</option>
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
+		</div>
+		
+		<div class='searchleftdiv'>
+			<div class='searchtitle'>
+				Select Production Date
+			</div>
+			<div class='searchbody'>
+				<div class='datepickcalendertext'>From: </div>
+				<div id='datepickcalender1' class='datepickcalender'></div>				
+			</div>
+			<div class='searchbody'>
+				<div class='datepickcalendertext'>To: </div>
+				<div id='datepickcalender2' class='datepickcalender'></div>				
+			</div>							
+		</div>		
+		
+		<div id='submitdiv'>										
+			<table id='submittable' cellspacing='0' cellpadding='0'>						
+				<tr>
+					<td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
+					<td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
+				</tr>
+			</table>
+		</div>	
+					
+	</div>
+	
+	
+	<div id='searchcontentright'>
+		{% block searchbodycontentright%}
+				
+		{% endblock searchbodycontentright%}
+	</div>			
+			
+{% endblock bodycontent%}

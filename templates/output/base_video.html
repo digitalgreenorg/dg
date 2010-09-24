@@ -1,0 +1,81 @@
+{% extends "static_site/base.html" %}
+
+{% block title %} DigitalGreen - Videos{% endblock title%}
+
+{% block cssfile %}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/base_video.css'/>       
+{% endblock cssfile %}
+
+{% block jsfile %}    
+	<script type="text/javascript" src="/media/Output/JS/Jvideo.js"></script>  	
+{% endblock jsfile %}
+
+{% block mainbody %}
+	<div id='header'>
+		<div id='navdiv'>
+			<div id='videologo'>
+				<a class="footerquicklink" href="/searchvideo_result" title="Videos Home Page"><img src="/media/Output/Images/videologo6.png" alt=""></a>
+			</div>
+			<div id='videonav'>
+				<a class="footerquicklink" href="/" title="Home Page">Home</a> 
+				&nbsp;|&nbsp; 
+				<a class="footerquicklink" href="/searchvideo_result" title="Search for videos">Search Videos</a>
+			</div>
+		</div>			 
+	</div>
+	
+	<div id='navbottomdiv'>		
+	</div>	
+	
+	<div id='contentdiv'>
+		{% block bodycontent%}
+				
+		{% endblock bodycontent%}	
+	</div>
+	
+	<div id='videofooter'>	
+		<div id='footertop'>  </div>
+		<div id='footerdivleft'>
+			<div id='footerquicklinkdiv'>
+				<ul>
+					<li>
+						&nbsp;&nbsp;
+					</li>
+					<li>
+						<a class="footerquicklink" href="/aboutus" title="">About Us</a>
+					</li>
+					<li class='footerquicklinkgap'> | </li>
+					<li>
+						<a class="footerquicklink" href="/partnerexecutive" title="">Partners</a>
+					</li>							
+					<li class='footerquicklinkgap'> | </li>
+					<li>
+						<a class="footerquicklink" href="/press" title="">Media Coverage</a>
+					</li>							
+					<li class='footerquicklinkgap'> | </li>
+					<li>
+						<a class="footerquicklink" href="/career" title="">Careers</a>
+					</li>
+					<li class='footerquicklinkgap'> | </li>
+					<li>
+						<a class="footerquicklink" href="/contact" title="">Contact Us</a>
+					</li>
+					<li class='footerquicklinkgap'> | </li>
+					<li>
+						Follow Us 
+						<a class="footerquicklink" href="http://www.youtube.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/youtube-icon4.png" alt=""></a>
+						<a class="footerquicklink" href="http://www.twitter.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/twitter-icon3.gif" alt=""></a>
+						<a class="footerquicklink" href="http://www.facebook.com/digitalgreenorg" title="" target="_blank"><img src="/media/Output/Images/facebook-icon3.gif" alt=""></a>
+					</li>
+				</ul>																											
+			</div>					
+			<div id='footerdivright'> <a class="exploredescmainlink1" href="http://www.digitalgreen.org/coco/home.html" title="" target="_blank"><img src="/media/Output/Images/cocoicon1.png" title="Login to COCO">COCO</a> </div>								
+			<div id="footerdivlicence">
+				<a target="_blank" title="Creative Commons Licence" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/" rel="license" class="footerquicklink"> <span style="font-weight: bold;">(cc)</span> &nbsp;Digital Green 2010</a>
+			</div>			
+		</div>
+	</div>
+{% endblock mainbody %}
+
+
+
