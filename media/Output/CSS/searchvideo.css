@@ -1,0 +1,49 @@
+/* CSS Document */
+
+/* Search Navigation Control */
+
+#searchcontentleft				{ padding-top:50px; margin-top:20px; float:left; width:200px; min-height:620px; background-color:none; border-right:1px solid #e2e2e2; }
+#searchcontentright				{ margin-top:20px; float:left; margin-left:5px; width:750px; min-height:600px; margin-bottom:50px; }
+#searchdiv						{ clear:both; margin-left:0px; width:748px; height:40px; background-color:#78bd26; border:1px solid Gray; }
+#searchinput					{ float:left; margin-left:5px; margin-top:5px; background-color:#ffffff; width:670px; height:28px; border:none; font-family:Arial,Helvitica,Sans-Serif; font-size:0.8em; color:#3f3e3e; }
+#searchbtn						{ float:left; margin-left:5px; width:63px; margin-top:5px; }
+.searchleftdiv					{ margin-top:10px; width:100%; margin-bottom:20px; }
+.searchtitle					{ clear:both; width:100%; text-align:left; border-bottom:3px solid #E2E2E2; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
+.searchbody						{ margin-top:5px; width:100%; }	
+
+#selectbody						{ clear:both; margin-top:0px; width:100%; background-color:none; }
+.searchbody1					{ margin-top:0px; width:100%; padding-left:0px; padding-top:5px; padding-bottom:5px; }
+select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; size:1px; border:1px solid Gray; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; }
+.datepickcalender				{ margin-top:5px; float:left; margin-left:0px; margin-bottom:5px; text-align:center; padding-top:2px; width:75%; height:20px; background-color:#f0f0f0; border-right:1px solid Gray;  border-top:1px solid Gray;  border-bottom:1px solid Gray; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; }
+.datepickcalendertext			{ margin-top:5px; margin-left:2%; text-align:center; padding-top:2px; float:left; width:20%; height:20px; background-color:#f0f0f0; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; border-left:1px solid Gray;  border-top:1px solid Gray;  border-bottom:1px solid Gray; }
+.advancedsearchtable			{ width:200px; background-color:#f4f4f4; padding-top:2px; padding-bottom:2px; border-bottom:3px solid #E2E2E2; }
+.advancedsearchtext				{ color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
+#advancedsearchopenbtn			{ cursor:pointer; }	
+#advancedsearchclosebtn			{ display:none; cursor:pointer; }	
+#videosuitable					{ margin-left:0px; }	
+.advancedsearchdiv				{ width:100%; padding-top:5px; padding-bottom:5px; background-color:#f4f4f4; display:none; }
+
+#advancedsearchbody				{ display:none; width:100%; }
+.advancedsearchtitle			{ margin-top:10px; padding-left:2%; text-align:left; clear:both; width:100%; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
+.searchbody2					{ margin-left:0px; width:100%; }
+
+
+/* Submit and Reset Button */
+#submitdiv						{ clear:both; margin-top:20px; width:100%; }
+#submittable					{ margin-top:10px; width:100%; padding:5px; background-color:#ededed; }
+.submitbtn						{ text-align:right;  margin-top:0px; width:50%;}
+.resetbtn						{ margin-top:0px; width:50%;}
+#Reset1							{ min-width:60%; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Black; }
+#Submit1						{ min-width:50%; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Black; }
+
+
+/* Searchdiv Right Hand Panel  */
+#searchresultdiv				{ margin-top:6px; width:748px; }
+
+#searchresultdivrighttable		{ width:100%; margin-top:8px; }
+#searchresultdivrighttddiv1		{ float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; padding-top:5px; }
+#searchresultdivrighttddiv2		{ float:left; margin-left:5px; width:87%; margin-bottom:10px; }
+.searchresultdivrighttddiv21	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:5px; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
+.searchresultdivrighttddiv22	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:5px; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
+
+

@@ -1,0 +1,95 @@
+/* CSS Document */
+
+/* Video Navigation Control */
+
+#header										{ width:100%; background-color:#ececec; border-bottom: 5px solid #e2e2e2; height:100px; }
+#navdiv										{ width:960px; }
+#videologo									{ float:left; width:269px; height:83px; margin-top:15px; }	
+#videonav									{ margin-top:60px; float:right;  }
+#navbottomdiv								{ margin-top:0px; clear:both; width:100%; height:20px; background:url("/media/Output/Images/navbottombg.png"); background-repeat:x-repeat; }
+
+/* Body Content */
+#contentdiv									{ clear:both; width:960px; align:center; margin-bottom:20px; }
+#contentdivtitle							{ border-bottom:0px solid #ececec; width:960px; text-align:left; height:30px; margin-top:20px; font-family: Georgia,'Times New Roman',Serif; color:#5B6E1D; font-weight:bold; font-size:1.4em; }
+
+#contentdivleft								{ float:left; width:700px; border-right:1px solid Gray; min-height:600px; margin-bottom:50px; }
+#videoembed									{ margin:5px; width:690px; }
+#videoembedtable							{ width:100%; height:400px; }
+
+
+/* First set of number data to show */
+#videodatadiv1 								{ margin-left:0px; width:690px; margin-top:15px;  }
+#videodatadiv1td							{ width:220px; height:30px; background-color:none; border:1px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; cursor:pointer; }
+.numberstyle								{ font-weight:bold; }
+.videodatadiv1tdspace						{ width:15px; background-color:none; }	
+
+#videodatadiv1div							{ position:relative; padding-top:0px;  }
+#videodatadiv1help							{ -moz-border-radius:4px; position:absolute; padding:2px; min-width:200px; top:-60px; left:0px; z-index:2; height:40px; background-color:#E7F7CF; display:none; border:2px solid #62980C; color:Black }
+
+
+/* Second set of data to project */
+#videodatadiv2 								{ margin-left:0px; width:690px; margin-top:25px; background-color:#ebebeb; border:1px solid #e2e2e2; }
+#videodatadiv2td							{ width:220px; border:0px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; cursor:pointer; }
+#videodatadiv2div							{ position:relative; margin-left:30px; display:block; width:150px; align:center; }
+.videodatadiv2tdspace						{ width:15px; height:40px; background-color:none; }
+.imgright									{ margin-top:-6px; float:right; margin-left:0px; }
+.divlinks									{ text-decoration:none; color:Gray; font-weight:bold; }
+
+#videodatadiv2td1							{ width:100%; border-top:5px solid #7f7f7f; background-color:White; }
+#videodatadiv2divdesc						{ margin-left:40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; }
+#videodatadiv2divdesctop					{ z-index:5; top:-11px; left:40px; width:12px; height:8px; position:absolute; background:url("/media/Output/Images/arrowhead3.png"); background-repeat:no-repeat; }
+#videoinfotable								{ width:100%; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; }
+.videoinfotd1								{ width:30%; height:30px; font-weight:normal; }
+.videoinfotd2								{ width:70%; height:30px; font-weight:bold; }
+.videodatadiv2td1							{ color:Black; }
+
+
+#videodatadiv3 								{ width:690px; margin-top:25px; background-color:#f4f4f4; border:1px solid #e2e2e2; }
+#videodatadiv3td1							{ width:220px; height:40px; border:0px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
+#videodatadiv3td2							{ padding-left:10px; width:470px; height:40px; border-left:2px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
+#videodatadiv3td3   						{ background-color:White; border-top:5px solid #e3e3e3; margin-left:0px; width:100%; color:#5B6E1D; position:relative; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; }
+#videodatadiv3divdesc						{ margin-left:40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; }
+
+
+
+/* Footer div */
+#videofooter								{ clear:both; margin-top:70px; width:100%;  }
+#footertop									{ clear:both; margin-top:0px; width:59px; height:17px; background:url("/media/Output/Images/footertopbg5.png"); background-position:center; background-repeat:none; }
+#footerdivleft								{ clear:both; margin-top:0px; width:100%; border-top:10px solid #c0e481; height:100px; background:url("/media/Output/Images/footerbg2.png"); background-repeat:x-repeat; }		
+
+#footerdivlicence							{ clear:both; margin-top:15px; margin-left:150px; text-align:left; }
+#footerdivlicence	a						{ text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+#footerdivlicence	a:hover					{ text-decoration:underline; }						
+						
+#footerquicklinkdiv							{ margin-top:2px; }
+#footerquicklinkdiv ul						{ margin-top:-10px; margin-left:105px; }
+#footerquicklinkdiv ul li					{ float:left; list-style:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+.footerlicence 								{ clear:both; margin-left:140px; }
+.footerquicklinkgap							{ margin-left:10px; margin-right:10px; }
+.footerquicklink							{ margin-left:5px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
+.footerquicklink:hover						{ text-decoration:underline; color:#fbae0c; }
+.footerquicklink img						{ float:right; margin-right:15px; }	
+.licenselink								{ text-align:right; width:230px;}
+#footerdivright								{ float:right; margin-right:150px; }	
+
+/*    COCO link     */
+a.exploredescmainlink1						{ float:left; margin-right:11px; text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
+a.exploredescmainlink1:hover				{ text-decoration:underline; color:#fbae0c; }
+a.exploredescmainlink1 img					{ float:left; display:block; border:none; margin-right:2px; }
+
+
+
+/* BODY CONTENT RIGHT   */
+#contentdivright							{ margin-left:5px; float:left; width:250px; background-color:none; border-left:0px solid #cfcfcf; min-height:600px; }	
+#contentdivrighttitle						{ text-align:left; width:100%; padding-left:0px; margin-bottom:5px; border-bottom:3px solid #f4f4f4; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:Gray; font-size:0.8em;  }		 
+#contentdivrightdesc						{ clear:both; margin-left:5px; width:250px; }	
+#contentdivrighttable						{ width:100%; margin-left:0px; }
+#contentdivrighttd							{ width:100%; border-bottom:1px solid #E2E2E2; }	
+#contentdivrighttddiv1						{ margin-top:6px; float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; }
+#contentdivrighttddiv2						{ margin-top:3px; float:left; margin-left:5px; width:155px; margin-bottom:10px; }
+#contentdivrighttddiv21						{ padding-top:2px; padding-bottom:2px; margin-top:0px; clear:both; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
+#contentdivrighttddiv22						{ padding-top:2px; padding-bottom:2px; margin-top:0px; clear:both; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
+
+/* View More links */
+.viewmore									{ text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+.viewmore:hover								{ color:#fbae0c; }
