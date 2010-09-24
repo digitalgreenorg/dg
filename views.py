@@ -2180,3 +2180,39 @@ def save_target_offline(request, id):
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
+
+def get_dashboard_errors_online(request, offset, limit):
+    districts = get_user_districts(request)
+    all_errors = Error.objects.filter(district__in =  districts).order_by('notanerror','rule')
+    count = all_errors.count()
+    errors = all_errors[offset:limit]
+    if errors:
+        json_subcat = serializers.serialize("json",errors,indent=4,relations={'rule':{'fields':('error_msg',)}, 'content_type1':{'fields':('name','model',)}, 'content_type2':{'fields':('name','model',)}})
+    else:
+        json_subcate = "EOF"
+    
+    response = HttpResponse(json_subcat, mimetype="application/javascript")
+    response['X-COUNT'] = count
+    return response
+
+def mark_error_as_not_error(request):
+    if request.method == "POST":
+        errorids = request.POST.getlist('errorid')
+        errorids = [int(x) for x in errorids]
+        #Deselected ones
+        Error.objects.filter(notanerror=1).exclude(pk__in=errorids).update(notanerror=0)
+        #Newly Selected ones
+        Error.objects.filter(pk__in=errorids).exclude(notanerror=1).update(notanerror=1)
+        
+        return HttpResponse();
+
+def index_template_data(request):
+    return_val = {}
+    
+    districts = get_user_districts(request)
+    countoferrors = Error.objects.filter(district__in =  districts).filter(notanerror=0).count()
+    
+    return_val['dashboard_error_count'] = str(countoferrors)
+    
+    return HttpResponse(cjson.encode(return_val))
+    

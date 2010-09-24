@@ -548,3 +548,29 @@ class Target(models.Model):
     
     class Meta:
         unique_together = ("district","month_year")
+        
+        
+class Rule(models.Model):
+    name = models.CharField(max_length=100);
+    error_msg = models.CharField(max_length=500);
+    description = models.TextField(blank=True)
+    
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class Error(models.Model):
+    rule = models.ForeignKey(Rule)
+    district = models.ForeignKey(District)
+    content_type1 = models.ForeignKey(ContentType, related_name = 'content_type1')
+    object_id1 = models.PositiveIntegerField()
+    content_object1 = generic.GenericForeignKey('content_type1', 'object_id1')
+    content_type2 = models.ForeignKey(ContentType, related_name = 'content_type2', null=True)
+    object_id2 = models.PositiveIntegerField(null=True)
+    content_object2 = generic.GenericForeignKey('content_type2', 'object_id2')
+    notanerror = models.BooleanField(default=False)
+    
+    class Meta:
+        unique_together = ("rule","content_type1","object_id1","content_type2","object_id2")
+        
+    def __unicode__(self):
+        return u'%s; %s; %s' % (self.rule, self.content_object1, self.content_object2)
