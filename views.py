@@ -310,6 +310,17 @@ def get_user_districts(request):
             districts = districts | District.objects.filter(district_name = user_permission.district_operated)
     return districts
 
+def get_user_states(request):
+    user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
+    states = State.objects.none()
+    for user_permission in user_permissions:
+        if(user_permission.role=='A'):
+            states = State.objects.all()
+        if(user_permission.role=='D'):
+            states = State.objects.filter(region = user_permission.region_operated)
+        if(user_permission.role=='F'):
+            states = State.objects.filter(district__district_name = user_permission.district_operated)
+    return states
 
 def save_region_online(request,id):
     if request.method == 'POST':
@@ -1558,11 +1569,12 @@ def save_screening_online(request,id):
             form = ScreeningForm()
             formset = PersonMeetingAttendanceInlineFormSet()
         villages = get_user_villages(request)
+        states = get_user_states(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
-        form.fields['videoes_screened'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
+        form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state = states).distinct().order_by('title')
         return HttpResponse(form.as_table())
 
 
