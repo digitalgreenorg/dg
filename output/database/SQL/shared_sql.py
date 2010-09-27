@@ -2,18 +2,15 @@ from dg.output.database.utility import *
 
 
 #Query for the drop down menu in search box
-#Context Required: geog can be (state/district/block/village(
-#                                 id for(district/block/village)
-#                                 geog_parent (e.g. 'state'->'district'->'block'->'village'
-search_drop_down_list = r"""
-        SELECT id, {{geog|upper}}_NAME AS name
-        FROM {{geog|upper}}
-        {% ifnotequal geog 'STATE' %}
-        WHERE {{geog_parent|lower}}_id = {{id}}
-        {% endifnotequal %}
-        ORDER BY name
-"""
-
+def search_drop_down_list(geog, geog_parent, id):
+    sql_ds = get_init_sql_ds();
+    sql_ds['select'].extend(['id', geog.upper()+'_NAME as name'])
+    sql_ds['from'].append(geog.upper())
+    if(geog.upper() != "STATE"):
+        sql_ds['where'].append(geog_parent.lower()+'_id = '+str(id))
+    sql_ds['order by'].append('name')
+    
+    return join_sql_ds(sql_ds)
 
 #Query for breadcrumbs
 #Params: geog - options to be calculated for this geog
@@ -55,19 +52,18 @@ def get_partners_sql(geog, id):
 
     return join_sql_ds(sql_ds);
 
-def child_geog_list(request, geog, id):
-    from_date, to_date, partner_id = get_dates_partners(request)
+def child_geog_list(geog, id, from_date, to_date, partners):
     if(geog == "COUNTRY"):
         sql = "SELECT DISTINCT S.id, STATE_NAME AS name from STATE S"
-        if(partner_id):
+        if(partners):
             sql+=  """ JOIN DISTRICT D ON (D.state_id = S.id)
-                      WHERE D.partner_id in ("""+','.join(partner_id)+")"
+                      WHERE D.partner_id in ("""+','.join(partners)+")"
     elif(geog == "STATE"):
         sql = """SELECT DISTINCT D.id, DISTRICT_NAME AS name from DISTRICT D
                           WHERE state_id = """+str(id)
-        if(partner_id):
+        if(partners):
             dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
-            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
+            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(filtered_partner_list):
                 sql += " AND D.partner_id in ("+','.join(filtered_partner_list)+")"
     elif(geog == 'DISTRICT'):
@@ -83,9 +79,8 @@ def child_geog_list(request, geog, id):
 
 #Query for the table in overview module and pie graphs.
 #Parameter Required:'type' can be (production/screening/adoption/practice/person/village)
-def overview(request, geog,id, type):
+def overview(geog, id, from_date, to_date, partners, type):
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
-    from_date, to_date, partners = get_dates_partners(request)
 
     if(geog == 'VILLAGE'):
         geog_child = 'VILLAGE'
@@ -161,10 +156,9 @@ def overview(request, geog,id, type):
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)
-def overview_line_chart(request,geog,id,type):
+def overview_line_chart(geog,id,from_date, to_date, partners,type):
     sql_ds = get_init_sql_ds();
     sql_inn_ds = get_init_sql_ds();
-    from_date, to_date, partners = get_dates_partners(request)
 
     if(type=='practice'):
         sql_ds['select'].extend(["date", "COUNT(*)"])
@@ -234,9 +228,8 @@ def overview_line_chart(request,geog,id,type):
 
 
 #'type' can be prod_tar/screen_tar/adopt_tar
-def target_lines(request, geog,id, type):
+def target_lines(geog,id, from_date, to_date, partners, type):
     sql_ds = get_init_sql_ds();
-    from_date, to_date, partners = get_dates_partners(request)
 
     if(geog == 'STATE'):
         sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])

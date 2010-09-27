@@ -1,16 +1,6 @@
 from dg.output.database.utility import *
 
-def getScreeningIDs(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request);
-
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(SC.id)")
-    sql_ds['from'].append("SCREENING SC")
-    filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners)
-    return join_sql_ds(sql_ds);
-
-def screening_min_date(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
+def screening_min_date(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("MIN(DATE) as date")
     sql_ds['from'].append("SCREENING SC")
@@ -31,8 +21,7 @@ def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners):
     return join_sql_ds(sql_ds);
 
 
-def screening_attendees_malefemaleratio(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request);
+def screening_attendees_malefemaleratio(geog,id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["P.GENDER AS pie_key", "COUNT(DISTINCT P.id) AS count"]);
     sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA");
@@ -44,8 +33,7 @@ def screening_attendees_malefemaleratio(request,geog,id):
     sql_ds['group by'].append('P.GENDER')
     return join_sql_ds(sql_ds);
 
-def screening_month_bar(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request);
+def screening_month_bar(geog,id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["COUNT(*) AS count","MONTH(DATE) AS MONTH", "YEAR(DATE) AS YEAR"])
     sql_ds['from'].append("SCREENING SC")
@@ -53,10 +41,9 @@ def screening_month_bar(request,geog,id):
     sql_ds['group by'].extend([ "YEAR", "MONTH"])
     return join_sql_ds(sql_ds);
 
-def screening_practice_scatter(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request);
+def screening_practice_scatter(geog,id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["practice_name AS name","COUNT(SVS.screening_id) AS count"]);
+    sql_ds['select'].extend(["practice_name AS name","COUNT(DISTINCT SVS.screening_id) AS count"]);
     sql_ds['from'].append("SCREENING_videoes_screened SVS")
     sql_ds['join'].append(["VIDEO_related_agricultural_practices VRP","VRP.video_id = SVS.video_id"])
     sql_ds['join'].append(["PRACTICES P", "P.id = VRP.practices_id"])
@@ -66,8 +53,7 @@ def screening_practice_scatter(request,geog,id):
     sql_ds['group by'].append("practice_name")
     return join_sql_ds(sql_ds);
 
-def screening_raw_attendance(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request);
+def screening_raw_attendance(geog,id,from_date,to_date,partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["DATE","COUNT(person_id) AS tot_per", "COUNT(expressed_interest_practice_id) AS tot_int", \
                              "COUNT(expressed_adoption_practice_id) as tot_ado, COUNT(expressed_question_practice_id) as tot_que"])
@@ -86,8 +72,7 @@ def screening_raw_attendance(request,geog,id):
 
     return join_sql_ds(return_sql_ds);
 
-def screening_percent_attendance(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request);
+def screening_percent_attendance(geog, id, from_date, to_date, partners):
     sql_ds_att = get_init_sql_ds(); #sql for selecting count(person) and count(interests)
     sql_ds_group = get_init_sql_ds(); #sql for person group_id and total strength
     sql_ds_main = get_init_sql_ds(); #sql joining above two sqls
@@ -118,9 +103,7 @@ def screening_percent_attendance(request, geog, id):
     return join_sql_ds(sql_ds_main)
 
 
-def screening_per_day(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request);
-
+def screening_per_day(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["DATE as date", "COUNT(SC.id) as count"]);
     sql_ds['from'].append("SCREENING SC");

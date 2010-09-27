@@ -1,9 +1,7 @@
 from dg.output.database.utility import *
 
 # query constructor for malefeamle ratio pie chaart
-def video_malefemale_ratio(request,geog,id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_malefemale_ratio(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["P.GENDER as pie_key", "COUNT(*) as count"])
     sql_ds['from'].append('PERSON P')
@@ -21,9 +19,7 @@ def video_malefemale_ratio(request,geog,id):
 
 
 # query constructor for month wise production of videos bar graph.
-def video_month_bar(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_month_bar(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["COUNT( DISTINCT VID.ID ) AS count", "MONTH( VID.VIDEO_PRODUCTION_END_DATE ) AS MONTH","YEAR( VID.VIDEO_PRODUCTION_END_DATE ) AS YEAR"])
     sql_ds['from'].append("VIDEO VID");
@@ -32,9 +28,7 @@ def video_month_bar(request, geog, id):
     sql_ds['order by'].extend(["YEAR","MONTH"])
     return join_sql_ds(sql_ds)
 
-def video_actor_wise_pie(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_actor_wise_pie(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["actors as pie_key", "count(*) as count"])
     sql_ds['from'].append("VIDEO VID")
@@ -43,9 +37,7 @@ def video_actor_wise_pie(request, geog, id):
 
     return join_sql_ds(sql_ds)
 
-def video_language_wise_scatter(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_language_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["L.language_name as name", "COUNT(VID.id) as count"])
     sql_ds['from'].append("LANGUAGE L");
@@ -58,9 +50,7 @@ def video_language_wise_scatter(request, geog, id):
 # This below section contains Query constructors for
 # total number of videos/screenings/avg time taken.
 #arguments (geod, id) and (from_date, to_date) optional
-def video_tot_video(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_tot_video(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT VID.id ) AS count")
     sql_ds['from'].append("VIDEO VID");
@@ -70,9 +60,7 @@ def video_tot_video(request, geog, id):
 
 # Query constructor for generating total distinct videos screened.
 #arguments (geod, id) and (from_date, to_date) optional
-def video_tot_scr(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_tot_scr(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT SCR.video_id) AS count")
     sql_ds['from'].append("SCREENING_videoes_screened SCR");
@@ -84,9 +72,7 @@ def video_tot_scr(request, geog, id):
 
 # Query constructor for generating average time taken to produce video
 #arguments (geod, id) and (from_date, to_date) optional
-def video_avg_time(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_avg_time(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("AVG(DATEDIFF(VIDEO_PRODUCTION_END_DATE ,VIDEO_PRODUCTION_START_DATE)+1) as avg")
     sql_ds['from'].append("VIDEO VID");
@@ -94,9 +80,7 @@ def video_avg_time(request, geog, id):
 
     return join_sql_ds(sql_ds)
 
-def video_type_wise_pie(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_type_wise_pie(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["VIDEO_TYPE as pie_key", "count(*) as count"])
     sql_ds['from'].append("VIDEO VID");
@@ -105,9 +89,7 @@ def video_type_wise_pie(request, geog, id):
 
     return join_sql_ds(sql_ds)
 
-def video_practice_wise_scatter(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(VID.id) as count"])
     sql_ds['from'].append("VIDEO VID");
@@ -118,9 +100,7 @@ def video_practice_wise_scatter(request, geog, id):
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 
-def video_min_date(request, geog, id):
-    from_date, to_date, partners = get_dates_partners(request)
-
+def video_min_date(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("MIN(VIDEO_PRODUCTION_END_DATE) as date")
     sql_ds['from'].append("VIDEO VID");
@@ -147,20 +127,14 @@ def get_adoption_for_video(id):
     ON T.person_id = PAP.person_id AND T.practices_id = PAP.practice_id AND DATE_OF_ADOPTION BETWEEN start AND end
     """
 
+def get_screening_month_bar_for_video(id):
+    sql_ds = get_init_sql_ds();
+    sql_ds['select'].extend(["COUNT( DISTINCT SC.ID ) AS count", "MONTH( SC.DATE ) AS MONTH","YEAR( SC.DATE ) AS YEAR"])
+    sql_ds['from'].append("SCREENING_videoes_screened SVS");
+    sql_ds['join'].append(["SCREENING SC", "SC.id = SVS.screening_id"])
+    sql_ds['where'].append("VID.id = "+str(id))
+    sql_ds['group by'].extend(["YEAR","MONTH"])
+    sql_ds['order by'].extend(["YEAR","MONTH"])
+    return join_sql_ds(sql_ds)
 
-def get_tot_screenig_for_video(id):
-    return """SELECT COUNT(*) as tot_screenings
-    FROM SCREENING_videoes_screened SVS
-    WHERE video_id = """ + str(id);
-    
-def get_tot_viewers_for_video(id):
-    return """SELECT COUNT(DISTINCT person_id)
-    FROM PERSON_MEETING_ATTENDANCE PMA
-    JOIN SCREENING_videoes_screened SVS ON SVS.screening_id = PMA.screening_id
-    WHERE video_id = """+str(id);
 
-def question_list_for_video(id):
-    return """SELECT EXPRESSED_QUESTION
-    FROM PERSON_MEETING_ATTENDANCE PMA
-    JOIN SCREENING_videoes_screened SVS ON SVS.screening_id = PMA.screening_id
-    WHERE EXPRESSED_QUESTION != '' AND video_id = """+str(id);

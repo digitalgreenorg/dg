@@ -45,8 +45,9 @@ def screening_module(request):
     ################
 
 def screening_tot_lines(request):
-    geog, id = get_geog_id(request)
-    rows = run_query_raw(screening_analytics_sql.screening_raw_attendance(request, geog, id))
+    geog, id = get_geog_id(request);
+    from_date, to_date, partners = get_dates_partners(request);
+    rows = run_query_raw(screening_analytics_sql.screening_raw_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
         return_val.append(';'.join([str(x) for x in row]))
@@ -57,8 +58,10 @@ def screening_tot_lines(request):
     return HttpResponse(';;;;')
 
 def screening_percent_lines(request):
-    geog, id = get_geog_id(request)
-    rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(request, geog, id))
+    geog, id = get_geog_id(request);
+    from_date, to_date, partners = get_dates_partners(request);
+    
+    rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
         return_val.append(';'.join([str(x) for x in row]))
@@ -69,8 +72,9 @@ def screening_percent_lines(request):
     return HttpResponse(';;;;')
 
 def screening_per_day_line(request):
-    geog, id = get_geog_id(request)
-    rows = run_query_raw(screening_analytics_sql.screening_per_day(request, geog, id))
+    geog, id = get_geog_id(request);
+    from_date, to_date, partners = get_dates_partners(request);
+    rows = run_query_raw(screening_analytics_sql.screening_per_day(geog, id, from_date, to_date, partners))
     if (not rows):
         return HttpResponse(';')
 
@@ -96,11 +100,17 @@ def screening_per_day_line(request):
 
 #Data generator for Month-wise Bar graph
 def screening_monthwise_bar_data(request):
-    return views.common.month_bar_data(request, screening_analytics_sql.screening_month_bar);
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.month_bar_data(screening_analytics_sql.screening_month_bar, setting_from_date = from_date, setting_to_date = to_date, \
+                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
 
 #Settings generator for Month-wise Bar graph
 def screening_monthwise_bar_settings(request):
-    return views.common.month_bar_settings(request,screening_analytics_sql.screening_month_bar, "Disseminations")
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.month_bar_settings(screening_analytics_sql.screening_month_bar, "Disseminations", \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
     ####################
     ## Scatter Chart  ##
@@ -108,15 +118,27 @@ def screening_monthwise_bar_settings(request):
 
 
 def screening_practice_wise_scatter_data(request):
-    return views.common.scatter_chart_data(request,screening_analytics_sql.screening_practice_scatter)
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.scatter_chart_data(screening_analytics_sql.screening_practice_scatter, \
+                                            geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
+
+    ################
+    ## PIE CHARTS ##
+    ################
+    
 def screening_mf_ratio(request):
-    return views.common.pie_chart_data(request,screening_analytics_sql.screening_attendees_malefemaleratio, \
-                                      {"M":"Male","F":"Female"}, 'Ratio of {{value}} attendees')
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.pie_chart_data(screening_analytics_sql.screening_attendees_malefemaleratio, \
+                                      {"M":"Male","F":"Female"}, 'Ratio of {{value}} attendees', \
+                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 #Data generator to generate Geography Wise Pie.
 def screening_geog_pie_data(request):
     geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
@@ -127,8 +149,8 @@ def screening_geog_pie_data(request):
 
     url = ";;;/analytics/screening_module?"
 
-    scr_geog = run_query(shared_sql.overview(request,geog,id,'screening'))
-    geog_name = run_query_dict(shared_sql.child_geog_list(request, geog, id),'id')
+    scr_geog = run_query(shared_sql.overview(geog,id, from_date, to_date, partners,'screening'))
+    geog_name = run_query_dict(shared_sql.child_geog_list(geog,id, from_date, to_date, partners,),'id')
 
     return_val = []
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')

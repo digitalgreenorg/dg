@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponse
 from dg.dashboard.models import *
 from dg.output.database  import utility
 from dg.output.database.SQL import shared_sql, overview_analytics_sql
-from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query
+from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
 import datetime
 import django
 import re, random, cjson
@@ -59,7 +59,7 @@ def get_search_box(request, min_date_func=None):
     else:
         search_box_params['is_date_selected'] = 0
         if(min_date_func):
-            from_date =  (run_query(min_date_func(request, geog, id)))[0]['date']
+            from_date =  (run_query(min_date_func(geog, id, from_date, to_date, partner)))[0]['date']
         else:
             from_date = None
         if(not from_date):
@@ -123,7 +123,7 @@ def drop_down_val(request):
     {%endfor%}
     """
     t = django.template.Template(temp);
-    rs = run_query(construct_query(shared_sql.search_drop_down_list,dict(geog=geog,geog_parent=geog_parent,id=id)));
+    rs = run_query(shared_sql.search_drop_down_list(geog=geog,geog_parent=geog_parent,id=id));
     html = t.render(django.template.Context(dict(geog=geog,rs=rs)))
 
     return HttpResponse(html)
@@ -135,54 +135,55 @@ def drop_down_val(request):
 #       If 'type' is not specified, it generates for all.
 def overview_line_graph(request):
     geog, id = get_geog_id(request)
-    id = int(id)
+    from_date, to_date, partners = get_dates_partners(request)
+
     if('type' in request.GET):
         type = request.GET.getlist('type')
     else:
         type = ['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
 
     if('prod' in type):
-        vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, request=request),'date');
+        vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         vid_prod_rs = []
 
     if('screen' in type):
-        sc_rs = run_query_dict(shared_sql.overview_line_chart(type='screening',geog=geog,id=id, request=request),'date');
+        sc_rs = run_query_dict(shared_sql.overview_line_chart(type='screening',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         sc_rs = []
 
     if('adopt' in type):
-        adopt_rs = run_query_dict(shared_sql.overview_line_chart(type='adoption',geog=geog,id=id, request=request),'date');
+        adopt_rs = run_query_dict(shared_sql.overview_line_chart(type='adoption',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         adopt_rs = []
 
     if('prac' in type):
-        prac_rs = run_query_dict(shared_sql.overview_line_chart(type='practice',geog=geog,id=id, request=request),'date');
+        prac_rs = run_query_dict(shared_sql.overview_line_chart(type='practice',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         prac_rs = []
 
     if('person' in type):
-        person_rs = run_query_dict(shared_sql.overview_line_chart(type='person',geog=geog,id=id, request=request),'date');
+        person_rs = run_query_dict(shared_sql.overview_line_chart(type='person',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         person_rs = []
     
     if('village' in type):
-        village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id, request=request));
+        village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id,from_date=from_date, to_date=to_date, partners=partners));
     else:
         village_rs = []
 
     if('prod_tar' in type):
-        prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, request=request),'date')
+        prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
     else:
         prod_tar_rs = []
 
     if('adopt_tar' in type):
-        adopt_tar_rs = run_query_dict(shared_sql.target_lines(type='adopt_tar',geog=geog,id=id, request=request),'date')
+        adopt_tar_rs = run_query_dict(shared_sql.target_lines(type='adopt_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
     else:
         adopt_tar_rs = []
 
     if('screen_tar' in type):
-        screen_tar_rs = run_query_dict(shared_sql.target_lines(type='screen_tar',geog=geog,id=id, request=request),'date')
+        screen_tar_rs = run_query_dict(shared_sql.target_lines(type='screen_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
     else:
         screen_tar_rs = []
 
@@ -329,10 +330,8 @@ def overview_line_graph(request):
 #pieNameDict is the dictionary in which key is the database entry (like "M") and value is the one that
 #               is show in Pie chart (Like "Male" for "M")
 #desc is the description string for the pie, can use variables  - {{key}}, {{value}} within it
-def pie_chart_data(request,sqlFunc,pieNameDict, desc):
-    geog, id = get_geog_id(request)
-
-    rs = run_query_dict(sqlFunc(request,geog,id),'pie_key')
+def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
+    rs = run_query_dict(sqlFunc(**args),'pie_key')
     str_list = []
     str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     if not rs:
@@ -349,9 +348,8 @@ def pie_chart_data(request,sqlFunc,pieNameDict, desc):
 #generic function to render data for Scatter Charts
 #sqlFunc is the function which renders the SQL query.
 #Pre-requisite: SQL function should generate name, count & in that order.(Other variable names would throw error)
-def scatter_chart_data(request,sqlFunc):
-    geog, id = get_geog_id(request)
-    rs = run_query(sqlFunc(request,geog=geog,id=id))
+def scatter_chart_data(sqlFunc, **args):
+    rs = run_query(sqlFunc(**args))
     if not rs:
         return HttpResponse(' ');
 
@@ -436,32 +434,30 @@ def make_dict(dic):
     return return_val
 #used to render data for month bar data in modules
 #sqlFunc is the func for the SQL query generator
-def month_bar_data(request,sqlFunc):
-    geog, id = get_geog_id(request)
-    rs = run_query(sqlFunc(request, geog = geog, id = id));
+def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
+    rs = run_query(sqlFunc(**args));
     if rs:
         dic = make_dict(rs)
     else:
         return HttpResponse(' ');
 
-    from_date, to_date, partner = utility.get_dates_partners(request);
-    if(not(from_date and to_date)):
-        from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
-        to_date = str(datetime.date.today());
+    if(not(setting_from_date and setting_to_date)):
+        setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
+        setting_to_date = str(datetime.date.today());
 
-    from_date = MyDate(* [int(x) for x in reversed(from_date.split('-')[:2])])
-    to_date = MyDate(* [int(x) for x in reversed(to_date.split('-')[:2])])
+    setting_from_date = MyDate(* [int(x) for x in reversed(setting_from_date.split('-')[:2])])
+    setting_to_date = MyDate(* [int(x) for x in reversed(setting_to_date.split('-')[:2])])
 
     data = [['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']]
 
-    if(from_date.y != to_date.y):
-        loop_from = MyDate(1,from_date.y)
-        loop_to = MyDate(12, to_date.y)
+    if(setting_from_date.y != setting_to_date.y):
+        loop_from = MyDate(1,setting_from_date.y)
+        loop_to = MyDate(12, setting_to_date.y)
     else:
-        loop_from = from_date;
-        loop_to = to_date;
+        loop_from = setting_from_date;
+        loop_to = setting_to_date;
     while(loop_from.compare(loop_to)!=1):
-        if(loop_from.compare(from_date)==-1 or loop_from.compare(to_date)==1):
+        if(loop_from.compare(setting_from_date)==-1 or loop_from.compare(setting_to_date)==1):
             data[loop_from.m - 1][-1] += ';'
             loop_from.addMonth(1)
             continue
@@ -477,9 +473,8 @@ def month_bar_data(request,sqlFunc):
 #used to render data for month bar settings in modules
 #sqlFunc is the func for the SQL query generator
 #ballon_string is the string shown in ballon text on graph hover.
-def month_bar_settings(request,sqlFunc,ballon_string):
-    geog, id = get_geog_id(request)
-    rs = run_query(sqlFunc(request,geog = geog, id = id));
+def month_bar_settings(sqlFunc,ballon_string, **args):
+    rs = run_query(sqlFunc(**args));
     year_list = []
     for i in range(len(rs)):
         if rs [i]['YEAR'] not in year_list:

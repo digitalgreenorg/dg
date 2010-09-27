@@ -19,15 +19,15 @@ def overview_module(request):
     geog_child = geog_list[geog_list.index(geog)+1]
 
     #Constructing table data
-    vid_prod = run_query_dict(shared_sql.overview(type='production',geog=geog,id=id,request=request),'id');
-    vid_screening = run_query_dict(shared_sql.overview(type='screening',geog=geog,id=id,request=request),'id');
-    adoption = run_query_dict(shared_sql.overview(type='adoption',geog=geog,id=id,request=request),'id');
-    tot_prac = run_query_dict(shared_sql.overview(type='practice',geog=geog,id=id,request=request),'id');
-    tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,request=request),'id');
-    tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,request=request),'id');
+    vid_prod = run_query_dict(shared_sql.overview(type='production',geog=geog,id=id, from_date = from_date, to_date=to_date, partners=partners),'id');
+    vid_screening = run_query_dict(shared_sql.overview(type='screening',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    adoption = run_query_dict(shared_sql.overview(type='adoption',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    tot_prac = run_query_dict(shared_sql.overview(type='practice',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
+    tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
 
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
-    table_data = run_query(shared_sql.child_geog_list(request, geog, id))
+    table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date, partners=partners))
     for i in table_data:
         if i['id'] in vid_prod:
             i['tot_pro'] = vid_prod[i['id']][0]
@@ -94,7 +94,7 @@ def overview_module(request):
     else:
         country_data.update(adopt_rate = 0)
     #Distinct videos screened
-    country_data.update(vid_screened = run_query(video_analytics_sql.video_tot_scr(request,geog=geog,id=id))[0]['count'])
+    country_data.update(vid_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count'])
     
 
 #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any

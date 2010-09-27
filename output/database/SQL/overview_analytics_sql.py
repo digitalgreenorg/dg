@@ -11,6 +11,7 @@ def overview_tot_pg(geog, id, from_date, to_date, partners):
     return join_sql_ds(sql_ds)
           
 #Type is an list which can have 'production', 'screening','person', 'adoption', 'practice', 'village'
+#Type can be None to include all
 def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
     geog_list = [None,"COUNTRY","STATE","DISTRICT","BLOCK","VILLAGE"]
     geog_par = geog_list[geog_list.index(geog)-1]
@@ -91,9 +92,7 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
 
     return 'SELECT * FROM ( '+combined_sql+')'
 
-def overview_min_date(request, geog, id):
-    from_date, to_date, partner_id = get_dates_partners(request)
-
+def overview_min_date(geog, id, from_date, to_date, partner_id):
     sql_ds_vid = get_init_sql_ds();
     sql_ds_sc = get_init_sql_ds();
     sql_ds_ado = get_init_sql_ds();
@@ -118,22 +117,3 @@ def overview_min_date(request, geog, id):
     join_sql_ds(sql_ds_sc)+"\nUNION\n" + \
     join_sql_ds(sql_ds_ado)+") AS T1"
 
-#Returns parent level region id
-def overview_parent_id(arg_dict):
-    sql = []
-    if 'geog' in arg_dict:
-        if arg_dict['geog'] == 'DISTRICT':
-            sql.append(r"""SELECT state_id as id FROM DISTRICT d WHERE d.id =  """+str(arg_dict['id']) )
-
-        elif arg_dict['geog'] == 'BLOCK':
-            sql.append(r""" SELECT district_id as id FROM BLOCK b WHERE b.id =  """+str(arg_dict['id']) )
-
-        elif arg_dict['geog'] == 'VILLAGE':
-            sql.append(r""" SELECT vil.block_id as id, b.BLOCK_NAME AS name FROM VILLAGE vil, BLOCK b WHERE vil.block_id = b.id and vil.id =  """+str(arg_dict['id']) )
-        elif arg_dict['geog'] == 'COUNTRY':
-            sql.append(r'SELECT 1 AS id ')
-        elif arg_dict['geog'] == 'STATE':
-            sql.append(r'SELECT 1 AS id ')
-
-
-    return ''.join(sql)

@@ -6,21 +6,22 @@ from dg.output.database.SQL  import video_analytics_sql, shared_sql
 from dg.output.database import utility
 from dg.output import views
 from dg.output.views.common import get_geog_id
-from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, construct_query
+from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 
 
 #Main view for the video module. Render's the main HTML page.
 #Views below this, serve the AJAX calls from the graphs.
 def video_module(request):
     geog, id = get_geog_id(request)
-
+    from_date, to_date, partners = get_dates_partners(request)
+    
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
 
-    tot_vid = run_query(video_analytics_sql.video_tot_video(request,geog=geog,id=id))[0]['count']
-    tot_scr = run_query(video_analytics_sql.video_tot_scr(request,geog=geog,id=id))[0]['count']
-    tot_avg = run_query(video_analytics_sql.video_avg_time(request,geog=geog,id=id))[0]['avg']
+    tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    tot_scr = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
     search_box_params = views.common.get_search_box(request, video_analytics_sql.video_min_date)
 
     get_req_url = request.META['QUERY_STRING']
@@ -43,24 +44,34 @@ def video_module(request):
 
 # Pie chart for male-female ratio in video module
 def video_pie_graph_mf_ratio(request):
-    return views.common.pie_chart_data(request,video_analytics_sql.video_malefemale_ratio, \
-                                      {"M":"Male","F":"Female"}, 'Ratio of videos featuring {{value}} actors')
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.pie_chart_data(video_analytics_sql.video_malefemale_ratio, \
+                                      {"M":"Male","F":"Female"}, 'Ratio of videos featuring {{value}} actors', \
+                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 #Data generator for Actor Wise Pie chart
 def video_actor_wise_pie(request):
-    return views.common.pie_chart_data(request,video_analytics_sql.video_actor_wise_pie, \
-                                      {"I":"Individual","F":"Family","G":"Group"}, 'Ratio of videos featuring {{value}} actor')
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.pie_chart_data(video_analytics_sql.video_actor_wise_pie, \
+                                      {"I":"Individual","F":"Family","G":"Group"}, 'Ratio of videos featuring {{value}} actor',\
+                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
 #Data generator for Video-Type Wise Pie chart
 def video_type_wise_pie(request):
-    return views.common.pie_chart_data(request,video_analytics_sql.video_type_wise_pie, \
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.pie_chart_data(video_analytics_sql.video_type_wise_pie, \
                                       {1:"Demonstration",2:"Success Story",3:"Activity Introduction",4:"Discussion",5:"General Awareness"}, \
-                                      'Ratio of videos featuring {{value}} type')
+                                      'Ratio of videos featuring {{value}} type',\
+                                      geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
@@ -72,8 +83,8 @@ def video_geog_pie_data(request):
     url = ";;;/analytics/video_module?"
 
 
-    vid_prod = run_query(shared_sql.overview(request,geog,id,'production'))
-    geog_name = run_query_dict(shared_sql.child_geog_list(request, geog, id),'id')
+    vid_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'production'))
+    geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
 
     return_val = []
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
@@ -94,11 +105,17 @@ def video_geog_pie_data(request):
 
 
 def video_language_wise_scatter_data(request):
-    return views.common.scatter_chart_data(request,video_analytics_sql.video_language_wise_scatter)
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.scatter_chart_data(video_analytics_sql.video_language_wise_scatter, \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
 def video_practice_wise_scatter(request):
-    return views.common.scatter_chart_data(request,video_analytics_sql.video_practice_wise_scatter)
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
     ###############
@@ -107,11 +124,17 @@ def video_practice_wise_scatter(request):
 
 #Data generator for Month-wise Bar graph
 def video_monthwise_bar_data(request):
-    return views.common.month_bar_data(request,video_analytics_sql.video_month_bar);
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.month_bar_data(video_analytics_sql.video_month_bar, setting_from_date = from_date, setting_to_date = to_date, \
+                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
 
 #Settings generator for Month-wise Bar graph
 def video_monthwise_bar_settings(request):
-    return views.common.month_bar_settings(request,video_analytics_sql.video_month_bar, "Video Production")
+    geog, id = get_geog_id(request)
+    from_date, to_date, partners = get_dates_partners(request)
+    return views.common.month_bar_settings(video_analytics_sql.video_month_bar, "Video Production", \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
 ###########################
@@ -120,7 +143,16 @@ def video_monthwise_bar_settings(request):
 
 def video(request):
     id = int(request.GET['id'])
-    vid = Video.objects.all().filter(pk=id)[0]
+    vid = Video.objects.get(pk=id)
+    scr = Screening.objects.all().filter(videoes_screened = vid)
+    pma = PersonMeetingAttendance.objects.all().filter(screening__in = scr)
+    
+    tot_vid_scr = len(scr)
+    dist_shown = list(set([s.village.block.district.district_name for s in scr]))
+    tot_vid_viewer = pma.aggregate(Count('person',distinct=True))['person__count']
+    exp_ques_pract_count = pma.exclude(expressed_question_practice = None).values('expressed_question_practice__practice_name').annotate(count = Count('person'))
+    tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
+    
     
     #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
     #in title and question
@@ -131,11 +163,11 @@ def video(request):
          title_arr.extend(elem.split('_'))
     #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
     
-    ques = run_query_raw(question_list_for_video(id))
+    ques = pma.exclude(expressed_question='').values_list('expressed_question',flat=True)
     if(ques):
         ques_arr = []
         for x in ques:
-            ques_arr.append([x[0].split(' '), x[0]])
+            ques_arr.append(x.split(' '), x)
             
         scores = []
         for ques in ques_arr:
@@ -148,9 +180,18 @@ def video(request):
         scores.sort(key = (lambda x: x[0]), reverse = True)
         ques = scores
     #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, questions]
-    
-    raise Http404
-    
+    return render_to_response('video_page.html',dict(vid = vid, \
+                                                     tot_vid_scr = tot_vid_scr, \
+                                                     tot_vid_viewer = tot_vid_viewer, \
+                                                     tot_vid_adopt = tot_vid_adopt, \
+                                                     ques = ques))
+
+
+
+#Data generator for Month-wise Bar graph for Screening of videos
+def video_screening_month_bar_data(request):
+    id = int(request.GET['id'])
+    return views.common.month_bar_data(video_analytics_sql.get_screening_month_bar_for_video, setting_from_date = None, setting_to_date = None, id = id);
     
     
     
