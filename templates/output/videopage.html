@@ -28,7 +28,7 @@
 					<tr>
 						<td id='videodatadiv1td'>
 							<div id='videodatadiv1div'>
-								<span class='numberstyle'> 42 </span> Disseminations
+								<span class='numberstyle'> {{tot_vid_scr}} </span> Dissemination{{tot_vid_scr|pluralize}}
 								<div id='videodatadiv1help'>
 									Total number of screenings of the video
 								</div>
@@ -40,7 +40,7 @@
 						
 						<td id='videodatadiv1td'>
 							<div id='videodatadiv1div'>
-								<span class='numberstyle'> 2000 </span> Viewers	
+								<span class='numberstyle'> {{tot_vid_viewer}} </span> Viewer{{tot_vid_viewer|pluralize}}
 								<div id='videodatadiv1help'>
 									Total number of farmers who watched the video
 								</div>
@@ -52,7 +52,7 @@
 						
 						<td id='videodatadiv1td'>
 							<div id='videodatadiv1div'>
-								<span class='numberstyle'> 423 </span> Adoptions Caused	
+								<span class='numberstyle'> {{tot_vid_adopt}} </span> Adoption{{tot_vid_adopt|pluralize}} Caused	
 								<div id='videodatadiv1help'>
 									Total number of adoptions caused by the video
 								</div>								
@@ -95,33 +95,27 @@
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
 									<tr>
 										<td class='videoinfotd1'> Video Language:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{vid.language.language_name}} </td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> Village:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{vid.village.village_name }} </td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> District:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{vid.village.block.district.district_name}} </td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> State:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{vid.village.block.district.state.state_name}} </td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> Video production Start Date:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{ vid.video_production_start_date|date:"d M Y" }} </td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> Video production End Date:  </td>
-										<td class='videoinfotd2'>											
-										</td>
+										<td class='videoinfotd2'> {{ vid.video_production_end_date|date:"d M Y" }} </td>
 									</tr>
 								</table>							
 							</div>													
@@ -139,15 +133,14 @@
 						</td>	
 						<td id='videodatadiv3td2'>
 							<div id='videodatadiv3div'>	
-								22 farmers are featured in the video : &nbsp; &nbsp; 12 Males and 10 Females
+								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video : &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
 							</div>
 						</td>										
 					</tr>
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
 							<div id='videodatadiv3divdesc'>								
-									Name of the farmers who are featured in the video 
-																
+									{% for actor in actors.actors %}{{actor.person_name}}<br>{% endfor %}
 							</div>								
 						</td>
 					</tr>									
@@ -161,14 +154,14 @@
 						</td>	
 						<td id='videodatadiv3td2'>
 							<div id='videodatadiv3div'>	
-								14 Questions asked in total
+								{{ques|length}} Question{{ques|length|pluralize}} asked in total
 							</div>
 						</td>										
 					</tr>
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
 							<div id='videodatadiv3divdesc'>								
-									The questions that were asked by the viewers 																
+									{%for que in ques%}{{que.1}}<br>{%endfor%} 																
 							</div>								
 						</td>
 					</tr>									

@@ -1,5 +1,6 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
+from django.db.models import Count
 from dg.dashboard.models import *
 import datetime
 from dg.output.database.SQL  import video_analytics_sql, shared_sql
@@ -153,9 +154,13 @@ def video(request):
     exp_ques_pract_count = pma.exclude(expressed_question_practice = None).values('expressed_question_practice__practice_name').annotate(count = Count('person'))
     tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
     
+    actors = vid.farmers_shown.all()
+    actor_data = dict(actors = actors.values('person_name'), tot_actors = len(actors))
+    for ratio in actors.values('gender').annotate(count=Count('id')):
+        actor_data[ratio['gender']] = ratio['count']
     
     #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
-    #in title and question
+    #in title and questionx
     title = vid.title
     x = title.split(' ')
     title_arr = []
@@ -167,7 +172,7 @@ def video(request):
     if(ques):
         ques_arr = []
         for x in ques:
-            ques_arr.append(x.split(' '), x)
+            ques_arr.append([x.split(' '), x])
             
         scores = []
         for ques in ques_arr:
@@ -176,15 +181,17 @@ def video(request):
                 if tok in ques[0]:
                     count = count+1
             scores.append([count, ques[1]])
-                    
         scores.sort(key = (lambda x: x[0]), reverse = True)
         ques = scores
     #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, questions]
-    return render_to_response('video_page.html',dict(vid = vid, \
+    return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
                                                      tot_vid_viewer = tot_vid_viewer, \
                                                      tot_vid_adopt = tot_vid_adopt, \
+                                                     actors = actor_data, \
                                                      ques = ques))
+    #return render_to_response("videopage.html",dict())
+                                                     
 
 
 
