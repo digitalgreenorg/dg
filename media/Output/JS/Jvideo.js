@@ -1,7 +1,7 @@
 
 // Displaying the data in the Video Page in Tab wise 
 
-var videodesc1 ="<div id='videodatadiv2divdesctop'></div><table class='he'><tr><td>ge</td></tr></table>"
+var videodesc1 ="<div id='videodatadiv2divdesctop'></div><table class='he'><tr><td>ge</td></tr></table>";
 var videodesc2 ="<div id='videodatadiv2divdesctop'></div>2.dvoifvnfeibnefoibndpfibnepfbnepibnepb";
 var videodesc3 ="<div id='videodatadiv2divdesctop'></div>3.oscnvfpvlfbmlkfbmnbnpibneoibnefoib";
 var videodesc4 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1'> Video Language:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Village:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> District:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> State:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Video production Start Date:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Video production End Date:</td><td class='videoinfotd2'></td></tr></table>";

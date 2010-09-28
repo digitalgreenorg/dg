@@ -3,7 +3,7 @@
 
 function defaultload(){ 
 			
-			// navigation search bar
+ // navigation search bar
 			$("input#navsearchinput").focus(function() {  
          		if (this.value == this.defaultValue || this.value != this.defaultValue){  
              		this.value = '';  
@@ -13,7 +13,16 @@ function defaultload(){
          	    if ($.trim(this.value == '')){  
                		this.value = (this.defaultValue ? this.defaultValue : '');  
          	    }  
-     		});  	
+     		}); 
+     		
+ // applying border to link in the pagination div of press column
+     		$("#pagingdivul li").mouseover(function() {            	
+            	$(this).css('border-color','#5B6E1D');
+            });
+            
+            $("#pagingdivul li").mouseleave(function() {            	
+            	$(this).css('border-color','#E7F7CF');
+            }); 	
             
             
 // navigation header panel that has the sub menus like About, News, etc

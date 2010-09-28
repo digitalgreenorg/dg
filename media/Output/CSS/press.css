@@ -20,12 +20,18 @@
 
 .mainbodycontentleftimg				{ margin-top:3px; width:620px; height:277px; }
 #presscontent						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
-#table1								{ margin-left:0px; width:620px; margin-top:5px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
+
+#table2div							{ clear:both; margin-left:0px; width:100%; }
+#outertable1						{ clear:both; margin-left:0px; width:100%; }
+#outercontenttd1					{ text-align:left; width:100%; padding-bottom:0px; background-color:none; }
+#table1div							{ clear:both; margin-left:0px; width:100%; }
+#table1								{ clear:both; margin-left:0px; width:620px; margin-top:5px; background-color:none; border-width:0px; border-style:solid; border-color:#59af04; }
 .contenttd1							{ text-align:left; width:620px; padding-bottom:0px; background-color:none; margin-bottom:10px; border-top-width:5px; border-top-style:solid; border-top-color:#e0e0e0; border-bottom-width:0px; border-bottom-style:solid; border-bottom-color:#e0e0e0; }
 .contenttd1div1						{ clear:both; width:100%; margin-bottom:0px; padding:0px; background-color:#f2f2f2; }
 .contenttd1div1 img					{ position:absolute; z-index:0; width:123px; height:147px;}
 .contenttd1div1name					{ width:122px; position:absolute; z-index:1; margin-top:122px; text-align:center; font-family:Calibri; font-weight:bold; color:#5b6e1d;  }
 
+.pstyle								{ color:Gray; font-weight:bold; }
 .contenttd1div2						{ width:100%; padding:0px; background-color:none; }
 .contenttd1div2title				{ float:none; width:100%; margin-top:0px; padding-left:0px; height:40px; }
 
@@ -111,3 +117,10 @@
 .cocotrial							{ margin-left:1px; margin-top:20px; width:266px;}
 .cocotrialdesc						{ }
 .cocotrialuser						{ width:260px; color:Gray; }
+
+
+/* Pagination */
+#pagingdiv							{ clear:both; margin-top:10px; border-top:2px solid Gray; width:620px; background-color:none; }
+#pagingdivul						{ margin-left:-45px; margin-top:2px; }
+#pagingdivli						{ float:left; margin-top:3px; margin-bottom:3px; margin-left:5px; margin-right:5px; display:block; width:20px; padding:1px; background-color:#E7F7CF; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#3F270B; border:1px solid #E7F7CF; cursor:pointer; }
+
