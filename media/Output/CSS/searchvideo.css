@@ -17,7 +17,7 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 .datepickcalender				{ margin-top:5px; float:left; margin-left:0px; margin-bottom:5px; text-align:center; padding-top:2px; width:75%; height:20px; background-color:#f0f0f0; border-right:1px solid Gray;  border-top:1px solid Gray;  border-bottom:1px solid Gray; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; }
 .datepickcalendertext			{ margin-top:5px; margin-left:2%; text-align:center; padding-top:2px; float:left; width:20%; height:20px; background-color:#f0f0f0; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; border-left:1px solid Gray;  border-top:1px solid Gray;  border-bottom:1px solid Gray; }
 .advancedsearchtable			{ width:200px; background-color:#f4f4f4; padding-top:2px; padding-bottom:2px; border-bottom:3px solid #E2E2E2; }
-.advancedsearchtext				{ color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
+.advancedsearchtext				{ padding-left:2px; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; text-align:left; }
 #advancedsearchopenbtn			{ cursor:pointer; }	
 #advancedsearchclosebtn			{ display:none; cursor:pointer; }	
 #videosuitable					{ margin-left:0px; }	
@@ -42,7 +42,7 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 
 #searchresultdivrighttable		{ width:100%; margin-top:8px; }
 #searchresultdivrighttddiv1		{ float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; padding-top:5px; }
-#searchresultdivrighttddiv2		{ float:left; margin-left:5px; width:87%; margin-bottom:10px; }
+#searchresultdivrighttddiv2		{ float:left; margin-left:5px; width:87%; margin-bottom:10px; text-align:left; }
 .searchresultdivrighttddiv21	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:5px; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
 .searchresultdivrighttddiv22	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:5px; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
 

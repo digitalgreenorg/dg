@@ -32,6 +32,10 @@ def corevalue(request):
     
     return render_to_response('base_overviewcorevalue.html')
 
+def workprocedure(request):
+    
+    return render_to_response('workprocedure.html')
+
 def overviewfarmer(request):
     
     return render_to_response('base_overviewfarmer.html')
@@ -104,6 +108,10 @@ def partner(request):
     
     return render_to_response('base_partner.html')
 
+def partnerselection(request):
+   
+    return render_to_response('partnerselection.html')
+
 def partnerexecutive(request):
     
     return render_to_response('base_partnerexecutive.html')
@@ -119,10 +127,6 @@ def partnerinvestor(request):
 def partnersupporter(request):
     
     return render_to_response('base_partnersupporter.html')
-
-def partnerselection(request):
-    
-    return render_to_response('base_partnerselection.html')
 
 def careerid(request):
     

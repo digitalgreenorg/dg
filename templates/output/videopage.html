@@ -52,7 +52,7 @@
 						
 						<td id='videodatadiv1td'>
 							<div id='videodatadiv1div'>
-								<span class='numberstyle'> {{tot_vid_adopt}} </span> Adoption{{tot_vid_adopt|pluralize}} Caused	
+								<span class='numberstyle'> {{tot_vid_adopt}} </span> Adoption{{tot_vid_adopt|pluralize}}	
 								<div id='videodatadiv1help'>
 									Total number of adoptions caused by the video
 								</div>								
@@ -64,9 +64,9 @@
 				
 				<table id='videodatadiv2' cellspacing='0px' cellpadding='0'>
 					<tr>
-						<td id='videodatadiv2td' onclick="javascript:displaydesc(1);">
+						<td id='videodatadiv2td' onclick="javascript:displaydesc(1)">
 							<div id='videodatadiv2div'>								
-									<a class='divlinks' href='#'> Video Details  <img class='imgright' src='/media/Output/Images/videodetail1.png' alt='Video Details'>	</a> 								
+									Video Details  <img class='imgright' src='/media/Output/Images/videodetail1.png' alt='Video Details'>	</a> 								
 							</div>								
 						</td>
 						
@@ -75,7 +75,7 @@
 						
 						<td id='videodatadiv2td' onclick="javascript:displaydesc(2)">
 							<div id='videodatadiv2div'>
-								<a class='divlinks' href='#'> Pratices Shown  <img class='imgright' src='/media/Output/Images/practice1.png' alt='Video Details'> </a>								
+								Pratices Shown  <img class='imgright' src='/media/Output/Images/practice1.png' alt='Video Details'> </a>								
 							</div>														
 						</td>
 						
@@ -84,45 +84,68 @@
 						
 						<td id='videodatadiv2td' onclick="javascript:displaydesc(3)">
 							<div id='videodatadiv2div'>
-								<a class='divlinks' href='#'> Video Summary <img class='imgright' src='/media/Output/Images/summary1.png' alt='Video Details'> </a>							
+								Video Summary <img class='imgright' src='/media/Output/Images/summary1.png' alt='Video Details'> </a>							
 							</div>															
 						</td>						
 					</tr>
 					<tr>
 						<td colspan='5' id='videodatadiv2td1'>
 							<div id='videodatadiv2divdesc'>
+								<script type="text/javascript">	
+									
+									window.onload = function(){
+										var languagename = "{{vid.language.language_name}}";
+										var villagename = "{{vid.village.village_name}}";
+										var distname = "{{vid.village.block.district.district_name}}";
+										var statename = "{{vid.village.block.district.state.state_name}}";
+										var prodtime = "22 days";
+										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";										
+										displaynumstat(languagename,villagename,distname,statename,prodtime,prodenddate);	
+																																					
+									}								
+								</script>
+								
 								<div id='videodatadiv2divdesctop'></div>	
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
 									<tr>
-										<td class='videoinfotd1'> Video Language:  </td>
-										<td class='videoinfotd2'> {{vid.language.language_name}} </td>
+										<td class='videoinfotd1'> Video Language: {{vid.language.language_name}} </td>
+										<td class='videoinfotd2'> Village: {{vid.village.village_name }} </td>
 									</tr>
 									<tr>
-										<td class='videoinfotd1'> Village:  </td>
-										<td class='videoinfotd2'> {{vid.village.village_name }} </td>
+										<td class='videoinfotd1'> District: {{vid.village.block.district.district_name}} </td>
+										<td class='videoinfotd2'> State: {{vid.village.block.district.state.state_name}} </td>
 									</tr>
 									<tr>
-										<td class='videoinfotd1'> District:  </td>
-										<td class='videoinfotd2'> {{vid.village.block.district.district_name}} </td>
-									</tr>
-									<tr>
-										<td class='videoinfotd1'> State:  </td>
-										<td class='videoinfotd2'> {{vid.village.block.district.state.state_name}} </td>
-									</tr>
-									<tr>
-										<td class='videoinfotd1'> Video production Start Date:  </td>
-										<td class='videoinfotd2'> {{ vid.video_production_start_date|date:"d M Y" }} </td>
-									</tr>
-									<tr>
-										<td class='videoinfotd1'> Video production End Date:  </td>
-										<td class='videoinfotd2'> {{ vid.video_production_end_date|date:"d M Y" }} </td>
-									</tr>
-								</table>							
+										<td class='videoinfotd1'> Production Duration: 22 days </td>
+										<td class='videoinfotd2'> Produced On: {{ vid.video_production_end_date|date:"d M Y" }} </td>
+									</tr>									
+								</table>															
 							</div>													
 						</td>
 					</tr>					
-				</table>
+				</table>				
 				
+				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
+					<tr>
+						<td id='videodatadiv3td1'>
+							<div id='videodatadiv2div'>								
+									Statistics  <img class='imgright' src='/media/Output/Images/bargraphicon1.png' alt='Video Details'>							
+							</div>								
+						</td>	
+						<td id='videodatadiv3td2'>
+							<div id='videodatadiv3div'>	
+								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video: &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
+							</div>
+						</td>										
+					</tr>
+					<tr>
+						<td id='videodatadiv3td3' colspan='2'>
+							<div id='videodatadiv3divdesc'>								
+									{% for actor in actors.actors %}{{actor.person_name}}<br>{% endfor %}
+							</div>								
+						</td>
+					</tr>									
+				</table>
 								
 				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
 					<tr>
@@ -133,7 +156,7 @@
 						</td>	
 						<td id='videodatadiv3td2'>
 							<div id='videodatadiv3div'>	
-								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video : &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
+								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video: &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
 							</div>
 						</td>										
 					</tr>
@@ -161,7 +184,7 @@
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
 							<div id='videodatadiv3divdesc'>								
-									{%for que in ques%}{{que.1}}<br>{%endfor%} 																
+									{% for que in ques %}{{ forloop.counter }}.&nbsp;{{que.1}}<br/><br/>{%endfor%} 																
 							</div>								
 						</td>
 					</tr>									
@@ -182,7 +205,7 @@
 				</div>
 				<div id='contentdivrightdesc'>
 					<script type="text/javascript">
-						var count = 10;
+						var count = 8;
 						var i;
 						var prac="Plantation";
 						document.write("<table id='contentdivrighttable' cellspacing='0' cellpadding='0'>");
@@ -190,23 +213,22 @@
 							{
 								document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
 									document.write("<div id='contentdivrighttddiv1'>");
-										document.write("<img src='/media/Output/Images/gauravva4.png' alt='' width='90px' height='70px'>");
+										document.write("<a href='#'>" + "<img src='/media/Output/Images/gauravva4.png' alt='' width='90px' height='70px'>" + "</a>");
 									document.write("</div>");
 									document.write("<div id='contentdivrighttddiv2'>");
 										document.write("<div id='contentdivrighttddiv21'>");
-											document.write("Vegetable Nursery Padding ");
+											document.write("<a class='videotitlelinks' href='#'>" + "Vegetable Nursery Padding" + "</a>");
 										document.write("</div>");											
 										document.write("<div id='contentdivrighttddiv22'>");
-											document.write("Practices:" + prac);
-										document.write("</div>");										
-										document.write("<a href='/featuredfarmer' class='viewmore'>");
-											document.write("View Video <img float:right alt='Updates' src='/media/Output/Images/learnmoreicon2.png'>");
-										document.write("</a>");										
+											document.write(prac);
+										document.write("</div>");
+										document.write("<div id='contentdivrighttddiv22'>");
+											document.write("2200 viewers");
+										document.write("</div>");				
 									document.write("</div>");						
 								document.write("</td></tr>");
 							}
 						document.write("</table>");
-						//alert("HI");						
 						
 					</script>
 				</div>

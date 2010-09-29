@@ -1,10 +1,31 @@
 
-// Displaying the data in the Video Page in Tab wise 
+// The values of the video details
+var languagename,villagename,distname,statename,prodtime,prodenddate;
+
+// Displaying the data in the Video Page in Tab wise
 
 var videodesc1 ="<div id='videodatadiv2divdesctop'></div><table class='he'><tr><td>ge</td></tr></table>";
 var videodesc2 ="<div id='videodatadiv2divdesctop'></div>2.dvoifvnfeibnefoibndpfibnepfbnepibnepb";
 var videodesc3 ="<div id='videodatadiv2divdesctop'></div>3.oscnvfpvlfbmlkfbmnbnpibneoibnefoib";
-var videodesc4 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1'> Video Language:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Village:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> District:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> State:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Video production Start Date:</td><td class='videoinfotd2'></td></tr><tr><td class='videoinfotd1'> Video production End Date:</td><td class='videoinfotd2'></td></tr></table>";
+var videodesc41 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1'> Video Language: ";
+var videodesc42 ="</td><td class='videoinfotd2'>Village: ";
+var videodesc43 ="</td></tr><tr><td class='videoinfotd1'> District: ";
+var videodesc44 ="</td><td class='videoinfotd2'> State: ";
+var videodesc45 ="</td></tr><tr><td class='videoinfotd1'> Production Duration: ";
+var videodesc46 ="</td><td class='videoinfotd2'> Produced On: "
+var videodesc47 ="</td></tr></table>";
+
+
+function displaynumstat(numstat1,numstat2,numstat3,numstat4,numstat5,numstat6)
+{
+	languagename = numstat1;
+	villagename = numstat2;
+	distname = numstat3;	
+	statename = numstat4;
+	prodtime = numstat5;
+	prodenddate = numstat6;
+}
+
 
 function displaydesc(temp){
 			
@@ -12,8 +33,8 @@ function displaydesc(temp){
 			// Adding the background colour to the selected tab            
 			
 			if(temp==1){			
-				$("div#videodatadiv2divdesc").html(videodesc4);
-				$("div#videodatadiv2divdesctop").css('margin-left','5px');					
+				$("div#videodatadiv2divdesc").html(videodesc41 + languagename + videodesc42 + villagename + videodesc43 + distname + videodesc44 + statename + videodesc45 + prodtime + videodesc46 + prodenddate + videodesc47);
+				$("div#videodatadiv2divdesctop").css('margin-left','0px');					
 				//$("table#videoinfotable").slideDown();				
 			} //ifends
 			
