@@ -147,6 +147,7 @@ def video(request):
     vid = Video.objects.get(pk=id)
     scr = Screening.objects.all().filter(videoes_screened = vid)
     pma = PersonMeetingAttendance.objects.all().filter(screening__in = scr)
+    prac_shown = vid.related_agricultural_practices.all()
     
     tot_vid_scr = len(scr)
     dist_shown = list(set([s.village.block.district.district_name for s in scr]))
@@ -189,16 +190,34 @@ def video(request):
                                                      tot_vid_viewer = tot_vid_viewer, \
                                                      tot_vid_adopt = tot_vid_adopt, \
                                                      actors = actor_data, \
-                                                     ques = ques))
-    #return render_to_response("videopage.html",dict())
+                                                     ques = ques, \
+                                                     prac_shown = prac_shown))
+
+
+def video_search(request):
+    video_suitable_for = request.GET.get('videosuitable')
+    video_uploaded = request.GET.get('videouploaded')
+    season = request.GET.get('seaon')
+    lang = request.GET.get('lang')
+    prac_arr = request.GET.getlist('prac')
+    
+    vid = Video.objects.all();
+    if(video_suitable_for):
+        vid = vid.fitler(video_suitable_for = int(video_suitable_for))
+    #if(video_uploaded):
+    #
+    if(season):
+        vid = vid.filter(related_agricultural_practices__seasonality = season);
+    if(lang):
+        vid = vid.filter(language__id = int(lang))
+    if(prac_arr):
+        vid = vid.fitler(related_agricultural_practices__id__in = [int(i) for i in prac_arr])
+        
+        
+    
+    return render_to_response("searchvideo_result.html",dict())
                                                      
-
-
-
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     id = int(request.GET['id'])
     return views.common.month_bar_data(video_analytics_sql.get_screening_month_bar_for_video, setting_from_date = None, setting_to_date = None, id = id);
-    
-    
-    
