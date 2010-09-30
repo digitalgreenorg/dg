@@ -47,3 +47,9 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 .searchresultdivrighttddiv22	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
 
 
+
+/* Pagination */
+#pagingdiv							{ clear:both; margin-top:10px; margin-left:2px; border-top:0px solid Gray; width:746px; background-color:none; }
+#pagingdivul						{ margin-left:-45px; margin-top:2px; }
+#pagingdivli						{ float:left; margin-top:3px; margin-bottom:3px; margin-left:5px; margin-right:5px; display:block; width:20px; padding:1px; background-color:#edf0f4; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#3F270B; border:1px solid Gray; cursor:pointer; }
+

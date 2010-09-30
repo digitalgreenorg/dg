@@ -129,6 +129,18 @@ function defaultload(){
             	$(this).hide();
             	$("td#advancedsearchopenbtn").show();
             }); 
+           
+           
+           // Paging in the SearchVideo Result page 
+            
+            $("li#pagingdivli").mouseover(function() { 
+            	$(this).css('border-color','#3F3E3E');
+            });
+            
+            $("li#pagingdivli").mouseleave(function() {
+            	$(this).css('border-color','Gray');
+            });
+			
 
 
 } // function defaultload
