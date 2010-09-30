@@ -1,12 +1,10 @@
 
 // The values of the video details
-var languagename,villagename,distname,statename,prodtime,prodenddate;
+var languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,videosummary;
 
 // Displaying the data in the Video Page in Tab wise
 
-var videodesc1 ="<div id='videodatadiv2divdesctop'></div><table class='he'><tr><td>ge</td></tr></table>";
-var videodesc2 ="<div id='videodatadiv2divdesctop'></div>2.dvoifvnfeibnefoibndpfibnepfbnepibnepb";
-var videodesc3 ="<div id='videodatadiv2divdesctop'></div>3.oscnvfpvlfbmlkfbmnbnpibneoibnefoib";
+var videodesc2 ="<div id='videodatadiv2divdesctop'></div>";
 var videodesc41 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1'> Video Language: ";
 var videodesc42 ="</td><td class='videoinfotd2'>Village: ";
 var videodesc43 ="</td></tr><tr><td class='videoinfotd1'> District: ";
@@ -16,7 +14,7 @@ var videodesc46 ="</td><td class='videoinfotd2'> Produced On: "
 var videodesc47 ="</td></tr></table>";
 
 
-function displaynumstat(numstat1,numstat2,numstat3,numstat4,numstat5,numstat6)
+function displaynumstat(numstat1,numstat2,numstat3,numstat4,numstat5,numstat6, numstat7,numstat8)
 {
 	languagename = numstat1;
 	villagename = numstat2;
@@ -24,11 +22,12 @@ function displaynumstat(numstat1,numstat2,numstat3,numstat4,numstat5,numstat6)
 	statename = numstat4;
 	prodtime = numstat5;
 	prodenddate = numstat6;
+	practiceshown = numstat7;
+	videosummary = numstat8;
+	
 }
 
-
-function displaydesc(temp){
-			
+function displaydesc(temp){			
 			
 			// Adding the background colour to the selected tab            
 			
@@ -39,15 +38,15 @@ function displaydesc(temp){
 			} //ifends
 			
 			if(temp==2){			
-				$("div#videodatadiv2divdesc").html(videodesc2);				
+				$("div#videodatadiv2divdesc").html(videodesc2 + practiceshown);				
 				$("div#videodatadiv2divdesctop").css('margin-left','250px');				
 			} //ifends
 			
 			if(temp==3){			
-				$("div#videodatadiv2divdesc").html(videodesc3);
+				$("div#videodatadiv2divdesc").html(videodesc2 + videosummary);
 				$("div#videodatadiv2divdesctop").css('margin-left','490px');				
 			} //ifends
-			
+						
 }
 
 function defaultload(){ 

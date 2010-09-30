@@ -32,7 +32,7 @@ def corevalue(request):
     
     return render_to_response('base_overviewcorevalue.html')
 
-def workprocedure(request):
+def sop(request):
     
     return render_to_response('workprocedure.html')
 
@@ -108,7 +108,7 @@ def partner(request):
     
     return render_to_response('base_partner.html')
 
-def partnerselection(request):
+def rfa(request):
    
     return render_to_response('partnerselection.html')
 

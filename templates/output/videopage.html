@@ -7,7 +7,16 @@
 			<div id='contentdivtitle'>
 				Vegetable Nursery Bed Preparation
 			</div>
+			<div id='partnertitle'>
+				Access Development Services
+			</div>
 			<div id='contentdivleft'>
+				<div id='novideoembed'>
+					<div id='novideoembeddesc'>						 
+						<img src='/media/Output/Images/novideoicon1.png' align="left"> 
+						<div>Sorry! Video has not been uploaded yet.</div>						
+					</div>
+				</div>				
 				<div id='videoembed'>					
 					<script type="text/javascript">
 						document.write("<table id='videoembedtable' cellspacing='0px' cellpadding='0'>");
@@ -93,14 +102,16 @@
 							<div id='videodatadiv2divdesc'>
 								<script type="text/javascript">	
 									
-									window.onload = function(){
+									window.onload = function(){										
 										var languagename = "{{vid.language.language_name}}";
 										var villagename = "{{vid.village.village_name}}";
 										var distname = "{{vid.village.block.district.district_name}}";
 										var statename = "{{vid.village.block.district.state.state_name}}";
 										var prodtime = "22 days";
-										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";										
-										displaynumstat(languagename,villagename,distname,statename,prodtime,prodenddate);	
+										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";	
+										var practiceshown = "Seed Plantation";
+										var summary = "The video content summary goes here"; 									
+										displaynumstat(languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,summary);	
 																																					
 									}								
 								</script>
@@ -129,12 +140,12 @@
 					<tr>
 						<td id='videodatadiv3td1'>
 							<div id='videodatadiv2div'>								
-									Statistics  <img class='imgright' src='/media/Output/Images/bargraphicon1.png' alt='Video Details'>							
+									Production Stat  <img class='imgright' src='/media/Output/Images/bargraphicon1.png' alt='Video Details'>							
 							</div>								
 						</td>	
 						<td id='videodatadiv3td2'>
 							<div id='videodatadiv3div'>	
-								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video: &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
+								Bar Graph showing month wise production of the Video 
 							</div>
 						</td>										
 					</tr>
@@ -213,7 +224,7 @@
 							{
 								document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
 									document.write("<div id='contentdivrighttddiv1'>");
-										document.write("<a href='#'>" + "<img src='/media/Output/Images/gauravva4.png' alt='' width='90px' height='70px'>" + "</a>");
+										document.write("<a href='#'>" + "<img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'>" + "</a>");
 									document.write("</div>");
 									document.write("<div id='contentdivrighttddiv2'>");
 										document.write("<div id='contentdivrighttddiv21'>");
