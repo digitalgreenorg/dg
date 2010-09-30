@@ -193,9 +193,80 @@ def rule5():
     
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
+    
+#rule Id:6; Name = Video production end date is before video production start date.
+def rule6():
+    rule = Rule.objects.get(pk=6)
+    sql = """SELECT VID.id as content_object1, B.district_id
+    FROM VIDEO VID
+    JOIN VILLAGE V ON V.id = VID.village_id
+    JOIN BLOCK B ON B.id = V.block_id
+    WHERE VIDEO_PRODUCTION_END_DATE < VIDEO_PRODUCTION_START_DATE
+    """
+
+    new_errors = []   
+    if cursor.execute(sql):
+        rows = cursor.fetchall()
+        for row in rows:
+            dist = District.objects.get(pk=row[1])
+            new_errors.append(Error(content_object1=Video.objects.get(pk=row[0]), \
+                                 district = District.objects.get(pk=row[1]),
+                                 rule = rule))
+    
+    old_errors = list(Error.objects.filter(rule = rule))
+    syncErrors(new_errors, old_errors)
+
+#rule Id:7; Name = Video production end date is after today    
+def rule7():
+    rule = Rule.objects.get(pk=7)
+    sql = """SELECT VID.id as content_object1, B.district_id
+    FROM VIDEO VID
+    JOIN VILLAGE V ON V.id = VID.village_id
+    JOIN BLOCK B ON B.id = V.block_id
+    WHERE VIDEO_PRODUCTION_END_DATE > CURDATE()
+    """
+
+    new_errors = []   
+    if cursor.execute(sql):
+        rows = cursor.fetchall()
+        for row in rows:
+            dist = District.objects.get(pk=row[1])
+            new_errors.append(Error(content_object1=Video.objects.get(pk=row[0]), \
+                                 district = District.objects.get(pk=row[1]),
+                                 rule = rule))
+    
+    old_errors = list(Error.objects.filter(rule = rule))
+    syncErrors(new_errors, old_errors)
+
+#rule Id:8; Name = Video productoin end date is after the date of screening of that video
+def rule8():
+    rule = Rule.objects.get(pk=8)
+    sql = """SELECT SC.id as content_object1, VID.id as content_object2, B.district_id
+    FROM SCREENING_videoes_screened SVS
+    JOIN SCREENING SC on SC.id = SVS.screening_id
+    JOIN VIDEO VID on VID.id = SVS.video_id
+    JOIN VILLAGE V ON V.id = SC.village_id
+    JOIN BLOCK B ON B.id = V.block_id
+    WHERE VIDEO_PRODUCTION_END_DATE > DATE
+    """
+
+    new_errors = []
+    if cursor.execute(sql):
+        rows = cursor.fetchall()
+        for row in rows:
+            new_errors.append(Error(content_object1=Screening.objects.get(pk=row[0]), \
+                                 content_object2 = Video.objects.get(pk=row[1]),
+                                 district = District.objects.get(pk=row[2]),
+                                 rule = rule))
+    old_errors = list(Error.objects.filter(rule = rule))
+    syncErrors(new_errors, old_errors)
+    
 
 rule1()
 rule2()
 rule3()
 rule4()
 rule5()
+rule6()
+rule7()
+rule8()
