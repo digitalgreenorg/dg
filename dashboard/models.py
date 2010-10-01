@@ -403,6 +403,7 @@ class Video(models.Model):
     farmers_shown = models.ManyToManyField(Person)
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
+    youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
     class Meta:
         db_table = u'VIDEO'
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
