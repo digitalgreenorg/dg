@@ -10,9 +10,12 @@
 		<script type="text/javascript">
 			var count = 10;
 			var i;
-			document.write("<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>");
+		
+			document.write("<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>");			
+			if(count>1){		
 			for(i=0;i<count;i++) 
-				{
+				{			
+					
 					document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
 						document.write("<div id='searchresultdivrighttddiv1'>");
 							document.write("<a href='#'>" + "<img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'>" + "</a>");
@@ -37,6 +40,20 @@
 						document.write("</div>");						
 					document.write("</td></tr>");
 				}
+			}//end of if statement
+			
+			else{
+				document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
+					document.write("<div id='nonvideoembed'>");
+						document.write("<div id='nonvideoembeddesc'>");						 
+							document.write("<img src='/media/Output/Images/novideoicon1.png' align='left'>"); 
+							document.write("<div>Sorry! Video has not been uploaded yet.");
+							document.write("</div>");					
+						document.write("</div>");
+					document.write("</div>");
+				document.write("</td></tr>");
+			} // end else statement	
+			
 			document.write("</table>");
 			//alert("HI");						
 		</script>
