@@ -4,17 +4,15 @@
 }
 
 .messageSpinnerClass {
-	background-color: #F4F379;
 	float: left;
 	height: 20px;
-	margin-left: 45%;
+	margin-left: 1px;
 	padding-left: 4px;
 	padding-top: 2px;
 	width: 20px;
 }
 
 .messageSpinnerDivClass {
-	background-color: #F4F379;
 	float: left;
 	font-family: Calibri;
 	font-size: 14px;
@@ -105,7 +103,7 @@
 	font-weight: bold; 
 	font-family: "Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif; 
 	text-align: center; 
-	position: fixed; 
+	position: fixed;
 	margin-left: -75px; 
 	margin-top: -75px; 
 	left: 50%; 
@@ -143,6 +141,13 @@
 #pagination-footer {
 	clear:both;
 	margin: 15px;
+}
+#loading-space {	
+	background-color: #F4F379;
+	position:fixed;
+	z-index:999;
+	top:45%;
+	left:45%;
 }
 
 /* Dashboard Error Page */
