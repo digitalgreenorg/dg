@@ -1,12 +1,16 @@
 {% extends "searchvideo.html" %}
 
-{% block searchbodycontentright %}
-    <form>
-	   <div id='searchdiv'>	
-		  <input id='searchinput' name='query' type='text' value="{{search_box_params.query}}">
-		  <input id='searchbtn' value='Search' type='submit' src='/media/Output/Images/searchbtn4.png'>
-	   </div>
+
+{% block searchbodycontentright%}
+	<form>
+	<div id='searchdiv'>	
+		<input id='searchinput' name='query' value='{{search_box_params.query}}' type='text'>
+		<input id='searchbtn' value='Search' type='Submit'>
+	</div>
 	</form>
+	<div id='searchcount'>
+		{{paging.vid_count}} Video{{paging.vid_count|pluralize}}
+	</div>
 	<div id='searchresultdiv'>
 	<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>
 	{% for vid in vids %}
@@ -50,8 +54,9 @@
 	</div>
 	<div id='pagingdiv'>  					
   		<ul id='pagingdivul'>
+  		    <li id='pagingdivlitotalcount' class='select_page'>{{paging.vid_count}} Video{{paging.vid_count|pluralize}}</li>
   		    {% for page in paging.tot_pages %}  
-  			<li id='pagingdivli' {% ifequal page paging.page %}class='selected_page'{%endifequal%} onclick = "go({{page}})">
+  			<li id='pagingdivli' class='select_page'{% ifequal page paging.page %}class='selected_page'{%endifequal%} onclick = "go({{page}})">
   				{{page}}
   			</li>
   			{%endfor%}

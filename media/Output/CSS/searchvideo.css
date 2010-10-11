@@ -6,7 +6,7 @@
 #searchcontentright				{ margin-top:20px; float:left; margin-left:5px; width:750px; min-height:600px; margin-bottom:50px; }
 #searchdiv						{ clear:both; margin-left:0px; width:748px; height:40px; background-color:#78bd26; border:1px solid Gray; }
 #searchinput					{ float:left; margin-left:5px; margin-top:5px; background-color:#ffffff; width:670px; height:28px; border:none; font-family:Arial,Helvitica,Sans-Serif; font-size:0.8em; color:#3f3e3e; }
-#searchbtn						{ float:left; margin-left:5px; width:63px; margin-top:5px; }
+#searchbtn						{ float:left; margin-left:0px; width:68px; margin-top:4px; height:32px; border:1px solid Gray; background-color:#f3f3f3; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; font-size:0.9em; }
 .searchleftdiv					{ margin-top:10px; width:100%; margin-bottom:20px; }
 .searchtitle					{ clear:both; width:100%; text-align:left; border-bottom:3px solid #E2E2E2; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
 .searchbody						{ margin-top:5px; width:100%; }	
@@ -38,6 +38,7 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 
 
 /* Searchdiv Right Hand Panel  */
+#searchcount					{ margin-top:5px; width:748px; text-align:right; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 #searchresultdiv				{ margin-top:6px; width:748px; }
 
 #searchresultdivrighttable		{ width:100%; margin-top:8px; }
@@ -49,7 +50,15 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 
 
 /* Pagination */
-#pagingdiv							{ clear:both; margin-top:10px; margin-left:2px; border-top:0px solid Gray; width:746px; background-color:none; }
-#pagingdivul						{ margin-left:-45px; margin-top:2px; }
-#pagingdivli						{ float:left; margin-top:3px; margin-bottom:3px; margin-left:5px; margin-right:5px; display:block; width:20px; padding:1px; background-color:#edf0f4; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#3F270B; border:1px solid Gray; cursor:pointer; }
+#pagingdiv						{ clear:both; margin-top:10px; margin-left:2px; border-top:0px solid Gray; width:746px; background-color:none; }
+#pagingdivul					{ margin-left:-45px; margin-top:2px; }
+#pagingdivlitotalcount			{ float:left; margin-top:3px; margin-bottom:3px; margin-left:5px; margin-right:5px; display:block; padding:1px 3px; font-size:0.7em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#3F270B; border:1px solid Gray; }
+#pagingdivli					{ float:left; margin-top:3px; margin-bottom:3px; margin-left:5px; margin-right:5px; display:block; padding:1px 3px; font-size:0.7em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:#3F270B; border:1px solid Gray; cursor:pointer; }
+.select_page					{ background-color:#edf0f4; } 
+.selected_page					{ background-color:#e2e2e2; }
 
+/* No Video Result Case */
+#nonvideoembed					{ margin:5px 0px; width:100%; background-color:Gray; }
+#nonvideoembeddesc				{ clear:both; margin:5px; height:50px; background-color:#f3f3f3; vertical-align:center; }
+#nonvideoembeddesc img			{ margin-left:165px; margin-right:5px; margin-top:12px; }
+#nonvideoembeddesc div			{ margin-top:15px; float:left; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }

@@ -7,7 +7,6 @@
 
 {% block title %} DigitalGreen - Video Page{% endblock title%}
 
-
 		{% block bodycontent%}
 			<div id='contentdivtitle'>
 				{{vid.title}}
@@ -40,6 +39,10 @@
 					</div>
 				</div>				
 				{% endif %}
+				<div id='videodatadiv0'>
+					<span class='smallfont'>{{vid.village.block.district.partner.partner_name}}  &nbsp; | &nbsp; {{ vid.video_production_end_date|date:"d M Y" }} </span>
+				</div>
+				
 				<table id='videodatadiv1' cellspacing='0px' cellpadding='0'>
 					<tr>
 						<td id='videodatadiv1td'>
@@ -126,7 +129,7 @@
 								<div id='videodatadiv2divdesctop'></div>	
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
 									<tr>
-										<td class='videoinfotd1'> Video Language: {{vid.language.language_name}} </td>
+										<td class='videoinfotd1'> Language: {{vid.language.language_name}} </td>
 										<td class='videoinfotd2'> Village: {{vid.village.village_name }} </td>
 									</tr>
 									<tr>
@@ -134,8 +137,16 @@
 										<td class='videoinfotd2'> State: {{vid.village.block.district.state.state_name}} </td>
 									</tr>
 									<tr>
+
 										<td class='videoinfotd1'> Production Duration: {{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}} </td>
+
 										<td class='videoinfotd2'> Produced On: {{ vid.video_production_end_date|date:"d M Y" }} </td>
+									</tr>
+									<tr>
+										<td class='videoinfotd1'> 
+											Farmer{{actors.tot_actors|pluralize}}: {% for actor in actors.actors %}{{actor.person_name}} {% endfor %} 
+										</td>
+										<td class='videoinfotd2'> </td>
 									</tr>									
 								</table>															
 							</div>													
@@ -147,28 +158,29 @@
 					<tr>
 						<td id='videodatadiv3td1'>
 							<div id='videodatadiv2div'>								
-									Production Stat  <img class='imgright' src='/media/Output/Images/bargraphicon1.png' alt='Video Details'>							
+									Screening Stats  <img class='imgright' src='/media/Output/Images/bargraphicon1.PNG' alt='Video Details'>							
 							</div>								
 						</td>	
 						<td id='videodatadiv3td2'>
 							<div id='videodatadiv3div'>	
-								Bar Graph showing month wise production of the Video 
+								Bar Graph showing month wise screening of the Video 
 							</div>
 						</td>										
 					</tr>
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
-							<div id='bar_graph'>								
+							<div id='bar_graph'>
 							</div>								
 						</td>
 					</tr>									
 				</table>
 								
+				
 				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
 					<tr>
 						<td id='videodatadiv3td1'>
 							<div id='videodatadiv2div'>								
-									Farmer Actors  <img class='imgright' src='/media/Output/Images/farmeractor1.png' alt='Video Details'>							
+								Farmer Actors  <img class='imgright' src='/media/Output/Images/farmeractor1.png' alt='Video Details'>							
 							</div>								
 						</td>	
 						<td id='videodatadiv3td2'>
@@ -179,8 +191,29 @@
 					</tr>
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
-							<div id='videodatadiv3divdesc'>								
-									{% for actor in actors.actors %}{{actor.person_name}}, {{actor.village.block.district.district_name}}, {{actor.village.block.district.state.state_name}}<br>{% endfor %}
+							<div id='videodatadiv3divdesc'>	
+								<table id='questiontable' cellspacing='0px' cellpadding='0'>
+									{% for actor in actors.actors %}									 
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd1'>	
+												{{actor.person_name}} 																		
+											</td>
+											<td id='questiontabletd2' rowspan='2'>												
+											</td>
+										</tr>
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd1'>																								
+												<span class='smallfont'> {{actor.village.block.district.district_name}}, {{actor.village.block.district.state.state_name}} </span>																									
+											</td>
+										</tr>
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd3' colspan='2'>
+												<div id='questiontabletd3div'>
+												</div>
+											</td>
+										</tr>
+									{%endfor%}
+								</table>
 							</div>								
 						</td>
 					</tr>									
@@ -188,8 +221,8 @@
 				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
 					<tr>
 						<td id='videodatadiv3td1'>
-							<div id='videodatadiv2div'>								
-									Questions Asked  <img class='imgright' src='/media/Output/Images/question1.png' alt='Video Details'>							
+							<div id='videodatadiv2div'>	
+								Questions Asked  <img class='imgright' src='/media/Output/Images/question1.png' alt='Video Details'>							
 							</div>								
 						</td>	
 						<td id='videodatadiv3td2'>
@@ -200,8 +233,31 @@
 					</tr>
 					<tr>
 						<td id='videodatadiv3td3' colspan='2'>
-							<div id='videodatadiv3divdesc'>								
-									{% for que in ques %}{{ forloop.counter }}.&nbsp;{{que.1.expressed_question}} -- {{que.1.person.person_name}}, {{que.1.person.village.block.district.district_name}}, {{que.1.person.village.block.district.state.state_name}}<br/><br/>{%endfor%} 																
+							<div id='videodatadiv3divdesc'>
+								<table id='questiontable' cellspacing='0px' cellpadding='0'>
+									{% for que in ques %}									 
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd1'>	
+												{{que.1.person.person_name}} &nbsp;|&nbsp; 12 Nov, 2009																		
+											</td>
+											<td id='questiontabletd2' rowspan='2'>												
+												{{que.1.expressed_question}}																					
+											</td>
+										</tr>
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd1'>																								
+												<span class='smallfont'> {{que.1.person.village.block.district.district_name}}, {{que.1.person.village.block.district.state.state_name}} </span>
+																									
+											</td>
+										</tr>
+										<tr class="{% cycle row1,row2 %}">
+											<td id='questiontabletd3' colspan='2'>
+												<div id='questiontabletd3div'>
+												</div>
+											</td>
+										</tr>
+									{%endfor%}
+								</table>
 							</div>								
 						</td>
 					</tr>									
@@ -260,4 +316,4 @@
     
     </script>
     
-		{% endblock bodycontent%}
+{% endblock bodycontent%}

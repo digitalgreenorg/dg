@@ -66,7 +66,7 @@
   								document.write("<div class='contenttd1div1'>"); 
   								 									 
   										document.write("<div class='contenttd1div1left'>");
-  											document.write("<img src='" + (x[i].getElementsByTagName("IMAGESRC")[0].childNodes[0].nodeValue)+"'>");
+  											document.write("<a href=" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + " target=_blank>" + "<img src='" + (x[i].getElementsByTagName("IMAGESRC")[0].childNodes[0].nodeValue)+"'></a>");
   										document.write("</div>");
   										
   										document.write("<div class='contenttd1div1right'>");
