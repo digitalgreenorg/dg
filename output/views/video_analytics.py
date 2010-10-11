@@ -211,7 +211,7 @@ def video(request):
 def video_search(request):
     video_suitable_for = request.GET.get('videosuitable')
     video_uploaded = request.GET.get('videouploaded')
-    season = request.GET.get('season')
+    season = request.GET.getlist('season')
     lang = request.GET.get('lang')
     prac_arr = request.GET.getlist('prac')
     query = request.GET.get('query')
@@ -222,8 +222,7 @@ def video_search(request):
     from_date = request.GET.get('from_date');
     to_date = request.GET.get('to_date');
     search_box_params = {}
-    
-    
+
     vids = Video.objects.annotate(viewers = Count('screening__farmers_attendance',distinct=True))
     
     if(query):
@@ -248,14 +247,14 @@ def video_search(request):
         search_box_params['video_uploaded'] = video_uploaded
     
     if(season):
-        vids = vids.filter(related_agricultural_practices__seasonality = season);
+        vids = vids.filter(related_agricultural_practices__seasonality__in = season);
         search_box_params['season'] = season
     if(lang):
         vids = vids.filter(language__id = int(lang))
         search_box_params['sel_lang'] = lang
     search_box_params['langs'] = Language.objects.all().values('id','language_name')
     if(prac_arr):
-        vids = vids.filter(related_agricultural_practices__id__in = [int(i) for i in prac_arr])
+        vids = vids.filter(related_agricultural_practices__id__in = map(int,prac_arr))
         search_box_params['prac'] = prac_arr
     search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
     if(geog):
@@ -281,11 +280,11 @@ def video_search(request):
     
     #for paging
     vid_count = vids.count()
-    tot_pages = int(math.ceil(float(vid_count)/15))
+    vid_per_page = 10
+    tot_pages = int(math.ceil(float(vid_count)/vid_per_page))
     if(not page or int(page) > tot_pages): 
         page = 1
     page = int(page)
-    vid_per_page = 10
     vids = vids[(page-1)*vid_per_page:((page-1)*vid_per_page)+vid_per_page]
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
     

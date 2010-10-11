@@ -164,6 +164,12 @@ function dochange(src, val) {
 
 function go(page) {
     var url = new Array();
+    var query = $("#searchinput").val();
+    if(query!="" && page!=null) {
+        window.location.href = '?query='+query+'&page='+page;
+        return ;
+    }   
+    
     if($("#videosuitable").val()!='-1')  url.push("videosuitable="+$("#videosuitable").val());
     if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
     
@@ -201,7 +207,8 @@ function go(page) {
     if($("#datepickcalender2").html()!="") url.push("to_date="+$("#datepickcalender2").html());
     if(page != null) url.push("page="+page);
     
-    if(url.length>0) window.location.href = '?'+url.join('&');
+    if(url.length>0) 
+        window.location.href = '?'+url.join('&');
 }
 
 /* This is run when the page is fully loaded */
