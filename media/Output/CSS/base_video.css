@@ -13,7 +13,7 @@
 #contentdivtitle							{ border-bottom:0px solid #ececec; width:960px; text-align:left; margin-top:20px; font-family: Georgia,'Times New Roman',Serif; color:#5B6E1D; font-weight:bold; font-size:1.4em; }
 #partnertitle								{ border-bottom:0px solid #ececec; width:955px; text-align:left; margin-left:5px; margin-top:6px; font-family: Georgia,'Times New Roman',Serif; color:Gray; font-weight:normal; font-size:0.7em; }
 #contentdivleft								{ float:left; width:700px; border-right:1px solid Gray; min-height:600px; margin-bottom:50px; }
-#novideoembed								{ display:none; margin:10px 5px; width:690px; background-color:Gray; }
+#novideoembed								{ margin:10px 5px; width:690px; background-color:Gray; }
 #novideoembeddesc							{ clear:both; margin:5px; height:50px; background-color:#f3f3f3; vertical-align:center; }
 #novideoembeddesc img						{ margin-left:165px; margin-right:5px; margin-top:12px; }
 #novideoembeddesc div						{ margin-top:15px; float:left; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }

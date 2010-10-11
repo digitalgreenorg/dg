@@ -1,94 +1,60 @@
 {% extends "searchvideo.html" %}
 
-{% block searchbodycontentright%}
-	<div id='searchdiv'>	
-		<input id='searchinput' name='query' value='search' type='text'>
-		<input id='searchbtn' value='Search' type='image' src='/media/Output/Images/searchbtn4.png'>
-	</div>
-	
+{% block searchbodycontentright %}
+    <form>
+	   <div id='searchdiv'>	
+		  <input id='searchinput' name='query' type='text'>
+		  <input id='searchbtn' value='Search' type='submit' src='/media/Output/Images/searchbtn4.png'>
+	   </div>
+	</form>
 	<div id='searchresultdiv'>
-		<script type="text/javascript">
-			var count = 10;
-			var i;
-		
-			document.write("<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>");			
-			if(count>1){		
-			for(i=0;i<count;i++) 
-				{			
-					
-					document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
-						document.write("<div id='searchresultdivrighttddiv1'>");
-							document.write("<a href='#'>" + "<img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'>" + "</a>");
-						document.write("</div>");
-						document.write("<div id='searchresultdivrighttddiv2'>");
-							document.write("<div class='searchresultdivrighttddiv21'>");
-								document.write("<a class='videotitlelinks' href='#'>" + "Vegetable Nursery Padding" + "</a>");
-							document.write("</div>");											
-							document.write("<div class='searchresultdivrighttddiv22'>");								
-								document.write("Vermipost Cultivation");								
-							document.write("</div>");
-							document.write("<div class='searchresultdivrighttddiv22'>");
-								document.write("22days");
-								document.write(" &nbsp;&nbsp; ");		
-								document.write("Produced On:" + "31-01-2010");								
-							document.write("</div>");
-							document.write("<div class='searchresultdivrighttddiv22'>");
-								document.write("2222 viewers");
-								document.write("&nbsp; | &nbsp;");
-								document.write("45 Adoptions");														
-							document.write("</div>");						
-						document.write("</div>");						
-					document.write("</td></tr>");
-				}
-			}//end of if statement
-			
-			else{
-				document.write("<tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>");
-					document.write("<div id='nonvideoembed'>");
-						document.write("<div id='nonvideoembeddesc'>");						 
-							document.write("<img src='/media/Output/Images/novideoicon1.png' align='left'>"); 
-							document.write("<div>Sorry! Video has not been uploaded yet.");
-							document.write("</div>");					
-						document.write("</div>");
-					document.write("</div>");
-				document.write("</td></tr>");
-			} // end else statement	
-			
-			document.write("</table>");
-			//alert("HI");						
-		</script>
+	<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>
+	{% for vid in vids %}
+	       <tr>
+	           <td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>
+	               <div id='searchresultdivrighttddiv1'>
+	                   <a href='../video/?id={{vid.id}}'><img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'></a>
+	               </div>
+	               <div id='searchresultdivrighttddiv2'>
+	                   <div class='searchresultdivrighttddiv21'>
+	                       <a class='videotitlelinks' href='../video/?id={{vid.id}}'>{{vid.title}}</a>
+	                    </div>
+	                    <div class='searchresultdivrighttddiv22'>
+	                       {% for prac in vid.related_agricultural_practices.all %}{{prac.practice_name}}{% if not forloop.last %}, {%endif%}{%empty%}NA{%endfor%}.
+	                    </div>
+	                    <div class='searchresultdivrighttddiv22'>
+	                       {{vid.duration|default_if_none:"Duration:NA"}}
+                           &nbsp;&nbsp;       
+                           Produced On: {{ vid.video_production_end_date|date:"d M Y" }}
+	                    </div>
+	                    <div class='searchresultdivrighttddiv22'>
+	                        {{vid.viewers}} viewer{{vid.viewers|pluralize}}
+                            &nbsp; | &nbsp;
+                            {{vid.adoptions}} Adoption{{vid.adoptions|pluralize}}
+	                    </div>
+	                 </div>
+	              </td>
+	          </tr>
+	    {% empty %}
+	      <tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>
+                   <div id='nonvideoembed'>
+                       <div id='nonvideoembeddesc'>                      
+                           <img src='/media/Output/Images/novideoicon1.png' align='left'> 
+                           <div>Sorry! No video found.
+                           </div>                   
+                       </div>
+                   </div>
+               </td></tr>
+         {% endfor %}
+		</table>
 	</div>
-	
 	<div id='pagingdiv'>  					
-  		<ul id='pagingdivul'>  
-  			<li id='pagingdivli'>
-  				1							
+  		<ul id='pagingdivul'>
+  		    {% for page in paging.tot_pages %}  
+  			<li id='pagingdivli' {% ifequal page paging.page %}class='selected_page'{%endifequal%} onclick = "go({{page}})">
+  				{{page}}
   			</li>
-  			<li id='pagingdivli'>
-  				2							
-  			</li>
-  			<li id='pagingdivli'>
-  				3							
-  			</li> 
-  			<li id='pagingdivli'>
-  				4							
-  			</li>
-  			<li id='pagingdivli'>
-  				5							
-  			</li>
-  			<li id='pagingdivli'>
-  				6							
-  			</li> 
-  			<li id='pagingdivli'>
-  				7							
-  			</li>
-  			<li id='pagingdivli'>
-  				8							
-  			</li>
-  			<li id='pagingdivli'>
-  				9							
-  			</li> 
-  					
+  			{%endfor%}
   		</ul>
   	</div>
   		

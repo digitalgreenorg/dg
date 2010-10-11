@@ -144,8 +144,68 @@ function defaultload(){
 
 
 } // function defaultload
+//Function to enable/disable and fill option in Selects for region select drop downs
+function dochange(src, val) {
+    $.ajax({ type: "GET", 
+            url: "/analytics/drop_down_val?geog="+src+"&id="+val,
+            success: function(html) {                    
+            var flag = false;
+            $(".geog").each(function() {
+                if(flag == true)
+                    $(this).val(-1).attr('disabled','disabled');
+                if (this.name == src)
+                    flag = true;                    
+            });
+            
+           $("#"+src+"Id").html(html).removeAttr('disabled');                   
+      }
+ });
+}
+
+function go(page) {
+    var url = new Array();
+    if($("#videosuitable").val()!='-1')  url.push("videosuitable="+$("#videosuitable").val());
+    if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
+    
+    partners = $("#partners").val();
+    for(i=0;i<partners.length;i++) {
+        if(partners[i] !='-1')
+            url.push("partner="+partners[i]);
+    }
+    
+    var geog = null, id = '1';
+    $(".geog").each(function() {
+        if($(this).val()=='-1')
+            return false;
+        geog = $(this).attr('name');
+        id = $(this).val();
+    });
+    if(geog != null) {
+	    url.push("geog="+geog);
+	    url.push("id="+id);
+    }
+    
+    if($("#lang").val()!='-1')  url.push("lang="+$("#lang").val());
+    season = $("#season").val();
+    for(i=0;i<season.length;i++) {
+        if(season[i] != '-1')
+            url.push("season="+season[i]);
+    }
+    
+    practice = $("#practice").val();
+    for(i=0;i<practice.length;i++) {
+        if(practice[i] != '-1')
+            url.push("prac="+practice[i]);
+    }
+    if($("#datepickcalender1").html()!="") url.push("from_date="+$("#datepickcalender1").html());
+    if($("#datepickcalender2").html()!="") url.push("to_date="+$("#datepickcalender2").html());
+    if(page != null) url.push("page="+page);
+    
+    if(url.length>0) window.location.href = '?'+url.join('&');
+}
 
 /* This is run when the page is fully loaded */
 $(document).ready(function(){	   
 	defaultload();	
+	init_box_params();
 });

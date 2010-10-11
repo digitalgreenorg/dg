@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from django.db.models import Count
 from dg.dashboard.models import *
-import datetime
+import datetime, math
 from dg.output.database.SQL  import video_analytics_sql, shared_sql
 from dg.output.database import utility
 from dg.output import views
@@ -145,9 +145,9 @@ def video_monthwise_bar_settings(request):
 def video(request):
     id = int(request.GET['id'])
     vid = Video.objects.get(pk=id)
+    vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
     scr = Screening.objects.all().filter(videoes_screened = vid)
     pma = PersonMeetingAttendance.objects.all().filter(screening__in = scr)
-    prac_shown = vid.related_agricultural_practices.all()
     
     tot_vid_scr = len(scr)
     dist_shown = list(set([s.village.block.district.district_name for s in scr]))
@@ -156,7 +156,7 @@ def video(request):
     tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
     
     actors = vid.farmers_shown.all()
-    actor_data = dict(actors = actors.values('person_name'), tot_actors = len(actors))
+    actor_data = dict(actors = actors, tot_actors = len(actors))
     for ratio in actors.values('gender').annotate(count=Count('id')):
         actor_data[ratio['gender']] = ratio['count']
     
@@ -169,11 +169,11 @@ def video(request):
          title_arr.extend(elem.split('_'))
     #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
     
-    ques = pma.exclude(expressed_question='').values_list('expressed_question',flat=True)
-    if(ques):
+    ques = pma.exclude(expressed_question='');
+    if(ques.count()>0):
         ques_arr = []
         for x in ques:
-            ques_arr.append([x.split(' '), x])
+            ques_arr.append([x.expressed_question.split(' '), x])
             
         scores = []
         for ques in ques_arr:
@@ -185,39 +185,129 @@ def video(request):
         scores.sort(key = (lambda x: x[0]), reverse = True)
         ques = scores
     #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, questions]
+    
+    
+    rel_vids_all = Video.objects.annotate(viewers = Count('screening__farmers_attendance',distinct=True))
+    rel_vids_all = rel_vids_all.order_by('viewers')
+    rel_vids_prac = rel_vids_all.filter(related_agricultural_practices__in = vid.related_agricultural_practices.all())
+    if(rel_vids_prac.count()>= 9):
+        rel_vids = rel_vids_prac[:9]
+    else:
+        rel_vids = list(rel_vids_prac)
+        rel_vids_lang = rel_vids_all.filter(language = vid.language)
+        rel_vids.extend(list(rel_vids_lang[:9-len(rel_vids)]))
+        if(len(rel_vids)< 9):
+            rel_vids.extend(list((rel_vids_all.filter(village__block__district__state == vid.village__block__district__state))[:9-len(rel_vids)]))
+        
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
                                                      tot_vid_viewer = tot_vid_viewer, \
                                                      tot_vid_adopt = tot_vid_adopt, \
                                                      actors = actor_data, \
                                                      ques = ques, \
-                                                     prac_shown = prac_shown))
+                                                     rel_vids = rel_vids))
 
 
 def video_search(request):
     video_suitable_for = request.GET.get('videosuitable')
     video_uploaded = request.GET.get('videouploaded')
-    season = request.GET.get('seaon')
+    season = request.GET.get('season')
     lang = request.GET.get('lang')
     prac_arr = request.GET.getlist('prac')
+    query = request.GET.get('query')
+    page = request.GET.get('page')
+    geog = request.GET.get('geog')
+    id = request.GET.get('id')
+    partners = request.GET.getlist('partner')
+    from_date = request.GET.get('from_date');
+    to_date = request.GET.get('to_date');
+    search_box_params = {}
     
-    vid = Video.objects.all();
+    
+    vids = Video.objects.annotate(viewers = Count('screening__farmers_attendance',distinct=True))
+    
+    if(query):
+        vids = vids.filter(title__icontains = query)
+        search_box_params['query'] = query
     if(video_suitable_for):
-        vid = vid.fitler(video_suitable_for = int(video_suitable_for))
-    #if(video_uploaded):
-    #
-    if(season):
-        vid = vid.filter(related_agricultural_practices__seasonality = season);
-    if(lang):
-        vid = vid.filter(language__id = int(lang))
-    if(prac_arr):
-        vid = vid.fitler(related_agricultural_practices__id__in = [int(i) for i in prac_arr])
-        
-        
+        vids = vids.filter(video_suitable_for = int(video_suitable_for))
+    search_box_params['video_suitable_for'] = video_suitable_for
+    if(from_date):
+        search_box_params['from_date'] = from_date;
+        from_date = datetime.date(*map(int,from_date.split('-')))
+        vids = vids.filter(video_production_end_date__gt = from_date)
+    if(to_date):
+        search_box_params['to_date'] = to_date;
+        to_date = datetime.date(*map(int,to_date.split('-')))
+        vids = vids.filter(video_production_end_date__lt = to_date)
+    if(video_uploaded == '1'):
+        vids = vids.exclude(youtubeid = '')
+        search_box_params['video_uploaded'] = video_uploaded
+    elif(video_uploaded == '0'):
+        vids = vids.filter(youtubeid = '')
+        search_box_params['video_uploaded'] = video_uploaded
     
-    return render_to_response("searchvideo_result.html",dict())
-                                                     
+    if(season):
+        vids = vids.filter(related_agricultural_practices__seasonality = season);
+        search_box_params['season'] = season
+    if(lang):
+        vids = vids.filter(language__id = int(lang))
+        search_box_params['sel_lang'] = lang
+    search_box_params['langs'] = Language.objects.all().values('id','language_name')
+    if(prac_arr):
+        vids = vids.filter(related_agricultural_practices__id__in = [int(i) for i in prac_arr])
+        search_box_params['prac'] = prac_arr
+    search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
+    if(geog):
+        geog = geog.upper();
+        if(geog=="STATE"):
+            vids = vids.filter(village__block__district__state__id = int(id))
+        elif(geog=="DISTRICT"):
+            vids = vids.filter(village__block__district__id = int(id))
+        elif(geog=="BLOCK"):
+            vids = vids.filter(village__block__id = int(id))
+        elif(geog=="VILLAGE"):
+            vids = vids.filter(village__id = int(id))
+        search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
+    else:
+        search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
+    
+    if(partners):
+        vids = vids.filter(village__block__district__partner__id__in = map(int,partners))
+        search_box_params['sel_partners'] = partners
+    search_box_params['all_partners'] = Partners.objects.all().values('id','partner_name')
+    
+    vids  = vids.order_by('id')
+    
+    #for paging
+    vid_count = vids.count()
+    tot_pages = int(math.ceil(float(vid_count)/15))
+    print page;
+    if(not page or int(page) > tot_pages): 
+        page = 1
+    print page;
+    page = int(page)
+    vid_per_page = 10
+    vids = vids[(page-1)*vid_per_page:((page-1)*vid_per_page)+vid_per_page]
+    print (page-1)*vid_per_page
+    paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
+    
+    if vids:
+        all_vid_adoptions = run_query_dict(video_analytics_sql.get_adoption_for_multiple_videos(vids.values_list('id',flat=True)), 'id')
+        for vid in vids: vid.adoptions = all_vid_adoptions[vid.id][0]
+
+    
+    return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
+                                            
+def test(request):
+     x = datetime.date.today()
+     return render_to_response("test.html",dict(d1=x,d2=(x-datetime.timedelta(days = 10))))
+ 
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     id = int(request.GET['id'])
     return views.common.month_bar_data(video_analytics_sql.get_screening_month_bar_for_video, setting_from_date = None, setting_to_date = None, id = id);
+
+def video_screening_month_bar_setting(request):
+    id = int(request.GET['id'])
+    return views.common.month_bar_settings(video_analytics_sql.get_screening_month_bar_for_video, "Total Dissemintions", id = id);
