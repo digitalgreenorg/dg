@@ -282,14 +282,11 @@ def video_search(request):
     #for paging
     vid_count = vids.count()
     tot_pages = int(math.ceil(float(vid_count)/15))
-    print page;
     if(not page or int(page) > tot_pages): 
         page = 1
-    print page;
     page = int(page)
     vid_per_page = 10
     vids = vids[(page-1)*vid_per_page:((page-1)*vid_per_page)+vid_per_page]
-    print (page-1)*vid_per_page
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
     
     if vids:
