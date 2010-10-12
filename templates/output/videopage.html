@@ -238,7 +238,7 @@
 									{% for que in ques %}									 
 										<tr class="{% cycle row1,row2 %}">
 											<td id='questiontabletd1'>	
-												{{que.1.person.person_name}} &nbsp;|&nbsp; 12 Nov, 2009																		
+												{{que.1.person.person_name}} &nbsp;|&nbsp; {{que.1.screening.date|date:"d M Y"}}																		
 											</td>
 											<td id='questiontabletd2' rowspan='2'>												
 												{{que.1.expressed_question}}																					
