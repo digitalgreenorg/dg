@@ -38,6 +38,7 @@ public class RegionsTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, regionsListFormHtml, addRegionServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveRegion);
 	}
@@ -78,6 +79,10 @@ public class RegionsTemplate extends BaseTemplate {
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final private String addDataToElementID[] = null;
 	

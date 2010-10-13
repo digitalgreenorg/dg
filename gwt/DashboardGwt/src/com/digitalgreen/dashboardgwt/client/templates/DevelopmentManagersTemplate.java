@@ -43,6 +43,7 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, dmListFormHtml, addDevelopmentManagersServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveDevelopmentManager);
 	}
 	
@@ -85,6 +86,10 @@ public class DevelopmentManagersTemplate extends BaseTemplate {
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final private String addDataToElementID[] = {"id_region"};
 

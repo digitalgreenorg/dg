@@ -57,6 +57,7 @@ public class TargetsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, targetsListFormHtml, addTargetsServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveTarget);
 	}
 	
@@ -100,7 +101,10 @@ public class TargetsTemplate extends BaseTemplate {
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	final private String addDataToElementID[] = {"id_district"};
 	
 	private String targetsListFormHtml = "<div class='actions'>" +

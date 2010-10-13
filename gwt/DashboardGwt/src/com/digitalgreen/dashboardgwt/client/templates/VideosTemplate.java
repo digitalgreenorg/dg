@@ -40,6 +40,7 @@ public class VideosTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, videosListFormHtml, addVideosServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveVideo);
 	}
@@ -85,7 +86,10 @@ public class VideosTemplate extends BaseTemplate {
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	final private String addDataToElementID[] = {"id_language", "id_village", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
 	
 	private String videosListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +

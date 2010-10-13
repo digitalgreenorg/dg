@@ -42,6 +42,7 @@ public class EquipmentsTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, equipmentsListFormHtml, addEquipmentsServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveEquipment);
 	}
 	
@@ -87,7 +88,10 @@ public class EquipmentsTemplate extends BaseTemplate{
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;	
 
 	final private String addDataToElementID[] = {"id_village", "id_equipmentholder"};
 	

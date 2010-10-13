@@ -42,7 +42,7 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, fieldofficerListFormHtml, addFieldOfficersServlet, links);
-		
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveFieldOfficer);
 	}
@@ -87,6 +87,10 @@ public class FieldOfficerTemplate extends BaseTemplate{
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 
 	private String fieldofficerListFormHtml = "<script type='text/javascript' src='/media/js/admin/DateTimeShortcuts.js'></script>" +
 												"<script type='text/javascript' src='/media/js/calendar.js'></script>" +

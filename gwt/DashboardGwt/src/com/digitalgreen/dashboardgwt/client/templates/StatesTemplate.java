@@ -40,6 +40,7 @@ public class StatesTemplate extends BaseTemplate{
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, statesListFormHtml, addStatesServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveState);
 	}
@@ -82,9 +83,10 @@ public class StatesTemplate extends BaseTemplate{
 		}
 		return links;
 	}
-	
-	
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;	
 	// A list of Element IDs that need to receive the data before the template is loaded. 
 	final private String addDataToElementID[] = {"id_region"};
 	

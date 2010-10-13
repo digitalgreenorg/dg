@@ -40,6 +40,7 @@ public class DistrictTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, districtListFormHtml, addDistrictsServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveDistrict);
 	}
 	
@@ -82,6 +83,10 @@ public class DistrictTemplate extends BaseTemplate{
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 
 	final private String addDataToElementID[] = {"id_state", "id_fieldofficer", "id_partner"};
 	

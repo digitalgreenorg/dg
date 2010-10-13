@@ -40,6 +40,7 @@ public class TrainingTemplate extends BaseTemplate{
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, trainingListFormHtml, addTrainingsServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveTraining);
 	}
@@ -83,7 +84,10 @@ public class TrainingTemplate extends BaseTemplate{
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	final private String addDataToElementID[] = {"id_village","id_development_manager_present","id_fieldofficer","id_animators_trained"};
 	
 	private String trainingListFormHtml = "<div class='actions'>" +

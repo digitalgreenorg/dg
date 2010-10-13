@@ -44,6 +44,7 @@ public class AnimatorsTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, animatorsListFormHtml, addAnimatorsServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveAnimator);
 	}
@@ -88,6 +89,10 @@ public class AnimatorsTemplate extends BaseTemplate {
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final private String addDataToElementID [] = {"id_partner","id_village","id_animatorassignedvillage_set-0-village",
 			"id_animatorassignedvillage_set-1-village","id_animatorassignedvillage_set-2-village"};

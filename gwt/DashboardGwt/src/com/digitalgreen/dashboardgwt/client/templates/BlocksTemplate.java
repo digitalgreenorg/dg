@@ -40,6 +40,7 @@ public class BlocksTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, blocksListFormHtml, addBlocksServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveBlock);
 	}
 	
@@ -79,6 +80,10 @@ public class BlocksTemplate extends BaseTemplate{
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final private String addDataToElementID[] = {"id_district"};
 	

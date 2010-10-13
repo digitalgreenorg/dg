@@ -46,6 +46,7 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, persongroupsListFormHtml, addPersonsGroupsServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(savePersonGroup);
 	}
@@ -88,7 +89,10 @@ public class PersonGroupsTemplate extends BaseTemplate{
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	final private String addDataToElementID[] = {"id_village","id_person_set-0-village","id_person_set-1-village","id_person_set-2-village",
 			"id_person_set-3-village","id_person_set-4-village","id_person_set-5-village","id_person_set-6-village","id_person_set-7-village",
 			"id_person_set-8-village","id_person_set-9-village","id_person_set-10-village","id_person_set-11-village","id_person_set-12-village",

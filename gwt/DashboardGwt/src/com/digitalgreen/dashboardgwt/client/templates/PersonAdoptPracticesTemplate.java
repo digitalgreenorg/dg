@@ -40,6 +40,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		List<Hyperlink> links = this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, personadoptpracticeListFormHtml, addPersonAdoptPracticesServlet1, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(savePersonAdoptPractice);
 	}
@@ -92,7 +93,10 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		}
 		return links;
 	}	
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	final private String addDataToElementID[] = {"id_person","id_practice"};
 	
 	private String personadoptpracticeListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +

@@ -47,6 +47,7 @@ public class VillagesTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, villagesListFormHtml, addVillagesServlet, links);
+		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(saveVillage);
 	}
@@ -88,7 +89,10 @@ public class VillagesTemplate extends BaseTemplate {
 		}
 		return links;
 	}
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	// A list of Element IDs that need to receive the data before the template is loaded.
 	final private String addDataToElementID[] = {"id_block", "id_animator_set-0-partner", "id_animator_set-1-partner", 
 			"id_animator_set-2-partner", "id_animator_set-3-partner", "id_animator_set-4-partner"};

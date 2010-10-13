@@ -61,6 +61,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveScreening);	
 		
 	}
@@ -105,6 +106,11 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	public static native void loadPerson(String id) /*-{
 			$wnd.screening_page_offline.init(id);
+	}-*/;
+	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
 	}-*/;
 	
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};

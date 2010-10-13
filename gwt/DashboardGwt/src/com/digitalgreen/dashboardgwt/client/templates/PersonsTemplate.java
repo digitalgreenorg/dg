@@ -50,6 +50,7 @@ public class PersonsTemplate extends BaseTemplate{
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, personsListFormHtml, addPersonsServlet, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(savePerson);
 	}
 	
@@ -72,14 +73,10 @@ public class PersonsTemplate extends BaseTemplate{
 						style= "row2";
 					else
 						style = "row1";
-					person = (PersonsData.Data) persons.get(row);
-					
-					if(person.getGroup() == null)
-					{
+					person = (PersonsData.Data) persons.get(row);					
+					if(person.getGroup() == null){
 						group = "null";
-					}
-					else
-					{
+					} else {
 						group = person.getGroup().getPersonGroupName();
 					}
 					requestContext = new RequestContext();
@@ -102,6 +99,10 @@ public class PersonsTemplate extends BaseTemplate{
 		}
 		return links;
 	}
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 
 	final private String addDataToElementID[] = {"id_village","id_group","id_personadoptpractice_set-0-practice",
 			"id_personadoptpractice_set-1-practice", "id_personadoptpractice_set-2-practice"};

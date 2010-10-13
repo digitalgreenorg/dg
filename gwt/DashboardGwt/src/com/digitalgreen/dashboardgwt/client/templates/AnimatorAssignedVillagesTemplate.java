@@ -45,6 +45,7 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		// Now add hyperlinks
 		super.fillDgListPage(templatePlainType, templateType, animatorassignedvillageListFormHtml, addAnimatorAssignedVillagesServlet1, links);
 		// Now add any submit control buttons
+		this.displayCalendar();
 		super.fillDgFormPage(saveAnimatorAssignedVillage);
 	}
 	
@@ -87,7 +88,10 @@ public class AnimatorAssignedVillagesTemplate extends BaseTemplate {
 		return links;
 	}
 	
-	
+	//Loading javascript for displaying calendar in Google chrome browser
+	public static native void displayCalendar() /*-{
+		$wnd.DateTimeShortcuts.init();		
+	}-*/;
 	
 	final private String addDataToElementID[] = {"id_animator","id_village"};
 	
