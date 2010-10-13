@@ -233,20 +233,22 @@ public class AnimatorsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator name = new StringValidator(this.name, false, false,	0, 100, true);
-			name.setError("Name is a required field and please make sure 'name' is less than 100 characters and does not contain special characters.");
-			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
-			age.setError("Please enter a valid age");
-			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
-			gender.setError("Please select gender");
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100, true);
-			phoneNo.setError("Please make sure that phone number is valid and does not contain special characters.");
-			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
-			address.setError("Please make sure that 'address' is less than 500 characters");
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
-			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
-			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			//Labels to print validation error messages
+			String nameLabel = "Name";
+			String ageLabel = "Age";
+			String genderLabel = "Gender";
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			String villageLabel = "Village";
+			String partnerLabel = "Partner";
+			
+			StringValidator name = new StringValidator(nameLabel, this.name, false, false,	0, 100, true);
+			IntegerValidator age = new IntegerValidator(ageLabel,this.age, true, true, 0, 100);
+			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
+			StringValidator phoneNo = new StringValidator(phoneNoLabel,this.phone_no, true, true, 0, 100, true);
+			StringValidator address = new StringValidator(addressLabel,this.address, true, true, 0, 500);
+			StringValidator villageValidator = new StringValidator(villageLabel,this.village.getId(), false, false, 1, 100);
+			StringValidator partnerValidator = new StringValidator(partnerLabel,this.partner.getId(), false, false, 1, 100);
 			
 			ArrayList unqName = new ArrayList();
 			unqName.add("name");
@@ -267,8 +269,14 @@ public class AnimatorsData extends BaseData {
 			uniqueTogether.add(unqPartner);
 			uniqueTogether.add(unqVillage);
 			
-			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
-			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Name");
+			uniqueValidatorLabels.add("Gender");
+			uniqueValidatorLabels.add("Partner");
+			uniqueValidatorLabels.add("Home Village");
+			
+			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniqueTogether, new AnimatorsData());
 			uniqueNameGenderPartnerVillage.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();
@@ -285,18 +293,18 @@ public class AnimatorsData extends BaseData {
 
 		@Override
 		public boolean validate(BaseData.Data foreignkey) {
-			StringValidator name = new StringValidator(this.name, false, false,	0, 100, true);
-			name.setError("Name is a required field and please make sure 'name' is less than 100 characters and does not contain special characters.");
-			IntegerValidator age = new IntegerValidator(this.age, true, true, 0, 100);
-			age.setError("Please enter a valid age");
-			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
-			gender.setError("Please select gender");
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, true, 0, 100, true);
-			phoneNo.setError("Please make sure that phone number is valid and deos not contain special charcters");
-			StringValidator address = new StringValidator(this.address, true, true, 0, 500);
-			address.setError("Please make sure that 'address' is less than 500 characters ");
-			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
-			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			String nameLabel = "Name";
+			String ageLabel = "Age";
+			String genderLabel = "Gender";
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			String partnerLabel = "Partner";
+			StringValidator name = new StringValidator(nameLabel, this.name, false, false,	0, 100, true);
+			IntegerValidator age = new IntegerValidator(ageLabel,this.age, true, true, 0, 100);
+			StringValidator gender = new StringValidator(genderLabel,this.gender, false, false, 0, 10 );
+			StringValidator phoneNo = new StringValidator(phoneNoLabel,this.phone_no, true, true, 0, 100, true);
+			StringValidator address = new StringValidator(addressLabel,this.address, true, true, 0, 500);
+			StringValidator partnerValidator = new StringValidator(partnerLabel,this.partner.getId(), false, false, 1, 100);
 			
 			ArrayList unqName = new ArrayList();
 			unqName.add("name");
@@ -314,8 +322,13 @@ public class AnimatorsData extends BaseData {
 			uniqueTogether.add(unqGender);
 			uniqueTogether.add(unqPartner);
 			
-			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorsData());
-			uniqueNameGenderPartnerVillage.setError("The Name, Gender, Partner and Home Village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Name");
+			uniqueValidatorLabels.add("Gender");
+			uniqueValidatorLabels.add("Partner");
+			
+			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniqueTogether, new AnimatorsData());
 			uniqueNameGenderPartnerVillage.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();

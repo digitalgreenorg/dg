@@ -4,21 +4,25 @@ import com.google.gwt.user.client.Window;
 
 public class IntegerValidator extends BaseValidator {
 
-	private Integer minValue = null;
-	private Integer maxValue = null;
-	private int valueInt;
+	protected Integer minValue = null;
+	protected Integer maxValue = null;
+	protected int valueInt;
 
 	public IntegerValidator(String value) {
 		super(value);
 	}
 
-	public IntegerValidator(String value, boolean nullable, boolean blank) {
+	public IntegerValidator(String childLabel, String value, boolean nullable, boolean blank) {
 		super(value, nullable, blank);
+		this.childLabel = childLabel;
 	}
 
-	public IntegerValidator(String value, boolean nullable, boolean blank,
+	public IntegerValidator(String childLabel, String value, boolean nullable, boolean blank,
 			int minValue, int maxValue) {
 		super(value, nullable, blank);
+		this.maxValue = maxValue;
+		this.minValue = minValue;
+		this.childLabel = childLabel;
 	}
 
 	public int getValueInt() {
@@ -28,6 +32,7 @@ public class IntegerValidator extends BaseValidator {
 	@Override
 	public boolean validate() {
 		if (!super.validate()) {
+			errorString += reqiuredFieldErrorMessage;
 			return false;
 		} else if (this.getValue() == null) {
 			return true;
@@ -35,11 +40,15 @@ public class IntegerValidator extends BaseValidator {
 			try {
 				this.valueInt = Integer.parseInt((String)this.getValue());
 			} catch (NumberFormatException e) {
+				errorString += integerErrorMessage;
 				return false;
 			}
-
-			return (this.minValue != null ? ((String)this.getValue()).length() >= this.minValue.toString().length(): true 
-					&& this.maxValue != null ? ((String)this.getValue()).length() <= this.maxValue.toString().length(): true);
+			if ((this.minValue != null ? this.getValueInt() >= this.minValue: true) && (this.maxValue != null ? this.getValueInt() <= this.maxValue: true)) {
+				return true;				
+			} else {
+				errorString += integerMaxMinErrorMessage+this.minValue+" and "+this.maxValue;
+				return false;		
+			}
 		}
 	}
 }

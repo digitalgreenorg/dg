@@ -266,55 +266,59 @@ public class VideosData extends BaseData {
 			} else {
 				return;
 			}
-			this.addNameValueToQueryString(key, val);			
+			this.addNameValueToQueryString(key, val);		
 		}
 		
 		@Override
 		public boolean validate() {
-			StringValidator title = new StringValidator(this.title, false, false, 1, 200, true);
-			title.setError("Please make sure that 'Title' is NOT EMPTY and not more than 200 characters and should not contain any special characters..");
-			StringValidator videoType = new StringValidator(this.video_type, false, false, 1, 1);
-			videoType.setError("Please make sure you choose a video type for 'Video type'.");
-			DateValidator videoProductionStartDate = new DateValidator(this.video_production_start_date, false, false);
-			videoProductionStartDate.setError("Please make sure 'Video production start date' is NOT EMPTY and id formatted as 'YYYY-MM-DD'.");
-			DateValidator videoProductionEndDate = new DateValidator(this.video_production_end_date, false, false);
-			videoProductionEndDate.setError("Please make sure 'Video production end date' is NOT EMPTY and id formatted as 'YYYY-MM-DD'.");
-			StringValidator language = new StringValidator(this.language.getId(), false, false, 1, 100);
-			language.setError("Please make sure you choose a language for 'Language'.");
-			StringValidator storybase = new StringValidator(this.storybase, false, false, 1, 1);
-			storybase.setError("Please make sure you choose a storybase type for 'Storybase'.");
-			StringValidator summary = new StringValidator(this.summary, true, false, 0, 1024);
-			summary.setError("Please make sure that 'Title' is not more than 1024 CHARACTERS");
-			StringValidator village = new StringValidator(this.facilitator.getId(), false, false, 1, 100);
-			village.setError("Please make sure you choose a village for 'Village'.");
-			StringValidator facilitator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			facilitator.setError("Please make sure you choose a facilitator for 'Facilitator'.");
-			StringValidator cameraOperator = new StringValidator(this.cameraoperator.getId(), false, false, 1, 100);
-			cameraOperator.setError("Please make sure you choose a camera operator for 'Camera Operator'.");
-			ManyToManyValidator relatedAgriculturalPractices = new ManyToManyValidator(this.related_agricultural_practices, false);
-			relatedAgriculturalPractices.setError("Please make sure you add some practices for 'Related agricultural practices'");
-			ManyToManyValidator farmersShown = new ManyToManyValidator(this.related_agricultural_practices, false);
-			farmersShown.setError("Please make sure you add some farmers for 'Farmers shown'");
-			StringValidator actors = new StringValidator(this.actors, false, false, 1, 1);
-			actors.setError("Please make sure you choose a actor for 'Actors'.");
-			StringValidator pictureQuality = new StringValidator( this.picture_quality, true, false, 0, 200,true);
-			pictureQuality.setError("Please make sure 'Picture quality' is less than 200 CHARACTERS and should not contain any special characters..");
-			StringValidator audioQuality = new StringValidator(this.audio_quality, true, true, 0, 200,true);
-			audioQuality.setError("Please make sure 'Audio quality' is less than 200 CHARACTERS and should not contain any special characters.");
-			StringValidator editingQuality = new StringValidator(this.editing_quality, true, true, 0, 200,true);
-			editingQuality.setError("Please make sure 'Editing quality' is less than 200 CHARACTERS and should not contain any special characters.");
-			DateValidator editStartDate = new DateValidator(this.edit_start_date, true, true);
-			editStartDate.setError("Please make sure 'Edit start date' is formatted as YYYY-MM-DD.");
-			DateValidator editFinishDate = new DateValidator(this.edit_finish_date, true, true);
-			editFinishDate.setError("Please make sure 'Edit finish date' is formatted as YYYY-MM-DD.");
-			StringValidator thematic_quality = new StringValidator(this.thematic_quality, true, true, 0, 200,true);
-			thematic_quality.setError("Please make sure 'Thematic quality' is less than 200 CHARACTERS and should not contain any special characters.");
-			DateValidator approvalDate = new DateValidator(this.approval_date, true, true);
-			approvalDate.setError("Please make sure 'Approval date' is formatted as YYYY-MM-DD.");
-			StringValidator videoSuitableFor = new StringValidator(this.video_suitable_for, false, false, 1, 1);
-			videoSuitableFor.setError("Please make sure you choose a video suitable for 'Video suitable for'.");
-			StringValidator remarks = new StringValidator(this.remarks, true, true, 0, 500);
-			remarks.setError("Please make sure 'Remarks' is less than 500 CHARACTERS.");
+			//Labels to print error messages
+			String titleLabel = "Title";
+			String videoTypeLabel = "Video Type";
+			String videoProductionStartDateLabel = "Video Production Start Date";
+			String videoProductionEndDateLabel = "Video Production End Date";
+			String languageLabel = "Language";
+			String storybaseLabel = "Story Base";
+			String summaryLabel = "Summary";
+			String villageLabel = "Village";
+			String facilitatorLabel = "Facilitator";
+			String cameraOperatorLabel = "Camera Operator";
+			String relatedAgriculturalPracticesLabel = "Related Agricultural Practices";
+			String farmersShownLabel = "Farmers Shown";
+			String actorsLabel = "Actors";
+			String pictureQualityLabel = "Picture Quality";
+			String audioQualityLabel = "Audio Quality";
+			String editingQualityLabel = "Editing Quality";
+			String editStartDateLabel = "Edit Start Date";
+			String editFinishDateLabel = "Edit FInish Date";
+			String thematic_qualityLabel = "Thematic Quality";
+			String approvalDateLabel = "Approval Date";
+			String videoSuitableForLabel = "Video Suitable For";
+			String remarksLabel = "Remarks";
+						
+			StringValidator title = new StringValidator(titleLabel, this.title, false, false, 1, 200, true);
+			StringValidator videoType = new StringValidator(videoTypeLabel, this.video_type, false, false, 1, 1);
+			DateValidator videoProductionStartDate = new DateValidator(videoProductionStartDateLabel, this.video_production_start_date, 
+					false, false);
+			DateValidator videoProductionEndDate = new DateValidator(videoProductionEndDateLabel, this.video_production_end_date, false, false);
+			StringValidator language = new StringValidator(languageLabel, this.language.getId(), false, false, 1, 100);
+			StringValidator storybase = new StringValidator(storybaseLabel, this.storybase, false, false, 1, 1);
+			StringValidator summary = new StringValidator(summaryLabel, this.summary, true, false, 0, 1024);
+			StringValidator village = new StringValidator(villageLabel, this.facilitator.getId(), false, false, 1, 100);
+			StringValidator facilitator = new StringValidator(facilitatorLabel, this.village.getId(), false, false, 1, 100);
+			StringValidator cameraOperator = new StringValidator(cameraOperatorLabel, this.cameraoperator.getId(), false, false, 1, 100);
+			ManyToManyValidator relatedAgriculturalPractices = new ManyToManyValidator(relatedAgriculturalPracticesLabel,
+					this.related_agricultural_practices, false);
+			ManyToManyValidator farmersShown = new ManyToManyValidator(farmersShownLabel, this.farmers_shown, false);
+			StringValidator actors = new StringValidator(actorsLabel, this.actors, false, false, 1, 1);
+			StringValidator pictureQuality = new StringValidator( pictureQualityLabel, this.picture_quality, true, false, 0, 200,true);
+			StringValidator audioQuality = new StringValidator(audioQualityLabel, this.audio_quality, true, true, 0, 200,true);
+			StringValidator editingQuality = new StringValidator(editingQualityLabel, this.editing_quality, true, true, 0, 200,true);
+			DateValidator editStartDate = new DateValidator(editStartDateLabel, this.edit_start_date, true, true);
+			DateValidator editFinishDate = new DateValidator(editFinishDateLabel, this.edit_finish_date, true, true);
+			StringValidator thematic_quality = new StringValidator(thematic_qualityLabel, this.thematic_quality, true, true, 0, 200,true);
+			DateValidator approvalDate = new DateValidator(approvalDateLabel, this.approval_date, true, true);
+			StringValidator videoSuitableFor = new StringValidator(videoSuitableForLabel, this.video_suitable_for, false, false, 1, 1);
+			StringValidator remarks = new StringValidator(remarksLabel, this.remarks, true, true, 0, 500);
 			
 			ArrayList uniqueTitle = new ArrayList();
 			uniqueTitle.add("TITLE");
@@ -338,8 +342,13 @@ public class VideosData extends BaseData {
 			uniqueTogether.add(uniqueVideoProductionEndDate);
 			uniqueTogether.add(uniqueVillage);
 			
-			UniqueConstraintValidator uniqueTitleStartEndDateVillageID = new UniqueConstraintValidator(uniqueTogether, new VideosData());
-			uniqueTitleStartEndDateVillageID.setError("The Title, video production start date, video production end date, and village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Title");
+			uniqueValidatorLabels.add("Video Production Start Date");
+			uniqueValidatorLabels.add("Video Production End Date");
+			uniqueValidatorLabels.add("Village");
+			UniqueConstraintValidator uniqueTitleStartEndDateVillageID = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniqueTogether, new VideosData());
 			uniqueTitleStartEndDateVillageID.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(title);
@@ -399,7 +408,7 @@ public class VideosData extends BaseData {
 						this.supplementary_video_produced.getId(),
 						this.video_suitable_for, 
 						this.remarks, 
-						this.actors, 
+						this.actors,
 						this.last_modified);
 			this.addNameValueToQueryString("id", this.id);
 		}

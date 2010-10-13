@@ -151,12 +151,13 @@ public class PersonGroupsData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100, true);
-			groupName.setError("Group name is a required field and is less than 100 characters and should not contain any special characters");
-			TimeValidator timings = new TimeValidator(this.timings, true, true);
-			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			//Labels to print validation error messages
+			String nameLabel = "Group Name";
+			String timeLabel = "Time";
+			String villageLabel = "Village";
+			StringValidator groupName = new StringValidator(nameLabel, this.group_name, false, false, 0, 100, true);
+			TimeValidator timings = new TimeValidator(timeLabel, this.timings, true, true);
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
 			ArrayList group_name = new ArrayList();
 			group_name.add("group_name");
 			group_name.add(this.group_name);
@@ -166,8 +167,11 @@ public class PersonGroupsData extends BaseData {
 			ArrayList groupVillageId = new ArrayList();
 			groupVillageId.add(group_name);
 			groupVillageId.add(villageId);
-			UniqueConstraintValidator uniqueGroupVillageId = new UniqueConstraintValidator(groupVillageId, new PersonGroupsData());
-			uniqueGroupVillageId.setError("The Person group and village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Person Group");
+			uniqueValidatorLabels.add("Village");			
+			UniqueConstraintValidator uniqueGroupVillageId = new UniqueConstraintValidator(uniqueValidatorLabels,
+					groupVillageId, new PersonGroupsData());
 			uniqueGroupVillageId.setCheckId(this.getId());
 
 			ArrayList validatorList = new ArrayList();
@@ -180,10 +184,11 @@ public class PersonGroupsData extends BaseData {
 
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			StringValidator groupName = new StringValidator(this.group_name, false, false, 0, 100, true);
-			groupName.setError("Please make sure to enter a group name and that it's less than 100 characters and should not contain any special characters");
-			TimeValidator timings = new TimeValidator(this.timings, true, true);
-			timings.setError("Please make sure that time is formatted as Hours:Minutes:Seconds");
+			//Labels to print validation error messages
+			String nameLabel = "Group Name";
+			String timeLabel = "Time";
+			StringValidator groupName = new StringValidator(nameLabel,this.group_name, false, false, 0, 100, true);
+			TimeValidator timings = new TimeValidator(timeLabel,this.timings, true, true);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(groupName);
 			validatorList.add(timings);

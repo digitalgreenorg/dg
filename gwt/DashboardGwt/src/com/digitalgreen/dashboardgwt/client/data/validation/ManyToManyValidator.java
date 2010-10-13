@@ -9,8 +9,9 @@ public class ManyToManyValidator extends BaseValidator {
 		super(value);
 	}
 
-	public ManyToManyValidator(ArrayList value, boolean nullable) {
+	public ManyToManyValidator(String childLabel, ArrayList value, boolean nullable) {
 		super(value, nullable);
+		this.childLabel = childLabel;
 	}
 	
 	@Override
@@ -18,6 +19,7 @@ public class ManyToManyValidator extends BaseValidator {
 		if(!this.isNullable() && (this.getValue() == null || 
 				(this.getValue() instanceof ArrayList && 
 				((ArrayList)this.getValue()).isEmpty()))) {
+			errorString = childLabel+" :"+manyToManyErrorMessage;
 			return false;
 		}
 		return true;

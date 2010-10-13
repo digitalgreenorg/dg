@@ -6,13 +6,13 @@ public class PositiveIntegerValidator extends IntegerValidator {
 		super(value);
 	}
 	
-	public PositiveIntegerValidator(String value, boolean nullable, boolean blank) {
-		super(value, nullable, blank);
+	public PositiveIntegerValidator(String childLabel,String value, boolean nullable, boolean blank) {
+		super(childLabel,value, nullable, blank);
 	}
 	
-	public PositiveIntegerValidator(String value, boolean nullable, boolean blank,
+	public PositiveIntegerValidator(String childLabel,String value, boolean nullable, boolean blank,
 			int minValue, int maxValue) {
-		super(value, nullable, blank, minValue, maxValue);
+		super(childLabel, value, nullable, blank, minValue, maxValue);
 	}
 	
 	@Override

@@ -1,10 +1,26 @@
 package com.digitalgreen.dashboardgwt.client.data.validation;
 
+import java.util.ArrayList;
+
+import com.google.gwt.user.client.Window;
+
 public class BaseValidator {
-	private boolean nullable = true;
-	private boolean blank = true;
-	private Object value = null;
-	private String errorString = "Invalid field.";
+	protected boolean nullable = true;
+	protected boolean blank = true;
+	protected Object value = null;
+	protected String childLabel = null;
+	protected String errorString = "Invalid field entries : ";
+	//Validation Error Messages format
+	protected final String reqiuredFieldErrorMessage = "Is a required field";
+	protected final String maximumCharactersErrorMessage = "Maximum number of characters allowed are ";
+	protected final String specialCharactersErrorMessage = "Should not contain any special characters ";
+	protected final String dateFormatErrorMessage = "Should be formatted as 'YYYY-MM-DD'.";
+	protected final String timeFormatErrorMessage = "Should be formatted as 'Hours:Minutes:Seconds'.";
+	protected final String integerErrorMessage = "Requires a valid integer ";
+	protected final String integerMaxMinErrorMessage = "Value should be between ";
+	protected final String uniqueValidatorErrorMessage = " Already in system. Please make sure it is unique";
+	protected final String floatFormatErrorMessage = " Is not valid. ";
+	protected final String manyToManyErrorMessage = " Enter atleast one value. ";	
 	
 	public BaseValidator(Object value) {
 		this.value = value;
@@ -19,6 +35,13 @@ public class BaseValidator {
 		this.value = value;
 		this.nullable = nullable;
 		this.blank = blank;
+	}
+	
+	public BaseValidator(String childLabel, Object value, boolean nullable, boolean blank) {
+		this.value = value;
+		this.nullable = nullable;
+		this.blank = blank;
+		this.childLabel = childLabel;
 	}
 
 	public boolean isNullable() {
@@ -40,6 +63,7 @@ public class BaseValidator {
 	
 	// Override this
 	public boolean validate() {
+		errorString = childLabel+" : ";
 		if(!nullable && value == null) {
 			return false;
 		}

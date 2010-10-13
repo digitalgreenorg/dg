@@ -221,29 +221,24 @@ public class PersonsData extends BaseData {
 		}
 		@Override
 		public boolean validate() {
-			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
-			personName.setError("Person Name is a required field and is less than 100 characters and should not contain any special characters");
+			//Labels to print validation error messages
+			String personNameLabel = "Person Name";
+			String fatherNameLabel = "Father Name";
+			String ageLabel = "Age";
+			String genderLabel = "Gender";
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			String landHoldingsLabel = "Land Holdings";
+			String villageLabel = "Village";
 			
-			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
-			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters");
-			
-			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
-			age.setError("Please enter a valid age");
-			
-			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
-			gender.setError("Please select gender");
-			
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
-			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters");
-			
-			StringValidator address = new StringValidator(this.address, true, false, 0, 500, true);
-			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters");
-			
-			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
-			landHoldings.setError("Please enter a valid Land holdings data");
-			
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
+			StringValidator personName = new StringValidator(personNameLabel ,this.person_name, false, false, 0, 100, true);
+			StringValidator fatherName = new StringValidator(fatherNameLabel,this.father_name, true, false, 0, 100, true);
+			IntegerValidator age = new IntegerValidator(ageLabel, this.age, true, false, 0, 100);
+			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
+			StringValidator phoneNo = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
+			StringValidator address = new StringValidator(addressLabel, this.address, true, false, 0, 500, true);
+			IntegerValidator landHoldings = new IntegerValidator(landHoldingsLabel, this.land_holdings, true, false, 0, 200);
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
 			
 			ArrayList person_name = new ArrayList();
 			person_name.add("person_name");
@@ -267,8 +262,14 @@ public class PersonsData extends BaseData {
 			uniqueTogether.add(group_id);
 			uniqueTogether.add(village_id);
 			
-			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueTogether, new PersonsData());
-			uniquePersonFatherGroupVillage.setError("The Person, father, group, and village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Person Name");
+			uniqueValidatorLabels.add("Father Name");
+			uniqueValidatorLabels.add("Group");
+			uniqueValidatorLabels.add("Village");
+			
+			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniqueTogether, new PersonsData());
 			uniquePersonFatherGroupVillage.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personName);
@@ -284,31 +285,24 @@ public class PersonsData extends BaseData {
 		}
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			StringValidator personName = new StringValidator(this.person_name, false, false, 0, 100, true);
-			personName.setError("Person Name is a required field and is less than 100 characters and should not contain any special characters");
+			//Labels to print validation error messages
+			String personNameLabel = "Person Name";
+			String fatherNameLabel = "Father Name";
+			String ageLabel = "Age";
+			String genderLabel = "Gender";
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			String landHoldingsLabel = "Land Holdings";
+			String villageLabel = "Village";
 			
-			StringValidator fatherName = new StringValidator(this.father_name, true, false, 0, 100, true);
-			fatherName.setError("Please make sure that Father Name is less than 100 characters and should not contain any special characters " +
-					"for "+this.person_name);
-			
-			IntegerValidator age = new IntegerValidator(this.age, true, false, 0, 100);
-			age.setError("Please enter a valid age for "+this.person_name);
-			
-			StringValidator gender = new StringValidator(this.gender, false, false, 0, 10);
-			gender.setError("Please select gender for "+this.person_name);
-			
-			StringValidator phoneNo = new StringValidator(this.phone_no, true, false, 0, 100, true);
-			phoneNo.setError("Please make sure that phone number is valid and should not contain any special characters for "+this.person_name);
-			
-			StringValidator address = new StringValidator(this.address, true, false, 0, 500, true);
-			address.setError("Please make sure that Address is less than 500 characters and should not contain any special characters " +
-					"for "+this.person_name);
-			
-			IntegerValidator landHoldings = new IntegerValidator(this.land_holdings, true, false, 0, 200);
-			landHoldings.setError("Please enter a valid Land holdings data for "+this.person_name);
-			
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village' for "+this.person_name);
+			StringValidator personName = new StringValidator(personNameLabel, this.person_name, false, false, 0, 100, true);
+			StringValidator fatherName = new StringValidator(fatherNameLabel, this.father_name, true, false, 0, 100, true);
+			IntegerValidator age = new IntegerValidator(ageLabel, this.age, true, false, 0, 100);
+			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
+			StringValidator phoneNo = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
+			StringValidator address = new StringValidator(addressLabel, this.address, true, false, 0, 500, true);
+			IntegerValidator landHoldings = new IntegerValidator(landHoldingsLabel, this.land_holdings, true, false, 0, 200);
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
 			
 			ArrayList person_name = new ArrayList();
 			person_name.add("person_name");
@@ -326,9 +320,12 @@ public class PersonsData extends BaseData {
 			uniqueTogether.add(person_name);
 			uniqueTogether.add(father_name);
 			uniqueTogether.add(village_id);
-			
-			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueTogether, new PersonsData());
-			uniquePersonFatherGroupVillage.setError("For "+this.person_name+" the Person, father and village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Person Name");
+			uniqueValidatorLabels.add("Father Name");
+			uniqueValidatorLabels.add("Village");
+			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueValidatorLabels, 
+					uniqueTogether, new PersonsData());
 			uniquePersonFatherGroupVillage.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personName);

@@ -170,24 +170,25 @@ public class DevelopmentManagersData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator nameValidator = new StringValidator(this.name, false, false, 1, 100, true);
-			nameValidator.setError("Please make sure 'Name' is NOT EMPTY, is less than 100 characters and does not contain special characters.");
-			StringValidator ageValidator = new StringValidator(this.age, true, false, 0, 3);
-			ageValidator.setError("Please make sure that 'Age' is not more than 3 CHARACTERS.");
-			StringValidator genderValidator = new StringValidator(this.gender, false, false, 1, 3);
-			genderValidator.setError("Please make sure that you have selected 'Gender'.");
-			DateValidator hireDate = new DateValidator(this.hire_date, true, false);
-			hireDate.setError("Please make sure 'Hire date' is formatted as YYYY-MM-DD.");
-			StringValidator phoneValidator = new StringValidator(this.phone_no, true, false, 0, 100, true);
-			phoneValidator.setError("Please make sure that 'Phone Number' is NOT MORE than 100 CHARACTERS and does not contain special characters.");
-			StringValidator addressValidator = new StringValidator(this.address, true, false, 0, 500);
-			addressValidator.setError("Please make sure that 'Address' is NOT MORE than 500 CHARACTERS.");
-			StringValidator specialityValidator = new StringValidator(this.speciality, true, false, 0, 500);
-			specialityValidator.setError("Please make sure that 'Speciality' is NOT MORE than 500 CHARACTERS.");
-			StringValidator regionValidator = new StringValidator(this.region.getId(), false, false, 1, 100);
-			regionValidator.setError("Please make sure you choose a region for 'Region'.");
-			DateValidator startDate = new DateValidator(this.start_day, true, false);
-			startDate.setError("Please make sure 'Start Date' is formatted as YYYY-MM-DD.");
+			//Labels to print validation error messages
+			String nameLabel = "Name";
+			String ageLabel = "Age";
+			String genderLabel = "Gender";
+			String hireDateLabel = "Hire Date";			
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			String specialityLabel = "Speciality";
+			String regionLabel = "Region";
+			String startDateLabel = "Start Date";			
+			StringValidator nameValidator = new StringValidator(nameLabel,this.name, false, false, 1, 100, true);
+			IntegerValidator ageValidator = new IntegerValidator(ageLabel,this.age, true, true, 0, 100);
+			StringValidator genderValidator = new StringValidator(genderLabel, this.gender, false, false, 1, 3);
+			DateValidator hireDate = new DateValidator(hireDateLabel,this.hire_date, true, false);
+			StringValidator phoneValidator = new StringValidator(phoneNoLabel,this.phone_no, true, false, 0, 100, true);
+			StringValidator addressValidator = new StringValidator(addressLabel,this.address, true, false, 0, 500);
+			StringValidator specialityValidator = new StringValidator(specialityLabel,this.speciality, true, false, 0, 500);
+			StringValidator regionValidator = new StringValidator(regionLabel,this.region.getId(), false, false, 1, 100);
+			DateValidator startDate = new DateValidator(startDateLabel,this.start_day, true, false);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);
 			validatorList.add(ageValidator);

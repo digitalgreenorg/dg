@@ -113,12 +113,12 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		@Override
 		public boolean validate(){
-			StringValidator animatorValidator = new StringValidator(this.animator.getId(), false, false, 1, 100);
-			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			String animatorLabel = "Animator";
+			String villageLabel = "Village";
+			String startDateLabel = "Start Date";
+			StringValidator animatorValidator = new StringValidator(animatorLabel, this.animator.getId(), false, false, 1, 100);		
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);		
+			DateValidator startDate = new DateValidator(startDateLabel, this.start_date, true, true);
 			
 			ArrayList unqName = new ArrayList();
 			unqName.add("animator_id");
@@ -130,9 +130,11 @@ public class AnimatorAssignedVillagesData extends BaseData{
 			ArrayList uniqueTogether = new ArrayList();
 			uniqueTogether.add(unqName);
 			uniqueTogether.add(unqVillage);
-			
-			UniqueConstraintValidator uniqueNameVillage = new UniqueConstraintValidator(uniqueTogether, new AnimatorAssignedVillagesData());
-			uniqueNameVillage.setError("The Animator and Village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Animator");
+			uniqueValidatorLabels.add("Village");
+			UniqueConstraintValidator uniqueNameVillage = new UniqueConstraintValidator(uniqueValidatorLabels, uniqueTogether,
+					new AnimatorAssignedVillagesData() );
 			uniqueNameVillage.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();
@@ -145,10 +147,10 @@ public class AnimatorAssignedVillagesData extends BaseData{
 		
 		@Override
 		public boolean validate(BaseData.Data foreignKey){
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			String villageLabel = "Village";
+			String startDateLabel = "Start Date";
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
+			DateValidator startDate = new DateValidator(startDateLabel, this.start_date, true, true);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(villageValidator);
 			validatorList.add(startDate);

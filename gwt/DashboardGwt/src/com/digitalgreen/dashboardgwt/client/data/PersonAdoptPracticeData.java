@@ -42,7 +42,7 @@ public class Data extends BaseData.Data {
 		private String date_of_adoption;
 		private String quality;
 		private String quantity;
-		private String quantity_unit;		
+		private String quantity_unit;	
 		
 		public Data() {
 			super();
@@ -160,18 +160,19 @@ public class Data extends BaseData.Data {
 		}
 		@Override
 		public boolean validate() {
-			StringValidator personValidator = new StringValidator(this.person.getId(), false, false, 1, 100);
-			personValidator.setError("Please make sure that you choose a person for 'Person' field.");
-			StringValidator practiceValidator = new StringValidator(this.practice.getId(), false, false, 1, 100);
-			practiceValidator.setError("Please make sure that you choose a practice for 'Practice' field.");
-			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
-			dateOfAdoption.setError("Please make sure 'DateOfAdoption' is formatted as YYYY-MM-DD.");
-			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100, true);
-			quality.setError("Please make sure quality is less than 100 characters and does not contain special characters.");
-			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
-			quantity.setError("Please make sure quantity is integer");
-			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100, true);
-			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters.");			
+			String personLabel = "Person";
+			String practiceLabel = "Practice";
+			String dateOfAdoptionLabel = "DateOfAdoption";
+			String qualityLabel = "Quality";
+			String quantityLabel = "Quantity";
+			String quantityUnitLabel = "Quantity Unit";
+			StringValidator personValidator = new StringValidator(personLabel,this.person.getId(), false, false, 1, 100);
+			StringValidator practiceValidator = new StringValidator(practiceLabel, this.practice.getId(), false, false, 1, 100);
+			DateValidator dateOfAdoption = new DateValidator(dateOfAdoptionLabel, this.date_of_adoption, false, false);
+			StringValidator quality = new StringValidator(qualityLabel, this.quality, true, true, 0, 100, true);
+			IntegerValidator quantity = new IntegerValidator(quantityLabel, this.quantity, true, true);
+			StringValidator quantityUnit = new StringValidator(quantityUnitLabel,this.quantity_unit, true, true, 0, 100, true);
+
 			//Unique constraint validator
 			ArrayList unqPerson = new ArrayList();
 			unqPerson.add("person_id");
@@ -185,9 +186,13 @@ public class Data extends BaseData.Data {
 			ArrayList uniqueTogether = new ArrayList();
 			uniqueTogether.add(unqPerson);
 			uniqueTogether.add(unqPractice);
-			uniqueTogether.add(unqDateOfAdoption);			
-			UniqueConstraintValidator uniquePersonPractice = new UniqueConstraintValidator(uniqueTogether, new PersonAdoptPracticeData());
-			uniquePersonPractice.setError("The Person with same adoption date and practice is already in system.  Please make sure they are unique.");
+			uniqueTogether.add(unqDateOfAdoption);
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Person");
+			uniqueValidatorLabels.add("Practice");
+			uniqueValidatorLabels.add("Date Of Adoption");
+			UniqueConstraintValidator uniquePersonPractice = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniqueTogether, new PersonAdoptPracticeData());
 			uniquePersonPractice.setCheckId(this.getId());			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personValidator);
@@ -202,16 +207,16 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			StringValidator practiceValidator = new StringValidator(this.practice.getId(), false, false, 1, 100);
-			practiceValidator.setError("Please make sure that you choose a practice for 'Practice'.");
-			DateValidator dateOfAdoption = new DateValidator(this.date_of_adoption, false, false);
-			dateOfAdoption.setError("Please make sure 'DateOfAdoption' is formatted as YYYY-MM-DD.");
-			StringValidator quality = new StringValidator(this.quality, true, true, 0, 100, true);
-			quality.setError("Please make sure quality is less than 100 characters and does not contain special characters");
-			IntegerValidator quantity = new IntegerValidator(this.quantity, true, true);
-			quantity.setError("Please make sure quantity is integer");
-			StringValidator quantityUnit = new StringValidator(this.quantity_unit, true, true, 0, 100,true);
-			quantityUnit.setError("Please make sure quantity unit is less than 100 characters and does not contain special characters");
+			String practiceLabel = "Practice";
+			String dateOfAdoptionLabel = "DateOfAdoption";
+			String qualityLabel = "Quality";
+			String quantityLabel = "Quantity";
+			String quantityUnitLabel = "Quantity Unit";
+			StringValidator practiceValidator = new StringValidator(practiceLabel, this.practice.getId(), false, false, 1, 100);
+			DateValidator dateOfAdoption = new DateValidator(dateOfAdoptionLabel, this.date_of_adoption, false, false);
+			StringValidator quality = new StringValidator(qualityLabel, this.quality, true, true, 0, 100, true);
+			IntegerValidator quantity = new IntegerValidator(quantityLabel, this.quantity, true, true);
+			StringValidator quantityUnit = new StringValidator(quantityUnitLabel, this.quantity_unit, true, true, 0, 100,true);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(practiceValidator);
 			validatorList.add(dateOfAdoption);

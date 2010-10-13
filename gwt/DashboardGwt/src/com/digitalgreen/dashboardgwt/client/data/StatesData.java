@@ -98,20 +98,20 @@ public class StatesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator stateValidator = new StringValidator(this.state_name, false, false, 1, 100, true);
-			stateValidator.setError("Please make sure that 'State Name' is NOT EMPTY and not more than 100 characters " +
-					"and should not contain any special characters.");
-			StringValidator regionValidator = new StringValidator(this.region.getId(), false, false);
-			regionValidator.setError("Please make sure you choose a region for 'Region'.");
-			DateValidator dateValidator = new DateValidator(this.start_date, true, true);
-			dateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			String nameLabel = "State Name";
+			String regionLabel = "Region";
+			String startDateLabel = "Start Date";
+			StringValidator stateValidator = new StringValidator(nameLabel, this.state_name, false, false, 1, 100, true);
+			StringValidator regionValidator = new StringValidator(regionLabel, this.region.getId(), false, false);
+			DateValidator dateValidator = new DateValidator(startDateLabel, this.start_date, true, true);
 			ArrayList state_name = new ArrayList();
 			state_name.add("state_name");
 			state_name.add(this.state_name);
 			ArrayList stateName = new ArrayList();
 			stateName.add(state_name);
-			UniqueConstraintValidator uniqueStateName = new UniqueConstraintValidator(stateName, new StatesData());
-			uniqueStateName.setError("The State Name is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("StateName");
+			UniqueConstraintValidator uniqueStateName = new UniqueConstraintValidator(uniqueValidatorLabels, stateName, new StatesData());
 			uniqueStateName.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(stateValidator);

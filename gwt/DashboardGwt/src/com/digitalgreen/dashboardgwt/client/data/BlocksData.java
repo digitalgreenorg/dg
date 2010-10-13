@@ -105,19 +105,21 @@ public class BlocksData extends BaseData {
 
 		@Override
 		public boolean validate() {
-			StringValidator blockName = new StringValidator(this.block_name, false, false, 1, 100, true);
-			blockName.setError(" 'Block Name' is a required field, should not be more than 100 characters and should not contain special characters.");
-			DateValidator startDate = new DateValidator(this.start_date, true, true);
-			startDate.setError("Please make sure 'Start date' is formatted as 'YYYY-MM-DD'.");
-			StringValidator districtValidator = new StringValidator(this.district.getId(), false, false, 1, 100);
-			districtValidator.setError("Please make sure you choose a district for 'District'.");
+			String blockNameLabel = "Block Name";
+			String startDateLabel = "Start date";
+			String districtLabel = "District";
+			StringValidator blockName = new StringValidator(blockNameLabel, this.block_name, false, false, 1, 10, true);
+			DateValidator startDate = new DateValidator(startDateLabel,this.start_date, true, true);
+			StringValidator districtValidator = new StringValidator(districtLabel,this.district.getId(), false, false, 1, 100);
+			
 			ArrayList block_name = new ArrayList();
 			block_name.add("block_name");
 			block_name.add(this.block_name);
 			ArrayList uniqueName = new ArrayList();
 			uniqueName.add(block_name);
-			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new BlocksData());
-			uniqueNameValidator.setError("The Block is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Block");
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueValidatorLabels,uniqueName, new BlocksData());
 			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(blockName);

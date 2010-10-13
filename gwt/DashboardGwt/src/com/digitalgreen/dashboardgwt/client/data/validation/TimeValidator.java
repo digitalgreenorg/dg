@@ -8,8 +8,9 @@ public class TimeValidator extends BaseValidator {
 		super(value);
 	}
 	
-	public TimeValidator(String value, boolean nullable, boolean blank) {
+	public TimeValidator(String childLabel, String value, boolean nullable, boolean blank) {		
 		super(value, nullable, blank);
+		this.childLabel = childLabel;
 	}
 
 	private boolean validateHour(String hour) {
@@ -46,13 +47,19 @@ public class TimeValidator extends BaseValidator {
 	@Override
 	public boolean validate() {
 		if(!super.validate()) {
+			errorString += reqiuredFieldErrorMessage;
 			return false;
 		} else if(this.getValue() == null){
 			return true;
 		}
 		String[] hourMinuteSecond = ((String)this.getValue()).split(":");
-		return this.validateHour(hourMinuteSecond[0]) &&
+		if (this.validateHour(hourMinuteSecond[0]) &&
 			this.validateMinute(hourMinuteSecond[1]) &&
-			this.validateSecond(hourMinuteSecond[2]);
+			this.validateSecond(hourMinuteSecond[2])) 
+			return true;
+		else {
+			errorString += timeFormatErrorMessage;
+			return false;
+		}
 	}
 }

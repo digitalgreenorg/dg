@@ -81,17 +81,19 @@ public class RegionsData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator nameValidator = new StringValidator(this.region_name, false, false, 1, 100, true);
-			nameValidator.setError("Please make sure that 'Region Name' is NOT EMPTY and not more than 100 characters and should not contain any special characters.");
-			DateValidator dateValidator = new DateValidator(this.start_date, true, false);
-			dateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			//Labels to print validation error messages
+			String nameLabel = "Region Name";
+			String dateLabel = "Start Date";
+			StringValidator nameValidator = new StringValidator(nameLabel, this.region_name, false, false, 1, 100, true);
+			DateValidator dateValidator = new DateValidator(dateLabel, this.start_date, true, false);
 			ArrayList region_name = new ArrayList();
 			region_name.add("region_name");
 			region_name.add(this.region_name);
 			ArrayList uniqueRegionName = new ArrayList();
 			uniqueRegionName.add(region_name);
-			UniqueConstraintValidator regionName = new UniqueConstraintValidator(uniqueRegionName, new RegionsData());
-			regionName.setError("The 'Region name' is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Region Name");
+			UniqueConstraintValidator regionName = new UniqueConstraintValidator(uniqueValidatorLabels, uniqueRegionName, new RegionsData());
 			regionName.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);

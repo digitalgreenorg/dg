@@ -92,14 +92,16 @@ public class PartnersData extends BaseData {
 		}
 		
 		public boolean validate(){
-			StringValidator nameValidator = new StringValidator(this.partner_name, false, false, 1, 100, true);
-			nameValidator.setError("Please make sure that 'Partner Name' is NOT EMPTY, is not more than 100 characters and does not contain special characters.");
-			DateValidator dateValidator = new DateValidator(this.date_of_association, true, false);
-			dateValidator.setError("Please make sure 'Date of Association' is formatted as 'YYYY-MM-DD'.");
-			StringValidator phoneValidator = new StringValidator(this.phone_no, true, false, 0, 100, true);
-			phoneValidator.setError("Please make sure that 'Phone No' is not more than 100 CHARACTERS and does not contain special characters.");
-			StringValidator addressValidator = new StringValidator(this.address, true, false, 0, 500);
-			addressValidator.setError("Please make sure that 'Address' is not more than 500 CHARACTERS");
+			//Labels to print validation error messages
+			String nameLabel = "Partner Name";
+			String dateOfAssociationLabel = "Date of Association";
+			String phoneNoLabel = "Phone Number";
+			String addressLabel = "Address";
+			
+			StringValidator nameValidator = new StringValidator(nameLabel, this.partner_name, false, false, 1, 100, true);
+			DateValidator dateValidator = new DateValidator(dateOfAssociationLabel, this.date_of_association, true, false);
+			StringValidator phoneValidator = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
+			StringValidator addressValidator = new StringValidator(addressLabel, this.address, true, false, 0, 500);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);
 			validatorList.add(dateValidator);

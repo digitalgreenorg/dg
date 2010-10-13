@@ -7,12 +7,14 @@ import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
 
 public class UniqueConstraintValidator extends BaseValidator {
-	private BaseData baseData = null;
-	private String checkId = null;
+	protected BaseData baseData = null;
+	protected String checkId = null;
+	protected ArrayList labels;
 	
-	public UniqueConstraintValidator(ArrayList value, BaseData baseData) {
+	public UniqueConstraintValidator(ArrayList labels, ArrayList value, BaseData baseData ) {
 		super(value);
 		this.baseData = baseData;
+		this.labels = labels;
 	}
 
 	public void setCheckId(String checkId) {
@@ -28,7 +30,7 @@ public class UniqueConstraintValidator extends BaseValidator {
 		for(int i=0; i < whereClause.size(); i++) {
 			ArrayList whereClausePart = (ArrayList)whereClause.get(i);
 			if((String)whereClausePart.get(1) != null) {
-				query += (String)whereClausePart.get(0) + "='" + (String)whereClausePart.get(1) + "'";
+				query += (String)whereClausePart.get(0) + "='" + ((String)whereClausePart.get(1)).trim() + "' COLLATE NOCASE";
 			} else {
 				query += (String)whereClausePart.get(0) + " is null" ;
 			}
@@ -50,6 +52,11 @@ public class UniqueConstraintValidator extends BaseValidator {
 			} finally {
 				BaseData.dbClose();
 			}
+			ArrayList childLabels = (ArrayList)this.labels;
+			for(int i=0; i < childLabels.size(); i++) {
+				errorString += childLabels.get(i)+", ";
+			}
+			errorString += uniqueValidatorErrorMessage;
 			return false;
 		}
 		BaseData.dbClose();

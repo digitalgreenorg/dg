@@ -98,19 +98,22 @@ public class PracticesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator nameValidator = new StringValidator(this.practice_name, false, false, 1, 200, true);
-			nameValidator.setError("Please make sure 'Name' NOT EMPTY and is less than 200 characters and should not contain any special characters.");
-			StringValidator seasonalityValidator = new StringValidator(this.seasonality, false, false, 3, 3);
-			seasonalityValidator.setError("Please make sure you choose a Season for 'Seasonality'.");
-			StringValidator summaryValidator = new StringValidator(this.summary, true, false, 0, 1024, true);
-			summaryValidator.setError("Please make sure 'Summary' is less than 1024 CHARACTERS and should not contain any special characters.");
+			//Labels to print validation error messages
+			String nameLabel = "Name";
+			String seasonLabel = "Seasonality";
+			String summaryLabel = "Summary";			
+			StringValidator nameValidator = new StringValidator(nameLabel, this.practice_name, false, false, 1, 200, true);
+			StringValidator seasonalityValidator = new StringValidator(seasonLabel, this.seasonality, false, false, 3, 3);
+			StringValidator summaryValidator = new StringValidator(summaryLabel, this.summary, true, false, 0, 1024, true);
 			ArrayList practice_name = new ArrayList();
 			practice_name.add("practice_name");
 			practice_name.add(this.practice_name);
 			ArrayList uniquePractice = new ArrayList();
 			uniquePractice.add(practice_name);
-			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniquePractice, new PracticesData());
-			uniqueNameValidator.setError("The Practice name is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Practice Name");
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueValidatorLabels,
+					uniquePractice, new PracticesData());
 			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(nameValidator);

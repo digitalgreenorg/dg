@@ -194,38 +194,29 @@ public class ScreeningsData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			DateValidator dateValidator = new DateValidator(this.date, false, false);
-			dateValidator.setError("Please make sure 'Date' is NOT EMPTY and is formatted as YYYY-MM-DD.");
+			String dateLabel = "Date";
+			String startTimeLabel = "Start Time";
+			String endTimeLabel = "End Time";
+			String locationLabel = "Location";
+			String villageLabel = "Village";
+			String animatorLabel = "Animator";
+			String videosScreenedLabel = "Videos Screened";
+			String targetPersonAttendanceLabel = "Target Person Attendance";
+			String targetAudienceIntereseLabel = "Target Audience Interested";
+			String targetAdoptionsLabel = "Target Adoptions";
+			String farmerGroupsTargetedLabel = "Farmer Groups Targeted";	
 			
-			TimeValidator startTimeValidator = new TimeValidator(this.start_time, false, false);
-			startTimeValidator.setError("Please make sure 'Start time' is NOT EMPTY and is formatted as 'HH:MM:SS' and it must be in 24 HOUR format.");
-			
-			TimeValidator endTimeValidator = new TimeValidator(this.end_time, false, false);
-			endTimeValidator.setError("Please make sure 'End time' is NOT EMPTY and is formatted as 'HH:MM:SS' and it must be in 24 HOUR format.");
-			
-			StringValidator locationValidator = new StringValidator(this.location, true, false, 0, 200, true);
-			locationValidator.setError("Please make sure that 'Location' is not nore than 200 CHARACTERS and does not contain special characters.");
-			
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
-			
-			StringValidator animatorValidator = new StringValidator(this.animator.getId(), false, false, 1, 100);
-			animatorValidator.setError("Please make sure you choose a animator for 'Animator'.");
-			
-			ManyToManyValidator videoScreenedValidator = new ManyToManyValidator(videoes_screened, false);
-			videoScreenedValidator.setError("Please make sure you add some videos for 'Videoes screened'.");
-			
-			IntegerValidator targetPersonAttendanceValidator = new IntegerValidator(this.target_person_attendance, true, false);
-			targetPersonAttendanceValidator.setError("Please make sure that 'Target person attendance' is a number.");
-			
-			IntegerValidator targetAudienceIntereseValidator = new IntegerValidator(this.target_audience_interest, true, false);
-			targetAudienceIntereseValidator.setError("Please make sure that 'Target audience interest' is a number.");
-			
-			IntegerValidator targetAdoptionsValidator = new IntegerValidator(this.target_adoptions, true, false);
-			targetAdoptionsValidator.setError("Please make sure that 'Target adoptions' is a number.");
-			
-			ManyToManyValidator farmerGroupValidator = new ManyToManyValidator(farmer_groups_targeted, false);
-			farmerGroupValidator.setError("Please make sure you add some farmer groups for 'Farmer groups targeted'.");
+			DateValidator dateValidator = new DateValidator(dateLabel, this.date, false, false);
+			TimeValidator startTimeValidator = new TimeValidator(startTimeLabel, this.start_time, false, false);
+			TimeValidator endTimeValidator = new TimeValidator(endTimeLabel, this.end_time, false, false);
+			StringValidator locationValidator = new StringValidator(locationLabel, this.location, true, false, 0, 200, true);
+			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
+			StringValidator animatorValidator = new StringValidator(animatorLabel, this.animator.getId(), false, false, 1, 100);
+			ManyToManyValidator videoScreenedValidator = new ManyToManyValidator(videosScreenedLabel,videoes_screened, false);
+			IntegerValidator targetPersonAttendanceValidator = new IntegerValidator(targetPersonAttendanceLabel, this.target_person_attendance, true, false);
+			IntegerValidator targetAudienceIntereseValidator = new IntegerValidator(targetAudienceIntereseLabel,this.target_audience_interest, true, false);
+			IntegerValidator targetAdoptionsValidator = new IntegerValidator(targetAdoptionsLabel,this.target_adoptions, true, false);
+			ManyToManyValidator farmerGroupValidator = new ManyToManyValidator(farmerGroupsTargetedLabel,farmer_groups_targeted, false);
 			
 			ArrayList uniqueDate = new ArrayList();
 			uniqueDate.add("date");
@@ -254,8 +245,14 @@ public class ScreeningsData extends BaseData {
 			uniqueTogether.add(uniqueLocation);
 			uniqueTogether.add(uniqueVillage);
 			
-			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueTogether, new ScreeningsData());
-			uniqueDateStartEndTimeLocationVillageId.setError("The Date, Start time, End time, Location, and Village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Date");
+			uniqueValidatorLabels.add("Start Time");
+			uniqueValidatorLabels.add("End TIme");
+			uniqueValidatorLabels.add("Location");
+			uniqueValidatorLabels.add("Village");			
+			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueValidatorLabels, uniqueTogether, 
+					new ScreeningsData());
 			uniqueDateStartEndTimeLocationVillageId.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();

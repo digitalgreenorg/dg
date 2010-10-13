@@ -6,48 +6,54 @@ import com.google.gwt.user.client.Window;
 
 public class StringValidator extends BaseValidator {
 	
-	final static private String strictChars = "[a-zA-Z0-9._, ]+";
-	private int minValue = Integer.MIN_VALUE;
-	private int maxValue = Integer.MAX_VALUE;
-	private HashMap choices = null;
-	private boolean strictCharSet = false;
+	final static protected String strictChars = "[a-zA-Z0-9._, ]+";
+	protected int minValue = Integer.MIN_VALUE;
+	protected int maxValue = Integer.MAX_VALUE;
+	protected HashMap choices = null;
+	protected boolean strictCharSet = false;
 	
 	public StringValidator(String value) {
 		super(value);
 	}
 	
-	public StringValidator(String value, boolean nullable, boolean blank) {
+	public StringValidator(String childLabel, String value, boolean nullable, boolean blank) {
 		super(value, nullable, blank);
+		this.childLabel = childLabel;
 	}
 	
-	public StringValidator(String value, boolean nullable, boolean blank, 
+	public StringValidator(String childLabel, String value, boolean nullable, boolean blank, 
 			int minValue, int maxValue) {
 		super(value, nullable, blank);
 		this.minValue = minValue;
 		this.maxValue = maxValue;
+		this.childLabel = childLabel;
 	}
 	
-	public StringValidator(String value, boolean nullable, boolean blank, 
+	public StringValidator(String childLabel, String value, boolean nullable, boolean blank, 
 			int minValue, int maxValue, boolean strictCharSet) {
-		super(value, nullable, blank);
+		super(childLabel,value, nullable, blank);
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.strictCharSet = strictCharSet;
+		this.childLabel = childLabel;
 	}
 	
 	@Override
 	public boolean validate() {
 		if(!super.validate()){
+			errorString += reqiuredFieldErrorMessage; 
 			return false;
 		} else if(this.getValue() == null){
 			return true;
 		} else if(!(((String)this.getValue()).length() >= this.minValue && 
 				((String)this.getValue()).length() <= this.maxValue)) {
+			errorString += maximumCharactersErrorMessage+Integer.toString(this.maxValue);
 			return false;
 		}		
 		
 		if(this.getValue() != null && this.isNotEmpty() && this.strictCharSet && 
 				!((String)this.getValue()).matches(StringValidator.strictChars)) {
+			errorString += specialCharactersErrorMessage;
 			return false;
 		}
 		return true;

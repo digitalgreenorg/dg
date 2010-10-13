@@ -30,8 +30,7 @@ public class VillagesData extends BaseData {
 	
 	public class Data extends BaseData.Data {
 		
-		final private static String COLLECTION_PREFIX = "village";
-		
+		final private static String COLLECTION_PREFIX = "village";		
 		private String village_name;
 	    private BlocksData.Data block; 
 	    private String no_of_households;
@@ -125,18 +124,18 @@ public class VillagesData extends BaseData {
 		
 		@Override
 		public boolean validate(){
-			StringValidator villageName = new StringValidator(this.village_name, false, false, 1, 100, true);
-			villageName.setError("Village Name is a required field, is less than 100 characters and should not contain any special characters.");
-			StringValidator blockValidator = new StringValidator(this.block.getId(), false, false, 1, 100);
-			blockValidator.setError("Please make sure you choose a block for 'Block'.");
-			IntegerValidator noOfHouseHolds = new IntegerValidator(this.no_of_households, true, false);
-			noOfHouseHolds.setError("Please enter integer for the number of households");
-			IntegerValidator population = new IntegerValidator(this.population, true, false);
-			population.setError("Please enter integer for population");
-			StringValidator roadConnectivity = new StringValidator(this.road_connectivity, true, false, 1, 100);
-			roadConnectivity.setError("Please make sure that road connectivity is less than 100 characters and does not contain any special characters.");
-			DateValidator startDate = new DateValidator(this.start_date, true, false);
-			startDate.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
+			String villageNameLabel = "Village Name" ;
+			String blockLabel = "Block" ;
+			String noOfHouseHoldsLabel = "Number Of HouseHolds" ;
+			String populationLabel = "Population" ;
+			String roadConnectivityLabel = "Road Connectivity" ;
+			String startDateLabel = "Start Date" ;			
+			StringValidator villageName = new StringValidator(villageNameLabel, this.village_name, false, false, 1, 100, true);
+			StringValidator blockValidator = new StringValidator(blockLabel, this.block.getId(), false, false, 1, 100);
+			IntegerValidator noOfHouseHolds = new IntegerValidator(noOfHouseHoldsLabel, this.no_of_households, true, false);
+			IntegerValidator population = new IntegerValidator(populationLabel, this.population, true, false);
+			StringValidator roadConnectivity = new StringValidator(roadConnectivityLabel, this.road_connectivity, true, false, 1, 100);
+			DateValidator startDate = new DateValidator(startDateLabel, this.start_date, true, false);
 			ArrayList village_name = new ArrayList();
 			village_name.add("village_name");
 			village_name.add(this.village_name);
@@ -148,8 +147,11 @@ public class VillagesData extends BaseData {
 			ArrayList villageBllockID = new ArrayList();
 			villageBllockID.add(village_name);
 			villageBllockID.add(blockID);
-			UniqueConstraintValidator uniqueVillageBlockID = new UniqueConstraintValidator(villageBllockID, new VillagesData());
-			uniqueVillageBlockID.setError("The Village and Block pair is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Block");
+			uniqueValidatorLabels.add("Village");
+			UniqueConstraintValidator uniqueVillageBlockID = new UniqueConstraintValidator(uniqueValidatorLabels,
+					villageBllockID, new VillagesData());
 			uniqueVillageBlockID.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();

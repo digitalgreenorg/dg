@@ -242,7 +242,7 @@ public class TargetsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			IntegerValidator clusters_identification = new IntegerValidator(this.clusters_identification, true, true);
+			/*IntegerValidator clusters_identification = new IntegerValidator(this.clusters_identification, true, true);
 			clusters_identification.setError("Please enter a valid clustersIdentification");
 			IntegerValidator dg_concept_sharing = new IntegerValidator(this.dg_concept_sharing, true, true);
 			dg_concept_sharing.setError("Please enter a valid DgConceptSharing");
@@ -322,7 +322,8 @@ public class TargetsData extends BaseData {
 			validatorList.add(what_not_went_well);
 			validatorList.add(challenges);
 			validatorList.add(support_requested);
-			return this.executeValidators(validatorList);
+			return this.executeValidators(validatorList);*/
+			return true;
 		}
 		
 		@Override

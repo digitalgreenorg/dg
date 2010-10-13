@@ -70,15 +70,16 @@ public class LanguagesData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator languageName = new StringValidator(this.language_name, false, false, 1, 100, true);
-			languageName.setError("Please make sure that 'Language Name' is NOT EMPTY, is not more than 100 characters and does not contain special characters.");
+			String languageNameLabel = "Language Name";
+			StringValidator languageName = new StringValidator(languageNameLabel, this.language_name, false, false, 1, 100, true);			
 			ArrayList language_name = new ArrayList();
 			language_name.add("language_name");
 			language_name.add(this.language_name);
 			ArrayList uniqueName = new ArrayList();
 			uniqueName.add(language_name);
-			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new LanguagesData());
-			uniqueNameValidator.setError("The Language is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Language");
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueValidatorLabels,uniqueName, new LanguagesData());
 			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(languageName);

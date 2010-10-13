@@ -8,6 +8,7 @@ import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BlocksData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.google.gwt.gears.client.Factory;
@@ -300,7 +301,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected static String updateApplicationStatus = "UPDATE `user` SET app_status=? WHERE username = ?;";
 	protected static String userTableExists = "SELECT * FROM sqlite_master where type='table' and name = 'user';";
 	protected static String createTable = "";
-	protected static String dropTable = "";	
+	protected static String dropTable = "";
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
 
 	public BaseData() {}
@@ -697,9 +698,10 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 			} catch (DatabaseException e) {
 				// TODO Auto-generated catch block
 				Window.alert("Database Exception"+e.toString());
+			} finally {
+				BaseData.dbClose();
 			}
 		}
-		BaseData.dbClose();
 		return count;
 	}
 }

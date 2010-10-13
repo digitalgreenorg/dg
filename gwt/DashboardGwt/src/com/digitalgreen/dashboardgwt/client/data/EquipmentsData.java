@@ -226,31 +226,42 @@ public class EquipmentsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator equipmentType = new StringValidator(this.equipment_type, false, false);
-			equipmentType.setError("Please make sure that 'Equipment Type' is NOT EMPTY");
-			StringValidator ModelNo = new StringValidator(this.model_no, true, false, 0, 100,true);
-			ModelNo.setError("Please make sure that 'Make / Model No ' is not more than 300 CHARACTERS and does not contain special characters");
-			StringValidator serialNo = new StringValidator(this.serial_no, true, false, 0, 100,true);
-			serialNo.setError("Please make sure that 'Serial No' is not more than 300 CHARACTERS and does not contain special characters");
-			FloatValidator cost = new FloatValidator(this.cost, true, true);
-			cost.setError("COST must be a number");
-			DateValidator procurementDate = new DateValidator(this.procurement_date, true, true);
-			procurementDate.setError("Please make sure 'Procurement date' is formatted as YYYY-MM-DD.");
-			DateValidator transferDate = new DateValidator(this.transfer_date, true, true);
-			transferDate.setError("Please make sure 'Transfer date' is formatted as YYYY-MM-DD.");
-			DateValidator installationDate = new DateValidator(this.installation_date, true, true);
-			installationDate.setError("Please make sure 'InstallationDate' is formatted as YYYY-MM-DD.");
-			DateValidator warrantyExpirationDate = new DateValidator(this.warranty_expiration_date, true, true);
-			warrantyExpirationDate.setError("Please make sure 'Warranty expiration date' is formatted as YYYY-MM-DD.");
+			//Labels to print validation error messages
+			String equipmentTypeLabel = "Equipment Type";
+			String otherEquipmentTypeLabel = "Other Equipment Type";
+			String modelNoLabel = "Make / Model No";
+			String serialNoLabel = "Serial No";
+			String costLabel = "Cost";
+			String additionalAccessoriesLabel = "Additional Accessories Supplied" ;
+			String procurementDateLabel = "Procurement Date";
+			String transferDateLabel = "Transfer from DG to Partner Date";
+			String installationDateLabel = "Field Installation Date";
+			String warrantyExpirationDateLabel = "Warranty Expiration Date";
+			String remarksLabel = "Remarks";
+			
+			StringValidator equipmentType = new StringValidator(equipmentTypeLabel,this.equipment_type, false, false);
+			StringValidator otherEquipmentType = new StringValidator(otherEquipmentTypeLabel, this.other_equipment, true, false, 0, 100,true);
+			StringValidator ModelNo = new StringValidator(modelNoLabel, this.model_no, true, false, 0, 100,true);
+			StringValidator serialNo = new StringValidator(serialNoLabel, this.serial_no, true, false, 0, 100,true);
+			FloatValidator cost = new FloatValidator(costLabel, this.cost, true, true);
+			StringValidator additionalAccessories = new StringValidator(additionalAccessoriesLabel,this.additional_accessories, true, false, 0, 100,true);
+			DateValidator procurementDate = new DateValidator(procurementDateLabel,this.procurement_date, true, true);
+			DateValidator transferDate = new DateValidator(transferDateLabel,this.transfer_date, true, true);
+			DateValidator installationDate = new DateValidator(installationDateLabel,this.installation_date, true, true);
+			DateValidator warrantyExpirationDate = new DateValidator(warrantyExpirationDateLabel,this.warranty_expiration_date, true, true);
+			StringValidator remarks = new StringValidator(remarksLabel,this.remarks, true, false, 0, 100,true);
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(equipmentType);
+			validatorList.add(otherEquipmentType);
 			validatorList.add(ModelNo);
 			validatorList.add(serialNo);
 			validatorList.add(cost);
+			validatorList.add(additionalAccessories);
 			validatorList.add(procurementDate);
 			validatorList.add(transferDate);
 			validatorList.add(installationDate);
 			validatorList.add(warrantyExpirationDate);
+			validatorList.add(remarks);
 			return this.executeValidators(validatorList);
 		}
 		

@@ -54,7 +54,8 @@ public class TrainingsData extends BaseData {
 		}
 		
 		public Data(String id, String training_purpose, String training_outcome, String training_start_date, String training_end_date, 
-				VillagesData.Data village, DevelopmentManagersData.Data development_manager_present, FieldOfficersData.Data field_officer_present ){
+				VillagesData.Data village, DevelopmentManagersData.Data development_manager_present, 
+				FieldOfficersData.Data field_officer_present ){
 			super();
 			this.id = id;
 			this.training_purpose = training_purpose;
@@ -158,21 +159,24 @@ public class TrainingsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator trainingPurpose = new StringValidator(this.training_purpose, true, false, 0, 1024, true);
-			trainingPurpose.setError("Please make sure 'Training purpose' is less than 1024 characters and does not contain special characters.");
-			StringValidator trainingOutcome = new StringValidator(this.training_outcome, true, false, 0, 1024, true);
-			trainingOutcome.setError("Please make sure 'Training outcome' is less than 1024 characters and does not contain special characters.");	
-			DateValidator trainingStartDate = new DateValidator(this.training_start_date, false, false);
-			trainingStartDate.setError("Please make sure 'Training start date' is formatted as YYYY-MM-DD.");
-			DateValidator trainingEndDate = new DateValidator(this.training_end_date, false, false);
-			trainingEndDate.setError("Please make sure 'Training end date' is formatted as YYYY-MM-DD.");
-			StringValidator villageValidator = new StringValidator(this.village.getId(), false, false, 1, 100);
-			villageValidator.setError("Please make sure you choose a village for 'Village'.");
-			StringValidator fieldValidator = new StringValidator(this.field_officer_present.getId(), false, false, 1, 100);
-			fieldValidator.setError("Please make sure you choose a field officer present for 'Field officer present'.");
-			ManyToManyValidator animatorsTrained = new ManyToManyValidator(this.animators_trained, false);
-			animatorsTrained.setError("Please make sure you add some animators for 'Animators trained'");
+			//Labels to print validation error messages
+			String trainingPurposeLabel = "Training Purpose";
+			String trainingOutcomeLabel = "Training Outcome";
+			String trainingStartDateLabel = "Training StartDate";
+			String trainingEndDateLabel = "Training EndDate";
+			String fieldOfficerLabel = "Address";
+			String villageLabel = "Village";
+			String animatorsTrainedLabel = "Animators Trained";
+			
+			StringValidator trainingPurpose = new StringValidator(trainingPurposeLabel, this.training_purpose, true, false, 0, 1024, true);
+			StringValidator trainingOutcome = new StringValidator(trainingOutcomeLabel, this.training_outcome, true, false, 0, 1024, true);
+			DateValidator trainingStartDate = new DateValidator(trainingStartDateLabel, this.training_start_date, false, false);
+			DateValidator trainingEndDate = new DateValidator(trainingEndDateLabel, this.training_end_date, false, false);
+			StringValidator villageValidator = new StringValidator(fieldOfficerLabel, this.village.getId(), false, false, 1, 100);
+			StringValidator fieldValidator = new StringValidator(villageLabel, this.field_officer_present.getId(), false, false, 1, 100);
+			ManyToManyValidator animatorsTrained = new ManyToManyValidator(animatorsTrainedLabel, this.animators_trained, false);
 			ArrayList predicateStartDate = new ArrayList();
+			
 			predicateStartDate.add("training_start_date");
 			predicateStartDate.add(this.training_start_date);
 			ArrayList predicateEndDate = new ArrayList();
@@ -185,8 +189,12 @@ public class TrainingsData extends BaseData {
 			startDateEndDateVillageIdIndex.add(predicateStartDate);
 			startDateEndDateVillageIdIndex.add(predicateStartDate);
 			startDateEndDateVillageIdIndex.add(predicateVillageId);
-			UniqueConstraintValidator startDateEndDateVillageId = new UniqueConstraintValidator(startDateEndDateVillageIdIndex, new TrainingsData());
-			startDateEndDateVillageId.setError("The start date, training end date, and village are already in the system.  Please make sure they are unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("Start Date");
+			uniqueValidatorLabels.add("End Date");
+			uniqueValidatorLabels.add("Village");
+			UniqueConstraintValidator startDateEndDateVillageId = new UniqueConstraintValidator(uniqueValidatorLabels, 
+					startDateEndDateVillageIdIndex,	new TrainingsData());
 			startDateEndDateVillageId.setCheckId(this.getId());
 			
 			ArrayList validatorList = new ArrayList();

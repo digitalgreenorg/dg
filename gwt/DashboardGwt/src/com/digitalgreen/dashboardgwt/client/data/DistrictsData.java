@@ -125,25 +125,29 @@ public class DistrictsData extends BaseData {
 		
 		@Override
 		public boolean validate() {
-			StringValidator districtNameValidator = new StringValidator(this.district_name, false, false, 1, 100, true);
-			districtNameValidator.setError("Please make sure that 'District Name' is NOT EMPTY and not more than 100 characters and does not contain special characters.");
-			DateValidator startDateValidator = new DateValidator(this.start_date, true, true);
-			startDateValidator.setError("Please make sure 'Start date' is formatted as YYYY-MM-DD.");
-			StringValidator stateValidator = new  StringValidator(this.state.getId(), false, false, 1, 100);
-			stateValidator.setError("Please make sure you choose a state for 'State'.");
-			StringValidator fieldValidator = new StringValidator(this.fieldofficer.getId(), false, false, 1, 100);
-			fieldValidator.setError("Please make sure you choose a field officer for 'Field officer'.");
-			DateValidator fieldOfficerStartDateValidator = new DateValidator(this.fieldofficer_startday, true, true);
-			fieldOfficerStartDateValidator.setError("Please make sure 'Fieldofficer Start date' is formatted as YYYY-MM-DD.");
-			StringValidator partnerValidator = new StringValidator(this.partner.getId(), false, false, 1, 100);
-			partnerValidator.setError("Please make sure you choose a partner for 'Partner'.");
+			//Labels to print validation error messages
+			String districtNameLabel = "District Name";
+			String startDateLabel = "Start Date";
+			String stateLabel = "State";
+			String fieldOfficerLabel = "Field officer";
+			String fieldOfficerStartDateLabel = "Fieldofficer Start date";
+			String partnerLabel = "Partner";
+			
+			StringValidator districtNameValidator = new StringValidator(districtNameLabel,this.district_name, false, false, 1, 100, true);
+			DateValidator startDateValidator = new DateValidator(startDateLabel,this.start_date, true, true);
+			StringValidator stateValidator = new  StringValidator(stateLabel,this.state.getId(), false, false, 1, 100);
+			StringValidator fieldValidator = new StringValidator(fieldOfficerLabel, this.fieldofficer.getId(), false, false, 1, 100);
+			DateValidator fieldOfficerStartDateValidator = new DateValidator(fieldOfficerStartDateLabel,this.fieldofficer_startday, true, true);
+			StringValidator partnerValidator = new StringValidator(partnerLabel, this.partner.getId(), false, false, 1, 100);
+			
 			ArrayList district_name = new ArrayList();
 			district_name.add("district_name");
 			district_name.add(this.district_name);
 			ArrayList uniqueName = new ArrayList();
 			uniqueName.add(district_name);
-			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueName, new DistrictsData());
-			uniqueNameValidator.setError("The District is already in the system.  Please make sure it is unique.");
+			ArrayList uniqueValidatorLabels = new ArrayList();
+			uniqueValidatorLabels.add("District");
+			UniqueConstraintValidator uniqueNameValidator = new UniqueConstraintValidator(uniqueValidatorLabels,uniqueName, new DistrictsData());
 			uniqueNameValidator.setCheckId(this.getId());
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(districtNameValidator);
