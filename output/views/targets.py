@@ -24,7 +24,7 @@ def target_table(request):
     
     vil_operation_from_date = run_query(get_village_operational(geog, id, from_date, partners))[0]['count']
     vil_operation_to_date = run_query(get_village_operational(geog, id, to_date, partners))[0]['count'] 
-    if(vil_operation_from_date and vil_operation_to_date):
+    if(vil_operation_from_date!=None and vil_operation_to_date!=None):
         achieved_vals['village_operational'] = vil_operation_to_date - vil_operation_from_date
     
     achieved_vals['storyboard'] = run_query(get_storyboard_prepared(geog, id, from_date, to_date, partners))[0]['count']
