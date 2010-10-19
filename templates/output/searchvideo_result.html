@@ -1,5 +1,10 @@
 {% extends "searchvideo.html" %}
 
+{% block videobreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Search Videos </span>
+{% endblock videobreadcrums %}	  
+
+{% block pagetitle %}{{block.super}} Search Videos {% endblock pagetitle %}
 
 {% block searchbodycontentright%}
 	<form>

@@ -1,29 +1,35 @@
 
 // The values of the video details
-var languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,videosummary;
+var farmerquant, languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,videosummary;
 
 // Displaying the data in the Video Page in Tab wise
 
 var videodesc2 ="<div id='videodatadiv2divdesctop'></div>";
-var videodesc41 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1'> Video Language: ";
-var videodesc42 ="</td><td class='videoinfotd2'>Village: ";
-var videodesc43 ="</td></tr><tr><td class='videoinfotd1'> District: ";
-var videodesc44 ="</td><td class='videoinfotd2'> State: ";
-var videodesc45 ="</td></tr><tr><td class='videoinfotd1'> Production Duration: ";
-var videodesc46 ="</td><td class='videoinfotd2'> Produced On: "
-var videodesc47 ="</td></tr></table>";
+var videodesc41 ="<div id='videodatadiv2divdesctop'></div><table id='videoinfotable' cellspacing='0px' cellpadding='0'><tr><td class='videoinfotd1span' colspan='2'>";
+var videodesc42	="</td></tr>";
+var videodesc43	="<tr><td class='videoinfotd1span' colspan='2'> Practices Shown: ";
+var videodesc44	="</td></tr>";
+var videodesc45	="<tr><td class='videoinfotd1'> Language:";
+var videodesc46 ="</td><td class='videoinfotd2'>Village: ";
+var videodesc47 ="</td></tr><tr><td class='videoinfotd1'> District: ";
+var videodesc48 ="</td><td class='videoinfotd2'> State: ";
+var videodesc49 ="</td></tr><tr><td class='videoinfotd1'> Production Duration: ";
+var videodesc50 ="</td><td class='videoinfotd2'> Produced On: "
+var videodesc51 ="</td></tr></table>";
 
 
-function displaynumstat(numstat1,numstat2,numstat3,numstat4,numstat5,numstat6, numstat7,numstat8)
+function displaynumstat(numstat0, numstat1,numstat2,numstat3,numstat4,numstat5,numstat6, numstat7,numstat8, numstat9)
 {
+	farmerquant = numstat0;
 	languagename = numstat1;
 	villagename = numstat2;
 	distname = numstat3;	
 	statename = numstat4;
 	prodtime = numstat5;
 	prodenddate = numstat6;
-	practiceshown = numstat7;
-	videosummary = numstat8;
+	farmeractor = numstat7
+	practiceshown = numstat8;
+	videosummary = numstat9;
 	
 }
 
@@ -32,24 +38,19 @@ function displaydesc(temp){
 			// Adding the background colour to the selected tab            
 			
 			if(temp==1){			
-				$("div#videodatadiv2divdesc").html(videodesc41 + languagename + videodesc42 + villagename + videodesc43 + distname + videodesc44 + statename + videodesc45 + prodtime + videodesc46 + prodenddate + videodesc47);
+				$("div#videodatadiv2divdesc").html(videodesc41 + farmerquant + ": " + farmeractor + videodesc42 +  videodesc43 + practiceshown + videodesc44 + videodesc45 + languagename + videodesc46 + villagename + videodesc47 + distname + videodesc48 + statename + videodesc49 + prodtime + videodesc50 + prodenddate + videodesc51);
 				$("div#videodatadiv2divdesctop").css('margin-left','0px');					
 				//$("table#videoinfotable").slideDown();				
 			} //ifends
 			
 			if(temp==2){			
-				$("div#videodatadiv2divdesc").html(videodesc2 + practiceshown);				
+				$("div#videodatadiv2divdesc").html(videodesc2 + videosummary);				
 				$("div#videodatadiv2divdesctop").css('margin-left','250px');				
-			} //ifends
-			
-			if(temp==3){			
-				$("div#videodatadiv2divdesc").html(videodesc2 + videosummary);
-				$("div#videodatadiv2divdesctop").css('margin-left','490px');				
-			} //ifends
-						
+			} //ifends			
+					
 }
 
-function defaultload(){ 
+function videodefaultload(){ 
 					
 // Videos Page Help divs			
 			
@@ -107,14 +108,6 @@ function defaultload(){
             	$(this).css('background-color','White');
             });
 			
-			// Initializing the Date Pick Calender
-			$("div#datepickcalender1").calendar({	       		
-	       		dateFormat:"%Y-%m-%d",	       		
-			});
-			
-			$("div#datepickcalender2").calendar({	       		
-	       		dateFormat:"%Y-%m-%d",	       		
-			});
 			
 			//showing the advanced search option in the Video Search Page
 			$("td#advancedsearchopenbtn").click(function() { 
@@ -203,8 +196,8 @@ function go(page) {
         if(practice[i] != '-1')
             url.push("prac="+practice[i]);
     }
-    if($("#datepickcalender1").html()!="") url.push("from_date="+$("#datepickcalender1").html());
-    if($("#datepickcalender2").html()!="") url.push("to_date="+$("#datepickcalender2").html());
+    if($("#inlinedatepicker1").html()!="") url.push("from_date="+$("#inlinedatepicker1").html());
+    if($("#inlinedatepicker2").html()!="") url.push("to_date="+$("#inlinedatepicker2").html());
     if(page != null) url.push("page="+page);
     
     if(url.length>0) 
@@ -213,6 +206,6 @@ function go(page) {
 
 /* This is run when the page is fully loaded */
 $(document).ready(function(){	   
-	defaultload();	
+	videodefaultload();	
 	init_box_params();
 });

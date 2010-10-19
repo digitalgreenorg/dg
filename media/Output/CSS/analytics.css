@@ -5,7 +5,7 @@
 .analyticsnavlink			{ text-align:left; margin-left:10px; margin-right:10px; float:left; display:block; height:30px; min-width:60px; }
 .analyticsnavlink a			{ text-decoration:none; font-size:1.0em; font-family:Sans-Serif; font-weight:normal; color:White; }
 .analyticsnavlink a:hover	{ text-decoration:none; color:White; }	
-#analyticsnavlink	img		{ float:right; margin-right:0px; }
+#analyticsnavlink	img		{ margin-right:0px; }
 #analyticsnav1				{ clear:both; display:none; position:absolute; z-index:2; width:200px; top:20px; left:-45px; border:2px solid #BBD569; background-color:#F3FDD5; color:Gray; }
 #analyticsnav1	ul			{ margin-left:-20px; list-style:square; clear:both; }
 #analyticsnav1	ul li a		{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }

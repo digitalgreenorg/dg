@@ -5,9 +5,16 @@
     {{ block.super }}
 {% endblock jsfile %}
 
+{% block pagetitle %}{{block.super}} Video Page{% endblock pagetitle %}
+
+{% block videobreadcrums %}
+	<a href='/analytics/video_search'>Search Videos</a> / 
+	<span style="font-weight: bold;"> Video Page</span>			
+{% endblock videobreadcrums %}	
+
 {% block title %} DigitalGreen - Video Page{% endblock title%}
 
-		{% block bodycontent%}
+{% block videobodycontent%}
 			<div id='contentdivtitle'>
 				{{vid.title}}
 			</div>
@@ -33,8 +40,7 @@
                 </div>
                 {% else %}
 				<div id='novideoembed'>
-					<div id='novideoembeddesc'>						 
-						<img src='/media/Output/Images/novideoicon1.png' align="left"> 
+					<div id='novideoembeddesc'>					 
 						<div>Sorry! Video has not been uploaded yet.</div>						
 					</div>
 				</div>				
@@ -94,16 +100,15 @@
 						
 						<td id='videodatadiv2td' onclick="javascript:displaydesc(2)">
 							<div id='videodatadiv2div'>
-								Pratices Shown  <img class='imgright' src='/media/Output/Images/practice1.png' alt='Video Details'> </a>								
+								Video Summary <img class='imgright' src='/media/Output/Images/summary1.png' alt='Video Summary'> </a>																
 							</div>														
 						</td>
 						
 						<td class='videodatadiv2tdspace'>							
 						</td>
 						
-						<td id='videodatadiv2td' onclick="javascript:displaydesc(3)">
-							<div id='videodatadiv2div'>
-								Video Summary <img class='imgright' src='/media/Output/Images/summary1.png' alt='Video Details'> </a>							
+						<td id='videodatadiv2td'>
+							<div id='videodatadiv2div'>															
 							</div>															
 						</td>						
 					</tr>
@@ -118,16 +123,27 @@
 										var distname = "{{vid.village.block.district.district_name}}";
 										var statename = "{{vid.village.block.district.state.state_name}}";
 										var prodtime = "{{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}}";
-										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";	
+										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";
+										var farmerquant = "Farmer" + "{{actors.tot_actors|pluralize}}";
+										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name}} {% endfor %}";	
+										var farmeractor = farmeractor.toUpperCase(farmeractor);
 										var practiceshown = "{%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name}}{%if not forloop.last%}, {%endif%}{%endfor%}.";
-										var summary = "{{vid.summary|escapejs}}"; 									
-										displaynumstat(languagename,villagename,distname,statename,prodtime,prodenddate,practiceshown,summary);	
+										practiceshown = practiceshown.toUpperCase(practiceshown);
+										var summary = "{{vid.summary|escapejs}}"; 	
+										summary = summary.toUpperCase(summary);								
+										displaynumstat(farmerquant,languagename,villagename,distname,statename,prodtime,prodenddate,farmeractor,practiceshown,summary);	
 																																					
 									}								
 								</script>
 								
 								<div id='videodatadiv2divdesctop'></div>	
 								<table id='videoinfotable' cellspacing='0px' cellpadding='0'>
+									<tr>
+										<td class='videoinfotd1span' colspan='2'> Farmer{{actors.tot_actors|pluralize}}: {% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}      </td>										
+									</tr>
+									<tr>
+										<td class='videoinfotd1span' colspan='2'> Practices Shown: {%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name.upper}}{%if not forloop.last%}, {%endif%}{%endfor%} </td>
+									</tr>
 									<tr>
 										<td class='videoinfotd1'> Language: {{vid.language.language_name}} </td>
 										<td class='videoinfotd2'> Village: {{vid.village.village_name }} </td>
@@ -141,13 +157,7 @@
 										<td class='videoinfotd1'> Production Duration: {{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}} </td>
 
 										<td class='videoinfotd2'> Produced On: {{ vid.video_production_end_date|date:"d M Y" }} </td>
-									</tr>
-									<tr>
-										<td class='videoinfotd1'> 
-											Farmer{{actors.tot_actors|pluralize}}: {% for actor in actors.actors %}{{actor.person_name}} {% endfor %} 
-										</td>
-										<td class='videoinfotd2'> </td>
-									</tr>									
+									</tr>																		
 								</table>															
 							</div>													
 						</td>
@@ -174,50 +184,7 @@
 						</td>
 					</tr>									
 				</table>
-								
 				
-				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
-					<tr>
-						<td id='videodatadiv3td1'>
-							<div id='videodatadiv2div'>								
-								Farmer Actors  <img class='imgright' src='/media/Output/Images/farmeractor1.png' alt='Video Details'>							
-							</div>								
-						</td>	
-						<td id='videodatadiv3td2'>
-							<div id='videodatadiv3div'>	
-								{{actors.tot_actors}} farmer{{actors.tot_actors|pluralize:" is,s are"}} featured in the video: &nbsp; &nbsp;{% if actors.M %}{{ actors.M }} Male{{actors.M|pluralize}}{%if actors.F %} and {% endif %}{% endif %}{% if actors.F %}{{ actors.F }} Female{{actors.F|pluralize}}{% endif %}
-							</div>
-						</td>										
-					</tr>
-					<tr>
-						<td id='videodatadiv3td3' colspan='2'>
-							<div id='videodatadiv3divdesc'>	
-								<table id='questiontable' cellspacing='0px' cellpadding='0'>
-									{% for actor in actors.actors %}									 
-										<tr class="{% cycle row1,row2 %}">
-											<td id='questiontabletd1'>	
-												{{actor.person_name}} 																		
-											</td>
-											<td id='questiontabletd2' rowspan='2'>												
-											</td>
-										</tr>
-										<tr class="{% cycle row1,row2 %}">
-											<td id='questiontabletd1'>																								
-												<span class='smallfont'> {{actor.village.block.district.district_name}}, {{actor.village.block.district.state.state_name}} </span>																									
-											</td>
-										</tr>
-										<tr class="{% cycle row1,row2 %}">
-											<td id='questiontabletd3' colspan='2'>
-												<div id='questiontabletd3div'>
-												</div>
-											</td>
-										</tr>
-									{%endfor%}
-								</table>
-							</div>								
-						</td>
-					</tr>									
-				</table>
 				<table id='videodatadiv3' cellspacing='0px' cellpadding='0'>
 					<tr>
 						<td id='videodatadiv3td1'>
@@ -238,7 +205,7 @@
 									{% for que in ques %}									 
 										<tr class="{% cycle row1,row2 %}">
 											<td id='questiontabletd1'>	
-												{{que.1.person.person_name}} &nbsp;|&nbsp; {{que.1.screening.date|date:"d M Y"}}																		
+												{{que.1.person.person_name.upper}} &nbsp;|&nbsp; {{que.1.screening.date|date:"d M Y"}}																		
 											</td>
 											<td id='questiontabletd2' rowspan='2'>												
 												{{que.1.expressed_question}}																					
@@ -316,4 +283,4 @@
     
     </script>
     
-{% endblock bodycontent%}
+{% endblock videobodycontent%}

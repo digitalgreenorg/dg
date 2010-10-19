@@ -7,7 +7,12 @@
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/searchvideo.css'/>       
 {% endblock cssfile %}
 
+{% block videobreadcrums %}	 
+{% endblock videobreadcrums %}	  
+
+
 {% block jsfile %}
+	{{ block.super }}
     <script>
     function init_box_params() {
     var video_suitable_for = {%if search_box_params.video_suitable_for %}{{search_box_params.video_suitable_for}}{%else%} null{%endif%};
@@ -31,7 +36,7 @@
 {% endblock jsfile %}
 
 
-{% block bodycontent%}
+{% block videobodycontent%}
 			
 	<div id='searchcontentleft'>	
 		
@@ -228,11 +233,11 @@
 			</div>
 			<div class='searchbody'>
 				<div class='datepickcalendertext'>From: </div>
-				<div id='datepickcalender1' class='datepickcalender'>{{search_box_params.from_date}}</div>				
+				<div id='inlinedatepicker1' class='datepickcalender'>{{search_box_params.from_date}}</div>				
 			</div>
 			<div class='searchbody'>
 				<div class='datepickcalendertext'>To: </div>
-				<div id='datepickcalender2' class='datepickcalender'>{{search_box_params.to_date}}</div>				
+				<div id='inlinedatepicker2' class='datepickcalender'>{{search_box_params.to_date}}</div>				
 			</div>							
 		</div>		
 		
@@ -254,4 +259,4 @@
 		{% endblock searchbodycontentright%}
 	</div>			
 			
-{% endblock bodycontent%}
+{% endblock videobodycontent%}

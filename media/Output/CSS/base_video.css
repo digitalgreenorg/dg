@@ -1,22 +1,31 @@
 /* CSS Document */
 
-/* Video Navigation Control */
+/* Overwriting the base.css ids  */
+#navpanel 									{ width:960px; }
+#logosearchdiv								{ width:960px; }
+#maintitlediv								{ width:960px; }
 
-#header										{ width:100%; background-color:none; border-bottom: 5px solid #e2e2e2; height:105px; }
-#navdiv										{ width:960px; }
+
+/* Video Navigation Control */
+#header										{ clear:both; width:960px; background-color:none; border-bottom: 0px solid #e2e2e2; height:105px; }
+#navdiv										{ width:980px; }
 #videologo									{ float:left; width:173px; height:90px; margin-top:7px; }	
-#videonav									{ margin-top:75px; float:right;  }
+#videonav									{ margin-top:75px; float:right; color:White; }
 #navbottomdiv								{ margin-top:0px; clear:both; width:100%; height:20px; background:url("/media/Output/Images/navbottombg.png"); background-repeat:x-repeat; }
+
+.navquicklink								{ margin-left:0px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:White;}	
+.navquicklink:hover							{ text-decoration:underline; color:#fbae0c; }
+
+								
 
 /* Body Content */
 #contentdiv									{ clear:both; width:960px; align:center; margin-bottom:20px; }
-#contentdivtitle							{ border-bottom:0px solid #ececec; width:960px; text-align:left; margin-top:20px; font-family: Georgia,'Times New Roman',Serif; color:#5B6E1D; font-weight:bold; font-size:1.4em; }
-#partnertitle								{ border-bottom:0px solid #ececec; width:955px; text-align:left; margin-left:5px; margin-top:6px; font-family: Georgia,'Times New Roman',Serif; color:Gray; font-weight:normal; font-size:0.7em; }
+#contentdivtitle							{ border-bottom:0px solid #ececec; width:952px; text-align:left; margin-top:40px; font-family: Arial,Helvetica,Sans-Serif; color:#5B6E1D; font-weight:bold; font-size:1.4em; }
+#partnertitle								{ border-bottom:0px solid #ececec; width:955px; text-align:left; margin-left:5px; margin-top:6px; font-family: Arial,Helvetica,Sans-Serif; color:Gray; font-weight:normal; font-size:0.7em; }
 #contentdivleft								{ float:left; width:700px; border-right:1px solid Gray; min-height:600px; margin-bottom:50px; }
 #novideoembed								{ margin:10px 5px; width:690px; background-color:Gray; }
 #novideoembeddesc							{ clear:both; margin:5px; height:50px; background-color:#f3f3f3; vertical-align:center; }
-#novideoembeddesc img						{ margin-left:165px; margin-right:5px; margin-top:12px; }
-#novideoembeddesc div						{ margin-top:15px; float:left; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }
+#novideoembeddesc div						{ padding-top:15px; float:center; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }
 #videoembed									{ margin:5px; width:690px; }
 #videoembedtable							{ width:100%; height:400px; }
 
@@ -44,9 +53,10 @@
 .divlinks									{ text-decoration:none; color:Gray; font-weight:bold; }
 
 #videodatadiv2td1							{ width:100%; border-top:5px solid #7f7f7f; background-color:White; }
-#videodatadiv2divdesc						{ margin-left:40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; }
+#videodatadiv2divdesc						{ margin-left:40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
 #videodatadiv2divdesctop					{ z-index:5; top:-11px; left:40px; width:12px; height:8px; position:absolute; background:url("/media/Output/Images/arrowhead3.png"); background-repeat:no-repeat; }
-#videoinfotable								{ width:100%; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; }
+#videoinfotable								{ width:100%; }
+.videoinfotd1span							{ width:100%; height:30px; font-weight:bold; }
 .videoinfotd1								{ width:55%; height:30px; font-weight:normal; }
 .videoinfotd2								{ width:45%; height:30px; font-weight:normal; }
 .videoinfotd3							    { width:100%; height:30px; background-color:#F4F4F4; cursor:pointer; padding-left:5px; }	
@@ -61,6 +71,10 @@
 #videodatadiv3td3   						{ background-color:White; border-top:5px solid #e3e3e3; margin-left:0px; width:100%; color:#5B6E1D; position:relative; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; }
 #videodatadiv3divdesc						{ margin:5px 0px 5px 30px; padding:5px; width:650px; color:#5B6E1D; position:relative; text-align:left; }
 #videodatadiv4divdesc						{ margin:5px 0px 5px 40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; }
+
+#bar_graph									{ width:670px; margin-left:10px; }
+
+
 /* Questions Asked */
 #questiontable								{ margin:0px; width:100%;  }
 #questiontabletd1							{ width:40%; text-align:left; background-color:none; color:#3F3E3E; padding-left:3px; padding-top:5px; border-bottom:0px solid #f3f3f3; }
@@ -71,26 +85,10 @@
 .row1										{ background-color:#f1f1f1; }
 .row2										{ background-color:White; }
 
-/* Footer div */
-#videofooter								{ clear:both; margin-top:70px; width:100%;  }
-#footertop									{ clear:both; margin-top:0px; width:59px; height:17px; background:url("/media/Output/Images/footertopbg5.png"); background-position:center; background-repeat:none; }
-#footerdivleft								{ clear:both; margin-top:0px; width:100%; border-top:10px solid #c0e481; height:100px; background:url("/media/Output/Images/footerbg2.png"); background-repeat:x-repeat; }		
 
-#footerdivlicence							{ clear:both; margin-top:15px; margin-left:150px; text-align:left; }
-#footerdivlicence	a						{ text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
-#footerdivlicence	a:hover					{ text-decoration:underline; }						
-						
-#footerquicklinkdiv							{ margin-top:2px; }
-#footerquicklinkdiv ul						{ margin-top:-10px; margin-left:105px; }
-#footerquicklinkdiv ul li					{ float:left; list-style:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
-.footerlicence 								{ clear:both; margin-left:140px; }
-.footerquicklinkgap							{ margin-left:10px; margin-right:10px; }
-.footerquicklink							{ margin-left:0px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray;}	
-.footerquicklink:hover						{ text-decoration:underline; color:#fbae0c; }
-.footerquicklink img						{ float:right; margin-right:15px; }	
-.licenselink								{ text-align:right; width:230px;}
-#footerdivright								{ float:right; margin-right:150px; }	
 
+#footerdivleft								{ width:960px; }
+#footerdivlicence							{ width:948px; }
 /*    COCO link     */
 a.exploredescmainlink1						{ float:left; margin-right:11px; text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
 a.exploredescmainlink1:hover				{ text-decoration:underline; color:#fbae0c; }
