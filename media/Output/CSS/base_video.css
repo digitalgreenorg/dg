@@ -6,6 +6,10 @@
 #maintitlediv								{ width:960px; }
 
 
+/* Video Thumbnail Image */
+.videothumbnail							    { width:90px; height:70px; }
+
+
 /* Video Navigation Control */
 #header										{ clear:both; width:960px; background-color:none; border-bottom: 0px solid #e2e2e2; height:105px; }
 #navdiv										{ width:980px; }
