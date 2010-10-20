@@ -248,7 +248,7 @@
 						{% for v in rel_vids %}
 						      <tr><td id='contentdivrighttd'  cellspacing='0' cellpadding='0'>
                                     <div id='contentdivrighttddiv1'>
-                                        <a href='../video/?id={{v.id}}'><img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'></a>
+                                        <a href='../video/?id={{v.id}}'>{% if v.youtubeid %}<img src='http://img.youtube.com/vi/{{v.youtubeid}}/default.jpg' class="videothumbnail">{%else%}<img src='/media/Output/Images/videothumbnail2.png' alt='' width='90px' height='70px'>{%endif%}</a>
                                     </div>
                                     <div id='contentdivrighttddiv2'>
                                         <div id='contentdivrighttddiv21'>
