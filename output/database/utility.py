@@ -14,7 +14,6 @@ def run_query_raw(query_string, *query_args):
     return_list = []
     cursor = connection.cursor()
     cursor.execute(query_string, query_args)
-    col_names = [desc[0] for desc in cursor.description]
     return cursor.fetchall()
 
 #This generates a list of dictionaries of key=column_header_name, value = row_value

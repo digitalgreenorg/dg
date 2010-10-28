@@ -2212,7 +2212,8 @@ def mark_error_as_not_error(request):
         errorids = request.POST.getlist('errorid')
         errorids = [int(x) for x in errorids]
         #Deselected ones
-        Error.objects.filter(notanerror=1).exclude(pk__in=errorids).update(notanerror=0)
+        districts = get_user_districts(request)
+        Error.objects.filter(district__in =  districts).filter(notanerror=1).exclude(pk__in=errorids).update(notanerror=0)
         #Newly Selected ones
         Error.objects.filter(pk__in=errorids).exclude(notanerror=1).update(notanerror=1)
         
