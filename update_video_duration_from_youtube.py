@@ -18,7 +18,7 @@ for vid in vids:
     try:
         #Fetch the video entry from Youtube
         entry = yt_service.GetYouTubeVideoEntry(video_id=vid.youtubeid)
-    except gdata.service.RequestError as inst:
+    except gdata.service.RequestError, inst:
         errors_ids[vid.id] = inst
     else:
         duration = timedelta(seconds = int(entry.media.duration.seconds))
