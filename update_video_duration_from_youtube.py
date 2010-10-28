@@ -13,7 +13,7 @@ yt_service = gdata.youtube.service.YouTubeService()
 # The YouTube API does not currently support HTTPS/SSL access.
 yt_service.ssl = False
 error_ids = {}
-vids = Video.objects.exclude(youtubeid='')
+vids = Video.objects.exclude(youtubeid='').filter(duration=None)
 for vid in vids:
     try:
         #Fetch the video entry from Youtube
