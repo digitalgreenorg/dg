@@ -2207,13 +2207,17 @@ def get_dashboard_errors_online(request, offset, limit):
     response['X-COUNT'] = count
     return response
 
-def mark_error_as_not_error(request):
+def mark_error_as_not_error(request, offset, limit):
     if request.method == "POST":
         errorids = request.POST.getlist('errorid')
         errorids = [int(x) for x in errorids]
         #Deselected ones
         districts = get_user_districts(request)
-        Error.objects.filter(district__in =  districts).filter(notanerror=1).exclude(pk__in=errorids).update(notanerror=0)
+        all_errors = Error.objects.filter(district__in =  districts).order_by('notanerror','rule')
+        for err in all_errors[offset:limit]:
+            if(err.notanerror==1 and err.id not in errorids):
+                err.notanerror = 0
+                err.save()
         #Newly Selected ones
         Error.objects.filter(pk__in=errorids).exclude(notanerror=1).update(notanerror=1)
         

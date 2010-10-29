@@ -125,7 +125,7 @@ urlpatterns = patterns('',
     (r'^dashboard/gettargetsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_targets_online),
     (r'^dashboard/savetargetoffline/((?P<id>\d*)/)?$', save_target_offline),
     (r'^dashboard/geterrorsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$',get_dashboard_errors_online),
-    (r'^dashboard/notanerror/$',mark_error_as_not_error),
+    (r'^dashboard/notanerror/((?P<offset>\d*)/(?P<limit>\d*)/)?$',mark_error_as_not_error),
     (r'^dashboard/getindexdata/$',index_template_data),
     (r'^$',home),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
