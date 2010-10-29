@@ -68,6 +68,7 @@ public class DashboardErrorTemplate extends BaseTemplate{
 		
 		// Now add any submit control buttons
 		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		saveRequestContext.getArgs().put("pageNum", this.requestContext.getArgs().get("pageNum"));
 		saveRequestContext.setForm(this.formTemplate);
 		DashboardError saveDashboardError = new DashboardError(saveRequestContext);
 		

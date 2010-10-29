@@ -30,6 +30,8 @@ public class DashboardError extends BaseServlet {
 		} else {
 			String method = this.getMethodTypeCtx();
 			if(method.equals(RequestContext.METHOD_POST)) {
+				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
+				String pageNum = (String)queryArgs.get("pageNum");
 				Form form = this.requestContext.getForm();
 				DashboardErrorData DashboardErrorData = new DashboardErrorData(new OnlineOfflineCallbacks(this) {
 					public void onlineSuccessCallback(String results) {
@@ -63,7 +65,7 @@ public class DashboardError extends BaseServlet {
 						getServlet().redirectTo(new Index(requestContext));
 					}
 				}, form);
-				DashboardErrorData.apply(DashboardErrorData.postPageData());
+				DashboardErrorData.apply(DashboardErrorData.postPageData(pageNum));
 			}
 			else {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();

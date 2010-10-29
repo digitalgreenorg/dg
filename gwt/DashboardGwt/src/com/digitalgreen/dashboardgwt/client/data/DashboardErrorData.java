@@ -154,9 +154,11 @@ public class DashboardErrorData extends BaseData {
 		}
 	}
 	
-	public Object postPageData() {
+	public Object postPageData(String pageNum) {
 		if(BaseData.isOnline()){
-			this.post(RequestContext.SERVER_HOST + DashboardErrorData.markNotAnErrorURL, this.form.getQueryString());
+			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int limit = offset+pageSize;
+			this.post(RequestContext.SERVER_HOST + DashboardErrorData.markNotAnErrorURL+Integer.toString(offset)+"/"+Integer.toString(limit)+ "/", this.form.getQueryString());
 		}
 		//else
 			//Offline is disabled for Dashboard Errors
