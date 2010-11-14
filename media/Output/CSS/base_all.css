@@ -48,6 +48,8 @@
 .maillinks							{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
 .maillinks:hover					{ text-decoration:underline; color:#fbae0c; }		
 
+.quicklinks							{ text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:bold; color:#5B6E1D; }
+.quicklinks:hover					{ text-decoration:underline; color:#fbae0c; }		
 
 
 /* Site Map */

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>The White House</TITLE>
+		<HEADLINE>Expo on Agriculture and Food Security</HEADLINE>
+		<REFERENCE>http://www.whitehouse.gov/the-press-office/2010/11/06/fact-sheet-expo-agriculture-and-food-security</REFERENCE>
+		<PRESSDATE>Sat, 06 November 2010</PRESSDATE>
+		<PLACE>Mumbai</PLACE>    
+    	<DESC>"Digital Green exhibits itself at the 'Expo on Agriculture and Food Security' attended by the US President Barack Obama during his recent visit to India"</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Mint ePaper</TITLE>
 		<HEADLINE>Videos by the farmers and for the farmers</HEADLINE>
 		<REFERENCE>http://epaper.livemint.com/ArticleImage.aspx?article=20_09_2010_026_004&amp;mode=1</REFERENCE>

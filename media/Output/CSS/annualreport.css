@@ -22,16 +22,15 @@
 
 #annualreporttable					{ border-top:1px solid #6e5a0c; border-bottom:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; background-color:#E7F7CF; width:900px; }
 
-.annualreporttd						{ padding:10px;  vertical-align:top; width:280px; }
-.annualreportdiv					{ width:280px; height:290px; background-color:#62980C; }	
-.annualreportdiv img				{ margin:5px; width:270px; }
-.annualreportdesc					{ text-align:left; width:270px; margin-left:5px; color:White; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; }
-.annualreporttitle					{ margin-bottom:3px; font-family:Arial,Helvetica,Sanserif;; color:#E7F7CF; font-weight:bold; display:block; }
+.annualreporttd						{ padding:10px;  vertical-align:top; width:225px; }
+.annualreportdiv					{ width:205px; height:280px; background-color:#62980C; }	
+.annualreportdiv img				{ margin:5px; width:195px; height:145px; }
+.annualreportdesc					{ text-align:left; width:195px; margin-left:5px; color:White; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; }
+.annualreporttitlelink				{ margin-bottom:3px; font-family:Arial,Helvetica,Sanserif; color:#E7F7CF; font-weight:bold; display:block; text-decoration:none; }
+.annualreporttitlelink:hover		{ text-decoration:underline; }
 
 #annualreporttable1					{ padding-top:10px; border-top:1px solid #6e5a0c; border-bottom:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; width:900px; }
-.annualreporttable1td1				{ width:61px; }
-.annualreporttable1td2				{ width:390px; vertical-align:top; text-align:left; }
-.annualreporttable1td2 img			{ margin-top:5px; margin-bottom:5px; }	
+.annualreporttable1td				{ width:100%; }
 
 
 #explorediv3						{ clear:both; width:264px; margin-top:20px; }
@@ -48,14 +47,14 @@
 .blockhighlight						{ margin-top:5px; margin-bottom:5px; display:block; vertical-align:top; width:612px; padding:2px; background-color:#62980C; font-family:Arial,Helvetica,Sanserif;  color:#E7F7CF; font-weight:bold; }
 
 /* Press Articles */
-#spotlighttable						{ margin-left:10px; margin-right:10px; width:590px; margin-bottom:10px; }
+#spotlighttable						{ margin-left:10px; margin-right:10px; width:97.2%; margin-bottom:10px; }
 .spotlighttd						{ width:100%; }
 .spotlightdivtitle					{ margin-top:2px; clear:both; margin-bottom:3px; width:100%; text-align:left; }
 .spotlightdivdesc					{ text-align:left; margin-left:0%; clear:both; padding-bottom:15px; width:98%; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; color:Black; }
 .spotlightdivtitle a				{ font-size:1.0em; font-family:Georgia,'Times New Roman',Serif; font-weight:normal; color:#C7A048; text-decoration:none; }
 .spotlightdivtitle a:hover			{ color:#fbae0c; }	
 
-.titlediv							{ vertical-align:top; margin:5px 5px 0px 10px; width:94.5%; padding:2px; background-color:#62980C; font-size:0.8em; font-family:Arial,Helvetica,Sanserif;  color:#E7F7CF; font-weight:bold; }    
+.titlediv							{ vertical-align:top; margin:5px 5px 0px 10px; width:97.2%; padding:2px; background-color:#62980C; font-size:0.8em; font-family:Arial,Helvetica,Sanserif;  color:#E7F7CF; font-weight:bold; }    
 
 .viewmore							{ text-decoration:none; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 .viewmore:hover						{ color:#fbae0c; }
