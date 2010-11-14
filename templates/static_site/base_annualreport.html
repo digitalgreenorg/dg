@@ -1,0 +1,79 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Digital Green - Annual Report{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/annualreport.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block pagetitle %} {{ block.super }}
+	{% block reportpagetitle %} Annual Report {% endblock reportpagetitle %} 
+{% endblock pagetitle %}
+
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+     {% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<img src="/media/Output/Images/technologyimg5.png" alt='Dr. Nagagouda giving Lessons'>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Project Progress and Results 
+	</div>
+	
+    <div id='contentdiv2'>  
+    </div>
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Annual Report </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/annualletter"><img src="/media/Output/Images/linkimg2.png" alt="">Annual Letter</a>
+				<a class="exploredescmainlink" href="/projectprogress"><img src="/media/Output/Images/linkimg2.png" alt="">Project Progress and Results</a>
+				<a class="exploredescmainlink" href="/budgetprogress"><img src="/media/Output/Images/linkimg2.png" alt="">Budget Progress and Results</a>
+				<a class="exploredescmainlink" href="/scalability" title='Progress Dashboard'><img src="/media/Output/Images/linkimg2.png" alt="">Scalability</a>
+				<a class="exploredescmainlink" href="/lessonlearned"><img src="/media/Output/Images/linkimg2.png" alt="">Lessons Learned</a>
+				<a class="exploredescmainlink" href="/team"><img src="/media/Output/Images/linkimg2.png" alt="">Our Employees</a>
+				<a class="exploredescmainlink" href="/partnerexecutive"><img src="/media/Output/Images/linkimg2.png" alt="">Our Partners</a>
+				
+				
+			</div> 
+		</div>			
+	</div>		
+	
+	<div id="explorediv1">		
+		<div class="exploredescdiv">			
+			<div class="exploredescmain"> 
+				<a class="exploredescmainlink" href="/sop">
+					<span style="font-weight: bold;">Press Room </span>
+					<br/>
+					Find new updates, press releases
+				</a>						
+			</div> 			
+		</div>			
+	</div>	
+	
+	
+	<div id="explorediv3">					
+		<a href="/sop">
+			<img src="/media/Output/Images/techresearch2.jpg" />
+		</a>		
+	</div>	
+
+{% endblock mainbodycontentright %}	

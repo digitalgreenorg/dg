@@ -1,0 +1,57 @@
+
+{% extends "base_annualreport.html" %}
+
+{% block title %} Digital Green - Annual Report - Budget Progress and Results{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block reportpagetitle %} Budget Progress and Results {% endblock reportpagetitle %}
+
+{% block breadcrums %}
+	{% block partnerbreadcrums %}
+		<a href='/annualreport'> Annual Report </a>/ 
+		<span style='font-size:0.9em; font-weight:bold;'> Budget Progress and Results </span>	
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+	{% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<img src="/media/Output/Images/budgetimg1.jpg" alt='Budget Progress and Results'>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Budget Progress and Results 
+	</div>
+	
+    <div id='contentdiv2'>    	
+    		Digital Green's chartered accountants and auditors have developed a financial management system that defines how we maintain and administer our accounts within and between the countries in which Digital Green operates.  We generally are on target with fund utilization
+    		<br/>
+    		<br/>
+    		<span class='subheaders'>Other Sources of Project Support:</span> <br/>
+    		Digital Green supported one partner, BAIF, to receive a grant of US$ 15,000 from Deshpande Foundation.  This grant was used to extend the system to villages in Karnataka beyond those already supported by the Bill & Melinda Gates Foundation. 
+    		<br/>
+    		<br/>
+    		<span class='subheaders'>Budget Variances:</span> <br/>
+    		As this was Digital Green's first year of operations, there were variances in the budgeted and actual amounts.  This is largely because the proposal had provided flexibility for the length of our first year to be between 12- to 18-months.  We have requested a review of our progress even though we have a positive balance to ensure a smooth continuity in our operations.  There were also some positive saving because of lower than expected hardware costs for video screening equipment with the advent of pico projectors.  This variance will be used to procure larger numbers of pico projectors as we have found it difficult to share single pico projectors across villages, which are often comprised of smaller hamlets spread over larger distances.
+    		<br/>
+    		<br/>
+    		<span class='subheaders'>Financial Risks:</span> <br/> 
+    		The Government of India's Foreign Contribution Regulation Act (FCRA) requires Digital Green Trust (India) as well as its partners in India to receive permission prior to receiving funds from a foreign entity like Digital Green Foundation (USA).  We have received pro-bono counsel from Amarchand Mangaldas, a legal firm in India, and have been regularly been permitted to transfer funds between Digital Green Foundation (USA) and Digital Green Trust (India).  
+    		Still, we have encountered delays in approval on certain occasions in which our outflows in India exceeded our inflows and we have had to request our team to defer the compensation or reimbursements for 2-4 weeks.  For one week in September 2010, we had to take a loan from a bank in India to meet our liabilities.  Fortunately, the interest fees were a minimal US$ 120, but we are looking for alternate mechanisms to manage our international finances.  We have submitted applications to obtain permanent FCRA registration through India's Ministry of Home Affairs as well as registration of a branch office for Digital Green Foundation (USA) through the Reserve Bank of India, but these require that Digital Green Foundation (USA) be incorporated for at least three years.  Digital Green will reach this milestone in April 2011.    		 
+    		<br/> <br/>	
+    </div>
+     
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	{{ block.super }}	
+{% endblock mainbodycontentright %}	

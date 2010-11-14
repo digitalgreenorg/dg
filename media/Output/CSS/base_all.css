@@ -16,13 +16,15 @@
 
 #mainbodycontent							{ clear:both; margin-top:5px; width:900px; }
 
+
+
 /* Main Body Content floating Left */
 #mainbodycontentleft						{ float:left; width:626px; margin-bottom:80px; background-color:none; border-top:4px solid #cae699;  border-right:4px solid #cae699; }
 
 #mainbodycontentright						{ float:left; margin-left:0px; margin-bottom:50px; width:270px; background-color:none; border-top:4px solid #cae699; }	
 .pagetitle									{ clear:both; margin-left:1px; margin-top:15px; margin-bottom:0px; text-align:left; color:#5B6E1D; font-family:Georgia,'Times New Roman',Serif; font-size:1.4em; font-weight:normal; }
 
-
+.imagelink									{ margin-left:0px; margin-top:20px; width:266px; }
 
 /* Footer Div */
 #footertop									{ clear:both; margin-top:20px; width:59px; height:17px; background:url("/media/Output/Images/footertopbg5.png"); background-position:center; background-repeat:none; }

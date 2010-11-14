@@ -24,6 +24,30 @@ def aboutus(request):
     
     return render_to_response('base_aboutusoverview.html')
 
+def annualreport(request):
+   
+    return render_to_response('annualreport.html')
+
+def annualletter(request):
+   
+    return render_to_response('annualletter.html')
+
+def projectprogress(request):
+   
+    return render_to_response('projectprogress.html')
+
+def budgetprogress(request):
+   
+    return render_to_response('budgetprogress.html')
+
+def scalability(request):
+   
+    return render_to_response('scalability.html')
+
+def lessonlearned(request):
+   
+    return render_to_response('lessonlearned.html')
+
 def keyprinciple(request):
     
     return render_to_response('base_overviewkeyprinciple.html')

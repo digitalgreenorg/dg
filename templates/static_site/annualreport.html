@@ -1,0 +1,175 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Digital Green - Annual Report{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/annualreport.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block pagetitle %} {{ block.super }}
+	{% block reportpagetitle %} Annual Report {% endblock reportpagetitle %} 
+{% endblock pagetitle %}
+
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontent %}	
+	
+    <div id='contentdiv1'>
+    	<img src="/media/Output/Images/annualreportimg2.jpg" />
+    	
+    	<table id='annualreporttable' cellspacing="0" cellpadding="0">
+    		<tr>
+    			<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/annualletter'> <img src='/media/Output/Images/annualletter3.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> ANNUAL LETTER </span>    						
+    						" We believe that we have established a foundation to exceed the impact that we had originally envisioned " - Rikin Gandhi, CEO
+    					</div>	
+    				</div>	  
+    	  		</td>
+    	  		<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/projectprogress'> <img src='/media/Output/Images/result1.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> PROJECT PROGRESS AND RESULTS </span>    						
+    						Our operations expanded from a small-scale research pilot in one state and with one partner to four states with seven partners in India.
+    					</div>
+    				</div>	  
+    	  		</td>
+    	  		<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/budgetprogress'> <img src='/media/Output/Images/budget1.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> BUDGET PROGRESS AND RESULTS </span>    						
+    						We believe that we have established a foundation to exceed the impact that we had originally envisioned during the next two years
+    					</div>
+    				</div>	  
+    	  		</td>
+    	  	</tr>
+    	  	<tr>
+    			<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/scalability'> <img src='/media/Output/Images/scalability1.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> SCALABILITY </span>    						
+    						We believe that we have established a foundation to exceed the impact that we had originally envisioned during the next two years
+    					</div>	
+    				</div>	  
+    	  		</td>     	  	
+    			<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/lessonlearned'> <img src='/media/Output/Images/lesson1.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> LESSONS LEARNED </span>    						
+    						We believe that we have established a foundation to exceed the impact that we had originally envisioned during the next two years
+    					</div>	
+    				</div>	  
+    	  		</td>
+    	  		<td class='annualreporttd'>
+    				<div class='annualreportdiv'>
+    					<a href='/team'> <img src='/media/Output/Images/employee1.jpg' alt="" /> </a>
+    					<div class='annualreportdesc'>
+    						<span class='annualreporttitle'> OUR EMPLOYEES </span>    						
+    						We believe that we have established a foundation to exceed the impact that we had originally envisioned during the next two years
+    					</div>
+    				</div>	  
+    	  		</td>
+    	  	</tr> 	  		
+    	</table>
+    	
+    	
+    	<table id='annualreporttable1' cellspacing="0" cellpadding="0">
+    		<tr>
+    			<td class='annualreporttable1td1'>  					
+    					<div class='titlediv'>    						
+    						MEDIA COVERAGE
+    					</div>
+    					
+    					<script type="text/javascript">
+							var xmlDoc=null;
+           				 	if (window.XMLHttpRequest){
+             					xhttp=new XMLHttpRequest();
+            				}
+            				else {
+            	 				xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            				}
+            				xhttp.open("GET","/media/Output/press.xml",false);
+            				xhttp.send();
+            				xmlDoc=xhttp.responseXML;
+							/*
+							if (window.ActiveXObject)
+							{// code for IE
+    							xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+							}
+							else if (document.implementation.createDocument)
+							{// code for Mozilla, Firefox, Opera, etc.
+    							xmlDoc=document.implementation.createDocument("","",null);
+							}
+							else
+							{
+								alert('Your browser cannot handle this script');
+							}
+							*/
+							if (xmlDoc!=null) 
+							{
+								//xmlDoc.async=false;
+								//xmlDoc.load("/media/Output/press.xml");
+								//alert("hello");
+								
+								var PressString = new Array();							
+								var x=xmlDoc.getElementsByTagName("TEAM");
+								
+								document.write("<table id='spotlighttable' cellspacing='0px' cellpadding='0'>");				
+								for (i=0;i<2;i++)
+ 								{
+ 									PressString[i] = (x[i].getElementsByTagName("DESC")[0].childNodes[0].nodeValue);
+ 									//alert(PressString[i]);
+ 									
+  									document.write("<tr><td class='spotlighttd' cellspacing='0px' cellpadding='0'>");  					
+  									
+  									document.write("<div class='spotlightdivtitle'>");
+  										document.write("<span style='font-family:Georgia,Times New Roman,Serif; font-size:1.0em; color:#5B6E1D; font-weight:normal;'>"  + (x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue)+ ": " + "</span>"+ "<a class='mainlinks' href='" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue) + "'>" + (x[i].getElementsByTagName("HEADLINE")[0].childNodes[0].nodeValue) + "</a>");
+  										document.write("<br/>");
+  										document.write("<span style='font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; color:Gray;'>" +(x[i].getElementsByTagName("PRESSDATE")[0].childNodes[0].nodeValue) + "</span>");
+  									document.write("</div>");
+  									document.write("<div class='spotlightdivdesc'>");
+  										document.write(PressString[i].substring(1,120)+" ..." +"<a class='viewmore' href='" + (x[i].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue)  + "' target='_blank'>Read more</a>" );
+  										document.write("<br/>");
+  										//document.write("<a class='viewmore' style='margin-left:0px;' href='/press'> View more <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>");
+  									document.write("</div>"); 						
+  									document.write("</td></tr>");
+  								}
+  								
+  								document.write("<tr><td class='spotlighttd' cellspacing='0px' cellpadding='0'>");  					
+  									document.write("<div class='viewmorediv'>");
+  										document.write("<a class='viewmore' style='margin-left:0px;' href='/press'> View more Media Coverage <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>");
+  									document.write("</div>"); 						
+  								document.write("</td></tr>");
+  								
+  								document.write("</table>");	
+  							}		
+				
+						</script>
+    			</td>
+    			<td class='annualreporttable1td2'> 					
+    				<a href='/partnerexecutive'> <img src='/media/Output/Images/partnerimg2.jpg' alt="Digital Green Partners" /> </a>
+    				<a href='/tech'> <img src='/media/Output/Images/techresearch2.jpg' alt="Research, Technology and Development" /> </a>
+    			</td>
+    			
+    	  	</tr>
+    	</table>	  
+    	     
+    </div>
+{% endblock mainbodycontent %}	

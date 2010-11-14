@@ -1,0 +1,81 @@
+
+{% extends "base_annualreport.html" %}
+
+{% block title %} Digital Green - Annual Report - Project Progress and Results{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block reportpagetitle %} Project Progress and Results {% endblock reportpagetitle %}
+
+{% block breadcrums %}
+	{% block partnerbreadcrums %}
+		<a href='/annualreport'> Annual Report </a>/ 
+		<span style='font-size:0.9em; font-weight:bold;'> Project Progress and Results </span>	
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+	{% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<img src="/media/Output/Images/projectprogressimg1.jpg" alt='Project Progress and Results'>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Project Progress and Results 
+	</div>
+	
+    <div id='contentdiv2'>    	
+    		In the first year, Digital Green transitioned from a learning and planning phase to a scaling-up execution phase.  This involved a transformation of our role as an organization that would jointly execute activities in the field with our partners to that of a technology development and support provider to existing agricultural extension systems.  Our operations expanded from a small-scale research pilot in one state and with one partner to operations that extended to four states in India, including Karnataka, Orissa, Jharkhand and Madhya Pradesh, with seven partners.  
+    		
+    		<br/>	<br/>    		
+    		The learning and planning phase provided opportunities for our team to assess the contexts in which we operate and to bootstrap the integration of the Digital Green system with our partners - from identifying packages best agronomic practices to ultimately improving the livelihoods of smallholder farmers on a sustained basis. To this end, Digital Green's partnerships were competitively selected and formally defined to build upon established foundations of domain expertise, scale of operations, and community-level rapport to accelerate the scaling-up of the system.
+    		<br/>	<br/>
+    		We focused on initiating project activities with our partners, developed institutional backstopping measures to support these partnerships, and refined and standardized the Digital Green system based on the experience of working with a variety of partners and communities.  We worked closely with partners to ensure that the system was grounded with strong linkages at the village-level, like with Self Help Groups, at the block level, like with agro dealers, and at district- and national-levels, like with government officials and schemes, that would provide sustain the interest and the livelihoods of smallholder farmers throughout the year.  
+    		To support these interventions, we built a novel monitoring and evaluation system to track and analyze progress across the distributed rural areas in which we operate.
+    		<br/>
+    		<br/>
+    		The Digital Green team was formed in May 2009 and, by September 2009, project activities had been initiated with four partners. The initial planning phase involved the development of detailed execution strategies; definitions of roles and responsibilities for Digital Green, our partners, and community members; implementation timelines and deliverables; framework for best practices and quality standards; and linkages with key institutions at village-, block-, district-, and nation-levels.  
+    		Together, this blueprint provided the structure to accelerate the scaling-up of the Digital Green system.
+    		<br/>
+    		<br/>
+    		Digital Green's team of trainers worked closely with its partners and community groups to enable them to integrate and execute the components of the Digital Green system within the framework of their existing extension systems. Most partners began with limited to no experience in using information and communication technologies in their operations, so our team conducted numerous training programs, workshops to share best of practices and tools, and direct support in the field. Over 165 workshops were organized on a variety of subjects with a diverse set of stakeholders across our operational areas.
+    		<br/> 
+    		
+    		Digital Green's team of trainers worked closely with its partners and community groups to enable them to integrate and execute the components of the Digital Green system within the framework of their existing extension systems. Most partners began with limited to no experience in using information and communication technologies in their operations, so our team conducted numerous training programs, workshops to share best of practices and tools, and direct support in the field. Over 165 workshops were organized on a variety of subjects with a diverse set of stakeholders across our operational areas.
+
+			<br/> <br/>	
+
+			The agricultural practices and technologies that are exchanged across the Digital Green network vary based on the local needs and interests of the communities that our partners are working with, but we work together using the data that we capture to focus on those practices provide long-term socioeconomic gains to farmers that adopt them for themselves.  For each practice, checklists are used by select members of the community and our partner staff to verify the adoptions of practices by farmers in the field.  For example, for a video on chemical treatment of tomato seedlings in a nursery bed (see: YouTube video), an adoption of that practice might considered if the dimensions of the nursery bed are maintained, a drainage system is used, and the chemical is applied in the correct quantity and manner.
+ 
+ 			<br/> <br/>	
+ 
+			We defined a standard operating procedures and internal control system to assure quality throughout our interventions and instituted a robust monitoring and evaluation system to track and analyze progress on a daily basis as well as to capture learnings and best practices for further replication. Through the Agricultural Technology Adoption Initiative (ATAI), researchers from the University of California, Berkeley and Yale University initiated consultations and field visits in preparations for a large-scale, randomized controlled trial evaluation of the Digital Green system in comparison to the traditional extension approaches practiced by our partners.
+
+			<br/> <br/>	
+
+			To manage the volume and variety of activities, Digital Green evolved from its startup beginnings to a maturing organization with enabling systems and practices in program operations, talent development, financial management and administration.  With its senior management and systems engineering team based in New Delhi, Digital Green also established three regional offices in Bhubaneswar, Orissa; Bhopal, Madhya Pradesh; and Bangalore, Karnataka to develop and support partnerships in those geographies.
+
+			<br/> <br/>	
+			
+			Thus far, the project has produced <span class='highlighttext'> 628 videos, operationalized 394 villages, screened 7,360 videos and reached 17,774 farmers. </span>  Over 300 of these videos are available on our website on a Creative Commons license: <a class='footerquicklink' href='/'>http://www.digitalgreen.org</a>. Some of the most popular videos include azolla cultivation and feeding, maize seed treatment, soil testing, girdle beetle pest management, cattle vaccination, system of rice intensification, and soybean seed germination test.  Please refer to our Analytics dashboards for the latest statistics on videos produced and screening conducted.  Digital Green's systems engineering team has developed a robust management information system that tracks these aggregate indicators as well as more detailed qualitative and quantitative metrics in geographic-, time-, and partner-based dimensions. 
+			
+			<br/> <br/>	
+			
+			To manage our operations in areas with limited to no Internet connectivity, our team developed an open-source data management framework, called <a class='footerquicklink' href='/tech'>COCO (Connect Online, Connect offline)</a>. This platform enables us, our partners, and anyone in the world to analyze our progress and to target our interventions in near real-time using the dashboards in our Analytics suite:<a class='footerquicklink' href='http://analytics.digitalgreen.org'>http://analytics.digitalgreen.org</a>.  We have also introduced an interactive voice response (IVR) system to complement our existing efforts to capture and analyze feedback to progressively better address the needs and interests of the community in a timely manner.  
+    		 
+    		<br/> <br/>	
+    </div>
+     
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	{{ block.super }}	
+{% endblock mainbodycontentright %}	
