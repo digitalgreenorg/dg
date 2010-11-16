@@ -1,7 +1,7 @@
 
 {% extends "base_annualreport.html" %}
 
-{% block title %} Digital Green - Annual Report - Annual Letter{% endblock %}
+{% block title %} Digital Green - Annual Report - Introduction{% endblock %}
 
 {% block cssfile %}
 	{{ block.super }}
@@ -10,27 +10,25 @@
 {% block jsfile %}       
 {% endblock jsfile %}
 
-{% block reportpagetitle %} Annual Letter {% endblock reportpagetitle %}
+{% block reportpagetitle %} Introduction {% endblock reportpagetitle %}
 
 {% block breadcrums %}
 	{% block partnerbreadcrums %}
 		<a href='/annualreport'> Annual Report </a>/ 
-		<span style='font-size:0.9em; font-weight:bold;'> Annual Letter </span>	
+		<span style='font-size:0.9em; font-weight:bold;'> Introduction </span>	
 	{% endblock partnerbreadcrums %}	  
 {% endblock breadcrums %}
 
 
 {% block mainbodycontentleft %}
 	{% block mainbodycontentleftimg %}		
+		<div class='mainbodycontentleftimg'>	
+			<img src='/media/Output/Images/annualletterimg2.jpg' />
+		</div>
 	{% endblock mainbodycontentleftimg %}
 	
 	
     <div id='contentdiv2'>
-    	<div id='contentdiv2body'>
-    		<br/>
-    		<img src='/media/Output/Images/letterheader1.png' />
-    		
-    		November 14, 2010
     		<br/><br/>
     		Digital Green works to build technologies and to serve as a resource agency to maximize the potential of the partners and the communities that we work with. The last year has been one of great learning and progress in the field and as a team.
     		<br/>
@@ -55,9 +53,10 @@
 			We are excited by the progress that we've made so far and look forward to bringing about an even greater change. 
     		<br/><br/>
     		<br/><br/>
+    		<img src='/media/Output/Images/rikinsign2.jpg' /><br/>
     		Rikin Gandhi <br/>
     		CEO, Digital Green    	
-    	</div>	    	     
+    	    	     
     </div>
      
 {% endblock mainbodycontentleft %}

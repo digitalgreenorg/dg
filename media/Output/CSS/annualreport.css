@@ -36,7 +36,7 @@
 #explorediv3						{ clear:both; width:264px; margin-top:20px; }
 #explorediv3 img					{ margin:0px; padding:0px; width:262px; height:90px; border:1px solid #abd268; }	
 
-#contentdiv2body					{ color:#333333; border-top:0px solid #E7F7CF; width:99%; margin-top:5px; background-color:#f8f3e7; padding:2px; background:url("/media/Output/Images/annualletterbg1.png"); background-repeat:no-repeat; background-position:center; }
+#contentdiv2body					{ color:#333333; border-top:0px solid #E7F7CF; width:99%; margin-top:5px; background-color:none; padding:2px; }
 
 #contentdiv1						{  }
 #contentdiv2						{ width:99%; margin-bottom:10px; text-align:left; font-family:Sans-Serif; font-size:0.8em; font-weight:normal; color:Black; }
