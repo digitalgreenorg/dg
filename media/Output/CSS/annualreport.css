@@ -17,7 +17,7 @@
 .contentheadertitlediv				{ width:100%; font-size:1em; font-family:Calibri; font-weight:normal; color:Gray; align:center; padding-bottom:2px; }
 .contentheadertitlediv1				{ font-size:1.2em; font-family:Calibri; font-weight:bold; color:Gray;}
 
-.mainbodycontentleftimg				{ margin-top:3px; width:620px; height:277px; }
+.mainbodycontentleftimg				{ margin-top:3px; width:620px; }
 #presscontent						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
 
 #annualreporttable					{ border-top:1px solid #6e5a0c; border-bottom:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; background-color:#E7F7CF; width:900px; }
