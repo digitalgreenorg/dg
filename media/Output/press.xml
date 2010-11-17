@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Daily Brink</TITLE>
+		<HEADLINE>Digital Green is revolutionizing an industry as old as civilization itself </HEADLINE>
+		<REFERENCE>http://www.dailybrink.com/?p=659</REFERENCE>
+		<PRESSDATE>Wed, 17 November 2010</PRESSDATE>
+		<PLACE></PLACE>    
+    	<DESC>"Digital Green is an agro-business non-profit. When I was working at Microsoft in Bangalore, India, the Emerging Markets department wanted to find ways to use simple technology to better the lives of marginalized communities.  We became an independent organization with advisory support from Microsoft."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>The White House</TITLE>
 		<HEADLINE>Expo on Agriculture and Food Security</HEADLINE>
 		<REFERENCE>http://www.whitehouse.gov/the-press-office/2010/11/06/fact-sheet-expo-agriculture-and-food-security</REFERENCE>
