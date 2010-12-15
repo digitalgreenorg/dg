@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Explocity</TITLE>
+		<HEADLINE>Great leap for Mankind </HEADLINE>
+		<REFERENCE>http://www.dailybrink.com/?p=659</REFERENCE>
+		<PRESSDATE>Fri, 19 November 2010</PRESSDATE>
+		<PLACE>Bangalore</PLACE>    
+    	<DESC>"While the rest of us were openly shadowing US President Barack Obama on his visit to India through news channels, Obama himself was busy admiring the work of Rikin Gandhi and his team at the Agriculture and Food Security Expo in Mumbai. Gandhi, the 29-year-old CEO of Digital Green, promotes sustainable agriculture through videos of better practices recorded for and by farmers across the country."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Daily Brink</TITLE>
 		<HEADLINE>Digital Green is revolutionizing an industry as old as civilization itself </HEADLINE>
 		<REFERENCE>http://www.dailybrink.com/?p=659</REFERENCE>
@@ -18,7 +30,7 @@
 		<REFERENCE>http://www.whitehouse.gov/the-press-office/2010/11/06/fact-sheet-expo-agriculture-and-food-security</REFERENCE>
 		<PRESSDATE>Sat, 06 November 2010</PRESSDATE>
 		<PLACE>Mumbai</PLACE>    
-    	<DESC>"Digital Green exhibits itself at the 'Expo on Agriculture and Food Security' attended by the US President Barack Obama during his recent visit to India"</DESC>
+    	<DESC>"Digital Green had the extraordinary opportunity to demonstrate its system to U.S. President Barack Obama during his visit to Bombay, India"</DESC>
 		<COMPANY> </COMPANY>
 		<IMGLINK> </IMGLINK>
 		<VIDEOLINK>NULL</VIDEOLINK>
