@@ -32,7 +32,9 @@ if(len(error_ids)> 0):
     from email.MIMEBase import MIMEBase
     from email.MIMEText import MIMEText
     
-    serv = smtplib.SMTP_SSL("smtp.gmail.com",465)
+    serv = smtplib.SMTP("smtp.gmail.com",587)
+    serv.ehlo()
+    serv.starttls()
     serv.login("rahul@digitalgreen.org","Rahul123")
     msg = MIMEMultipart()
 
@@ -44,7 +46,9 @@ if(len(error_ids)> 0):
     for k,v in error_ids.iteritems():
         text.append(str(k)+"\t"+str(v))
     msg.attach(MIMEText('\n'.join(text)))
-    mailServer.sendmail('rahul@digitalgreen.org', 'system@digitalgreen.org', msg.as_string())
+    serv.sendmail('rahul@digitalgreen.org', 'system@digitalgreen.org', msg.as_string())
+    
+    serv.quit()
      
        
         
