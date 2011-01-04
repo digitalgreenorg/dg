@@ -32,7 +32,7 @@ public class UniqueConstraintValidator extends BaseValidator {
 			if((String)whereClausePart.get(1) != null) {
 				query += (String)whereClausePart.get(0) + "='" + ((String)whereClausePart.get(1)).trim() + "' COLLATE NOCASE";
 			} else {
-				query += (String)whereClausePart.get(0) + " is null" ;
+				query += "("+(String)whereClausePart.get(0) + " is null" +" OR "+ (String)whereClausePart.get(0) + " = \"\" )" ;
 			}
 			if(i != whereClause.size() - 1) {
 					query += " AND ";

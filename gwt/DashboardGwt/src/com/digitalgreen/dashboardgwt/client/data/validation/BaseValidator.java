@@ -15,7 +15,7 @@ public class BaseValidator {
 	protected final String maximumCharactersErrorMessage = "Maximum number of characters allowed are ";
 	protected final String specialCharactersErrorMessage = "Should not contain any special characters ";
 	protected final String dateFormatErrorMessage = "Should be formatted as 'YYYY-MM-DD'.";
-	protected final String timeFormatErrorMessage = "Should be formatted as 'Hours:Minutes:Seconds'.";
+	protected final String timeFormatErrorMessage = "Should be formatted as 'Hours:Minutes:Seconds (e.g: 07:30:00)'.";
 	protected final String integerErrorMessage = "Requires a valid integer ";
 	protected final String integerMaxMinErrorMessage = "Value should be between ";
 	protected final String uniqueValidatorErrorMessage = " Already in system. Please make sure it is unique";

@@ -14,34 +14,52 @@ public class TimeValidator extends BaseValidator {
 	}
 
 	private boolean validateHour(String hour) {
-		int valueInt = 0;
-		try {
-			valueInt = Integer.parseInt(hour);
-		} catch(Exception e) {
+		if(hour.length() == 2){
+			int valueInt = 0;
+			try {
+				valueInt = Integer.parseInt(hour);
+			} catch(Exception e) {
+				return false;
+			}
+			
+			return valueInt >= 0 && valueInt <= 24;
+		}
+		else {
 			return false;
 		}
 		
-		return valueInt >= 0 && valueInt <= 24;
 	}
 	
 	private boolean validateMinute(String minute) {
-		int valueInt = 0;
-		try {
-			valueInt = Integer.parseInt(minute);
-		} catch(Exception e) {
+		if(minute.length() == 2) {
+			int valueInt = 0;
+			try {
+				valueInt = Integer.parseInt(minute);
+			} catch(Exception e) {
+				return false;
+			}
+			return valueInt >= 0 && valueInt <= 60;
+		}
+		else {
 			return false;
 		}
-		return valueInt >= 0 && valueInt <= 60;
+		
 	}
 	
 	private boolean validateSecond(String second) {
-		int valueInt = 0;
-		try {
-			valueInt = Integer.parseInt(second);
-		} catch(Exception e) {
+		if (second.length() == 2) {
+			int valueInt = 0;
+			try {
+				valueInt = Integer.parseInt(second);
+			} catch(Exception e) {
+				return false;
+			}
+			return valueInt >= 0 && valueInt <= 60;
+		}
+		else {
 			return false;
 		}
-		return valueInt >= 0 && valueInt <= 60;
+		
 	}
 	
 	@Override
