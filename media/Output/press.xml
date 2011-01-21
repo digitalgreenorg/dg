@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>The Weekend Leader</TITLE>
+		<HEADLINE>Through Digital Green, Rikin Gandhi helps farmers prosper</HEADLINE>
+		<REFERENCE>http://www.theweekendleader.com/page.php?id=377&amp;title=A-homecoming</REFERENCE>
+		<PRESSDATE>Fri, 21 January, 2011</PRESSDATE>
+		<PLACE>Mumbai</PLACE>    
+    	<DESC>"Digital Green's aim is to raise the livelihoods of smallholder farmers across the developing world through the targeted production and dissemination of agricultural information via participatory video and mediated instruction through grassroots-level partnerships."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
+		<TITLE>Business Standard</TITLE>
+		<HEADLINE>Gururaj Deshpande's Indian sandbox of social innovation </HEADLINE>
+		<REFERENCE>http://www.business-standard.com/india/news/gururaj-deshpande/s-indian-sandboxsocial-innovation/422348/</REFERENCE>
+		<PRESSDATE>Thu, 20 January 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>    
+    	<DESC>"Another project includes training marginal and small farmers - who often lack modern agricultural knowledge that could quickly and easily improve their productivity levels and enhance their livelihoods - by utilising low-cost technologies such as handycams, projectors, TVs and DVD players. It's called the Digital Green project."</DESC>
+		<COMPANY> </COMPANY>
+		<IMGLINK> </IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Explocity</TITLE>
 		<HEADLINE>Great leap for Mankind </HEADLINE>
 		<REFERENCE>http://www.dailybrink.com/?p=659</REFERENCE>
