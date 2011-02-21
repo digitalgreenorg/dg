@@ -35,10 +35,10 @@ if(len(error_ids)> 0):
     serv = smtplib.SMTP("smtp.gmail.com",587)
     serv.ehlo()
     serv.starttls()
-    serv.login("rahul@digitalgreen.org","Rahul123")
+    serv.login("server@digitalgreen.org","virtuala")
     msg = MIMEMultipart()
 
-    msg['From'] = 'rahul@digitalgreen.org'
+    msg['From'] = 'server@digitalgreen.org'
     msg['To'] = 'system@digitalgreen.org'
     msg['Subject'] = 'Error in Youtube IDs in Database'
     
@@ -46,7 +46,7 @@ if(len(error_ids)> 0):
     for k,v in error_ids.iteritems():
         text.append(str(k)+"\t"+str(v))
     msg.attach(MIMEText('\n'.join(text)))
-    serv.sendmail('rahul@digitalgreen.org', 'system@digitalgreen.org', msg.as_string())
+    serv.sendmail('server@digitalgreen.org', 'system@digitalgreen.org', msg.as_string())
     
     serv.quit()
      
