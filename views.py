@@ -1457,7 +1457,6 @@ def save_person_offline(request, id):
                 new_form.save()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
         else:
             person = Person.objects.get(id=id)
@@ -1466,7 +1465,6 @@ def save_person_offline(request, id):
                 form.save()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
 
 def save_personadoptpractice_online(request,id):
@@ -1626,7 +1624,6 @@ def save_screening_offline(request, id):
                 form.save_m2m()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
         else:
             screening = Screening.objects.get(id=id)
@@ -1635,7 +1632,6 @@ def save_screening_offline(request, id):
                 form.save()
                 return HttpResponse("1")
             else:
-                print form.errors
                 return HttpResponse("0")
 
 
