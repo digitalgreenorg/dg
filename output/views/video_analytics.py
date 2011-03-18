@@ -197,7 +197,7 @@ def video(request):
         rel_vids_lang = rel_vids_all.filter(language = vid.language)
         rel_vids.extend(list(rel_vids_lang[:9-len(rel_vids)]))
         if(len(rel_vids)< 9):
-            rel_vids.extend(list((rel_vids_all.filter(village__block__district__state == vid.village__block__district__state))[:9-len(rel_vids)]))
+            rel_vids.extend(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
         
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
