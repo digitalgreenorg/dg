@@ -289,7 +289,7 @@ class Person(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, db_column='GENDER')
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
-    land_holdings = models.IntegerField(null=True, db_column='LAND_HOLDINGS', blank=True)
+    land_holdings = models.FloatField(null=True, db_column='LAND_HOLDINGS', blank=True)
     village = models.ForeignKey(Village)
     group = models.ForeignKey(PersonGroups, null=True, blank=True)
     relations = models.ManyToManyField('self', symmetrical=False, through='PersonRelations',related_name ='rel',null=True,blank=True)
