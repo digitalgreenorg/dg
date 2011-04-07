@@ -8,6 +8,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Type;
 import com.digitalgreen.dashboardgwt.client.data.PersonsData.Data;
+import com.digitalgreen.dashboardgwt.client.data.validation.FloatValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
@@ -237,7 +238,7 @@ public class PersonsData extends BaseData {
 			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
 			StringValidator phoneNo = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
 			StringValidator address = new StringValidator(addressLabel, this.address, true, false, 0, 500, true);
-			IntegerValidator landHoldings = new IntegerValidator(landHoldingsLabel, this.land_holdings, true, false, 0, 200);
+			FloatValidator landHoldings = new FloatValidator(landHoldingsLabel, this.land_holdings, true, true);
 			StringValidator villageValidator = new StringValidator(villageLabel, this.village.getId(), false, false, 1, 100);
 			
 			ArrayList person_name = new ArrayList();

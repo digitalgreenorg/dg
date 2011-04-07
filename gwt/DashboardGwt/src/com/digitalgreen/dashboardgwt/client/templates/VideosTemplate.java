@@ -400,6 +400,12 @@ public class VideosTemplate extends BaseTemplate {
 															"<label for='id_remarks'>Remarks:</label><textarea id='id_remarks' rows='10' cols='40' name='remarks' class='vLargeTextField'></textarea>" +
 														"</div>" +
 													"</div>" +
+													"<div class='form-row youtubeid'>" +
+														"<div>" +
+															"<label for='id_youtubeid'>Youtubeid:</label>" +
+															"<input type='text' maxlength='20' name='youtubeid' class='vTextField' id='id_youtubeid'>" +
+														"</div>" +
+													"</div>"+
 												"</fieldset>" +
 												"<div class='submit-row' >" +
 													"<input id='save' type='button' value='Save' class='default' name='_save' />" +

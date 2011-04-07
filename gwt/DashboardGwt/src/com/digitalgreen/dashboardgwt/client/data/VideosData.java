@@ -48,13 +48,14 @@ public class VideosData extends BaseData {
 		public final native String getRemarks()/*-{ return  $wnd.checkForNullValues(this.fields.remarks); }-*/;
 		public final native String getActors()/*-{ return  $wnd.checkForNullValues(this.fields.actors); }-*/;
 		public final native String getLastModified()/*-{ return  $wnd.checkForNullValues(this.fields.last_modified); }-*/;
+		public final native String getYouTubeId()/*-{ return  $wnd.checkForNullValues(this.fields.youtubeid); }-*/;
 	}
 	
 	public class Data extends BaseData.Data {
 				
 		final private static String COLLECTION_PREFIX = "video";
 		
-		private String title;   		
+		private String title;
 		private String video_type;
 	    private String duration; 
 	    private LanguagesData.Data language; 
@@ -84,6 +85,7 @@ public class VideosData extends BaseData {
 	    private String last_modified;
 	    private ArrayList related_agricultural_practices;
 	    private ArrayList farmers_shown;
+	    private String youtubeid;
 		
 		public Data() {
 			super();
@@ -130,7 +132,7 @@ public class VideosData extends BaseData {
 				String storyboard_filename, String raw_filename, String movie_maker_project_filename, String final_edited_filename, 
 				VillagesData.Data village, AnimatorsData.Data facilitator, AnimatorsData.Data cameraoperator, ReviewersData.Data reviewer, 
 				String approval_date, VideosData.Data supplementary_video_produced, String video_suitable_for, String remarks, 
-				String actors, String last_modified){
+				String actors, String last_modified, String youtubeid){
 			
 			super();
 			this.id = id;
@@ -162,6 +164,7 @@ public class VideosData extends BaseData {
 			this.remarks = remarks;
 			this.actors = actors;
 			this.last_modified = last_modified;
+			this.youtubeid = youtubeid;
 		}
 		
 		public String getTitle(){
@@ -263,6 +266,8 @@ public class VideosData extends BaseData {
 				this.related_agricultural_practices.add(val);
 			} else if(key.equals("farmers_shown")){
 				this.farmers_shown.add(val);
+			} else if(key.equals("youtubeid")){
+				this.youtubeid = (String)val;
 			} else {
 				return;
 			}
@@ -294,6 +299,7 @@ public class VideosData extends BaseData {
 			String approvalDateLabel = "Approval Date";
 			String videoSuitableForLabel = "Video Suitable For";
 			String remarksLabel = "Remarks";
+			String youtubeIdLabel = "YouTubeId";
 						
 			StringValidator title = new StringValidator(titleLabel, this.title, false, false, 1, 200, true);
 			StringValidator videoType = new StringValidator(videoTypeLabel, this.video_type, false, false, 1, 1);
@@ -319,6 +325,8 @@ public class VideosData extends BaseData {
 			DateValidator approvalDate = new DateValidator(approvalDateLabel, this.approval_date, true, true);
 			StringValidator videoSuitableFor = new StringValidator(videoSuitableForLabel, this.video_suitable_for, false, false, 1, 1);
 			StringValidator remarks = new StringValidator(remarksLabel, this.remarks, true, true, 0, 500);
+			StringValidator youtubeid = new StringValidator(youtubeIdLabel, this.youtubeid, true, true, 0, 20);
+			youtubeid.setError("Please make sure 'Youtubeid' is less than 20 CHARACTERS.");
 			
 			ArrayList uniqueTitle = new ArrayList();
 			uniqueTitle.add("TITLE");
@@ -373,6 +381,7 @@ public class VideosData extends BaseData {
 			validatorList.add(approvalDate);
 			validatorList.add(videoSuitableFor);
 			validatorList.add(remarks);
+			validatorList.add(youtubeid);
 			validatorList.add(uniqueTitleStartEndDateVillageID);
 			return this.executeValidators(validatorList);
 		}
@@ -409,7 +418,8 @@ public class VideosData extends BaseData {
 						this.video_suitable_for, 
 						this.remarks, 
 						this.actors,
-						this.last_modified);
+						this.last_modified,
+						this.youtubeid);
 			this.addNameValueToQueryString("id", this.id);
 		}
 		
@@ -457,6 +467,7 @@ public class VideosData extends BaseData {
 												"REMARKS TEXT  NULL DEFAULT NULL," +
 												"ACTORS VARCHAR(1)  NOT NULL ," +
 												"last_modified DATETIME  NOT NULL, " +
+												"youtubeid VARCHAR(20)  NOT NULL ," +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(facilitator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(cameraoperator_id) REFERENCES animator(id), " +
@@ -477,7 +488,7 @@ public class VideosData extends BaseData {
 								"editing_quality", "edit_start_date", "edit_finish_date", "thematic_quality", "video_production_start_date", 
 								"video_production_end_date", "storybase","storyboard_filename", "raw_filename", "movie_maker_project_filename",
 								"final_edited_filename", "village_id", "facilitator_id", "cameraoperator_id", "reviewer_id", "approval_date", "supplementary_video_produced_id",
-								"video_suitable_for", "remarks","actors", "last_modified"}; 		
+								"video_suitable_for", "remarks","actors", "last_modified", "youtubeid"}; 		
 	
 	public VideosData() {
 		super();
@@ -594,7 +605,8 @@ public class VideosData extends BaseData {
 									videoObjects.get(i).getVideoSuitableFor(),
 									videoObjects.get(i).getRemarks(),
 									videoObjects.get(i).getActors(),
-									videoObjects.get(i).getLastModified());
+									videoObjects.get(i).getLastModified(),
+									videoObjects.get(i).getYouTubeId());
 
 			videos.add(video);
 		}

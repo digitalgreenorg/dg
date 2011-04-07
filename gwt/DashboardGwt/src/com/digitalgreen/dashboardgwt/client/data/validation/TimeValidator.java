@@ -70,6 +70,10 @@ public class TimeValidator extends BaseValidator {
 		} else if(this.getValue() == null){
 			return true;
 		}
+		if(((String)this.getValue()).length() > 8) {
+			errorString += timeFormatErrorMessage;
+			return false;
+		}
 		String[] hourMinuteSecond = ((String)this.getValue()).split(":");
 		if (this.validateHour(hourMinuteSecond[0]) &&
 			this.validateMinute(hourMinuteSecond[1]) &&
