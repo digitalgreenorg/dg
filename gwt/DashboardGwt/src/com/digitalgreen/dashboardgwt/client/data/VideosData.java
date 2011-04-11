@@ -467,12 +467,12 @@ public class VideosData extends BaseData {
 												"REMARKS TEXT  NULL DEFAULT NULL," +
 												"ACTORS VARCHAR(1)  NOT NULL ," +
 												"last_modified DATETIME  NOT NULL, " +
-												"youtubeid VARCHAR(20)  NOT NULL ," +
+												"youtubeid VARCHAR(20)  NULL DEFAULT NULL ," +
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(facilitator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(cameraoperator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
-												"FOREIGN KEY(language_id) REFERENCES language(id) );";  
+												"FOREIGN KEY(language_id) REFERENCES language(id) );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `video`;";
 	protected static String selectVideos = "SELECT video.id, video.title, village.id, village.village_name " +
 										   "FROM video JOIN village ON video.village_id = village.id" +
