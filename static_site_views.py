@@ -160,6 +160,10 @@ def careersm(request):
     
     return render_to_response('base_career_sm.html')
 
+def careerpm(request):
+    
+    return render_to_response('base_career_pm.html')
+
 def careerrse(request):
     
     return render_to_response('base_career_se.html')
