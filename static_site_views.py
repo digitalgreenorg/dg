@@ -92,6 +92,10 @@ def career(request):
     
     return render_to_response('base_career.html')
 
+def careers(request):
+    
+    return render_to_response('base_career.html')
+
 def contact(request):
     
     return render_to_response('base_contact.html')
