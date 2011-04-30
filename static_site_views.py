@@ -156,6 +156,10 @@ def careerid(request):
     
     return render_to_response('base_career_id.html')
 
+def careersm(request):
+    
+    return render_to_response('base_career_sm.html')
+
 def careerrse(request):
     
     return render_to_response('base_career_se.html')
