@@ -164,6 +164,14 @@ def careerpm(request):
     
     return render_to_response('base_career_pm.html')
 
+def careerts(request):
+    
+    return render_to_response('base_career_ts.html')
+
+def careerqam(request):
+    
+    return render_to_response('base_career_qam.html')
+
 def careerrse(request):
     
     return render_to_response('base_career_se.html')
