@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- Edited by XMLSpy® -->
 <CATALOG>
+    <TEAM>
+        <NAME>Srikant Vasan</NAME>
+        <POSITION>Entrepreneur-in-Residence</POSITION>    
+        <COUNTRY>USA</COUNTRY>
+        <COMPANY>Bill & Melinda Gates Foundation</COMPANY>
+        <PAGELINK>http://www.linkedin.com/pub/srikant-vasan/27/774/6a3/</PAGELINK>
+        <YEAR>1985</YEAR>
+    </TEAM>
+    <TEAM>
+        <NAME>Melissa Ho</NAME>
+        <POSITION>Specialist in Agricultural Policy</POSITION>    
+        <COUNTRY>USA</COUNTRY>
+        <COMPANY>U.S. Congress</COMPANY>
+        <PAGELINK></PAGELINK>
+        <YEAR>1985</YEAR>
+    </TEAM>
 	<TEAM>
 		<NAME>Aishwarya Ratan</NAME>
 		<POSITION>Associate Researcher</POSITION>    
