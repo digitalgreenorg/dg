@@ -1,0 +1,58 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} DigitalGreen - Board members - Melissa Ho{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />  
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+
+{% block pagetitle %} {{ block.super }}Melissa Ho {% endblock pagetitle %}
+
+{% block breadcrums %}  
+
+	{{ block.super }}
+	 {% block breadcrumsmore %}  
+	 	<a href='/team'> Team </a> / 
+	 	<a href='/teamboard'>Board members</a> /
+	 	<span style='font-size:0.9em; font-weight:bold;'> Melissa Ho </span> 
+	 {% endblock breadcrumsmore %} 
+	 
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+		
+	<div class='pagetitle'>
+		Melissa Ho
+	</div>
+	
+	<div class='teamcontent'>
+		Melissa Ho is a Specialist in Agricultural Policy at the Congressional Research Service in Washington D.C. She covers issues related to international agricultural development, global food security, agricultural trade, climate adaptation, and agricultural research, education and extension for the U.S. Congress. 
+		Before coming to CRS, Melissa was a Program Officer in Agricultural Development at the Bill & Melinda Gates Foundation. 
+		Previously, she served as the Agricultural Policy Advisor for Senator Hillary Rodham Clinton. Melissa has a Ph.D. in Plant Physiology from Penn State University, an M.Sc. in Soil Science from the University of California, Davis, and a B.Sc. in Environmental Systems from Cornell University.
+		<br/><br/>
+	</div>
+{% endblock mainbodycontentleft %}	
+
+
+{% block mainbodycontentright %}
+		
+	<div id='explorediv1' style='margin-top:3px'>		
+		<div class='exploredescdiv'>			
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/teamboard"><img src="/media/Output/Images/searchimg2.png" alt="">EXPLORE<br/>Learn about other Board Members</a>						
+			</div> 
+			<br/>
+		</div>			
+	</div>
+	
+	
+{% endblock mainbodycontentright %}		
+	
