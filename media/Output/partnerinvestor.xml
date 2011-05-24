@@ -14,5 +14,11 @@
     	<DESC>A philanthropic foundation that has established a geographically-defined "sandbox" in the northwestern region of Karnataka state to to promote innovation and inter-organizational collaboration which supports Digital Green's work there.    </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.deshpandefoundation.org/</REFERENCE>	
-	</TEAM>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Ford Foundation</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/ford_logo1.png</IMAGESRC>
+		<DESC>A philanthropic foundation that supports Digital Green's efforts to engage policy makers and the broader public in bringing systemic change to the agriculture sector</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.fordfoundation.org/</REFERENCE></TEAM>
 </CATALOG>
