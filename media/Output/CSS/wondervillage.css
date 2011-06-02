@@ -2,7 +2,7 @@
 	 
 .wonderteamtable					{ padding:5px; width:100%; margin:10px 0px; }
 
-.wondertitle						{ padding-left: 5px; text-align:left; background-color:none; color:White; font-family: Arial,Helvetica,Sans-Serif; font-size:1.2em; font-weight:bold; }
+.wondertitle						{ padding-left: 5px; text-align:left; background-color:none; color:Gray; font-family: Arial,Helvetica,Sans-Serif; font-size:1.2em; font-weight:bold; }
 .wondername							{ margin-top:5px; padding-left:5px; vertical-align:middle; text-align:left; color: #5B6E1D; font-family: Georgia,'Times New Roman',Serif; font-size:1.4em; background-color:#eeeeee; }
-.wonderimg                          { width:123px; height:130px; overflow:hidden; }
+.wonderimg                          { width:70px; height:69px; }
 	
