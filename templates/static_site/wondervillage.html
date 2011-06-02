@@ -24,7 +24,7 @@
 	
 	{% block mainbodycontentleftimg %}
 		<div class='mainbodycontentleftimg'>	
-			<img src="/media/Output/Images/wondergame1.png" alt='Wonder Village Game'>
+			<a href='http://www.facebook.com/apps/application.php?id=180609021958564'><img src="/media/Output/Images/wondergame1.png" alt='Wonder Village Game'></a>
 		</div>	
 	{% endblock mainbodycontentleftimg %}
 	
@@ -33,6 +33,81 @@
 		Wonder Village
 	</div>
 		
+	
+	<div id='contentdiv1'>		
+		<script type="text/javascript">
+			var xmlDoc=null;
+            if (window.XMLHttpRequest){
+             xhttp=new XMLHttpRequest();
+            }
+            else {
+             xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xhttp.open("GET","/media/Output/team_members_board.xml",false);
+            xhttp.send();
+            xmlDoc=xhttp.responseXML;
+			/*
+			if (window.ActiveXObject)
+			{// code for IE
+    			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+			}
+			else if (document.implementation.createDocument)
+			{// code for Mozilla, Firefox, Opera, etc.
+    			xmlDoc=document.implementation.createDocument("","",null);
+			}
+			else
+			{
+				alert('Your browser cannot handle this script');
+			}
+			*/
+			if (xmlDoc!=null) 
+			{
+				//xmlDoc.async=false;
+				//xmlDoc.load("/media/Output/team_members_board.xml");				
+				var x=xmlDoc.getElementsByTagName("TEAM");
+				//alert(x.length);
+				document.write("<table id='table1' cellspacing='0px' cellpadding='0'>");				
+				for (i=0;i<x.length;i++)
+ 					{
+  						document.write("<tr><td class='boardtd1' cellspacing='0px' cellpadding='0'>");  					
+  						document.write("<div class='boardtd1div1'>");
+  							document.write("<div class='boardtd1div1name'>");
+  								document.write(x[i].getElementsByTagName("NAME")[0].childNodes[0].nodeValue);  								
+  							document.write("</div>");	
+  						document.write("</div>");
+  					
+  						document.write("<div class='boardtd1div2'>");
+  							document.write("<div class='boardtd1div2title'>");
+  								document.write("<ul class='boardtd1div2ul'>");
+  									document.write("<li>"); 
+  										document.write((x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue)+",");	
+  									document.write("</li>");
+  									document.write("<li>"); 
+  										document.write(x[i].getElementsByTagName("COMPANY")[0].childNodes[0].nodeValue);  										
+  									document.write("</li>"); 									
+  								document.write("</ul>");
+  								  								
+  							document.write("</div>");
+  							document.write("<div class='boardtd1div2desc'>");  								
+  									document.write("<ul class='boardtd1div2ul'>");  									
+  									document.write("<li>"); 
+  										document.write(x[i].getElementsByTagName("COUNTRY")[0].childNodes[0].nodeValue);  										
+  									document.write("</li>");
+  									document.write("<li>"); 
+  										if( (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue)!=" " )
+  											{ 
+  												document.write("<a href=" + (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue) + " target='_blank'>" + "View Profile" + "</a>" );
+  											}   										
+  									document.write("</li>");  									
+  								document.write("</ul>");  									  									
+  							document.write("</div>");
+  						document.write("</div>");
+  						document.write("</td></tr>");
+  					}
+  				document.write("</table>");
+			}	
+		</script>					
+	</div>
 	
 	<div id='contentdiv2'>		
 		The Digital Green content repository is video-centric. This is important for a developing and predominantly rural country like India, which, by optimistic estimates, has an adult literacy rate of less than 60%. 
