@@ -8,11 +8,12 @@
 	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/press.css' />       
 {% endblock cssfile %}
 
+{% block jsfile %}       
+{% endblock jsfile %}
+
 {% block breadcrumsmore %} 	
 	<span style='font-size:0.9em; font-weight:bold;'> Wonder Village </span>	
 {% endblock breadcrumsmore %}
-
-{% block overviewrightlink %}{% endblock overviewrightlink %}
 
 {% block pagetitle %} &nbsp; Wonder Village Game {% endblock pagetitle %}
 
@@ -20,7 +21,7 @@
 	
 	{% block mainbodycontentleftimg %}
 		<div class='mainbodycontentleftimg'>	
-			<img src="/media/Output/Images/wondevillage1.png" alt='Wonder Village Game'>
+			<img src="/media/Output/Images/wondergame1.png" alt='Wonder Village Game'>
 		</div>	
 	{% endblock mainbodycontentleftimg %}
 	
@@ -48,30 +49,13 @@
 {% block mainbodycontentright %}		
 	<div id='explorediv'>		
 		<div class='exploredescdiv'>
-			<div class='exploredesctitle'> &nbsp; Software </div>
+			<div class='exploredesctitle'> &nbsp;Wonder Village</div>
 			<div class='exploredescmain'> 
 				<a class="exploredescmainlink" href="mailto:labs@digitalgreen.org"><img src="/media/Output/Images/linkimg2.png" alt="">Contact Technology Team</a>
-				<a class="exploredescmainlink" href="/analytics/overview_module?geog=country&id=1" title='Progress Dashboard'><img src="/media/Output/Images/linkimg2.png" alt="">Analytics Dashboard</a>
+				<a class="exploredescmainlink" href="/analytics/overview_module?geog=country&id=1" title='Wonder Village team members'><img src="/media/Output/Images/linkimg2.png" alt="">Wonder Village Team</a>
 			</div> 
 		</div>			
 	</div>
 	
-	<div class='cocotrial'>
-		<div class='cocotrialdesc'>
-			 <a href='http://sandbox.digitalgreen.org/coco/home.html' target='_blank'><img src="/media/Output/Images/cocotrialimg3.jpg" alt=""></a>		 
-			
-		</div>			
-	</div>
-	
-	<div class='cocotrial'>
-		<div class='cocotrialdesc'>
-			 <a href='/media/paperdev2010.pdf' target='_blank'><img src="/media/Output/Images/paperdev20101.jpg" alt="COCO Paper Selection at the ACM Dev2010"></a>		 
-			
-		</div>			
-	</div>
-	
-	<div class='imagelink'>
-		<a href='/annualreport'> <img src="/media/Output/Images/annualreportlinkimg2.jpg" alt='Digital Green Annual Report'> </a>
-	</div>
 {% endblock mainbodycontentright %}		
 
