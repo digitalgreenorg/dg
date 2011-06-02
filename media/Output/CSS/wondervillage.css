@@ -3,5 +3,5 @@
 .wonderteamtable					{ padding:10px; margin-left:5px; width:100%; margin-top:10px; }
 
 .wondertitle						{ background-color:#666666; color:White; font-family: Arial,Helvetica,Sans-Serif; font-size:1.2em; font-weight:bold; }
-.wondername							{ color: #5B6E1D; font-family: Georgia,'Times New Roman',Serif; font-size:1em; }
+.wondername							{  padding:20px; vertical-align:middle; text-align:left; color: #5B6E1D; font-family: Georgia,'Times New Roman',Serif; font-size:1em; }
 .wonderimg                          { width:123px; height: 147px; }
