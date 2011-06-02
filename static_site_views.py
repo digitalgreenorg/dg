@@ -7,6 +7,10 @@ def home(request):
         return HttpResponseRedirect('/coco/home.html')
     else:
         return home_with_analytics()
+    
+def wondervillage(request):
+   
+    return render_to_response('wondervillage.html')    
 
 def featuredfarmer(request):
    
