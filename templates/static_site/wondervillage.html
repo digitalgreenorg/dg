@@ -11,9 +11,12 @@
 {% block jsfile %}       
 {% endblock jsfile %}
 
-{% block breadcrumsmore %} 	
-	<span style='font-size:0.9em; font-weight:bold;'> Wonder Village </span>	
-{% endblock breadcrumsmore %}
+{% block breadcrums %}
+	{{ block.super }}
+	{% block partnerbreadcrums %} 	 
+		<span style='font-size:0.9em; font-weight:bold;'> WonderVillage </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
 
 {% block pagetitle %} &nbsp; Wonder Village Game {% endblock pagetitle %}
 
@@ -31,7 +34,7 @@
 	</div>
 		
 	
-	<div id='contentdiv1'>		
+	<div id='contentdiv2'>		
 		The Digital Green content repository is video-centric. This is important for a developing and predominantly rural country like India, which, by optimistic estimates, has an adult literacy rate of less than 60%. 
 		In farming communities, the literacy rate is substantially lower. The video based approach has several important advantages to traditional forms of agricultural content, which is typically not in the local language, 
 		intended for a literate audience, uses expert terminology, lacks grassroots level practicalities, and remains inaccessible in a sea of scattered media. Farmers, by the nature of their occupation, rely on their auditory 
