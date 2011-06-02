@@ -36,7 +36,8 @@
 	</div>
 		
 	
-	<div id='contentdiv1'>		
+	<div id='contentdiv1'>
+		
 		<script type="text/javascript">
 			var xmlDoc=null;
             if (window.XMLHttpRequest){
@@ -45,7 +46,7 @@
             else {
              xhttp=new ActiveXObject("Microsoft.XMLHTTP");
             }
-            xhttp.open("GET","/media/Output/team_members_board.xml",false);
+            xhttp.open("GET","/media/Output/team_members.xml",false);
             xhttp.send();
             xmlDoc=xhttp.responseXML;
 			/*
@@ -65,49 +66,45 @@
 			if (xmlDoc!=null) 
 			{
 				//xmlDoc.async=false;
-				//xmlDoc.load("/media/Output/team_members_board.xml");				
+				//xmlDoc.load("/media/Output/team_members.xml");
+				//alert("hello");
 				var x=xmlDoc.getElementsByTagName("TEAM");
-				//alert(x.length);
+
+				//alert(x.length);				
 				document.write("<table id='table1' cellspacing='0px' cellpadding='0'>");				
 				for (i=0;i<x.length;i++)
  					{
-  						document.write("<tr><td class='boardtd1' cellspacing='0px' cellpadding='0'>");  					
-  						document.write("<div class='boardtd1div1'>");
-  							document.write("<div class='boardtd1div1name'>");
+  						document.write("<tr><td class='contenttd1' cellspacing='0px' cellpadding='0'>");  					
+  						document.write("<div class='contenttd1div1'>");
+  							document.write("<img src='" + (x[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue)+"'>");
+  							document.write("<div class='contenttd1div1name'>");
   								document.write(x[i].getElementsByTagName("NAME")[0].childNodes[0].nodeValue);  								
   							document.write("</div>");	
   						document.write("</div>");
   					
-  						document.write("<div class='boardtd1div2'>");
-  							document.write("<div class='boardtd1div2title'>");
-  								document.write("<ul class='boardtd1div2ul'>");
-  									document.write("<li>"); 
-  										document.write((x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue)+",");	
+  						document.write("<div class='contenttd1div2'>");
+  							document.write("<div class='contenttd1div2title'>");
+  								document.write("<ul class='contenttd1div2titleul'>");
+  									document.write("<li style='color:Gray; font-weight:bold;'>"); 
+  										document.write(x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue);	
   									document.write("</li>");
   									document.write("<li>"); 
-  										document.write(x[i].getElementsByTagName("COMPANY")[0].childNodes[0].nodeValue);  										
-  									document.write("</li>"); 									
+  										document.write("<a class='maillinks' href=mailto:" + (x[i].getElementsByTagName("MAILID")[0].childNodes[0].nodeValue) + ">" + (x[i].getElementsByTagName("MAILID")[0].childNodes[0].nodeValue) + "</a>" );	
+  									document.write("</li>");  									
   								document.write("</ul>");
   								  								
   							document.write("</div>");
-  							document.write("<div class='boardtd1div2desc'>");  								
-  									document.write("<ul class='boardtd1div2ul'>");  									
-  									document.write("<li>"); 
-  										document.write(x[i].getElementsByTagName("COUNTRY")[0].childNodes[0].nodeValue);  										
-  									document.write("</li>");
-  									document.write("<li>"); 
-  										if( (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue)!=" " )
-  											{ 
-  												document.write("<a href=" + (x[i].getElementsByTagName("PAGELINK")[0].childNodes[0].nodeValue) + " target='_blank'>" + "View Profile" + "</a>" );
-  											}   										
-  									document.write("</li>");  									
-  								document.write("</ul>");  									  									
+  							document.write("<div class='contenttd1div2desc'>");
+  								document.write("<p>");
+  									document.write(x[i].getElementsByTagName("DESC")[0].childNodes[0].nodeValue);
+  								document.write("</p>");
   							document.write("</div>");
   						document.write("</div>");
   						document.write("</td></tr>");
   					}
-  				document.write("</table>");
-			}	
+  				document.write("</table>");	
+  			}		
+				
 		</script>					
 	</div>
 	
