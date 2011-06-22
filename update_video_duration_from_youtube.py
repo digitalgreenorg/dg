@@ -19,13 +19,13 @@ for vid in vids:
         #Fetch the video entry from Youtube
         entry = yt_service.GetYouTubeVideoEntry(video_id=vid.youtubeid)
     except gdata.service.RequestError, inst:
-        errors_ids[vid.id] = inst
+        error_ids[vid.id] = inst
     else:
         duration = timedelta(seconds = int(entry.media.duration.seconds))
         vid.duration = str(duration)
         vid.save()
 
-#If there are errros in the youtube ID. Send mail to system@digitalgreen.org using SMTP on GMAIL
+#If there are errros in the youtube ID. Send mail to rahul@digitalgreen.org using SMTP on GMAIL
 if(len(error_ids)> 0):
     import smtplib
     from email.MIMEMultipart import MIMEMultipart
@@ -39,14 +39,14 @@ if(len(error_ids)> 0):
     msg = MIMEMultipart()
 
     msg['From'] = 'server@digitalgreen.org'
-    msg['To'] = 'system@digitalgreen.org'
+    msg['To'] = 'rahul@digitalgreen.org'
     msg['Subject'] = 'Error in Youtube IDs in Database'
     
     text = ["Following Videos (ID & Error given) have problem with youtube id."]
     for k,v in error_ids.iteritems():
         text.append(str(k)+"\t"+str(v))
     msg.attach(MIMEText('\n'.join(text)))
-    serv.sendmail('server@digitalgreen.org', 'system@digitalgreen.org', msg.as_string())
+    serv.sendmail('server@digitalgreen.org', 'rahul@digitalgreen.org', msg.as_string())
     
     serv.quit()
      
