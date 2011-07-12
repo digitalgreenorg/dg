@@ -10,7 +10,10 @@ import re, random, cjson
 
 
 def home_with_analytics():
-    analytics_data= run_query(overview_analytics_sql.overview_sum_geog('COUNTRY', 1, None, None, None))[0]
+    tot_scr = Screening.objects.count()
+    tot_vid = Video.objects.count()
+    tot_per = len(set(PersonMeetingAttendance.objects.values_list('person',flat=True).distinct()).union(set(PersonShownInVideo.objects.values_list('person',flat=True).distinct())))
+    analytics_data = dict(tot_scr = tot_scr, tot_vid = tot_vid, tot_per = tot_per)
     return render_to_response('base_home.html', dict(analytics_data = analytics_data))
 
 def test_output(request,geog,id=None):
