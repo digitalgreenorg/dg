@@ -329,6 +329,10 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
 
+class PersonAdoptPracticeAdmin(admin.ModelAdmin):
+    list_display = ('person','practice')
+    search_fields = ['person__person_name','person__village__village_name', 'practice__practice_name']
+
 class PersonForm(forms.ModelForm):
     class DynamicChoiceField(forms.ChoiceField):
         def clean(self, value):
@@ -520,6 +524,9 @@ class EquipmentAdmin(admin.ModelAdmin):
 class PracticesAdmin(admin.ModelAdmin):
     search_fields = ['practice_name']
 
+class UserPermissionAdmin(admin.ModelAdmin):
+	list_display = ('username','role','region_operated','district_operated')
+
 class TargetAdmin(admin.ModelAdmin):
 
     formfield_overrides = {
@@ -574,8 +581,9 @@ admin.site.register(Screening, ScreeningAdmin)
 admin.site.register(Training, TrainingAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Target, TargetAdmin)
-#admin.site.register(UserPermission)
-#admin.site.register(EquipmentHolder)
+admin.site.register(UserPermission, UserPermissionAdmin)
+admin.site.register(EquipmentHolder)
+admin.site.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
 #admin.site.register(Reviewer)
 #admin.site.register(Random)
 #admin.site.register(Message, MessageAdmin)

@@ -229,7 +229,7 @@ class Block(models.Model):
         return self.block_name
 
 class Village(models.Model):
-    village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME', unique='True')
+    village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME')
     block = models.ForeignKey(Block)
     no_of_households = models.IntegerField(null=True, db_column='NO_OF_HOUSEHOLDS', blank=True)
     population = models.IntegerField(null=True, db_column='POPULATION', blank=True)
