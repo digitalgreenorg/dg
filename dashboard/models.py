@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.db.models import Min
+from django.db.models.signals import pre_delete, m2m_changed, pre_save, post_delete
 
 # Variables
 GENDER_CHOICES = (
@@ -294,10 +296,135 @@ class Person(models.Model):
     group = models.ForeignKey(PersonGroups, null=True, blank=True)
     relations = models.ManyToManyField('self', symmetrical=False, through='PersonRelations',related_name ='rel',null=True,blank=True)
     adopted_agricultural_practices = models.ManyToManyField('Practices',through='PersonAdoptPractice',null=True, blank=True)
+    date_of_joining = models.DateField(null=True, blank=True)
+    
     class Meta:
         db_table = u'PERSON'
         unique_together = ("person_name", "father_name", "group","village")
-
+        
+    # Called on any update/insert/delete of PersonMeetingAttendance/PersonShownInVideo
+    @staticmethod
+    def date_of_joining_handler(sender, **kwargs):
+        try:
+            def get_min_date(person, exclude_model, exclude_pk_set):
+                all_dates = []
+                if exclude_model == Screening:
+                    all_dates.extend(person.screening_set.exclude(id__in = exclude_pk_set).values_list('date',flat=True))
+                else:
+                    all_dates.extend(person.screening_set.values_list('date',flat=True))
+                
+                if exclude_model == Video:
+                    all_dates.extend(person.video_set.exclude(id__in = exclude_pk_set).values_list('video_production_end_date',flat=True))
+                else:
+                    all_dates.extend(person.video_set.values_list('video_production_end_date',flat=True))
+                
+                if all_dates:
+                    return min(all_dates);
+                else:
+                    return None
+                    
+            instance = kwargs['instance']
+            if sender == Screening or sender == Video:
+                if kwargs['signal'] == pre_save and instance.pk != None:
+                    if(sender == Screening):
+                        old_date = Screening.objects.get(pk=instance.pk).date
+                        person_set = instance.farmers_attendance.all()
+                        check_date = instance.date
+                    elif sender == Video:
+                        old_date = Video.objects.get(pk=instance.pk).video_production_end_date
+                        person_set = instance.farmers_shown.all()
+                        check_date = instance.video_production_end_date
+                    if old_date == check_date:
+                        return
+                    for person in person_set:
+                        if check_date < person.date_of_joining:
+                            person.date_of_joining = check_date
+                            person.save()
+                        elif person.date_of_joining == old_date:
+                            person.date_of_joining = min(filter(lambda x: x is not None, [check_date, get_min_date(person, sender, (instance.pk,))]))
+                            person.save()
+                elif kwargs['signal'] == pre_delete:
+                    if sender == Video:
+                        person_set = instance.farmers_shown.all()
+                        check_date = instance.video_production_end_date
+                    for person in person_set:
+                        if check_date == person.date_of_joining:
+                            min_date = get_min_date(person, sender, (instance.pk,))
+                            if min_date != person.date_of_joining:
+                                person.date_of_joining = min_date
+                                person.save()
+            elif sender == PersonMeetingAttendance:
+                if kwargs['signal'] == pre_save:
+                    if instance.pk == None:
+                        person = Person.objects.get(pk=instance.person.pk)
+                        if person.date_of_joining == None or person.date_of_joining > instance.screening.date:
+                            person.date_of_joining = instance.screening.date
+                            person.save()
+                    else:
+                        old_pma = PersonMeetingAttendance.objects.get(pk=instance.pk)
+                        if old_pma.person != instance.person or old_pma.screening != instance.screening:
+                            old_person = old_pma.person
+                            min_vid_date = (old_person.video_set.aggregate(Min('video_production_end_date'))).values()[0]
+                            min_sc_date = (old_person.personmeetingattendance_set.exclude(pk=instance.pk).aggregate(Min('screening__date'))).values()[0]
+                            if min_vid_date or min_sc_date:
+                                old_person.date_of_joining = min(filter(lambda x: x is not None, [min_vid_date, min_sc_date]))
+                            else:
+                                old_person.date_of_joining = None
+                            old_person.save()
+                            person = Person.objects.get(pk=instance.person.pk)
+                            if person.date_of_joining == None or person.date_of_joining > instance.screening.date:
+                                person.date_of_joining = instance.screening.date
+                                person.save()
+                elif kwargs['signal'] == post_delete:
+                    person = Person.objects.get(pk=instance.person.pk)
+                    if(person.date_of_joining == instance.screening.date):
+                        min_vid_date = (person.video_set.aggregate(Min('video_production_end_date'))).values()[0]
+                        min_sc_date = (person.personmeetingattendance_set.exclude(pk=instance.pk).aggregate(Min('screening__date'))).values()[0]
+                        if min_vid_date or min_sc_date:
+                            person.date_of_joining = min(filter(lambda x: x is not None, [min_vid_date, min_sc_date]))
+                        else:
+                            person.date_of_joining = None
+                        person.save()
+            elif sender == Video.farmers_shown.through:
+                if kwargs['reverse'] == False:
+                    person_set = instance.farmers_shown.all()
+                    check_date = instance.video_production_end_date
+                    if kwargs['action'] == 'pre_clear' or kwargs['action'] == 'pre_remove':
+                        if kwargs['action'] == 'pre_remove':
+                            person_set = Person.objects.filter(id__in = kwargs['pk_set'])
+                        for person in person_set:
+                            if check_date == person.date_of_joining:
+                                min_date = get_min_date(person, instance.__class__, (instance.pk,))
+                                if min_date != person.date_of_joining:
+                                    person.date_of_joining = min_date
+                                    person.save()
+                    elif kwargs['action'] == 'post_add':
+                        person_set = Person.objects.filter(id__in = kwargs['pk_set'])
+                        for person in person_set:    
+                            if person.date_of_joining == None or check_date < person.date_of_joining:
+                                person.date_of_joining = check_date
+                                person.save()
+                else:
+                    if kwargs['action'] == 'pre_clear':
+                        min_date = (instance.screening_set.aggregate(Min('date'))).values()[0]
+                        if min_date != instance.date_of_joining:
+                            instance.date_of_joining = min_date
+                            instance.save()
+                    elif kwargs['action'] == 'pre_remove':
+                        check_date = (Video.objects.filter(pk__in = kwargs['pk_set']).aggregate(Min('video_production_end_date'))).values()[0]
+                        if check_date == instance.date_of_joining:
+                            min_date = get_min_date(instance, kwargs['model'], kwargs['pk_set'])
+                            if min_date != instance.date_of_joining:
+                                instance.date_of_joining = min_date
+                                instance.save()
+                    elif kwargs['action'] == 'post_add':
+                        check_date = (Video.objects.filter(pk__in = kwargs['pk_set']).aggregate(Min('video_production_end_date'))).values()[0]
+                        if instance.date_of_joining == None or check_date < instance.date_of_joining:
+                            instance.date_of_joining = check_date
+                            instance.save()
+        except Exception, e:
+            #TODO: notify on exception raised. Catching all to avoid bugs from stopping COCO
+            pass
     def __unicode__(self):
         return  u'%s (%s)' % (self.person_name, self.village)
 
@@ -409,6 +536,10 @@ class Video(models.Model):
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
+    
+pre_delete.connect(Person.date_of_joining_handler, sender=Video)
+pre_save.connect(Person.date_of_joining_handler, sender=Video)
+m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
 class Practices(models.Model):
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
@@ -432,7 +563,7 @@ class PersonShownInVideo(models.Model):
     person = models.ForeignKey(Person, db_column='person_id')
     class Meta:
         db_table = u'VIDEO_farmers_shown'
-
+        
 class Screening(models.Model):
     date = models.DateField(db_column='DATE')
     start_time = models.TimeField(db_column='START_TIME')
@@ -453,7 +584,9 @@ class Screening(models.Model):
 
     def __unicode__(self):
         return u'%s %s' % (self.date, self.village)
-
+    
+pre_save.connect(Person.date_of_joining_handler, sender=Screening)
+    
 class GroupsTargetedInScreening(models.Model):
     screening = models.ForeignKey(Screening, db_column='screening_id')
     persongroups = models.ForeignKey(PersonGroups, db_column='persongroups_id')
@@ -477,7 +610,13 @@ class PersonMeetingAttendance(models.Model):
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
-
+    
+    def __unicode__(self):
+        return  u'%s' % (self.id)
+        
+post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
+pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
+        
 class PersonAdoptPractice(models.Model):
     person = models.ForeignKey(Person)
     practice = models.ForeignKey(Practices)
