@@ -63,7 +63,14 @@ def overview_module(request):
 
 
 #par_geog is summed data in the below table
-    par_geog_data= run_query(overview_analytics_sql.overview_sum_geog(geog, id, from_date, to_date, partners))[0]
+    par_geog_data = {}
+    par_geog_data['tot_vid'] = reduce(lambda x,y: x+y, map(lambda x: x[0], vid_prod.values()), 0)
+    par_geog_data['tot_scr'] = reduce(lambda x,y: x+y, map(lambda x: x[0], vid_screening.values()), 0)
+    par_geog_data['tot_per'] = reduce(lambda x,y: x+y, map(lambda x: x[0], tot_per.values()), 0)
+    par_geog_data['tot_pra'] = reduce(lambda x,y: x+y, map(lambda x: x[0], tot_prac.values()), 0)
+    par_geog_data['tot_vil'] = reduce(lambda x,y: x+y, map(lambda x: x[0], tot_vil.values()), 0)
+    par_geog_data['tot_ado'] = reduce(lambda x,y: x+y, map(lambda x: x[0], adoption.values()), 0)
+    par_geog_data['name'], par_geog_data['id'] = get_parent_geog_id(geog, id)
     par_geog_data['geog'] = geog_par
 
 
@@ -108,7 +115,7 @@ def overview_module(request):
         header_geog = geog_child
     else:
         header_geog = "Village"
-
+    
     return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
                                                                                                        country_data = country_data, \
                                                                                                        table_data = table_data, \
@@ -116,3 +123,18 @@ def overview_module(request):
                                                                                                        get_req_url = get_req_url, \
                                                                                                        header_geog = header_geog \
                                                                                                        ))
+
+def get_parent_geog_id(geog, id):
+    if geog == "COUNTRY":
+        return "India", None
+    elif geog == "STATE":
+        return State.objects.get(pk=id).state_name, 1
+    elif geog == "DISTRICT":
+        dist = District.objects.filter(pk=id).values("district_name", "state_id")[0]
+        return dist['district_name'], dist['state_id']
+    elif geog == "BLOCK":
+        block = Block.objects.filter(pk=id).values("block_name", "district_id")[0]
+        return block['block_name'], block['district_id']
+    elif geog == "VILLAGE":
+        vil = Village.objects.filter(pk=id).values("village_name", "block_id")[0]
+        return vil['village_name'], vil['block_id']

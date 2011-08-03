@@ -121,24 +121,11 @@ def overview(geog, id, from_date, to_date, partners, type):
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
     elif(type=='person'):
-        sql_ds['select'].append('COUNT(DISTINCT TAB.person_id) as tot_per')
-        sql_ds['from'].append("""(
-        SELECT person_id, min(date) as DATE
-        FROM (
-                SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
-                FROM VIDEO_farmers_shown vs, VIDEO vid
-                WHERE vs.video_id = vid.id
-
-                UNION
-
-                SELECT  pa.person_id, DATE
-                FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
-                WHERE pa.screening_id = sc.id ) TMP
-                GROUP BY person_id
-        )AS TAB""")
-        sql_ds['join'].append(['PERSON P',"TAB.person_id = P.id"])
+        sql_ds['select'].append('COUNT(P.id) as tot_per')
+        sql_ds['from'].append("PERSON P")
+        sql_ds['where'].append("P.date_of_joining is not NULL")
         main_tab_abb = 'P'
-        date_field = "TAB.DATE"
+        date_field = "P.date_of_joining"
     if(geog=="COUNTRY"):
         #Hacking attach_geog_date for attaching geography till state in country case.
         attach_geog_date(sql_ds,main_tab_abb,date_field,'STATE',0, from_date,to_date)
@@ -173,28 +160,10 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');
     elif(type=='person'):
-        sql_ds['select'].extend(["date", "COUNT(*)"])
-
-        sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["person_id", "MIN(date) as date"])
-        sql_inn_ds['from'].append("""(
-                SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
-                FROM VIDEO_farmers_shown vs, VIDEO vid
-                WHERE vs.video_id = vid.id
-
-                UNION
-
-                SELECT  pa.person_id, DATE
-                FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
-                WHERE pa.screening_id = sc.id
-
-        ) as tab""");
-        if(geog!="COUNTRY" or partners):
-            sql_inn_ds['join'].append(["PERSON P","P.id = tab.person_id"])
-            filter_partner_geog_date(sql_inn_ds,'P','dummy',geog,id,None,None,partners)
-        sql_inn_ds['group by'].append("tab.person_id");
-
-        sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
+        sql_ds['select'].extend(["date_of_joining as date", "COUNT(*)"])
+        sql_ds['from'].append("PERSON P")
+        sql_ds['where'].append("P.date_of_joining is not NULL")
+        filter_partner_geog_date(sql_ds,"P",'dummy',geog,id,None,None,partners)
         sql_ds['group by'].append('date');
     elif(type=='production'):
         sql_ds['select'].extend(["VIDEO_PRODUCTION_END_DATE as date", "count(*)"])

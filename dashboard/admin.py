@@ -349,6 +349,7 @@ class PersonForm(forms.ModelForm):
 class PersonAdmin(admin.ModelAdmin):
     inlines = [PersonAdoptPracticeInline]
     list_display = ('person_name','group','village')
+    exclude = ('date_of_joining',)
     search_fields = ['person_name','village__village_name','group__group_name']
     related_search_fields = {
         'village': ('village_name',),

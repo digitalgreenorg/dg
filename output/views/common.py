@@ -12,7 +12,7 @@ import re, random, cjson
 def home_with_analytics():
     tot_scr = Screening.objects.count()
     tot_vid = Video.objects.count()
-    tot_per = len(set(PersonMeetingAttendance.objects.values_list('person',flat=True).distinct()).union(set(PersonShownInVideo.objects.values_list('person',flat=True).distinct())))
+    tot_per = Person.objects.exclude(date_of_joining = None).count()
     analytics_data = dict(tot_scr = tot_scr, tot_vid = tot_vid, tot_per = tot_per)
     return render_to_response('base_home.html', dict(analytics_data = analytics_data))
 
@@ -69,8 +69,8 @@ def get_search_box(request, min_date_func=None):
             from_date = datetime.date.today()
         to_date = datetime.date.today()
 
-    search_box_params['from_date'] = from_date
-    search_box_params['to_date'] = to_date
+    search_box_params['from_date'] = str(from_date)
+    search_box_params['to_date'] = str(to_date)
     search_box_params['geog_val'] = breadcrumbs_options(geog,id)
     search_box_params['cur_geog'] = geog.lower()
     search_box_params['cur_id'] = id

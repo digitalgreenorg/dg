@@ -45,23 +45,10 @@ def overview_sum_geog(geog, id, from_date, to_date, partner_id, type=None):
     filter_partner_geog_date(pra_sql,"VID","VIDEO_PRODUCTION_END_DATE",geog,id,from_date,to_date,partner_id);
 
     per_sql = get_init_sql_ds()
-    per_sql['select'].append('COUNT(DISTINCT TAB.person_id) as tot_per')
-    per_sql['from'].append("""(
-        SELECT person_id, min(date) as DATE
-        FROM (
-            SELECT  vs.person_id, VIDEO_PRODUCTION_END_DATE AS date
-            FROM VIDEO_farmers_shown vs, VIDEO vid
-            WHERE vs.video_id = vid.id
-
-            UNION
-
-            SELECT  pa.person_id, DATE
-            FROM PERSON_MEETING_ATTENDANCE pa, SCREENING sc
-            WHERE pa.screening_id = sc.id ) TMP
-            GROUP BY person_id
-        )AS TAB""")
-    per_sql['join'].append(['PERSON P', "TAB.person_id = P.id"])
-    filter_partner_geog_date(per_sql,"P","TAB.DATE",geog,id,from_date,to_date,partner_id);
+    per_sql['select'].append('COUNT(P.id) as tot_per')
+    per_sql['from'].append('PERSON P')
+    per_sql['where'].append('date_of_joining is not NULL')
+    filter_partner_geog_date(per_sql,"P","P.date_of_joining",geog,id,from_date,to_date,partner_id);
 
     if(type):
         combined_sql = []
