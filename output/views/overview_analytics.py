@@ -85,15 +85,12 @@ def overview_module(request):
         date_var = str(datetime.date.today())
     #Operational Village (Last 60 days)
     country_data.update(vil_oper = run_query(targets_sql.get_village_operational(geog, id, date_var, partners))[0]['count'])
-    tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners))[0];
-    if(tot_val['tot_scr']):
-        #Average attendance 
-        #Average Screening
-        country_data.update(avg_att = float(tot_val['tot_per'])/tot_val['tot_scr'])
-        country_data.update(avg_scr = float(tot_val['tot_scr'])/tot_val['tot_days'])
-    else:
-        country_data.update(avg_att = 0)
-        country_data.update(avg_scr = 0)
+    tot_val = views.screening_analytics.get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, ['avg_sc_per_day', 'avg_att_per_sc']);
+    #Average attendance 
+    #Average Screening
+    country_data.update(avg_att = tot_val['avg_att_per_sc'])
+    country_data.update(avg_scr = tot_val['avg_sc_per_day'])
+    
     #Adoption Rate
     tot_att_60_days = float(run_query(shared_sql.tot_dist_attendees_60_days(geog, id, date_var, partners))[0]['tot_per'])
     if(tot_att_60_days):

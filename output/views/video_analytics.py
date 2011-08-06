@@ -223,7 +223,7 @@ def video_search(request):
     to_date = request.GET.get('to_date');
     search_box_params = {}
 
-    vids = Video.objects.annotate(viewers = Count('screening__farmers_attendance',distinct=True))
+    vids = Video.objects.all()
     
     if(query):
         vids = vids.filter(title__icontains = query)

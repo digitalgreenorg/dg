@@ -32,7 +32,7 @@
 	                       {% for prac in vid.related_agricultural_practices.all %}{{prac.practice_name}}{% if not forloop.last %}, {%endif%}{%empty%}NA{%endfor%}.
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
-	                       {{vid.duration|default_if_none:"Duration:NA"}}
+	                       {{vid.duration|time:"H:i:s"|default_if_none:"Duration:NA"}}
                            &nbsp;&nbsp;       
                            Produced On: {{ vid.video_production_end_date|date:"d M Y" }}
 	                    </div>

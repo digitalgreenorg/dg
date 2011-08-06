@@ -8,18 +8,28 @@ def screening_min_date(geog, id, from_date, to_date, partners):
     return join_sql_ds(sql_ds);
 
 
-def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners):
+#values_to_fetch is for restricting calculated values.
+#values_to_fetch is a list of combination of 'tot_dist_per', 'tot_per', 'tot_scr', 'dates'
+def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners, values_to_fetch=None):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(DISTINCT PMA.person_id) as tot_dist_per");
-    sql_ds['select'].append("COUNT(PMA.person_id) as tot_per");
-    sql_ds['select'].append("COUNT(DISTINCT SC.id) as tot_scr");
-    sql_ds['select'].append("DATEDIFF(MAX(SC.DATE),MIN(SC.DATE))+1 as tot_days");
-    sql_ds['from'].append("SCREENING SC");
-    sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"]);
+    if(values_to_fetch==None or 'tot_dist_per' in values_to_fetch):
+        sql_ds['select'].append("COUNT(DISTINCT PMA.person_id) as tot_dist_per");
+    if(values_to_fetch==None or 'tot_per' in values_to_fetch):
+        sql_ds['select'].append("COUNT(PMA.person_id) as tot_per");
+    if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
+        sql_ds['select'].append("COUNT(DISTINCT SC.id) as tot_scr");
+    if(values_to_fetch==None or 'dates' in values_to_fetch):
+        sql_ds['select'].append("DATEDIFF(MAX(SC.DATE),MIN(SC.DATE))+1 as tot_days");
+    if(values_to_fetch==None or 'tot_scr' in values_to_fetch or 'dates' in values_to_fetch or geog!="COUNTRY" or from_date or to_date or partners):
+        sql_ds['from'].append("SCREENING SC");
+    if(values_to_fetch==None or 'tot_dist_per' in values_to_fetch or 'tot_per' in values_to_fetch):
+        if sql_ds['from']:
+            sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"]);
+        else:
+            sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
     filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners);
 
     return join_sql_ds(sql_ds);
-
 
 def screening_attendees_malefemaleratio(geog,id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
