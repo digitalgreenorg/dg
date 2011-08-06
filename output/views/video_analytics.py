@@ -151,7 +151,6 @@ def video(request):
     
     tot_vid_scr = len(scr)
     dist_shown = list(set([s.village.block.district.district_name for s in scr]))
-    tot_vid_viewer = pma.aggregate(Count('person',distinct=True))['person__count']
     exp_ques_pract_count = pma.exclude(expressed_question_practice = None).values('expressed_question_practice__practice_name').annotate(count = Count('person'))
     tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
     
@@ -187,21 +186,19 @@ def video(request):
     #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, questions]
     
     
-    rel_vids_all = Video.objects.annotate(viewers = Count('screening__farmers_attendance',distinct=True))
-    rel_vids_all = rel_vids_all.order_by('viewers')
+    rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('viewers')
     rel_vids_prac = rel_vids_all.filter(related_agricultural_practices__in = vid.related_agricultural_practices.all())
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
     else:
         rel_vids = list(rel_vids_prac)
-        rel_vids_lang = rel_vids_all.filter(language = vid.language)
+        rel_vids_lang = rel_vids_all.exclude(pk__in=rel_vids_prac.values_list('pk',flat=True)).filter(language = vid.language)
         rel_vids.extend(list(rel_vids_lang[:9-len(rel_vids)]))
         if(len(rel_vids)< 9):
             rel_vids.extend(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
         
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
-                                                     tot_vid_viewer = tot_vid_viewer, \
                                                      tot_vid_adopt = tot_vid_adopt, \
                                                      actors = actor_data, \
                                                      ques = ques, \
