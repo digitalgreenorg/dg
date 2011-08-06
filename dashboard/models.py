@@ -1,9 +1,10 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
-from django.db.models import Min
-from django.db.models.signals import pre_delete, m2m_changed, pre_save, post_delete
+from django.db.models import Min, Count, F
+from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
 
 # Variables
 GENDER_CHOICES = (
@@ -376,15 +377,28 @@ class Person(models.Model):
                                 person.date_of_joining = instance.screening.date
                                 person.save()
                 elif kwargs['signal'] == post_delete:
-                    person = Person.objects.get(pk=instance.person.pk)
-                    if(person.date_of_joining == instance.screening.date):
-                        min_vid_date = (person.video_set.aggregate(Min('video_production_end_date'))).values()[0]
-                        min_sc_date = (person.personmeetingattendance_set.exclude(pk=instance.pk).aggregate(Min('screening__date'))).values()[0]
-                        if min_vid_date or min_sc_date:
-                            person.date_of_joining = min(filter(lambda x: x is not None, [min_vid_date, min_sc_date]))
-                        else:
-                            person.date_of_joining = None
-                        person.save()
+                    try:
+                        #This is put under try..except because if person is deleted, it will cascade delete of PersonMeetingAttendance, get will throw DoesNotExist error
+                        person = Person.objects.get(pk=instance.person.pk)
+                    except ObjectDoesNotExist:
+                        return
+                    try:
+                        #This is put under try..except because if Screening is deleted, it will cascade delete of PersonMeetingAttendance, get will throw DoesNotExist error
+                        date = instance.screening.date
+                    except ObjectDoesNotExist:
+                        min_date = get_min_date(person, Screening, (instance.screening_id,))
+                        if min_date != person.date_of_joining:
+                            person.date_of_joining = min_date
+                            person.save()
+                    else:
+                        if(person.date_of_joining == date):
+                            min_vid_date = (person.video_set.aggregate(Min('video_production_end_date'))).values()[0]
+                            min_sc_date = (person.personmeetingattendance_set.exclude(pk=instance.pk).aggregate(Min('screening__date'))).values()[0]
+                            if min_vid_date or min_sc_date:
+                                person.date_of_joining = min(filter(lambda x: x is not None, [min_vid_date, min_sc_date]))
+                            else:
+                                person.date_of_joining = None
+                            person.save()
             elif sender == Video.farmers_shown.through:
                 if kwargs['reverse'] == False:
                     person_set = instance.farmers_shown.all()
@@ -425,6 +439,7 @@ class Person(models.Model):
         except Exception, e:
             #TODO: notify on exception raised. Catching all to avoid bugs from stopping COCO
             pass
+    
     def __unicode__(self):
         return  u'%s (%s)' % (self.person_name, self.village)
 
@@ -531,6 +546,46 @@ class Video(models.Model):
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
+    viewers = models.PositiveIntegerField(default=0, editable=False)
+    
+    @staticmethod
+    def update_viewer_count(sender, **kwargs):
+        try:
+            if sender == Screening.videoes_screened.through and kwargs['signal'] == m2m_changed:
+                if kwargs['reverse'] == False:
+                    count = kwargs['instance'].farmers_attendance.count()
+                    if kwargs['action'] == "post_remove":
+                        Video.objects.filter(pk__in = kwargs['pk_set']).update(viewers = F("viewers") - count)
+                    elif kwargs['action'] == "post_add":
+                        Video.objects.filter(pk__in = kwargs['pk_set']).update(viewers = F("viewers") + count)
+                    elif kwargs['action'] == 'pre_clear':
+                       kwargs['instance'].videoes_screened.update(viewers = F("viewers") - count)
+                else:
+                    video = Video.objects.get(pk=kwargs['instance'].pk)
+                    if kwargs['action'] == "post_remove":
+                        video.viewers = video.viewers - (Screening.objects.filter(pk__in = kwargs['pk_set']).aggregate(c = Count('farmers_attendance'))).values()[0]
+                        video.save()
+                    elif kwargs['action'] == "post_add":
+                        video.viewers = video.viewers + (Screening.objects.filter(pk__in = kwargs['pk_set']).aggregate(c = Count('farmers_attendance'))).values()[0]
+                        video.save()
+                    elif kwargs['action'] == "post_clear":
+                        video.viewers = 0
+                        video.save()
+            elif sender == PersonMeetingAttendance:
+                if kwargs['signal'] == pre_save:
+                    if kwargs['instance'].pk != None:
+                        old_pma = PersonMeetingAttendance.objects.get(pk=kwargs['instance'].pk)
+                        if old_pma.screening_id != kwargs['instance'].screening_id:
+                            old_pma.screening.videoes_screened.update(viewers = F('viewers') - 1)
+                            kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
+                    else:
+                        kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
+                elif kwargs['signal'] == pre_delete:
+                    kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') - 1)
+        except Exception, e:
+            #TODO: notify on exception raised. Catching all to avoid bugs from stopping COCO
+            pass
+                       
     class Meta:
         db_table = u'VIDEO'
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
@@ -586,6 +641,7 @@ class Screening(models.Model):
         return u'%s %s' % (self.date, self.village)
     
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
+m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
 class GroupsTargetedInScreening(models.Model):
     screening = models.ForeignKey(Screening, db_column='screening_id')
@@ -615,7 +671,10 @@ class PersonMeetingAttendance(models.Model):
         return  u'%s' % (self.id)
         
 post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
+pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
+pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
+
         
 class PersonAdoptPractice(models.Model):
     person = models.ForeignKey(Person)
