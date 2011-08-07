@@ -146,47 +146,39 @@ def video(request):
     id = int(request.GET['id'])
     vid = Video.objects.get(pk=id)
     vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
-    scr = Screening.objects.all().filter(videoes_screened = vid)
-    pma = PersonMeetingAttendance.objects.all().filter(screening__in = scr)
     
-    tot_vid_scr = len(scr)
-    dist_shown = list(set([s.village.block.district.district_name for s in scr]))
-    exp_ques_pract_count = pma.exclude(expressed_question_practice = None).values('expressed_question_practice__practice_name').annotate(count = Count('person'))
+    tot_vid_scr = vid.screening_set.count()
     tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
     
-    actors = vid.farmers_shown.all()
+    actors = vid.farmers_shown.values('person_name')
     actor_data = dict(actors = actors, tot_actors = len(actors))
-    for ratio in actors.values('gender').annotate(count=Count('id')):
-        actor_data[ratio['gender']] = ratio['count']
     
     #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
-    #in title and questionx
-    title = vid.title
-    x = title.split(' ')
-    title_arr = []
-    for elem in x:
-         title_arr.extend(elem.split('_'))
+    #in title and question
+    title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
     #title_arr is the final array of tokens from Title after splitting by ' ' and '_'
     
-    ques = pma.exclude(expressed_question='');
-    if(ques.count()>0):
+    ques = PersonMeetingAttendance.objects.filter(screening__videoes_screened = vid).exclude(expressed_question =  '')
+    ques = ques.values('expressed_question','person__person_name','person__village__block__district__district_name',
+                       'person__village__block__district__state__state_name','screening__date')
+    if(len(ques) > 0):
         ques_arr = []
         for x in ques:
-            ques_arr.append([x.expressed_question.split(' '), x])
+            ques_arr.append([x['expressed_question'].split(' '), x])
             
         scores = []
         for ques in ques_arr:
             count = 0
             for tok in title_arr:
                 if tok in ques[0]:
-                    count = count+1
+                    count = count + 1
             scores.append([count, ques[1]])
         scores.sort(key = (lambda x: x[0]), reverse = True)
         ques = scores
-    #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, questions]
+    #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
     
     
-    rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('viewers')
+    rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('-viewers')
     rel_vids_prac = rel_vids_all.filter(related_agricultural_practices__in = vid.related_agricultural_practices.all())
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]

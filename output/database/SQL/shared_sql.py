@@ -234,27 +234,13 @@ def target_lines(geog,id, from_date, to_date, partners, type):
 
 
 #Query for number of distinct persons who attended a screening in the past 60 days from 'to_date'
-def tot_dist_attendees_60_days(geog, id, to_date, partners):
+def tot_dist_attendees_adopt_60_days(geog, id, to_date,partners):
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append("COUNT(DISTINCT person_id) as tot_per")
-    sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
-    sql_ds['join'].append(["SCREENING SC","SC.id = PMA.screening_id"])
+    sql_ds['select'].extend(["COUNT(DISTINCT PMA.person_id) as tot_per", "COUNT(DISTINCT PAP.person_id) as tot_adop_per"])
+    sql_ds['from'].append("SCREENING SC")
+    sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"])
+    sql_ds['lojoin'].append(["PERSON_ADOPT_PRACTICE PAP", "PAP.person_id = PMA.person_id"])
     sql_ds['where'].append("DATE BETWEEN SUBDATE('"+to_date+"',INTERVAL 60 DAY) AND '"+to_date+"'")
     filter_partner_geog_date(sql_ds,"SC","DUMMY",geog,id,None,None,partners)
     
     return join_sql_ds(sql_ds);
-
-def tot_dist_adopt_60_days(geog, id, to_date, partners):
-    inner_sql = get_init_sql_ds()
-    inner_sql['select'].append("DISTINCT person_id")
-    inner_sql['from'].append("PERSON_MEETING_ATTENDANCE PMA")
-    inner_sql['join'].append(["SCREENING SC","SC.id = PMA.screening_id"])
-    inner_sql['where'].append("DATE BETWEEN SUBDATE('"+to_date+"',INTERVAL 60 DAY) AND '"+to_date+"'")
-    filter_partner_geog_date(inner_sql,"SC","DUMMY",geog,id,None,None,partners)
-    
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append("COUNT(DISTINCT person_id) as tot_adop_per")
-    sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP")
-    sql_ds['where'].append("person_id IN ("+join_sql_ds(inner_sql)+")")
-    
-    return join_sql_ds(sql_ds)

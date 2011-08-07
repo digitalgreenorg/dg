@@ -125,8 +125,7 @@
 										var prodtime = "{{vid.prod_duration.days}} day{{vid.prod_duration.days|pluralize}}";
 										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";
 										var farmerquant = "Farmer" + "{{actors.tot_actors|pluralize}}";
-										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name}} {% endfor %}";	
-										var farmeractor = farmeractor.toUpperCase(farmeractor);
+										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}";	
 										var practiceshown = "{%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name}}{%if not forloop.last%}, {%endif%}{%endfor%}.";
 										practiceshown = practiceshown.toUpperCase(practiceshown);
 										var summary = "{{vid.summary|escapejs}}"; 	
@@ -205,7 +204,7 @@
 									{% for que in ques %}									 
 										<tr class="{% cycle row1,row2 %}">
 											<td id='questiontabletd1'>	
-												{{que.1.person.person_name.upper}} &nbsp;|&nbsp; {{que.1.screening.date|date:"d M Y"}}																		
+												{{que.1.person__person_name.upper}} &nbsp;|&nbsp; {{que.1.screening__date|date:"d M Y"}}																		
 											</td>
 											<td id='questiontabletd2' rowspan='2'>												
 												{{que.1.expressed_question}}																					
@@ -213,7 +212,7 @@
 										</tr>
 										<tr class="{% cycle row1,row2 %}">
 											<td id='questiontabletd1'>																								
-												<span class='smallfont'> {{que.1.person.village.block.district.district_name}}, {{que.1.person.village.block.district.state.state_name}} </span>
+												<span class='smallfont'> {{que.1.person__village__block__district__district_name}}, {{que.1.person__village__block__district__state__state_name}} </span>
 																									
 											</td>
 										</tr>
