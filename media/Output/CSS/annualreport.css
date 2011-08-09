@@ -35,7 +35,7 @@
 .annualreporttable1td				{ width:100%; }
 
 .annualreporttd10					{ padding:10px;  vertical-align:top; width:100%; }
-.annualreportdiv10					{ float:left; width:435px; background-color:#0099cc; }
+.annualreportdiv10					{ float:left; width:435px; height: 230px; background-color:#0099cc; }
 .annualreportdiv10 img				{ margin:10px; width:415px; height:145px; }
 .annualreportdesc10					{ text-align:left; width:415px; margin-left:10px; margin-bottom:10px; color:White; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; }
 .divgap								{ float:left; width: 10px; height:10px; }
