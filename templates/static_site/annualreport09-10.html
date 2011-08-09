@@ -1,26 +1,20 @@
 
-{% extends "base_all.html" %}
+{% extends "annualreports.html" %}
 
-{% block title %} Digital Green - Annual Report{% endblock %}
+{% block title %} Digital Green - Annual Report 2009-10{% endblock %}
 
 {% block cssfile %}
-	{{ block.super }}
-	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/annualreport.css' />       
+	{{ block.super }}	  
 {% endblock cssfile %}
 
-{% block jsfile %}       
-{% endblock jsfile %}
+{% block reportpagetitle %} Annual Report 2009-10{% endblock reportpagetitle %} 
 
-{% block pagetitle %} {{ block.super }}
-	{% block reportpagetitle %} Annual Report {% endblock reportpagetitle %} 
-{% endblock pagetitle %}
 
-{% block breadcrums %}  
-	{{ block.super }}	
-	{% block partnerbreadcrums %} 	 
-	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report </span>
-	{% endblock partnerbreadcrums %}	  
-{% endblock breadcrums %}
+{% block partnerbreadcrums %} 	 
+	 <a href='/annualreport'> Annual Reports </a>/ 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report 2009-10</span>
+{% endblock partnerbreadcrums %}	  
+
 
 
 {% block mainbodycontent %}	

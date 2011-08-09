@@ -1,0 +1,52 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Digital Green - Annual Report{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/annualreport.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block pagetitle %} {{ block.super }}
+	{% block reportpagetitle %} Annual Reports {% endblock reportpagetitle %} 
+{% endblock pagetitle %}
+
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Reports </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontent %}	
+	
+    <div id='contentdiv1'>
+    	<img src="/media/Output/Images/headerimg.jpg" />   	     
+    </div>
+    
+    <table id='annualreporttable' cellspacing="0" cellpadding="0">
+    	<tr>
+    		<td class='annualreporttd'>
+    			<div class='pagetitle'>
+					Annual Reports
+				</div>
+				<div id='reportintro'>
+					Read our past Annual Reports to know the progress of the Digital green. 
+				</div>	
+    			<div class='pastreport'>
+    				<a href='/annualreport09'> <img src='/media/Output/Images/annualreportlinkimg2.jpg' > </a>
+    			</div>  
+    			
+    			<div class='pastreport'>
+    				<a href='/annualreport10'> <img src='/media/Output/Images/annualreportlinkimg3.jpg' > </a>
+    			</div> 
+    			  			
+    		</td>
+    	</tr>
+    </table>		
+{% endblock mainbodycontent %}	

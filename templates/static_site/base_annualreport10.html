@@ -1,0 +1,60 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Digital Green - Annual Report 2010-11{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/annualreport.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block pagetitle %} {{ block.super }}
+	{% block reportpagetitle %} Annual Report {% endblock reportpagetitle %} 
+{% endblock pagetitle %}
+
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+    
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Annual Report 2010-11 </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/annualletter10"><img src="/media/Output/Images/linkimg2.png" alt="">Introduction</a>
+				<a class="exploredescmainlink" href="/challenge10" title='Challenges'><img src="/media/Output/Images/linkimg2.png" alt="">Challenges</a>
+				<a class="exploredescmainlink" href="/projectprogress10"><img src="/media/Output/Images/linkimg2.png" alt="">Progress</a>			
+				<a class="exploredescmainlink" href="/financial10"><img src="/media/Output/Images/linkimg2.png" alt="">Financials</a>
+				<a class="exploredescmainlink" href="/wondervillage"  target="_blank"><img src="/media/Output/Images/linkimg2.png" alt="">Wonder Village</a>				
+			</div> 
+		</div>			
+	</div>		
+	
+	
+	
+	<div id="explorediv3">					
+		<a href="/annualreport09">
+			<img src="/media/Output/Images/annualreportlinkimg1.jpg" />
+		</a>		
+	</div>	
+
+	<div id="explorediv3">					
+		<a href="/press">
+			<img src="/media/Output/Images/pressimg5.jpg" />
+		</a>		
+	</div>
+	
+
+{% endblock mainbodycontentright %}	
