@@ -12,7 +12,7 @@ def wondervillage(request):
    
     return render_to_response('wondervillage.html') 
 
-def annualreport(request):
+def annualreports(request):
    
     return render_to_response('annualreports.html')    
 
