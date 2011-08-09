@@ -29,8 +29,30 @@
 .annualreporttitlelink				{ margin-bottom:3px; font-family:Arial,Helvetica,Sanserif; color:#E7F7CF; font-weight:bold; display:block; text-decoration:none; }
 .annualreporttitlelink:hover		{ text-decoration:underline; }
 
+/*  annual report 2010-2011 css */
+
 #annualreporttable1					{ padding-top:10px; border-top:1px solid #6e5a0c; border-bottom:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; width:900px; }
 .annualreporttable1td				{ width:100%; }
+
+.annualreporttd10					{ padding:10px;  vertical-align:top; width:100%; }
+.annualreportdiv10					{ float:left; width:435px; background-color:#0099cc; }
+.annualreportdiv10 img				{ margin:10px; width:415px; height:145px; }
+.annualreportdesc10					{ text-align:left; width:415px; margin-left:10px; margin-bottom:10px; color:White; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; }
+.divgap								{ float:left; width: 10px; height:10px; }
+
+.annualreportdiv11					{ float:left; width:286px; background-color:#0099cc; }
+.annualreportdesc11					{ text-align:left; width:276px; margin-left:10px; margin-bottom:10px; color:White; font-size:0.8em; font-family:Arial,Helvetica,Sanserif; font-weight:normal; }
+.annualreportdiv11 img				{ margin:10px; width:266px; height:145px; }
+
+.financialtable						{ font-family:Sans-Serif; }
+.financialtd1						{ border-bottom: 1px solid #8e7e57; width:60%; padding:5px; background-color:#cebc91; text-align:left; color:Black;}	
+.financialtd2	      				{ border-bottom: 1px solid #8e7e57; width:40%; padding:5px; background-color:#f5e2b5; text-align:left; color:Black;  }
+
+
+
+#reportintro						{ margin:6px 10px 0px 0px; font-family:Arial,Helvetica,Sanserif; color:Black; font-size:13px;  }
+.pastreport							{  margin: 10px 10px 10px 0px; float:left; }
+
 
 
 #explorediv3						{ clear:both; width:264px; margin-top:20px; }

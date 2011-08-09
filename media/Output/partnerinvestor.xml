@@ -21,4 +21,10 @@
 		<DESC>A philanthropic foundation that supports Digital Green's efforts to engage policy makers and the broader public in bringing systemic change to the agriculture sector</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.fordfoundation.org/</REFERENCE></TEAM>
+	<TEAM>
+		<TITLE>Ministry of Rural Development</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/ministry_logo1.png</IMAGESRC>
+		<DESC>The Ministry of Rural Development, a branch of the Government of India, is entrusted with the task of accelerating the socio-economic development of rural India. Its focus is on areas like agricultural productivity, sanitation solutions, employment generation, food security, etc.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://rural.nic.in/</REFERENCE></TEAM>
 </CATALOG>
