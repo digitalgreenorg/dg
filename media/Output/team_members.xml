@@ -56,7 +56,20 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>nadagouda@digitalgreen.org</MAILID>
 		<NAME>S.B. Nadagouda</NAME>		
-	</TEAM>
+	</TEAM><TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/abhishekh1.png</ARTIST>
+		<DESC>Abhishek is a graduate from the London School of Economics, UK with specialization in use of ICT for socioeconomic development and holds a bachelor's in mechanical engineering from PESIT, Bangalore. He has over five years experience in product development and research. He has filed four patents in the field of computer science and has worked as part of engineering teams at Adobe Systems and Infosys Technologies. He is also a Fellow for Sustainable Business at the Piramal Foundation.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>hegde@digitalgreen.org</MAILID>
+		<NAME>Abhishek Hegde</NAME></TEAM>
+	<TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/shabnam1.png</ARTIST>
+		<DESC>Shabnam's deep rooted passion is in bringing quality education to those who do not have access today, and until now, she has primarily focussed on children. After earning an Engineering degree from Carnegie Mellon University, Shabnam worked as an investment banker, a rural BPO manager, an educator to sex trafficked victims, a co-founder of MILLEE educating children using mobile phone games, an independent researcher of education products in India, a pre-primary school teacher, and lastly the founder of an SMS feedback mechanism for students to have a voice in their classrooms and education, called 'HobNob' while simultaneously starting a global conference focussed on failure, called 'Hindsight'. Her long term vision for Digital Green is to take the model far beyond the farmers one day. Having spent so much time trying to educate children better, she realized that the key lies not in the tool but in the hands of the people, in this instance, the teachers. Imagine the possibilities of taking Digital Green to teachers worldwide and giving them the resources to be better teachers to the children!! In the shorter term, she hopes to scale Digital Green to various other countries by truly understanding what farmers needs are and how we can pivot the model to reach millions and empower from within. She is super super excited to join the team and learn more about all of you. Shabnam's style is to ask lots of questions, so please feel free to do the same if you feel so inclined.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>shabnam@digitalgreen.org</MAILID>
+		<NAME>Shabnam Aggarwal</NAME></TEAM>
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/abhishek2.png</ARTIST>    
@@ -105,6 +118,7 @@
 		<MAILID>sudha@digitalgreen.org</MAILID>
 		<NAME>Sudha Jha</NAME>		
 	</TEAM>
+	
 	<TEAM>
 		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/rahul1.png</ARTIST>    
