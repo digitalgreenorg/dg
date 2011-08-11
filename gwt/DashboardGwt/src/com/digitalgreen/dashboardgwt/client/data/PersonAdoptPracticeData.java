@@ -6,17 +6,13 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Data;
-import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData.Type;
 import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
-import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
-import com.google.web.bindery.event.shared.UmbrellaException;
 
 public class PersonAdoptPracticeData extends BaseData{
 	

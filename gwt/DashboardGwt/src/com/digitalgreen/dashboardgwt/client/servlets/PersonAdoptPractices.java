@@ -10,9 +10,6 @@ import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.PersonAdoptPracticesTemplate;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.web.bindery.event.shared.UmbrellaException;
 
 public class PersonAdoptPractices extends BaseServlet {
 	
