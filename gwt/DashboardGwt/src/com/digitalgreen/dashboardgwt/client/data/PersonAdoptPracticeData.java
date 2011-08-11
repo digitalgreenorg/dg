@@ -12,9 +12,11 @@ import com.digitalgreen.dashboardgwt.client.data.validation.DateValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
+import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.UmbrellaException;
 
 public class PersonAdoptPracticeData extends BaseData{
 	
@@ -297,6 +299,7 @@ public class Data extends BaseData.Data {
 	protected static String savePersonAdoptPracticeOnlineURL = "/dashboard/savepersonadoptpracticeonline/";
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
+	protected static String getPracticeSeenForPersonURL = "/dashboard/getpracticesseenforperson/";
 	protected String table_name = "person_adopt_practice";
 	protected String[] fields = {"id", "person_id", "practice_id", "prior_adoption_flag", 
 			"date_of_adoption","quality","quantity","quantity_unit"};
@@ -524,6 +527,20 @@ public class Data extends BaseData.Data {
 		return false;
 	}	
 	
+	public String retrievePracticeSeenDataAndConvertToHtml(String person_id) {
+		PracticesData practiceData = new PracticesData();
+		List practices = practiceData.getPracticeSeenForPersonOffline(person_id);
+		
+		String htmlPractice = "<option value='' selected='selected'>---------</option>";
+		
+		for(Object practice : practices) {
+			htmlPractice = htmlPractice + "<option value=\"" + ((PracticesData.Data)practice).getId() + "\">" + 
+			((PracticesData.Data)practice).getPracticeName() + "</option>";
+		}
+		
+		return htmlPractice;
+	}
+	
 	public String retrieveDataAndConvertResultIntoHtml() {
 		
 		PersonsData personData = new PersonsData();
@@ -558,6 +575,16 @@ public class Data extends BaseData.Data {
 		}
 		else{
 			return retrieveDataAndConvertResultIntoHtml();
+		}
+		return false;
+	}
+	
+	public Object getPracticesForPerson(String person_id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPracticeSeenForPersonURL + person_id + "/");
+		}
+		else {
+			return retrievePracticeSeenDataAndConvertToHtml(person_id);
 		}
 		return false;
 	}

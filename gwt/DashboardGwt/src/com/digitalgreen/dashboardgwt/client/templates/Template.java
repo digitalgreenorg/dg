@@ -42,6 +42,10 @@ public class Template implements TemplateInterface {
 			RootPanel.get("info-space").insert(this.getFormattedMessages(), 0);
 		}
 	}
+	
+	public void ajaxFill(RequestContext requestContext) {
+		
+	}
 
 	public RequestContext getRequestContext() {
 		return this.requestContext;

@@ -8,9 +8,11 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
+import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.PersonAdoptPracticesTemplate;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.web.bindery.event.shared.UmbrellaException;
 
 public class PersonAdoptPractices extends BaseServlet {
 	
@@ -20,6 +22,50 @@ public class PersonAdoptPractices extends BaseServlet {
 	
 	public PersonAdoptPractices(RequestContext requestContext) {
 		super(requestContext);
+	}
+	
+	public void ajaxResponse(final BaseTemplate callerTemplate) {
+		if(this.getMethodTypeCtx().equals(RequestContext.METHOD_GET)) {
+			PersonAdoptPracticeData personAdoptPracticeData = new PersonAdoptPracticeData(new OnlineOfflineCallbacks(this) {
+				public void onlineSuccessCallback(String ajaxData) {
+					if(this.getStatusCode() == 200) {
+						getServlet().getRequestContext().getArgs().put("ajax_data", ajaxData);
+						getServlet().ajaxFillTemplate(callerTemplate, getServlet().getRequestContext());
+					} else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+						getServlet().redirectTo(new Index(requestContext));
+					}
+				}
+			
+				public void onlineErrorCallback(int errorCode) {
+					RequestContext requestContext = new RequestContext();
+					if (errorCode == BaseData.ERROR_RESPONSE)
+						requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
+					else if (errorCode == BaseData.ERROR_SERVER)
+						requestContext.setErrorMessage("Problem in the connection with the server.");
+					else
+						requestContext.setErrorMessage("Unknown error.  Please contact support.");
+					getServlet().redirectTo(new Index(requestContext));	
+				}
+				
+				public void offlineSuccessCallback(Object ajaxData) {
+					if((String)ajaxData != null) {
+						// Got whatever info we need to display for this GET request, so go ahead
+						// and display it by filling in the template.  No need to redirect.
+						getServlet().getRequestContext().getArgs().put("ajax_data", (String)ajaxData);
+						getServlet().ajaxFillTemplate(callerTemplate, getServlet().getRequestContext());
+					} else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("Unexpected local error. Please contact support");
+						getServlet().redirectTo(new Index(requestContext));				
+					}	
+				}
+			});
+			if(this.getRequestContext().getArgs().get("action").equals("person-select")) {
+				personAdoptPracticeData.apply(personAdoptPracticeData.getPracticesForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
+			}
+		}
 	}
 	
 	@Override

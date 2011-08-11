@@ -6,6 +6,7 @@ import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
+import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.Template;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -59,6 +60,10 @@ public class BaseServlet implements ServletInterface{
 
 	public void fillTemplate(Template template) {
 		template.fill();
+	}
+	
+	public void ajaxFillTemplate(Template template, RequestContext requestContext) {
+		template.ajaxFill(requestContext);
 	}
 	
 	// Override this

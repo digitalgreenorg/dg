@@ -8,9 +8,17 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dev.util.Callback;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class PersonAdoptPracticesTemplate extends BaseTemplate {
 
@@ -43,6 +51,53 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(savePersonAdoptPractice);
+		this.addPracticeFilter();
+	}
+	
+	@Override
+	public void ajaxFill(RequestContext ajaxRC) {
+		super.ajaxFill(ajaxRC);
+		if(ajaxRC.getArgs().get("action").equals("person-select")) {
+			BaseTemplate operationsUI = new BaseTemplate();
+			operationsUI.hideGlassDoorMessage();
+			String html = ajaxRC.getArgs().get("ajax_data").toString();
+			final ListBox practiceSelect = ListBox.wrap(RootPanel.get("id_practice").getElement());
+			practiceSelect.setEnabled(true);
+			practiceSelect.getElement().setInnerHTML(html);
+		}
+	}
+	
+	public void addPracticeFilter() {
+		if(this.requestContext.getArgs().get("action").equals("add")) {
+			final ListBox practiceSelect = ListBox.wrap(RootPanel.get("id_practice").getElement());
+			practiceSelect.setEnabled(false);
+			
+			final ListBox personSelect = ListBox.wrap(RootPanel.get("id_person").getElement());
+			
+			final BaseTemplate callerTemplate = this;
+			
+			personSelect.addChangeHandler(new ChangeHandler() {
+				
+				@Override
+				public void onChange(ChangeEvent event) {
+					int selectedIndex = personSelect.getSelectedIndex();
+					
+					if(selectedIndex == 0 || selectedIndex == -1) {
+						practiceSelect.setEnabled(false);
+						return;
+					}
+					
+					BaseTemplate operationsUI = new BaseTemplate();
+					operationsUI.showGlassDoorMessage("Loading Agricultural Practices..");
+					
+					RequestContext requestContext = new RequestContext();
+					requestContext.getArgs().put("action", "person-select");
+					requestContext.getArgs().put("person_id", personSelect.getValue(personSelect.getSelectedIndex()).toString());
+					PersonAdoptPractices pap = new PersonAdoptPractices(requestContext);
+					pap.ajaxResponse(callerTemplate);
+				}
+			});
+		}
 	}
 	
 	protected List<Hyperlink> fillListings() {

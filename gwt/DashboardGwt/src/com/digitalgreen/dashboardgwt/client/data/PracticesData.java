@@ -155,6 +155,11 @@ public class PracticesData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `practices`;";
 	protected static String selectPractices = "SELECT id, practice_name FROM practices  ORDER BY LOWER(practice_name)";
 	protected static String listPractices = "SELECT * FROM practices ORDER BY LOWER(practice_name)";
+	protected static String selectPracticesSeenForPerson = "select distinct pr.id, pr.practice_name from practices pr " +
+										"join video_related_agricultural_practices vrap on vrap.practices_id = pr.id " + 
+										"join screening_videos_screened svs on svs.video_id = vrap.video_id " +
+										"join person_meeting_attendance pma on pma.screening_id = svs.screening_id " +
+										"where person_id = ";
 	protected static String savePracticeOnlineURL = "/dashboard/savepracticeonline/";
 	protected static String getPracticeOnlineURL = "/dashboard/getpracticesonline/";
 	protected static String savePracticeOfflineURL = "/dashboard/savepracticeoffline/";
@@ -263,6 +268,26 @@ public class PracticesData extends BaseData {
 				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
 					Data practice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
 							this.getResultSet().getFieldAsString(2), this.getResultSet().getFieldAsString(3));
+					practices.add(practice);
+				}
+			}
+			catch(DatabaseException e){
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return practices;
+	}
+	
+	public List getPracticeSeenForPersonOffline(String person_id) {
+		BaseData.dbOpen();
+		List practices = new ArrayList();
+		this.select(selectPracticesSeenForPerson + person_id);
+		if(this.getResultSet().isValidRow()){
+			try {
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					Data practice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
 					practices.add(practice);
 				}
 			}
