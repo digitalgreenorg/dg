@@ -129,7 +129,7 @@ def get_videos_uploaded(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(VID.id) as count")
     sql_ds['from'].append("VIDEO VID")
-    sql_ds['where'].append("FINAL_EDITED_FILENAME != ''")
+    sql_ds['where'].append("YOUTUBEID != ''")
     filter_partner_geog_date(sql_ds,"VID","VID.VIDEO_PRODUCTION_END_DATE",geog,id,from_date,to_date,partners)
     
     return join_sql_ds(sql_ds)

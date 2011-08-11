@@ -244,9 +244,9 @@ def get_key_for_user(request):
                 cursor = connection.cursor()
                 cursor.execute(query_string, query_args)
                 transaction.commit_unless_managed()
-                return HttpResponse(id)
+                return HttpResponse(str(id))
             else:
-                return HttpResponse(result[0].get('id'))
+                return HttpResponse(str(result[0].get('id')))
         else:
             return HttpResponse("0")
     else:
@@ -546,6 +546,19 @@ def save_practice_offline(request, id):
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
+
+def get_practices_seen_for_person(request, person_id):
+    practices = Person.objects.get(pk=person_id).screening_set.values_list('videoes_screened__related_agricultural_practices', 
+                                                    'videoes_screened__related_agricultural_practices__practice_name').distinct()
+                                                    
+    html_template = """
+    <option value='' selected='selected'>---------</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=practices)))
+    
+    return HttpResponse(html)
 
 def save_language_online(request,id):
     if request.method == 'POST':
@@ -2006,7 +2019,7 @@ def save_personmeetingattendance_online(request):
         form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['expressed_interest_practice'].queryset = Practice.objects.all().distinct().order_by('practice_name')
         return HttpResponse(form)
-
+    
 def get_personmeetingattendances_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('personmeetingattendances')
