@@ -62,6 +62,23 @@ public class PersonAdoptPractices extends BaseServlet {
 			if(this.getRequestContext().getArgs().get("action").equals("person-select")) {
 				personAdoptPracticeData.apply(personAdoptPracticeData.getPracticesForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
 			}
+			else if(this.getRequestContext().getArgs().get("action").equals("district-select")) {
+				personAdoptPracticeData.apply(personAdoptPracticeData.getBlocksForDistrict(this.getRequestContext().getArgs().get("district_id").toString()));
+			}
+			else if(this.getRequestContext().getArgs().get("action").equals("block-select")) {
+				personAdoptPracticeData.apply(personAdoptPracticeData.getVillagesForBlock(this.getRequestContext().getArgs().get("block_id").toString()));
+			}
+			else if(this.getRequestContext().getArgs().get("action").equals("village-select")) {
+				personAdoptPracticeData.apply(personAdoptPracticeData.getPersonGroupsForVillage(this.getRequestContext().getArgs().get("village_id").toString()));
+			}
+			else if(this.getRequestContext().getArgs().get("action").equals("person_group-select")) {
+				if(this.getRequestContext().getArgs().get("person_group_id").equals("null")) {
+					personAdoptPracticeData.apply(personAdoptPracticeData.getPersonForVillageAndNoPersonGroup(this.getRequestContext().getArgs().get("village_id").toString()));
+				}
+				else {
+					personAdoptPracticeData.apply(personAdoptPracticeData.getPersonForPersonGroups(this.getRequestContext().getArgs().get("person_group_id").toString()));
+				}
+			}
 		}
 	}
 	

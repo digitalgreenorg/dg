@@ -160,6 +160,7 @@ public class BlocksData extends BaseData {
 			+ "FOREIGN KEY(district_id) REFERENCES district(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";
+	protected static String selectBlocksForDistrct = "SELECT id, BLOCK_NAME FROM block WHERE district_id = ";
 	protected static String listBlocks = "SELECT b.id, b.BLOCK_NAME, b.START_DATE, d.id, d.DISTRICT_NAME" +
 			" FROM block b, district d where b.district_id = d.id ORDER BY LOWER(b.BLOCK_NAME) ";
 	protected static String saveBlockOnlineURL = "/dashboard/saveblockonline/";
@@ -296,11 +297,11 @@ public class BlocksData extends BaseData {
 		BaseData.dbClose();
 		return blocks;
 	}
-
-	public List getAllBlocksOffline() {
+	
+	private List fetchBlocksForSQL(String SQL) {
 		BaseData.dbOpen();
 		List blocks = new ArrayList();
-		this.select(selectBlocks);
+		this.select(SQL);
 		if (this.getResultSet().isValidRow()) {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
@@ -316,6 +317,14 @@ public class BlocksData extends BaseData {
 		}
 		BaseData.dbClose();
 		return blocks;
+	}
+	
+	public List getAllBlocksForDistrictOffline(String district_id) {
+		return fetchBlocksForSQL(selectBlocksForDistrct + district_id);
+	}
+
+	public List getAllBlocksOffline() {
+		return fetchBlocksForSQL(selectBlocks);
 	}
 
 	public Object postPageData() {

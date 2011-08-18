@@ -5,11 +5,7 @@ import java.util.HashMap;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.servlets.ServletInterface;
-import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.Template;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 
 public class BaseServlet implements ServletInterface{
 	

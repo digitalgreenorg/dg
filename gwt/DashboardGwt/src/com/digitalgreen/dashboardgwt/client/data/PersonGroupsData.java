@@ -3,12 +3,10 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Date;
+
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.PersonGroupsData.Type;
-import com.digitalgreen.dashboardgwt.client.data.VillagesData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.TimeValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.UniqueConstraintValidator;
@@ -256,6 +254,7 @@ public class PersonGroupsData extends BaseData {
 			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
 
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
+	protected static String selectPersonGroupsForVillage = "SELECT id, GROUP_NAME FROM person_groups where village_id = ";
 	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.VILLAGE_NAME " +
 			"FROM person_groups JOIN village ON person_groups.village_id = village.id ORDER BY (person_groups.GROUP_NAME)";
 	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg "
@@ -395,11 +394,19 @@ public class PersonGroupsData extends BaseData {
 		BaseData.dbClose();
 		return personGroups;
 	}
+	
+	public List getAllPersonGroupsForVillageOffline(String village_id) {
+		return fetchPersonGroupsForSql(selectPersonGroupsForVillage + village_id);
+	}
 
 	public List getAllPersonGroupsOffline() {
+		return fetchPersonGroupsForSql(selectPersonGroups);
+	}
+		
+	public List fetchPersonGroupsForSql(String sql) {
 		BaseData.dbOpen();
 		List personGroups = new ArrayList();
-		this.select(selectPersonGroups);
+		this.select(sql);
 		if (this.getResultSet().isValidRow()) {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this

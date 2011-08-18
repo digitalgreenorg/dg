@@ -6,8 +6,6 @@ import java.util.List;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
-import com.digitalgreen.dashboardgwt.client.data.PersonsData.Type;
-import com.digitalgreen.dashboardgwt.client.data.PersonsData.Data;
 import com.digitalgreen.dashboardgwt.client.data.validation.FloatValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.IntegerValidator;
 import com.digitalgreen.dashboardgwt.client.data.validation.StringValidator;
@@ -401,6 +399,12 @@ public class PersonsData extends BaseData {
 	protected static String dropTable = "DROP TABLE IF EXISTS `person`;";
 	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
+	protected static String selectPersonsForVillageAndNoPersonGroup = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+																	"FROM person JOIN village on person.village_id = village.id " +
+																	"WHERE person.GROUP_ID is null and village_id = ";
+	protected static String selectPersonsForPersonGroup = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+																	"FROM person JOIN village on person.village_id = village.id " +
+																	"WHERE person.GROUP_ID = ";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
 			"FROM person p LEFT JOIN village vil on p.village_id = vil.id " +
 			"LEFT JOIN person_groups pg on p.group_id = pg.id ORDER BY LOWER(p.PERSON_NAME) ";
@@ -564,11 +568,11 @@ public class PersonsData extends BaseData {
 		BaseData.dbClose();
 		return persons;
 	}
-
-	public List getAllPersonsOffline() {
+	
+	public List fetchPersonGroupsForSql(String sql) {
 		BaseData.dbOpen();
 		List persons = new ArrayList();
-		this.select(selectPersons);
+		this.select(sql);
 		if (this.getResultSet().isValidRow()) {
 			try {
 				VillagesData villagesData = new VillagesData();
@@ -591,6 +595,18 @@ public class PersonsData extends BaseData {
 		}
 		BaseData.dbClose();
 		return persons;
+	}
+	
+	public List getAllPersonsForPersonGroupOffline(String person_group_id) {
+		return this.fetchPersonGroupsForSql(selectPersonsForPersonGroup + person_group_id);
+	}
+	
+	public List getAllPersonsForVillageAndNoPersonGroupOffline(String village_id) {
+		return this.fetchPersonGroupsForSql(selectPersonsForVillageAndNoPersonGroup + village_id);
+	}
+
+	public List getAllPersonsOffline() {
+		return this.fetchPersonGroupsForSql(selectPersons);
 	}
 
 	public Object postPageData() {
@@ -693,7 +709,7 @@ public class PersonsData extends BaseData {
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.savePersonOnlineURL + id + "/" );
 		}
-		else{
+		else {
 			this.form.toQueryString(id);
 			return retrieveDataAndConvertResultIntoHtml();
 		}

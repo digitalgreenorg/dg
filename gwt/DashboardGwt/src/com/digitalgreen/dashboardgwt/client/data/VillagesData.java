@@ -205,6 +205,7 @@ public class VillagesData extends BaseData {
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `village`;";
 	protected static String selectVillages = "SELECT id, village_name FROM village ORDER BY(village_name)";
+	protected static String selectVillagesForBlock = "SELECT id, village_name FROM village WHERE block_id = ";
 	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name " +
 			"FROM village JOIN block ON village.block_id = block.id ORDER BY LOWER(village.village_name)";
 	protected static String saveVillageOnlineURL = "/dashboard/savevillageonline/";
@@ -340,7 +341,7 @@ public class VillagesData extends BaseData {
 		return villages;
 	}
 	
-	public List getAllVillagesOffline(){
+	private List fetchVillageFromSql(String sql) {
 		BaseData.dbOpen();
 		List villages = new ArrayList();
 		this.select(selectVillages);
@@ -358,6 +359,14 @@ public class VillagesData extends BaseData {
 		}
 		BaseData.dbClose();
 		return villages;
+	}
+	
+	public List getAllVillagesForBlockOffline(String block_id) {
+		return fetchVillageFromSql(selectVillagesForBlock + block_id);
+	}
+	
+	public List getAllVillagesOffline(){
+		return fetchVillageFromSql(selectVillages);
 	}
 
 	public Object postPageData() {

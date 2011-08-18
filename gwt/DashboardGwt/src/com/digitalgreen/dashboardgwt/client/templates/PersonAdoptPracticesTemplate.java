@@ -2,7 +2,9 @@ package com.digitalgreen.dashboardgwt.client.templates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -10,11 +12,15 @@ import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PersonAdoptPracticesTemplate extends BaseTemplate {
+	
+	private LinkedHashMap<String, ListBox> addPageFilterListBoxMap = null;
 
 	public PersonAdoptPracticesTemplate(RequestContext requestContext) {
 		super(requestContext);
@@ -35,7 +41,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		saveRequestContext.setForm(this.formTemplate);
 		PersonAdoptPractices savePersonAdoptPractice = new PersonAdoptPractices(saveRequestContext);
 		// Draw the content of the template depending on the request type (GET/POST)
-		super.fillDGTemplate(templateType, personadoptpracticeListHtml, personadoptpracticeAddHtml, addDataToElementID);
+		fillDGTemplate(templateType, personadoptpracticeListHtml, personadoptpracticeAddHtml, personadoptpracticeFilterHtmL, addDataToElementID);
 		// Add it to the rootpanel
 		super.fill();
 		//Now add listings
@@ -45,52 +51,139 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(savePersonAdoptPractice);
-		this.addPracticeFilter();
+		this.initializeFilters();
+	}
+	
+	private void fillDGTemplate(String templateType, 
+			  String listHtml,
+			  String addHtml,
+			  String filterHtml, String addDataToElementID[]) {
+		HashMap queryArgs = this.getRequestContext().getArgs();
+		if(queryArgs.get("action").equals("add")) {
+			super.fillDGTemplate(templateType, listHtml, addHtml, new String[0]);
+			HTMLPanel filterPanel = new HTMLPanel(filterHtml);
+			String addData = (String)queryArgs.get("addPageData");
+			if(addData != null) {
+				HTMLPanel h = new HTMLPanel(addData);
+				filterPanel.getElementById("id_district").setInnerHTML(h.getElementById("id_district").getInnerHTML());
+			}
+
+			VerticalPanel vPanel = new VerticalPanel();
+			vPanel.add(filterPanel);
+			vPanel.add(super.getContentPanel());
+			super.setContentPanel(vPanel);
+		}
+		else {
+			super.fillDGTemplate(templateType, listHtml, addHtml, addDataToElementID);
+		}
 	}
 	
 	@Override
 	public void ajaxFill(RequestContext ajaxRC) {
 		super.ajaxFill(ajaxRC);
-		if(ajaxRC.getArgs().get("action").equals("person-select")) {
-			BaseTemplate operationsUI = new BaseTemplate();
-			operationsUI.hideGlassDoorMessage();
-			String html = ajaxRC.getArgs().get("ajax_data").toString();
-			final ListBox practiceSelect = ListBox.wrap(RootPanel.get("id_practice").getElement());
-			practiceSelect.setEnabled(true);
-			practiceSelect.getElement().setInnerHTML(html);
+		Object action = ajaxRC.getArgs().get("action");
+		ListBox newBox = null;
+		BaseTemplate operationsUI = new BaseTemplate();
+		operationsUI.hideGlassDoorMessage();
+		if(action.equals("person-select")) {
+			newBox = this.addPageFilterListBoxMap.get("id_practice");
+		}
+		else if(action.equals("district-select")) {
+			newBox = this.addPageFilterListBoxMap.get("id_block");
+		}
+		else if(action.equals("block-select")) {
+			newBox = this.addPageFilterListBoxMap.get("id_village");
+		}
+		else if(action.equals("village-select")) {
+			newBox = this.addPageFilterListBoxMap.get("id_person_group");
+		}
+		else if(action.equals("person_group-select")) {
+			newBox = this.addPageFilterListBoxMap.get("id_person");
+		}
+		
+		if(newBox != null) {
+			newBox.setEnabled(true);
+			newBox.getElement().setInnerHTML(ajaxRC.getArgs().get("ajax_data").toString());
 		}
 	}
 	
-	public void addPracticeFilter() {
+	public void initializeFilters() {
 		if(this.requestContext.getArgs().get("action").equals("add")) {
-			final ListBox practiceSelect = ListBox.wrap(RootPanel.get("id_practice").getElement());
-			practiceSelect.setEnabled(false);
+			this.addPageFilterListBoxMap = new LinkedHashMap<String, ListBox>();
+			this.addPageFilterListBoxMap.put("id_district", ListBox.wrap(RootPanel.get("id_district").getElement()));
+			this.addPageFilterListBoxMap.put("id_block", ListBox.wrap(RootPanel.get("id_block").getElement()));
+			this.addPageFilterListBoxMap.put("id_village", ListBox.wrap(RootPanel.get("id_village").getElement()));
+			this.addPageFilterListBoxMap.put("id_person_group", ListBox.wrap(RootPanel.get("id_person_group").getElement()));
+			this.addPageFilterListBoxMap.put("id_person", ListBox.wrap(RootPanel.get("id_person").getElement()));
+			this.addPageFilterListBoxMap.put("id_practice", ListBox.wrap(RootPanel.get("id_practice").getElement()));
 			
-			final ListBox personSelect = ListBox.wrap(RootPanel.get("id_person").getElement());
-			
-			final BaseTemplate callerTemplate = this;
-			
-			personSelect.addChangeHandler(new ChangeHandler() {
-				
-				@Override
-				public void onChange(ChangeEvent event) {
-					int selectedIndex = personSelect.getSelectedIndex();
-					
-					if(selectedIndex == 0 || selectedIndex == -1) {
-						practiceSelect.setEnabled(false);
-						return;
-					}
-					
-					BaseTemplate operationsUI = new BaseTemplate();
-					operationsUI.showGlassDoorMessage("Loading Agricultural Practices..");
-					
-					RequestContext requestContext = new RequestContext();
-					requestContext.getArgs().put("action", "person-select");
-					requestContext.getArgs().put("person_id", personSelect.getValue(personSelect.getSelectedIndex()).toString());
-					PersonAdoptPractices pap = new PersonAdoptPractices(requestContext);
-					pap.ajaxResponse(callerTemplate);
+			for (Entry<String, ListBox> pair : this.addPageFilterListBoxMap.entrySet()) {
+				if(pair.getKey() != "id_district") {
+					pair.getValue().setEnabled(false);
 				}
-			});
+				
+				if(pair.getKey() != "id_practice") {
+					pair.getValue().addChangeHandler(new filterListBoxOnChangeHandler((HashMap<String, ListBox>) this.addPageFilterListBoxMap.clone(), this));
+				}
+					
+			}
+		}
+	}
+	
+	private class filterListBoxOnChangeHandler implements ChangeHandler {
+		private HashMap<String, ListBox> allListBoxMap = null;
+		private BaseTemplate callerTemplate = null;
+		
+		public filterListBoxOnChangeHandler(HashMap<String, ListBox> objects,BaseTemplate in_callerTemplate) {
+			this.allListBoxMap = objects;
+			this.callerTemplate = in_callerTemplate;
+		}
+		
+
+		@Override
+		public void onChange(ChangeEvent event) {
+			ListBox source = (ListBox) event.getSource();
+			String source_id = source.getElement().getId();
+			ListBox next = null;
+			
+			boolean startDisable = false;
+			ListBox[] allListBox = allListBoxMap.values().toArray(new ListBox[allListBoxMap.size()]);
+			for(int i=0; i < allListBox.length; i++) {
+				if(startDisable) {
+					allListBox[i].setItemSelected(0, true);
+					allListBox[i].setEnabled(false);
+				}
+				else {
+					if(allListBox[i].getElement().getId().equals(source_id)) {
+						next = allListBox[i+1];
+						startDisable = true;
+					}
+				}
+			}
+			
+			//Set the remaining ones to zero index and disable them
+			int selectedIndex = source.getSelectedIndex();
+			if(selectedIndex == 0 || selectedIndex == -1) {
+				return;
+			}
+			
+			BaseTemplate operationsUI = new BaseTemplate();
+			operationsUI.showGlassDoorMessage("Loading " + next.getElement().getId().substring(3).replace('_', ' ') + "s..");
+			
+			RequestContext requestContext = new RequestContext();
+			requestContext.getArgs().put("action", source_id.substring(3)+"-select");
+			requestContext.getArgs().put(source_id.substring(3)+"_id", source.getValue(source.getSelectedIndex()).toString());
+			
+			//This is a special case for Person Group select, if the desired farmer doesn't belong to any group, we'll filter all
+			//farmers belonging to the selected village with group_id = null
+			if(requestContext.getArgs().get("action").equals("person_group-select")) {
+				ListBox villageListBox = this.allListBoxMap.get("id_village");
+				requestContext.getArgs().put("village_id", villageListBox.getValue(villageListBox.getSelectedIndex()).toString());
+			}
+			
+			PersonAdoptPractices pap = new PersonAdoptPractices(requestContext);
+			pap.ajaxResponse(callerTemplate);
+			
 		}
 	}
 	
@@ -209,6 +302,27 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 									"</div>" +
 								"</div>" +
 							"</div>";
+	
+	private String personadoptpracticeFilterHtmL = "<div id='filter_html'>"+
+												   "<label for='id_district' class='required'>District:</label>" +
+														"<select name='district' id='id_district'>" +
+														"<option value='' selected='selected'>---------</option>" +
+														"</select>" +
+													"<label for='id_block' class='required'>Block:</label>" +
+														"<select name='block' id='id_block'>" +
+														"<option value='' selected='selected'>---------</option>" +
+														"</select>" +
+													"<label for='id_village' class='required'>Village:</label>" +
+														"<select name='village' id='id_village'>" +
+														"<option value='' selected='selected'>---------</option>" +
+														"</select>" +
+													"<label for='id_person_group' class='required'>Person Group:</label>" +
+														"<select name='person_group' id='id_person_group'>" +
+														"<option value='' selected='selected'>---------</option>" +
+														"</select>" +
+												 "</div>";
+	
+												
 	
 	private String personadoptpracticeAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 						"<div id='content' class='colM'>" +

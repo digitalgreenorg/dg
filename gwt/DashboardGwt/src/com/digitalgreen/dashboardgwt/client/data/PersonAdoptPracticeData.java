@@ -296,6 +296,11 @@ public class Data extends BaseData.Data {
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
 	protected static String getPracticeSeenForPersonURL = "/dashboard/getpracticesseenforperson/";
+	protected static String getBlocksForDistrictURL = "/dashboard/getblocksfordistrictonline/";
+	protected static String getVillagesForBlockURL = "/dashboard/getvillagesforblocksonline/";
+	protected static String getPersonGroupsForVillageURL = "/dashboard/getpersongroupsforvillageonline/";
+	protected static String getPersonForVillageAndNoPersonGroupURL = "/dashboard/getpersonforvillageandnopersongrouponline/";
+	protected static String getPersonForPersonGroupsURL = "/dashboard/getpersonforpersongrouponline/";
 	protected String table_name = "person_adopt_practice";
 	protected String[] fields = {"id", "person_id", "practice_id", "prior_adoption_flag", 
 			"date_of_adoption","quality","quantity","quantity_unit"};
@@ -523,6 +528,77 @@ public class Data extends BaseData.Data {
 		return false;
 	}	
 	
+	public String retrieveBlocksDataAndConvertToHtml(String district_id) {
+		BlocksData blocksData = new BlocksData();
+		List blocks = blocksData.getAllBlocksForDistrictOffline(district_id);
+		
+		String htmlBlocks = "<option value='' selected='selected'>---------</option>";
+		
+		for(Object block : blocks) {
+			htmlBlocks = htmlBlocks + "<option value=\"" + ((BlocksData.Data)block).getId() + "\">" + 
+			((BlocksData.Data)block).getBlockName() + "</option>";
+		}
+		
+		return htmlBlocks;
+		
+	}
+	
+	public String retrieveVillagesDataAndConvertToHtml(String block_id) {
+		VillagesData villagesData = new VillagesData();
+		List villages = villagesData.getAllVillagesForBlockOffline(block_id);
+		
+		String htmlVillages = "<option value='' selected='selected'>---------</option>";
+		
+		for(Object village : villages) {
+			htmlVillages = htmlVillages + "<option value=\"" + ((VillagesData.Data)village).getId() + "\">" + 
+			((VillagesData.Data)village).getVillageName() + "</option>";
+		}
+		
+		return htmlVillages;
+	}
+	
+	public String retrievePersonsForPersonGroupDataAndConvertToHtml(String person_group_id) {
+		PersonsData personsData = new PersonsData();
+		List persons = personsData.getAllPersonsForPersonGroupOffline(person_group_id);
+		
+		String html = "<option value='' selected='selected'>---------</option>";
+		
+		for(Object person : persons) {
+			html = html + "<option value=\"" + ((PersonsData.Data)person).getId() + "\">" + 
+			((PersonsData.Data)person).getPersonName() + "</option>";
+		}
+		
+		return html;
+	}
+	
+	public String retrievePersonsForVillageDataAndConvertToHtml(String village_id) {
+		PersonsData personsData = new PersonsData();
+		List persons = personsData.getAllPersonsForVillageAndNoPersonGroupOffline(village_id);
+		
+		String html = "<option value='' selected='selected'>---------</option>";
+		
+		for(Object person : persons) {
+			html = html + "<option value=\"" + ((PersonsData.Data)person).getId() + "\">" + 
+			((PersonsData.Data)person).getPersonName() + "</option>";
+		}
+		
+		return html;
+	}
+	
+	public String retrievePersonGroupsDataAndConvertToHtml(String village_id) {
+		PersonGroupsData personGroupsData = new PersonGroupsData();
+		List personGroups = personGroupsData.getAllPersonGroupsForVillageOffline(village_id);
+		
+		String htmlPG = "<option value='' selected='selected'>---------</option><option value='null'>No Group</option>";
+		
+		for(Object personGroup : personGroups) {
+			htmlPG = htmlPG + "<option value=\"" + ((PersonGroupsData.Data)personGroup).getId() + "\">" + 
+			((PersonGroupsData.Data)personGroup).getPersonGroupName() + "</option>";
+		}
+		
+		return htmlPG;
+	}
+	
 	public String retrievePracticeSeenDataAndConvertToHtml(String person_id) {
 		PracticesData practiceData = new PracticesData();
 		List practices = practiceData.getPracticeSeenForPersonOffline(person_id);
@@ -538,7 +614,6 @@ public class Data extends BaseData.Data {
 	}
 	
 	public String retrieveDataAndConvertResultIntoHtml() {
-		
 		PersonsData personData = new PersonsData();
 		List persons = personData.getAllPersonsOffline();
 		PersonsData.Data person;
@@ -565,12 +640,52 @@ public class Data extends BaseData.Data {
 		return htmlPerson + htmlPractice;
 	}
 	
-	public Object getAddPageData() {
+	public Object getBlocksForDistrict(String district_id) {
 		if(BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL);
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getBlocksForDistrictURL + district_id + "/");
 		}
-		else{
-			return retrieveDataAndConvertResultIntoHtml();
+		else {
+			return retrieveBlocksDataAndConvertToHtml(district_id);
+		}
+		return false;
+	}
+	
+	public Object getVillagesForBlock(String block_id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getVillagesForBlockURL + block_id + "/");
+		}
+		else {
+			return retrieveVillagesDataAndConvertToHtml(block_id);
+		}
+		return false;
+	}
+	
+	public Object getPersonForVillageAndNoPersonGroup(String village_id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonForVillageAndNoPersonGroupURL + village_id + "/");
+		}
+		else {
+			return retrievePersonsForVillageDataAndConvertToHtml(village_id);
+		}
+		return false;
+	}
+	
+	public Object getPersonForPersonGroups(String person_group_id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonForPersonGroupsURL + person_group_id + "/");
+		}
+		else {
+			return retrievePersonsForPersonGroupDataAndConvertToHtml(person_group_id);
+		}
+		return false;
+	}
+	
+	public Object getPersonGroupsForVillage(String village_id) {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPersonGroupsForVillageURL + village_id + "/");
+		}
+		else {
+			return retrievePersonGroupsDataAndConvertToHtml(village_id);
 		}
 		return false;
 	}
@@ -581,6 +696,17 @@ public class Data extends BaseData.Data {
 		}
 		else {
 			return retrievePracticeSeenDataAndConvertToHtml(person_id);
+		}
+		return false;
+	}
+	
+	public Object getAddPageData() {
+		if(BaseData.isOnline()) {
+			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL);
+		}
+		else{
+			BlocksData blockData = new BlocksData();
+			return blockData.retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
 	}
