@@ -952,6 +952,18 @@ def get_blocks_online(request, offset, limit):
         response = HttpResponse(json_subcat, mimetype="application/javascript")
         response['X-COUNT'] = count
         return response
+    
+def get_blocks_for_district_online(request, district_id):
+    blocks = Block.objects.filter(district__id = district_id).values_list('id', 'block_name')
+                                                    
+    html_template = """
+    <option value='' selected='selected'>---------</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=blocks)))
+    
+    return HttpResponse(html)
 
 def save_block_offline(request, id):
     if request.method == 'POST':
@@ -1152,6 +1164,17 @@ def get_villages_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+def get_villages_for_blocks_online(request, block_id):
+    villages = Village.objects.filter(block__id = block_id).values_list('id', 'village_name')
+                                                    
+    html_template = """
+    <option value='' selected='selected'>---------</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=villages)))
+    
+    return HttpResponse(html)
 
 def save_village_offline(request, id):
     if request.method == 'POST':
@@ -1380,7 +1403,17 @@ def get_persongroups_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
-
+def get_persongroups_for_village_online(request, village_id):
+    person_groups = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name')
+                                                    
+    html_template = """
+    <option value='' selected='selected'>---------</option><option value='null'>No Group</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=person_groups)))
+    
+    return HttpResponse(html)
 
 def save_persongroup_offline(request, id):
     if request.method == 'POST':
@@ -1460,6 +1493,30 @@ def get_persons_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+def get_person_for_village_and_no_person_group_online(request, village_id):
+    persons = Person.objects.filter(village__id = village_id, group=None).values_list('id', 'person_name')
+    
+    html_template = """
+    <option value='' selected='selected'>---------</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=persons)))
+    
+    return HttpResponse(html)
+
+def get_person_for_person_group_online(request, group_id):
+    persons = Person.objects.filter(group__id=group_id).values_list('id', 'person_name')
+    
+    html_template = """
+    <option value='' selected='selected'>---------</option>
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    """
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=persons)))
+    
+    return HttpResponse(html)
+
 def save_person_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1496,12 +1553,16 @@ def save_personadoptpractice_online(request,id):
         if id:
             personadoptpractice = PersonAdoptPractice.objects.get(id=id)
             form = PersonAdoptPracticeForm(instance = personadoptpractice)
+            villages = get_user_villages(request)
+            form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+            form.fields['practice'].queryset = Practices.objects.all().distinct().order_by('practice_name')
+            return HttpResponse(form)
         else:
-            form = PersonAdoptPracticeForm()
-        villages = get_user_villages(request)
-        form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-        form.fields['practice'].queryset = Practices.objects.all().distinct().order_by('practice_name')
-        return HttpResponse(form)
+            districts = get_user_districts(request)
+            template = """<select name="district" id="id_district"><option value='' selected='selected'>---------</option>
+                           {% for district in districts %}<option value='{{district.id}}'>{{district.district_name}}</option>{%endfor%}"""
+            t = Template(template);
+            return HttpResponse(t.render(Context(dict(districts=districts))))
 
 def get_personadoptpractices_online(request, offset, limit):
     if request.method == 'POST':
