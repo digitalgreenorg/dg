@@ -1,0 +1,75 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} Digital Green - Wonder Village {% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/press.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}       
+{% endblock jsfile %}
+
+{% block pagetitle %} {{ block.super }}Wonder Village {% endblock pagetitle %}
+
+{% block breadcrums %}  
+	{{ block.super }}	
+	{% block partnerbreadcrums %} 	 
+	 <span style='font-size:0.9em; font-weight:bold;'> Wonder Village </span>
+	{% endblock partnerbreadcrums %}	  
+{% endblock breadcrums %}
+
+
+{% block mainbodycontentleft %}
+	{% block mainbodycontentleftimg %}
+		<div class='mainbodycontentleftimg'>	
+			<a href='http://www.facebook.com/apps/application.php?id=180609021958564' target='_blank'><img src="/media/Output/Images/wondergame1.png" alt='Wonder Village Game'></a>
+		</div>	
+	{% endblock mainbodycontentleftimg %}
+	
+	<div class='pagetitle'>
+		Wonder Village 
+	</div>
+	
+    <div id='contentdiv2'>
+    	<span class='subheaders'>Wonder Village: Game </span><br/> 
+    	Digital Green's technology stack has been primarily geared toward operationalizing our work with partners and communities in the field.  
+    	At the same time, progress monitoring tools, like our analytics dashboards, are accessible via our website to the general public.  
+    	<br/><br/>
+    	We have found that these systems provide transparency and even encourage healthy competition across our partners to better manage their operations.  
+    	Recently, we began to see how our core work in the field might connect with other audiences who could learn and engage with the issues of agriculture and rural development.  To this end, our technology team developed a social game, called Wonder Village, which was launched on Facebook.  
+    	Through the game, players set up a simulated village economy and have opportunities to relate with the actual farmers that we work with in the field.  Players are placed in a resource-constrained setting and pursue quests like setting up small farms of paddy and maize and supplying raw materials to farmers' markets.  
+    	The game follows a so-called "freemium" model which allows users to play for free and allows users to purchase virtual currency to advance more quickly.  With over 80m users playing Facebook games like Farmville and Cityville every month for an average of 15 min a day, Wonder Village could represent a novel approach to raise awareness and fundraise in the development sector.
+    </div>
+     
+{% endblock mainbodycontentleft %}
+
+
+{% block mainbodycontentright %}		
+	<div id='explorediv'>		
+		<div class='exploredescdiv'>
+			<div class='exploredesctitle'> &nbsp; Software </div>
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="mailto:labs@digitalgreen.org"><img src="/media/Output/Images/linkimg2.png" alt="">Contact Technology Team</a>
+				<a class="exploredescmainlink" href="/analytics/overview_module?geog=country&id=1" title='Progress Dashboard'><img src="/media/Output/Images/linkimg2.png" alt="">Analytics Dashboard</a>
+			</div> 
+		</div>			
+	</div>
+	
+	<div style='margin-top:15px; '>
+		<a href='/wondervillage'> <img width='264px' height='120px' src="/media/Output/Images/wondergamelinkimg4.jpg" alt='Wonder Village Game Credits'> </a>
+	</div>
+	
+	<div style="margin-top: 15px;" id="explorediv3">					
+		<a href="/tech">
+			<img src="/media/Output/Images/softwarelinkimg1.jpg">
+		</a>		
+	</div>
+	
+	<div style='margin-top:15px; '>
+		<a href='/annualreport10'> <img width='264px' height='115px' src="/media/Output/Images/annualreportlinkimg3.jpg" alt='Digital Green Annual Report'> </a>
+	</div>
+	
+	
+{% endblock mainbodycontentright %}	
