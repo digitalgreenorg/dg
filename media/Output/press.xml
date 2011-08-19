@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Business Standard</TITLE>
+		<HEADLINE>Aspiring Astronaut helps farmers</HEADLINE>
+		<REFERENCE>http://www.business-standard.com/india/news/aspiring-astronaut-helps-farmersearth/445251/</REFERENCE>
+		<PRESSDATE>Tue, 09 August, 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>Rikin Gandhi's novel idea to film and screen 'best practice' videos of farming techniques across villages in India has wooed both farmers and the government.</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>The Pioneer</TITLE>
+		<HEADLINE>So, he started his own organisation to help farmers improve their produce through a video camera. Eram Agha tracks the young Gandhi to find out more about him</HEADLINE>
+		<REFERENCE>http://dailypioneer.com/358910/Flight-of-aspiration.html</REFERENCE>
+		<PRESSDATE>Sat, 06 August, 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>Neither the Greenfields lyrics by The Brothers Four, nor Shah Rukh Khan's role in Swades inspired Rikin Gandhi, CEO of Digital Green, to chuck his NASA dreams for addressing the issues of farmers in India.</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
 		<TITLE>The Weekend Leader</TITLE>
 		<HEADLINE>Through Digital Green, Rikin Gandhi helps farmers prosper</HEADLINE>
 		<REFERENCE>http://www.theweekendleader.com/page.php?id=377&amp;title=A-homecoming</REFERENCE>
