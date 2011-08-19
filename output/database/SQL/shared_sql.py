@@ -121,11 +121,18 @@ def overview(geog, id, from_date, to_date, partners, type):
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
     elif(type=='person'):
-        sql_ds['select'].append('COUNT(P.id) as tot_per')
-        sql_ds['from'].append("PERSON P")
-        sql_ds['where'].append("P.date_of_joining is not NULL")
-        main_tab_abb = 'P'
-        date_field = "P.date_of_joining"
+        if(from_date and to_date):
+            sql_ds['select'].append('COUNT(DISTINCT PMA.person_id) as tot_per')
+            sql_ds['from'].append('PERSON_MEETING_ATTENDANCE PMA')
+            sql_ds['join'].append(['SCREENING SC', 'SC.id = PMA.screening_id'])
+            main_tab_abb = "SC"
+            date_field = "SC.DATE"
+        else:
+            sql_ds['select'].append('COUNT(P.id) as tot_per')
+            sql_ds['from'].append("PERSON P")
+            sql_ds['where'].append("P.date_of_joining is not NULL")
+            main_tab_abb = 'P'
+            date_field = "P.date_of_joining"
     if(geog=="COUNTRY"):
         #Hacking attach_geog_date for attaching geography till state in country case.
         attach_geog_date(sql_ds,main_tab_abb,date_field,'STATE',0, from_date,to_date)
