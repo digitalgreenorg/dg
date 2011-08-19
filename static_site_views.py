@@ -12,6 +12,10 @@ def wondervillage(request):
    
     return render_to_response('wondervillage.html') 
 
+def wondervillagegame(request):
+   
+    return render_to_response('wondervillagegame.html') 
+
 def annualreports(request):
    
     return render_to_response('annualreports.html')    
@@ -54,6 +58,9 @@ def projectprogress(request):
 
 def projectprogress10(request):   
     return render_to_response('projectprogress10-11.html')
+
+def partners10(request):   
+    return render_to_response('partners10-11.html')
 
 def budgetprogress(request):   
     return render_to_response('budgetprogress.html')
