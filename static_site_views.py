@@ -88,6 +88,9 @@ def corevalue(request):
 def sop(request):    
     return render_to_response('workprocedure.html')
 
+def qualityassurance(request):    
+    return render_to_response('qualityassurance.html')
+
 def overviewfarmer(request):    
     return render_to_response('base_overviewfarmer.html')
 
