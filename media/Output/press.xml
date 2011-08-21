@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
+	
 	<TEAM>
+		<TITLE>iBN Times</TITLE>
+		<HEADLINE>MIT Graduate making a difference in Rural India </HEADLINE>
+		<REFERENCE>http://www.ibtimes.com/articles/201214/20110821/digital-green-milinda-bill-gates-foundation-informational-videos-farmers-india.htm</REFERENCE>
+		<PRESSDATE>Thu, 18 August, 2011 </PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>Archimedes:"Give me a lever long enough and a fulcrum on which to place it, and I shall move the world."</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM><TEAM>
 		<TITLE>Business Standard</TITLE>
 		<HEADLINE>Aspiring Astronaut helps farmers</HEADLINE>
 		<REFERENCE>http://www.business-standard.com/india/news/aspiring-astronaut-helps-farmersearth/445251/</REFERENCE>
@@ -18,6 +29,50 @@
 		<PRESSDATE>Sat, 06 August, 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>Neither the Greenfields lyrics by The Brothers Four, nor Shah Rukh Khan's role in Swades inspired Rikin Gandhi, CEO of Digital Green, to chuck his NASA dreams for addressing the issues of farmers in India.</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>ILRI Clippings</TITLE>
+		<HEADLINE>Video with farmers help to amplify agricultural extension and learnings</HEADLINE>
+		<REFERENCE>http://ilriclippings.wordpress.com/2011/04/03/video-with-farmers-helps-to-amplify-agricultural-extension-and-learning/</REFERENCE>
+		<PRESSDATE>Sun, 03 April, 2011</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>Rikin Ghandi spoke to people on the ILRI campus about the work of Digital Green to reinforce agricultural extension through the use of participatory video with farmers.</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>e-Agriculture</TITLE>
+		<HEADLINE>Digital Green - 'ICT' and 'AG Profile'</HEADLINE>
+		<REFERENCE>http://www.e-agriculture.org/en/content/digital-green-ict-and-ag-profile-usaid#ict4d</REFERENCE>
+		<PRESSDATE>Mon, 28 March, 2011</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>Digital Green, a farm extension service using video camera and pico projectors in India</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>DNA</TITLE>
+		<HEADLINE>MIT alumnus chucks space dreams for terra firma - Money </HEADLINE>
+		<REFERENCE>http://www.dnaindia.com/money/report_mit-alumnus-chucks-space-dreams-for-terra-firma_1523520</REFERENCE>
+		<PRESSDATE>Thu, 24 March, 2011</PRESSDATE>
+		<PLACE>Mumbai</PLACE>
+		<DESC>Rikin Gandhi started reading autobiographies and books on astronauts after he received his pilot's licence and was preparing to join the US astronaut programme.</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>The Hindu</TITLE>
+		<HEADLINE>Video clippings educate on methods practised elseware </HEADLINE>
+		<REFERENCE>http://www.hindu.com/seta/2011/02/17/stories/2011021751611600.htm</REFERENCE>
+		<PRESSDATE>Thu, 17 Feb, 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>Though immediately after my graduation I thought of joining some space programme, I happened to read about people travelling to space and seeing the earth from high up and wondering why poverty and war exist on this beautiful planet.</DESC>
 		<COMPANY></COMPANY>
 		<IMGLINK></IMGLINK>
 		<VIDEOLINK>NULL</VIDEOLINK>
