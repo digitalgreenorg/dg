@@ -248,6 +248,7 @@ public class DevelopmentManagersData extends BaseData {
 												"SALARY FLOAT(0,0)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) REFERENCES region(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `development_manager`;";
+	protected static String indexColumns = "CREATE INDEX IF NOT EXISTS development_manager_PRIMARY ON development_manager(id);";
 	protected static String selectDevelopmentManagers = "SELECT id, NAME FROM development_manager  ORDER BY (NAME);";
 	protected static String getDevelopmentManagerByID = "SELECT id, NAME FROM development_manager WHERE id = ?;";
 	protected static String listDevelopmentManagers = "SELECT d.id, d.NAME,d.AGE, d.GENDER, d.HIRE_DATE, d.PHONE_NO, d.ADDRESS,d.SPECIALITY, r.id, r.REGION_NAME , d.START_DAY, d.salary FROM development_manager d JOIN region r ON d.region_id = r.id ORDER BY (-d.id)";

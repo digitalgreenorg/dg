@@ -117,6 +117,7 @@ public class EquipmentHoldersData extends BaseData {
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id BIGINT UNSIGNED NOT NULL DEFAULT 0);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_holder`;";
+	protected static String indexColumns = "CREATE INDEX IF NOT EXISTS equipment_holder_PRIMARY ON equipment_holder(id);";
 	protected static String selectEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String listEquipmentHolders = "SELECT * FROM equipment_holder ORDER BY(-id)";
 	protected static String saveEquipmentHolderOnlineURL = "/dashboard/saveequipmentholderonline/";
