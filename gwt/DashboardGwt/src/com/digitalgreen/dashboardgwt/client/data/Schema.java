@@ -55,8 +55,8 @@ public class Schema {
 		try {
 			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
-			BaseData.getDb().execute(RegionsData.indexColumns);
-			BaseData.getDb().execute(EquipmentHoldersData.indexColumns);
+			BaseData.getDb().execute(RegionsData.createIndexes);
+			BaseData.getDb().execute(EquipmentHoldersData.createIndexes);
 			BaseData.getDb().execute(ReviewersData.createTable);
 			BaseData.getDb().execute(DevelopmentManagersData.createTable);
 			BaseData.getDb().execute(StatesData.createTable);
@@ -72,8 +72,8 @@ public class Schema {
 			BaseData.getDb().execute(AnimatorsData.createTable);
 			BaseData.getDb().execute(TrainingsData.createTable);
 			BaseData.getDb().execute(TrainingAnimatorsTrainedData.createTable);
-			BaseData.getDb().execute(AnimatorAssignedVillagesData.createTable);
-			BaseData.getDb().execute(AnimatorSalaryPerMonthData.createTable);
+			BaseData.getDb().execute(AnimatorAssignedVillagesData.createIndexes);
+			BaseData.getDb().execute(AnimatorSalaryPerMonthData.createIndexes);
 			BaseData.getDb().execute(LanguagesData.createTable);
 			BaseData.getDb().execute(PracticesData.createTable);
 			BaseData.getDb().execute(VideosData.createTable);

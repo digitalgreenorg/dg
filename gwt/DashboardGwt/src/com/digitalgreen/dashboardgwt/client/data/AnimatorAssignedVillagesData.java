@@ -207,6 +207,9 @@ public class AnimatorAssignedVillagesData extends BaseData{
 												"FOREIGN KEY(animator_id) REFERENCES animator(id), " +
 												"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator_assigned_village`;";
+	protected static String createIndexes = "CREATE INDEX IF NOT EXISTS animator_assigned_village_id ON animator_assigned_village(id); " +
+			"CREATE INDEX IF NOT EXISTS animator_assigned_village_animator_id ON animator_assigned_village(animator_id); " +
+			"CREATE INDEX IF NOT EXISTS animator_assigned_village_village_id ON animator_assigned_village(village_id);";
 	protected static String selectAnimatorsAssignedVillages = "SELECT id, start_date from animator_assigned_village ORDER BY(id);";
 	protected static String listAnimatorsAssignedVillages = "SELECT aav.id, a.id, a.name, vil.id,vil.VILLAGE_NAME,aav.start_date" +
 			" FROM animator_assigned_village aav,animator a,village vil WHERE aav.animator_id = a.id and aav.village_id = vil.id ORDER BY LOWER(a.name)";

@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -193,15 +194,21 @@ public class Villages extends BaseServlet {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
-							}	
+							}
 						}
 					}, form);
-					if(queryArg.equals("add")) {
-						villageData.apply(villageData.getAddPageData());
-					}
-					else{
-						form.setId((String)this.requestContext.getArgs().get("id"));
-						villageData.apply(villageData.getAddPageData(form.getId()));
+					if(ApplicationConstants.getUsernameCookie().equals("serp_mahabubnagar")){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("You do not have permission to add a Village.");
+						this.redirectTo(new Index(requestContext));
+					} else {					
+						if(queryArg.equals("add")) {
+							villageData.apply(villageData.getAddPageData());
+						}
+						else{
+							form.setId((String)this.requestContext.getArgs().get("id"));
+							villageData.apply(villageData.getAddPageData(form.getId()));
+						}
 					}
 				}
 			}

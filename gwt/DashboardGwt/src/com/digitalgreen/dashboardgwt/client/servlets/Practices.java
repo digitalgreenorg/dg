@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.servlets;
 import java.util.HashMap;
 import java.util.List;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
@@ -195,12 +196,18 @@ public class Practices extends BaseServlet {
 							}*/	
 						}
 					}, form);
-					if(queryArg.equals("add")) {
-						practicesData.apply(practicesData.getAddPageData());
-					}
-					else{
-						form.setId((String)this.requestContext.getArgs().get("id"));
-						practicesData.apply(practicesData.getAddPageData(form.getId()));
+					if(ApplicationConstants.getUsernameCookie().equals("serp_mahabubnagar")){
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("You do not have permission to add a Practice.");
+						this.redirectTo(new Index(requestContext));
+					} else {				
+						if(queryArg.equals("add")) {
+							practicesData.apply(practicesData.getAddPageData());
+						}
+						else{
+							form.setId((String)this.requestContext.getArgs().get("id"));
+							practicesData.apply(practicesData.getAddPageData(form.getId()));
+						}
 					}
 				}
 			}

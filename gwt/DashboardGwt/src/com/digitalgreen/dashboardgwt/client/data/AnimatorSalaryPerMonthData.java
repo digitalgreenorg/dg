@@ -136,6 +136,8 @@ public class AnimatorSalaryPerMonthData extends BaseData{
 												"PAY_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator_salary_per_month`;";
+	protected static String createIndexes = "CREATE INDEX IF NOT EXISTS animator_salary_per_month_id ON animator_salary_per_month(id); " +
+	"CREATE INDEX IF NOT EXISTS animator_salary_per_month_animator_id ON animator_salary_per_month(animator_id); " ;
 	protected static String selectAnimatorSalaryPerMonths = "SELECT asp.id, a.NAME  FROM animator_salary_per_month asp, animator a " +
 			"WHERE asp.animator_id = a.id ORDER BY (NAME);";
 	protected static String listAnimatorSalaryPerMonths = "SELECT * FROM animator_salary_per_month aav JOIN animator a ON aav.animator_id = a.id " +

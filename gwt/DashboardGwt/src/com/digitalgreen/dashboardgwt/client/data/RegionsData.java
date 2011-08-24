@@ -130,7 +130,7 @@ public class RegionsData extends BaseData {
 												"REGION_NAME VARCHAR(100) NOT NULL," +
 												"START_DATE DATE NULL DEFAULT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `region`;";
-	protected static String indexColumns = "CREATE INDEX IF NOT EXISTS REGION_PRIMARY ON REGION(id);";
+	protected static String createIndexes = "CREATE INDEX IF NOT EXISTS REGION_PRIMARY ON REGION(id);";
 	protected static String selectRegions = "SELECT id, region_name FROM region ORDER BY(region_name)";
 	protected static String listRegions = "SELECT * FROM region ORDER BY(-id)";
 	protected static String saveRegionOnlineURL = "/dashboard/saveregiononline/";
