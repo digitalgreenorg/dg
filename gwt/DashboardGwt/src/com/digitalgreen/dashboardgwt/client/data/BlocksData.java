@@ -159,6 +159,8 @@ public class BlocksData extends BaseData {
 			+ "district_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, "
 			+ "FOREIGN KEY(district_id) REFERENCES district(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `block`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS block_PRIMARY ON block(id);",
+											"CREATE INDEX IF NOT EXISTS block_district_id ON block(district_id);"};
 	protected static String selectBlocks = "SELECT id, BLOCK_NAME FROM block ORDER BY (block_name);";
 	protected static String selectBlocksForDistrct = "SELECT id, BLOCK_NAME FROM block WHERE district_id = ";
 	protected static String listBlocks = "SELECT b.id, b.BLOCK_NAME, b.START_DATE, d.id, d.DISTRICT_NAME" +

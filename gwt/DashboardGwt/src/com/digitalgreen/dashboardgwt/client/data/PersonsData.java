@@ -397,6 +397,9 @@ public class PersonsData extends BaseData {
 												"FOREIGN KEY(village_id) REFERENCES village(id), " +
 												"FOREIGN KEY(group_id) REFERENCES person_groups(id)); " ; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `person`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_PRIMARY ON person(id);", 
+											"CREATE INDEX IF NOT EXISTS person_village_id ON person(village_id);",
+											"CREATE INDEX IF NOT EXISTS person_group_id ON person(group_id);"};
 	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
 	protected static String selectPersonsForVillageAndNoPersonGroup = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +

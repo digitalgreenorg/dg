@@ -115,7 +115,7 @@ public class ReviewersData extends BaseData {
 												"content_type_id INT NOT NULL DEFAULT 0," +
 												"object_id BIGINT UNSIGNED NOT NULL DEFAULT 0);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `reviewer`;";
-	protected static String indexColumns = "CREATE INDEX IF NOT EXISTS reviewer_PRIMARY ON reviewer(id);";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS reviewer_PRIMARY ON reviewer(id);"};
 	protected static String selectReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String listReviewers = "SELECT * FROM reviewer ORDER BY(-id)";
 	protected static String saveReviewerOnlineURL = "/dashboard/saverevieweronline/";

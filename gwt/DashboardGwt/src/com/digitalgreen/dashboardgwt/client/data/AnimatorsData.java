@@ -402,6 +402,9 @@ public class AnimatorsData extends BaseData {
 											"FOREIGN KEY(partner_id) REFERENCES partners(id), " +
 											"FOREIGN KEY(village_id) REFERENCES village(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `animator`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS animator_PRIMARY ON animator(id);", 
+	   										"CREATE INDEX IF NOT EXISTS animator_partner_id ON animator(partner_id);",
+											"CREATE INDEX IF NOT EXISTS animator_village_id ON animator(village_id);"};
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.NAME);";
 	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.NAME, village.id, village.VILLAGE_NAME " +
 			"FROM animator JOIN village ON animator.village_id = village.id ORDER BY (animator.NAME);";

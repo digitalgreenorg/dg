@@ -180,6 +180,7 @@ public class FieldOfficersData extends BaseData {
 												"PHONE_NO VARCHAR(100) NULL DEFAULT NULL ," +
 												"ADDRESS VARCHAR(500) NULL DEFAULT NULL)";
 	protected static String dropTable = "DROP TABLE IF EXISTS `field_officer`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS field_officer_PRIMARY ON field_officer(id);"};
 	protected static String selectFieldOfficers = "SELECT id, name FROM field_officer ORDER BY(name);";
 	protected static String getFieldOfficerByID = "SELECT id, name FROM field_officer WHERE id = ?";
 	protected static String listFieldOfficers = "SELECT * FROM field_officer ORDER BY (-id)";

@@ -120,6 +120,9 @@ public class VideoFarmersShownData extends BaseData {
 												"FOREIGN KEY(video_id) REFERENCES video(id), " +
 												"FOREIGN KEY(person_id) REFERENCES person(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `video_farmers_shown`;";
+	protected static String createIndexes[] = {"CREATE INDEX IF NOT EXISTS video_farmers_shown_PRIMARY ON video_farmers_shown(id);", 
+							   "CREATE INDEX IF NOT EXISTS video_farmers_shown_video_id ON video_farmers_shown(video_id);",
+							   "CREATE INDEX IF NOT EXISTS video_farmers_shown_person_id ON video_farmers_shown(person_id);"};
 	protected static String selectVideoFarmerShown = "SELECT vfs.id, vid.TITLE FROM video_farmers_shown vfs, video vid" +
 	"WHERE vfs.video_id = vid.id ORDER BY (vid.TITLE);";
 	protected static String listVideoFarmerShown = "SELECT vfs.id, vid.TITLE, p.person_name FROM video_farmers_shown vfs, video vid, person p" +

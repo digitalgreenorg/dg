@@ -319,6 +319,10 @@ public class ScreeningsData extends BaseData {
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `screening`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS screening_PRIMARY ON screening(id);", 
+							   "CREATE INDEX IF NOT EXISTS screening_village_id ON screening(village_id);",
+							   "CREATE INDEX IF NOT EXISTS screening_fieldofficer_id ON screening(fieldofficer_id);",
+							   "CREATE INDEX IF NOT EXISTS screening_animator_id ON screening(animator_id);"};
 	protected static String selectScreenings = "SELECT sc.id, sc.DATE, sc.location FROM screening sc ORDER BY (sc.DATE);";
 	protected static String listScreenings = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
 			"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name FROM screening sc JOIN village vil " +

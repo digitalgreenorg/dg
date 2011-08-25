@@ -204,6 +204,8 @@ public class VillagesData extends BaseData {
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(block_id) REFERENCES block(id)); ";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `village`;";
+	protected static String createIndexes[] = {"CREATE INDEX IF NOT EXISTS village_PRIMARY ON village(id);",
+	   										"CREATE INDEX IF NOT EXISTS village_block_id ON village(block_id);"};
 	protected static String selectVillages = "SELECT id, village_name FROM village ORDER BY(village_name)";
 	protected static String selectVillagesForBlock = "SELECT id, village_name FROM village WHERE block_id = ";
 	protected static String listVillages = "SELECT village.id, village.village_name, block.id, block.block_name " +

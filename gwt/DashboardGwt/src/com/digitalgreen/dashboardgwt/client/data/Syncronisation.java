@@ -122,6 +122,7 @@ public class Syncronisation {
 						offset = 0;
 						if(currentIndex == ApplicationConstants.tableIDs.length){
 							updateSyncStatusInUserTable("0", "0");
+							Schema.createIndexes();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");
 							// This is to clear out anything left over in the progress bar the next time the operation is run.

@@ -218,6 +218,12 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"FOREIGN KEY(expressed_question_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_adoption_practice_id) REFERENCES practices(id) );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_meeting_attendance`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_meeting_attendance_PRIMARY ON person_meeting_attendance(id);", 
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_screening_id ON person_meeting_attendance(screening_id);",
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_person_id ON person_meeting_attendance(person_id);",
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_expressed_interest_practice_id ON person_meeting_attendance(expressed_interest_practice_id);",
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_region_expressed_question_practice_id ON person_meeting_attendance(expressed_question_practice_id);",
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_region_expressed_adoption_practice_id ON person_meeting_attendance(expressed_adoption_practice_id);"};
 	protected static String selectPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME FROM person_meeting_attendance pma, person p" +
 			"WHERE pma.person_id = p.id ORDER BY (p.PERSON_NAME);";
 	protected static String listPersonMeetingAttendances = "SELECT pma.id,p.id, p.PERSON_NAME, expressed_interest_practice_id" +

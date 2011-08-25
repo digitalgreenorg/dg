@@ -250,6 +250,10 @@ public class TrainingsData extends BaseData {
 												"FOREIGN KEY(dm_id) REFERENCES development_manager(id), " +
 												"FOREIGN KEY(fieldofficer_id) REFERENCES field_officer(id));" ;  
 	protected static String dropTable = "DROP TABLE IF EXISTS `training`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS training_PRIMARY ON training(id);",
+	   										"CREATE INDEX IF NOT EXISTS training_village_id ON training(village_id);",
+	   										"CREATE INDEX IF NOT EXISTS training_dm_id ON training(dm_id);",
+	   										"CREATE INDEX IF NOT EXISTS training_fieldofficer_id ON training(fieldofficer_id);"};
 	protected static String selectTrainings = "SELECT id, TRAINING_PURPOSE, TRAINING_OUTCOME, TRAINING_START_DATE, TRAINING_END_DATE " +
 			"FROM training ORDER BY (-id)";
 	protected static String listTrainings = "SELECT training.id, training.training_purpose, training.training_outcome, " +

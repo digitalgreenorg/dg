@@ -123,8 +123,10 @@ public class ScreeningVideosScreenedData extends BaseData {
 												"video_id BIGINT UNSIGNED  NOT NULL DEFAULT 0,  " +
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(video_id) REFERENCES video(id));";
-	
 	protected static String dropTable = "DROP TABLE IF EXISTS `screening_videos_screened`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS screening_videos_screened_PRIMARY ON screening_videos_screened(id);", 
+								   "CREATE INDEX IF NOT EXISTS screening_videos_screened_screening_id ON screening_videos_screened(screening_id);",
+								   "CREATE INDEX IF NOT EXISTS screening_videos_screened_video_id ON screening_videos_screened(video_id);"};
 	protected static String selectScreeningVideosScreened = "SELECT svs.id, vid.TITLE FROM screening_videos_screened svs, video vid" +
 	"WHERE svs.video_id = vid.id ORDER BY (vid.TITLE);";
 	protected static String listScreeningVideosScreened = "SELECT svs.id, vid.TITLE FROM screening_videos_screened svs, video vid" +

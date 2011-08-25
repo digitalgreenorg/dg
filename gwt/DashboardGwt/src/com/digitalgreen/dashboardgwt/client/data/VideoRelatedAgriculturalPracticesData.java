@@ -120,6 +120,9 @@ public class VideoRelatedAgriculturalPracticesData extends BaseData {
 												"FOREIGN KEY(video_id) REFERENCES video(id),  " +
 												"FOREIGN KEY(practices_id) REFERENCES practices(id) );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `video_related_agricultural_practices`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS video_related_agricultural_practices_PRIMARY ON video_related_agricultural_practices(id);", 
+			"CREATE INDEX IF NOT EXISTS video_related_agricultural_practices_video_id ON video_related_agricultural_practices(video_id);",
+			"CREATE INDEX IF NOT EXISTS video_related_agricultural_practices_practices_id ON video_related_agricultural_practices(practices_id);"};
 	protected static String selectVideoRelatedAgriculturalPracticeShown = "SELECT vrap.id, vid.TITLE FROM video_related_agricultural_practices vrap, video vid" +
 	"WHERE vrap.video_id = vid.id ORDER BY (vid.TITLE);";
 	protected static String listVideoRelatedAgriculturalPracticeShown = "SELECT vrap.id, vid.TITLE, pr.practice_name FROM" +

@@ -122,6 +122,9 @@ public class TrainingAnimatorsTrainedData extends BaseData {
 												"FOREIGN KEY(training_id) REFERENCES training(id), " +
 												"FOREIGN KEY(animator_id) REFERENCES animator(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `training_animators_trained`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS training_animators_trained_PRIMARY ON training_animators_trained(id);", 
+	   										"CREATE INDEX IF NOT EXISTS training_animators_trained_training_id ON training_animators_trained(training_id);",
+	   										"CREATE INDEX IF NOT EXISTS training_animators_trained_animator_id ON training_animators_trained(animator_id);"};
 	protected static String selectTrainingAnimatorsTrained = "SELECT id FROM training_animators_trained ORDER BY (id)";
 	protected static String listTrainingAnimatorsTrained = "SELECT training_animators_trained.id, training.id, training.training_purpose, training.training_outcome, animator.id, animator.name FROM training_animators_trained JOIN training ON training_animators_trained.training_id = training.id JOIN animator ON training_animators_trained.animator_id = animator.id ORDER BY (training_animators_trained.id);";
 	protected static String saveTrainingAnimatorsTrainedOnlineURL = "/dashboard/savetraininganimatorstrainedonline/";

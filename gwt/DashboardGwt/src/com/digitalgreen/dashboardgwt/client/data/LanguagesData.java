@@ -113,6 +113,7 @@ public class LanguagesData extends BaseData {
 											"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 											"language_name VARCHAR(100) UNIQUE NOT NULL );";  
 	protected static String dropTable = "DROP TABLE IF EXISTS `language`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS language_PRIMARY ON language(id);"};
 	protected static String selectLanguages = "SELECT * FROM language ORDER BY(language_name);";
 	protected static String listLanguages = "SELECT * FROM language ORDER BY(-id)";
 	protected static String saveLanguageOnlineURL = "/dashboard/savelanguageonline/";

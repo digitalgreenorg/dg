@@ -125,6 +125,9 @@ public class ScreeningFarmerGroupsTargetedData extends BaseData {
 												"FOREIGN KEY(screening_id) REFERENCES screening(id), " +
 												"FOREIGN KEY(persongroups_id) REFERENCES person_groups(id));" ;
 	protected static String dropTable = "DROP TABLE IF EXISTS `screening_farmer_groups_targeted`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS screening_farmer_groups_targeted_PRIMARY ON screening_farmer_groups_targeted(id);", 
+	   "CREATE INDEX IF NOT EXISTS screening_farmer_groups_targeted_screening_id ON screening_farmer_groups_targeted(screening_id);",
+	   "CREATE INDEX IF NOT EXISTS screening_farmer_groups_targeted_persongroups_id ON screening_farmer_groups_targeted(persongroups_id);"};
 	protected static String selectScreeningFarmerGroupsTargeted = "SELECT id FROM screening_farmer_groups_targeted ORDER BY (id);";
 	protected static String listScreeningFarmerGroupsTargeted = "SELECT sfgt.id, pg.group_name FROM screening_farmer_groups_targeted sfgt" +
 			",person_group pg WHERE sfgt.persongroups_id = pg.id ORDER BY (sfgt.id);";

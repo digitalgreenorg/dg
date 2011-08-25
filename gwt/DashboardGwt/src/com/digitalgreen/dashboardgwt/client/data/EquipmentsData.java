@@ -323,6 +323,9 @@ public class EquipmentsData extends BaseData {
 												"FOREIGN KEY(VILLAGE_ID) REFERENCES village(id)," +
 												"FOREIGN KEY(EQUIPMENTHOLDER_ID) REFERENCES equipment_holder(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `equipment_id`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS equipment_id_PRIMARY ON equipment_id(id);", 
+	   "CREATE INDEX IF NOT EXISTS equipment_id_VILLAGE_ID ON equipment_id(VILLAGE_ID);",
+	   "CREATE INDEX IF NOT EXISTS equipment_id_EQUIPMENTHOLDER_ID ON equipment_id(EQUIPMENTHOLDER_ID);"};
 	protected static String selectEquipments = "SELECT id, EQUIPMENT_TYPE, model_no, serial_no FROM equipment_id  ORDER BY (EQUIPMENT_TYPE);";
 	protected static String listEquipments = "SELECT e.id, e.equipment_type, e.model_no, e.serial_no, v.id, v.village_name " +
 			"FROM equipment_id e LEFT JOIN village v ON e.village_id = v.id ORDER BY (e.equipment_type);";

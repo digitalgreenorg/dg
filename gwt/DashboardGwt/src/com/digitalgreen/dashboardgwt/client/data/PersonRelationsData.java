@@ -120,6 +120,9 @@ public class Data extends BaseData.Data {
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(relative_id) REFERENCES person(id));" ;
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_relations`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_relations_PRIMARY ON person_relations(id);",
+											"CREATE INDEX IF NOT EXISTS person_relations_person_id ON person_relations(person_id);",
+											"CREATE INDEX IF NOT EXISTS person_relations_relative_id ON person_relations(relative_id);"};
 	protected static String selectPersonRelations = "SELECT id, type_of_relationship FROM person_relations ORDER BY (type_of_relationship);";
 	protected static String listPersonRelations = "SELECT * FROM person_relations pr JOIN person p ON p.id = pr.person_id" +
 			"ORDER BY (-pr.id);";

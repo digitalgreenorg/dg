@@ -252,7 +252,8 @@ public class PersonGroupsData extends BaseData {
 			+ "TIME_UPDATED DATETIME  NULL DEFAULT NULL ,"
 			+ "village_id BIGINT UNSIGNED  NOT NULL DEFAULT 0, "
 			+ "FOREIGN KEY(village_id) REFERENCES village(id));";
-
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_groups_PRIMARY ON person_groups(id);", 
+	   										"CREATE INDEX IF NOT EXISTS person_groups_village_id ON person_groups(village_id);"};
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
 	protected static String selectPersonGroupsForVillage = "SELECT id, GROUP_NAME FROM person_groups where village_id = ";
 	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.VILLAGE_NAME " +

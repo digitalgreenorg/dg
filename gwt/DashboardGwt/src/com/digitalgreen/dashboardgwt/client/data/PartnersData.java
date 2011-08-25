@@ -143,6 +143,7 @@ public class PartnersData extends BaseData {
 												"PHONE_NO VARCHAR(100)  NULL DEFAULT NULL ," +
 												"ADDRESS VARCHAR(500)  NULL DEFAULT NULL);"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `partners`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS partners_PRIMARY ON partners(id);"};
 	protected static String selectPartners = "SELECT id, partner_name FROM partners ORDER BY(partner_name)";
 	protected static String getPartnerByID = "SELECT id, partner_name FROM partners WHERE id = ?";
 	protected static String listPartners = "SELECT * FROM partners ORDER BY(-id)";

@@ -286,6 +286,9 @@ public class Data extends BaseData.Data {
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(practice_id) REFERENCES practices(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_adopt_practice`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_adopt_practice_PRIMARY ON person_adopt_practice(id);", 
+	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_person_id ON person_adopt_practice(person_id);",
+	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_practice_id ON person_adopt_practice(practice_id);"};
 	protected static String selectPersonAdoptPractices = "SELECT id, date_of_adoption FROM person_adopt_practice ORDER BY (date_of_adoption);";
 	protected static String listPersonAdoptPractices = "SELECT pap.id, p.id, p.person_name," +
 			"pr.id,pr.practice_name, pap.DATE_OF_ADOPTION,pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit," +

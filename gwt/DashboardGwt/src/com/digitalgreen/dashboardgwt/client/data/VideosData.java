@@ -474,6 +474,12 @@ public class VideosData extends BaseData {
 												"FOREIGN KEY(reviewer_id) REFERENCES reviewer(id), " +
 												"FOREIGN KEY(language_id) REFERENCES language(id) );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `video`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS video_PRIMARY ON video(id);", 
+											"CREATE INDEX IF NOT EXISTS video_village_id ON video(village_id);",
+											"CREATE INDEX IF NOT EXISTS video_facilitator_id ON video(facilitator_id);",
+											"CREATE INDEX IF NOT EXISTS video_cameraoperator_id ON video(cameraoperator_id);",
+											"CREATE INDEX IF NOT EXISTS video_reviewer_id ON video(reviewer_id);",
+											"CREATE INDEX IF NOT EXISTS video_language_id ON video(language_id);"};
 	protected static String selectVideos = "SELECT video.id, video.title, village.id, village.village_name " +
 										   "FROM video JOIN village ON video.village_id = village.id" +
 										   " ORDER BY (video.title);";

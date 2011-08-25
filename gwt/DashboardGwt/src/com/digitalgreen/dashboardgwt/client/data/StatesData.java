@@ -149,8 +149,8 @@ public class StatesData extends BaseData {
 												"START_DATE DATE  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(region_id) references region(id));"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `state`;";
-	protected static String indexColumns = "CREATE INDEX IF NOT EXISTS state_PRIMARY ON state(id);" + 
-										   "CREATE INDEX IF NOT EXISTS state_region_id ON state(region_id);";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS state_PRIMARY ON state(id);", 
+										   "CREATE INDEX IF NOT EXISTS state_region_id ON state(region_id);"};
 	protected static String selectStates = "SELECT id, state_name FROM state ORDER BY (state_name);";
 	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id ORDER BY (-state.id);";
 	protected static String saveStateOnlineURL = "/dashboard/savestateonline/";

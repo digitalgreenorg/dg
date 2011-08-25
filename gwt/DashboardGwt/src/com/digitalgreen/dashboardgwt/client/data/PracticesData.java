@@ -153,6 +153,7 @@ public class PracticesData extends BaseData {
 												"SEASONALITY VARCHAR(3)  NOT NULL ," +
 												"SUMMARY TEXT NULL DEFAULT NULL );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `practices`;";
+	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS practices_PRIMARY ON practices(id);"};
 	protected static String selectPractices = "SELECT id, practice_name FROM practices  ORDER BY LOWER(practice_name)";
 	protected static String listPractices = "SELECT * FROM practices ORDER BY LOWER(practice_name)";
 	protected static String selectPracticesSeenForPerson = "select distinct pr.id, pr.practice_name from practices pr " +
