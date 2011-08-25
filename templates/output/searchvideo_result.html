@@ -8,14 +8,25 @@
 
 {% block searchbodycontentright%}
 	<form>
-	<div id='searchdiv'>	
-		<input id='searchinput' name='query' value='{{search_box_params.query}}' type='text'>
-		<input id='searchbtn' value='Search' type='Submit'>
-	</div>
+		<div id='searchdiv'>	
+			<input id='searchinput' name='query' value='{{search_box_params.query}}' type='text'>
+			<input id='searchbtn' value='Search' type='Submit'>
+		</div>
 	</form>
-	<div id='searchcount'>
-		{{paging.vid_count}} Video{{paging.vid_count|pluralize}}
+	
+	<div id='searchcount'>							
+		{{paging.vid_count}} Video{{paging.vid_count|pluralize}}			
 	</div>
+	
+	<div id='searchsort'>
+		Sort by:
+		<select class='select1' id='sortfilter'>
+			<option value="-1">Any</option>
+			<option value="1">Disseminations</option>
+  			<option value="2">Video Production Training</option>
+		</select>
+	</div>
+	
 	<div id='searchresultdiv'>
 	<table id='searchresultdivrighttable' cellspacing='0' cellpadding='0'>
 	{% for vid in vids %}
