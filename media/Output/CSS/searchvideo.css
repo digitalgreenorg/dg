@@ -18,10 +18,10 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 .datepickcalendertext			{ margin-top:5px; margin-left:2%; text-align:center; padding-top:2px; float:left; width:20%; height:20px; background-color:#f0f0f0; font-size:0.8em; font-family:Arial,Helvitica,Sans-Serif; font-weight:normal; color:#3f3e3e; border-left:1px solid Gray;  border-top:1px solid Gray;  border-bottom:1px solid Gray; }
 .advancedsearchtable			{ width:200px; background-color:#f4f4f4; padding-top:2px; padding-bottom:2px; border-bottom:3px solid #E2E2E2; }
 .advancedsearchtext				{ padding-left:2px; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; text-align:left; }
-#advancedsearchopenbtn			{ cursor:pointer; }	
+#advancedsearchopenbtn			{ display:none; cursor:pointer; }	
 #advancedsearchclosebtn			{ display:none; cursor:pointer; }	
 #videosuitable					{ margin-left:0px; }	
-.advancedsearchdiv				{ width:100%; padding-top:5px; padding-bottom:5px; background-color:#f4f4f4; display:none; }
+.advancedsearchdiv				{ width:100%; padding-top:5px; padding-bottom:5px; background-color:#f4f4f4; }
 
 #advancedsearchbody				{ display:none; width:100%; }
 .advancedsearchtitle			{ margin-top:10px; padding-left:2%; text-align:left; clear:both; width:100%; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; font-size:0.8em; }
@@ -38,10 +38,13 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 
 
 /* Searchdiv Right Hand Panel  */
-#searchcount					{ margin-top:5px; width:748px; text-align:right; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
-#searchresultdiv				{ margin-top:6px; width:748px; }
+#searchcount					{ float:left; margin-top:5px; width:475px; text-align:right; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+#searchsort						{ float:left; width:268px; text-align:right; margin:5px 0px 0px 5px; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+#sortfilter						{ padding:1px; background-color:#F4F4F4; float:right; width:200px; height:20px; border:none; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:Bold; color:#3F3E3E; } 
 
-#searchresultdivrighttable		{ width:100%; margin-top:8px; }
+#searchresultdiv				{ clear:both; margin-top:6px; width:748px; }
+
+#searchresultdivrighttable		{ clear:both; width:100%; margin-top:8px; }
 #searchresultdivrighttddiv1		{ float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; padding-top:5px; }
 #searchresultdivrighttddiv2		{ float:left; margin-left:5px; width:87%; margin-bottom:10px; text-align:left; }
 .searchresultdivrighttddiv21	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-family:Arial,Helvetica,Sans-Serif; }

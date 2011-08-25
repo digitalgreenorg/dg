@@ -54,6 +54,17 @@ function videodefaultload(){
 					
 // Videos Page Help divs			
 			
+			
+			$("div#searchsort").mouseover(function() {            	
+            	$(this).css('background-color','#E7F7CF' );
+            	$(this).find("#sortfilter").css('background-color','#E7F7CF' );
+            });
+			
+			$("div#searchsort").mouseleave(function() {            	
+            	$(this).css('background-color','White' );
+            	$(this).find("#sortfilter").css('background-color','#F4F4F4' );
+            });
+			
 					
 			$("div#videodatadiv1div").mouseover(function() {            	
             	$(this).find("div#videodatadiv1help").show();
@@ -108,7 +119,7 @@ function videodefaultload(){
             	$(this).css('background-color','White');
             });
 			
-			
+			/*
 			//showing the advanced search option in the Video Search Page
 			$("td#advancedsearchopenbtn").click(function() { 
             	$("div.advancedsearchdiv").slideDown();
@@ -122,7 +133,7 @@ function videodefaultload(){
             	$(this).hide();
             	$("td#advancedsearchopenbtn").show();
             }); 
-           
+           */
            
            // Paging in the SearchVideo Result page 
             
