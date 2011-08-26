@@ -5,6 +5,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.db.models import Min, Count, F
 from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
+from django.core.mail import send_mail
 
 # Variables
 GENDER_CHOICES = (
@@ -437,7 +438,9 @@ class Person(models.Model):
                             instance.date_of_joining = check_date
                             instance.save()
         except Exception, e:
-            #TODO: notify on exception raised. Catching all to avoid bugs from stopping COCO
+            #Catching all to avoid bugs from stopping COCO
+            #Sending email to rahul@digitalgreen.org
+            send_mail("Error in date_of_joining_handler", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
     
     def __unicode__(self):
@@ -583,7 +586,9 @@ class Video(models.Model):
                 elif kwargs['signal'] == pre_delete:
                     kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') - 1)
         except Exception, e:
-            #TODO: notify on exception raised. Catching all to avoid bugs from stopping COCO
+            #Catching all to avoid bugs from stopping COCO
+            #Sending exception for immediate attention
+            send_mail("Error in update_viewer_count", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
                        
     class Meta:
