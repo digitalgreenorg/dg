@@ -168,12 +168,9 @@ function dochange(src, val) {
 
 function go(page) {
     var url = new Array();
-    var query = $("#searchinput").val();
-    if(query!="" && page!=null) {
-        window.location.href = '?query='+query+'&page='+page;
-        return ;
-    }   
     
+    if($("#sortfilter").val() != "-1") url.push("sort="+$("#sortfilter").val());
+    if($("#searchinput").val() != "") url.push("query="+$("#searchinput").val());
     if($("#videosuitable").val()!='-1')  url.push("videosuitable="+$("#videosuitable").val());
     if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
     

@@ -21,6 +21,7 @@
     var lang = {%if search_box_params.sel_lang %}{{search_box_params.sel_lang}}{%else%} null{%endif%};
     var season = {%if search_box_params.season %}["{{search_box_params.season|join:'", "'}}"]{%else%} null{%endif%};
     var pracs = {%if search_box_params.prac %}["{{search_box_params.prac|join:'", "'}}"]{%else%} null{%endif%};
+    var sort = {%if search_box_params.sort %}"{{search_box_params.sort}}"{%else%} null{%endif%};
     
     if(video_suitable_for != null) $("#videosuitable").val(video_suitable_for);
     if(uploaded != null) $("#uploads").val(uploaded);
@@ -28,6 +29,7 @@
     if(lang != null) $("#lang").val(lang);
     if(season!=null) $("#season").val(season);
     if(pracs!=null) $("#practice").val(pracs);
+    if(sort!=null) $("#sortfilter").val(sort);
     //alert(""+video_suitable_for+uploaded+partners+lang+season+pracs);
     }   
     </script>

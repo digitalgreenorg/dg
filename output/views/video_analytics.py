@@ -4,7 +4,6 @@ from django.db.models import Count
 from dg.dashboard.models import *
 import datetime, math
 from dg.output.database.SQL  import video_analytics_sql, shared_sql
-from dg.output.database import utility
 from dg.output import views
 from dg.output.views.common import get_geog_id
 from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
@@ -210,6 +209,7 @@ def video_search(request):
     partners = request.GET.getlist('partner')
     from_date = request.GET.get('from_date');
     to_date = request.GET.get('to_date');
+    sort = request.GET.get('sort');
     search_box_params = {}
 
     vids = Video.objects.all()
@@ -265,7 +265,14 @@ def video_search(request):
         search_box_params['sel_partners'] = partners
     search_box_params['all_partners'] = Partners.objects.all().values('id','partner_name')
     
-    vids  = vids.order_by('id')
+    if(sort == None):
+        vids  = vids.order_by('id')
+    elif(sort == "viewers"):
+        search_box_params['sort'] = sort
+        vids = vids.order_by('-viewers', 'id')
+    elif(sort == "prod_date"):
+        search_box_params['sort'] = sort
+        vids = vids.order_by('-video_production_end_date', 'id')
     
     #for paging
     vid_count = vids.count()
@@ -274,7 +281,7 @@ def video_search(request):
     if(not page or int(page) > tot_pages): 
         page = 1
     page = int(page)
-    vids = vids[(page-1)*vid_per_page:((page-1)*vid_per_page)+vid_per_page]
+    vids = vids[(page-1)*vid_per_page:(page*vid_per_page)]
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
     
     if vids:
@@ -284,10 +291,7 @@ def video_search(request):
     
     return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
                                             
-def test(request):
-     x = datetime.date.today()
-     return render_to_response("test.html",dict(d1=x,d2=(x-datetime.timedelta(days = 10))))
- 
+
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     id = int(request.GET['id'])
