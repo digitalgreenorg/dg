@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Min, Count, F
 from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
 from django.core.mail import send_mail
+import sys, traceback
 
 # Variables
 GENDER_CHOICES = (
@@ -440,7 +441,9 @@ class Person(models.Model):
         except Exception, e:
             #Catching all to avoid bugs from stopping COCO
             #Sending email to rahul@digitalgreen.org
-            val = send_mail("Error in date_of_joining_handler", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            type, value, tracebk = sys.exc_info()
+            mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
+            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
     
     def __unicode__(self):
@@ -588,7 +591,9 @@ class Video(models.Model):
         except Exception, e:
             #Catching all to avoid bugs from stopping COCO
             #Sending exception for immediate attention
-            val = send_mail("Error in update_viewer_count", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            type, value, tracebk = sys.exc_info()
+            mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
+            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
                        
     class Meta:
