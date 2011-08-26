@@ -440,7 +440,7 @@ class Person(models.Model):
         except Exception, e:
             #Catching all to avoid bugs from stopping COCO
             #Sending email to rahul@digitalgreen.org
-            send_mail("Error in date_of_joining_handler", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            val = send_mail("Error in date_of_joining_handler", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
     
     def __unicode__(self):
@@ -588,7 +588,7 @@ class Video(models.Model):
         except Exception, e:
             #Catching all to avoid bugs from stopping COCO
             #Sending exception for immediate attention
-            send_mail("Error in update_viewer_count", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            val = send_mail("Error in update_viewer_count", str(e),'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
                        
     class Meta:
