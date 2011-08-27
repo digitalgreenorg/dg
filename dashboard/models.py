@@ -330,11 +330,17 @@ class Person(models.Model):
             if sender == Screening or sender == Video:
                 if kwargs['signal'] == pre_save and instance.pk != None:
                     if(sender == Screening):
-                        old_date = Screening.objects.get(pk=instance.pk).date
+                        old_date_vqs = Screening.objects.filter(pk=instance.pk).values('date')
+                        if(not bool(old_date_vqs)):
+                            return
+                        old_date = old_date_vqs[0]['date']
                         person_set = instance.farmers_attendance.all()
                         check_date = instance.date
                     elif sender == Video:
-                        old_date = Video.objects.get(pk=instance.pk).video_production_end_date
+                        old_date_vqs = Video.objects.filter(pk=instance.pk).values('video_production_end_date')
+                        if(not bool(old_date_vqs)):
+                            return
+                        old_date = old_date_vqs[0]['video_production_end_date']
                         person_set = instance.farmers_shown.all()
                         check_date = instance.video_production_end_date
                     if old_date == check_date:
@@ -358,13 +364,15 @@ class Person(models.Model):
                                 person.save()
             elif sender == PersonMeetingAttendance:
                 if kwargs['signal'] == pre_save:
-                    if instance.pk == None:
+                    if instance.pk != None:
+                        old_pma_qs = PersonMeetingAttendance.objects.filter(pk=instance.pk)
+                    if(instance.pk == None or not bool(old_pma_qs)):
                         person = Person.objects.get(pk=instance.person.pk)
                         if person.date_of_joining == None or person.date_of_joining > instance.screening.date:
                             person.date_of_joining = instance.screening.date
                             person.save()
                     else:
-                        old_pma = PersonMeetingAttendance.objects.get(pk=instance.pk)
+                        old_pma = old_pma_qs[0]
                         if old_pma.person != instance.person or old_pma.screening != instance.screening:
                             old_person = old_pma.person
                             min_vid_date = (old_person.video_set.aggregate(Min('video_production_end_date'))).values()[0]
@@ -443,9 +451,8 @@ class Person(models.Model):
             #Sending email to rahul@digitalgreen.org
             type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            #val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
-            pass
-    
+            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+        
     def __unicode__(self):
         return  u'%s (%s)' % (self.person_name, self.village)
 
@@ -580,12 +587,13 @@ class Video(models.Model):
             elif sender == PersonMeetingAttendance:
                 if kwargs['signal'] == pre_save:
                     if kwargs['instance'].pk != None:
-                        old_pma = PersonMeetingAttendance.objects.get(pk=kwargs['instance'].pk)
+                        old_pma_qs = PersonMeetingAttendance.objects.filter(pk=kwargs['instance'].pk)
+                    if(kwargs['instance'].pk == None or not bool(old_pma_qs)):
+                        kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
+                    else:
                         if old_pma.screening_id != kwargs['instance'].screening_id:
                             old_pma.screening.videoes_screened.update(viewers = F('viewers') - 1)
                             kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
-                    else:
-                        kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
                 elif kwargs['signal'] == pre_delete:
                     kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') - 1)
         except Exception, e:
@@ -593,9 +601,8 @@ class Video(models.Model):
             #Sending exception for immediate attention
             type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            #val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
-            pass
-                       
+            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+    
     class Meta:
         db_table = u'VIDEO'
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
