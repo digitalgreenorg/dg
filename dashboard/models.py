@@ -443,7 +443,7 @@ class Person(models.Model):
             #Sending email to rahul@digitalgreen.org
             type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            #val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
     
     def __unicode__(self):
@@ -593,7 +593,7 @@ class Video(models.Model):
             #Sending exception for immediate attention
             type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            #val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
             pass
                        
     class Meta:
