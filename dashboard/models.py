@@ -547,7 +547,7 @@ class Video(models.Model):
     movie_maker_project_filename = models.FileField(upload_to='movie_maker_project_file', db_column='MOVIE_MAKER_PROJECT_FILENAME', blank=True)
     final_edited_filename = models.FileField(upload_to='final_edited_file', db_column='FINAL_EDITED_FILENAME', blank=True)
     village = models.ForeignKey(Village)
-    facilitator = models.ForeignKey(Animator,related_name='facilitator', null=True, blank=True)
+    facilitator = models.ForeignKey(Animator,related_name='facilitator')
     cameraoperator = models.ForeignKey(Animator,related_name='cameraoperator')
     reviewer = models.ForeignKey(Reviewer,null=True, blank=True)
     approval_date = models.DateField(null=True, blank=True, db_column='APPROVAL_DATE')
