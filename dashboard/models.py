@@ -591,6 +591,7 @@ class Video(models.Model):
                     if(kwargs['instance'].pk == None or not bool(old_pma_qs)):
                         kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
                     else:
+                        old_pma = old_pma_qs[0]
                         if old_pma.screening_id != kwargs['instance'].screening_id:
                             old_pma.screening.videoes_screened.update(viewers = F('viewers') - 1)
                             kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
@@ -601,7 +602,7 @@ class Video(models.Model):
             #Sending exception for immediate attention
             type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            val = send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
     
     class Meta:
         db_table = u'VIDEO'
