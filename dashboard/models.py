@@ -346,6 +346,8 @@ class Person(models.Model):
                     if old_date == check_date:
                         return
                     for person in person_set:
+                        if person.date_of_joining == None:
+                            continue 
                         if check_date < person.date_of_joining:
                             person.date_of_joining = check_date
                             person.save()
@@ -357,6 +359,8 @@ class Person(models.Model):
                         person_set = instance.farmers_shown.all()
                         check_date = instance.video_production_end_date
                     for person in person_set:
+                        if person.date_of_joining == None:
+                            continue
                         if check_date == person.date_of_joining:
                             min_date = get_min_date(person, sender, (instance.pk,))
                             if min_date != person.date_of_joining:
