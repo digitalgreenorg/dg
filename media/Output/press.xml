@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
-	
+	<TEAM>
+		<TITLE>ZDNet Asia</TITLE>
+		<HEADLINE>India taps communication tools to transform villages</HEADLINE>
+		<REFERENCE>http://www.zdnetasia.com/india-taps-communication-tools-to-transform-villages-62301780.htm</REFERENCE>
+		<PRESSDATE>Thu, 25 August, 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>"Another such company is Digital Green, which aims to improve agricultural practices through the creation of videos that are produced by farmers and meant for farmers across various field locations."</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+
 	<TEAM>
 		<TITLE>iBN Times</TITLE>
 		<HEADLINE>MIT Graduate making a difference in Rural India </HEADLINE>
@@ -33,6 +44,18 @@
 		<IMGLINK></IMGLINK>
 		<VIDEOLINK>NULL</VIDEOLINK>
 		<VIDEOREFERENCE>NULL</VIDEOREFERENCE></TEAM>
+	<TEAM>
+		<TITLE>The Hindu</TITLE>
+		<HEADLINE>Latest technology helps ryots get good yield</HEADLINE>
+		<REFERENCE>http://www.thehindu.com/todays-paper/tp-national/tp-otherstates/article2321091.ece#.TlYBMLcr_d4.twitter</REFERENCE>
+		<PRESSDATE>Mon, 04 April, 2011</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"Volunteers from Pragati, an NGO working on agriculture in Koraput district, visit the village on Friday evenings with a film projector and the villagers turn up to watch various programmes on agriculture."</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>
 	<TEAM>
 		<TITLE>ILRI Clippings</TITLE>
 		<HEADLINE>Video with farmers help to amplify agricultural extension and learnings</HEADLINE>
