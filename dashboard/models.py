@@ -712,6 +712,7 @@ class PersonAdoptPractice(models.Model):
 class Equipment(models.Model):
     equipment_type = models.IntegerField(choices=EQUIPMENT, db_column='EQUIPMENT_TYPE')
     other_equipment = models.CharField("Specify the equipment if 'Other' equipment type has been selected ", max_length=300, db_column='OTHER_EQUIPMENT', null = True, blank=True)
+    invoice_no = models.CharField(max_length=300, db_column='INVOICE_NO')
     model_no = models.CharField("Make / Model No ", max_length=300, db_column='MODEL_NO', blank=True)
     serial_no = models.CharField(max_length=300, db_column='SERIAL_NO', blank=True)
     cost = models.FloatField(null=True, db_column='COST', blank=True)
@@ -724,7 +725,7 @@ class Equipment(models.Model):
     warranty_expiration_date = models.DateField(null=True, db_column='WARRANTY_EXPIRATION_DATE', blank=True)
     village = models.ForeignKey(Village, null=True, blank=True)
     equipmentholder = models.ForeignKey(EquipmentHolder,null=True,blank=True)
-    remarks = models.TextField(blank=True)
+    remarks = models.TextField(blank=True)    
 
     class Meta:
         db_table = u'EQUIPMENT_ID'
