@@ -1059,6 +1059,9 @@ def save_equipment_online(request,id):
             form = EquipmentForm(instance = equipment)
         else:
             form  = EquipmentForm()
+        villages = get_user_villages(request)
+        form.fields['village'].queryset = villages.order_by('village_name')
+        
         return HttpResponse(form)
 
 
@@ -1066,8 +1069,18 @@ def get_equipments_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('equipments')
     else:
-        count = Equipment.objects.count()
-        equipments = Equipment.objects.order_by("-id")[offset:limit]
+        searchText = request.GET.get('searchText')
+        villages = get_user_villages(request)
+        count = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True)).count()
+        equipments = Equipment.objects.filter(village__in = villages)
+        if(searchText):
+            vil = villages.filter(Q(village_name__icontains = searchText) )
+            count = equipments.filter(Q(id__icontains = searchText)  | Q(procurement_date__icontains = searchText) | Q(village__in = vil) | \
+                        Q(invoice_no__icontains = searchText) | Q(remarks__icontains = searchText) | Q(model_no__icontains = searchText)).count()
+            equipments = Equipment.objects.filter(Q(id__icontains = searchText) | Q(procurement_date__icontains = searchText) | Q(village__in = vil) | \
+                        Q(invoice_no__icontains = searchText)).order_by("-id")[offset:limit]
+        else:
+            equipments = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True)).order_by("-id")[offset:limit]
         if(equipments):
             json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder','village',))
         else:
