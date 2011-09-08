@@ -455,10 +455,15 @@ function filter_person() {
 			}
 			// Add practice to add new row template
 			template = (template).replace(/--prac_list--/g, prac_options.join('\n'));
-			var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
+			var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, P.father_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
 			var person_options = [];
 			while(persons_list_for_add_new_row.isValidRow()) {
-				person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +'(' + persons_list_for_add_new_row.field(2) + ')'+'</option>');
+				if(persons_list_for_add_new_row.field(2).toString() == '') {
+					person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(3) + ')'+'</option>');
+				}
+				else {
+					person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(2) + ')'+' (' + persons_list_for_add_new_row.field(3) + ')'+'</option>');
+				}
 				persons_list_for_add_new_row.next();
 			}	
 			// Add person to add new row template 
@@ -466,11 +471,17 @@ function filter_person() {
 			// Add "add new row" button
 			initialize_add_screening();
 			//alert('before sql execute');
-			var persons = db.execute("SELECT DISTINCT P.id, P.person_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
+			var persons = db.execute("SELECT DISTINCT P.id, P.person_name, P.father_name FROM PERSON P where P.group_id in ("+grps.join(", ")+")");	
 			var tot_form = 0;
 			var row ='';
 			while (persons.isValidRow()) {
-				var per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>'
+				var per = null;
+				if(persons.field(2).toString() == "") {
+					per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>';
+				}
+				else {
+					per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+' (' + persons.field(2) + ')'+'</option>';
+				}
 				//var row = (off_template).replace(/--per_list--/g, per);
 				row = row  + (template).replace(/--per_list--/g, per);
 				//table.find('tbody').append(row);

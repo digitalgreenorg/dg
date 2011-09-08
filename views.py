@@ -108,8 +108,7 @@ def feed_person_html_on_person_group(request):
     all_persons = Person.objects.all()
     persons = []
     if group_id[0]:
-        persons = Person.objects.all().filter(group__in = \
-                                                                                  (PersonGroups.objects.all().filter(pk__in = group_id)))
+        persons = Person.objects.all().filter(group__in = (PersonGroups.objects.all().filter(pk__in = group_id)))
 
 
     html = get_template('feeds/screening_view_person.txt')
@@ -137,11 +136,9 @@ def feed_person_html_on_person_group_modified(request):
     if(not(group_id and init_id) or mode not in [0,1]):
         return HttpResponse('{"html":\'Error\'}')
 
-    all_persons = Person.objects.all()
     persons = []
     if group_id[0]:
-        persons = Person.objects.all().filter(group__in = \
-                                                                                  (PersonGroups.objects.all().filter(pk__in = group_id)))
+        persons = Person.objects.all().filter(group__pk__in = group_id)
 
 
     html = get_template('feeds/screening_view_person_modified.txt')
@@ -174,7 +171,7 @@ def get_person(request):
     for village in villages:
         blocks = blocks | Block.objects.filter(id = village.block.id)
     p = Person.objects.all().filter(village__block__in = blocks).order_by('person_name')
-    per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}} ({{p.village}})</option>{% endfor %}""")
+    per_list = Template("""{% for p in per %}<option value="{{p.id}}">{{p.person_name}}{% if p.father_name %} ({{p.father_name}}){% endif %} ({{p.village}})</option>{% endfor %}""")
     return HttpResponse(cjson.encode(dict(per_list=per_list.render(Context(dict(per=p))))))
 
 
@@ -954,7 +951,7 @@ def get_blocks_online(request, offset, limit):
         return response
     
 def get_blocks_for_district_online(request, district_id):
-    blocks = Block.objects.filter(district__id = district_id).values_list('id', 'block_name')
+    blocks = Block.objects.filter(district__id = district_id).values_list('id', 'block_name').order_by("block_name")
                                                     
     html_template = """
     <option value='' selected='selected'>---------</option>
@@ -1178,7 +1175,7 @@ def get_villages_online(request, offset, limit):
         return response
 
 def get_villages_for_blocks_online(request, block_id):
-    villages = Village.objects.filter(block__id = block_id).values_list('id', 'village_name')
+    villages = Village.objects.filter(block__id = block_id).values_list('id', 'village_name').order_by('village_name')
                                                     
     html_template = """
     <option value='' selected='selected'>---------</option>
@@ -1417,7 +1414,7 @@ def get_persongroups_online(request, offset, limit):
         return response
 
 def get_persongroups_for_village_online(request, village_id):
-    person_groups = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name')
+    person_groups = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name').order_by('group_name')
                                                     
     html_template = """
     <option value='' selected='selected'>---------</option><option value='null'>No Group</option>
@@ -1507,11 +1504,11 @@ def get_persons_online(request, offset, limit):
         return response
 
 def get_person_for_village_and_no_person_group_online(request, village_id):
-    persons = Person.objects.filter(village__id = village_id, group=None).values_list('id', 'person_name')
+    persons = Person.objects.filter(village__id = village_id, group=None).values_list('id', 'person_name', 'father_name').order_by("person_name")
     
     html_template = """
     <option value='' selected='selected'>---------</option>
-    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}{% if row.2 %} ({{row.2}}){% endif %}</option>{%endfor%}
     """
     t = Template(html_template);
     html = t.render(Context(dict(rows=persons)))
@@ -1519,11 +1516,11 @@ def get_person_for_village_and_no_person_group_online(request, village_id):
     return HttpResponse(html)
 
 def get_person_for_person_group_online(request, group_id):
-    persons = Person.objects.filter(group__id=group_id).values_list('id', 'person_name')
+    persons = Person.objects.filter(group__id=group_id).values_list('id', 'person_name', 'father_name').order_by("person_name")
     
     html_template = """
     <option value='' selected='selected'>---------</option>
-    {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+    {% for row in rows %}<option value="{{row.0}}">{{row.1}}{% if row.2 %} ({{row.2}}){% endif %}</option>{%endfor%}
     """
     t = Template(html_template);
     html = t.render(Context(dict(rows=persons)))

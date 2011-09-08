@@ -9,7 +9,7 @@
 </td>
 <td class="person">
 	<select id="id_personmeetingattendance_set-{{ forloop.counter0|add:init }}-person" name="personmeetingattendance_set-{{ forloop.counter0|add:init }}-person">
-		<option value="{{person.id}}">{{person.person_name}} ({{person.village}})</option>		
+		<option value="{{person.id}}">{{person.person_name}}{%if person.father_name%} ({{person.father_name}}){%endif%} ({{person.village}})</option>		
 	</select>
 </td>
 <td class="expressed_interest_practice">
