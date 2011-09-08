@@ -23,7 +23,8 @@ a {
 </head>
 <body> <h1>It works!</h1>
 <div>
-	Drag this bookmark <a id="bookmarklet" href="javascript:alert('It works!!');">Bookmarklet</a>
+	Drag this bookmark <a id="bookmarklet" href="javascript:void(imgs=document.images);for(i=0;i<imgs.length;i++)
+{void(imgs[i].style.border='medium solid green');}">Bookmarklet</a>
 		to your Bookmarks Bar. 
 </div>
 
