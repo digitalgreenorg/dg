@@ -98,10 +98,11 @@ public class PersonsData extends BaseData {
 			this.group = group;
 		}
 
-		public Data(String id, String person_name, VillagesData.Data village) {
+		public Data(String id, String person_name, String father_name, VillagesData.Data village) {
 			super();
 			this.id = id;
 			this.person_name = person_name;
+			this.father_name = father_name;
 			this.village = village;
 		}
 
@@ -400,12 +401,12 @@ public class PersonsData extends BaseData {
 	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_PRIMARY ON person(id);", 
 											"CREATE INDEX IF NOT EXISTS person_village_id ON person(village_id);",
 											"CREATE INDEX IF NOT EXISTS person_group_id ON person(group_id);"};
-	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+	protected static String selectPersons = "SELECT person.id, person.PERSON_NAME, person.FATHER_NAME, village.id, village.village_name " +
 											"FROM person JOIN village on person.village_id = village.id ORDER BY (PERSON_NAME);";
-	protected static String selectPersonsForVillageAndNoPersonGroup = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+	protected static String selectPersonsForVillageAndNoPersonGroup = "SELECT person.id, person.PERSON_NAME, person.FATHER_NAME, village.id, village.village_name " +
 																	"FROM person JOIN village on person.village_id = village.id " +
 																	"WHERE person.GROUP_ID is null and village_id = ";
-	protected static String selectPersonsForPersonGroup = "SELECT person.id, person.PERSON_NAME, village.id, village.village_name " +
+	protected static String selectPersonsForPersonGroup = "SELECT person.id, person.PERSON_NAME, person.FATHER_NAME, village.id, village.village_name " +
 																	"FROM person JOIN village on person.village_id = village.id " +
 																	"WHERE person.GROUP_ID = ";
 	protected static String listPersons = "SELECT p.id, p.PERSON_NAME, p.village_id, vil.VILLAGE_NAME, p.group_id, pg.GROUP_NAME " +
@@ -572,7 +573,7 @@ public class PersonsData extends BaseData {
 		return persons;
 	}
 	
-	public List fetchPersonGroupsForSql(String sql) {
+	public List fetchPersonsForSql(String sql) {
 		BaseData.dbOpen();
 		List persons = new ArrayList();
 		this.select(sql);
@@ -583,11 +584,12 @@ public class PersonsData extends BaseData {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this
 						.getResultSet().next()) {
 					village = villagesData.new Data(this.getResultSet()
-							.getFieldAsString(2), this.getResultSet()
-							.getFieldAsString(3));
-					Data person = new Data(this.getResultSet()
-							.getFieldAsString(0), this.getResultSet()
-							.getFieldAsString(1), village);
+							.getFieldAsString(3), this.getResultSet()
+							.getFieldAsString(4));
+					Data person = new Data(this.getResultSet().getFieldAsString(0), 
+							this.getResultSet().getFieldAsString(1),
+							this.getResultSet().getFieldAsString(2),
+							village);
 					persons.add(person);
 				}
 			} catch (DatabaseException e) {
@@ -601,15 +603,15 @@ public class PersonsData extends BaseData {
 	}
 	
 	public List getAllPersonsForPersonGroupOffline(String person_group_id) {
-		return this.fetchPersonGroupsForSql(selectPersonsForPersonGroup + person_group_id);
+		return this.fetchPersonsForSql(selectPersonsForPersonGroup + person_group_id);
 	}
 	
 	public List getAllPersonsForVillageAndNoPersonGroupOffline(String village_id) {
-		return this.fetchPersonGroupsForSql(selectPersonsForVillageAndNoPersonGroup + village_id);
+		return this.fetchPersonsForSql(selectPersonsForVillageAndNoPersonGroup + village_id);
 	}
 
 	public List getAllPersonsOffline() {
-		return this.fetchPersonGroupsForSql(selectPersons);
+		return this.fetchPersonsForSql(selectPersons);
 	}
 
 	public Object postPageData() {

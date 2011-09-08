@@ -568,7 +568,9 @@ public class Data extends BaseData.Data {
 		
 		for(Object person : persons) {
 			html = html + "<option value=\"" + ((PersonsData.Data)person).getId() + "\">" + 
-			((PersonsData.Data)person).getPersonName() + "</option>";
+			((PersonsData.Data)person).getPersonName() + 
+			(((PersonsData.Data)person).getFatherName() == "" ? "": (" (" + ((PersonsData.Data)person).getFatherName() + ")")) + 
+					"</option>";
 		}
 		
 		return html;
@@ -582,7 +584,9 @@ public class Data extends BaseData.Data {
 		
 		for(Object person : persons) {
 			html = html + "<option value=\"" + ((PersonsData.Data)person).getId() + "\">" + 
-			((PersonsData.Data)person).getPersonName() + "</option>";
+			((PersonsData.Data)person).getPersonName() + 
+			(((PersonsData.Data)person).getFatherName() == "" ? "": (" (" + ((PersonsData.Data)person).getFatherName() + ")")) + 
+					"</option>";
 		}
 		
 		return html;
