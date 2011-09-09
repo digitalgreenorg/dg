@@ -515,7 +515,7 @@ class TrainingAdmin(admin.ModelAdmin):
         )
 
 class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ('equipment_type', 'model_no', 'serial_no', 'village', 'district_name', 'remarks')
+    list_display = ('equipment_type', 'model_no', 'invoice_no', 'village', 'equipmentholder', 'procurement_date', 'remarks')
     
     def district_name(self, obj):
       return ("%s" % (obj.village.block.district.district_name)).title()

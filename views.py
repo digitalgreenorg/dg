@@ -1069,15 +1069,15 @@ def get_equipments_online(request, offset, limit):
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         count = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True)).count()
-        equipments = Equipment.objects.filter(village__in = villages)
+        equipments = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True))
         if(searchText):
             vil = villages.filter(Q(village_name__icontains = searchText) )
             count = equipments.filter(Q(id__icontains = searchText)  | Q(procurement_date__icontains = searchText) | Q(village__in = vil) | \
                         Q(invoice_no__icontains = searchText) | Q(remarks__icontains = searchText) | Q(model_no__icontains = searchText)).count()
-            equipments = Equipment.objects.filter(Q(id__icontains = searchText) | Q(procurement_date__icontains = searchText) | Q(village__in = vil) | \
-                        Q(invoice_no__icontains = searchText)).order_by("-id")[offset:limit]
+            equipments = equipments.filter(Q(id__icontains = searchText) | Q(procurement_date__icontains = searchText) | Q(village__in = vil) | \
+                        Q(invoice_no__icontains = searchText) | Q(remarks__icontains = searchText) | Q(model_no__icontains = searchText)).order_by("-village__village_name")[offset:limit]
         else:
-            equipments = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True)).order_by("-id")[offset:limit]
+            equipments = Equipment.objects.filter(Q(village__in = villages) | Q(village__isnull = True)).order_by("-village__village_name")[offset:limit]
         if(equipments):
             json_subcat = serializers.serialize("json", equipments,  relations=('equipmentholder','village',))
         else:
