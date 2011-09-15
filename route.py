@@ -12,6 +12,7 @@ def analytics_route(request, func_name):
     from dg.output.views.overview_analytics import *
     from dg.output.views.screening_analytics import *
     from dg.output.views.video_analytics import *
+    from dg.output.views.adoption_analytics import *
     from dg.output.views.targets import *
     from dg.output.views.common import drop_down_val, overview_line_graph
     

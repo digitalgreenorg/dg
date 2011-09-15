@@ -251,3 +251,13 @@ def tot_dist_attendees_adopt_60_days(geog, id, to_date,partners):
     filter_partner_geog_date(sql_ds,"SC","DUMMY",geog,id,None,None,partners)
     
     return join_sql_ds(sql_ds);
+
+def tot_attendance(geog, id, from_date, to_date, partners):
+    sql_ds = get_init_sql_ds();
+    sql_ds['select'].append("COUNT(PMA.id) as count")
+    sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
+    if geog != "COUNTRY" or partners or (from_date and to_date):
+        sql_ds['lojoin'].append(["SCREENING SC", "SC.id = PMA.screening_id"])
+        filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners)
+        
+    return join_sql_ds(sql_ds)
