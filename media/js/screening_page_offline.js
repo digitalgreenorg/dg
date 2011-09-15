@@ -458,7 +458,7 @@ function filter_person() {
 			var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, P.father_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id ORDER BY P.person_name");
 			var person_options = [];
 			while(persons_list_for_add_new_row.isValidRow()) {
-				if(persons_list_for_add_new_row.field(2).toString() == '') {
+				if(persons_list_for_add_new_row.field(2) == null || persons_list_for_add_new_row.field(2).toString() == '') {
 					person_options.push('<option value="'+persons_list_for_add_new_row.field(0)+'">'+persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(3) + ')'+'</option>');
 				}
 				else {
@@ -476,7 +476,7 @@ function filter_person() {
 			var row ='';
 			while (persons.isValidRow()) {
 				var per = null;
-				if(persons.field(2).toString() == "") {
+				if(persons.field(2) == null || persons.field(2).toString() == "") {
 					per = '<option value="'+persons.field(0)+'" selected="true">'+persons.field(1)+'</option>';
 				}
 				else {
