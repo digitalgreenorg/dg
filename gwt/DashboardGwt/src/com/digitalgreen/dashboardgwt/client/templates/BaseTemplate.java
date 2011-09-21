@@ -261,6 +261,7 @@ public class BaseTemplate extends Template {
 					// The query string can only be formed if we're on the page with 
 					// the add-form id, set when we got a GET request on the page
 					String formQueryString = BaseTemplate.getFormString("add-form");
+					servlet.getRequestContext().getArgs().put("redirect_to", "list");
 					servlet.getRequestContext().getForm().setQueryString(formQueryString);
 					servlet.response();
 				}

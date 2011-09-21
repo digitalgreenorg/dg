@@ -37,7 +37,8 @@ public class Equipments extends BaseServlet {
 						if(this.getStatusCode() == 200) {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Equipment successfully saved");
-							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("action", 
+									getServlet().getRequestContext().getArgs().get("redirect_to"));
 							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Equipments(requestContext));
 						} else {
@@ -62,7 +63,8 @@ public class Equipments extends BaseServlet {
 						if((Boolean)results) {
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Equipment successfully saved");
-							requestContext.getArgs().put("action", "list");
+							requestContext.getArgs().put("action", 
+									getServlet().getRequestContext().getArgs().get("redirect_to"));
 							requestContext.getArgs().put("pageNum", "1");
 							getServlet().redirectTo(new Equipments(requestContext));
 						} else {
@@ -86,6 +88,11 @@ public class Equipments extends BaseServlet {
 				HashMap queryArgs = (HashMap)this.requestContext.getArgs();
 				String queryArg = (String)queryArgs.get("action");
 				String pageNum = (String)queryArgs.get("pageNum");
+				String operation = (String)queryArgs.get("operation");
+				String searchText = "";
+				if(operation == "search") {
+					searchText = (String)queryArgs.get("searchText");
+				}
 				if(queryArg.equals("list")){
 					EquipmentsData equipmentsData = new EquipmentsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
@@ -122,17 +129,31 @@ public class Equipments extends BaseServlet {
 								String totalRows = equipmentsData.getCount();
 								requestContext.getArgs().put("totalRows", totalRows);
 								String pageNum = (String)getServlet().getRequestContext().getArgs().get("pageNum");
-								List equipments = equipmentsData.getEquipmentsListingOffline(pageNum);
+								List equipments;
+								String operation = (String)getServlet().getRequestContext().getArgs().get("operation");
+								if(operation == "search") {
+									String searchText = (String)getServlet().getRequestContext().getArgs().get("searchText");
+									equipments = equipmentsData.getEquipmentsListingOffline(pageNum, searchText);
+									requestContext.getArgs().put("totalRows", equipmentsData.getCount(searchText));
+								}
+								else {
+									equipments = equipmentsData.getEquipmentsListingOffline(pageNum);
+									requestContext.getArgs().put("totalRows", equipmentsData.getCount());
+								}
 								requestContext.getArgs().put("listing", equipments);
 								getServlet().fillTemplate(new EquipmentsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected local error. Please contact support");
-								getServlet().redirectTo(new Index(requestContext));				
-							}	
+								getServlet().redirectTo(new Index(requestContext));		
+							}							
 						}
 					});
-					equipmentsData.apply(equipmentsData.getListPageData(pageNum));
+					if (operation == "search") {
+						equipmentsData.apply(equipmentsData.getListPageData(pageNum, searchText));
+					} else {
+						equipmentsData.apply(equipmentsData.getListPageData(pageNum));						
+					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();
@@ -174,7 +195,7 @@ public class Equipments extends BaseServlet {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected local error. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));				
-							}	
+							}							
 						}
 					}, form);
 					if(queryArg.equals("add")) {

@@ -20,6 +20,7 @@ public class EquipmentsData extends BaseData {
 		protected Type() {}
 		public final native String getEquipmentType() /*-{ return $wnd.checkForNullValues(this.fields.equipment_type); }-*/;
 		public final native String getOtherEquipment() /*-{ return $wnd.checkForNullValues(this.fields.other_equipment); }-*/;
+		public final native String getInvoiceNo() /*-{ return $wnd.checkForNullValues(this.fields.invoice_no); }-*/;
 		public final native String getModelNo() /*-{ return $wnd.checkForNullValues(this.fields.model_no); }-*/;
 		public final native String getSerialNo() /*-{ return $wnd.checkForNullValues(this.fields.serial_no); }-*/;
 		public final native String getCost() /*-{ return $wnd.checkForNullValues(this.fields.cost); }-*/;
@@ -33,6 +34,7 @@ public class EquipmentsData extends BaseData {
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.village; }-*/;
 		public final native EquipmentHoldersData.Type getEquipmentHolder() /*-{ return this.fields.equipmentholder; }-*/;
 		public final native String getRemarks() /*-{ return $wnd.checkForNullValues(this.fields.remarks); }-*/;
+		
 	
 	}
 	
@@ -55,13 +57,13 @@ public class EquipmentsData extends BaseData {
 		private VillagesData.Data village;
 		private EquipmentHoldersData.Data equipmentholder;
 		private String remarks;
-		
+		private String invoice_no;
 		
 		public Data() {
 			super();
 		}
 
-		public Data(String id, String equipment_type, String other_equipment, String model_no, String serial_no, String cost,
+		public Data(String id, String equipment_type, String other_equipment,  String invoice_no, String model_no, String serial_no, String cost,
 				String purpose, String additional_accessories, String is_reserve, String procurement_date, String transfer_date,
 				String installation_date, String warranty_expiration_date, VillagesData.Data village,
 				EquipmentHoldersData.Data equipmentholder, String remarks) {
@@ -82,6 +84,7 @@ public class EquipmentsData extends BaseData {
 			this.village = village;
 			this.equipmentholder = equipmentholder;
 			this.remarks = remarks;
+			this.invoice_no = invoice_no;
 		}
 		
 		public Data(String id, String equipment_type){
@@ -90,13 +93,15 @@ public class EquipmentsData extends BaseData {
 			this.equipment_type = equipment_type;
 		}
 		
-		public Data(String id, String equipment_type, String model_no, String serial_no, VillagesData.Data village){
+		public Data(String id, String equipment_type, String model_no, String invoice_no, VillagesData.Data village, String procurement_date, String remarks){
 			super();
 			this.id = id;
 			this.equipment_type = equipment_type; 
 			this.model_no = model_no;
-			this.serial_no = serial_no;
+			this.invoice_no = invoice_no;
 			this.village = village;
+			this.procurement_date = procurement_date;
+			this.remarks = remarks;
 		}
 		
 		public Data(String id, String equipment_type, String model_no, String serial_no){
@@ -167,6 +172,10 @@ public class EquipmentsData extends BaseData {
 			return this.remarks;
 		}
 		
+		public String getInvoiceNo(){
+			return this.invoice_no;
+		}
+		
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.equipmentholder = (new EquipmentHoldersData()).new Data();
@@ -184,11 +193,13 @@ public class EquipmentsData extends BaseData {
 			super.setObjValueFromString(key, val);
 			if(key.equals("id")) {
 				this.id = val;
-			}else if(key.equals("equipment_type")) {
+			} else if(key.equals("equipment_type")) {
 				this.equipment_type = (String)val;
-			}else if(key.equals("other_equipment")) {
+			} else if(key.equals("invoice_no")) {
+				this.invoice_no = (String)val;
+			} else if(key.equals("other_equipment")) {
 				this.other_equipment = (String)val;
-			}else if(key.equals("model_no")) {
+			} else if(key.equals("model_no")) {
 				this.model_no = (String)val;
 			} else if(key.equals("serial_no")) {
 				this.serial_no = (String)val;
@@ -238,9 +249,11 @@ public class EquipmentsData extends BaseData {
 			String installationDateLabel = "Field Installation Date";
 			String warrantyExpirationDateLabel = "Warranty Expiration Date";
 			String remarksLabel = "Remarks";
+			String invoiceNoLabel = "Invoice Number";
 			
 			StringValidator equipmentType = new StringValidator(equipmentTypeLabel,this.equipment_type, false, false);
 			StringValidator otherEquipmentType = new StringValidator(otherEquipmentTypeLabel, this.other_equipment, true, false, 0, 100,true);
+			StringValidator invoiceNo = new StringValidator(invoiceNoLabel, this.invoice_no, false, false, 0, 100,true);
 			StringValidator ModelNo = new StringValidator(modelNoLabel, this.model_no, true, false, 0, 100,true);
 			StringValidator serialNo = new StringValidator(serialNoLabel, this.serial_no, true, false, 0, 100,true);
 			FloatValidator cost = new FloatValidator(costLabel, this.cost, true, true);
@@ -253,6 +266,7 @@ public class EquipmentsData extends BaseData {
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(equipmentType);
 			validatorList.add(otherEquipmentType);
+			validatorList.add(invoiceNo);
 			validatorList.add(ModelNo);
 			validatorList.add(serialNo);
 			validatorList.add(cost);
@@ -267,10 +281,11 @@ public class EquipmentsData extends BaseData {
 		
 		@Override		
 		public void save() {
-			EquipmentsData equipmentsDataDbApis = new EquipmentsData();			
+			EquipmentsData equipmentsDataDbApis = new EquipmentsData();
 			this.id = equipmentsDataDbApis.autoInsert(this.id,
 						this.equipment_type,
 						this.other_equipment,
+						this.invoice_no,						
 						this.model_no,
 						this.serial_no,
 						this.cost,
@@ -307,6 +322,7 @@ public class EquipmentsData extends BaseData {
 												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"EQUIPMENT_TYPE INT  NOT NULL ," +
 												"OTHER_EQUIPMENT VARCHAR(300) DEFAULT NULL," +
+												"INVOICE_NO varchar(300) NOT NULL,"+
 												"MODEL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
 												"SERIAL_NO VARCHAR(300)  NULL DEFAULT NULL ," +
 												"COST FLOAT(0,0)  NULL DEFAULT NULL," +
@@ -327,13 +343,13 @@ public class EquipmentsData extends BaseData {
 	   "CREATE INDEX IF NOT EXISTS equipment_id_VILLAGE_ID ON equipment_id(VILLAGE_ID);",
 	   "CREATE INDEX IF NOT EXISTS equipment_id_EQUIPMENTHOLDER_ID ON equipment_id(EQUIPMENTHOLDER_ID);"};
 	protected static String selectEquipments = "SELECT id, EQUIPMENT_TYPE, model_no, serial_no FROM equipment_id  ORDER BY (EQUIPMENT_TYPE);";
-	protected static String listEquipments = "SELECT e.id, e.equipment_type, e.model_no, e.serial_no, v.id, v.village_name " +
-			"FROM equipment_id e LEFT JOIN village v ON e.village_id = v.id ORDER BY (e.equipment_type);";
+	protected static String listEquipments = "SELECT e.id, e.equipment_type, e.model_no, e.invoice_no, v.id, v.village_name, e.procurement_date, e.remarks " +
+			"FROM equipment_id e LEFT JOIN village v ON e.village_id = v.id ORDER BY (v.village_name) DESC";
 	protected static String saveEquipmentOfflineURL = "/dashboard/saveequipmentoffline/";
 	protected static String saveEquipmentOnlineURL = "/dashboard/saveequipmentonline/";
 	protected static String getEquipmentOnlineURL = "/dashboard/getequipmentsonline/";
 	protected String table_name = "equipment_id";
-	protected String[] fields = {"id", "equipment_type", "other_equipment", "model_no", 
+	protected String[] fields = {"id", "equipment_type", "other_equipment", "invoice_no","model_no", 
 			"serial_no", "cost", "purpose", "additional_accessories", "is_reserve",
 			"procurement_date", "transfer_date", "installation_date", "warranty_expiration_date",
 			"village_id", "equipmentholder_id", "remarks"};
@@ -416,7 +432,7 @@ public class EquipmentsData extends BaseData {
 			}
 
 			Data equipment = new Data(equipmentObjects.get(i).getPk(), equipmentObjects.get(i).getEquipmentType(),
-					equipmentObjects.get(i).getOtherEquipment(), equipmentObjects.get(i).getModelNo(),
+					equipmentObjects.get(i).getOtherEquipment(), equipmentObjects.get(i).getInvoiceNo(), equipmentObjects.get(i).getModelNo(),
 					equipmentObjects.get(i).getSerialNo(), equipmentObjects.get(i).getCost(),
 					equipmentObjects.get(i).getPurpose(), equipmentObjects.get(i).getAdditionalAccessories(),
 					equipmentObjects.get(i).getIsReserve(), equipmentObjects.get(i).getProcurementDate(), 
@@ -445,8 +461,19 @@ public class EquipmentsData extends BaseData {
 			listTemp = listEquipments;
 		}
 		else {
-			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0]) - 1)* pageSize;
 			listTemp = listEquipments + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			
+			if(pageNum.length == 1) {
+				listTemp = listEquipments + " LIMIT "+ Integer.toString(offset) + " , "+Integer.toString(pageSize) +";";
+			} else {
+				listTemp = "SELECT e.id, e.equipment_type, e.model_no, e.invoice_no, e.village_id, vil.village_name, e.procurement_date, e.remarks " +
+						"FROM equipment_id e LEFT JOIN village vil  ON  vil.id= e.village_id WHERE e.equipment_type LIKE '%"+pageNum[1]+"%' " + 
+									" OR e.invoice_no LIKE '%"+pageNum[1]+"%' " + 
+									" OR e.procurement_date LIKE '%"+pageNum[1]+"%' " + " OR e.remarks LIKE '%"+pageNum[1]+"%' " +
+									"OR vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%'" +" ORDER BY(vil.village_name) " 
+									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}			
 		}
 		this.select(listTemp);
 		if (this.getResultSet().isValidRow()){
@@ -457,7 +484,7 @@ public class EquipmentsData extends BaseData {
 							this.getResultSet().getFieldAsString(1),
 							this.getResultSet().getFieldAsString(2),
 							this.getResultSet().getFieldAsString(3),
-							v);
+							v, this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7));
 					equipments.add(equipment);
 				}				
 			} catch (DatabaseException e) {
@@ -516,11 +543,16 @@ public class EquipmentsData extends BaseData {
 		return false;
 	}
 	
-	public Object getListPageData(String pageNum){
+	public Object getListPageData(String... pageNum){
 		if(BaseData.isOnline()){
-			int offset = (Integer.parseInt(pageNum)-1)*pageSize;
+			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
-			this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL + Integer.toString(offset)+ "/"+ Integer.toString(limit) +"/");
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL +
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + EquipmentsData.getEquipmentOnlineURL + Integer.toString(offset)+ "/"+ Integer.toString(limit) +"/");
+			}
 		}
 		else{
 			return true;
@@ -575,6 +607,27 @@ public class EquipmentsData extends BaseData {
 			return retrieveDataAndConvertResultIntoHtml();
 		}
 		return false;
+	}
+	
+	public String getCount(String searchText) {
+		String count = "0";//stores number of rows in a resultset
+		String countSql = "SELECT COUNT(*) " +
+				"FROM equipment_id e LEFT JOIN village vil  ON  vil.id= e.village_id " +
+				"WHERE  (e.village_id = vil.id OR e.village_id is null) AND (e.equipment_type LIKE '%"+searchText+"%' " + 
+									" OR e.invoice_no LIKE '%"+searchText+"%' " + 
+									" OR e.procurement_date LIKE '%"+searchText+"%' " + " OR e.remarks LIKE '%"+searchText+"%' " +
+									"OR vil.VILLAGE_NAME" +	" LIKE '%"+searchText+"%' );" ;
+		BaseData.dbOpen();
+		this.select(countSql);
+		if(this.getResultSet().isValidRow()) {
+			try {
+				count = getResultSet().getFieldAsString(0);
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception"+e.toString());
+			}
+		}
+		BaseData.dbClose();
+		return count;
 	}
 	
 
