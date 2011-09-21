@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>	
 	<TEAM>
+		<TITLE>Young Turks, CNBC TV 18</TITLE>
+		<HEADLINE>Digital Green and CNBC </HEADLINE>
+		<REFERENCE>http://www.facebook.com/video/video.php?v=255493837824737
+  http://www.facebook.com/video/video.php?v=255493837824737</REFERENCE>
+		<PRESSDATE>Sat, 10 September,2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>"An introduction of Rikin Gandhis' journey from MIT to forming Digital Green in India to help farmers at ground zero "</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>
+	<TEAM>
 		<TITLE>Governance Knowledge Centre</TITLE>
 		<HEADLINE>Digital Green </HEADLINE>
 		<REFERENCE>http://indiagovernance.gov.in/bestpractices.php?id=885</REFERENCE>
