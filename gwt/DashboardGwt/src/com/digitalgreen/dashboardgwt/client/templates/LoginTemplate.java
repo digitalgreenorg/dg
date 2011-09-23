@@ -72,7 +72,7 @@ public class LoginTemplate extends Template {
 						"<input type='hidden' name='this_is_the_login_form' value='1' />"+
 					"</div>"+
 					"<div class='submit-row'>"+
-						"<label>&nbsp;</label><input id='submit-button' type='button' value='Log in' />"+
+						"<label>&nbsp;</label><input id='submit-button' type='submit' value='Log in' />"+
 					"</div>" +
     			"</div>"+
 	    		"<br class='clear' />"+
