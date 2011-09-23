@@ -78,27 +78,33 @@ init :function(id) {
 	$(window).resize(function(){
 		$('#box').css("display") == 'block'?showStatus(null):"";
 	});
-	try {
-			var db = google.gears.factory.create('beta.database');
-			db.open('digitalgreendatabase');
-			var rs = db.execute('select u.app_status from user u');
-			if(rs.field(0) == 0 ) {
-				app_status = 0
-				// Offline case
-			}
-			else if (rs.field(0) == 1) {
-				app_status = 1
-				// Online case
-			}
-			rs.close();
-			db.close();
+	
+	if (!window.google || !google.gears) {
+		app_status = 1;
 	}
-	catch(err) {
-			// If an exception is caught, assume online case
-			app_status = 1;
-			db.close();
+	else {
+		try {
+				var db = google.gears.factory.create('beta.database');
+				db.open('digitalgreendatabase');
+				var rs = db.execute('select u.app_status from user u');
+				if(rs.field(0) == 0 ) {
+					app_status = 0
+					// Offline case
+				}
+				else if (rs.field(0) == 1) {
+					app_status = 1
+					// Online case
+				}
+				rs.close();
+				db.close();
+		}
+		catch(err) {
+				// If an exception is caught, assume online case
+				app_status = 1;
+				db.close();
+		}
 	}
-
+	
 	// Edit case
 	if(parseFloat(id) > 0) {
 		// Edit Online case
