@@ -1666,7 +1666,7 @@ def get_attendance(request, id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
 	screening = Screening.objects.get(id = id)
 	formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
-	personInMeeting = Person.objects.filter(id__in = PersonMeetingAttendance.objects.filter(screening = id).distinct().values('person')).order_by('person_name')
+	personInMeeting = screening.farmers_attendance.distinct().order_by('person_name')
 	practices = Practices.objects.all().order_by('practice_name')
 	for form_person_meeting_attendance in formset.forms:
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
