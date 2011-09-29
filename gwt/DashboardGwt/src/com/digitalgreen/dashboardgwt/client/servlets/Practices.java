@@ -196,11 +196,11 @@ public class Practices extends BaseServlet {
 							}*/	
 						}
 					}, form);
-					if(ApplicationConstants.getUsernameCookie().equals("serp_mahabubnagar")){
+					if(ApplicationConstants.getUserRoleCookie().equals("F")){
 						RequestContext requestContext = new RequestContext();
 						requestContext.setErrorMessage("You do not have permission to add a Practice.");
 						this.redirectTo(new Index(requestContext));
-					} else {				
+					} else {		
 						if(queryArg.equals("add")) {
 							practicesData.apply(practicesData.getAddPageData());
 						}

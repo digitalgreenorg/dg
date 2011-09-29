@@ -190,6 +190,26 @@ public class PersonGroupsData extends BaseData {
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(groupName);
 			validatorList.add(timings);
+			if(foreignKey.getId() != null) {
+				ArrayList group_name = new ArrayList();
+				group_name.add("group_name");
+				group_name.add(this.group_name);
+				ArrayList villageId = new ArrayList();
+				villageId.add("village_id");
+				villageId.add(foreignKey.getId());
+				ArrayList groupVillageId = new ArrayList();
+				groupVillageId.add(group_name);
+				groupVillageId.add(villageId);
+				ArrayList uniqueValidatorLabels = new ArrayList();
+				uniqueValidatorLabels.add("Person Group");
+				uniqueValidatorLabels.add("Village");			
+				UniqueConstraintValidator uniqueGroupVillageId = new UniqueConstraintValidator(uniqueValidatorLabels,
+						groupVillageId, new PersonGroupsData());
+				uniqueGroupVillageId.setCheckId(this.getId());
+				
+				validatorList.add(uniqueGroupVillageId);
+			}
+			
 			return this.executeValidators(validatorList);
 		}
 
