@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<CATALOG>	
+<CATALOG>
+	<TEAM>
+		<TITLE>TechSangam</TITLE>
+		<HEADLINE>An agricultural extension innovation going viral: Digital Green</HEADLINE>
+		<REFERENCE>http://www.techsangam.com/2011/09/28/an-agricultural-extension-innovation-going-viral-digital-green/</REFERENCE>
+		<PRESSDATE>Wed, 28 September 2011</PRESSDATE>
+		<PLACE>New Delhi</PLACE>
+		<DESC>"A first-time visitor to Digital Green's website could be forgiven for thinking she stumbled on to a Web 2.0 video sharing site. A crisp and clean UI with dynamic menus, an appealing 5X4 featured videos grid on the left, and 3 prominent engagement metrics on the right present a spiffy picture. "</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>	
 	<TEAM>
 		<TITLE>Young Turks, CNBC TV 18</TITLE>
 		<HEADLINE>Digital Green and CNBC </HEADLINE>
 		<REFERENCE>http://www.facebook.com/video/video.php?v=255493837824737
   http://www.facebook.com/video/video.php?v=255493837824737</REFERENCE>
-		<PRESSDATE>Sat, 10 September,2011</PRESSDATE>
+		<PRESSDATE>Sat, 10 September 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"An introduction of Rikin Gandhis' journey from MIT to forming Digital Green in India to help farmers at ground zero "</DESC>
 		<COMPANY></COMPANY>
@@ -17,7 +29,7 @@
 		<TITLE>Governance Knowledge Centre</TITLE>
 		<HEADLINE>Digital Green </HEADLINE>
 		<REFERENCE>http://indiagovernance.gov.in/bestpractices.php?id=885</REFERENCE>
-		<PRESSDATE>Fri, 02 September,2011</PRESSDATE>
+		<PRESSDATE>Fri, 02 September 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"Digital Green combines technology and social organization to improve the cost-effectiveness and broaden the community participation of existing agricultural extension systems. "</DESC>
 		<COMPANY></COMPANY>
@@ -29,7 +41,7 @@
 		<TITLE>One World South Asia</TITLE>
 		<HEADLINE>Digital Green: For more productive agriculture </HEADLINE>
 		<REFERENCE>http://southasia.oneworld.net/ictsfordevelopment/digital-green-making-agricultural-practices-more-effective</REFERENCE>
-		<PRESSDATE>Fri, 02 September, 2011 </PRESSDATE>
+		<PRESSDATE>Fri, 02 September 2011 </PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"The low-cost Digital Green initiative in India prepares video DVDs of live demonstrations of agricultural practices by experts to be distributed among small farmers in remote areas. "</DESC>
 		<COMPANY></COMPANY>
@@ -41,7 +53,7 @@
 		<TITLE>Next Billion</TITLE>
 		<HEADLINE>How to Reach Out to Rural India? Practitioners and Academics In Dialogue </HEADLINE>
 		<REFERENCE>http://www.nextbillion.net/blog/2011/08/31/how-to-reach-out-to-rural-india-</REFERENCE>
-		<PRESSDATE>Wed, August 31, 2011</PRESSDATE>
+		<PRESSDATE>Wed, 31 August 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"There is no shortage of ideas, and some would even say no shortage of products, that would help the rural poor to improve their social and economic situation.  "</DESC>
 		<COMPANY></COMPANY>
@@ -53,7 +65,7 @@
 		<TITLE>iBN Times</TITLE>
 		<HEADLINE>MIT Graduate making a difference in Rural India </HEADLINE>
 		<REFERENCE>http://www.ibtimes.com/articles/201214/20110821/digital-green-milinda-bill-gates-foundation-informational-videos-farmers-india.htm</REFERENCE>
-		<PRESSDATE>Thu, 18 August, 2011 </PRESSDATE>
+		<PRESSDATE>Thu, 18 August 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"Archimedes:Give me a lever long enough and a fulcrum on which to place it, and I shall move the world."</DESC>
 		<COMPANY></COMPANY>
@@ -65,7 +77,7 @@
 		<TITLE>Silicon India</TITLE>
 		<HEADLINE>Find your Lever </HEADLINE>
 		<REFERENCE>http://blogs.siliconindia.com/outsource/Find_your_Lever-bid-otUu4yln51225228.html</REFERENCE>
-		<PRESSDATE>Wed, 17 August, 2011 </PRESSDATE>
+		<PRESSDATE>Wed, 17 August 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"No business operates with unlimited resources.  Resources either financial or human are limited hence business must utilize them with end in mind.  Smaller challenges are like smaller bumps, you step over it whereas bigger challenges are like mountains.  You can either continue bumping into it or dig a tunnel underneath to cross under or get into the hot air balloon to cross over"</DESC>
 		<COMPANY></COMPANY>
@@ -77,7 +89,7 @@
 		<TITLE>Business Standard</TITLE>
 		<HEADLINE>Aspiring Astronaut helps farmers</HEADLINE>
 		<REFERENCE>http://www.business-standard.com/india/news/aspiring-astronaut-helps-farmersearth/445251/</REFERENCE>
-		<PRESSDATE>Tue, 09 August, 2011</PRESSDATE>
+		<PRESSDATE>Tue, 09 August 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"Rikin Gandhi's novel idea to film and screen 'best practice' videos of farming techniques across villages in India has wooed both farmers and the government."</DESC>
 		<COMPANY></COMPANY>
@@ -89,7 +101,7 @@
 		<TITLE>The Pioneer</TITLE>
 		<HEADLINE>So, he started his own organisation to help farmers improve their produce through a video camera. Eram Agha tracks the young Gandhi to find out more about him</HEADLINE>
 		<REFERENCE>http://dailypioneer.com/358910/Flight-of-aspiration.html</REFERENCE>
-		<PRESSDATE>Sat, 06 August, 2011</PRESSDATE>
+		<PRESSDATE>Sat, 06 August 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"Neither the Greenfields lyrics by The Brothers Four, nor Shah Rukh Khan's role in Swades inspired Rikin Gandhi, CEO of Digital Green, to chuck his NASA dreams for addressing the issues of farmers in India."</DESC>
 		<COMPANY></COMPANY>
@@ -101,7 +113,7 @@
 		<TITLE>The Hindu</TITLE>
 		<HEADLINE>Latest technology helps ryots get good yield</HEADLINE>
 		<REFERENCE>http://www.thehindu.com/todays-paper/tp-national/tp-otherstates/article2321091.ece#.TlYBMLcr_d4.twitter</REFERENCE>
-		<PRESSDATE>Mon, 04 August, 2011</PRESSDATE>
+		<PRESSDATE>Mon, 04 August 2011</PRESSDATE>
 		<PLACE>Web</PLACE>
 		<DESC>"Volunteers from Pragati, an NGO working on agriculture in Koraput district, visit the village on Friday evenings with a film projector and the villagers turn up to watch various programmes on agriculture."</DESC>
 		<COMPANY></COMPANY>
@@ -113,7 +125,7 @@
 		<TITLE>ILRI Clippings</TITLE>
 		<HEADLINE>Video with farmers help to amplify agricultural extension and learnings</HEADLINE>
 		<REFERENCE>http://ilriclippings.wordpress.com/2011/04/03/video-with-farmers-helps-to-amplify-agricultural-extension-and-learning/</REFERENCE>
-		<PRESSDATE>Sun, 03 April, 2011</PRESSDATE>
+		<PRESSDATE>Sun, 03 April 2011</PRESSDATE>
 		<PLACE>Web</PLACE>
 		<DESC>"Rikin Ghandi spoke to people on the ILRI campus about the work of Digital Green to reinforce agricultural extension through the use of participatory video with farmers."</DESC>
 		<COMPANY></COMPANY>
@@ -124,7 +136,7 @@
 		<TITLE>e-Agriculture</TITLE>
 		<HEADLINE>Digital Green - 'ICT' and 'AG Profile'</HEADLINE>
 		<REFERENCE>http://www.e-agriculture.org/en/content/digital-green-ict-and-ag-profile-usaid#ict4d</REFERENCE>
-		<PRESSDATE>Mon, 28 March, 2011</PRESSDATE>
+		<PRESSDATE>Mon, 28 March 2011</PRESSDATE>
 		<PLACE>Web</PLACE>
 		<DESC>"Digital Green, a farm extension service using video camera and pico projectors in India"</DESC>
 		<COMPANY></COMPANY>
@@ -135,7 +147,7 @@
 		<TITLE>DNA</TITLE>
 		<HEADLINE>MIT alumnus chucks space dreams for terra firma - Money </HEADLINE>
 		<REFERENCE>http://www.dnaindia.com/money/report_mit-alumnus-chucks-space-dreams-for-terra-firma_1523520</REFERENCE>
-		<PRESSDATE>Thu, 24 March, 2011</PRESSDATE>
+		<PRESSDATE>Thu, 24 March 2011</PRESSDATE>
 		<PLACE>Mumbai</PLACE>
 		<DESC>"Rikin Gandhi started reading autobiographies and books on astronauts after he received his pilot's licence and was preparing to join the US astronaut programme."</DESC>
 		<COMPANY></COMPANY>
@@ -146,7 +158,7 @@
 		<TITLE>The Hindu</TITLE>
 		<HEADLINE>Video clippings educate on methods practised elseware </HEADLINE>
 		<REFERENCE>http://www.hindu.com/seta/2011/02/17/stories/2011021751611600.htm</REFERENCE>
-		<PRESSDATE>Thu, 17 Feb, 2011</PRESSDATE>
+		<PRESSDATE>Thu, 17 February 2011</PRESSDATE>
 		<PLACE>New Delhi</PLACE>
 		<DESC>"Though immediately after my graduation I thought of joining some space programme, I happened to read about people travelling to space and seeing the earth from high up and wondering why poverty and war exist on this beautiful planet."</DESC>
 		<COMPANY></COMPANY>
@@ -157,7 +169,7 @@
 		<TITLE>The Weekend Leader</TITLE>
 		<HEADLINE>Through Digital Green, Rikin Gandhi helps farmers prosper</HEADLINE>
 		<REFERENCE>http://www.theweekendleader.com/page.php?id=377&amp;title=A-homecoming</REFERENCE>
-		<PRESSDATE>Fri, 21 January, 2011</PRESSDATE>
+		<PRESSDATE>Fri, 21 January 2011</PRESSDATE>
 		<PLACE>Mumbai</PLACE>    
     	<DESC>"Digital Green's aim is to raise the livelihoods of smallholder farmers across the developing world through the targeted production and dissemination of agricultural information via participatory video and mediated instruction through grassroots-level partnerships."</DESC>
 		<COMPANY> </COMPANY>

@@ -2,6 +2,13 @@
 <!-- Edited by XMLSpy® -->
 <CATALOG>
 	<TEAM>
+		<TITLE>Cereal Systems Initiative for South Asia</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/csisa_logo.jpg</IMAGESRC>    
+    	<DESC>The Cereal Systems Initiative for South Asia (CSISA) is accelerating short-and long-term cereal production growth in South Asia's most important grain baskets.  Digital Green is working with International Rice Research Institute (IRRI) and CSISA to establish a two-way dialouge between researchers, extension agents, and farming communities in Bihar.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://csisaportal.org</REFERENCE>	
+	</TEAM>
+	<TEAM>
 		<TITLE>D-Rev</TITLE>
 		<IMAGESRC>/media/Output/Images/partner/drev_logo1.png</IMAGESRC>    
     	<DESC>D-Rev is working to build an affordable device that will enable farmers' ready access to suitable and value-adding agricultural practices. D-Rev is surveying "featherweight" devices that could complement Digital Green and the agriculture extension systems of our partners. </DESC>
