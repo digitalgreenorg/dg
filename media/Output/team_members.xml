@@ -99,6 +99,16 @@
 	</TEAM>
 	
 	<TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/ronali.png</ARTIST>
+		<DESC>With a Master Degree in Agriculture having specialization in Extension Education, I have been deeply involved in working with the marginalized rural communities for bringing positive change in the qualities of their life and livelihoods. I have also completed PGD in Agribusiness and Plantation Management from Indian Institute of Plantation Management, Bangalore which has widened my horizon of professional acumen of coordinating and managing broad range of activities in focused manner. In last 9 years my association with state level organizations like Sahabhagi Vikash Abhiyan and national level entity like Centre for World Solidarity has enabled me to work closely with small and marginal farmers in the state of Odisha by adding value to their existing occupation and establishing support mechanisms to maximize the return on investment done in any of the factors of production. During my past experience I have realized that there is a gap in transferring technology in a usable and adoptable mode. In practice in India both the innovators and the end users are drawn from different levels of knowledge, understanding and attitude and rarely any efforts taken to bring coherence and synergy between the two. Digital Green is playing a crucial role in bridging the gaps and my inclination towards focusing on dissemination of sustainable technologies for bringing sustainable upliftment in the livelihood of the farming communities has prompted me to join Digital Green. </DESC>
+
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>ronali@digitalgreen.org</MAILID>
+		<NAME>Ronali Pradhan</NAME>
+	</TEAM>
+	
+	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/shekhar1.png</ARTIST>    
     	<DESC>Hi, This is Chandra Shekhar from Jharkhand.  I pursued my Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar.  My career interest is working for rural development through which small and marginal farmers will better their livelihoods in a manner that is socially, economically and environmentally sustainable.  Joining Digital Green has given me a new strategy in my thinking process to work with the rural community and a new methodology to address the rural concern through efficient extension system.  </DESC>
@@ -163,14 +173,7 @@
 		<MAILID>sreenivasula@digitalgreen.org</MAILID>
 		<NAME>G S Reddy</NAME>		
 	</TEAM>
-	
-	<TEAM>
-		<TITLE>Graphic Designer</TITLE>
-		<ARTIST>/media/Output/Images/madhvi1.png</ARTIST>
-		<DESC>She has been passionate about learning graphic design since high school. She really enjoyed noticing design all around her and on the web. She completed studying B.A.Hons. in Communication Design from Pearl Academy. During college, She took up a lot of projects addressed on social issues such as reusing waste, promoting fair trade organizations, adoption of dogs and many more. She also completed her final project in the avenue of Interaction Design she is confident that Digital Green would be an apt platform to work in her field of interests.</DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>madhvi@digitalgreen.org</MAILID>
-		<NAME>Madhvi Nawani</NAME></TEAM>
+		
 	<TEAM>
 		<TITLE>Operations Executive</TITLE>
 		<ARTIST>/media/Output/Images/debika1.png</ARTIST>    
