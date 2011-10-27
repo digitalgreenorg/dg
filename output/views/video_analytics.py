@@ -20,7 +20,7 @@ def video_module(request):
         raise Http404()
 
     tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    tot_scr = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
     search_box_params = views.common.get_search_box(request, video_analytics_sql.video_min_date)
 
@@ -30,7 +30,7 @@ def video_module(request):
 
     return render_to_response('video_module.html',dict(search_box_params = search_box_params,\
                                                           tot_video=tot_vid,\
-                                                          tot_screening=tot_scr, \
+                                                          tot_vids_screened=tot_vids_screened, \
                                                           tot_average= tot_avg, \
                                                           get_req_url = get_req_url
                                                           ))
@@ -218,7 +218,10 @@ def video_search(request):
         vids = vids.filter(title__icontains = query)
         search_box_params['query'] = query
     if(video_suitable_for):
-        vids = vids.filter(video_suitable_for = int(video_suitable_for))
+        if(int(video_suitable_for) != -1):
+            vids = vids.filter(video_suitable_for = int(video_suitable_for))
+    else:
+        vids = vids.filter(video_suitable_for = 1)
     search_box_params['video_suitable_for'] = video_suitable_for
     if(from_date):
         search_box_params['from_date'] = from_date;

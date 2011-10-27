@@ -171,7 +171,7 @@ function go(page) {
     
     if($("#sortfilter").val() != "-1") url.push("sort="+$("#sortfilter").val());
     if($("#searchinput").val() != "") url.push("query="+$("#searchinput").val());
-    if($("#videosuitable").val()!='-1')  url.push("videosuitable="+$("#videosuitable").val());
+    if($("#videosuitable").val()!='1')  url.push("videosuitable="+$("#videosuitable").val());
     if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
     
     partners = $("#partners").val();
