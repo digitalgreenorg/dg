@@ -96,6 +96,7 @@ def overview(geog, id, from_date, to_date, partners, type):
     if(type == 'production'):
         sql_ds['select'].append('COUNT(DISTINCT VID.id) as tot_pro')
         sql_ds['from'].append('VIDEO VID')
+        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         main_tab_abb = "VID"
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
     elif(type=='screening'):
@@ -175,6 +176,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
     elif(type=='production'):
         sql_ds['select'].extend(["VIDEO_PRODUCTION_END_DATE as date", "count(*)"])
         sql_ds['from'].append("VIDEO VID");
+        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         filter_partner_geog_date(sql_ds,'VID','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("VIDEO_PRODUCTION_END_DATE");
     elif(type=='screening'):
@@ -243,7 +245,7 @@ def target_lines(geog,id, from_date, to_date, partners, type):
 #Query for number of distinct persons who attended a screening in the past 60 days from 'to_date'
 def tot_dist_attendees_adopt_60_days(geog, id, to_date,partners):
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(["COUNT(DISTINCT PMA.person_id) as tot_per", "COUNT(DISTINCT PAP.person_id) as tot_adop_per"])
+    sql_ds['select'].extend(["COUNT(DISTINCT PMA.person_id) as tot_per", "COUNT(DISTINCT PAP.person_id) as tot_adop_per", "COUNT(DISTINCT PAP.id) as tot_active_adop"])
     sql_ds['from'].append("SCREENING SC")
     sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"])
     sql_ds['lojoin'].append(["PERSON_ADOPT_PRACTICE PAP", "PAP.person_id = PMA.person_id"])

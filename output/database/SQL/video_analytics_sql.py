@@ -6,11 +6,9 @@ def video_malefemale_ratio(geog, id, from_date, to_date, partners):
     sql_ds['select'].extend(["P.GENDER as pie_key", "COUNT(*) as count"])
     sql_ds['from'].append('PERSON P')
     sql_ds['join'].append(["VIDEO_farmers_shown VFS", "P.id = VFS.person_id"])
-    if(from_date and to_date):
-        sql_ds['join'].append(["VIDEO VID","VID.id = VFS.video_id"])
-        filter_partner_geog_date(sql_ds,'P','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
-    else:
-        filter_partner_geog_date(sql_ds,'P',"dummy",geog,id,from_date,to_date,partners)
+    sql_ds['join'].append(["VIDEO VID","VID.id = VFS.video_id"])
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
+    filter_partner_geog_date(sql_ds,'P','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
 
     sql_ds['group by'].append("P.GENDER")
 
@@ -23,6 +21,7 @@ def video_month_bar(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["COUNT( DISTINCT VID.ID ) AS count", "MONTH( VID.VIDEO_PRODUCTION_END_DATE ) AS MONTH","YEAR( VID.VIDEO_PRODUCTION_END_DATE ) AS YEAR"])
     sql_ds['from'].append("VIDEO VID");
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     sql_ds['group by'].extend(["YEAR","MONTH"])
     sql_ds['order by'].extend(["YEAR","MONTH"])
@@ -32,6 +31,7 @@ def video_actor_wise_pie(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["actors as pie_key", "count(*) as count"])
     sql_ds['from'].append("VIDEO VID")
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append("actors")
 
@@ -42,18 +42,17 @@ def video_language_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['select'].extend(["L.language_name as name", "COUNT(VID.id) as count"])
     sql_ds['from'].append("LANGUAGE L");
     sql_ds['join'].append(["VIDEO VID", "VID.language_id = L.id"])
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append("language_name")
 
     return join_sql_ds(sql_ds)
 
-# This below section contains Query constructors for
-# total number of videos/screenings/avg time taken.
-#arguments (geod, id) and (from_date, to_date) optional
 def video_tot_video(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT VID.id ) AS count")
     sql_ds['from'].append("VIDEO VID");
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
 
     return join_sql_ds(sql_ds)
@@ -76,6 +75,7 @@ def video_avg_time(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("AVG(DATEDIFF(VIDEO_PRODUCTION_END_DATE ,VIDEO_PRODUCTION_START_DATE)+1) as avg")
     sql_ds['from'].append("VIDEO VID");
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
 
     return join_sql_ds(sql_ds)
@@ -84,6 +84,7 @@ def video_type_wise_pie(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(["VIDEO_TYPE as pie_key", "count(*) as count"])
     sql_ds['from'].append("VIDEO VID");
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append('VIDEO_TYPE')
 
@@ -95,6 +96,7 @@ def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['from'].append("VIDEO VID");
     sql_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
     sql_ds['join'].append(["PRACTICES P","VRAP.practices_id = P.id"])
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append("PRACTICE_NAME")
     sql_ds['order by'].append("count")
@@ -104,6 +106,7 @@ def video_min_date(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("MIN(VIDEO_PRODUCTION_END_DATE) as date")
     sql_ds['from'].append("VIDEO VID");
+    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
     return join_sql_ds(sql_ds)
 
