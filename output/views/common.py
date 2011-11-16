@@ -1,9 +1,9 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-from dg.dashboard.models import *
-from dg.output.database  import utility
-from dg.output.database.SQL import shared_sql, overview_analytics_sql
-from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
+from dashboard.models import *
+from output.database  import utility
+from output.database.SQL import shared_sql, overview_analytics_sql
+from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
 import datetime
 import django
 import re, random, cjson

@@ -1,4 +1,4 @@
-from dg.output.database.utility import *
+from output.database.utility import *
 
 # query constructor for malefeamle ratio pie chaart
 def video_malefemale_ratio(geog, id, from_date, to_date, partners):

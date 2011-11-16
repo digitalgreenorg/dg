@@ -1,8 +1,8 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse, QueryDict
-from dg.dashboard.models import *
-from dg.views import *
-from dg.forms import *
+from dashboard.models import *
+from views import *
+from forms import *
 from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.core.urlresolvers import reverse
@@ -11,7 +11,7 @@ from django.template import Context, Template
 from django.shortcuts import render_to_response
 from django.db import connection, transaction
 from django.db.models import Q
-from dg.output.database.utility import run_query, run_query_dict
+from output.database.utility import run_query, run_query_dict
 import datetime
 import cjson
 import re

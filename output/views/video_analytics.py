@@ -1,12 +1,12 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from django.db.models import Count
-from dg.dashboard.models import *
+from dashboard.models import *
 import datetime, math
-from dg.output.database.SQL  import video_analytics_sql, shared_sql
-from dg.output import views
-from dg.output.views.common import get_geog_id
-from dg.output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
+from output.database.SQL  import video_analytics_sql, shared_sql
+from output import views
+from output.views.common import get_geog_id
+from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 
 
 #Main view for the video module. Render's the main HTML page.
