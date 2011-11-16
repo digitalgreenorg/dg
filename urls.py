@@ -2,7 +2,6 @@ from django.conf.urls.defaults import *
 from route import route
 from django.conf.urls.defaults import *
 from views import *
-from gameapp.views import *
 from django.contrib.auth.views import login, logout
 from django.conf import settings
 from static_site_views import home
