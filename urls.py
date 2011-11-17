@@ -1,11 +1,10 @@
 from django.conf.urls.defaults import *
-from dg.route import route
+from route import route
 from django.conf.urls.defaults import *
-from dg.views import *
-from dg.gameapp.views import *
+from views import *
 from django.contrib.auth.views import login, logout
 from django.conf import settings
-from dg.static_site_views import home
+from static_site_views import home
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin

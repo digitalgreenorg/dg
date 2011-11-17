@@ -1,4 +1,4 @@
-from dg.dashboard.models import *
+from dashboard.models import *
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *

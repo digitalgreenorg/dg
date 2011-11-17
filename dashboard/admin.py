@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dg.dashboard.models import *
+from dashboard.models import *
 
 from django import forms
 from django.contrib.contenttypes import generic
@@ -20,7 +20,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str
 
-from dg.dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
+from dashboard.widgets import ForeignKeySearchInput, MonthYearWidget
 from django.conf.urls.defaults import *
 
 class PersonMeetingAttendanceForm(forms.ModelForm):

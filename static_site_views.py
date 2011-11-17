@@ -1,6 +1,6 @@
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
-from dg.output.views.common import home_with_analytics
+from output.views.common import home_with_analytics
 #Mindless views for plain HTML pages on the main website
 def home(request):
     if request.get_host() == "sandbox.digitalgreen.org":

@@ -1,4 +1,4 @@
-from dg.output.database.utility import *
+from output.database.utility import *
 import datetime
 
 def get_csp_identified(geog, id, from_date, to_date, partners):

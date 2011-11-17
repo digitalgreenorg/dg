@@ -1,4 +1,4 @@
-from dg.output.database.utility import *
+from output.database.utility import *
 
 def screening_min_date(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();

@@ -1,4 +1,4 @@
-from dg.output.database.utility import *
+from output.database.utility import *
 
 
 def adoption_tot_ado(geog, id, from_date, to_date, partners):
