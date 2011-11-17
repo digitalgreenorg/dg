@@ -82,5 +82,4 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'dashboard',
     'debug_toolbar',
-    'django_extensions',
 )
