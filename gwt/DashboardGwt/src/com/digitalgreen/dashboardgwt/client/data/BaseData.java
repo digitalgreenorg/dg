@@ -515,9 +515,7 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 				tempListString[i] = tempList.get(i) == null ? (String)tempList.get(i) : "" + tempList.get(i);
 			}
 			try {
-				BaseData.dbOpen();
-				this.lastResultSet = BaseData.db.execute(insertSql, tempListString);
-				BaseData.dbClose();
+				this.lastResultSet = BaseData.db.execute(insertSql, tempListString);				
 			// Assuming duplicate exception (yuck), but no other way to tell.
 			} catch (DatabaseException e) {
 				BaseData.dbClose();

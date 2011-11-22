@@ -108,12 +108,26 @@ public class Syncronisation {
 			public void onlineSuccessCallback(String results) {
 				if(results != null) {
 					if(!results.equals("EOF")) {
+						BaseData.dbOpen();
+						try {
+							BaseData.dbStartTransaction();
+						} catch (DatabaseException e) {
+							// TODO Auto-generated catch block
+							Window.alert("Database transaction exception");
+						}
 						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 						BaseData.Data object;
 						for (int i = 0; i < objects.size(); ++i) {
 							object = (BaseData.Data) objects.get(i);
 							object.save();
 						}
+						try {
+							BaseData.dbCommit();
+						} catch (DatabaseException e) {
+							// TODO Auto-generated catch block
+							Window.alert("BaseData commit exception"+e.toString());
+						}
+						BaseData.dbClose();						
 						offset = offset + ApplicationConstants.PAGESIZE;
 						formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 					} else {
@@ -127,10 +141,12 @@ public class Syncronisation {
 							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");
 							// This is to clear out anything left over in the progress bar the next time the operation is run.
 							EventBus.get().fireEvent(new ProgressEvent(0));
-							getServlet().redirectTo(new Index(requestContext));	
+							getServlet().redirectTo(new Index(requestContext));
+							
 						}else{
 							updateSyncStatusInUserTable("1", "" + currentIndex);
-							formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
+							formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.
+									get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
 						}
 					}
 				}
@@ -165,7 +181,9 @@ public class Syncronisation {
 			//baseData.delete(baseData.getDeleteTableSql());
 			//baseData.create(baseData.getCreateTableSql());
 			EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
-			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
+			formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.
+					get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+offset+"/"+(offset+ApplicationConstants.PAGESIZE)+"/");
+			
 		}else{
 			//Delete the complete schema
 			Schema.dropSchema();
@@ -173,6 +191,7 @@ public class Syncronisation {
 			this.currentIndex = 0;
 			EventBus.get().fireEvent(new ProgressEvent(0));
 			indexData.apply(indexData.getGlobalPrimaryKey(ApplicationConstants.getUsernameCookie()));
+			
 		}
 	}
 	
