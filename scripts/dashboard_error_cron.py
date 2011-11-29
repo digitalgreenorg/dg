@@ -14,6 +14,10 @@
 #        syncErrors(new_errors, old_errors)
 #
 # 3. Add a call to the new rule at the bottom of this script
+import site, sys
+sys.path.append('/home/ubuntu/code/dg_git')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.6/site-packages/')
+
 from django.core.management import setup_environ
 import settings
 
@@ -64,12 +68,12 @@ def syncErrors(new_errors, old_errors):
 #check equality of errors
 def compareErrors(error1, error2):
     return isinstance(error2, error1.__class__) \
-                and error1.rule == error2.rule \
-                and error1.content_type1 == error2.content_type1 \
-                and error1.content_type2 == error2.content_type2 \
+                and error1.rule.id == error2.rule.id \
+                and error1.content_type1.id == error2.content_type1.id \
                 and error1.object_id1 == error2.object_id1 \
+                and ((error1.content_type2 == None and error2.content_type2 == None) or error1.content_type2.id == error2.content_type2.id) \
                 and error1.object_id2 == error2.object_id2
-            
+
 #rule Id:1; Name = Screening with same date and same PG
 def rule1():
     rule = Rule.objects.all()[0]

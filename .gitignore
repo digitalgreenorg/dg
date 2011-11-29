@@ -3,4 +3,5 @@
 /.project
 /.pydevproject
 /settings.py
+/sandbox_settings.py
 /gwt/DashboardGwt/war/WEB-INF/*
