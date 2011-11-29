@@ -49,7 +49,7 @@ public class ApplicationConstants {
 
 	public static HashMap mappingBetweenTableIDAndDataObject;
 	
-	public final static int PAGESIZE = 30;
+	public final static int PAGESIZE = 10000;
 	
 	//Below Constants and their getter methods are for pagination
 	public final static int pageSize = 100;
