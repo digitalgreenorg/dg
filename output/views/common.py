@@ -11,7 +11,7 @@ import re, random, cjson
 
 def home_with_analytics():
     tot_scr = Screening.objects.count()
-    tot_vid = Video.objects.count()
+    tot_vid = Video.objects.filter(video_suitable_for = 1).count()
     tot_per = Person.objects.exclude(date_of_joining = None).count()
     analytics_data = dict(tot_scr = tot_scr, tot_vid = tot_vid, tot_per = tot_per)
     return render_to_response('base_home.html', dict(analytics_data = analytics_data))
