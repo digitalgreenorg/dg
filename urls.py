@@ -132,6 +132,12 @@ urlpatterns = patterns('',
     (r'^dashboard/geterrorsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$',get_dashboard_errors_online),
     (r'^dashboard/notanerror/((?P<offset>\d*)/(?P<limit>\d*)/)?$',mark_error_as_not_error),
     (r'^dashboard/getindexdata/$',index_template_data),
+    (r'^dashboard/personsingroup/$',farmers_in_groups),
+    (r'^dashboard/personsinscreening/((?P<screening_id>\d*)/)?$',persons_in_screening),
+    (r'^dashboard/personmeetingattendance/(?P<person_id>\d*)/(?P<screening_id>\d*)', person_meeting_attendance_data),
+    (r'^dashboard/screeningsinvillage/((?P<village_id>\d*)/)?$',screenings_in_village),
+    (r'^dashboard/practicesforperson/((?P<person_id>\d*)/)?$', practices_seen_by_farmer),
+    (r'^dashboard/practicesinvideos/$', practices_in_videos),
     (r'^$',home),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )

@@ -2316,4 +2316,129 @@ def index_template_data(request):
     return_val['dashboard_error_count'] = str(countoferrors)
     
     return HttpResponse(cjson.encode(return_val))
-    
+
+
+
+def persons_in_screening(request, screening_id):
+    # test url http://127.0.0.1:8000/dashboard/personsinscreening/6000001033/
+    person_ids = []
+    if request.method == "GET":
+        try:
+            person_list = PersonMeetingAttendance.objects.filter(screening=screening_id).values_list('person_id',flat=True)
+        except:
+            # log error. Send error message.
+            print "No screening id."
+    return HttpResponse(cjson.encode(list(person_list)), mimetype='application/json')
+
+def farmers_in_groups(request):
+    # test url http://127.0.0.1:8000/dashboard/personsingroup/?groups=5000001001
+    if request.method == "GET":
+        persongroup_ids = request.GET.getlist('groups')
+        person_ids = []
+        for group_id in persongroup_ids:
+            try:
+                group = PersonGroups.objects.get(id=group_id)
+            except:
+                # log an error
+                continue
+            person_ids.extend(group.person_set.values_list('id',flat=True))
+        person_ids = list(set(person_ids))
+        return HttpResponse(cjson.encode(person_ids), mimetype='application/json')
+
+def screenings_in_village(request, village_id):
+    # test url - 127.0.0.1:8000/dashboard/screeningsinvillage/6000009723/
+    data = {}
+    if request.method == 'GET':
+        try:
+            village = Village.objects.get(id=village_id)
+            persons_in_village = village.person_set.all()
+            data['person_list'] = []
+            for person in persons_in_village:
+                data['person_list'].append({'value':person.id, 'string':str(person)})
+            data['practice_list'] = []
+            practices = village.screening_set.values_list('videoes_screened__related_agricultural_practices__id','videoes_screened__related_agricultural_practices__practice_name').distinct()
+            for practice in practices:
+                data['practice_list'].append({'value':practice[0],'string':practice[1]})
+        except Exception as ex:
+            data['person_list'] = []
+            data['practice_list'] = []
+            # print ex - log Exception
+            # return error response
+        return HttpResponse(cjson.encode(data), mimetype='application/json') 
+
+def practices_seen_by_farmer(request, person_id):
+    # test url - 127.0.0.1:8000/dashboard/practicesforperson/5000001002/
+    if request.method == 'GET':
+        try:
+            farmer = Person.objects.get(id=person_id)
+            practice_list = farmer.screening_set.values_list('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
+            #practice_list = farmer.screening_set.values('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
+            practice_list = list(set(practice_list))
+        except:
+            practice_list = []
+            # log an error
+            # send an error status message back, maybe not
+        data = {}
+        prac_data = []
+        for prac in practice_list:
+            prac_data.append({'value':prac[0],'string':prac[1]})    
+        data['practice_list'] = prac_data
+        data['person_list'] = [{'value':farmer.id, 'string':str(farmer)}]
+        return HttpResponse(cjson.encode(data), mimetype='application/json')
+
+def person_meeting_attendance_data(request, person_id, screening_id):
+    # test url http://127.0.0.1:8000/dashboard/personmeetingattendance/6000001019/6000001033/
+    data = {}
+    if request.method == 'GET':
+        try:
+            farmer = Person.objects.get(id=person_id)
+            pma = PersonMeetingAttendance.objects.filter(person=person_id).get(screening=screening_id)
+            practice_list = farmer.screening_set.values_list('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
+            practice_list = list(set(practice_list))
+        except Exception as ex:
+            print ex
+        prac_data = []
+        for prac in practice_list:
+            prac_data.append({'value':prac[0],'string':prac[1]})
+        data = {
+            'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
+            'practice_list': prac_data,
+            'expressed_interest_comment': pma.expressed_interest,
+            'expressed_adoption_comment': pma.expressed_adoption,
+            'expressed_question_comment': pma.expressed_question,
+        }
+        if pma.expressed_interest_practice:
+            data['selected_expressed_interest_practice'] = {
+                'string': pma.expressed_interest_practice.practice_name,
+                'value': pma.expressed_interest_practice.id
+            }
+        if pma.expressed_adoption_practice:
+            data['selected_expressed_adoption_practice'] = {
+                'value': pma.expressed_adoption_practice.id,
+                'string': pma.expressed_adoption_practice.practice_name
+            }
+        if pma.expressed_question_practice:
+            data['selected_expressed_question_practice'] = {
+                'value': pma.expressed_question_practice.id,
+                'string': pma.expressed_question_practice.practice_name
+            }
+        return HttpResponse(cjson.encode(data), mimetype='application/json')
+
+def practices_in_videos(request):
+    # test url http://127.0.0.1:8000/dashboard/practicesinvideos/?video=6000007313&video=6000008464
+    if request.method == "GET":
+        video_ids = request.GET.getlist('video')
+        print video_ids
+        practice_ids = []
+        for video_id in video_ids:
+            print video_id
+            try:
+                video = Video.objects.get(id=video_id)
+            except:
+                # log an error
+                continue
+            practice_ids.extend(video.related_agricultural_practices.values_list('id',flat=True))
+        practice_ids = list(set(practice_ids))
+        return HttpResponse(cjson.encode(practice_ids), mimetype='application/json')
+
+ 

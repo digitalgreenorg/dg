@@ -51,6 +51,12 @@ public class ScreeningsTemplate extends BaseTemplate {
 		List<Hyperlink> links =  this.fillListings();
 		// Add it to the rootpanel
 		super.fill();
+		
+		// Now add hyperlinks
+		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
+		// Now add any submit control buttons
+		this.displayCalendar();
+		super.fillDgFormPage(saveScreening);	
 		if(!this.getRequestContext().getArgs().get("action").equals("list")) {
 			String id ="0";
 			if(this.requestContext.getArgs().get("action").equals("edit")) {
@@ -58,12 +64,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 			}
 			ScreeningsTemplate.loadPerson(id);
 		}
-		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
-		// Now add any submit control buttons
-		this.displayCalendar();
-		super.fillDgFormPage(saveScreening);	
-		
 	}
 	
 	public List<Hyperlink> fillListings(){

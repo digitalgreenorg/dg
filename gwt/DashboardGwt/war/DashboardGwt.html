@@ -38,8 +38,9 @@
 	<link href="/media/css/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" />
 	
 	<!-- JQuery stuff -->
-	<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script type="text/javascript" src="/media/js/coco.js"></script>
+	<script type="text/javascript" src="/media/js/ICanHaz.min.js"></script>
 	<script type="text/javascript" src="/media/js/screening_page_offline.js"></script>
 	    
     <!--                                           -->
@@ -48,6 +49,8 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="dashboardgwt/dashboardgwt.nocache.js"></script>
+	
+
   </head>
 
   <!--                                           -->
@@ -57,7 +60,73 @@
   <!--                                           -->
   <body class="">
   
-
+	<script id="row_template" type="text/html">
+		<tr class="row_zebra">
+		    <td class="delete_row"><img src="/media/img/admin/icon_deletelink.gif" width="10" height="10" alt="Delete row" style="margin-top:0.5em" /></td>
+			<td class="original">
+				  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id">
+		          <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening">
+		    </td>
+		    <td class="person">
+				<select id="id_personmeetingattendance_set-0-person" name="personmeetingattendance_set-0-person">
+					{{#person_list}}<option value="{{ value }}">{{ string }}</option>{{/person_list}}
+				</select>
+			</td>
+			<td class="expressed_interest_practice">
+		        <select id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice">
+					{{#selected_expressed_interest_practice}}
+						<option selected="selected" value="{{ value }}">{{ string }}</option>
+						<option value="">---------</option>
+					{{/selected_expressed_interest_practice}}
+					{{^selected_expressed_interest_practice}}
+						<option selected="selected" value="">---------</option>
+					{{/selected_expressed_interest_practice}}
+					{{#screened_practice_list}}
+						<option value="{{ value }}">{{ string }}</option>
+					{{/screened_practice_list}}
+				</select>
+			</td>
+		    <td class="expressed_interest">
+				<input type="text" maxlength="500" value="{{expressed_interest_comment}}" name="personmeetingattendance_set-0-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-0-expressed_interest">
+		    </td>
+			<!--td class="expressed_interest_practice">
+				<input type="checkbox" id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice" value="True">
+			</td-->
+		    <td class="expressed_adoption_practice">
+		        <select id="id_personmeetingattendance_set-0-expressed_adoption_practice" name="personmeetingattendance_set-0-expressed_adoption_practice">
+					{{#selected_expressed_adoption_practice}}
+						<option selected="selected" value="{{ value }}">{{ string }}</option>
+						<option value="">---------</option>
+					{{/selected_expressed_adoption_practice}}
+					{{^selected_expressed_adoption_practice}}
+						<option selected="selected" value="">---------</option>
+					{{/selected_expressed_adoption_practice}}
+					{{#practice_list}}
+						<option value="{{ value }}">{{ string }}</option>
+					{{/practice_list}}
+				</select>
+		    </td>
+		    <td class="expressed_adoption">
+		        <input type="text" maxlength="500" value="{{expressed_adoption_comment}}" name="personmeetingattendance_set-0-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-0-expressed_adoption">
+		    </td>
+		    <td class="expressed_question_practice">
+		        <select id="id_personmeetingattendance_set-0-expressed_question_practice" name="personmeetingattendance_set-0-expressed_question_practice">
+					{{#selected_expressed_question_practice}}
+						<option selected="selected" value="{{ value }}">{{ string }}</option>
+						<option value="">---------</option>
+					{{/selected_expressed_question_practice}}
+					{{^selected_expressed_question_practice}}
+						<option selected="selected" value="">---------</option>
+					{{/selected_expressed_question_practice}}
+					{{#practice_list}}<option value="{{ value }}">{{ string }}</option>{{/practice_list}}
+				</select>
+		    </td>
+		    <td class="expressed_question">
+		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
+		    </td>
+		</tr>
+	</script>
+	
   	<script type="text/javascript">
   		function showGlassDoorMessage(msg){
   			$('#screen').css({ opacity: 0.7, 'width':screen.width,'height':screen.height, 'display':'inline'});
@@ -66,7 +135,7 @@
   				$('#box').html(msg);
   			}
   				
-		}
+		}		
 
   		function hideGlassDoorMessage() {
   			$('#box').css('display', 'none');
