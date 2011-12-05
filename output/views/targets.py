@@ -1,11 +1,11 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-from dg.output.database.SQL  import screening_analytics_sql, shared_sql, overview_analytics_sql, adoption_analytics_sql, video_analytics_sql
-from dg.output.database.SQL.targets_sql import *
-from dg.output.views.common import get_geog_id
-from dg.output.views.overview_analytics import get_parent_geog_id
-from dg.output import views
-from dg.output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
+from output.database.SQL  import screening_analytics_sql, shared_sql, overview_analytics_sql, adoption_analytics_sql, video_analytics_sql
+from output.database.SQL.targets_sql import *
+from output.views.common import get_geog_id
+from output.views.overview_analytics import get_parent_geog_id
+from output import views
+from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
 import datetime
 
 def target_table(request):
