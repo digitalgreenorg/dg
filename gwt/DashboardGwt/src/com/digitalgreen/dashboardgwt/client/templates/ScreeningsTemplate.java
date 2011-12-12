@@ -277,24 +277,6 @@ public class ScreeningsTemplate extends BaseTemplate {
 											"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
 										"</div>" +
 									"</div>" +
-									"<div class='form-row target_person_attendance  '>" +
-										"<div>" +
-											"<label for='id_target_person_attendance'>Target person attendance:</label>" +
-											"<input id='id_target_person_attendance' type='text' class='vIntegerField' name='target_person_attendance' />" +
-										"</div>" +
-									"</div>" +
-									"<div class='form-row target_audience_interest  '>" +
-										"<div>" +
-											"<label for='id_target_audience_interest'>Target audience interest:</label>" +
-											"<input id='id_target_audience_interest' type='text' class='vIntegerField' name='target_audience_interest' />" +
-										"</div>" +
-									"</div>" +
-									"<div class='form-row target_adoptions  '>" +
-										"<div>" +
-											"<label for='id_target_adoptions'> Target adoptions:</label>" +
-											"<input id='id_target_adoptions' type='text' class='vIntegerField' name='target_adoptions' />" +
-										"</div>" +
-									"</div>" +
 									"<div class='form-row fieldofficer  '>" +
 										"<div>" +
 											"<label for='id_fieldofficer'>Fieldofficer:</label>" +
@@ -323,13 +305,11 @@ public class ScreeningsTemplate extends BaseTemplate {
 												"<thead>" +
 													"<tr>" +
 														"<th>Delete?</th>" +
-														"<th colspan='2'>Person</th>" +
-														"<th >Expressed interest practice</th>" +
-														"<th >Expressed interest</th>" +
-														"<th >Expressed adoption practice</th>" +
-														"<th >Expressed adoption</th>" +
-														"<th >Expressed question practice</th>" +
-														"<th >Expressed question</th>" +
+														"<th>Sr No.</th>" +
+														"<th >Person</th>" +
+														"<th >Interested?</th>" +
+														"<th >Question Asked</th>" +
+														"<th >Recently Adopted Video</th>" +
 													"</tr>" +
 												"</thead>" +
 											"</table>" +

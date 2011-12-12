@@ -2403,24 +2403,12 @@ def person_meeting_attendance_data(request, person_id, screening_id):
         data = {
             'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
             'practice_list': prac_data,
-            'expressed_interest_comment': pma.expressed_interest,
-            'expressed_adoption_comment': pma.expressed_adoption,
             'expressed_question_comment': pma.expressed_question,
         }
-        if pma.expressed_interest_practice:
-            data['selected_expressed_interest_practice'] = {
-                'string': pma.expressed_interest_practice.practice_name,
-                'value': pma.expressed_interest_practice.id
-            }
         if pma.expressed_adoption_practice:
             data['selected_expressed_adoption_practice'] = {
                 'value': pma.expressed_adoption_practice.id,
                 'string': pma.expressed_adoption_practice.practice_name
-            }
-        if pma.expressed_question_practice:
-            data['selected_expressed_question_practice'] = {
-                'value': pma.expressed_question_practice.id,
-                'string': pma.expressed_question_practice.practice_name
             }
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 

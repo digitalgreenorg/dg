@@ -470,18 +470,10 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         // This should yield exactly one row.
         if (pma.isValidRow()) {
             data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
-            data['expressed_interest_comment'] = pma.field(6);
-            data['expressed_adoption_comment'] = pma.field(9);
             data['expressed_question_comment'] = pma.field(12);
             data['practice_list'] = practice_list;
-            if(pma.field(4) == null || person_rs.field(4).toString() == '') {
-                data['selected_expressed_interest'] = {'value': pma.field(4), 'string': pma.field(5)};
-            }
             if(pma.field(7) == null || person_rs.field(7).toString() == '') {
-                data['selected_expressed_adoption'] = {'value': pma.field(7), 'string': pma.field(8)};
-            }
-            if(pma.field(10) == null || person_rs.field(10).toString() == '') {
-                data['selected_expressed_question'] = {'value': pma.field(10), 'string': pma.field(11)};
+                data['selected_expressed_adoption_practice'] = {'value': pma.field(7), 'string': pma.field(8)};
             }
         }
         callbackfn(data,table);

@@ -72,26 +72,14 @@
 					{{#person_list}}<option value="{{ value }}">{{ string }}</option>{{/person_list}}
 				</select>
 			</td>
-			<td class="expressed_interest_practice">
-		        <select id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice">
-					{{#selected_expressed_interest_practice}}
-						<option selected="selected" value="{{ value }}">{{ string }}</option>
-						<option value="">---------</option>
-					{{/selected_expressed_interest_practice}}
-					{{^selected_expressed_interest_practice}}
-						<option selected="selected" value="">---------</option>
-					{{/selected_expressed_interest_practice}}
-					{{#screened_practice_list}}
-						<option value="{{ value }}">{{ string }}</option>
-					{{/screened_practice_list}}
-				</select>
+			<td class="expressed_interest">
+		        <input type="checkbox" name="interest" value="interest" />Interested<br />
 			</td>
-		    <td class="expressed_interest">
-				<input type="text" maxlength="500" value="{{expressed_interest_comment}}" name="personmeetingattendance_set-0-expressed_interest" class="vTextField" id="id_personmeetingattendance_set-0-expressed_interest">
+		
+			<td class="expressed_question">
+		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
 		    </td>
-			<!--td class="expressed_interest_practice">
-				<input type="checkbox" id="id_personmeetingattendance_set-0-expressed_interest_practice" name="personmeetingattendance_set-0-expressed_interest_practice" value="True">
-			</td-->
+		
 		    <td class="expressed_adoption_practice">
 		        <select id="id_personmeetingattendance_set-0-expressed_adoption_practice" name="personmeetingattendance_set-0-expressed_adoption_practice">
 					{{#selected_expressed_adoption_practice}}
@@ -106,24 +94,7 @@
 					{{/practice_list}}
 				</select>
 		    </td>
-		    <td class="expressed_adoption">
-		        <input type="text" maxlength="500" value="{{expressed_adoption_comment}}" name="personmeetingattendance_set-0-expressed_adoption" class="vTextField" id="id_personmeetingattendance_set-0-expressed_adoption">
-		    </td>
-		    <td class="expressed_question_practice">
-		        <select id="id_personmeetingattendance_set-0-expressed_question_practice" name="personmeetingattendance_set-0-expressed_question_practice">
-					{{#selected_expressed_question_practice}}
-						<option selected="selected" value="{{ value }}">{{ string }}</option>
-						<option value="">---------</option>
-					{{/selected_expressed_question_practice}}
-					{{^selected_expressed_question_practice}}
-						<option selected="selected" value="">---------</option>
-					{{/selected_expressed_question_practice}}
-					{{#practice_list}}<option value="{{ value }}">{{ string }}</option>{{/practice_list}}
-				</select>
-		    </td>
-		    <td class="expressed_question">
-		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
-		    </td>
+
 		</tr>
 	</script>
 	
