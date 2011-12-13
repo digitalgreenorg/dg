@@ -680,18 +680,19 @@ class VideosScreenedInScreening(models.Model):
 class PersonMeetingAttendance(models.Model):
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
-    expressed_interest_practice = models.ForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True)
-    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True)
-    expressed_adoption_practice = models.ForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
-    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True)
-    expressed_question_practice = models.ForeignKey(Practices,related_name='expressed_question_practice',null=True,blank=True)
+    interested = models.BooleanField()
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
+    expressed_adoption_practice = models.ForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
+    expressed_interest_practice = models.ForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True,editable=False)
+    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True, editable=False)
+    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True, editable=False)
+    expressed_question_practice = models.ForeignKey(Practices,related_name='expressed_question_practice',null=True,blank=True, editable=False)
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
-    
+
     def __unicode__(self):
         return  u'%s' % (self.id)
-        
+
 post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
