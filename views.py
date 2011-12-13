@@ -2404,6 +2404,7 @@ def person_meeting_attendance_data(request, person_id, screening_id):
             'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
             'practice_list': prac_data,
             'expressed_question_comment': pma.expressed_question,
+            'interested' : pma.interested,
         }
         if pma.expressed_adoption_practice:
             data['selected_expressed_adoption_practice'] = {
