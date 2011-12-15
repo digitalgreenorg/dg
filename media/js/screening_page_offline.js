@@ -455,30 +455,39 @@ function get_pma(person_id, screening_id, table, callbackfn) {
             practice_rs.next();
         }
         practice_rs.close();
-        
-        var pma = db.execute("SELECT pma.id, pma.screening_id, p.id, p.person_name, "+
-        						"pma.expressed_interest_practice_id, p1.practice_name, pma.expressed_interest, "+
-        						"pma.expressed_adoption_practice_id, p2.practice_name, pma.expressed_adoption, "+
-        						"pma.expressed_question_practice_id, p3.practice_name, pma.expressed_question "+
+        var query_str = "SELECT pma.id, pma.screening_id, p.id, p.person_name, "+
+                                "pma.expressed_question, "+
+        						"pma.expressed_adoption_practice_id, p2.practice_name, "+
+        						"pma.interested " +
         						"FROM person_meeting_attendance pma "+
-        						"LEFT JOIN practices p1 ON (pma.expressed_interest_practice_id = p1.id ) "+
         						"LEFT JOIN practices p2 ON (pma.expressed_adoption_practice_id = p2.id ) "+
-        						"LEFT JOIN practices p3 ON (pma.expressed_question_practice_id = p3.id ) "+
         						"JOIN person p ON pma.person_id = p.id "+
-        						"WHERE pma.screening_id="+screening_id+
-        						"AND pma.person_id="+person_id);
-        // This should yield exactly one row.
-        if (pma.isValidRow()) {
-            data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
-            data['expressed_question_comment'] = pma.field(12);
-            data['practice_list'] = practice_list;
-            if(pma.field(7) == null || person_rs.field(7).toString() == '') {
-                data['selected_expressed_adoption_practice'] = {'value': pma.field(7), 'string': pma.field(8)};
-            }
+        						"WHERE pma.screening_id="+screening_id+ " " + 
+        						"AND pma.person_id="+person_id;
+        console.log(query_str);
+        var pma = db.execute(query_str);
+        var data = new Object;
+        try {
+             // This should yield exactly one row.
+                if (pma.isValidRow()) {
+                    data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
+                    data['expressed_question_comment'] = pma.field(4);
+                    data['practice_list'] = practice_list;
+                    data['interested'] = true;
+                    if (pma.field(7)==0) {
+                        data['interested'] = false;
+                    }
+                    if(pma.field(5) != null && pma.field(5).toString() != '') {
+                        data['selected_expressed_adoption_practice'] = {'value': pma.field(5), 'string': pma.field(6)};
+                    }
+                }
+                callbackfn(data,table);
+                pma.close();
+                db.close();
         }
-        callbackfn(data,table);
-        pma.close();
-        db.close();
+        catch (error) {
+            console.log(error);
+        }
     }
 }
 
