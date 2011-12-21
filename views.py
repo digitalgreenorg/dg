@@ -1625,24 +1625,30 @@ def save_personadoptpractice_offline(request, id):
 def save_screening_online(request,id):
     PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
     if request.method == 'POST':
-        if(id):
-            screening = Screening.objects.get(id = id)
-            form = ScreeningForm(request.POST, instance = screening)
-            formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance = screening)
-        else:
-            form = ScreeningForm(request.POST)
-            formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
-        if form.is_valid() and formset.is_valid():
-            saved_screening = form.save()
-            screening = Screening.objects.get(pk=saved_screening.id)
-            formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance=screening)
-            formset.save()
-            return HttpResponse('')
-        else:
-            errors = form.errors.as_text()
-            for form_person_meeting_attendance in formset.forms:
-                if(form_person_meeting_attendance.errors):
-                    errors = errors + '\n' + form_person_meeting_attendance.errors.as_text()
+        try:
+            if(id):
+                screening = Screening.objects.get(id = id)
+                form = ScreeningForm(request.POST, instance = screening)
+                try:
+                    formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance = screening)
+                except Exception as ex:
+                    print ex
+            else:
+                form = ScreeningForm(request.POST)
+                formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
+            if form.is_valid() and formset.is_valid():
+                saved_screening = form.save()
+                screening = Screening.objects.get(pk=saved_screening.id)
+                formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance=screening)
+                formset.save()
+                return HttpResponse('')
+            else:
+                errors = form.errors.as_text()
+                for form_person_meeting_attendance in formset.forms:
+                    if(form_person_meeting_attendance.errors):
+                        errors = errors + '\n' + form_person_meeting_attendance.errors.as_text()
+        except Exception as ex:
+            print ex
         return HttpResponse(errors, status=201)
     else:
         if(id):
@@ -2317,8 +2323,6 @@ def index_template_data(request):
     
     return HttpResponse(cjson.encode(return_val))
 
-
-
 def persons_in_screening(request, screening_id):
     # test url http://127.0.0.1:8000/dashboard/personsinscreening/6000001033/
     person_ids = []
@@ -2404,8 +2408,6 @@ def filters_for_village (request, village_id):
             pass
         return HttpResponse(cjson.encode(data), mimetype='application/json') 
 
-
-
 def person_meeting_attendance_data(request, person_id, screening_id):
     # test url http://127.0.0.1:8000/dashboard/personmeetingattendance/6000001019/6000001033/
     data = {}
@@ -2415,32 +2417,31 @@ def person_meeting_attendance_data(request, person_id, screening_id):
             pma = PersonMeetingAttendance.objects.filter(person=person_id).get(screening=screening_id)
             practice_list = farmer.screening_set.values_list('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
             practice_list = list(set(practice_list))
+            prac_data = []
+            for prac in practice_list:
+                prac_data.append({'value':prac[0],'string':prac[1]})
+            data = {
+                'pma' : {'id':pma.id,'screening':pma.screening_id},
+                'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
+                'practice_list': prac_data,
+                'expressed_question_comment': pma.expressed_question,
+                'interested' : pma.interested,
+            }
+            if pma.expressed_adoption_practice:
+                data['selected_expressed_adoption_practice'] = {
+                    'value': pma.expressed_adoption_practice.id,
+                    'string': pma.expressed_adoption_practice.practice_name
+                }
         except Exception as ex:
             print ex
-        prac_data = []
-        for prac in practice_list:
-            prac_data.append({'value':prac[0],'string':prac[1]})
-        data = {
-            'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
-            'practice_list': prac_data,
-            'expressed_question_comment': pma.expressed_question,
-            'interested' : pma.interested,
-        }
-        if pma.expressed_adoption_practice:
-            data['selected_expressed_adoption_practice'] = {
-                'value': pma.expressed_adoption_practice.id,
-                'string': pma.expressed_adoption_practice.practice_name
-            }
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
 def practices_in_videos(request):
     # test url http://127.0.0.1:8000/dashboard/practicesinvideos/?video=6000007313&video=6000008464
     if request.method == "GET":
         video_ids = request.GET.getlist('video')
-        print video_ids
         practice_ids = []
         for video_id in video_ids:
-            print video_id
             try:
                 video = Video.objects.get(id=video_id)
             except:

@@ -80,12 +80,15 @@
 					{{/option_list}}
 	</script>
 	<script id="row_template" type="text/html">
-		<tr class="row_zebra">
-		    <td class="delete_row"><img src="/media/img/admin/icon_deletelink.gif" width="10" height="10" alt="Delete row" style="margin-top:0.5em" /></td>
+		<tr class="{{#pma}}has_original{{/pma}}">
+		    <td class="delete_row">
+				<img src="/media/img/admin/icon_deletelink.gif" width="10" height="10" alt="Delete row" style="margin-top:0.5em" />
+				<input type="checkbox" id="id_personmeetingattendance_set-0-DELETE" name="personmeetingattendance_set-0-DELETE" style="display: none; ">
+			</td>
 			<td class="original">
-				  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id">
-		          <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening">
-				  <label for="id_personmeetingattendance_set-0-id">1</label>
+				  <input type="hidden" id="id_personmeetingattendance_set-0-id" name="personmeetingattendance_set-0-id" {{#pma}}value="{{id}}"{{/pma}}>
+		          <input type="hidden" id="id_personmeetingattendance_set-0-screening" name="personmeetingattendance_set-0-screening" {{#pma}}value="{{screening}}"{{/pma}}>
+				  <label class="srno" for="id_personmeetingattendance_set-0-id">1</label>
 		    </td>
 		    <td class="person">
 				<select id="id_personmeetingattendance_set-0-person" name="personmeetingattendance_set-0-person">

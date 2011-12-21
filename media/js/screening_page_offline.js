@@ -65,8 +65,9 @@ init :function(id) {
 	// Edit case
 	if(parseFloat(id) > 0) {
 		// Edit Online case
-
+		
 		is_edit = true;						
+		
 		var pg_selected = $("#id_farmer_groups_targeted").val() || [];
         
         if (app_status == 1) {
@@ -80,22 +81,20 @@ init :function(id) {
         
             //Case when village is already entered on page load
             showStatus("Intializing the page. Please wait.");
-        
-            
             
             var table = $('div.inline-group div.tabular').find('table');
             table.append('<tbody  class="row_zebra"></tbody>');
             
             get_persons_for_screening(id, function(person_list){
                 clear_table(table);
+                $('#id_personmeetingattendance_set-INITIAL_FORMS').attr('value', person_list.length);
+
                 for (index in person_list) {
                     get_pma(person_list[index], id, table, function(data){
                         add_attendance_form(data, table);
                     });
                 }
             });
-            
-            update_positions(table, true);
             
             if (app_status == 0) {
                 $("#id_farmer_groups_targeted").attr('disabled', 'true');
@@ -134,112 +133,82 @@ function clear_table(tab) {
 			tab.find('tbody').html('');
 		return;
 	}
-	//If village was selected, it might be 'edit page'. For pre-selected persons, marks them for deletion and hide.
-	//					Remove Other persons(newly added ones) 
-	tab.find('tbody tr:not(:hidden)').each(
-		function(){
- 			if($(this).is('.has_original')) { 			
-		        $(this).find('td.delete input').attr('checked', true);
-				$(this).addClass('deleted_row').hide();
-			}
-			else
-				$(this).remove();
+	// If village was selected, it might be 'edit page'. For pre-selected persons, marks them for deletion and hide.
+	// Remove Other persons(newly added ones) 
+	tab.find('tbody tr:not(:hidden)').each(function(){ 
+	    dom_delete_row(tab, $(this)); 
 	});
-	
 }
 
 //Function to perform some more initialized functions on load	
 function initialize_add_screening() {
-	if(is_inited)
-		return;
-	else
-		is_inited = true;
+	if (is_inited) {
+	    return;
+	}
+	else {
+	    is_inited = true;
+	}
 	
 	tabu = $('div.inline-group div.tabular');
-	table = tabu.find('table');
+	var table = tabu.find('table');
 	// Hide initial deleted rows
-	table.find('td.delete input:checkbox:checked').parent('td').parent('tr').addClass('deleted_row').hide();
+	table.find('td.delete_row input:checkbox:checked').parent('td').parent('tr').addClass('deleted_row').hide();
 	// "Add"-button in bottom of inline for adding new rows
 	tabu.find('fieldset').after('<a class="add" href="#">' + add_link_html + '</a>');
 	tabu.find('a.add').click(function(){
-	   table.append(_new_template.clone())
-    	
-	   create_delete_button(table.find('tr:last td.delete'));                
-	    
-	    update_positions($(this).parent().find('table'), true);
-	    
+	    var table = tabu.find('table');
+	    table.append(_new_template.clone());
+	    // Finished adding a new row. Update positions? Only the one new row needs to be updated, but anyway.               
+	    update_positions(table, true);
 	    // Place for special code to re-enable javascript widgets after clone (e.g. an ajax-autocomplete field)
 	    // Fictive example: new_item.find('.autocomplete').each(function() { $(this).triggerHandler('autocomplete'); });
 	}).removeAttr('href').css('cursor', 'pointer');
-	// "Delete"-buttons for each row that replaces the default checkbox 
-	table.find('tr:not(.add_template) td.delete').each(
-		function() {
-		    create_delete_button($(this));
-	});  
 }
 
 // Function for creating fancy delete buttons
-function create_delete_button(td)
-{
-     // Replace checkbox with image
-    td.find('input:checkbox').hide();
-    td.append('<a class="delete" href="#">' + delete_link_html + '</a>');
-    
-    td.find('a.delete').click(function(){
-        current_row = $(this).parent('td').parent('tr');
-        table = current_row.parent().parent();
-        if (current_row.is('.has_original')) // This row has already been saved once, so we must keep checkbox
-        {
-            $(this).prev('input').attr('checked', true);
-            current_row.addClass('deleted_row').hide();
-        }
-        else // This row has never been saved so we can just remove the element completely
-        {
-            current_row.remove();
-        }
-        
+function dom_delete_row(table, current_row) {
+    if (current_row.is('.has_original')) // This row has already been saved once, so we must keep checkbox
+    {
+        current_row.find('td.delete_row input').attr('checked', true);
+        current_row.addClass('deleted_row').hide();
+        // positions don't change. only numbering and total number of forms changes.
+        update_positions(table, false);
+    }
+    else // This row has never been saved so we can just remove the element completely
+    {
+        current_row.remove();
+        // The actual row has been removed -> Need to update id, serial number and total forms.
         update_positions(table, true);
-    }).removeAttr('href').css('cursor', 'pointer');
+    }
 }
 
 // Updates "position"-field values based on row order in table
 function update_positions(table, update_ids)
 {
-    even = true
-    num_rows = 0
-    position = 0;
-
-    // Set correct position: Filter through all trs, excluding first th tr and last hidden template tr
-    table.find('tbody tr:not(.add_template):not(.deleted_row)').each(function() {
-            // Update row coloring
-            $(this).removeClass('row1 row2');
-            if (even)
-            {
-                $(this).addClass('row1');
-                even = false;
+    var num_rows = 0;
+    var serial_no = 1;
+    table.find('tbody tr').each(function() {
+        var row = $(this);
+        if (update_ids) {
+            update_id_fields(row, num_rows);
+        }
+        // update serial numbers and odd/even row coloring
+        if (!row.hasClass('deleted_row')) {
+            row.removeClass("row1");
+            row.removeClass("row2");
+            if (serial_no%2) { // Odd
+                row.addClass("row1");
             }
-            else
-            {
-                $(this).addClass('row2');
-                even = true;
+            else { // even
+                row.addClass("row2");
             }
-       
-    });
-    
-    table.find('tbody tr.has_original').each(function() {
+            row.find('label.srno').each(function() {
+                $(this).html(String(serial_no));
+            });
+            serial_no++;
+        }
         num_rows++;
     });
-    
-    table.find('tbody tr:not(.has_original):not(.add_template)').each(function() {
-        if (update_ids) update_id_fields($(this), num_rows);
-        num_rows++;
-    });    
-    
-    table.find('tbody tr.add_template').each(function() {
-        if (update_ids) update_id_fields($(this), num_rows)
-        num_rows++;
-    });
-
     table.parent().parent('div.tabular').find("input[id$='TOTAL_FORMS']").val(num_rows);
 }
 
@@ -283,9 +252,6 @@ function update_id_fields(row, new_position)
         $(this).attr('id', new_id)
     });
     
-    row.find('label').each(function() {
-        $(this).html(String(new_position + 1))
-    });
     // Are there other element types...? Add here.
 }
 
@@ -294,7 +260,6 @@ function filter_by_village(){
         var village = $('#id_village').val() || [];
         if (village.length > 0) {
             showStatus("Updating...");
-            console.log("Village " + village)
             get_filtered_data_for_village(village, function (data){
                 update_filtered_data_for_village(data);
                 hideStatus();
@@ -324,10 +289,10 @@ function filter_person() {
                         add_attendance_form(data, table);
                     });
                 }
+                // Group is selected. New rows are added and their id fields need to be updated.
+                update_positions(table, true);
+                hideStatus();
             });
-            
-            update_positions(table, true);
-            hideStatus();
         }
     }
 }
@@ -336,6 +301,8 @@ function add_attendance_form(data,table){
     var new_row = ich.row_template(data);
     table.append(new_row);
     initialize_add_screening();
+    // Finished adding a row. Update the ids, serial numbers and total forms required by django inlineformsets.
+    // Need to do this after every row is added, because we can't really control when all the individual ajax calls have returned.
     update_positions(table, true);
 }
 
@@ -355,17 +322,7 @@ $(document).ready(function() {
     $('.delete_row').live('click', function() {
         var current_row = $(this).parent('tr');
         var table = current_row.parent().parent();
-        if (current_row.is('.has_original')) // This row has already been saved once, so we must keep checkbox
-        {
-            $(this).prev('input').attr('checked', true);
-            current_row.addClass('deleted_row').hide();
-        }
-        else // This row has never been saved so we can just remove the element completely
-        {
-            current_row.remove();
-        }
-
-        update_positions(table, true);
+        dom_delete_row(table, current_row);
     });
     
 });
@@ -491,7 +448,6 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         						"JOIN person p ON pma.person_id = p.id "+
         						"WHERE pma.screening_id="+screening_id+ " " + 
         						"AND pma.person_id="+person_id;
-        console.log(query_str);
         var pma = db.execute(query_str);
         var data = new Object;
         try {
