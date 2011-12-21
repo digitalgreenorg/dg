@@ -59,7 +59,26 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body class="">
-  
+  	<script id="options_template" type="text/html">
+					{{#option_selected}}
+						<option selected="selected" value="{{ value }}">{{ string }}</option>
+						<option value="">---------</option>
+					{{/option_selected}}
+					{{^option_selected}}
+						<option selected="selected" value="">---------</option>
+					{{/option_selected}}
+					{{#option_list}}
+						<option value="{{ value }}">{{ string }}</option>
+					{{/option_list}}
+	</script>
+	<script id="multioptions_template" type="text/html">
+					{{#option_selected}}
+						<option selected="selected" value="{{ value }}">{{ string }}</option>
+					{{/option_selected}}
+					{{#option_list}}
+						<option value="{{ value }}">{{ string }}</option>
+					{{/option_list}}
+	</script>
 	<script id="row_template" type="text/html">
 		<tr class="row_zebra">
 		    <td class="delete_row"><img src="/media/img/admin/icon_deletelink.gif" width="10" height="10" alt="Delete row" style="margin-top:0.5em" /></td>

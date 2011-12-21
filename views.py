@@ -2386,6 +2386,27 @@ def practices_seen_by_farmer(request, person_id):
         data['person_list'] = [{'value':farmer.id, 'string':str(farmer)}]
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
+def filters_for_village (request, village_id):
+    print "arrey re re"
+    data = {}
+    if request.method == 'GET':
+        try:
+            village = Village.objects.get(id=village_id)
+            data['village'] = {'value': village.id, 'string' : village.village_name } 
+            animators = village.animator_set.all()
+            data['animators'] = []
+            for anim in animators:
+                data['animators'].append({'value':anim.id,'string':anim.name})
+            groups = village.persongroups_set.all()
+            data['groups'] = []
+            for group in groups:
+                data['groups'].append({'value':group.id,'string':group.group_name})
+        except:
+            pass
+        return HttpResponse(cjson.encode(data), mimetype='application/json') 
+
+
+
 def person_meeting_attendance_data(request, person_id, screening_id):
     # test url http://127.0.0.1:8000/dashboard/personmeetingattendance/6000001019/6000001033/
     data = {}

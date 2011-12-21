@@ -120,11 +120,11 @@ init :function(id) {
 		}
 	}
 
-	$("#id_farmer_groups_targeted").change(function(){filter_person()});
+	$("#id_farmer_groups_targeted").change(function(){filter_person();});
+	$("#id_village").change(function(){filter_by_village();});
 	
 }
 };
-
 
 //Function to clear section of Person-Meeting-Attendance
 function clear_table(tab) {
@@ -286,13 +286,27 @@ function update_id_fields(row, new_position)
     // Are there other element types...? Add here.
 }
 
+function filter_by_village(){
+    if(is_inited || !is_edit) {
+        var village = $('#id_village').val() || [];
+        if (village.length > 0) {
+            showStatus("Updating...");
+            console.log("Village " + village)
+            get_filtered_data_for_village(village, function (data){
+                update_filtered_data_for_village(data);
+                hideStatus();
+            });
+        }
+    }
+}
+
 //Function called on Person Group Selection
 function filter_person() {
 	if(is_inited || !is_edit) {
         var grps = $("#id_farmer_groups_targeted").val() || [];
         if( grps.length > 0) {
             
-            showStatus("Loading persons..");
+            showStatus("Loading persons...");
             
             var village = $("#id_village").val() || [];
             setup_add_new_row(village, function(data){
@@ -320,6 +334,16 @@ function add_attendance_form(data,table){
     table.append(new_row);
     initialize_add_screening();
     update_positions(table, true);
+}
+
+function update_filtered_data_for_village(data) {
+    var op = Object;
+    op.option_list = data.animators;
+    var anim_options = ich.options_template(op);
+    $("#id_animator").html(anim_options);
+    op.option_list = data.groups;
+    var group_options = ich.multioptions_template(op);
+    $("#id_farmer_groups_targeted").html(group_options);
 }
 
 $(document).ready(function() {
@@ -518,6 +542,22 @@ function get_persons_for_group(grps, callbackfn) {
         persons.close();
         db.close();
 	}
+}
+
+function get_filtered_data_for_village (village_id, callbackfn) {
+    if (app_status == 1) {
+        $.ajax({
+            type:'GET',
+            dataType: 'json',
+            url:"/dashboard/filtereddataforvillage/"+village_id+"/",
+            success:function(data){
+                callbackfn(data);
+            }
+        });
+    }
+    else {
+        
+    }
 }
 
 function get_attendance_form_for_person (person_id, table, callbackfn) {
