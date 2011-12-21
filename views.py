@@ -2387,7 +2387,6 @@ def practices_seen_by_farmer(request, person_id):
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
 def filters_for_village (request, village_id):
-    print "arrey re re"
     data = {}
     if request.method == 'GET':
         try:

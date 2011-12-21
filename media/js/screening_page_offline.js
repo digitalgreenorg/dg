@@ -283,6 +283,9 @@ function update_id_fields(row, new_position)
         $(this).attr('id', new_id)
     });
     
+    row.find('label').each(function() {
+        $(this).html(String(new_position + 1))
+    });
     // Are there other element types...? Add here.
 }
 
