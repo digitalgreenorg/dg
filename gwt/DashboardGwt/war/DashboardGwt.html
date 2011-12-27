@@ -102,18 +102,18 @@
 		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
 		    </td>
 		
-		    <td class="expressed_adoption_practice">
-		        <select id="id_personmeetingattendance_set-0-expressed_adoption_practice" name="personmeetingattendance_set-0-expressed_adoption_practice">
-					{{#selected_expressed_adoption_practice}}
+		    <td class="expressed_adoption_video">
+		        <select id="id_personmeetingattendance_set-0-expressed_adoption_video" name="personmeetingattendance_set-0-expressed_adoption_video">
+					{{#selected_expressed_adoption_video}}
 						<option selected="selected" value="{{ value }}">{{ string }}</option>
 						<option value="">---------</option>
-					{{/selected_expressed_adoption_practice}}
-					{{^selected_expressed_adoption_practice}}
+					{{/selected_expressed_adoption_video}}
+					{{^selected_expressed_adoption_video}}
 						<option selected="selected" value="">---------</option>
-					{{/selected_expressed_adoption_practice}}
-					{{#practice_list}}
+					{{/selected_expressed_adoption_video}}
+					{{#video_list}}
 						<option value="{{ value }}">{{ string }}</option>
-					{{/practice_list}}
+					{{/video_list}}
 				</select>
 		    </td>
 

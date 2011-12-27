@@ -9,13 +9,13 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding field 'PersonMeetingAttendance.interested'
-        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'interested', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
+        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'interested', self.gf('django.db.models.fields.BooleanField')(default=False, db_column='INTERESTED'), keep_default=False)
 
 
     def backwards(self, orm):
         
         # Deleting field 'PersonMeetingAttendance.interested'
-        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'interested')
+        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'INTERESTED')
 
 
     models = {
@@ -242,7 +242,7 @@ class Migration(SchemaMigration):
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),
             'expressed_question_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_question_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_column': "'INTERESTED'"}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'screening': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Screening']"})
         },

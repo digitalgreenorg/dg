@@ -680,8 +680,9 @@ class VideosScreenedInScreening(models.Model):
 class PersonMeetingAttendance(models.Model):
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
-    interested = models.BooleanField()
+    interested = models.BooleanField(db_column="INTERESTED")
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
+    expressed_adoption_video = models.ForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
     expressed_adoption_practice = models.ForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
     expressed_interest_practice = models.ForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True,editable=False)
     expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True, editable=False)

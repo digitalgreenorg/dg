@@ -1,18 +1,21 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from django.db.models import Q
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        orm.PersonMeetingAttendance.objects.filter(~Q(expressed_interest="")|~Q(expressed_interest_practice=None)).update(interested=True)
+        
+        # Adding field 'PersonMeetingAttendance.expressed_adoption_video'
+        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_adoption_video', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='expressed_adoption_video', null=True, db_column='EXPRESSED_ADOPTION_VIDEO', to=orm['dashboard.Video']), keep_default=False)
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        
+        # Deleting field 'PersonMeetingAttendance.expressed_adoption_video'
+        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'EXPRESSED_ADOPTION_VIDEO')
 
 
     models = {
@@ -234,6 +237,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'PersonMeetingAttendance', 'db_table': "u'PERSON_MEETING_ATTENDANCE'"},
             'expressed_adoption': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_ADOPTION'", 'blank': 'True'}),
             'expressed_adoption_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
+            'expressed_adoption_video': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'to': "orm['dashboard.Video']"}),
             'expressed_interest': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_INTEREST'", 'blank': 'True'}),
             'expressed_interest_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_interest_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),

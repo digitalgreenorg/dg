@@ -371,21 +371,21 @@ function setup_add_new_row (village, callbackfn) {
     		persons_list_for_add_new_row.next();
     	}
     	
-    	var prac = db.execute("select distinct practices.id, practices.practice_name as practices from practices, VIDEO_related_agricultural_practices, screening_videos_screened, screening where practices.id=VIDEO_related_agricultural_practices.practices_id and VIDEO_related_agricultural_practices.video_id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.village_id LIKE '"+village+"'");
-    	var practice_options = [];
-    	while(prac.isValidRow()) {
-    		practice_options.push({'value':prac.field(0), 'string':prac.field(1)});
-    		prac.next();
+    	var videos = db.execute("select distinct video.id, video.title from video, screening_videos_screened, screening where video.id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.village_id LIKE '"+village+"'");
+    	var video_options = [];
+    	while(videos.isValidRow()) {
+    		video_options.push({'value':videos.field(0), 'string':videos.field(1)});
+    		videos.next();
     	}
 
     	data = {
-    	    'practice_list': practice_options,
+    	    'video_list': video_options,
     	    'person_list': person_options
     	};
     	
     	callbackfn(data);
     	
-    	prac.close();
+    	videos.close();
     	persons_list_for_add_new_row.close();
     	db.close();
 	}
@@ -432,19 +432,19 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         var db = google.gears.factory.create('beta.database');
         db.open('digitalgreendatabase');
         
-        var practice_list = [];
-        var practice_rs = db.execute("select distinct practices.id, practices.practice_name as practices from practices, VIDEO_related_agricultural_practices, screening_videos_screened, screening, person_meeting_attendance where practices.id=VIDEO_related_agricultural_practices.practices_id and VIDEO_related_agricultural_practices.video_id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.id=person_meeting_attendance.screening_id and person_meeting_attendance.person_id LIKE '"+ person_id + "'");
-        while (practice_rs.isValidRow()){
-            practice_list.push({'value': practice_rs.field(0), 'string':practice_rs.field(1) });
-            practice_rs.next();
+        var video_list = [];
+        var video_rs = db.execute("select distinct video.id, video.title from video, screening_videos_screened, screening, person_meeting_attendance where VIDEO.id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.id=person_meeting_attendance.screening_id and person_meeting_attendance.person_id LIKE '"+ person_id + "'");
+        while (video_rs.isValidRow()){
+            video_list.push({'value': video_rs.field(0), 'string':video_rs.field(1) });
+            video_rs.next();
         }
-        practice_rs.close();
+        video_rs.close();
         var query_str = "SELECT pma.id, pma.screening_id, p.id, p.person_name, "+
                                 "pma.expressed_question, "+
-        						"pma.expressed_adoption_practice_id, p2.practice_name, "+
+        						"pma.expressed_adoption_video_id, p2.title, "+
         						"pma.interested " +
         						"FROM person_meeting_attendance pma "+
-        						"LEFT JOIN practices p2 ON (pma.expressed_adoption_practice_id = p2.id ) "+
+        						"LEFT JOIN VIDEO p2 ON (pma.expressed_adoption_video_id = p2.id ) "+
         						"JOIN person p ON pma.person_id = p.id "+
         						"WHERE pma.screening_id="+screening_id+ " " + 
         						"AND pma.person_id="+person_id;
@@ -455,13 +455,13 @@ function get_pma(person_id, screening_id, table, callbackfn) {
                 if (pma.isValidRow()) {
                     data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
                     data['expressed_question_comment'] = pma.field(4);
-                    data['practice_list'] = practice_list;
+                    data['video_list'] = video_list;
                     data['interested'] = true;
                     if (pma.field(7)==0) {
                         data['interested'] = false;
                     }
                     if(pma.field(5) != null && pma.field(5).toString() != '') {
-                        data['selected_expressed_adoption_practice'] = {'value': pma.field(5), 'string': pma.field(6)};
+                        data['selected_expressed_adoption_video'] = {'value': pma.field(5), 'string': pma.field(6)};
                     }
                 }
                 callbackfn(data,table);
@@ -515,7 +515,36 @@ function get_filtered_data_for_village (village_id, callbackfn) {
         });
     }
     else {
+        var db  = google.gears.factory.create('beta.database');
+        db.open('digitalgreendatabase');
+        var village_rs = db.execute("SELECT VILLAGE.VILLAGE_NAME FROM VILLAGE WHERE ID="+village_id);
+        if (village_rs.isValidRow()) {
+            village = { 'value': village_id, 'string' : village_rs.field(0) };
+        }
+        village_rs.close();
         
+        animator_list = [];
+        var animator_rs = db.execute("select distinct animator.id, animator.name from animator, animator_assigned_village where animator.id=animator_assigned_village.animator_id and animator_assigned_village.village_id="+village_id);
+        while(animator_rs.isValidRow()) {
+            animator_list.push({'value':animator_rs.field(0),'string':animator_rs.field(1)});
+            animator_rs.next();
+        }
+        animator_rs.close();
+              
+        group_list = [];
+        var group_rs = db.execute("select id, group_name from person_groups where village_id="+village_id);
+        while(group_rs.isValidRow()) {
+            group_list.push({'value':group_rs.field(0), 'string':group_rs.field(1)});
+            group_rs.next();
+        }
+        group_rs.close();
+    
+        data = {
+            'village' : village,
+            'animators' : animator_list,
+            'groups' : group_list
+        };
+        callbackfn(data);
     }
 }
 
@@ -553,21 +582,21 @@ function get_attendance_form_for_person (person_id, table, callbackfn) {
             console.log("How exactly?");
         }
         
-        var practice_list = [];
-        var practice_rs = db.execute("select distinct practices.id, practices.practice_name as practices from practices, VIDEO_related_agricultural_practices, screening_videos_screened, screening, person_meeting_attendance where practices.id=VIDEO_related_agricultural_practices.practices_id and VIDEO_related_agricultural_practices.video_id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.id=person_meeting_attendance.screening_id and person_meeting_attendance.person_id LIKE '"+ person_id + "'");
-        while (practice_rs.isValidRow()){
-            practice_list.push({'value': practice_rs.field(0), 'string':practice_rs.field(1) });
-            practice_rs.next();
+        var video_list = [];
+        var video_rs = db.execute("select distinct video.id, video.title from video, screening_videos_screened, screening, person_meeting_attendance where video.id=screening_videos_screened.video_id and screening_videos_screened.screening_id=screening.id and screening.id=person_meeting_attendance.screening_id and person_meeting_attendance.person_id LIKE '"+ person_id + "'");
+        while (video_rs.isValidRow()){
+            video_list.push({'value': video_rs.field(0), 'string':video_rs.field(1) });
+            video_rs.next();
         }
         
         data = {
             'person_list': person_list,
-            'practice_list': practice_list
+            'video_list': video_list
         };
         callbackfn(data, table);
         
         person_rs.close();
-        practice_rs.close();
+        video_rs.close();
         db.close();
     }
 }

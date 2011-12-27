@@ -22,7 +22,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public final native String getInterested() /*-{ return this.fields.interested;}-*/;
 		public final native String getExpressedInterestPractice() /*-{ return this.fields.expressed_interest_practice; }-*/;
 		public final native String getExpressedInterest() /*-{ return $wnd.checkForNullValues(this.fields.expressed_interest); }-*/;
-		public final native String getExpressedAdoptionPractice() /*-{ return this.fields.expressed_adoption_practice; }-*/;
+		public final native String getExpressedAdoptionVideo() /*-{ return this.fields.expressed_adoption_video; }-*/;
 		public final native String getExpressedAdoption() /*-{ return $wnd.checkForNullValues(this.fields.expressed_adoption); }-*/;
 		public final native String getExpressedQuestionPractice() /*-{ return this.fields.expressed_question_practice; }-*/;
 		public final native String getExpressedQuestion() /*-{ return $wnd.checkForNullValues(this.fields.expressed_question); }-*/;
@@ -37,7 +37,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		private String interested;
 		private PracticesData.Data expressed_interest_practice;
 		private String expressed_interest;
-		private PracticesData.Data expressed_adoption_practice;
+		private VideosData.Data expressed_adoption_video;
 		private String expressed_adoption;
 		private PracticesData.Data expressed_question_practice;
 		private String expressed_question;
@@ -48,7 +48,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		}
 		
 		public Data(String id, ScreeningsData.Data screening, PersonsData.Data person, 
-				String interested, String expressed_question, PracticesData.Data expressed_adoption_practice,
+				String interested, String expressed_question, VideosData.Data expressed_adoption_video,
 				PracticesData.Data expressed_interest_practice, String expressed_interest, 
 				String expressed_adoption, PracticesData.Data expressed_question_practice) {
 			this.id = id;
@@ -57,7 +57,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.interested = interested;
 			this.expressed_interest_practice =expressed_interest_practice;
 			this.expressed_interest = expressed_interest;
-			this.expressed_adoption_practice = expressed_adoption_practice;
+			this.expressed_adoption_video = expressed_adoption_video;
 			this.expressed_adoption = expressed_adoption;
 			this.expressed_question_practice = expressed_question_practice;
 			this.expressed_question = expressed_question;
@@ -92,8 +92,8 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public String getExpressedInterest(){
 			return this.expressed_interest;
 		}
-		public PracticesData.Data getExpressedAdoptionPractice(){
-			return this.expressed_adoption_practice;
+		public VideosData.Data getExpressedAdoptionVideo(){
+			return this.expressed_adoption_video;
 		}
 		public String getExpressedAdoption(){
 			return this.expressed_adoption;
@@ -109,7 +109,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			Data obj = new Data();
 			obj.person = (new PersonsData()).new Data();
 			obj.expressed_interest_practice = (new PracticesData()).new Data();
-			obj.expressed_adoption_practice = (new PracticesData()).new Data();
+			obj.expressed_adoption_video = (new VideosData()).new Data();
 			obj.expressed_question_practice = (new PracticesData()).new Data();
 			return obj;
 		}
@@ -141,10 +141,10 @@ public class PersonMeetingAttendanceData extends BaseData {
 				
 			}  else if(key.equals("expressed_interest")) {
 				this.expressed_interest = (String)val;
-			} else if(key.equals("expressed_adoption_practice")) {
-				PracticesData expressed_adoption_practice = new PracticesData();
-				this.expressed_adoption_practice = expressed_adoption_practice.getNewData();
-				this.expressed_adoption_practice.id = val;
+			} else if(key.equals("expressed_adoption_video")) {
+				VideosData expressed_adoption_video = new VideosData();
+				this.expressed_adoption_video = expressed_adoption_video.getNewData();
+				this.expressed_adoption_video.id = val;
 				
 			}  else if(key.equals("expressed_adoption")) {
 				this.expressed_adoption= (String)val;
@@ -181,7 +181,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
 						this.screening.getId(),
 						this.person.getId(),
-						interested, this.expressed_question, this.expressed_adoption_practice.getId(),
+						interested, this.expressed_question, this.expressed_adoption_video.getId(),
 						this.expressed_interest_practice.getId(), this.expressed_interest,
 						this.expressed_adoption, this.expressed_question_practice.getId());
 			this.addNameValueToQueryString("id", this.id);
@@ -196,7 +196,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
 						foreignKey.getId(),
 						this.person.getId(),
-						this.interested, this.expressed_question, this.expressed_adoption_practice.getId(),
+						this.interested, this.expressed_question, this.expressed_adoption_video.getId(),
 						this.expressed_interest_practice.getId(), this.expressed_interest,
 						this.expressed_adoption, this.expressed_question_practice.getId());
 			this.addNameValueToQueryString("id", this.id);
@@ -231,7 +231,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"interested INT NOT NULL DEFAULT 0," + 
 												"EXPRESSED_QUESTION TEXT NULL DEFAULT NULL, " +
-					                            "expressed_adoption_practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
+					                            "expressed_adoption_video_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"expressed_interest_practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"EXPRESSED_INTEREST TEXT NULL DEFAULT NULL ," +
 												"EXPRESSED_ADOPTION TEXT NULL DEFAULT NULL," +
@@ -240,25 +240,25 @@ public class PersonMeetingAttendanceData extends BaseData {
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
 												"FOREIGN KEY(expressed_interest_practice_id) REFERENCES practices(id), " +
 												"FOREIGN KEY(expressed_question_practice_id) REFERENCES practices(id), " +
-												"FOREIGN KEY(expressed_adoption_practice_id) REFERENCES practices(id) );";
+												"FOREIGN KEY(expressed_adoption_video_id) REFERENCES videos(id) );";
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_meeting_attendance`;";
 	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_meeting_attendance_PRIMARY ON person_meeting_attendance(id);", 
 	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_screening_id ON person_meeting_attendance(screening_id);",
 	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_person_id ON person_meeting_attendance(person_id);",
 	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_expressed_interest_practice_id ON person_meeting_attendance(expressed_interest_practice_id);",
 	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_region_expressed_question_practice_id ON person_meeting_attendance(expressed_question_practice_id);",
-	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_region_expressed_adoption_practice_id ON person_meeting_attendance(expressed_adoption_practice_id);"};
+	   "CREATE INDEX IF NOT EXISTS person_meeting_attendance_region_expressed_adoption_video_id ON person_meeting_attendance(expressed_adoption_video_id);"};
 	protected static String selectPersonMeetingAttendances = "SELECT pma.id, p.PERSON_NAME FROM person_meeting_attendance pma, person p" +
 			"WHERE pma.person_id = p.id ORDER BY (p.PERSON_NAME);";
 	protected static String listPersonMeetingAttendances = "SELECT pma.id,p.id, p.PERSON_NAME, expressed_interest_practice_id" +
-			",EXPRESSED_INTEREST,expressed_adoption_practice_id, EXPRESSED_ADOPTION,expressed_question_practice_id,EXPRESSED_QUESTION " +
+			",EXPRESSED_INTEREST,expressed_adoption_video_id, EXPRESSED_ADOPTION,expressed_question_practice_id,EXPRESSED_QUESTION " +
 			"FROM person_meeting_attendance pma, person p WHERE p.id = pma.person_id " +
 			"ORDER BY (-pma.id);";
 	protected static String savePersonMeetingAttendanceOfflineURL = "/dashboard/savepersonmeetingattendanceoffline/";
 	protected static String savePersonMeetingAttendanceOnlineURL = "/dashboard/savepersonmeetingattendanceonline/";
 	protected static String getPersonMeetingAttendanceOnlineURL = "/dashboard/getpersonmeetingattendancesonline/";
 	protected String table_name = "person_meeting_attendance";
-	protected String[] fields = {"id", "screening_id","person_id", "interested", "EXPRESSED_QUESTION", "expressed_adoption_practice_id",
+	protected String[] fields = {"id", "screening_id","person_id", "interested", "EXPRESSED_QUESTION", "expressed_adoption_video_id",
 			"expressed_interest_practice_id", "EXPRESSED_INTEREST",
 			"EXPRESSED_ADOPTION","expressed_question_practice_id",};
 	
@@ -327,10 +327,11 @@ public class PersonMeetingAttendanceData extends BaseData {
 		ScreeningsData screening = new ScreeningsData();
 		PersonsData person = new PersonsData();
 		PracticesData practice = new PracticesData();
+		VideosData video = new VideosData();
 		
 		for(int i = 0; i < personMeetingAttendanceObjects.length(); i++){
 			PracticesData.Data interest_pr = practice.new Data();
-			PracticesData.Data adoption_pr = practice.new Data();
+			VideosData.Data adoption_vid = video.new Data();
 			PracticesData.Data question_pr = practice.new Data();
 			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening());
 			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson());
@@ -338,8 +339,8 @@ public class PersonMeetingAttendanceData extends BaseData {
 				interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice());
 			}
 			
-			if(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice()!=null){
-				adoption_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionPractice());
+			if(personMeetingAttendanceObjects.get(i).getExpressedAdoptionVideo()!=null){
+				adoption_vid = video.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionVideo());
 			}
 			
 			if(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice()!=null){
@@ -347,7 +348,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 			}
 						
 			Data personMeetingAttendance = new Data(personMeetingAttendanceObjects.get(i).getPk(),sc,p,
-					personMeetingAttendanceObjects.get(i).getInterested(), personMeetingAttendanceObjects.get(i).getExpressedQuestion(), adoption_pr,
+					personMeetingAttendanceObjects.get(i).getInterested(), personMeetingAttendanceObjects.get(i).getExpressedQuestion(), adoption_vid,
 					interest_pr,personMeetingAttendanceObjects.get(i).getExpressedInterest(),
 					personMeetingAttendanceObjects.get(i).getExpressedAdoption(),question_pr);
 			personMeetingAttendances.add(personMeetingAttendance);

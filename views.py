@@ -1629,10 +1629,7 @@ def save_screening_online(request,id):
             if(id):
                 screening = Screening.objects.get(id = id)
                 form = ScreeningForm(request.POST, instance = screening)
-                try:
-                    formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance = screening)
-                except Exception as ex:
-                    print ex
+                formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance = screening)
             else:
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
@@ -1657,7 +1654,7 @@ def save_screening_online(request,id):
             formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
         else:
             form = ScreeningForm()
-            formset = PersonMeetingAttendanceInlineFormSet()
+            #formset = PersonMeetingAttendanceInlineFormSet()
         villages = get_user_villages(request)
         states = get_user_states(request)
         form.fields['village'].queryset = villages.order_by('village_name')
@@ -2359,13 +2356,13 @@ def screenings_in_village(request, village_id):
             data['person_list'] = []
             for person in persons_in_village:
                 data['person_list'].append({'value':person.id, 'string':str(person)})
-            data['practice_list'] = []
-            practices = village.screening_set.values_list('videoes_screened__related_agricultural_practices__id','videoes_screened__related_agricultural_practices__practice_name').distinct()
-            for practice in practices:
-                data['practice_list'].append({'value':practice[0],'string':practice[1]})
+            data['video_list'] = []
+            videos = village.screening_set.values_list('videoes_screened__id','videoes_screened__title').distinct()
+            for video in videos:
+                data['video_list'].append({'value':video[0],'string':video[1]})
         except Exception as ex:
             data['person_list'] = []
-            data['practice_list'] = []
+            data['video_list'] = []
             # print ex - log Exception
             # return error response
         return HttpResponse(cjson.encode(data), mimetype='application/json') 
@@ -2375,18 +2372,18 @@ def practices_seen_by_farmer(request, person_id):
     if request.method == 'GET':
         try:
             farmer = Person.objects.get(id=person_id)
-            practice_list = farmer.screening_set.values_list('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
+            video_list = farmer.screening_set.values_list('videoes_screened__id', 'videoes_screened__title')
             #practice_list = farmer.screening_set.values('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
-            practice_list = list(set(practice_list))
+            video_list = list(set(video_list))
         except:
-            practice_list = []
+            video_list = []
             # log an error
             # send an error status message back, maybe not
         data = {}
-        prac_data = []
-        for prac in practice_list:
-            prac_data.append({'value':prac[0],'string':prac[1]})    
-        data['practice_list'] = prac_data
+        video_data = []
+        for vid in video_list:
+            video_data.append({'value':vid[0],'string':vid[1]})    
+        data['video_list'] = video_data
         data['person_list'] = [{'value':farmer.id, 'string':str(farmer)}]
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
@@ -2415,25 +2412,27 @@ def person_meeting_attendance_data(request, person_id, screening_id):
         try:
             farmer = Person.objects.get(id=person_id)
             pma = PersonMeetingAttendance.objects.filter(person=person_id).get(screening=screening_id)
-            practice_list = farmer.screening_set.values_list('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
-            practice_list = list(set(practice_list))
-            prac_data = []
-            for prac in practice_list:
-                prac_data.append({'value':prac[0],'string':prac[1]})
+            video_list = farmer.screening_set.values_list('videoes_screened__id', 'videoes_screened__title')
+            video_list = list(set(video_list))
+            video_data = []
+            for video in video_list:
+                video_data.append({'value':video[0],'string':video[1]})
             data = {
                 'pma' : {'id':pma.id,'screening':pma.screening_id},
                 'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
-                'practice_list': prac_data,
+                'video_list': video_data,
                 'expressed_question_comment': pma.expressed_question,
                 'interested' : pma.interested,
             }
-            if pma.expressed_adoption_practice:
-                data['selected_expressed_adoption_practice'] = {
-                    'value': pma.expressed_adoption_practice.id,
-                    'string': pma.expressed_adoption_practice.practice_name
+
+            if pma.expressed_adoption_video:
+                data['selected_expressed_adoption_video'] = {
+                    'value': pma.expressed_adoption_video.id,
+                    'string': pma.expressed_adoption_video.title
                 }
         except Exception as ex:
             print ex
+            # log error
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
 def practices_in_videos(request):
