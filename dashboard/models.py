@@ -458,7 +458,9 @@ class Person(models.Model):
             val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
         
     def __unicode__(self):
-        return  u'%s (%s)' % (self.person_name, self.village)
+        if (self.father_name is None or self.father_name==''):
+            return self.person_name
+        return  u'%s (%s)' % (self.person_name, self.father_name)
 
 class PersonRelations(models.Model):
     person = models.ForeignKey(Person,related_name='person')
