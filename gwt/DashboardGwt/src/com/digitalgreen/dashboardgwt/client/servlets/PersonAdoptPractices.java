@@ -10,6 +10,7 @@ import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.PersonAdoptPracticesTemplate;
+import com.google.gwt.user.client.Window;
 
 public class PersonAdoptPractices extends BaseServlet {
 	
@@ -60,7 +61,7 @@ public class PersonAdoptPractices extends BaseServlet {
 				}
 			});
 			if(this.getRequestContext().getArgs().get("action").equals("person-select")) {
-				personAdoptPracticeData.apply(personAdoptPracticeData.getPracticesForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
+				personAdoptPracticeData.apply(personAdoptPracticeData.getVideosForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
 			}
 			else if(this.getRequestContext().getArgs().get("action").equals("district-select")) {
 				personAdoptPracticeData.apply(personAdoptPracticeData.getBlocksForDistrict(this.getRequestContext().getArgs().get("district_id").toString()));

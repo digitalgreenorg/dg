@@ -12,6 +12,7 @@ import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.ListBox;
@@ -86,7 +87,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		BaseTemplate operationsUI = new BaseTemplate();
 		operationsUI.hideGlassDoorMessage();
 		if(action.equals("person-select")) {
-			newBox = this.addPageFilterListBoxMap.get("id_practice");
+			newBox = this.addPageFilterListBoxMap.get("id_video");
 		}
 		else if(action.equals("district-select")) {
 			newBox = this.addPageFilterListBoxMap.get("id_block");
@@ -115,14 +116,14 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 			this.addPageFilterListBoxMap.put("id_village", ListBox.wrap(RootPanel.get("id_village").getElement()));
 			this.addPageFilterListBoxMap.put("id_person_group", ListBox.wrap(RootPanel.get("id_person_group").getElement()));
 			this.addPageFilterListBoxMap.put("id_person", ListBox.wrap(RootPanel.get("id_person").getElement()));
-			this.addPageFilterListBoxMap.put("id_practice", ListBox.wrap(RootPanel.get("id_practice").getElement()));
+			this.addPageFilterListBoxMap.put("id_video", ListBox.wrap(RootPanel.get("id_video").getElement()));
 			
 			for (Entry<String, ListBox> pair : this.addPageFilterListBoxMap.entrySet()) {
 				if(pair.getKey() != "id_district") {
 					pair.getValue().setEnabled(false);
 				}
 				
-				if(pair.getKey() != "id_practice") {
+				if(pair.getKey() != "id_video") {
 					pair.getValue().addChangeHandler(new filterListBoxOnChangeHandler((HashMap<String, ListBox>) this.addPageFilterListBoxMap.clone(), this));
 				}
 					
@@ -222,12 +223,18 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 							personAdoptPractice.getPerson().getPersonName() +"</a>",
 							"dashboard/personadoptpractice/" + personAdoptPractice.getId() +"/",
 							new PersonAdoptPractices(requestContext)));
+					String video;
+					if(personAdoptPractice.getVideo() == null){
+						video = "null";
+					} else {
+						video = personAdoptPractice.getVideo().getTitle();
+					}
 					tableRows += "<tr class='" + style + "'>" +
 									  "<td><input type='checkbox' class='action-select' value='" + personAdoptPractice.getId() + "' name='_selected_action' /></td>" +
 									  "<th id = 'row" + row + "'></th>" +
 									  "<td>"+ group + "</td>"+
 									  "<td>"+ village + "</td>" +
-										"<td>" + personAdoptPractice.getPractice().getPracticeName() + "</td>" +
+										"<td>" + video + "</td>" +
 									"</tr>";
 				}
 				personadoptpracticeListFormHtml = personadoptpracticeListFormHtml + tableRows + "</tbody></table>";
@@ -239,7 +246,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 	public static native void displayCalendar() /*-{
 		$wnd.DateTimeShortcuts.init();		
 	}-*/;
-	final private String addDataToElementID[] = {"id_person","id_practice"};
+	final private String addDataToElementID[] = {"id_person", "id_video"};
 	
 	private String personadoptpracticeListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
 									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
@@ -276,10 +283,10 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 										"</a>" +
 									"</th>" +
 										"<th>" +
-											"<a href='?ot=asc&amp;o=2'>" +
-												"Practice" +
-											"</a>" +
-										"</th>" +
+										"<a href='?ot=asc&amp;o=2'>" +
+											"Video" +
+										"</a>" +
+									"</th>" +
 									"</tr>" +
 								"</thead>" +
 								"<tbody>";
@@ -338,14 +345,14 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 												"</select>" +
 											"</div>" +
 										"</div>" +
-										"<div class='form-row practice  '>" +
-											"<div>" +
-												"<label for='id_practice' class='required'>Practice:</label>" +
-												"<select name='practice' id='id_practice'>" +
-													"<option value='' selected='selected'>---------</option>" +
-												"</select>" +
-											"</div>" +
+										"<div class='form-row video '>" +
+										"<div>" +
+											"<label for='id_video' class='required' >Video:</label>" +
+											"<select name='video' id='id_video'>" +
+											"<option value='' selected='selected'>---------</option>" +
+											"</select>" +
 										"</div>" +
+									"</div>" +
 										"<div class='form-row prior_adoption_flag  '>" +
 											"<div>" +
 												"<label for='id_prior_adoption_flag' >Prior adoption flag:</label>" +
