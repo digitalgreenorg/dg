@@ -220,7 +220,7 @@ public class AnimatorsData extends BaseData {
 		public boolean compare(BaseData.Data other) {
 			if(other instanceof AnimatorsData.Data) {
 				AnimatorsData.Data obj = (AnimatorsData.Data) other;
-				if(this.name.equals(obj.getAnimatorName()) 
+				if(this.name.trim().equals(obj.getAnimatorName().trim()) 
 						&& this.gender.equals(obj.getGender())
 						&& this.partner.getId().equals(obj.getPartner().getId()) ) {
 					errorStack.add(this.name+": Details entered twice");

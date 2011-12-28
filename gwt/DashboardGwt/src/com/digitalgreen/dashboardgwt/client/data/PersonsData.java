@@ -209,8 +209,8 @@ public class PersonsData extends BaseData {
 				PersonsData.Data obj = (PersonsData.Data) other;
 				String fatherName = (this.father_name == null)?"null":this.father_name;
 				String fatherNameOfFormObject = (obj.getFatherName() == null)?"null":obj.getFatherName();
-				if(this.person_name.equals(obj.getPersonName()) 
-						&& fatherName.equals(fatherNameOfFormObject)
+				if(this.person_name.trim().equals(obj.getPersonName().trim()) 
+						&& fatherName.trim().equals(fatherNameOfFormObject.trim())
 						&& this.village.getId().equals(obj.getVillage().getId()) ) {
 					errorStack.add(this.person_name+": Details entered twice");
 					return true;
