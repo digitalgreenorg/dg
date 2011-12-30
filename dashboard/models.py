@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Min, Count, F
 from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
 from django.core.mail import send_mail
+from dashboard.fields import PositiveBigIntegerField
 import sys, traceback
 
 # Variables
@@ -114,6 +115,7 @@ class RegionTest(models.Model):
         return self.region_name
 
 class Region(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
@@ -123,6 +125,7 @@ class Region(models.Model):
         return self.region_name
 
 class EquipmentHolder(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey("content_type", "object_id")
@@ -133,6 +136,7 @@ class EquipmentHolder(models.Model):
         return u'%s' % self.content_object
 
 class Reviewer(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey("content_type", "object_id")
@@ -144,6 +148,7 @@ class Reviewer(models.Model):
 
 
 class DevelopmentManager(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, db_column='GENDER')
@@ -170,6 +175,7 @@ class DevelopmentManager(models.Model):
             )
 
 class State(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     state_name = models.CharField(max_length=100, db_column='STATE_NAME', unique='True')
     region = models.ForeignKey(Region)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -181,6 +187,7 @@ class State(models.Model):
 
 
 class Partners(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     partner_name = models.CharField(max_length=100, db_column='PARTNER_NAME')
     date_of_association = models.DateField(null=True, db_column='DATE_OF_ASSOCIATION', blank=True)
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
@@ -196,6 +203,7 @@ class Partners(models.Model):
 
 
 class FieldOfficer(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, db_column='GENDER')
@@ -211,6 +219,7 @@ class FieldOfficer(models.Model):
         return self.name
 
 class District(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     district_name = models.CharField(max_length=100, db_column='DISTRICT_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     state = models.ForeignKey(State)
@@ -224,6 +233,7 @@ class District(models.Model):
         return self.district_name
 
 class Block(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     block_name = models.CharField(max_length=100, db_column='BLOCK_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     district = models.ForeignKey(District)
@@ -234,6 +244,7 @@ class Block(models.Model):
         return self.block_name
 
 class Village(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME')
     block = models.ForeignKey(Block)
     no_of_households = models.IntegerField(null=True, db_column='NO_OF_HOUSEHOLDS', blank=True)
@@ -250,6 +261,7 @@ class Village(models.Model):
 
 
 class MonthlyCostPerVillage(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     village = models.ForeignKey(Village)
     date = models.DateField(db_column='DATE')
     labor_cost = models.FloatField(null=True, db_column='LABOR_COST', blank=True)
@@ -264,6 +276,7 @@ class MonthlyCostPerVillage(models.Model):
         db_table = u'MONTHLY_COST_PER_VILLAGE'
 
 class PersonGroups(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     DAY_CHOICES = (
                 ('Monday','Monday'),
                 ('Tuesday','Tuesday'),
@@ -288,6 +301,7 @@ class PersonGroups(models.Model):
         #return self.group_name
 
 class Person(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     person_name = models.CharField(max_length=100, db_column='PERSON_NAME')
     father_name = models.CharField(max_length=100, db_column='FATHER_NAME', blank=True)
     age = models.IntegerField(max_length=3, null=True, db_column='AGE', blank=True)
@@ -461,6 +475,7 @@ class Person(models.Model):
         return  u'%s (%s)' % (self.person_name, self.village)
 
 class PersonRelations(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     person = models.ForeignKey(Person,related_name='person')
     relative = models.ForeignKey(Person,related_name='relative')
     type_of_relationship = models.CharField(max_length=100, db_column='TYPE_OF_RELATIONSHIP')
@@ -468,6 +483,7 @@ class PersonRelations(models.Model):
         db_table = u'PERSON_RELATIONS'
 
 class Animator(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
     gender = models.CharField(max_length=1,choices=GENDER_CHOICES, db_column='GENDER')
@@ -488,6 +504,7 @@ class Animator(models.Model):
 
 
 class Training(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     training_purpose = models.TextField(db_column='TRAINING_PURPOSE', blank=True)
     training_outcome = models.TextField(db_column='TRAINING_OUTCOME', blank=True)
     training_start_date = models.DateField(db_column='TRAINING_START_DATE')
@@ -502,12 +519,14 @@ class Training(models.Model):
 
 
 class TrainingAnimatorsTrained(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     training = models.ForeignKey(Training, db_column='training_id')
     animator = models.ForeignKey(Animator, db_column='animator_id')
     class Meta:
         db_table = u'TRAINING_animators_trained'
 
 class AnimatorAssignedVillage(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     animator = models.ForeignKey(Animator)
     village = models.ForeignKey(Village)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -515,6 +534,7 @@ class AnimatorAssignedVillage(models.Model):
         db_table = u'ANIMATOR_ASSIGNED_VILLAGE'
 
 class AnimatorSalaryPerMonth(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     animator = models.ForeignKey(Animator)
     date = models.DateField(db_column='DATE')
     total_salary = models.FloatField(null=True, db_column='TOTAL_SALARY', blank=True)
@@ -523,6 +543,7 @@ class AnimatorSalaryPerMonth(models.Model):
         db_table = u'ANIMATOR_SALARY_PER_MONTH'
 
 class Language(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
         db_table = u'LANGUAGE'
@@ -532,6 +553,7 @@ class Language(models.Model):
 
 
 class Video(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     title = models.CharField(max_length=200, db_column='TITLE')
     video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE, db_column='VIDEO_TYPE')
     duration = models.TimeField(null=True, db_column='DURATION', blank=True)
@@ -619,6 +641,7 @@ pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
 class Practices(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
     seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
     summary = models.TextField(db_column='SUMMARY', blank=True)
@@ -630,18 +653,21 @@ class Practices(models.Model):
         return self.practice_name
 
 class VideoAgriculturalPractices(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     video = models.ForeignKey(Video, db_column='video_id')
     practice = models.ForeignKey(Practices, db_column='practices_id')
     class Meta:
         db_table = u'VIDEO_related_agricultural_practices'
 
 class PersonShownInVideo(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     video = models.ForeignKey(Video, db_column='video_id')
     person = models.ForeignKey(Person, db_column='person_id')
     class Meta:
         db_table = u'VIDEO_farmers_shown'
         
 class Screening(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     date = models.DateField(db_column='DATE')
     start_time = models.TimeField(db_column='START_TIME')
     end_time = models.TimeField(db_column='END_TIME')
@@ -666,18 +692,21 @@ pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
 class GroupsTargetedInScreening(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     screening = models.ForeignKey(Screening, db_column='screening_id')
     persongroups = models.ForeignKey(PersonGroups, db_column='persongroups_id')
     class Meta:
         db_table = u'SCREENING_farmer_groups_targeted'
 
 class VideosScreenedInScreening(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     screening = models.ForeignKey(Screening, db_column='screening_id')
     video = models.ForeignKey(Video, db_column='video_id')
     class Meta:
         db_table = u'SCREENING_videoes_screened'
 
 class PersonMeetingAttendance(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
     expressed_interest_practice = models.ForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True)
@@ -699,8 +728,10 @@ pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 
         
 class PersonAdoptPractice(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     person = models.ForeignKey(Person)
-    practice = models.ForeignKey(Practices)
+    practice = models.ForeignKey(Practices, blank=True, null=True)
+    video = models.ForeignKey(Video)
     prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
     date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION')
     quality = models.CharField(max_length=200, db_column='QUALITY', blank=True)
@@ -710,6 +741,7 @@ class PersonAdoptPractice(models.Model):
         db_table = u'PERSON_ADOPT_PRACTICE'
 
 class Equipment(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     equipment_type = models.IntegerField(choices=EQUIPMENT, db_column='EQUIPMENT_TYPE')
     other_equipment = models.CharField("Specify the equipment if 'Other' equipment type has been selected ", max_length=300, db_column='OTHER_EQUIPMENT', null = True, blank=True)
     invoice_no = models.CharField(max_length=300, db_column='INVOICE_NO')
@@ -737,6 +769,7 @@ class UserPermission(models.Model):
     district_operated = models.ForeignKey(District, null=True, blank=True)
 
 class Target(models.Model):
+    id = PositiveBigIntegerField(primary_key = True)
     district = models.ForeignKey(District)
     month_year = models.DateField("Month & Year")
 
