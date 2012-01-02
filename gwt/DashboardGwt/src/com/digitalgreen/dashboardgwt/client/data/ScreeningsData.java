@@ -3,6 +3,7 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.StringBuilder;
+import java.util.HashMap;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
@@ -540,7 +541,7 @@ public class ScreeningsData extends BaseData {
 		return false;	
 	}
 	
-	public String retrieveDataAndConvertResultIntoHtml(){
+	public String retrieveFilteredDataAndConvertResultIntoHtml(){
 		StringBuilder sbHtml = new StringBuilder();
 		
 		VillagesData villageData = new VillagesData();
@@ -552,16 +553,20 @@ public class ScreeningsData extends BaseData {
 			village = (VillagesData.Data)villages.get(i);
 			sbHtml.append("<option value = \"" + village.getId() +"\">" + village.getVillageName() + "</option>");
 		}
-		sbHtml.append("</select>");		
+		sbHtml.append("</select>");
 		
-		AnimatorsData animatorData = new AnimatorsData();
-		List animators = animatorData.getAllAnimatorsWithVillageOffline();
-		AnimatorsData.Data animator;
 		sbHtml.append("<select name=\"animator\" id=\"id_animator\">" + 
 						"<option value='' >---------</option>");
-		for(int i = 0; i < animators.size(); i++){
-			animator = (AnimatorsData.Data)animators.get(i);
-			sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + " ("+ animator.getVillage().getVillageName() +")" + "</option>");
+		String village_id = getVillageFromForm();
+		if (village_id != null)
+		{
+			AnimatorsData animatorData = new AnimatorsData();
+			List animators = animatorData.getAllAnimatorsFilteredByVillageOffline(village_id);
+			AnimatorsData.Data animator;
+			for(int i = 0; i < animators.size(); i++){
+				animator = (AnimatorsData.Data)animators.get(i);
+				sbHtml.append("<option value = \"" + animator.getId() +"\">" + animator.getAnimatorName() + "</option>");
+			}
 		}
 		sbHtml.append("</select>");
 		
@@ -587,16 +592,18 @@ public class ScreeningsData extends BaseData {
 		}
 		sbHtml.append("</select>");
 		
-		PersonGroupsData personGroupData = new PersonGroupsData();
-		List personGroups = personGroupData.getAllPersonGroupsWithVillageOffline();
-		PersonGroupsData.Data personGroup;
-		sbHtml.append("<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">" + 
-						"<option value=''>---------</option>");
-
-		for(int i = 0; i < personGroups.size(); i++){
-			personGroup = (PersonGroupsData.Data)personGroups.get(i);
-			sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() + " ("+ personGroup.getVillage().getVillageName() + ")" +"</option>");
+		sbHtml.append("<select name=\"farmer_groups_targeted\" id=\"id_farmer_groups_targeted\">");
+		if (village_id != null)
+		{
+			PersonGroupsData personGroupData = new PersonGroupsData();
+			List personGroups = personGroupData.getAllPersonGroupsForVillageOffline(village_id);
+			PersonGroupsData.Data personGroup;
+			for(int i = 0; i < personGroups.size(); i++){
+				personGroup = (PersonGroupsData.Data)personGroups.get(i);
+				sbHtml.append("<option value = \"" + personGroup.getId() +"\">" + personGroup.getPersonGroupName() +"</option>");
+			}
 		}
+		
 		sbHtml.append("</select>");
 		
 		return sbHtml.toString();
@@ -607,20 +614,32 @@ public class ScreeningsData extends BaseData {
 		if(BaseData.isOnline()) {
 			this.get(RequestContext.SERVER_HOST + ScreeningsData.saveScreeningOnlineURL);
 		} else {
-			return retrieveDataAndConvertResultIntoHtml();
+			return retrieveFilteredDataAndConvertResultIntoHtml();
 		}
 		return false;
 	}
-	
+
 	public Object getAddPageData(String id){
 		if(BaseData.isOnline()){
 			this.get(RequestContext.SERVER_HOST + this.saveScreeningOnlineURL + id + "/" );
 		}
 		else {
 			this.form.toQueryString(id);
-			return retrieveDataAndConvertResultIntoHtml();
+			return retrieveFilteredDataAndConvertResultIntoHtml();
 		}
 		return false;
+	}
+	
+	private String getVillageFromForm() {
+		String village_id = null;
+		String qstr = this.form.getQueryString();
+		if ((qstr!=null) && (qstr.contains("village"))) {
+			HashMap map = Form.flatten(qstr);
+			if(map.containsKey("village")) {
+				village_id = map.get("village").toString();
+			}
+		}
+		return village_id;
 	}
 	
 	public String getCount(String searchText) {

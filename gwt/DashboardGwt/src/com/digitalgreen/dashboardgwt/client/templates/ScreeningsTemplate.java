@@ -309,7 +309,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 														"<th >Person</th>" +
 														"<th >Interested?</th>" +
 														"<th >Question Asked</th>" +
-														"<th >Recently Adopted Video</th>" +
+														"<th >Expressed Adopted Video</th>" +
 													"</tr>" +
 												"</thead>" +
 											"</table>" +

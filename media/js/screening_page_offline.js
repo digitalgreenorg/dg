@@ -256,15 +256,13 @@ function update_id_fields(row, new_position)
 }
 
 function filter_by_village(){
-    if(is_inited || !is_edit) {
-        var village = $('#id_village').val() || [];
-        if (village.length > 0) {
-            showStatus("Updating...");
-            get_filtered_data_for_village(village, function (data){
-                update_filtered_data_for_village(data);
-                hideStatus();
-            });
-        }
+    var village = $('#id_village').val() || [];
+    if (village.length > 0) {
+        showStatus("Updating...");
+        get_filtered_data_for_village(village, function (data){
+            update_filtered_data_for_village(data);
+            hideStatus();
+        });
     }
 }
 

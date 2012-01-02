@@ -406,8 +406,10 @@ public class AnimatorsData extends BaseData {
 	   										"CREATE INDEX IF NOT EXISTS animator_partner_id ON animator(partner_id);",
 											"CREATE INDEX IF NOT EXISTS animator_village_id ON animator(village_id);"};
 	protected static String selectAnimators = "SELECT animator.id, animator.name FROM animator ORDER BY (animator.NAME);";
-	protected static String selectAnimatorsWithVillage = "SELECT animator.id, animator.NAME, village.id, village.VILLAGE_NAME " +
+	protected static String selectAnimatorsWithVillage = "SELECT DISTINCT(animator.id), animator.name " +
 			"FROM animator JOIN village ON animator.village_id = village.id ORDER BY (animator.NAME);";
+	protected static String selectAnimatorsFilteredByVillage = "SELECT animator.id, animator.NAME " +
+			"FROM animator JOIN animator_assigned_village ON animator_assigned_village.animator_id = animator.id WHERE animator_assigned_village.village_id=\"%s\" ORDER BY (animator.NAME)";
 	protected static String listAnimators = "SELECT a.id, a.name,p.id,p.partner_name,vil.id,vil.village_name "
 			+ "FROM animator a,partners p,village vil WHERE  a.partner_id = p.id and a.village_id = vil.id ORDER BY LOWER(a.name)";
 	protected static String saveAnimatorOnlineURL = "/dashboard/saveanimatoronline/";
@@ -581,6 +583,26 @@ public class AnimatorsData extends BaseData {
 		return animators;
 	}
 	
+	public List getAllAnimatorsFilteredByVillageOffline(String village_id) {
+		BaseData.dbOpen();
+		List animators = new ArrayList();
+		this.select(selectAnimatorsFilteredByVillage.replaceFirst("%s", village_id));
+		if (this.getResultSet().isValidRow()) {
+			try {
+				VillagesData v = new VillagesData();
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
+					Data animator = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					animators.add(animator);
+				}
+			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return animators;
+	}
+	
 	public List getAllAnimatorsWithVillageOffline() {
 		BaseData.dbOpen();
 		List animators = new ArrayList();
@@ -601,7 +623,7 @@ public class AnimatorsData extends BaseData {
 		BaseData.dbClose();
 		return animators;
 	}
-
+	
 	public Object postPageData() {
 		if (BaseData.isOnline()) {
 			this.post(RequestContext.SERVER_HOST

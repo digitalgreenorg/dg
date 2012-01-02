@@ -275,7 +275,7 @@ public class PersonGroupsData extends BaseData {
 	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_groups_PRIMARY ON person_groups(id);", 
 	   										"CREATE INDEX IF NOT EXISTS person_groups_village_id ON person_groups(village_id);"};
 	protected static String selectPersonGroups = "SELECT id, GROUP_NAME FROM person_groups  ORDER BY (GROUP_NAME);";
-	protected static String selectPersonGroupsForVillage = "SELECT id, GROUP_NAME FROM person_groups where village_id = ";
+	protected static String selectPersonGroupsForVillage = "SELECT id, group_name FROM person_groups where village_id=%s ORDER BY group_name";
 	protected static String selectPersonGroupsWithVillage = "SELECT person_groups.id, person_groups.GROUP_NAME, village.id, village.VILLAGE_NAME " +
 			"FROM person_groups JOIN village ON person_groups.village_id = village.id ORDER BY (person_groups.GROUP_NAME)";
 	protected static String listPersonGroups = "SELECT pg.id,pg.GROUP_NAME, vil.id,vil.village_name FROM person_groups pg "
@@ -417,7 +417,7 @@ public class PersonGroupsData extends BaseData {
 	}
 	
 	public List getAllPersonGroupsForVillageOffline(String village_id) {
-		return fetchPersonGroupsForSql(selectPersonGroupsForVillage + village_id);
+		return fetchPersonGroupsForSql(selectPersonGroupsForVillage.replaceFirst("%s", village_id));
 	}
 
 	public List getAllPersonGroupsOffline() {
@@ -588,5 +588,6 @@ public class PersonGroupsData extends BaseData {
 		BaseData.dbClose();
 		return count;
 	}
+
 		
 }

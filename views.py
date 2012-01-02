@@ -1651,19 +1651,20 @@ def save_screening_online(request,id):
         if(id):
             screening = Screening.objects.get(id = id)
             form = ScreeningForm(instance = screening)
+            form.fields['animator'].queryset = Animator.objects.filter(village = screening.village).distinct().order_by('name')
+            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = screening.village).distinct().order_by('group_name')
             formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
         else:
             form = ScreeningForm()
+            form.fields['animator'].queryset = Animator.objects.none() #filter(village__in = villages).distinct().order_by('name')
+            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.none() #filter(village__in = villages).distinct().order_by('group_name')
             #formset = PersonMeetingAttendanceInlineFormSet()
         villages = get_user_villages(request)
         states = get_user_states(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
-        form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
         form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state__in = states).distinct().order_by('title')
         return HttpResponse(form.as_table())
-
 
 def get_attendance(request, id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
@@ -2393,11 +2394,11 @@ def filters_for_village (request, village_id):
         try:
             village = Village.objects.get(id=village_id)
             data['village'] = {'value': village.id, 'string' : village.village_name } 
-            animators = village.animator_set.all()
+            animators = Animator.objects.filter(assigned_villages=village).distinct()
             data['animators'] = []
             for anim in animators:
                 data['animators'].append({'value':anim.id,'string':anim.name})
-            groups = village.persongroups_set.all()
+            groups = PersonGroups.objects.filter(village=village).distinct()
             data['groups'] = []
             for group in groups:
                 data['groups'].append({'value':group.id,'string':group.group_name})
