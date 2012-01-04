@@ -258,7 +258,7 @@ public class PersonAdoptPractices extends BaseServlet {
 					if(queryArg.equals("add")) {
 						personAdoptPracticeData.apply(personAdoptPracticeData.getAddPageData());
 					}
-					else{
+					else {
 						form.setId((String)this.requestContext.getArgs().get("id"));
 						personAdoptPracticeData.apply(personAdoptPracticeData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}

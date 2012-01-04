@@ -23,8 +23,7 @@ public class PersonsTemplate extends BaseTemplate{
 		super(requestContext);
 		ArrayList personAdoptPracticeData = new ArrayList();
 		personAdoptPracticeData.add((new PersonAdoptPracticeData()).getNewData());
-		this.formTemplate = new Form((new PersonsData()).getNewData(),
-				new Object[] {personAdoptPracticeData});
+		this.formTemplate = new Form((new PersonsData()).getNewData());
 	}
 
 	@Override
@@ -104,8 +103,7 @@ public class PersonsTemplate extends BaseTemplate{
 		$wnd.DateTimeShortcuts.init();		
 	}-*/;
 
-	final private String addDataToElementID[] = {"id_village","id_group","id_personadoptpractice_set-0-practice",
-			"id_personadoptpractice_set-1-practice", "id_personadoptpractice_set-2-practice"};
+	final private String addDataToElementID[] = {"id_village","id_group"};
 	
 	private String personsListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
 								"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
@@ -264,145 +262,145 @@ public class PersonsTemplate extends BaseTemplate{
 														"</div>" +
 													"</div>" +
 												"</fieldset>" +
-												"<div class='inline-group'>" +
-												"<h2>Person Adopt Practices</h2>" +
-												"<input type='hidden' name='personadoptpractice_set-TOTAL_FORMS' value='3' id='id_personadoptpractice_set-TOTAL_FORMS' /><input type='hidden' name='personadoptpractice_set-INITIAL_FORMS' value='0' id='id_personadoptpractice_set-INITIAL_FORMS' />" +
-												"<div class='inline-related'>" +
-													"<h3><b>Person Adopt Practice:</b>&nbsp; #1" +
-													"</h3>" +
-													"<fieldset class='module aligned '>" +
-														"<div class='form-row practice  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-practice' class='required'>Practice:</label><select name='personadoptpractice_set-0-practice' id='id_personadoptpractice_set-0-practice'>" +
-																	"<option value='' selected='selected'>---------</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row prior_adoption_flag  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-0-prior_adoption_flag' id='id_personadoptpractice_set-0-prior_adoption_flag'>" +
-																	"<option value='' selected='selected'>---------</option>" +	
-																	"<option value='1'>Unknown</option>" +
-																	"<option value='2'>Yes</option>" +
-																	"<option value='3'>No</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row date_of_adoption  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-0-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-0-date_of_adoption' size='10' />" +
-																"</div>" +
-														"</div>" +
-														"<div class='form-row quality  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-quality'>Quality:</label><input id='id_personadoptpractice_set-0-quality' type='text' class='vTextField' name='personadoptpractice_set-0-quality' maxlength='200' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-quantity'>Quantity:</label><input id='id_personadoptpractice_set-0-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-0-quantity' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity_unit  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-0-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-0-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-0-quantity_unit' maxlength='150' />" +
-															"</div>" +
-														"</div>" +
-													"</fieldset>" +
-													"<input type='hidden' name='personadoptpractice_set-0-id' id='id_personadoptpractice_set-0-id' />" +
-													"<input type='hidden' name='personadoptpractice_set-0-person' id='id_personadoptpractice_set-0-person' />" +
-												"</div>" +
-												"<div class='inline-related'>" +
-													"<h3><b>Person Adopt Practice:</b>&nbsp; #2" +
-													"</h3>" +
-													"<fieldset class='module aligned '>" +
-														"<div class='form-row practice  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-practice' class='required'>Practice:</label><select name='personadoptpractice_set-1-practice' id='id_personadoptpractice_set-1-practice'>" +
-																	"<option value='' selected='selected'>---------</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row prior_adoption_flag  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-1-prior_adoption_flag' id='id_personadoptpractice_set-1-prior_adoption_flag'>" +
-																	"<option value='' selected='selected'>---------</option>" +		
-																	"<option value='1'>Unknown</option>" +
-																	"<option value='2'>Yes</option>" +
-																	"<option value='3'>No</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row date_of_adoption  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-1-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-1-date_of_adoption' size='10' />" +
-																"</div>" +
-														"</div>" +
-														"<div class='form-row quality  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-quality'>Quality:</label><input id='id_personadoptpractice_set-1-quality' type='text' class='vTextField' name='personadoptpractice_set-1-quality' maxlength='200' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-quantity'>Quantity:</label><input id='id_personadoptpractice_set-1-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-1-quantity' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity_unit  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-1-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-1-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-1-quantity_unit' maxlength='150' />" +
-															"</div>" +
-														"</div>" +
-													"</fieldset>" +
-													"<input type='hidden' name='personadoptpractice_set-1-id' id='id_personadoptpractice_set-1-id' />" +
-													"<input type='hidden' name='personadoptpractice_set-1-person' id='id_personadoptpractice_set-1-person' />" +
-												"</div>" +
-												"<div class='inline-related last-related'>" +
-													"<h3><b>Person Adopt Practice:</b>&nbsp; #3" +
-													"</h3>" +
-													"<fieldset class='module aligned '>" +
-														"<div class='form-row practice  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-practice' class='required'>Practice:</label><select name='personadoptpractice_set-2-practice' id='id_personadoptpractice_set-2-practice'>" +
-																	"<option value='' selected='selected'>---------</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row prior_adoption_flag  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-2-prior_adoption_flag' id='id_personadoptpractice_set-2-prior_adoption_flag'>" +
-																	"<option value='' selected='selected'>---------</option>" +		
-																	"<option value='1'>Unknown</option>" +
-																	"<option value='2'>Yes</option>" +
-																	"<option value='3'>No</option>" +
-																"</select>" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row date_of_adoption  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-2-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-2-date_of_adoption' size='10' />" +
-																"</div>" +
-														"</div>" +
-														"<div class='form-row quality  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-quality'>Quality:</label><input id='id_personadoptpractice_set-2-quality' type='text' class='vTextField' name='personadoptpractice_set-2-quality' maxlength='200' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-quantity'>Quantity:</label><input id='id_personadoptpractice_set-2-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-2-quantity' />" +
-															"</div>" +
-														"</div>" +
-														"<div class='form-row quantity_unit  '>" +
-															"<div>" +
-																"<label for='id_personadoptpractice_set-2-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-2-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-2-quantity_unit' maxlength='150' />" +
-															"</div>" +
-														"</div>" +
-													"</fieldset>" +
-													"<input type='hidden' name='personadoptpractice_set-2-id' id='id_personadoptpractice_set-2-id' />" +
-													"<input type='hidden' name='personadoptpractice_set-2-person' id='id_personadoptpractice_set-2-person' />" +
-													"</div>" +
-												"</div>" +
+//												"<div class='inline-group'>" +
+//												"<h2>Person Adopt Practices</h2>" +
+//												"<input type='hidden' name='personadoptpractice_set-TOTAL_FORMS' value='3' id='id_personadoptpractice_set-TOTAL_FORMS' /><input type='hidden' name='personadoptpractice_set-INITIAL_FORMS' value='0' id='id_personadoptpractice_set-INITIAL_FORMS' />" +
+//												"<div class='inline-related'>" +
+//													"<h3><b>Person Adopt Practice:</b>&nbsp; #1" +
+//													"</h3>" +
+//													"<fieldset class='module aligned '>" +
+//														"<div class='form-row practice  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-practice' class='required'>Practice:</label><select name='personadoptpractice_set-0-practice' id='id_personadoptpractice_set-0-practice'>" +
+//																	"<option value='' selected='selected'>---------</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row prior_adoption_flag  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-0-prior_adoption_flag' id='id_personadoptpractice_set-0-prior_adoption_flag'>" +
+//																	"<option value='' selected='selected'>---------</option>" +	
+//																	"<option value='1'>Unknown</option>" +
+//																	"<option value='2'>Yes</option>" +
+//																	"<option value='3'>No</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row date_of_adoption  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-0-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-0-date_of_adoption' size='10' />" +
+//																"</div>" +
+//														"</div>" +
+//														"<div class='form-row quality  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-quality'>Quality:</label><input id='id_personadoptpractice_set-0-quality' type='text' class='vTextField' name='personadoptpractice_set-0-quality' maxlength='200' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-quantity'>Quantity:</label><input id='id_personadoptpractice_set-0-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-0-quantity' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity_unit  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-0-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-0-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-0-quantity_unit' maxlength='150' />" +
+//															"</div>" +
+//														"</div>" +
+//													"</fieldset>" +
+//													"<input type='hidden' name='personadoptpractice_set-0-id' id='id_personadoptpractice_set-0-id' />" +
+//													"<input type='hidden' name='personadoptpractice_set-0-person' id='id_personadoptpractice_set-0-person' />" +
+//												"</div>" +
+//												"<div class='inline-related'>" +
+//													"<h3><b>Person Adopt Practice:</b>&nbsp; #2" +
+//													"</h3>" +
+//													"<fieldset class='module aligned '>" +
+//														"<div class='form-row practice  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-practice' class='required'>Practice:</label><select name='personadoptpractice_set-1-practice' id='id_personadoptpractice_set-1-practice'>" +
+//																	"<option value='' selected='selected'>---------</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row prior_adoption_flag  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-1-prior_adoption_flag' id='id_personadoptpractice_set-1-prior_adoption_flag'>" +
+//																	"<option value='' selected='selected'>---------</option>" +		
+//																	"<option value='1'>Unknown</option>" +
+//																	"<option value='2'>Yes</option>" +
+//																	"<option value='3'>No</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row date_of_adoption  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-1-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-1-date_of_adoption' size='10' />" +
+//																"</div>" +
+//														"</div>" +
+//														"<div class='form-row quality  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-quality'>Quality:</label><input id='id_personadoptpractice_set-1-quality' type='text' class='vTextField' name='personadoptpractice_set-1-quality' maxlength='200' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-quantity'>Quantity:</label><input id='id_personadoptpractice_set-1-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-1-quantity' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity_unit  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-1-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-1-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-1-quantity_unit' maxlength='150' />" +
+//															"</div>" +
+//														"</div>" +
+//													"</fieldset>" +
+//													"<input type='hidden' name='personadoptpractice_set-1-id' id='id_personadoptpractice_set-1-id' />" +
+//													"<input type='hidden' name='personadoptpractice_set-1-person' id='id_personadoptpractice_set-1-person' />" +
+//												"</div>" +
+//												"<div class='inline-related last-related'>" +
+//													"<h3><b>Person Adopt Practice:</b>&nbsp; #3" +
+//													"</h3>" +
+//													"<fieldset class='module aligned '>" +
+//														"<div class='form-row practice  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-practice' class='required'>Practice:</label><select name='personadoptpractice_set-2-practice' id='id_personadoptpractice_set-2-practice'>" +
+//																	"<option value='' selected='selected'>---------</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row prior_adoption_flag  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-prior_adoption_flag'>Prior adoption flag:</label><select name='personadoptpractice_set-2-prior_adoption_flag' id='id_personadoptpractice_set-2-prior_adoption_flag'>" +
+//																	"<option value='' selected='selected'>---------</option>" +		
+//																	"<option value='1'>Unknown</option>" +
+//																	"<option value='2'>Yes</option>" +
+//																	"<option value='3'>No</option>" +
+//																"</select>" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row date_of_adoption  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-date_of_adoption' class='required'>Date of adoption:</label><input id='id_personadoptpractice_set-2-date_of_adoption' type='text' class='vDateField' name='personadoptpractice_set-2-date_of_adoption' size='10' />" +
+//																"</div>" +
+//														"</div>" +
+//														"<div class='form-row quality  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-quality'>Quality:</label><input id='id_personadoptpractice_set-2-quality' type='text' class='vTextField' name='personadoptpractice_set-2-quality' maxlength='200' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-quantity'>Quantity:</label><input id='id_personadoptpractice_set-2-quantity' type='text' class='vIntegerField' name='personadoptpractice_set-2-quantity' />" +
+//															"</div>" +
+//														"</div>" +
+//														"<div class='form-row quantity_unit  '>" +
+//															"<div>" +
+//																"<label for='id_personadoptpractice_set-2-quantity_unit'>Quantity unit:</label><input id='id_personadoptpractice_set-2-quantity_unit' type='text' class='vTextField' name='personadoptpractice_set-2-quantity_unit' maxlength='150' />" +
+//															"</div>" +
+//														"</div>" +
+//													"</fieldset>" +
+//													"<input type='hidden' name='personadoptpractice_set-2-id' id='id_personadoptpractice_set-2-id' />" +
+//													"<input type='hidden' name='personadoptpractice_set-2-person' id='id_personadoptpractice_set-2-person' />" +
+//													"</div>" +
+//												"</div>" +
 												"<div class='submit-row' >" +
 												"<input id='save' type='button' value='Save' class='default' name='_save' />" +
 												"</div>" +
