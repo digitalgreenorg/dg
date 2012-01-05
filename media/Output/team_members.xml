@@ -43,7 +43,7 @@
 		<NAME>Shivaji Choudhary</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Development Manager</TITLE>
+		<TITLE>Regional Program Coordinator</TITLE>
 		<ARTIST>/media/Output/Images/gulzar1.png</ARTIST>    
     	<DESC>Hi, I am Gulzar. I have twenty years of experience in RD, ICT business and social development.  I had the opportunity to serve people in post conflict Afghanistan through the Aga Khan Development Network which led to my commitment to development sector. My personal vision of equitable society connects to the vision of Digital Green which aims to bring cost-effectiveness to the agricultural extension services and thus improve the agricultural practices that can improve the socio-economic status of the marginalized and small landholder farmers. </DESC>
     	<COMPANY>Digital Green</COMPANY>
@@ -74,35 +74,9 @@
 		<MAILID>gulrez@digitalgreen.org</MAILID>
 		<NAME>Mohammad Gulrez</NAME>
 	</TEAM>
-	<TEAM>
-		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/abhishekh1.png</ARTIST>
-		<DESC>Abhishek is a graduate from the London School of Economics, UK with specialization in use of ICT for socioeconomic development and holds a bachelor's in mechanical engineering from PESIT, Bangalore. He has over five years experience in product development and research. He has filed four patents in the field of computer science and has worked as part of engineering teams at Adobe Systems and Infosys Technologies. He is also a Fellow for Sustainable Business at the Piramal Foundation. Abhishek has strong commitment to bringing about social change by harnessing innovations in the technology space. Abhishek likes to strategize and work towards sustainable rural development, especially for the empowerment of the farmers in rural India. He wants to avail this opportunity to gain invaluable hands-on experience as well as contribute to the vision and commitment nurtured by the passionate Digital Green team. He likes to travel, read and follow emerging technologies in mobile and web applications space.</DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>hegde@digitalgreen.org</MAILID>
-		<NAME>Abhishek Hegde</NAME>
-	</TEAM>	
-	<TEAM>
-		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/aruna.png</ARTIST>
-		<DESC>Aruna Katragadda Gali has eighteen years of experience in Social Development sector,Volunteering and Media. She has worked with National Green Corps (NGC)-Andhra Pradesh and National and International repute NGOs like PRIA, CARE- STEP and Satyam Foundation. In Satyam Foundation, she has promoted eco-friendly, sustainable, solid waste management project at KPHB- GHMC and Community Ganesha at different places in Hyderabad. Also facilitated rainwater harvesting structures in Hyderabad City Police stations, AP. She authored, translated, published 10 books on environment education, Panchayat Raj Institutions and Government Welfare Schemes. As a trainer, she has developed modules and trained different stakeholders on gender, Environment Education and Panchayat Raj Institutes. Writes for media on developmental issues on regular basis and participates in TV talk shows on Developmental Issues. She blogs at blog.vikasadhatri.org on developmental issues. She received Best Project Officer Award from Chief Minister in 2001 on the eve of World Ozone Day. She loves traveling and photography, she is always motivated by interaction with people, fond of exploring the traditional knowledge systems, especially interested in Tribal and Rural practices. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>aruna@digitalgreen.org</MAILID>
-		<NAME>Aruna Katragadda Gali</NAME>
-	</TEAM>
 	
 	<TEAM>
-		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/shreyaaggarwal.png</ARTIST>
-		<DESC>While travelling around rural India two years back, I was repeatedly told by farmers that foremost on their list of concerns was limited access to water and information. This is why I joined Digital Green. I hope that by working here I will be able to bridge at least some of the gap that exists in bringing good quality information to farmers. For the last three years, I have worked in the development sector on issues such as education, health and livelihoods. After completing a MA Development Studies from the Institute of Development Studies (IDS), University of Sussex, I worked in the United Kingdom as a research consultant with IDS on participatory learning initiatives and as a volunteer with PLAN UK on its Because I am a Girl Project. I then decided to come back to India to be closer to the hot bed of path breaking and high impact development work. For a few months I worked as a communications consultant with BAIRD's CMC and as a researcher with PRADAN. I then joined a public policy think tank, Centre for Civil Society, as a research associate. Besides research, I was able to get diverse experience in fund-raising, organizational strategy planning, program management and advocacy. I now hope to use this knowledge and experience in contributing to achieving the Digital Green vision of sustainable rural development. In my spare time I like travelling, reading and painting. </DESC>
-
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>shreya@digitalgreen.org</MAILID>
-		<NAME>Shreya Aggarwal</NAME>
-	</TEAM>
-	
-	<TEAM>
-		<TITLE>Program Manager</TITLE>
+		<TITLE>Senior Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/ronali.png</ARTIST>
 		<DESC>With specialization in Agriculture Extension Education and Agribusiness Management, I have been deeply involved in working with the marginalized rural communities for bringing positive change in the qualities of their life and livelihoods since last 9 years. I have worked with state level organizations like SVA and national level entity like CWS has enabled me to work closely with small and marginal farmers in the state of Odisha. Over the years I have realized that there is a gap in transferring technology in usable and adoptable mode and both the innovators and the end users are drawn from different levels of knowledge, understanding and attitude. I have joined Digital Green because Digital Green is playing a crucial role in bridging these gaps and focusing on dissemination of sustainable technologies for bringing sustainable upliftment in the livelihoods of the farming communities. </DESC>
 
@@ -112,7 +86,35 @@
 	</TEAM>
 	
 	<TEAM>
-		<TITLE>Assistant Development Manager</TITLE>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/abhishekh1.png</ARTIST>
+		<DESC>Abhishek is a graduate from the London School of Economics, UK with specialization in use of ICT for socioeconomic development and holds a bachelor's in mechanical engineering from PESIT, Bangalore. He has over five years experience in product development and research. He has filed four patents in the field of computer science and has worked as part of engineering teams at Adobe Systems and Infosys Technologies. He is also a Fellow for Sustainable Business at the Piramal Foundation. Abhishek has strong commitment to bringing about social change by harnessing innovations in the technology space. Abhishek likes to strategize and work towards sustainable rural development, especially for the empowerment of the farmers in rural India. He wants to avail this opportunity to gain invaluable hands-on experience as well as contribute to the vision and commitment nurtured by the passionate Digital Green team. He likes to travel, read and follow emerging technologies in mobile and web applications space.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>hegde@digitalgreen.org</MAILID>
+		<NAME>Abhishek Hegde</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/shreyaaggarwal.png</ARTIST>
+		<DESC>While travelling around rural India two years back, I was repeatedly told by farmers that foremost on their list of concerns was limited access to water and information. This is why I joined Digital Green. I hope that by working here I will be able to bridge at least some of the gap that exists in bringing good quality information to farmers. For the last three years, I have worked in the development sector on issues such as education, health and livelihoods. After completing a MA Development Studies from the Institute of Development Studies (IDS), University of Sussex, I worked in the United Kingdom as a research consultant with IDS on participatory learning initiatives and as a volunteer with PLAN UK on its Because I am a Girl Project. I then decided to come back to India to be closer to the hot bed of path breaking and high impact development work. For a few months I worked as a communications consultant with BAIRD's CMC and as a researcher with PRADAN. I then joined a public policy think tank, Centre for Civil Society, as a research associate. Besides research, I was able to get diverse experience in fund-raising, organizational strategy planning, program management and advocacy. I now hope to use this knowledge and experience in contributing to achieving the Digital Green vision of sustainable rural development. In my spare time I like travelling, reading and painting. </DESC>
+
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>shreya@digitalgreen.org</MAILID>
+		<NAME>Shreya Agarwal</NAME>
+	</TEAM>
+		
+	<TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/aruna.png</ARTIST>
+		<DESC>Aruna Katragadda Gali has eighteen years of experience in Social Development sector,Volunteering and Media. She has worked with National Green Corps (NGC)-Andhra Pradesh and National and International repute NGOs like PRIA, CARE- STEP and Satyam Foundation. In Satyam Foundation, she has promoted eco-friendly, sustainable, solid waste management project at KPHB- GHMC and Community Ganesha at different places in Hyderabad. Also facilitated rainwater harvesting structures in Hyderabad City Police stations, AP. She authored, translated, published 10 books on environment education, Panchayat Raj Institutions and Government Welfare Schemes. As a trainer, she has developed modules and trained different stakeholders on gender, Environment Education and Panchayat Raj Institutes. Writes for media on developmental issues on regular basis and participates in TV talk shows on Developmental Issues. She blogs at blog.vikasadhatri.org on developmental issues. She received Best Project Officer Award from Chief Minister in 2001 on the eve of World Ozone Day. She loves traveling and photography, she is always motivated by interaction with people, fond of exploring the traditional knowledge systems, especially interested in Tribal and Rural practices. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>aruna@digitalgreen.org</MAILID>
+		<NAME>Aruna Katragadda Gali</NAME>
+	</TEAM>		
+	
+	<TEAM>
+		<TITLE>Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/shekhar1.png</ARTIST>    
     	<DESC>Hi, This is Chandra Shekhar from Jharkhand.  I pursued my Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar.  My career interest is working for rural development through which small and marginal farmers will better their livelihoods in a manner that is socially, economically and environmentally sustainable.  Joining Digital Green has given me a new strategy in my thinking process to work with the rural community and a new methodology to address the rural concern through efficient extension system.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
@@ -169,7 +171,7 @@
 		<NAME>Nandini Bhardwaj</NAME>		
 	</TEAM>
 	<TEAM>
-		<TITLE>Assistant Systems Engineer</TITLE>
+		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/sreenu1.png</ARTIST>    
     	<DESC>Hi, My name is G.Sreenivasula Reddy. My home town is kadapa, Andhra Pradesh. I joined Digital Green as an intern in Systems Department and later joined as an Assistant Research Software Development Engineer. I pursued my graduation in ICT at Dhirubhai Ambani Institute of Infomation and Communication Technology (DA-IICT) Gandhinagar, Gujarat. I firmly believe that ICT has a key role to play in developing the disadvantaged sections of the society.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
