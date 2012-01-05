@@ -212,9 +212,9 @@ def tech(request):
     
     return render_to_response('technology.html')
 
-def bookmarklet(request):
+def retreat11(request):
     
-    return render_to_response('bookmarklet.html')
+    return render_to_response('base_team_retreat11.html')
 
 def update(request):
     return HttpResponseRedirect('https://sites.google.com/a/digitalgreen.org/inside-digital-green/updates')
