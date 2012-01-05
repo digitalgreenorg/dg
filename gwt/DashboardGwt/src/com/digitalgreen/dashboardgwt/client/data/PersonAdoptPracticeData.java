@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.digitalgreen.dashboardgwt.client.common.Form;
@@ -19,7 +20,6 @@ public class PersonAdoptPracticeData extends BaseData{
 	public static class Type extends BaseData.Type{
 		protected Type() {}
 		public final native PersonsData.Type getPerson() /*-{ return this.fields.person }-*/;
-		public final native PracticesData.Type getPractice() /*-{ return this.fields.practice }-*/;
 		public final native VideosData.Type getVideo() /*-{ return this.fields.video }-*/;
 		public final native PersonGroupsData.Type getGroup() /*-{ return this.fields.person.fields.group }-*/;
 		public final native VillagesData.Type getVillage() /*-{ return this.fields.person.fields.village }-*/;
@@ -36,7 +36,6 @@ public class Data extends BaseData.Data {
 		private PersonsData.Data person;
 		private VillagesData.Data village;
 		private PersonGroupsData.Data group;
-		private PracticesData.Data practice;
 		private VideosData.Data video;
 		private String prior_adoption_flag;
 		private String date_of_adoption;
@@ -53,30 +52,13 @@ public class Data extends BaseData.Data {
 			this.id = id;
 			this.date_of_adoption = date_of_adoption;
 		}		
-		//previous constructor before adding video field in personadopt practice
-		public Data(String id,PersonsData.Data person, PracticesData.Data practice,PersonGroupsData.Data group, VillagesData.Data village, 
-				String prior_adoption_flag,String date_of_adoption,
-				String quality,String quantity,String quantity_unit) {
-			super();
-			this.id = id;
-			this.person = person;
-			this.practice = practice;
-			this.group = group;
-			this.village = village;
-			this.prior_adoption_flag = prior_adoption_flag;
-			this.date_of_adoption = date_of_adoption;
-			this.quality = quality;
-			this.quantity = quantity;
-			this.quantity_unit = quantity_unit;			
-		}
 		
-		public Data(String id,PersonsData.Data person, PracticesData.Data practice,VideosData.Data video, PersonGroupsData.Data group, VillagesData.Data village, 
+		public Data(String id,PersonsData.Data person, VideosData.Data video, PersonGroupsData.Data group, VillagesData.Data village, 
 				String prior_adoption_flag,String date_of_adoption,
 				String quality,String quantity,String quantity_unit) {
 			super();
 			this.id = id;
 			this.person = person;
-			this.practice = practice;
 			this.video = video;
 			this.group = group;
 			this.village = village;
@@ -89,10 +71,6 @@ public class Data extends BaseData.Data {
 		
 		public PersonsData.Data getPerson(){
 			return this.person;
-		}
-		
-		public PracticesData.Data getPractice(){
-			return this.practice;
 		}
 		
 		public VideosData.Data getVideo(){
@@ -127,7 +105,7 @@ public class Data extends BaseData.Data {
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.person = (new PersonsData()).new Data();
-			obj.practice = (new PracticesData()).new Data();
+			obj.video = (new VideosData()).new Data();
 			return obj;
 		}
 		
@@ -145,11 +123,7 @@ public class Data extends BaseData.Data {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
 				this.person.id = val;
-			} else if(key.equals("practice")) {
-				PracticesData practice = new PracticesData();
-				this.practice = practice.getNewData();
-				this.practice.id = val;
-			}  else if(key.equals("video")) {
+			} else if(key.equals("video")) {
 				VideosData video = new VideosData();
 				this.video = video.getNewData();
 				this.video.id = val;
@@ -175,8 +149,8 @@ public class Data extends BaseData.Data {
 			if(other instanceof PersonAdoptPracticeData.Data) {
 				PersonAdoptPracticeData.Data obj = (PersonAdoptPracticeData.Data) other;
 				if(this.date_of_adoption.equals(obj.getDateOfAdoption()) 
-						&& this.practice.getId().equals(obj.getPractice().getId()) ) {
-					errorStack.add("Person adopted two same practices on same date");
+						&& this.video.getId().equals(obj.getVideo().getId()) ) {
+					errorStack.add("Person adopted two same video on same date");
 					return true;
 				} else
 					return false;
@@ -186,14 +160,12 @@ public class Data extends BaseData.Data {
 		@Override
 		public boolean validate() {
 			String personLabel = "Person";
-			String practiceLabel = "Practice";
 			String videoLabel = "Video";
 			String dateOfAdoptionLabel = "DateOfAdoption";
 			String qualityLabel = "Quality";
 			String quantityLabel = "Quantity";
 			String quantityUnitLabel = "Quantity Unit";
 			StringValidator personValidator = new StringValidator(personLabel,this.person.getId(), false, false, 1, 100);
-			//StringValidator practiceValidator = new StringValidator(practiceLabel, this.practice.getId(), false, false, 1, 100);
 			StringValidator videoValidator = new StringValidator(videoLabel, this.video.getId(), false, false, 1, 100);
 			DateValidator dateOfAdoption = new DateValidator(dateOfAdoptionLabel, this.date_of_adoption, false, false);
 			StringValidator quality = new StringValidator(qualityLabel, this.quality, true, true, 0, 100, true);
@@ -204,15 +176,15 @@ public class Data extends BaseData.Data {
 			ArrayList unqPerson = new ArrayList();
 			unqPerson.add("person_id");
 			unqPerson.add(this.person.getId());			
-			ArrayList unqPractice = new ArrayList();
-			unqPractice.add("video_id");
-			unqPractice.add(this.video.getId());			
+			ArrayList unqVideo = new ArrayList();
+			unqVideo.add("video_id");
+			unqVideo.add(this.video.getId());			
 			ArrayList unqDateOfAdoption = new ArrayList();
 			unqDateOfAdoption.add("date_of_adoption");
 			unqDateOfAdoption.add(this.date_of_adoption);			
 			ArrayList uniqueTogether = new ArrayList();
 			uniqueTogether.add(unqPerson);
-			uniqueTogether.add(unqPractice);
+			uniqueTogether.add(unqVideo);
 			uniqueTogether.add(unqDateOfAdoption);
 			ArrayList uniqueValidatorLabels = new ArrayList();
 			uniqueValidatorLabels.add("Person");
@@ -223,7 +195,7 @@ public class Data extends BaseData.Data {
 			uniquePersonPractice.setCheckId(this.getId());			
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(personValidator);
-			//validatorList.add(practiceValidator);
+			validatorList.add(videoValidator);
 			validatorList.add(dateOfAdoption);
 			validatorList.add(quality);
 			validatorList.add(quantity);
@@ -234,18 +206,18 @@ public class Data extends BaseData.Data {
 		
 		@Override
 		public boolean validate(BaseData.Data foreignKey) {
-			String practiceLabel = "Practice";
+			String videoLabel = "Video";
 			String dateOfAdoptionLabel = "DateOfAdoption";
 			String qualityLabel = "Quality";
 			String quantityLabel = "Quantity";
 			String quantityUnitLabel = "Quantity Unit";
-			StringValidator practiceValidator = new StringValidator(practiceLabel, this.practice.getId(), false, false, 1, 100);
+			StringValidator videoValidator = new StringValidator(videoLabel, this.video.getId(), false, false, 1, 100);
 			DateValidator dateOfAdoption = new DateValidator(dateOfAdoptionLabel, this.date_of_adoption, false, false);
 			StringValidator quality = new StringValidator(qualityLabel, this.quality, true, true, 0, 100, true);
 			IntegerValidator quantity = new IntegerValidator(quantityLabel, this.quantity, true, true);
 			StringValidator quantityUnit = new StringValidator(quantityUnitLabel, this.quantity_unit, true, true, 0, 100,true);
 			ArrayList validatorList = new ArrayList();
-			validatorList.add(practiceValidator);
+			validatorList.add(videoValidator);
 			validatorList.add(dateOfAdoption);
 			validatorList.add(quality);
 			validatorList.add(quantity);
@@ -258,7 +230,6 @@ public class Data extends BaseData.Data {
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
 			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
 					this.person.getId(),
-					this.practice.getId(),
 					this.video.getId(),
 					this.prior_adoption_flag,
 					this.date_of_adoption,
@@ -272,7 +243,6 @@ public class Data extends BaseData.Data {
 			PersonAdoptPracticeData personAdoptPracticesDataDbApis = new PersonAdoptPracticeData();
 			this.id = personAdoptPracticesDataDbApis.autoInsert(this.id,
 					foreignKey.getId(),
-					this.practice.getId(),
 					this.video.getId(),
 					this.prior_adoption_flag,
 					this.date_of_adoption,
@@ -307,7 +277,6 @@ public class Data extends BaseData.Data {
 	protected static String createTable = "CREATE TABLE IF NOT EXISTS `person_adopt_practice` " +
 												"(id BIGINT UNSIGNED PRIMARY KEY  NOT NULL ," +
 												"person_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
-												"practice_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"video_id BIGINT UNSIGNED  NULL DEFAULT NULL," +
 												"PRIOR_ADOPTION_FLAG SMALLINT  NULL DEFAULT NULL," +
 												"DATE_OF_ADOPTION DATE NOT NULL," +
@@ -315,23 +284,24 @@ public class Data extends BaseData.Data {
 												"QUANTITY INT  NULL DEFAULT NULL," +
 												"QUANTITY_UNIT VARCHAR(150)  NULL DEFAULT NULL, " +
 												"FOREIGN KEY(person_id) REFERENCES person(id), " +
-												"FOREIGN KEY(video_id) REFERENCES video(id), " +
-												"FOREIGN KEY(practice_id) REFERENCES practices(id));";
+												"FOREIGN KEY(video_id) REFERENCES video(id));";
 	protected static String dropTable = "DROP TABLE IF EXISTS `person_adopt_practice`;";
 	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS person_adopt_practice_PRIMARY ON person_adopt_practice(id);", 
 	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_person_id ON person_adopt_practice(person_id);",
-	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_person_id ON person_adopt_practice(video_id);",
-	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_practice_id ON person_adopt_practice(practice_id);"};
+	   "CREATE INDEX IF NOT EXISTS person_adopt_practice_video_id ON person_adopt_practice(video_id);"};
 	protected static String selectPersonAdoptPractices = "SELECT id, date_of_adoption FROM person_adopt_practice ORDER BY (date_of_adoption);";
 	protected static String listPersonAdoptPractices = "SELECT pap.id, p.id, p.person_name," +
 			"pap.DATE_OF_ADOPTION,pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit," +
 			" pg.id, pg.group_name, vil.id, vil.village_name, vid.id, vid.title " +
-			"FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN village vil ON p.village_id = vil.id " +
-			"LEFT JOIN person_groups pg on p.group_id = pg.id LEFT JOIN video vid ON vid.id = pap.video_id  ORDER BY LOWER(p.PERSON_NAME) ";
+			"FROM person_adopt_practice pap " +
+			"JOIN person p ON p.id = pap.person_id " +
+			"JOIN village vil ON p.village_id = vil.id " +
+			"LEFT JOIN person_groups pg on p.group_id = pg.id " +
+			"LEFT JOIN video vid ON vid.id = pap.video_id  " +
+			"ORDER BY pap.id DESC";
 	protected static String savePersonAdoptPracticeOnlineURL = "/dashboard/savepersonadoptpracticeonline/";
 	protected static String getPersonAdoptPracticeOnlineURL = "/dashboard/getpersonadoptpracticesonline/";
 	protected static String savePersonAdoptPracticeOfflineURL = "/dashboard/savepersonadoptpracticeoffline/";
-	protected static String getPracticeSeenForPersonURL = "/dashboard/getpracticesseenforperson/";
 	protected static String getVideoSeenForPersonURL = "/dashboard/getvideosseenforperson/";
 	protected static String getBlocksForDistrictURL = "/dashboard/getblocksfordistrictonline/";
 	protected static String getVillagesForBlockURL = "/dashboard/getvillagesforblocksonline/";
@@ -339,7 +309,7 @@ public class Data extends BaseData.Data {
 	protected static String getPersonForVillageAndNoPersonGroupURL = "/dashboard/getpersonforvillageandnopersongrouponline/";
 	protected static String getPersonForPersonGroupsURL = "/dashboard/getpersonforpersongrouponline/";
 	protected String table_name = "person_adopt_practice";
-	protected String[] fields = {"id", "person_id", "practice_id", "video_id", "prior_adoption_flag", 
+	protected String[] fields = {"id", "person_id", "video_id", "prior_adoption_flag", 
 			"date_of_adoption","quality","quantity","quantity_unit"};
 		
 	
@@ -410,13 +380,11 @@ public class Data extends BaseData.Data {
 		PersonsData person = new PersonsData();
 		VillagesData village = new VillagesData();
 		PersonGroupsData group = new PersonGroupsData();
-		PracticesData practice = new PracticesData();
 		VideosData video = new VideosData();
 		VillagesData.Data vil = null;
 		for(int i = 0; i < personAdoptPracticeObjects.length(); i++){
 			PersonGroupsData.Data pg = group.new Data();
 			VideosData.Data vid = video.new Data();
-			PracticesData.Data pr = practice.new Data();
 			vil = village.new Data(personAdoptPracticeObjects.get(i).getVillage().getPk(),
 					personAdoptPracticeObjects.get(i).getVillage().getVillageName());
 
@@ -431,11 +399,11 @@ public class Data extends BaseData.Data {
 			
 			PersonsData.Data p=person.new Data(personAdoptPracticeObjects.get(i).getPerson().getPk(), 
 					personAdoptPracticeObjects.get(i).getPerson().getPersonName());
-			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(),p, pr, vid, pg,vil, 
+			Data personAdoptPractice = new Data(personAdoptPracticeObjects.get(i).getPk(), p, vid, pg, vil, 
 					personAdoptPracticeObjects.get(i).getPriorAdoptionFlag(), personAdoptPracticeObjects.get(i).getDateOfAdoption(),
 					personAdoptPracticeObjects.get(i).getQuality(),personAdoptPracticeObjects.get(i).getQuantity(),
 					personAdoptPracticeObjects.get(i).getQuantityUnit());
-			personAdoptPractices.add(personAdoptPractice);			
+			personAdoptPractices.add(personAdoptPractice);	
 		}		
 		return personAdoptPractices;
 	}
@@ -446,7 +414,6 @@ public class Data extends BaseData.Data {
 		PersonsData person = new PersonsData();
 		PersonGroupsData group = new PersonGroupsData();
 		VillagesData vil = new VillagesData(); 
-		PracticesData practice = new PracticesData();
 		VideosData video = new VideosData();
 		String listTemp;
 		if(pageNum.length == 0) {
@@ -460,11 +427,14 @@ public class Data extends BaseData.Data {
 				listTemp = "SELECT pap.id, p.id, p.person_name," +
 				"pap.DATE_OF_ADOPTION,pap.prior_adoption_flag,pap.quality, pap.quantity, pap.quantity_unit," +
 				" pg.id, pg.group_name, vil.id, vil.village_name, vid.id, vid.title " +
-				"FROM person_adopt_practice pap JOIN person p ON p.id = pap.person_id JOIN village vil ON p.village_id = vil.id " +
-				"LEFT JOIN person_groups pg on p.group_id = pg.id LEFT JOIN video vid ON vid.id = pap.video_id " +
+				"FROM person_adopt_practice pap " +
+				"JOIN person p ON p.id = pap.person_id " +
+				"JOIN village vil ON p.village_id = vil.id " +
+				"LEFT JOIN person_groups pg on p.group_id = pg.id " +
+				"LEFT JOIN video vid ON vid.id = pap.video_id " +
 				"WHERE (p.person_name LIKE '%"+pageNum[1]+"%' " +
-										"OR pg.group_name" +" LIKE '%"+pageNum[1]+"%' "+
-									"OR vil.village_name" +	" LIKE '%"+pageNum[1]+"%') ORDER BY LOWER(p.PERSON_NAME) " 
+						"OR pg.group_name" +" LIKE '%"+pageNum[1]+"%' "+
+						"OR vil.village_name" +	" LIKE '%"+pageNum[1]+"%') ORDER BY pap.id DESC" 
 							+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
 			}
 		}
@@ -484,9 +454,8 @@ public class Data extends BaseData.Data {
 					VillagesData.Data v = vil.new Data(this.getResultSet()
 							.getFieldAsString(10), this.getResultSet()
 							.getFieldAsString(11));
-					PracticesData.Data pr = practice.new Data();
 					VideosData.Data vid = video.new Data(this.getResultSet().getFieldAsString(12),  this.getResultSet().getFieldAsString(13));
-					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), p,pr,vid, pg,v,this.getResultSet().getFieldAsString(3),
+					Data personAdoptPractice = new Data(this.getResultSet().getFieldAsString(0), p, vid, pg, v,this.getResultSet().getFieldAsString(3),
 							this.getResultSet().getFieldAsString(4),this.getResultSet().getFieldAsString(5),this.getResultSet().getFieldAsString(6),
 							this.getResultSet().getFieldAsString(7));
 					personAdoptPractices.add(personAdoptPractice);
@@ -555,7 +524,7 @@ public class Data extends BaseData.Data {
 	}
 	
 	public Object getListPageData(String...pageNum ){
-		if(BaseData.isOnline()){
+		if(BaseData.isOnline()) {
 			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
 			if(pageNum.length > 1 ) {
@@ -566,11 +535,11 @@ public class Data extends BaseData.Data {
 						+ Integer.toString(offset) + "/" + Integer.toString(limit) + "/");
 			}
 		}
-		else{
+		else {
 			return true;
 		}
 		return false;
-	}	
+	}
 	
 	public String retrieveBlocksDataAndConvertToHtml(String district_id) {
 		BlocksData blocksData = new BlocksData();
@@ -641,20 +610,6 @@ public class Data extends BaseData.Data {
 		return htmlPG;
 	}
 	
-	public String retrievePracticeSeenDataAndConvertToHtml(String person_id) {
-		PracticesData practiceData = new PracticesData();
-		List practices = practiceData.getPracticeSeenForPersonOffline(person_id);
-		
-		String htmlPractice = "<option value='' selected='selected'>---------</option>";
-		
-		for(Object practice : practices) {
-			htmlPractice = htmlPractice + "<option value=\"" + ((PracticesData.Data)practice).getId() + "\">" + 
-			((PracticesData.Data)practice).getPracticeName() + "</option>";
-		}
-		
-		return htmlPractice;
-	}
-	
 	public String retrieveVideoSeenDataAndConvertToHtml(String person_id) {
 		VideosData videosData = new VideosData();
 		List videos = videosData.getVideoSeenForPersonOffline(person_id);
@@ -681,29 +636,28 @@ public class Data extends BaseData.Data {
 			} 
 		htmlPerson = htmlPerson + "</select>";
 		
-		//code commented after moving to practice migration
-		/*PracticesData practiceData = new PracticesData();
-		List practices = practiceData.getAllPracticesOffline();
-		PracticesData.Data practice;
-		String htmlPractice = "<select name=\"practice\" id=\"id_practice\""  + 
-							"<option value='' selected='selected'>---------</option>";
-		for(int i = 0; i < practices.size(); i++ ) {
-			practice = (PracticesData.Data)practices.get(i);
-			htmlPractice = htmlPractice + "<option value=\"" + practice.getId() + "\">" + practice.getPracticeName() + "</option>";
+		String htmlVideoOptions = null;
+		//Fetch filtered videos if person is present in querystring
+		if(this.form.getQueryString() != null) {
+			HashMap map = Form.flatten(this.form.getQueryString());
+			if(map.containsKey("person")) {
+				htmlVideoOptions = retrieveVideoSeenDataAndConvertToHtml(map.get("person").toString());
+			}
 		}
-		htmlPractice = htmlPractice + "</select>";*/
 		
-		VideosData videoData = new VideosData();
-		List videos = videoData.getAllVideosOffline();
-		VideosData.Data video;
-		String htmlVideo = "<select name=\"video\" id=\"id_video\""  + 
-							"<option value='' selected='selected'>---------</option>";
-		for(int i = 0; i < videos.size(); i++ ) {
-			video = (VideosData.Data)videos.get(i);
-			htmlVideo = htmlVideo + "<option value=\"" + video.getId() + "\">" + video.getTitle() + " ("+ video.getVillage().getVillageName() +")" 
-			+ "</option>";
+		//person was not present in querystring. fetch all videos in the database
+		if(htmlVideoOptions == null) {
+			VideosData videoData = new VideosData();
+			List videos = videoData.getAllVideosOffline();
+			VideosData.Data video;
+			htmlVideoOptions = "<option value='' selected='selected'>---------</option>";
+			for(int i = 0; i < videos.size(); i++ ) {
+				video = (VideosData.Data)videos.get(i);
+				htmlVideoOptions = htmlVideoOptions + "<option value=\"" + video.getId() + "\">" + video.getTitle() + " ("+ video.getVillage().getVillageName() +")" 
+				+ "</option>";
+			}
 		}
-		htmlVideo = htmlVideo + "</select>";
+		String htmlVideo = "<select name=\"video\" id=\"id_video\""  + htmlVideoOptions + "</select>";
 		
 		return htmlPerson + htmlVideo;
 	}
@@ -754,16 +708,6 @@ public class Data extends BaseData.Data {
 		}
 		else {
 			return retrievePersonGroupsDataAndConvertToHtml(village_id);
-		}
-		return false;
-	}
-	
-	public Object getPracticesForPerson(String person_id) {
-		if(BaseData.isOnline()) {
-			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.getPracticeSeenForPersonURL + person_id + "/");
-		}
-		else {
-			return retrievePracticeSeenDataAndConvertToHtml(person_id);
 		}
 		return false;
 	}

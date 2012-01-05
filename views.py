@@ -697,16 +697,15 @@ def get_videos_online(request, offset, limit):
     else:
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        count = Video.objects.filter(village__in = villages).distinct().count()
-        videos = Video.objects.filter(village__in = villages)
+        videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
+        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen))
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)            
-            count = videos.filter(Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                        Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText)).count()
             videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("title")[offset:limit]
-        else:
-            videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("-id")[offset:limit]
+
+        count = videos.distinct().count()
+        videos = videos.distinct().order_by("-id")[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
@@ -1455,39 +1454,28 @@ def save_persongroup_offline(request, id):
                 return HttpResponse("0")
 
 def save_person_online(request, id):
-    PersonAdoptPracticeFormSet = inlineformset_factory( Person,PersonAdoptPractice,extra=3)
     if request.method == 'POST':
         if(id):
             person = Person.objects.get(id = id)
             form = PersonForm(request.POST, instance = person)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance = person)
         else:
             form = PersonForm(request.POST)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES)
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             saved_person = form.save()
-            person = Person.objects.get(pk=saved_person.id)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance=person)
-            formset.save()
             return HttpResponse('')
         else:
             errors = form.errors.as_text()
-            for form_person in formset.forms:
-                if(form_person.errors):
-                    errors = errors + '\n' + form_person.errors.as_text()
             return HttpResponse(errors, status=201)
     else:
         if(id):
             person = Person.objects.get(id=id)
             form = PersonForm(instance = person)
-            formset = PersonAdoptPracticeFormSet(instance = person)
         else:
             form = PersonForm()
-            formset = PersonAdoptPracticeFormSet()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
-        return HttpResponse(form.as_table() + formset.as_table())
+        return HttpResponse(form.as_table())
 
 def get_persons_online(request, offset, limit):
     if request.method == 'POST':

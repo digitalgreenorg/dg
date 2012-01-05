@@ -109,26 +109,38 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 	}
 	
 	public void initializeFilters() {
+		boolean addCase = false;
 		if(this.requestContext.getArgs().get("action").equals("add")) {
-			this.addPageFilterListBoxMap = new LinkedHashMap<String, ListBox>();
+			addCase = true;
+		}
+		else if(this.requestContext.getArgs().get("action").equals("edit")) {
+			addCase = false;
+		}
+		else {
+			return;
+		}
+		
+		this.addPageFilterListBoxMap = new LinkedHashMap<String, ListBox>();
+		if(addCase) {
 			this.addPageFilterListBoxMap.put("id_district", ListBox.wrap(RootPanel.get("id_district").getElement()));
 			this.addPageFilterListBoxMap.put("id_block", ListBox.wrap(RootPanel.get("id_block").getElement()));
 			this.addPageFilterListBoxMap.put("id_village", ListBox.wrap(RootPanel.get("id_village").getElement()));
 			this.addPageFilterListBoxMap.put("id_person_group", ListBox.wrap(RootPanel.get("id_person_group").getElement()));
-			this.addPageFilterListBoxMap.put("id_person", ListBox.wrap(RootPanel.get("id_person").getElement()));
-			this.addPageFilterListBoxMap.put("id_video", ListBox.wrap(RootPanel.get("id_video").getElement()));
-			
-			for (Entry<String, ListBox> pair : this.addPageFilterListBoxMap.entrySet()) {
-				if(pair.getKey() != "id_district") {
-					pair.getValue().setEnabled(false);
-				}
-				
-				if(pair.getKey() != "id_video") {
-					pair.getValue().addChangeHandler(new filterListBoxOnChangeHandler((HashMap<String, ListBox>) this.addPageFilterListBoxMap.clone(), this));
-				}
-					
-			}
 		}
+		this.addPageFilterListBoxMap.put("id_person", ListBox.wrap(RootPanel.get("id_person").getElement()));
+		this.addPageFilterListBoxMap.put("id_video", ListBox.wrap(RootPanel.get("id_video").getElement()));
+		
+		for (Entry<String, ListBox> pair : this.addPageFilterListBoxMap.entrySet()) {
+			if(pair.getKey() != "id_district" && addCase) {
+				pair.getValue().setEnabled(false);
+			}
+			
+			if(pair.getKey() != "id_video") {
+				pair.getValue().addChangeHandler(new filterListBoxOnChangeHandler((HashMap<String, ListBox>) this.addPageFilterListBoxMap.clone(), this));
+			}
+				
+		}
+		
 	}
 	
 	private class filterListBoxOnChangeHandler implements ChangeHandler {

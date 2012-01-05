@@ -701,7 +701,7 @@ pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 class PersonAdoptPractice(models.Model):
     person = models.ForeignKey(Person)
     practice = models.ForeignKey(Practices, null=True, blank=True)
-    video = models.ForeignKey(Video, null=True, blank = True)
+    video = models.ForeignKey(Video)
     prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
     date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION')
     quality = models.CharField(max_length=200, db_column='QUALITY', blank=True)
