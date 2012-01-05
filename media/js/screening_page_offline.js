@@ -357,14 +357,14 @@ function setup_add_new_row (village, callbackfn) {
 	    var db = google.gears.factory.create('beta.database');
     	db.open('digitalgreendatabase');
     	
-    	var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, P.father_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id WHERE V.id='"+village+"' ORDER BY P.person_name");
-    	var person_options = [];
+    	var persons_list_for_add_new_row = db.execute("SELECT P.id, P.person_name, P.father_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id WHERE V.id='"+village+"' ORDER BY P.person_name, P.father_name");
+    	var person_options = [{'value':"", 'string':"---------"}];
     	while(persons_list_for_add_new_row.isValidRow()) {
     		if(persons_list_for_add_new_row.field(2) == null || persons_list_for_add_new_row.field(2).toString() == '') {
-    			person_options.push({'value': persons_list_for_add_new_row.field(0),'string': persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(3) + ')'});
+    			person_options.push({'value': persons_list_for_add_new_row.field(0),'string': persons_list_for_add_new_row.field(1) });
     		}
     		else {
-    			person_options.push({'value': persons_list_for_add_new_row.field(0), 'string': persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(2) + ')'+' (' + persons_list_for_add_new_row.field(3) + ')'});
+    			person_options.push({'value': persons_list_for_add_new_row.field(0), 'string': persons_list_for_add_new_row.field(1) +' (' + persons_list_for_add_new_row.field(2) + ')'});
     		}
     		persons_list_for_add_new_row.next();
     	}
@@ -489,7 +489,7 @@ function get_persons_for_group(grps, callbackfn) {
         var db = google.gears.factory.create('beta.database');
         db.open('digitalgreendatabase');
         
-        var persons = db.execute("SELECT P.id FROM PERSON P where P.group_id in ("+grps.join(", ")+")");
+        var persons = db.execute("SELECT P.id FROM PERSON P where P.group_id in ("+grps.join(", ")+") order by P.person_name, P.father_name");
         var person_list = [];
         while (persons.isValidRow()) {
           person_list.push(persons.field(0));
@@ -564,10 +564,10 @@ function get_attendance_form_for_person (person_id, table, callbackfn) {
         var person_list = [];
         var rsCount = 0;
 
-        var person_rs = db.execute("SELECT DISTINCT P.id, P.person_name, P.father_name, V.village_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id where P.id LIKE '"+person_id+"'");
+        var person_rs = db.execute("SELECT DISTINCT P.id, P.person_name, P.father_name FROM PERSON P JOIN VILLAGE V on P.village_id = V.id where P.id LIKE '"+person_id+"'");
         while (person_rs.isValidRow()){
             if(person_rs.field(2) == null || person_rs.field(2).toString() == '') {
-                person_list.push({'value': person_rs.field(0), 'string':person_rs.field(1) +' (' + person_rs.field(3) + ')' });
+                person_list.push({'value': person_rs.field(0), 'string':person_rs.field(1) });
             }
             else {
                 person_list.push({'value': person_rs.field(0) , 'string': person_rs.field(1) +' (' + person_rs.field(2) + ')'});

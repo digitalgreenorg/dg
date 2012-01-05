@@ -1651,7 +1651,7 @@ def save_screening_online(request,id):
         if(id):
             screening = Screening.objects.get(id = id)
             form = ScreeningForm(instance = screening)
-            form.fields['animator'].queryset = Animator.objects.filter(village = screening.village).distinct().order_by('name')
+            form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=screening.village).distinct().order_by('name')
             form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = screening.village).distinct().order_by('group_name')
             formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
         else:
@@ -2343,7 +2343,7 @@ def farmers_in_groups(request):
             except:
                 # log an error
                 continue
-            person_ids.extend(group.person_set.values_list('id',flat=True))
+            person_ids.extend(group.person_set.order_by('father_name').order_by('person_name').values_list('id',flat=True))
         person_ids = list(set(person_ids))
         return HttpResponse(cjson.encode(person_ids), mimetype='application/json')
 
@@ -2353,14 +2353,14 @@ def screenings_in_village(request, village_id):
     if request.method == 'GET':
         try:
             village = Village.objects.get(id=village_id)
-            persons_in_village = village.person_set.all()
-            data['person_list'] = []
+            persons_in_village = village.person_set.all().order_by('father_name').order_by('person_name')
+            data['person_list'] = [{'value':"", 'string':"---------"}]
             for person in persons_in_village:
                 data['person_list'].append({'value':person.id, 'string':str(person)})
             data['video_list'] = []
             videos = village.screening_set.values_list('videoes_screened__id','videoes_screened__title').distinct()
             for video in videos:
-                data['video_list'].append({'value':video[0],'string':video[1]})
+                data['video_list'].append({'value':video[0], 'string':video[1]})
         except Exception as ex:
             data['person_list'] = []
             data['video_list'] = []
@@ -2394,11 +2394,11 @@ def filters_for_village (request, village_id):
         try:
             village = Village.objects.get(id=village_id)
             data['village'] = {'value': village.id, 'string' : village.village_name } 
-            animators = Animator.objects.filter(assigned_villages=village).distinct()
+            animators = Animator.objects.filter(assigned_villages=village).distinct().order_by('name')
             data['animators'] = []
             for anim in animators:
                 data['animators'].append({'value':anim.id,'string':anim.name})
-            groups = PersonGroups.objects.filter(village=village).distinct()
+            groups = PersonGroups.objects.filter(village=village).distinct().order_by('group_name')
             data['groups'] = []
             for group in groups:
                 data['groups'].append({'value':group.id,'string':group.group_name})
