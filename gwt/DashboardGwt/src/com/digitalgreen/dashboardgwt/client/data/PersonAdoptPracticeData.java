@@ -236,6 +236,7 @@ public class Data extends BaseData.Data {
 					this.quality,
 					this.quantity,
 					this.quantity_unit);		
+			this.addNameValueToQueryString("id", this.id);
 		}
 		
 		@Override
@@ -499,14 +500,10 @@ public class Data extends BaseData.Data {
 		if(BaseData.isOnline()){
 			this.post(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL, this.form.getQueryString());
 		}
-		else{
-			if(this.validate()) {
-				if(this.validate()) {
-					this.save();
-					return true;
-				}
-			}
-		}		
+		else if(this.validate()) {
+			this.save();
+			return true;
+		}
 		return false;
 	}
 
@@ -722,13 +719,18 @@ public class Data extends BaseData.Data {
 		return false;
 	}
 	
-	public Object getAddPageData() {
+	public Object getAddPageData(boolean hasFilters) {
 		if(BaseData.isOnline()) {
 			this.get(RequestContext.SERVER_HOST + PersonAdoptPracticeData.savePersonAdoptPracticeOnlineURL);
 		}
 		else{
-			BlocksData blockData = new BlocksData();
-			return blockData.retrieveDataAndConvertResultIntoHtml();
+			if(hasFilters) {
+				BlocksData blockData = new BlocksData();
+				return blockData.retrieveDataAndConvertResultIntoHtml();
+			}
+			else {
+				return retrieveDataAndConvertResultIntoHtml();
+			}
 		}
 		return false;
 	}

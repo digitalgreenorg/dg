@@ -1553,7 +1553,13 @@ def save_personadoptpractice_online(request,id):
             form.save()
             return HttpResponse('')
         else:
-            return HttpResponse(form.errors.as_text(), status=201)
+            villages = get_user_villages(request)
+            form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+            if('person' in request.POST and request.POST['person']):
+                form.fields['video'].queryset = Video.objects.filter(id__in = Person.objects.get(pk=request.POST['person']).screening_set.values_list('videoes_screened'))
+            else:
+                form.fields['video'].quersy = Video.objects.none()
+            return HttpResponse(cjson.encode({'form':form.as_table(), 'errors':form.errors.as_text()}), status=201)
     else:
         if id:
             personadoptpractice = PersonAdoptPractice.objects.get(id=id)

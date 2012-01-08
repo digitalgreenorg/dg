@@ -60,7 +60,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 			  String addHtml,
 			  String filterHtml, String addDataToElementID[]) {
 		HashMap queryArgs = this.getRequestContext().getArgs();
-		if(queryArgs.get("action").equals("add")) {
+		if(queryArgs.get("action").equals("add") && !this.getRequestContext().hasErrorMessages()) {
 			super.fillDGTemplate(templateType, listHtml, addHtml, new String[0]);
 			HTMLPanel filterPanel = new HTMLPanel(filterHtml);
 			String addData = (String)queryArgs.get("addPageData");
@@ -106,6 +106,8 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 			newBox.setEnabled(true);
 			newBox.getElement().setInnerHTML(ajaxRC.getArgs().get("ajax_data").toString());
 		}
+		
+		
 	}
 	
 	public void initializeFilters() {
@@ -121,7 +123,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		}
 		
 		this.addPageFilterListBoxMap = new LinkedHashMap<String, ListBox>();
-		if(addCase) {
+		if(addCase  && !this.requestContext.hasErrorMessages()) {
 			this.addPageFilterListBoxMap.put("id_district", ListBox.wrap(RootPanel.get("id_district").getElement()));
 			this.addPageFilterListBoxMap.put("id_block", ListBox.wrap(RootPanel.get("id_block").getElement()));
 			this.addPageFilterListBoxMap.put("id_village", ListBox.wrap(RootPanel.get("id_village").getElement()));
@@ -131,7 +133,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		this.addPageFilterListBoxMap.put("id_video", ListBox.wrap(RootPanel.get("id_video").getElement()));
 		
 		for (Entry<String, ListBox> pair : this.addPageFilterListBoxMap.entrySet()) {
-			if(pair.getKey() != "id_district" && addCase) {
+			if(pair.getKey() != "id_district" && addCase && !this.requestContext.hasErrorMessages()) {
 				pair.getValue().setEnabled(false);
 			}
 			
