@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.ScreeningsData;
 import com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
@@ -42,8 +44,26 @@ public class Screenings extends BaseServlet {
 							getServlet().redirectTo(new Screenings(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().setErrorMessage(results) ;
-							getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));	
+							JSONObject resultObj = JSONParser.parse(results).isObject();
+							if(getServlet().getRequestContext().getForm().getQueryString() == null) {
+								String formString = resultObj.get("form").isString().stringValue();
+								getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(formString));
+							}
+							
+							getServlet().getRequestContext().setErrorMessage(resultObj.get("errors").isString().stringValue());
+							getServlet().getRequestContext().getArgs().put("addPageData", resultObj.get("form").isString().stringValue());
+							
+							//getServlet().getRequestContext().getArgs().put("addPageData", addData);
+							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+							
+							//getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
+							//getServlet().getRequestContext().setErrorMessage(results) ;
+							//getServlet().redirectTo(new Screenings(getServlet().getRequestContext()));	
+							//RequestContext requestContext = new RequestContext();
+							//requestContext.setMessage("Add with ");
+							//requestContext.getArgs().put("action", "add");
+							//requestContext.getArgs().put("pageNum", "1");
+							//getServlet().redirectTo(new Screenings(requestContext));
 						}
 					}
 					
@@ -154,14 +174,17 @@ public class Screenings extends BaseServlet {
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
 					Form form = this.requestContext.getForm();
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
-						public void onlineSuccessCallback(String addData) {
+						public void onlineSuccessCallback(String results) {
+							JSONObject resultObj = JSONParser.parse(results).isObject();
+							String formString = resultObj.get("form").isString().stringValue();
+							
 							if(this.getStatusCode() == 200) {
 								if(getServlet().getRequestContext().getArgs().get("action").equals("edit")) {
 									if(getServlet().getRequestContext().getForm().getQueryString() == null) {
-										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(addData));
+										getServlet().getRequestContext().getForm().setQueryString(Form.retriveQueryStringFromHTMLString(formString));
 									}
 								}
-								getServlet().getRequestContext().getArgs().put("addPageData", addData);
+								getServlet().getRequestContext().getArgs().put("addPageData", formString);
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
 							} else {
 								RequestContext requestContext = new RequestContext();

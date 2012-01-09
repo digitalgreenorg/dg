@@ -1623,6 +1623,7 @@ def save_personadoptpractice_offline(request, id):
 
 
 def save_screening_online(request,id):
+    results = {}
     PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
     if request.method == 'POST':
         try:
@@ -1644,27 +1645,37 @@ def save_screening_online(request,id):
                 for form_person_meeting_attendance in formset.forms:
                     if(form_person_meeting_attendance.errors):
                         errors = errors + '\n' + form_person_meeting_attendance.errors.as_text()
+                results["errors"] = errors
         except Exception as ex:
             print ex
-        return HttpResponse(errors, status=201)
+    # Get Request or Form Error
+    if(id):
+        screening = Screening.objects.get(id = id)
+        form = ScreeningForm(instance = screening)
+        formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
+        form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=screening.village).distinct().order_by('name')
+        form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = screening.village).distinct().order_by('group_name')
     else:
-        if(id):
-            screening = Screening.objects.get(id = id)
-            form = ScreeningForm(instance = screening)
-            form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=screening.village).distinct().order_by('name')
-            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = screening.village).distinct().order_by('group_name')
-            formset = PersonMeetingAttendanceInlineFormSet(instance = screening)
-        else:
-            form = ScreeningForm()
-            form.fields['animator'].queryset = Animator.objects.none() #filter(village__in = villages).distinct().order_by('name')
-            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.none() #filter(village__in = villages).distinct().order_by('group_name')
-            #formset = PersonMeetingAttendanceInlineFormSet()
-        villages = get_user_villages(request)
-        states = get_user_states(request)
-        form.fields['village'].queryset = villages.order_by('village_name')
-        form.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
-        form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state__in = states).distinct().order_by('title')
-        return HttpResponse(form.as_table())
+        form = ScreeningForm()
+        form.fields['animator'].queryset = Animator.objects.none()
+        form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.none()
+    if "village" in request.POST:
+        village_id = request.POST["village"]
+        try:
+            village = Village.objects.get(id=village_id)
+            form.fields['animator'].queryset = Animator.objects.filter(assigned_villages=village).distinct().order_by('name')
+            form.fields['farmer_groups_targeted'].queryset = PersonGroups.objects.filter(village = village).distinct().order_by('group_name')
+        except:
+            pass
+    villages = get_user_villages(request)
+    states = get_user_states(request)
+    form.fields['village'].queryset = villages.order_by('village_name')
+    form.fields['fieldofficer'].queryset = FieldOfficer.objects.distinct().order_by('name')
+    form.fields['videoes_screened'].queryset = Video.objects.filter(village__block__district__state__in = states).distinct().order_by('title')
+    results["form"] = form.as_table()
+    if "errors" in results:
+        return HttpResponse(cjson.encode(results), status=201)
+    return HttpResponse(cjson.encode(results))
 
 def get_attendance(request, id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
