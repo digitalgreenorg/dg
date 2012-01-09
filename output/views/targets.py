@@ -1,8 +1,9 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
-from output.database.SQL  import screening_analytics_sql, shared_sql, overview_analytics_sql
+from output.database.SQL  import screening_analytics_sql, shared_sql, overview_analytics_sql, adoption_analytics_sql, video_analytics_sql
 from output.database.SQL.targets_sql import *
 from output.views.common import get_geog_id
+from output.views.overview_analytics import get_parent_geog_id
 from output import views
 from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
 import datetime
@@ -36,15 +37,16 @@ def target_table(request):
     achieved_vals['new_crp_training'] = run_query(get_fresh_crp_tot_training(geog, id, from_date, to_date, partners))[0]['count']
     achieved_vals['refresher_crp_traing'] = run_query(get_crp_tot_training(geog, id, from_date, to_date, partners))[0]['count'] - achieved_vals['new_crp_training']
     achieved_vals['vil_identified'] = run_query(get_village_identified(geog, id, from_date, to_date, partners))[0]['count']
-    overview_vals = run_query(overview_analytics_sql.overview_sum_geog(geog, id, from_date, to_date, partners, ['adoption', 'production']))[0]
-    achieved_vals['geog_name'] = overview_vals['name']
-    achieved_vals['video_production'] = overview_vals['tot_vid']
+    achieved_vals['geog_name'] = get_parent_geog_id(geog, id)[0]
+    achieved_vals['video_production'] = run_query(video_analytics_sql.video_tot_video(geog, id, from_date, to_date, partners))[0]['count']
     
     tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners))[0];
     achieved_vals['disseminations'] = tot_val['tot_scr']
+    
+    tot_ado = run_query(adoption_analytics_sql.adoption_tot_ado(geog, id, from_date, to_date, partners))[0]['tot_ado']
     if(tot_val['tot_scr']):
         achieved_vals['att_per_diss'] = float(tot_val['tot_per'])/tot_val['tot_scr']
-        achieved_vals['avg_adoption'] = float(overview_vals['tot_ado'])/tot_val['tot_scr']
+        achieved_vals['avg_adoption'] = float(tot_ado)/tot_val['tot_scr']
     else:
         achieved_vals['att_per_diss'] = 0
         achieved_vals['avg_adoption'] = 0
