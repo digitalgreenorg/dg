@@ -17,4 +17,41 @@ class PositiveBigIntegerField(fields.BigIntegerField):
         else:
             raise Exception("db not supported")
         
+class BigAutoField(fields.AutoField):
+        
+    def db_type(self, connection):
+        if connection.settings_dict['ENGINE'] == 'django.db.backends.mysql':
+            return "bigint(20) UNSIGNED AUTO_INCREMENT"
+        else:
+            pass
+    
+    def get_internal_type(self):
+        return "BigAutoField"
+    
+    def to_python(self, value):
+        if value is None:
+            return value
+        try:
+            return long(value)
+        except (TypeError, ValueError):
+            raise exceptions.ValidationError(
+                _("This value must be a long integer."))
+
+class BigForeignKey(fields.related.ForeignKey):
+
+    def db_type(self, connection):
+        rel_field = self.rel.get_related_field()
+        # next lines are the "bad tooth" in the original code:
+        if (isinstance(rel_field, BigAutoField) or
+                (not connection.features.related_fields_match_type and
+                isinstance(rel_field, BigIntegerField))):
+            # because it continues here in the django code:
+            # return PositiveBigIntegerField().db_type()
+            # thereby fixing any BigAutoField as PositiveBigIntegerField
+            return PositiveBigIntegerField().db_type()
+        return rel_field.db_type()
+
 add_introspection_rules([], ["^dashboard\.fields\.PositiveBigIntegerField"])
+add_introspection_rules([], ["^dashboard\.fields\.BigAutoField"])
+add_introspection_rules([], ["^dashboard\.fields\.BigForeignKey"])
+
