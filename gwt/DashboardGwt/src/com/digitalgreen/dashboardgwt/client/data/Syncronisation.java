@@ -115,6 +115,7 @@ public class Syncronisation {
 							// TODO Auto-generated catch block
 							Window.alert("Database transaction exception");
 						}
+						
 						List objects = ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnline(results);
 						BaseData.Data object;
 						for (int i = 0; i < objects.size(); ++i) {

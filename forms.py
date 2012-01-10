@@ -40,6 +40,7 @@ class PersonAdoptPracticeForm(forms.ModelForm):
         #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
         class Meta:
                 model = PersonAdoptPractice
+                exclude = ('practice',)
 
 class PersonForm(forms.ModelForm):
 	class Meta:
@@ -135,7 +136,3 @@ class ReviewerForm(forms.ModelForm):
 class TargetForm(forms.ModelForm):
     class Meta:
         model = Target
-
-class PersonAdoptPracticeForm(forms.ModelForm):
-    class Meta:
-        model = PersonAdoptPractice

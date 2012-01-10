@@ -138,7 +138,7 @@ public class PersonGroupsData extends BaseData {
 		public boolean compare(BaseData.Data other) {
 			if(other instanceof PersonGroupsData.Data) {
 				PersonGroupsData.Data obj = (PersonGroupsData.Data) other;
-				if(this.group_name.equals(obj.getPersonGroupName())) {
+				if(this.group_name.trim().equals(obj.getPersonGroupName().trim())) {
 					errorStack.add(this.group_name+": Details entered twice");
 					return true;
 				} else

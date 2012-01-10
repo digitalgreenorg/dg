@@ -10,6 +10,9 @@ import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.PersonAdoptPracticeData;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.PersonAdoptPracticesTemplate;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Window;
 
 public class PersonAdoptPractices extends BaseServlet {
 	
@@ -60,7 +63,7 @@ public class PersonAdoptPractices extends BaseServlet {
 				}
 			});
 			if(this.getRequestContext().getArgs().get("action").equals("person-select")) {
-				personAdoptPracticeData.apply(personAdoptPracticeData.getPracticesForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
+				personAdoptPracticeData.apply(personAdoptPracticeData.getVideosForPerson(this.getRequestContext().getArgs().get("person_id").toString()));
 			}
 			else if(this.getRequestContext().getArgs().get("action").equals("district-select")) {
 				personAdoptPracticeData.apply(personAdoptPracticeData.getBlocksForDistrict(this.getRequestContext().getArgs().get("district_id").toString()));
@@ -102,8 +105,16 @@ public class PersonAdoptPractices extends BaseServlet {
 							getServlet().redirectTo(new PersonAdoptPractices(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							getServlet().getRequestContext().setErrorMessage(results) ;
-							getServlet().redirectTo(new PersonAdoptPractices(getServlet().getRequestContext()));	
+							JSONObject resultObj = JSONParser.parseStrict(results).isObject();
+							if(resultObj == null || resultObj.get("errors") == null || resultObj.get("errors").isString() == null ||
+									resultObj.get("form") == null || resultObj.get("form").isString() == null) {
+								getServlet().getRequestContext().setErrorMessage("Unknown error.  Please contact support.");
+								getServlet().redirectTo(new PersonAdoptPractices(getServlet().getRequestContext()));
+							}
+							getServlet().getRequestContext().setErrorMessage(resultObj.get("errors").isString().stringValue());
+							getServlet().getRequestContext().getArgs().put("addPageData", resultObj.get("form").isString().stringValue());
+							getServlet().fillTemplate(new PersonAdoptPracticesTemplate(getServlet().getRequestContext()));
+							//getServlet().redirectTo(new PersonAdoptPractices(getServlet().getRequestContext()));	
 						}
 					}
 					
@@ -255,9 +266,9 @@ public class PersonAdoptPractices extends BaseServlet {
 						}
 					}, form);
 					if(queryArg.equals("add")) {
-						personAdoptPracticeData.apply(personAdoptPracticeData.getAddPageData());
+						personAdoptPracticeData.apply(personAdoptPracticeData.getAddPageData(!getRequestContext().hasErrorMessages()));
 					}
-					else{
+					else {
 						form.setId((String)this.requestContext.getArgs().get("id"));
 						personAdoptPracticeData.apply(personAdoptPracticeData.getAddPageData(this.requestContext.getArgs().get("id").toString()));
 					}

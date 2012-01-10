@@ -346,7 +346,7 @@ public class VillagesData extends BaseData {
 	private List fetchVillageFromSql(String sql) {
 		BaseData.dbOpen();
 		List villages = new ArrayList();
-		this.select(selectVillages);
+		this.select(sql);
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {

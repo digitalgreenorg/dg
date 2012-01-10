@@ -546,8 +546,7 @@ def save_practice_offline(request, id):
 
 def get_practices_seen_for_person(request, person_id):
     practices = Person.objects.get(pk=person_id).screening_set.values_list('videoes_screened__related_agricultural_practices', 
-                                                    'videoes_screened__related_agricultural_practices__practice_name').distinct()
-                                                    
+                                                    'videoes_screened__related_agricultural_practices__practice_name').distinct()                                                    
     html_template = """
     <option value='' selected='selected'>---------</option>
     {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
@@ -698,16 +697,15 @@ def get_videos_online(request, offset, limit):
     else:
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        count = Video.objects.filter(village__in = villages).distinct().count()
-        videos = Video.objects.filter(village__in = villages)
+        videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
+        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen))
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)            
-            count = videos.filter(Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                        Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText)).count()
             videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("title")[offset:limit]
-        else:
-            videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
+                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("-id")[offset:limit]
+
+        count = videos.distinct().count()
+        videos = videos.distinct().order_by("-id")[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
@@ -715,6 +713,16 @@ def get_videos_online(request, offset, limit):
         response = HttpResponse(json_subcat, mimetype="application/javascript")
         response['X-COUNT'] = count
         return response
+
+def get_videos_seen_for_person(request, person_id):    
+    videos = Person.objects.filter(pk=person_id).values_list('screening__videoes_screened__id', 'screening__videoes_screened__title').distinct()
+    html_template = """   <option value='' selected='selected'>---------</option>
+        {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
+        """    
+    t = Template(html_template);
+    html = t.render(Context(dict(rows=videos)))
+    
+    return HttpResponse(html)
 
 def save_video_offline(request, id):
     if request.method == 'POST':
@@ -1446,39 +1454,28 @@ def save_persongroup_offline(request, id):
                 return HttpResponse("0")
 
 def save_person_online(request, id):
-    PersonAdoptPracticeFormSet = inlineformset_factory( Person,PersonAdoptPractice,extra=3)
     if request.method == 'POST':
         if(id):
             person = Person.objects.get(id = id)
             form = PersonForm(request.POST, instance = person)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance = person)
         else:
             form = PersonForm(request.POST)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES)
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             saved_person = form.save()
-            person = Person.objects.get(pk=saved_person.id)
-            formset = PersonAdoptPracticeFormSet(request.POST, request.FILES, instance=person)
-            formset.save()
             return HttpResponse('')
         else:
             errors = form.errors.as_text()
-            for form_person in formset.forms:
-                if(form_person.errors):
-                    errors = errors + '\n' + form_person.errors.as_text()
             return HttpResponse(errors, status=201)
     else:
         if(id):
             person = Person.objects.get(id=id)
             form = PersonForm(instance = person)
-            formset = PersonAdoptPracticeFormSet(instance = person)
         else:
             form = PersonForm()
-            formset = PersonAdoptPracticeFormSet()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
-        return HttpResponse(form.as_table() + formset.as_table())
+        return HttpResponse(form.as_table())
 
 def get_persons_online(request, offset, limit):
     if request.method == 'POST':
@@ -1505,7 +1502,6 @@ def get_persons_online(request, offset, limit):
 
 def get_person_for_village_and_no_person_group_online(request, village_id):
     persons = Person.objects.filter(village__id = village_id, group=None).values_list('id', 'person_name', 'father_name').order_by("person_name")
-    
     html_template = """
     <option value='' selected='selected'>---------</option>
     {% for row in rows %}<option value="{{row.0}}">{{row.1}}{% if row.2 %} ({{row.2}}){% endif %}</option>{%endfor%}
@@ -1517,7 +1513,6 @@ def get_person_for_village_and_no_person_group_online(request, village_id):
 
 def get_person_for_person_group_online(request, group_id):
     persons = Person.objects.filter(group__id=group_id).values_list('id', 'person_name', 'father_name').order_by("person_name")
-    
     html_template = """
     <option value='' selected='selected'>---------</option>
     {% for row in rows %}<option value="{{row.0}}">{{row.1}}{% if row.2 %} ({{row.2}}){% endif %}</option>{%endfor%}
@@ -1558,14 +1553,20 @@ def save_personadoptpractice_online(request,id):
             form.save()
             return HttpResponse('')
         else:
-            return HttpResponse(form.errors.as_text(), status=201)
+            villages = get_user_villages(request)
+            form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
+            if('person' in request.POST and request.POST['person']):
+                form.fields['video'].queryset = Video.objects.filter(id__in = Person.objects.get(pk=request.POST['person']).screening_set.values_list('videoes_screened'))
+            else:
+                form.fields['video'].quersy = Video.objects.none()
+            return HttpResponse(cjson.encode({'form':form.as_table(), 'errors':form.errors.as_text()}), status=201)
     else:
         if id:
             personadoptpractice = PersonAdoptPractice.objects.get(id=id)
             form = PersonAdoptPracticeForm(instance = personadoptpractice)
             villages = get_user_villages(request)
             form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-            form.fields['practice'].queryset = Practices.objects.all().distinct().order_by('practice_name')
+            form.fields['video'].queryset = Video.objects.filter(id__in = Person.objects.get(pk=personadoptpractice.person_id).screening_set.values_list('videoes_screened'))
             return HttpResponse(form)
         else:
             districts = get_user_districts(request)
@@ -1588,14 +1589,14 @@ def get_personadoptpractices_online(request, offset, limit):
             persongroups = PersonGroups.objects.filter(group_name__icontains = searchText)
             vil = villages.filter(village_name__icontains = searchText)
             per = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = persongroups) )                        
-            practices = Practices.objects.filter(practice_name__icontains = searchText)
-            count = personadoptpractices.filter(Q(person__in = per) | Q(practice__in = practices) ).count()
-            personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(practice__in = practices) )\
+            videos = Video.objects.filter(title__icontains = searchText)
+            count = personadoptpractices.filter(Q(person__in = per) | Q(video__in = videos) ).count()
+            personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(video__in = videos) )\
             .order_by("person__person_name")[offset:limit]
         else:
             personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
         if(personadoptpractices):
-            json_subcat = serializers.serialize("json", personadoptpractices,indent=4,relations={'practice':{},'person':{'relations':('village','group')}})
+            json_subcat = serializers.serialize("json", personadoptpractices,indent=4,relations={'video':{},'person':{'relations':('village','group')}})
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")

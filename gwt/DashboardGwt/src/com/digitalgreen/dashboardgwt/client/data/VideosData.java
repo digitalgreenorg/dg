@@ -486,6 +486,10 @@ public class VideosData extends BaseData {
 	protected static String listVideos = "SELECT video.id, video.title, video.video_production_start_date, " +
 										 "video.video_production_end_date, video.village_id, village.village_name " +
 										 "FROM video JOIN village ON video.village_id = village.id ORDER BY LOWER(video.title);";
+	protected static String selectVideosSeenForPerson = "SELECT DISTINCT vid.id, vid.title FROM video vid " +
+		"JOIN screening_videos_screened svs ON svs.video_id = vid.id " +
+		"JOIN person_meeting_attendance pma ON pma.screening_id = svs.screening_id " +
+		"WHERE person_id = ";
 	protected static String saveVideoOnlineURL = "/dashboard/savevideoonline/";
 	protected static String getVideoOnlineURL = "/dashboard/getvideosonline/";
 	protected static String saveVideoOfflineURL = "/dashboard/savevideooffline/";
@@ -678,6 +682,26 @@ public class VideosData extends BaseData {
 					videos.add(video);
 	    	      }				
 			} catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return videos;
+	}
+	
+	public List getVideoSeenForPersonOffline(String person_id) {
+		BaseData.dbOpen();
+		List videos = new ArrayList();
+		this.select(selectVideosSeenForPerson + person_id);
+		if(this.getResultSet().isValidRow()){
+			try {
+				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
+					Data video = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
+					videos.add(video);
+				}
+			}
+			catch(DatabaseException e){
 				Window.alert("Database Exception : " + e.toString());
 				BaseData.dbClose();
 			}
