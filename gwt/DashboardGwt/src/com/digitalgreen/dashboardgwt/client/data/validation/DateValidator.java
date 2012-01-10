@@ -58,7 +58,7 @@ public class DateValidator extends BaseValidator {
 		}
 		try {
 			//Using GWT API for validating date.
-			Date date = DateTimeFormat.getFormat("yyyy-MM-dd").parseStrict((String)this.getValue());
+			Date date = DateTimeFormat.getFormat("yyyy-MM-dd").parse((String)this.getValue());
 		} catch (IllegalArgumentException e) {
 			errorString += dateFormatErrorMessage;
 			return false;

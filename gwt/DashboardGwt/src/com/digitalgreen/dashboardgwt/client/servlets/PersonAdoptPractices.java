@@ -105,7 +105,7 @@ public class PersonAdoptPractices extends BaseServlet {
 							getServlet().redirectTo(new PersonAdoptPractices(requestContext));
 						} else {
 							getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
-							JSONObject resultObj = JSONParser.parseStrict(results).isObject();
+							JSONObject resultObj = JSONParser.parse(results).isObject();
 							if(resultObj == null || resultObj.get("errors") == null || resultObj.get("errors").isString() == null ||
 									resultObj.get("form") == null || resultObj.get("form").isString() == null) {
 								getServlet().getRequestContext().setErrorMessage("Unknown error.  Please contact support.");
