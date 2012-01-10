@@ -9,12 +9,20 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        orm.PersonMeetingAttendance.objects.filter(~Q(expressed_interest="")|~Q(expressed_interest_practice=None)).update(interested=True)
-
+        for pma in orm.PersonMeetingAttendance.objects.filter(~Q(expressed_adoption_practice=None) & Q(expressed_adoption_video=None)):
+        	videos_seen = pma.person.screening_set.filter(date__lt=pma.screening.date).values_list('videoes_screened__id', flat=True)
+        	for practice_video in pma.expressed_adoption_practice.video_set.all():
+        		if practice_video.id in videos_seen:
+        			pma.expressed_adoption_video = practice_video
+        			pma.save()
+        			break
+    
     def backwards(self, orm):
         "Write your backwards methods here."
-
-
+        for pma in orm.PersonMeetingAttendance.objects.filter(~Q(expressed_adoption_video=None) & Q(expressed_adoption_practice=None)):
+            pma.expressed_adoption_practice = pma.expressed_adoption_video.related_agricultural_practices.all()[0]
+            pma.save()
+    
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -61,7 +69,7 @@ class Migration(DataMigration):
             'csp_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CSP_FLAG'", 'blank': 'True'}),
             'facilitator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'FACILITATOR_FLAG'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
@@ -70,7 +78,7 @@ class Migration(DataMigration):
         'dashboard.animatorassignedvillage': {
             'Meta': {'object_name': 'AnimatorAssignedVillage', 'db_table': "u'ANIMATOR_ASSIGNED_VILLAGE'"},
             'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Animator']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'village': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Village']"})
         },
@@ -78,7 +86,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'AnimatorSalaryPerMonth', 'db_table': "u'ANIMATOR_SALARY_PER_MONTH'"},
             'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'pay_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'PAY_DATE'", 'blank': 'True'}),
             'total_salary': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'TOTAL_SALARY'", 'blank': 'True'})
         },
@@ -86,7 +94,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Block', 'db_table': "u'BLOCK'"},
             'block_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'BLOCK_NAME'"}),
             'district': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.District']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'})
         },
         'dashboard.developmentmanager': {
@@ -95,7 +103,7 @@ class Migration(DataMigration):
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'hire_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'HIRE_DATE'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Region']"}),
@@ -108,7 +116,7 @@ class Migration(DataMigration):
             'district_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'DISTRICT_NAME'"}),
             'fieldofficer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.FieldOfficer']"}),
             'fieldofficer_startday': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'FIELDOFFICER_STARTDAY'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.State']"})
@@ -119,7 +127,7 @@ class Migration(DataMigration):
             'cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'COST'", 'blank': 'True'}),
             'equipment_type': ('django.db.models.fields.IntegerField', [], {'db_column': "'EQUIPMENT_TYPE'"}),
             'equipmentholder': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.EquipmentHolder']", 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'installation_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'invoice_no': ('django.db.models.fields.CharField', [], {'max_length': '300', 'db_column': "'INVOICE_NO'"}),
             'is_reserve': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -136,7 +144,7 @@ class Migration(DataMigration):
         'dashboard.equipmentholder': {
             'Meta': {'object_name': 'EquipmentHolder', 'db_table': "u'EQUIPMENT_HOLDER'"},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {})
         },
         'dashboard.error': {
@@ -156,20 +164,20 @@ class Migration(DataMigration):
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'hire_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'HIRE_DATE'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'salary': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'SALARY'", 'blank': 'True'})
         },
         'dashboard.groupstargetedinscreening': {
             'Meta': {'object_name': 'GroupsTargetedInScreening', 'db_table': "u'SCREENING_farmer_groups_targeted'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'persongroups': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.PersonGroups']", 'db_column': "'persongroups_id'"}),
             'screening': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Screening']", 'db_column': "'screening_id'"})
         },
         'dashboard.language': {
             'Meta': {'object_name': 'Language', 'db_table': "u'LANGUAGE'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'language_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100'})
         },
         'dashboard.monthlycostpervillage': {
@@ -178,7 +186,7 @@ class Migration(DataMigration):
             'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
             'digitalgreen_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'DIGITALGREEN_COST'", 'blank': 'True'}),
             'equipment_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'EQUIPMENT_COST'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'labor_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LABOR_COST'", 'blank': 'True'}),
             'miscellaneous_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'MISCELLANEOUS_COST'", 'blank': 'True'}),
             'partners_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'PARTNERS_COST'", 'blank': 'True'}),
@@ -190,7 +198,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Partners', 'db_table': "u'PARTNERS'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'date_of_association': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'DATE_OF_ASSOCIATION'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'partner_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PARTNER_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'})
         },
@@ -203,7 +211,7 @@ class Migration(DataMigration):
             'father_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'FATHER_NAME'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.PersonGroups']", 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LAND_HOLDINGS'", 'blank': 'True'}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PERSON_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
@@ -213,19 +221,20 @@ class Migration(DataMigration):
         'dashboard.personadoptpractice': {
             'Meta': {'object_name': 'PersonAdoptPractice', 'db_table': "u'PERSON_ADOPT_PRACTICE'"},
             'date_of_adoption': ('django.db.models.fields.DateField', [], {'db_column': "'DATE_OF_ADOPTION'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Person']"}),
-            'practice': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Practices']"}),
+            'practice': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),
             'prior_adoption_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'PRIOR_ADOPTION_FLAG'", 'blank': 'True'}),
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'QUALITY'", 'blank': 'True'}),
             'quantity': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'QUANTITY'", 'blank': 'True'}),
-            'quantity_unit': ('django.db.models.fields.CharField', [], {'max_length': '150', 'db_column': "'QUANTITY_UNIT'", 'blank': 'True'})
+            'quantity_unit': ('django.db.models.fields.CharField', [], {'max_length': '150', 'db_column': "'QUANTITY_UNIT'", 'blank': 'True'}),
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Video']"})
         },
         'dashboard.persongroups': {
             'Meta': {'unique_together': "(('group_name', 'village'),)", 'object_name': 'PersonGroups', 'db_table': "u'PERSON_GROUPS'"},
             'days': ('django.db.models.fields.CharField', [], {'max_length': '9', 'db_column': "'DAYS'", 'blank': 'True'}),
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'GROUP_NAME'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_column': "'TIME_UPDATED'", 'blank': 'True'}),
             'timings': ('django.db.models.fields.TimeField', [], {'null': 'True', 'db_column': "'TIMINGS'", 'blank': 'True'}),
             'village': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Village']"})
@@ -234,38 +243,39 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'PersonMeetingAttendance', 'db_table': "u'PERSON_MEETING_ATTENDANCE'"},
             'expressed_adoption': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_ADOPTION'", 'blank': 'True'}),
             'expressed_adoption_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
+            'expressed_adoption_video': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'to': "orm['dashboard.Video']"}),
             'expressed_interest': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_INTEREST'", 'blank': 'True'}),
             'expressed_interest_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_interest_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),
             'expressed_question_practice': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'expressed_question_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_column': "'INTERESTED'"}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'screening': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Screening']"})
         },
         'dashboard.personrelations': {
             'Meta': {'object_name': 'PersonRelations', 'db_table': "u'PERSON_RELATIONS'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person'", 'to': "orm['dashboard.Person']"}),
             'relative': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'relative'", 'to': "orm['dashboard.Person']"}),
             'type_of_relationship': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'TYPE_OF_RELATIONSHIP'"})
         },
         'dashboard.personshowninvideo': {
             'Meta': {'object_name': 'PersonShownInVideo', 'db_table': "u'VIDEO_farmers_shown'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Person']", 'db_column': "'person_id'"}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
         'dashboard.practices': {
             'Meta': {'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'practice_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '200', 'db_column': "'PRACTICE_NAME'"}),
             'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'})
         },
         'dashboard.region': {
             'Meta': {'object_name': 'Region', 'db_table': "u'REGION'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'region_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'REGION_NAME'"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'})
         },
@@ -278,7 +288,7 @@ class Migration(DataMigration):
         'dashboard.reviewer': {
             'Meta': {'object_name': 'Reviewer', 'db_table': "u'REVIEWER'"},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {})
         },
         'dashboard.rule': {
@@ -296,7 +306,7 @@ class Migration(DataMigration):
             'farmer_groups_targeted': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.PersonGroups']", 'symmetrical': 'False'}),
             'farmers_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['dashboard.Person']", 'null': "'False'", 'through': "orm['dashboard.PersonMeetingAttendance']", 'blank': "'False'"}),
             'fieldofficer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.FieldOfficer']", 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'LOCATION'", 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {'db_column': "'START_TIME'"}),
             'target_adoptions': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_ADOPTIONS'", 'blank': 'True'}),
@@ -307,7 +317,7 @@ class Migration(DataMigration):
         },
         'dashboard.state': {
             'Meta': {'object_name': 'State', 'db_table': "u'STATE'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Region']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'STATE_NAME'"})
@@ -330,7 +340,7 @@ class Migration(DataMigration):
             'editor_refresher_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'editor_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'exp_interest_per_dissemination': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'month_year': ('django.db.models.fields.DateField', [], {}),
             'storyboard_preparation': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -350,7 +360,7 @@ class Migration(DataMigration):
             'animators_trained': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.Animator']", 'symmetrical': 'False'}),
             'development_manager_present': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.DevelopmentManager']", 'null': 'True', 'db_column': "'dm_id'", 'blank': 'True'}),
             'fieldofficer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.FieldOfficer']", 'db_column': "'fieldofficer_id'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'training_end_date': ('django.db.models.fields.DateField', [], {'db_column': "'TRAINING_END_DATE'"}),
             'training_outcome': ('django.db.models.fields.TextField', [], {'db_column': "'TRAINING_OUTCOME'", 'blank': 'True'}),
             'training_purpose': ('django.db.models.fields.TextField', [], {'db_column': "'TRAINING_PURPOSE'", 'blank': 'True'}),
@@ -360,7 +370,7 @@ class Migration(DataMigration):
         'dashboard.traininganimatorstrained': {
             'Meta': {'object_name': 'TrainingAnimatorsTrained', 'db_table': "u'TRAINING_animators_trained'"},
             'animator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Animator']", 'db_column': "'animator_id'"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'training': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Training']", 'db_column': "'training_id'"})
         },
         'dashboard.userpermission': {
@@ -384,7 +394,7 @@ class Migration(DataMigration):
             'facilitator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'facilitator'", 'to': "orm['dashboard.Animator']"}),
             'farmers_shown': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.Person']", 'symmetrical': 'False'}),
             'final_edited_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'FINAL_EDITED_FILENAME'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Language']"}),
             'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'movie_maker_project_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'MOVIE_MAKER_PROJECT_FILENAME'", 'blank': 'True'}),
@@ -409,13 +419,13 @@ class Migration(DataMigration):
         },
         'dashboard.videoagriculturalpractices': {
             'Meta': {'object_name': 'VideoAgriculturalPractices', 'db_table': "u'VIDEO_related_agricultural_practices'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'practice': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Practices']", 'db_column': "'practices_id'"}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
         'dashboard.videosscreenedinscreening': {
             'Meta': {'object_name': 'VideosScreenedInScreening', 'db_table': "u'SCREENING_videoes_screened'"},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'screening': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Screening']", 'db_column': "'screening_id'"}),
             'video': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
@@ -423,7 +433,7 @@ class Migration(DataMigration):
             'Meta': {'unique_together': "(('village_name', 'block'),)", 'object_name': 'Village', 'db_table': "u'VILLAGE'"},
             'block': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Block']"}),
             'control': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CONTROL'", 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'id': ('dashboard.fields.PositiveBigIntegerField', [], {'primary_key': 'True'}),
             'no_of_households': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'NO_OF_HOUSEHOLDS'", 'blank': 'True'}),
             'population': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'POPULATION'", 'blank': 'True'}),
             'road_connectivity': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'ROAD_CONNECTIVITY'", 'blank': 'True'}),
