@@ -700,7 +700,7 @@ class GroupsTargetedInScreening(models.Model):
     class Meta:
         db_table = u'SCREENING_farmer_groups_targeted'
 
-class VideosScreenedInScreening(models.Model):
+class VideosScreenedInScreening(models.Model):  
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     video = BigForeignKey(Video, db_column='video_id')
@@ -711,12 +711,15 @@ class PersonMeetingAttendance(models.Model):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening)
     person = BigForeignKey(Person)
-    expressed_interest_practice = BigForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True)
-    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True)
-    expressed_adoption_practice = BigForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
-    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True)
-    expressed_question_practice = BigForeignKey(Practices,related_name='expressed_question_practice',null=True,blank=True)
+    interested = models.BooleanField(db_column="INTERESTED")
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
+    expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
+    expressed_adoption_practice = BigForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
+    expressed_interest_practice = BigForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True, editable=False)
+    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True, editable=False)
+    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True, editable=False)
+    expressed_question_practice = BigForeignKey(Practices,related_name='expressed_question_practice', null=True, blank=True, editable=False)
+    
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
     

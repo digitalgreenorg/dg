@@ -5,4 +5,6 @@
 /settings.py
 /sandbox_settings.py
 /gwt/DashboardGwt/war/WEB-INF/*
+/gwt/DashboardGwt/war/dashboardgwt/*
 *.prefs
+.DS_Store
