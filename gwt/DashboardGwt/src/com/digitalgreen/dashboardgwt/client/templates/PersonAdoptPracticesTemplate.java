@@ -30,8 +30,8 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 	
 	@Override
 	public void fill() {
-		String templateType = "PersonAdoptPractice";
-		String templatePlainType = "dashboard/personadoptpractice/add";
+		String templatePlainType = "PersonAdoptVideo";
+		String templateType = "dashboard/personadoptpractice/add";
 		RequestContext requestContext = new RequestContext();
 		HashMap args = new HashMap();
 		args.put("action", "add");
@@ -48,7 +48,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 		//Now add listings
 		List<Hyperlink> links = this.fillListings();
 		// Now add hyperlinks
-		super.fillDgListPage(templatePlainType, templateType, personadoptpracticeListFormHtml, addPersonAdoptPracticesServlet1, links);
+		super.fillDgListPage(templateType, templatePlainType, personadoptpracticeListFormHtml, addPersonAdoptPracticesServlet1, links);
 		this.displayCalendar();
 		// Now add any submit control buttons
 		super.fillDgFormPage(savePersonAdoptPractice);
@@ -309,7 +309,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 	// Fill ids:  listing-form-body, add-link
 	private String personadoptpracticeListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 							"<div id='content' class='flex'>" +
-							"<h1>Select Person Adopt Practices to change</h1>" +
+							"<h1>Select Person Adopt Video to change</h1>" +
 								"<div id='content-main'>" +
 									"<ul class='object-tools'>" +
 										"<li id='add-link'>" +                // Insert add link here
@@ -347,7 +347,7 @@ public class PersonAdoptPracticesTemplate extends BaseTemplate {
 	
 	private String personadoptpracticeAddHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
 						"<div id='content' class='colM'>" +
-							"<h1>Add Person Adopt Practice</h1>" +
+							"<h1>Add Person Adopt Video</h1>" +
 							"<div id='content-main'>" +
 								   "<div>" +
 									"<fieldset class='module aligned '>" +
