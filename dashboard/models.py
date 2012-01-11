@@ -745,7 +745,7 @@ class PersonAdoptPractice(models.Model):
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     class Meta:
         db_table = u'PERSON_ADOPT_PRACTICE'
-        unique_together = ("person", "practice", "date_of_adoption")
+        unique_together = ("person", "video", "date_of_adoption")
 
 class Equipment(models.Model):
     id = BigAutoField(primary_key = True)
