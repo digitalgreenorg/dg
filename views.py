@@ -5,6 +5,7 @@ from views import *
 from forms import *
 from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
+from django.core.exceptions import MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.template import Context, Template
@@ -2425,7 +2426,10 @@ def person_meeting_attendance_data(request, person_id, screening_id):
     if request.method == 'GET':
         try:
             farmer = Person.objects.get(id=person_id)
-            pma = PersonMeetingAttendance.objects.filter(person=person_id).get(screening=screening_id)
+            try:
+                pma = PersonMeetingAttendance.objects.filter(person=person_id).get(screening=screening_id)
+            except MultipleObjectsReturned:
+                pma = PersonMeetingAttendance.objects.filter(person=person_id).filter(screening=screening_id)[0]
             video_list = farmer.screening_set.values_list('videoes_screened__id', 'videoes_screened__title')
             video_list = list(set(video_list))
             video_data = []
