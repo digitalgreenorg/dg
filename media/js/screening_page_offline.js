@@ -403,7 +403,12 @@ function get_persons_for_screening (screening_id, callbackfn) {
     else {
         var db = google.gears.factory.create('beta.database');
         db.open('digitalgreendatabase');
-        var persons = db.execute("select person_id from person_meeting_attendance where screening_id="+screening_id);
+        var persons = db.execute("select person_id "+
+                        " from person_meeting_attendance, person "+
+                        " where screening_id="+screening_id+
+                        " and person_meeting_attendance.person_id = person.id"+
+                        " order by person.person_name, person.father_name "
+                        );
         var person_list = [];
         while (persons.isValidRow()) {
           person_list.push(persons.field(0));
@@ -445,7 +450,8 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         						"LEFT JOIN VIDEO p2 ON (pma.expressed_adoption_video_id = p2.id ) "+
         						"JOIN person p ON pma.person_id = p.id "+
         						"WHERE pma.screening_id="+screening_id+ " " + 
-        						"AND pma.person_id="+person_id;
+        						"AND pma.person_id="+person_id+ " " +
+        						"ORDER BY p.person_name, p.father_name";
         var pma = db.execute(query_str);
         var data = new Object;
         try {

@@ -2338,7 +2338,8 @@ def persons_in_screening(request, screening_id):
     person_ids = []
     if request.method == "GET":
         try:
-            person_list = PersonMeetingAttendance.objects.filter(screening=screening_id).values_list('person_id',flat=True)
+            person_list = PersonMeetingAttendance.objects.filter(screening=screening_id).distinct().order_by("person__father_name").order_by("person__person_name").values_list('person_id',flat=True)
+            #per.order_by("person_name").order_by("father_name").
         except:
             # log error. Send error message.
             print "No screening id."
@@ -2355,8 +2356,8 @@ def farmers_in_groups(request):
             except:
                 # log an error
                 continue
-            person_ids.extend(group.person_set.order_by('father_name').order_by('person_name').values_list('id',flat=True))
-        person_ids = list(set(person_ids))
+            person_ids.extend(group.person_set.distinct().order_by('father_name').order_by('person_name').values_list('id',flat=True))
+        #person_ids = list(set(person_ids))
         return HttpResponse(cjson.encode(person_ids), mimetype='application/json')
 
 def screenings_in_village(request, village_id):
