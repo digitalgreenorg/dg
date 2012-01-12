@@ -445,7 +445,7 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         var query_str = "SELECT pma.id, pma.screening_id, p.id, p.person_name, "+
                                 "pma.expressed_question, "+
         						"pma.expressed_adoption_video_id, p2.title, "+
-        						"pma.interested " +
+        						"pma.interested, p.father_name " +
         						"FROM person_meeting_attendance pma "+
         						"LEFT JOIN VIDEO p2 ON (pma.expressed_adoption_video_id = p2.id ) "+
         						"JOIN person p ON pma.person_id = p.id "+
@@ -457,7 +457,12 @@ function get_pma(person_id, screening_id, table, callbackfn) {
         try {
              // This should yield exactly one row.
                 if (pma.isValidRow()) {
-                    data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
+                    if (pma.field(8) == null) {
+                        data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3)}];
+                    }
+                    else {
+                        data['person_list'] = [{'value': pma.field(2), 'string': pma.field(3) + " ("+pma.field(8)+")"}];
+                    }
                     data['expressed_question_comment'] = pma.field(4);
                     data['video_list'] = video_list;
                     data['interested'] = true;
