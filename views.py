@@ -706,7 +706,7 @@ def get_videos_online(request, offset, limit):
                    Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("-id")[offset:limit]
 
         count = videos.distinct().count()
-        videos = videos.distinct().order_by("-id")[offset:limit]
+        videos = videos.distinct()[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
