@@ -188,6 +188,14 @@ def careerpm(request):
     
     return render_to_response('base_career_pm.html')
 
+def careerhr(request):
+    
+    return render_to_response('base_career_hr.html')
+
+def careernpc(request):
+    
+    return render_to_response('base_career_npc.html')
+
 def careerts(request):
     
     return render_to_response('base_career_ts.html')
