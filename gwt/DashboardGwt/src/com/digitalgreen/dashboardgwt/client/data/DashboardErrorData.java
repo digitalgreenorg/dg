@@ -7,6 +7,7 @@ import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class DashboardErrorData extends BaseData {
 	
@@ -62,7 +63,7 @@ public class DashboardErrorData extends BaseData {
 		}
 		
 		public boolean isError(){
-			if(this.notanerror!=null && this.notanerror!="0")
+			if(this.notanerror!=null && this.notanerror!="0" && this.notanerror != "false")
 				return true;
 			else 
 				return false;

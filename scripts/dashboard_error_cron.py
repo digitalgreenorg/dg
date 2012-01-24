@@ -296,3 +296,6 @@ rule6()
 rule7()
 rule8()
 rule9()
+
+cursor.close()
+connection.close()

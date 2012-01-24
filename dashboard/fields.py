@@ -48,7 +48,7 @@ class BigForeignKey(fields.related.ForeignKey):
             # because it continues here in the django code:
             # return PositiveBigIntegerField().db_type()
             # thereby fixing any BigAutoField as PositiveBigIntegerField
-            return PositiveBigIntegerField().db_type()
+            return PositiveBigIntegerField().db_type(connection)
         return rel_field.db_type()
 
 add_introspection_rules([], ["^dashboard\.fields\.PositiveBigIntegerField"])
