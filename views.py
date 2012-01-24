@@ -1494,7 +1494,9 @@ def get_persons_online(request, offset, limit):
         else:
             persons = Person.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
         if(persons):
-            json_subcat = serializers.serialize("json", persons,  relations=('group','village',))
+            json_subcat = serializers.serialize("json", persons,  relations={'group':{'fields':('group_name')},
+                                                                             'village':{'fields':('village_name')}
+                                                                             })
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")
@@ -1582,22 +1584,24 @@ def get_personadoptpractices_online(request, offset, limit):
     else:
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        persons = Person.objects.filter(village__in = villages)
-        persongroups = PersonGroups.objects.filter(village__in = villages)
-        count = PersonAdoptPractice.objects.filter(person__in = persons).distinct().count()
-        personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")
+        personadoptpractices = PersonAdoptPractice.objects.filter(person__village__in = villages).distinct().order_by("-id")
         if(searchText):
-            persongroups = PersonGroups.objects.filter(group_name__icontains = searchText)
+            persongroups = PersonGroups.objects.filter(village__in = villages).filter(group_name__icontains = searchText)
             vil = villages.filter(village_name__icontains = searchText)
-            per = persons.filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = persongroups) )                        
+            per = Person.objects.filter(village__in = villages).filter(Q(person_name__icontains = searchText) | Q(village__in = vil) | Q(group__in = persongroups) )                        
             videos = Video.objects.filter(title__icontains = searchText)
-            count = personadoptpractices.filter(Q(person__in = per) | Q(video__in = videos) ).count()
-            personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(video__in = videos) )\
-            .order_by("person__person_name")[offset:limit]
+            personadoptpractices = personadoptpractices.filter(Q(person__in = per) | Q(video__in = videos)).order_by("-id")
+            count = personadoptpractices.count()
+            personadoptpractices = personadoptpractices[offset:limit]
         else:
-            personadoptpractices = PersonAdoptPractice.objects.filter(person__in = persons).distinct().order_by("-id")[offset:limit]
+            count = personadoptpractices.count()
+            personadoptpractices = personadoptpractices[offset:limit]
         if(personadoptpractices):
-            json_subcat = serializers.serialize("json", personadoptpractices,indent=4,relations={'video':{},'person':{'relations':('village','group')}})
+            json_subcat = serializers.serialize("json", personadoptpractices,indent=4,relations={'video':{'fields':('title')},
+                                                                                                 'person':{'relations':{'village':{'fields':('village_name')},
+                                                                                                                        'group':{'fields':('group_name')}}, 
+                                                                                                           'fields':('person_name','village','group')}
+                                                                                                 })
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")
