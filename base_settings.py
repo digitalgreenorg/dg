@@ -68,6 +68,7 @@ TEMPLATE_DIRS = (
 	os.path.join(PROJECT_PATH, 'templates'),
 	os.path.join(PROJECT_PATH, 'templates/output'),
 	os.path.join(PROJECT_PATH, 'templates/static_site'),
+    os.path.join(PROJECT_PATH, 'templates/farmerbook'),
 )
 
 INSTALLED_APPS = (

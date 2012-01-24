@@ -1,0 +1,305 @@
+.left_panel {
+	background-color: #FFFFFF;
+    border: 1px solid #009E0F;
+    height: 800px;
+    margin-left: 165px;
+    width: 250px;
+	position:absolute;
+}
+
+.vil_left_panel {
+	background-color: #FFFFFF;
+    border: 1px solid #009E0F;
+    height: 1130px;
+    margin-left: 165px;
+    width: 250px;
+	position:absolute;
+}
+.vil_tabcontent {
+	border: 1px solid #009E0F;
+	width: 740px;
+	height:270px;
+}
+
+.vil_section_title {
+	color: #009E0F;
+    font-size: 20px;
+	text-align:center;
+}
+.left_panel_top {
+	padding-left:25px;
+	padding-right:25px;
+}
+
+.left_panel_bottom {
+	padding-top:20px;
+}
+
+.content_top {
+	background-color: #FFFFFF;
+    height: 800px;
+    margin-left: 415px;
+    width: 740px;	
+}
+
+#img_container {
+	height: 150px;
+    margin-top: 5px;
+    width: 200px;    
+}
+
+#district_label {
+	margin-top: 5px;	
+    color: #000000;
+    font-size: 13px;
+    
+}
+
+#name_label {
+	color: #000000;
+    font-size: 20px;
+    text-align: center;    
+}
+
+.group_label {
+	color: #000000;
+    font-size: 11px;
+	text-align: center;    
+}
+
+.horizontal_line {
+	border-top: 1px solid #009E0F;
+    height: 1px;    
+}
+
+#progress_bar_label {
+	color: #000000;
+    font-size: 13px;
+	text-align: right;
+	margin-top: 15px;
+}
+
+#progress_bar_content {
+	font-size:13px; 
+	margin-top:5px; 
+	width:200px;	
+}
+.progress_bar {
+	font-size:60%; 
+	margin-top:5px; 
+	width:200px;
+}
+
+.statsLabel {
+    color: #000000;
+    font-size: 20px;
+    text-align: left;
+    margin-top: 5px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	float:left;
+}
+
+.statsValue {
+    color: #00FF00;
+    font-size: 20px;
+    text-align: right;
+    margin-top: 5px;
+	margin-right: 20px;
+	margin-bottom: 5px;
+}
+
+.imgContainerLabel {
+    color: #000000;
+    font-size: 20px;
+    text-align: left;
+    margin-top: 5px;
+	margin-left: 5px;
+	margin-bottom: 5px;	
+}
+
+.imgLabel {
+    color: #000000;
+    font-size: 13px;
+    text-align: right;
+    margin-top: 55px;
+	margin-right: 20px;
+	margin-bottom: 55px;
+}
+
+#toptabs
+{
+	margin:0px;
+	padding:0px; 
+	border-bottom:3px solid #009E0F;
+}
+
+#tabs ul
+{
+	margin:0px;
+	margin-left:0px;
+	padding:0px;
+}
+
+#tabsli
+{
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top:2px solid #009E0F; 
+	border-left:2px solid #009E0F;
+	border-right:2px solid #009E0F;
+	margin-right:10px; 
+	padding:0px 5px;
+	vertical-align:middle;
+	font-size: 1em;
+	font-weight: bold; 
+	//font-family: Calibri;
+	display:inline;		
+
+}
+
+.playli, .inviteli, .allianceli, .fbcreditli, .helpli, .giftsli
+{
+	background-color:#6D9D30;	
+	color:#FFFFFF;	
+}
+
+.tabsliselect
+{
+	background-color:#683f04;	
+	color:White;	
+}			
+
+#tabsli:hover
+{
+	background-color:#4AA02C;
+	cursor:pointer;
+}
+
+.tabcontent {
+	border: 1px solid #009E0F;
+	width: 740px;
+	height:299px;
+}
+
+.pagination_left {
+	margin-top:40px;
+	margin-right:3px;
+	float:left;
+}
+
+.pagination_right {
+	margin-top:40px;
+	margin-left:-5px;
+	clear:both;
+}
+
+.imageContainer {
+	margin-top:15px;
+	margin-right:8px;
+	float:left;
+}
+.video_title {
+	width:120px; 
+	margin-top:10px;
+	float:left;
+	margin-right:8px;
+}
+.first {
+margin-left:50px;	
+}
+
+.last_seen {
+	width:60px; 
+	margin-top:10px;
+	float:left;
+	margin-right:68px;
+	font-size:11px;
+}
+
+.question {
+	width:120px; 
+	margin-top:10px;
+	float:left;
+	margin-right:8px;
+	font-size:12px;
+}
+
+.section_title {
+	color: #009E0F;
+    font-size: 20px;
+	margin-left:10px;
+}
+
+.video_container {
+	width:200px;
+	margin-right:8px;
+	float:left;
+}
+
+.video_tn {
+	margin-left:40px;
+	margin-right: 40px;
+	margin-top: 10px;
+	float:left;
+}
+
+.farmer_details_container {
+	width:200px; 
+	height:300px;
+	padding-left:5px; 
+	padding-right:5px;
+	border: 1px solid #009E0F;
+	margin-right:0px;
+	margin-top:10px;	
+	float:left;
+}
+
+.farmer_name {
+	width:200px;
+}
+
+.fv_title {
+	width:200px;
+	font-weight:bold;
+}
+
+.practice_title {
+	width:200px;	
+}
+
+.last_adopted {
+	width:200px;font-size:12px;
+}
+.location_icon {
+	margin-right:5px;
+	width:20px; height:20px;
+}
+
+.location {
+	font-size:12px;
+	margin-bottom:5px;
+	margin-top:5px;
+}
+.produced {
+	width:200px;
+	font-size:12px;
+	margin-bottom:5px;
+}
+.fv_details_container {
+	width:200px; 
+	height:190px;
+	padding-left:5px; 
+	padding-right:5px;
+	border: 1px solid #009E0F;
+	margin-right:0px;
+	margin-top:10px;	
+	float:left;
+}
+
+.group_image {
+	width:100px;
+	height:70px;
+	margin-left:15px;
+	margin-top:5px;
+}
