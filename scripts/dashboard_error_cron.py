@@ -265,6 +265,27 @@ def rule8():
     old_errors = list(Error.objects.filter(rule = rule))
     syncErrors(new_errors, old_errors)
     
+#rule Id:9; Name = Screening end time is less than or same as start time   
+def rule9():
+    rule = Rule.objects.get(pk=9)
+    sql = """SELECT SC.id as object_id, B.district_id 
+    FROM SCREENING SC
+    JOIN VILLAGE V ON V.id = SC.village_id
+    JOIN BLOCK B ON B.id = V.block_id   
+    WHERE END_TIME <= START_TIME
+    """
+    
+    new_errors = []
+    if cursor.execute(sql):
+        rows = cursor.fetchall()
+        for row in rows:
+            dist = District.objects.get(pk=row[1])
+            new_errors.append(Error(content_object1=Screening.objects.get(pk=row[0]), \
+                                 district = dist,
+                                 rule = rule))
+
+    old_errors = list(Error.objects.filter(rule = rule))
+    syncErrors(new_errors, old_errors)
 
 rule1()
 rule2()
@@ -274,3 +295,4 @@ rule5()
 rule6()
 rule7()
 rule8()
+rule9()
