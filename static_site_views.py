@@ -220,6 +220,13 @@ def tech(request):
     
     return render_to_response('technology.html')
 
+#farmerbook test urls
+def farmerpage(request):
+    return render_to_response('farmer_page.html')
+
+def villagepage(request):
+    return render_to_response('village_page.html')
+
 def retreat11(request):
     
     return render_to_response('base_team_retreat11.html')
