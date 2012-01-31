@@ -147,7 +147,7 @@ def video(request):
     vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
     
     tot_vid_scr = vid.screening_set.count()
-    tot_vid_adopt = run_query(video_analytics_sql.get_adoption_for_video(id))[0]['tot_adopt']
+    tot_vid_adopt = vid.personadoptpractice_set.count()
     
     actors = vid.farmers_shown.values('person_name')
     actor_data = dict(actors = actors, tot_actors = len(actors))
@@ -207,12 +207,13 @@ def video_search(request):
     geog = request.GET.get('geog')
     id = request.GET.get('id')
     partners = request.GET.getlist('partner')
-    from_date = request.GET.get('from_date');
-    to_date = request.GET.get('to_date');
-    sort = request.GET.get('sort');
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    sort = request.GET.get('sort')
+    sort_order = request.GET.get('sort_order')
     search_box_params = {}
 
-    vids = Video.objects.all()
+    vids = Video.objects.annotate(adoptions=Count('personadoptpractice'))
     
     if(query):
         vids = vids.filter(title__icontains = query)
@@ -272,10 +273,26 @@ def video_search(request):
         vids  = vids.order_by('id')
     elif(sort == "viewers"):
         search_box_params['sort'] = sort
-        vids = vids.order_by('-viewers', 'id')
+        if(sort_order == "asc"):
+            search_box_params['sort_order'] = sort_order
+            vids = vids.order_by("viewers",'id')
+        else:
+            vids = vids.order_by('-viewers', 'id')
     elif(sort == "prod_date"):
         search_box_params['sort'] = sort
-        vids = vids.order_by('-video_production_end_date', 'id')
+        if(sort_order == "asc"):
+            search_box_params['sort_order'] = sort_order
+            vids = vids.order_by('video_production_end_date', 'id')
+        else:
+            vids = vids.order_by('-video_production_end_date', 'id')
+    elif(sort == 'adoptions'):
+        search_box_params['sort'] = sort
+        if(sort_order == "asc"):
+            search_box_params['sort_order'] = sort_order
+            vids = vids.order_by('adoptions', 'id')
+        else:
+            vids = vids.order_by('-adoptions', 'id')
+        
     
     #for paging
     vid_count = vids.count()
@@ -286,11 +303,6 @@ def video_search(request):
     page = int(page)
     vids = vids[(page-1)*vid_per_page:(page*vid_per_page)]
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
-    
-    if vids:
-        all_vid_adoptions = run_query_dict(video_analytics_sql.get_adoption_for_multiple_videos(vids.values_list('id',flat=True)), 'id')
-        for vid in vids: vid.adoptions = all_vid_adoptions[vid.id][0]
-
     
     return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
                                             

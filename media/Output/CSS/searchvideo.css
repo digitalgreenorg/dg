@@ -40,7 +40,7 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 /* Searchdiv Right Hand Panel  */
 #searchcount					{ float:left; margin-top:5px; width:475px; text-align:right; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 #searchsort						{ float:left; width:268px; text-align:right; margin:5px 0px 0px 5px; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
-#sortfilter						{ padding:1px; background-color:#F4F4F4; float:right; width:200px; height:20px; border:none; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:Bold; color:#3F3E3E; } 
+#sortfilter						{ padding:1px; background-color:#F4F4F4; float:right; width:150px; height:20px; border:none; font-size:0.9em; font-family:Arial,Helvetica,Sans-Serif; font-weight:Bold; color:#3F3E3E; } 
 
 #searchresultdiv				{ clear:both; margin-top:6px; width:748px; }
 
@@ -65,3 +65,9 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 #nonvideoembeddesc				{ clear:both; margin:5px; height:50px; background-color:#f3f3f3; vertical-align:center; }
 #nonvideoembeddesc img			{ margin-left:165px; margin-right:5px; margin-top:12px; }
 #nonvideoembeddesc div			{ width:100%; text-align:center; padding-top:15px; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }
+
+/* for sorting table2 styles for all sorting order(ascending, descending and none) */
+div#sort_order	{ float:right; width:5%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tddefaultbg2.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:1}
+div#sort_order.arrow_up	{ float:right; width:5%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tddescbg4.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:1}
+div#sort_order.arrow_down	{ float:right; width:5%; height:30px; margin-top:0px; background:url("/media/Output/Images/table2tdascenbg4.png"); background-repeat:no-repeat; text-align:right; cursor:pointer; opacity:1}
+

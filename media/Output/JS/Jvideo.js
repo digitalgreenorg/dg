@@ -56,15 +56,22 @@ function videodefaultload(){
 			
 			
 			$("div#searchsort").mouseover(function() {            	
-            	$(this).css('background-color','#E7F7CF' );
+            	//$(this).css('background-color','#E7F7CF' );
             	$(this).find("#sortfilter").css('background-color','#E7F7CF' );
             });
 			
 			$("div#searchsort").mouseleave(function() {            	
-            	$(this).css('background-color','White' );
+            	//$(this).css('background-color','White' );
             	$(this).find("#sortfilter").css('background-color','#F4F4F4' );
             });
 			
+			$("div#sort_order").click(function(){
+				if($("#sortfilter").val() != "-1") {
+					$(this).toggleClass('arrow_down');
+					$(this).toggleClass('arrow_up');
+					go(null);
+				}
+			});
 					
 			$("div#videodatadiv1div").mouseover(function() {            	
             	$(this).find("div#videodatadiv1help").show();
@@ -119,21 +126,6 @@ function videodefaultload(){
             	$(this).css('background-color','White');
             });
 			
-			/*
-			//showing the advanced search option in the Video Search Page
-			$("td#advancedsearchopenbtn").click(function() { 
-            	$("div.advancedsearchdiv").slideDown();
-            	$(this).hide();
-            	$("td#advancedsearchclosebtn").show();
-            });
-            
-            
-            $("td#advancedsearchclosebtn").click(function() { 
-            	$("div.advancedsearchdiv").slideUp();
-            	$(this).hide();
-            	$("td#advancedsearchopenbtn").show();
-            }); 
-           */
            
            // Paging in the SearchVideo Result page 
             
@@ -173,6 +165,7 @@ function go(page) {
     if($("#searchinput").val() != "") url.push("query="+$("#searchinput").val());
     if($("#videosuitable").val()!='1')  url.push("videosuitable="+$("#videosuitable").val());
     if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
+    if($("div#sort_order").hasClass("arrow_down") && $("#sortfilter").val() != "-1") url.push("sort_order=asc");
     
     partners = $("#partners").val();
     for(i=0;i<partners.length;i++) {

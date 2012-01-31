@@ -12,7 +12,6 @@
 
 
 {% block jsfile %}
-	{{ block.super }}
     <script>
     function init_box_params() {
     var video_suitable_for = {%if search_box_params.video_suitable_for %}{{search_box_params.video_suitable_for}}{%else%} null{%endif%};
@@ -22,7 +21,7 @@
     var season = {%if search_box_params.season %}["{{search_box_params.season|join:'", "'}}"]{%else%} null{%endif%};
     var pracs = {%if search_box_params.prac %}["{{search_box_params.prac|join:'", "'}}"]{%else%} null{%endif%};
     var sort = {%if search_box_params.sort %}"{{search_box_params.sort}}"{%else%} null{%endif%};
-    
+    var sort_order = {%if search_box_params.sort_order %}"{{search_box_params.sort_order}}"{%else%} null{%endif%};
     if(video_suitable_for != null) $("#videosuitable").val(video_suitable_for);
     if(uploaded != null) $("#uploads").val(uploaded);
     if(partners != null) $("#partners").val(partners);
@@ -30,6 +29,13 @@
     if(season!=null) $("#season").val(season);
     if(pracs!=null) $("#practice").val(pracs);
     if(sort!=null) $("#sortfilter").val(sort);
+    if(sort_order == "asc") {
+    	$("div#sort_order").addClass("arrow_down");
+    }
+    else if(sort != null) {
+    	$("div#sort_order").addClass("arrow_up");
+    }
+    
     //alert(""+video_suitable_for+uploaded+partners+lang+season+pracs);
     }   
     </script>
