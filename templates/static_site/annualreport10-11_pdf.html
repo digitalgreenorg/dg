@@ -1,0 +1,36 @@
+
+{% extends "annualreports.html" %}
+
+{% block title %} Digital Green - Annual Report 2010-11{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}	  
+{% endblock cssfile %}
+
+{% block reportpagetitle %} Annual Report 2010-11{% endblock reportpagetitle %} 
+
+
+{% block partnerbreadcrums %} 
+	 <a href='/annualreports'> Annual Reports </a>/<a href='/annualreport10'> Annual Report 2010-11 </a>/ 
+	 <span style='font-size:0.9em; font-weight:bold;'> Annual Report 2010-11 Pdf</span>
+{% endblock partnerbreadcrums %}
+
+{% block mainbodycontent %}	
+	
+    <div id='contentdiv1'>
+    	<img src="/media/Output/Images/annualreportimg10.jpg" />
+		<object id="doc_98872" name="doc_98872" height="600" width="900" type="application/x-shockwave-flash" data="http://d1.scribdassets.com/ScribdViewer.swf" style="outline:none;" > 
+			<param name="movie" value="http://d1.scribdassets.com/ScribdViewer.swf">             
+			<param name="wmode" value="opaque">             
+			<param name="bgcolor" value="#ffffff">            
+			<param name="allowFullScreen" value="true">             
+			<param name="allowScriptAccess" value="always">             
+			<param name="FlashVars" value="document_id=79824595&access_key=key-2o3sj0xp50qyqozod4bi&page=1&viewMode=list">             
+			<embed id="doc_98872" name="doc_98872" src="http://d1.scribdassets.com/ScribdViewer.swf?document_id=79824595&access_key=key-2o3sj0xp50qyqozod4bi&page=1&viewMode=list" 
+				type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="600" width="900" wmode="opaque" bgcolor="#ffffff">
+			</embed>    
+		</object>
+		<br/><br/>
+    </div>
+	
+{% endblock mainbodycontent %}	

@@ -51,6 +51,9 @@ def annualreport09(request):
 def annualreport10(request):   
     return render_to_response('annualreport10-11.html')
 
+def annualreport10pdf(request):   
+    return render_to_response('annualreport10-11_pdf.html')
+
 def annualletter(request):   
     return render_to_response('annualletter.html')
 
@@ -219,6 +222,9 @@ def donate(request):
 def tech(request):
     
     return render_to_response('technology.html')
+
+def keyfacts(request):
+    return render_to_response('key_facts.html')
 
 #farmerbook test urls
 def farmerpage(request):
