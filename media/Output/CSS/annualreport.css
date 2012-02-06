@@ -20,7 +20,7 @@
 .mainbodycontentleftimg				{ margin-top:3px; width:620px; }
 #presscontent						{ width:100%; margin-top:0px; text-align:center; margin-left:0; margin-right:0%; }
 
-#annualreporttable					{ border-top:1px solid #6e5a0c; border-bottom:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; background-color:#E7F7CF; width:900px; }
+#annualreporttable					{ border-top:1px solid #6e5a0c; align:center; clear:both; margin-top:20px; background-color:#E7F7CF; width:900px; }
 
 .annualreporttd						{ padding:10px;  vertical-align:top; width:225px; }
 .annualreportdiv					{ width:205px; height:280px; background-color:#62980C; }	
