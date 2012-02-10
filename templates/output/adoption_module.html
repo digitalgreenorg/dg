@@ -31,25 +31,50 @@
 						</tr>
 					</table>								
 				</div>
-				<table id='table1stat' cellspacing='0' cellpadding='0'> 				
-					
-					<tr>					
-						<td class='table1statdescmerge' colspan='3'>
-							<div class='statdesc'>
-								<div class='statdescnamemerge'>	Adoption Rate	</div>
-								<div id='statdescimgmerge'> 
-									<div id='statdescimg1'>	
+				<table id='table1stat' cellspacing='0' cellpadding='0'> 	
+					<tr>
+						<td class="table1statdesc">
+							<div class="statdesc">
+								<div class="statdescname">	Adoption Rate	</div>
+								<div id="statdescimg"> 	
+									<div id="statdescimg1" style="display: none;">	
 										Farmers who have adopted an agricultural practice <br/>
-										divided by 'Active' attendees i.e. farmers who have watched a DG video in last 60 days.				
+										divided by 'Active' attendees i.e. farmers who have watched a DG video in last 60 days.					
 									</div>								
 								</div>
 							</div>
-							<div class='statnumbermerge'>
-								<div class='statdesnumber'>	{{adopt_rate|floatformat:2|default:"0"}} %</div>
+							<div class="statnumber">
+								<div class="statdesnumber">	{{adopt_rate|floatformat:2|default:"0"}} %</div>
+							</div>																				
+						</td>
+						<td class="table1statdesc">
+							<div class="statdesc">
+								<div class="statdescname">Avg. adoption per active farmer </div>
+								<div id="statdescimg"> 
+									<div id="statdescimg1" style="display: none;">	
+										Average number of adoptions per active farmer. Active farmer <br/>
+										is the one still involved with DG system.			
+									</div>								
+								</div>
+							</div>
+							<div class="statnumber">
+								<div class="statdesnumber">	{{avg_ado_per_farmer|floatformat:2|default:"0"}}</div>
 							</div>													
-						</td>						
-					</tr>
-					
+						</td>
+						<td class="table1statdesc">
+							<div class="statdesc">
+								<div class="statdescname">Avg. adoption per screening </div>
+								<div id="statdescimg">
+									<div id="statdescimg1" style="display: none;">	
+										Average number of adoptions per screening			
+									</div>									 									
+								</div>																
+							</div>
+							<div class="statnumber">
+								<div class="statdesnumber"> {{ avg_ado_per_scr|floatformat:2|default:"0" }} </div>
+							</div>																			
+						</td>
+					</tr>				
 					<tr>
 						<td class="table1statdesc">
 							<div class="statdesc">
@@ -66,20 +91,36 @@
 							</div>																				
 						</td>
 						
+						{% comment %}
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname"> Manifested Adoption Interests</div>
+								<div class="statdescname">Ratio of manifested expressed interests</div>
 								<div id="statdescimg"> 
 									<div id="statdescimg1" style="display: none;">	
 										Farmers express interests for adopting a practice during Video screenings. <br\>
-										This statistic indicates the number of interests that materialized into actual adoption.				
+										This statistic indicates the ratio of interests that materialized into actual adoption.				
 									</div>								
 								</div>
 							</div>
 							<div class="statnumber">
-								<div class="statdesnumber">{{tot_exp_int}} Adoption{{tot_exp_int|pluralize}}</div>
+								<div class="statdesnumber">{{ratio_exp_int|floatformat:2|default:"0"}} interests</div>
 							</div>													
 						</td>
+						{% endcomment %}
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'> Avg. adoption per video</div>
+								<div id='statdescimg'> 
+									<div id='statdescimg1'>	
+										Average number of adoptions <br/>
+										per video
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'> {{ avg_ado_per_vid|floatformat:2|default:"0"}} adoptions/video</div>
+							</div>													
+						</td>	
 						
 						<td class="table1statdesc">
 							<div class="statdesc">
@@ -124,25 +165,47 @@
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>{{tot_farmers}} Farmer{{tot_farmers|pluralize}}</div>
+								<div class='statdesnumber'>{{tot_prac}} Practice{{tot_prac|pluralize}}</div>
 							</div>													
 						</td>	
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'> Total practices adopted repeatedly by same farmer </div>
+								<div class='statdescname'> Ratio of farmers with Repeat Adoption </div>
 								<div id='statdescimg'> 	
 									<div id='statdescimg1'>	
-										Total number of Practices <br/> 
-										adopted repeatedly by same farmer	
+										Ratio of farmers who repeated an adoption to the  
+										number of farmers who made at least one adoption
 									</div>								
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>{{repeat_pract}} Practice{{repeat_pract|pluralize}}</div>
+								<div class='statdesnumber'>{{repeat_pract|floatformat:2|default:"0"}} %</div>
 							</div>																				
 						</td>					
-					</tr>						
+					</tr>
+					{% comment %}
+					<tr>						
+						<td class='table1statdesc'>
+						</td>						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'> Avg. adoption per video</div>
+								<div id='statdescimg'> 
+									<div id='statdescimg1'>	
+										Average number of adoptions <br/>
+										per video
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'> {{ avg_ado_per_vid|floatformat:2|default:"0"}} adoptions/video</div>
+							</div>													
+						</td>	
+						<td class='table1statdesc'>
+						</td>					
+					</tr>		
+					{% endcomment %}				
 				</table>				
 			</div>					
 		</div>
@@ -336,7 +399,7 @@
 	adopt_line1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 	adopt_line1.addVariable("chart_data",escape(line_data));
 	adopt_line1.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
-	adopt_line1.addVariable("chart_id", "video_line_chart");
+	adopt_line1.addVariable("chart_id", "video_line_chart1");
 	
 	/*var adopt_rate_line_data = '';
 	$.ajax({ type: "GET", 
@@ -344,7 +407,8 @@
 				async: false,
 				url: "/analytics/adoption_rate_line?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}", 
 				success: function(obj) {
-						adopt_rate_line_data = obj.data;
+						window.alert(obj);
+						adopt_rate_line_data = obj;
 				}
 	});*/	 	
 	
@@ -356,7 +420,7 @@
 	adopt_rate_line1.addVariable("additional_chart_settings", encodeURIComponent('<settings><graphs> \
 						<graph gid="1"><title>Adoption Rate</title><color>#FFCC00</color><balloon_text><![CDATA[{value}]]></balloon_text></graph> \
 						</graphs><legend><align>center</align></legend><labels><label lid="0"><text><![CDATA[<font face="Calibri">Adoption Rate</font>]]></text></label></labels></settings>'));
-	adopt_rate_line1.addVariable("chart_id", "adopt_rate_line_chart");
+	adopt_rate_line1.addVariable("chart_id", "adopt_rate_line_chart1");
 	
 </script>
 
