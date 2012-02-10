@@ -1,5 +1,5 @@
 import site, sys
-sys.path.append('/home/ubuntu/code/dg_git')
+sys.path.append('C:\Users\Rahul\workspace\dg_git')
 site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.6/site-packages/')
 
 from django.core.management import setup_environ
@@ -15,6 +15,9 @@ start = datetime.datetime.now()
 sixty_days = datetime.timedelta(days=60)
 
 last_calculated_date = VillagePrecalculation.objects.aggregate(Max('date')).values()[0] + datetime.timedelta(days=1)
+today = datetime.date.today()
+if last_calculated_date > today:
+    exit() 
 pmas = PersonMeetingAttendance.objects.filter(screening__date__gte = last_calculated_date - sixty_days).values_list('person','screening__date').order_by('person', 'screening__date')
 person_att_dict = defaultdict(list)
 max_date = min_date = cur_person = None
@@ -38,7 +41,7 @@ person_village = {}
 for id, village in person_village_qs:
     person_village[id] = village
 
-today = datetime.date.today()
+
 paps = PersonAdoptPractice.objects.filter(person__in = person_att_dict.keys()).values_list('person', 'date_of_adoption').order_by('person', 'date_of_adoption')
 pap_dict = defaultdict(list)
 for person_id, date in paps:
