@@ -92,9 +92,9 @@ def overview_module(request):
     country_data.update(avg_scr = tot_val['avg_sc_per_day'])
     
     #Adoption Rate
-    adopt_rate_data = run_query(shared_sql.tot_dist_attendees_adopt_60_days(geog, id, date_var, partners))[0]
-    if(adopt_rate_data['tot_per']):
-        country_data.update(adopt_rate = float(adopt_rate_data['tot_adop_per'])*100/adopt_rate_data['tot_per'])
+    adopt_rate_data = run_query(shared_sql.adoption_rate(geog, id, date_var, partners))[0]
+    if(adopt_rate_data and adopt_rate_data['tot_per']):
+        country_data.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
     else:
         country_data.update(adopt_rate = 0)
     #Distinct videos screened

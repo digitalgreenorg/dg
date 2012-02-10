@@ -226,11 +226,11 @@ def video_search(request):
     if(from_date):
         search_box_params['from_date'] = from_date;
         from_date = datetime.date(*map(int,from_date.split('-')))
-        vids = vids.filter(video_production_end_date__gt = from_date)
+        vids = vids.filter(video_production_end_date__gte = from_date)
     if(to_date):
         search_box_params['to_date'] = to_date;
         to_date = datetime.date(*map(int,to_date.split('-')))
-        vids = vids.filter(video_production_end_date__lt = to_date)
+        vids = vids.filter(video_production_end_date__lte = to_date)
     if(video_uploaded == '1'):
         vids = vids.exclude(youtubeid = '')
         search_box_params['video_uploaded'] = video_uploaded

@@ -707,11 +707,40 @@ class VideosScreenedInScreening(models.Model):
     class Meta:
         db_table = u'SCREENING_videoes_screened'
 
+class PersonAdoptPractice(models.Model):
+    id = BigAutoField(primary_key = True)
+    person = BigForeignKey(Person)
+    practice = BigForeignKey(Practices, null=True, blank=True)
+    video = BigForeignKey(Video)
+    prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
+    date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION')
+    quality = models.CharField(max_length=200, db_column='QUALITY', blank=True)
+    quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
+    quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
+    
+    @staticmethod
+    def udpate_practice(sender, **kwargs):
+        try:
+            instance = kwargs['instance']
+            if kwargs['signal'] == pre_save:
+                instance.practice = instance.video.related_agricultural_practices.all()[0]
+        except Exception, e:
+            #sending mail to self for immediation attention
+            type, value, tracebk = sys.exc_info()
+            mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
+            val = send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+    
+    class Meta:
+        db_table = u'PERSON_ADOPT_PRACTICE'
+        unique_together = ("person", "video", "date_of_adoption")
+        
+pre_save.connect(PersonAdoptPractice.udpate_practice, sender = PersonAdoptPractice)
+        
 class PersonMeetingAttendance(models.Model):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening)
     person = BigForeignKey(Person)
-    interested = models.BooleanField(db_column="INTERESTED")
+    interested = models.BooleanField(db_column="INTERESTED", db_index=True)
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
     expressed_adoption_practice = BigForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
@@ -719,6 +748,7 @@ class PersonMeetingAttendance(models.Model):
     expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True, editable=False)
     expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True, editable=False)
     expressed_question_practice = BigForeignKey(Practices,related_name='expressed_question_practice', null=True, blank=True, editable=False)
+    matched_adoption = BigForeignKey(PersonAdoptPractice, blank=True, null=True, editable=False)
     
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
@@ -731,21 +761,6 @@ post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttend
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
-
-        
-class PersonAdoptPractice(models.Model):
-    id = BigAutoField(primary_key = True)
-    person = BigForeignKey(Person)
-    practice = BigForeignKey(Practices, null=True, blank=True)
-    video = BigForeignKey(Video)
-    prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
-    date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION')
-    quality = models.CharField(max_length=200, db_column='QUALITY', blank=True)
-    quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
-    quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
-    class Meta:
-        db_table = u'PERSON_ADOPT_PRACTICE'
-        unique_together = ("person", "video", "date_of_adoption")
 
 class Equipment(models.Model):
     id = BigAutoField(primary_key = True)
@@ -836,3 +851,14 @@ class Error(models.Model):
         
     def __unicode__(self):
         return u'%s; %s; %s' % (self.rule, self.content_object1, self.content_object2)
+    
+class VillagePrecalculation(models.Model):
+    village = BigForeignKey(Village)
+    date = models.DateField()
+    total_adopted_attendees = models.PositiveIntegerField(default=0)
+    total_active_attendees = models.PositiveIntegerField(default=0)
+    total_adoption_by_active = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        unique_together = ("village", "date")
+        db_table = u'village_precalculation'
