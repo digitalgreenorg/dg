@@ -1,5 +1,5 @@
 import site, sys
-sys.path.append('C:\Users\Rahul\workspace\dg_git')
+sys.path.append('/home/ubuntu/code/dg_git')
 site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.6/site-packages/')
 
 from django.core.management import setup_environ
