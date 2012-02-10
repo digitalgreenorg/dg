@@ -2,6 +2,20 @@
 <!-- Edited by XMLSpy® -->
 <CATALOG>
 	<TEAM>
+		<TITLE>IICD</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/iicd_logo.jpg</IMAGESRC>    
+    	<DESC>IICD supports sustainable development through the use of Information and communication technologies(ICT) for strategic development and poverty alleviation. IICD and Digital Green will synergize to identify and develop ICT programs in Africa.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://www.iicd.org</REFERENCE>	
+	</TEAM>
+	<TEAM>
+		<TITLE>Agro-Know Technologies</TITLE>
+		<IMAGESRC>/media/Output/Images/partner/agro_know_logo.png</IMAGESRC>    
+    	<DESC>Agro-know technologies, Greece is a research-oriented enterprise that focuses on knowledge-intensive technology innovation for agriculture and rural development. Our collaboration with Agro-know technologies will focus on sharing Digital green's educational resources in relevant learning repositories.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<REFERENCE>http://agroknow.gr/</REFERENCE>	
+	</TEAM>
+	<TEAM>
 		<TITLE>Cereal Systems Initiative for South Asia</TITLE>
 		<IMAGESRC>/media/Output/Images/partner/csisa_logo.jpg</IMAGESRC>    
     	<DESC>The Cereal Systems Initiative for South Asia (CSISA) is accelerating short-and long-term cereal production growth in South Asia's most important grain baskets.  Digital Green is working with International Rice Research Institute (IRRI) and CSISA to establish a two-way dialouge between researchers, extension agents, and farming communities in Bihar.</DESC>
