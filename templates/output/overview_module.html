@@ -193,9 +193,12 @@
 									{% endifnotequal  %}
 								</td>
 								<td class='table2statdesc2'> 
-									{{ item.tot_ado }}
-									<a href='/analytics/adoption_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
-									{{ item.tot_ado }} </a>
+									{% ifnotequal item.geog None %}
+										<a href='/analytics/adoption_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
+										{{ item.tot_ado }} </a>
+									{% else %}
+										{{ item.tot_ado }}
+									{% endifnotequal  %}
 								</td>
 								<td class='table2statdesc2'>
 									{{ item.tot_pra }}
@@ -241,16 +244,16 @@
 					    </td>
 					    
 					    <td class='table2statdesc2'> 
-						    {{ par_geog_data.tot_ado }} 
-					    </td>
-					    
-					    <td class='table2statdesc21'>
-					        {% if par_geog_data.geog %}
+						    {% if par_geog_data.geog %}
                                 <a href='/analytics/adoption_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
                                 {{ par_geog_data.tot_ado }}</a>
                             {% else %}
                                 {{ par_geog_data.tot_ado }}
                             {% endif %}
+					    </td>
+					    
+					    <td class='table2statdesc21'>
+					        {{ par_geog_data.tot_pra }}
 					    </td>
 		            </tr>
 			    </table>

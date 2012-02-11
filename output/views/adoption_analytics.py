@@ -26,7 +26,7 @@ def adoption_module(request):
     else:
         date_var = str(datetime.date.today())
     adopt_rate_data = run_query(shared_sql.adoption_rate(geog, id, date_var, partners))[0]
-    if(adopt_rate_data and adopt_rate_data['tot_per'] != 0):
+    if(adopt_rate_data and adopt_rate_data['tot_per']):
         main_stats.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
         main_stats.update(avg_ado_per_farmer = adopt_rate_data['tot_active_adop'] / adopt_rate_data['tot_per'])
     else:
