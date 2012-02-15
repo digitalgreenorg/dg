@@ -233,6 +233,9 @@ def farmerpage(request):
 def villagepage(request):
     return render_to_response('village_page.html')
 
+def farmerbook(request):
+    return render_to_response('farmerbook_home.html')
+
 def grouppage(request):
     return render_to_response('group_page.html')
 

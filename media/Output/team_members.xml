@@ -121,6 +121,17 @@
 		<MAILID>shekhar@digitalgreen.org</MAILID>
 		<NAME>Chandra Shekhar</NAME>		
 	</TEAM>
+	
+	
+	<TEAM>
+		<TITLE>Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/amrita.png</ARTIST>
+    	<DESC>Hi, I am Amrita. I hold a bachelors degree in Agriculture from G. B. Pant University of Agriculture and Technology, Pantnagar and master's in Business Administration with specialization in Agri Business Management from VAMNICOM, Pune. I have three and a half years of experience in different corporates.  I have started my career with a field job in State Bank of India and gradually moved onto take the responsibility of knowledge management for Mahindra Samriddhi at Mumbai. I have travelled across the country while performing the previous roles. The work being done by Digital Green to educate the farmers by use of information and communication technology is commendable and is leading to sustained social change. I have a firm believe that as Digital Green team, will keep on stepping forward towards food security and improving rural livelihoods. I am happy to be a part of the young and energetic team. My hobbies are reading, traveling and listening to music.</DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>amrita@digitalgreen.org</MAILID>
+		<NAME>Amrita Singh</NAME>		
+	</TEAM>
+	
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/salil1.png</ARTIST>    
@@ -152,6 +163,15 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sudha@digitalgreen.org</MAILID>
 		<NAME>Sudha Jha</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/surender.jpg</ARTIST>    
+    	<DESC>Surender has received master degree in Social work from Osmania University, Hyderabad. He has two years of experience in development sector.  Before Digital Green, he was associated with disability movement in Andhra Pradesh.  While implementing the project, he travelled across the state which was a wonderful experience for him and in turn motivated him to explore other parts of the country as well. Later, he joined Action Aid's Development Traineeship programme under which he was engaged in extensive fieldwork. The Development Traineeship enabled him to work towards and understand the Rural India and its old-age agricultural practices. His interest in rural development and specifically development of small holder agricultural practitioners has drawn him towards Digital Green as it is finding solutions for farming communities by using low cost technology that is effective in letting farmers adopt affordable agricultural practices.  </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>surender@digitalgreen.org</MAILID>
+		<NAME>Taduri Surender</NAME>		
 	</TEAM>
 	
 	<TEAM>

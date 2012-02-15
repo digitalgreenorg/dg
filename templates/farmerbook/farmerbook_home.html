@@ -4,6 +4,28 @@
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?sensor=false">
+    </script>
+	<script type="text/javascript"
+      src="http://127.0.0.1:8000/media/farmerbook/js/markermanager.js">
+    </script>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script src="http://127.0.0.1:8000/media/farmerbook/js/jquery.colorbox-min.js"></script>
+	<script type="text/javascript"
+      src="http://127.0.0.1:8000/media/farmerbook/js/jquery.qtip-1.0.0-rc3.min.js">
+    </script>
+	
+	
 	<script type='text/javascript'>
 		$(document).ready(function() {
 		$("#progress_bar_1").progressbar({ value: 37 });
@@ -12,12 +34,100 @@
 		$("#progress_bar_4").progressbar({ value: 50 });
 		$('#content').hide();
 		
+		
+		$('<div id="qtip-blanket">')
+      .css({
+         position: 'absolute',
+         top: $(document).scrollTop(), // Use document scrollTop so it's on-screen even if the window is scrolled
+         left: 0,
+         height: $(document).height(), // Span the full document height...
+         width: '100%', // ...and full width
+
+         opacity: 0.7, // Make it slightly transparent
+         backgroundColor: 'black',
+         zIndex: 5000  // Make sure the zIndex is below 6000 to keep it below tooltips!
+      })
+      .appendTo(document.body) // Append to the document body
+      .hide(); // Hide it initially
+
+		
 		});
+		
+		function initialize() {
+	   var center = new google.maps.LatLng(21.7, 79.7);
+		var options = {
+		  'zoom': 5,
+		  'center': center,
+		  'mapTypeId': google.maps.MapTypeId.ROADMAP
+		};
+
+		var map = new google.maps.Map(document.getElementById("map_canvas"), options);
+		var markers = [];
+		for (var i = 0; i < 1000; i++) {
+		  var latLng = new google.maps.LatLng(21.7 + 5 * Math.random(), 79.7 + 10 * Math.random());
+		  var marker = new google.maps.Marker({'position': latLng});		  
+		  
+			google.maps.event.addDomListener(marker, 'click', function(event) {
+			//alert($("#content").html());	
+			marker.tooltip = $('<div />').qtip({
+            content: {
+         title: {
+            text: 'Village Page',
+            button: 'Close'
+         },
+         text: $("#content").html()
+      },
+    position: { adjust: { x: ($('#map_canvas').width() - 930 )/ 2 - 50, y: 0 } },
+      show: {
+                ready: true,
+                event: false,
+                solo: true
+            },
+      hide: false,
+      style: {
+         width: { max: 1350 },
+		 height: '1140px',
+         padding: '5px',
+         border: {
+            width: 9,
+            radius: 9,
+            color: '#666666'
+         },
+         name: 'light'
+      },
+      api: {
+         beforeShow: function()
+         {
+            // Fade in the modal "blanket" using the defined show speed
+            $('#qtip-blanket').fadeIn(this.options.show.effect.length);
+         },
+         beforeHide: function()
+         {
+            // Fade out the modal "blanket" using the defined hide speed
+            $('#qtip-blanket').fadeOut(this.options.hide.effect.length);
+         }
+      }
+        })
+        .qtip('api');
+    });
+		  
+		  markers.push(marker);
+		  
+		}
+		
+		var markerCluster = new MarkerClusterer(map, markers); 
+		
+      }
+	  
+	  
 	</script>
 </head>
-<body style="font-family: Calibri; font-weight: normal;">
+<body onload="initialize()" style="font-family: Calibri; font-weight: normal;" >
+
+<div id="map_canvas" style="width:100%; height:100%;"></div>
+
 <div id="content">
-<div class='vil_left_panel'>
+<div class='vil_left_panel' style="margin-left:0px;">
 	<div class="left_panel_top">
 		<div id="district_label" >Dindori | MadhyaPradesh</div>
 			<img id="img_container" src='/media/farmerbook/images/vil1.jpg'>
@@ -70,7 +180,7 @@
 		<div style='clear:both;'></div>
 	</div>
 </div>
-<div class='content_top'>
+<div class='content_top' style="margin-left:260px;">
 	<div id="tabs">
 		<div id='toptabs'> 
 			<ul>
