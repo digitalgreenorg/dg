@@ -76,6 +76,7 @@ public class StatesTemplate extends BaseTemplate{
 								  "<td><input type='checkbox' class='action-select' value='"+ state.getId() + "' name='_selected_action' /></td>" +
 									"<th id = 'row" + row + "'></th>" +
 									"<td>"+ state.getRegion().getRegionName() + "</td>" +
+									"<td>"+ state.getCountry().getCountryName() + "</td>" +
 								"</tr>";
 				}
 				statesListFormHtml = statesListFormHtml + tableRows + "</tbody></table>";
@@ -114,6 +115,11 @@ public class StatesTemplate extends BaseTemplate{
     											"Region" +
     										"</a>" +
     									"</th>" +
+    									"<th>" +
+											"<a href='?ot=asc&amp;o=3'>" +
+												"Country" +
+											"</a>" +
+										"</th>" +
     								"</tr>" +
     							"</thead>" +
     							"<tbody>";

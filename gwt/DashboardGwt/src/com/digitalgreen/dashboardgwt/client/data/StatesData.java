@@ -277,8 +277,8 @@ public class StatesData extends BaseData {
 		if (this.getResultSet().isValidRow()){
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
-					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
-					CountriesData.Data c = country.new Data(this.getResultSet().getFieldAsString(7),  this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9)) ;
+					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(5),  this.getResultSet().getFieldAsString(6), this.getResultSet().getFieldAsString(7)) ;
+					CountriesData.Data c = country.new Data(this.getResultSet().getFieldAsString(8),  this.getResultSet().getFieldAsString(9), this.getResultSet().getFieldAsString(10)) ;
 					Data state = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r, c);
 					states.add(state);
 				}				
