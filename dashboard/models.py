@@ -123,6 +123,18 @@ class Region(models.Model):
 
     def __unicode__(self):
         return self.region_name
+    
+class Country(models.Model):
+    id = BigAutoField(primary_key = True)
+    country_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
+    start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
+    
+    class Meta:
+        db_table = u'country'
+        verbose_name_plural = "countries"
+
+    def __unicode__(self):
+        return self.country_name
 
 class EquipmentHolder(models.Model):
     id = BigAutoField(primary_key = True)
@@ -178,6 +190,7 @@ class State(models.Model):
     id = BigAutoField(primary_key = True)
     state_name = models.CharField(max_length=100, db_column='STATE_NAME', unique='True')
     region = BigForeignKey(Region)
+    country = BigForeignKey(Country)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
         db_table = u'STATE'

@@ -320,6 +320,61 @@ def get_user_states(request):
             states = State.objects.filter(district__district_name = user_permission.district_operated)
     return states
 
+def save_country_online(request,id):
+    if request.method == 'POST':
+        if(id):
+            country = Country.objects.get(id = id)
+            form = CountryForm(request.POST, instance = country)
+        else:
+            form  = CountryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('')
+        else:
+            return HttpResponse(form.errors.as_text(),status = 201)
+    else:
+        if(id):
+            country = Country.objects.get(id = id)
+            form = CountryForm(instance = country)
+        else:
+            form  = CountryForm()
+        return HttpResponse(form)
+
+def get_countries_online(request, offset, limit):
+    if request.method == 'POST':
+        return redirect('country')
+    else:
+        countries = Country.objects.order_by("-id")[offset:limit]
+        count = Country.objects.count()
+        if(countries):
+            json_subcat = serializers.serialize("json", countries)
+        else:
+            json_subcat = 'EOF'
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        response['X-COUNT'] = count
+        return response
+
+
+def save_country_offline(request, id):
+    if request.method == 'POST':
+        if(not id):
+            form = CountryForm(request.POST)
+            if form.is_valid():
+                new_form  = form.save(commit=False)
+                new_form.id = request.POST['id']
+                new_form.save()
+                return HttpResponse("1")
+            else:
+                return HttpResponse("0")
+        else:
+            country = Country.objects.get(id=id)
+            form = CountryForm(request.POST, instance = country)
+            if form.is_valid():
+                form.save()
+                return HttpResponse("1")
+            else:
+                return HttpResponse("0")
+
 def save_region_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -399,10 +454,10 @@ def get_states_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('states')
     else:
-        states = State.objects.select_related('region').order_by("-id")[offset:limit]
-        count = State.objects.select_related('region').count()
+        states = State.objects.select_related('region','country').order_by("-id")[offset:limit]
+        count = State.objects.select_related('region','country').count()
         if(states):
-            json_subcat = serializers.serialize("json", states,  relations=('region',))
+            json_subcat = serializers.serialize("json", states,  relations=('region','country'))
         else:
             json_subcat = 'EOF'
         response = HttpResponse(json_subcat, mimetype="application/javascript")

@@ -88,7 +88,7 @@ public class StatesTemplate extends BaseTemplate{
 		$wnd.DateTimeShortcuts.init();		
 	}-*/;	
 	// A list of Element IDs that need to receive the data before the template is loaded. 
-	final private String addDataToElementID[] = {"id_region"};
+	final private String addDataToElementID[] = {"id_region", "id_country"};
 	
 	private String statesListFormHtml = "<div class='actions'>" +
     							"<label>Action: <select name='action'>" +
@@ -151,6 +151,13 @@ public class StatesTemplate extends BaseTemplate{
 													"<div class='form-row region  '>" +
 														"<div>" +
 															"<label for='id_region' class='required'>Region:</label><select name='region' id='id_region'>" +
+																"<option value='' selected='selected'>---------</option>" +
+															"</select>" +
+														"</div>" +
+													"</div>" +
+													"<div class='form-row country  '>" +
+														"<div>" +
+															"<label for='id_country' class='required'>Country:</label><select name='country' id='id_country'>" +
 																"<option value='' selected='selected'>---------</option>" +
 															"</select>" +
 														"</div>" +

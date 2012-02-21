@@ -6,6 +6,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.AnimatorAssignedVillages;
 import com.digitalgreen.dashboardgwt.client.servlets.Animators;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Blocks;
+import com.digitalgreen.dashboardgwt.client.servlets.Countries;
 import com.digitalgreen.dashboardgwt.client.servlets.DashboardError;
 import com.digitalgreen.dashboardgwt.client.servlets.DevelopmentManagers;
 import com.digitalgreen.dashboardgwt.client.servlets.Districts;
@@ -287,6 +288,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
 		requestContext.getArgs().put("pageNum", "1");
+		addHyperlink("country-1", "<a href='#dashboard/country/'>Countries</a>", "dashboard/country", new Countries(requestContext));
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "add");
+		addHyperlink("country-2", "<a href='#dashboard/country/add' class='addlink'>Add</a>", "dashboard/country/add", new Countries(requestContext));
+		
+		requestContext = new RequestContext();
+		requestContext.getArgs().put("action", "list");
+		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("s-1", "<a href='#dashboard/screening/'>Screenings</a>", "dashboard/screening", new Screenings(requestContext));
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -460,6 +469,12 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 									"<div class='module'>" +
      								"<table summary='Models available in the Dashboard application.'>" +
      									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
+	     									"<tr>" +
+	 										"<th id='country-1' scope='row'>" +
+												"</th>" +
+												"<td id='country-2'>" +
+												"</td>" +
+											"</tr>" +
      										"<tr>" +
 	     										"<th id='r-1' scope='row'>" +
 	 											"</th>" +

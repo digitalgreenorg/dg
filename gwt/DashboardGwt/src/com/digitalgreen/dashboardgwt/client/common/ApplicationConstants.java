@@ -6,6 +6,7 @@ import com.digitalgreen.dashboardgwt.client.data.AnimatorAssignedVillagesData;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorSalaryPerMonthData;
 import com.digitalgreen.dashboardgwt.client.data.AnimatorsData;
 import com.digitalgreen.dashboardgwt.client.data.BlocksData;
+import com.digitalgreen.dashboardgwt.client.data.CountriesData;
 import com.digitalgreen.dashboardgwt.client.data.DevelopmentManagersData;
 import com.digitalgreen.dashboardgwt.client.data.DistrictsData;
 import com.digitalgreen.dashboardgwt.client.data.EquipmentHoldersData;
@@ -42,7 +43,7 @@ public class ApplicationConstants {
 	
 	public static String digitalgreenDatabaseName = "digitalgreendatabase";
 	
-	public static String[] tableIDs = {	"8","9","10","11","12","13",
+	public static String[] tableIDs = {	"7","8","9","10","11","12","13",
 										"14","15","16", "17","18", "19","20","21",
 										"22","23","37","24", "25","26", "28","27",
 										"38","39","29","40","41","30","31","34","42"};
@@ -114,6 +115,8 @@ public class ApplicationConstants {
 	@SuppressWarnings("unchecked")
 	public static void createMappingBetweenTableIDAndDataObject(){
 		mappingBetweenTableIDAndDataObject = new HashMap();
+		CountriesData countriesData  = new CountriesData();
+		mappingBetweenTableIDAndDataObject.put(CountriesData.tableID, countriesData);
 		RegionsData regionsData  = new RegionsData();
 		mappingBetweenTableIDAndDataObject.put(RegionsData.tableID, regionsData);
 		EquipmentHoldersData equipmentHoldersData= new EquipmentHoldersData();

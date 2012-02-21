@@ -58,10 +58,6 @@ class ScreeningForm(forms.ModelForm):
     class Meta:
         model = Screening
 
-
-
-
-
 class ScreeningAdmin(admin.ModelAdmin):
     fields = ('date','start_time','end_time','location','village','animator','videoes_screened','target_person_attendance','target_audience_interest','target_adoptions','fieldofficer','farmer_groups_targeted')
     inlines = [FarmerAttendanceInline]
@@ -268,8 +264,6 @@ class AnimatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'partner', 'village',)
     search_fields = ['name','village__village_name', 'partner__partner_name']
 
-
-
 class PersonGroupsInline(admin.TabularInline):
     model = PersonGroups
     extra = 5
@@ -322,8 +316,6 @@ class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
 
 class FieldOfficerAdmin(admin.ModelAdmin):
     exclude = ('salary',)
-
-
 
 class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
@@ -566,6 +558,7 @@ class TargetAdmin(admin.ModelAdmin):
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Region)
+admin.site.register(Country)
 admin.site.register(State, StateAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.register(Block, BlockAdmin)

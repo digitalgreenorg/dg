@@ -7,6 +7,10 @@ class LanguageForm(ModelForm):
         class Meta:
                 model = Language
 
+class CountryForm(ModelForm):
+    class Meta:
+        model = Country
+
 class RegionForm(ModelForm):
         class Meta:
                 model = Region

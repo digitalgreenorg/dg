@@ -20,6 +20,7 @@ public class StatesData extends BaseData {
 		protected Type() {}
 		public final native String getStateName() /*-{ return $wnd.checkForNullValues(this.fields.state_name); }-*/;
 		public final native RegionsData.Type getRegion() /*-{ return this.fields.region }-*/;
+		public final native CountriesData.Type getCountry() /*-{ return this.fields.country }-*/;
 		public final native String getStartDate() /*-{ return $wnd.checkForNullValues(this.fields.start_date); }-*/;
 	}
 	
@@ -30,6 +31,7 @@ public class StatesData extends BaseData {
 		private String state_name;
 		private String start_date;
 		private RegionsData.Data region;
+		private CountriesData.Data country;
 		
 		
 		public Data() {
@@ -43,12 +45,13 @@ public class StatesData extends BaseData {
 		}
 		
 
-		public Data(String id, String state_name,String start_date, RegionsData.Data region) {
+		public Data(String id, String state_name,String start_date, RegionsData.Data region, CountriesData.Data country) {
 			super();
 			this.id = id;
 			this.state_name = state_name;
 			this.start_date = start_date;
 			this.region = region;
+			this.country = country;
 		}
 		
 		
@@ -64,9 +67,14 @@ public class StatesData extends BaseData {
 			return this.region;
 		}
 		
+		public CountriesData.Data getCountry(){
+			return this.country;
+		}
+		
 		public BaseData.Data clone() {
 			Data obj = new Data();
 			obj.region = (new RegionsData()).new Data();
+			obj.country = (new CountriesData()).new Data();
 			return obj;
 		}
 		
@@ -88,7 +96,11 @@ public class StatesData extends BaseData {
 				this.region = region.getNewData();
 				this.region.id = val;
 				//Never ever use this -- this.region.id = ((Integer)val).intValue();
-			}  else if(key.equals("start_date")) {
+			} else if(key.equals("country")) {
+				CountriesData country = new CountriesData();
+				this.country = country.getNewData();
+				this.country.id = val;
+			} else if(key.equals("start_date")) {
 				this.start_date = val;
 			} else {
 				return;
@@ -100,9 +112,11 @@ public class StatesData extends BaseData {
 		public boolean validate(){
 			String nameLabel = "State Name";
 			String regionLabel = "Region";
+			String countryLabel = "Country";
 			String startDateLabel = "Start Date";
 			StringValidator stateValidator = new StringValidator(nameLabel, this.state_name, false, false, 1, 100, true);
 			StringValidator regionValidator = new StringValidator(regionLabel, this.region.getId(), false, false);
+			StringValidator countryValidator = new StringValidator(countryLabel, this.country.getId(), false, false);
 			DateValidator dateValidator = new DateValidator(startDateLabel, this.start_date, true, true);
 			ArrayList state_name = new ArrayList();
 			state_name.add("state_name");
@@ -116,6 +130,7 @@ public class StatesData extends BaseData {
 			ArrayList validatorList = new ArrayList();
 			validatorList.add(stateValidator);
 			validatorList.add(regionValidator);
+			validatorList.add(countryValidator);
 			validatorList.add(dateValidator);
 			validatorList.add(uniqueStateName);
 			return this.executeValidators(validatorList);
@@ -124,7 +139,7 @@ public class StatesData extends BaseData {
 		@Override
 		public void save() {
 			StatesData statesDataDbApis = new StatesData();		
-			this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date);
+			this.id = statesDataDbApis.autoInsert(this.id, this.state_name, this.region.getId(), this.start_date, this.country.getId());
 			this.addNameValueToQueryString("id", this.id);
 		}
 		
@@ -147,17 +162,21 @@ public class StatesData extends BaseData {
 												"STATE_NAME VARCHAR(100)  NOT NULL ," +
 												"region_id BIGINT UNSIGNED  NOT NULL DEFAULT 0," +
 												"START_DATE DATE  NULL DEFAULT NULL, " +
+												"country_id BIGINT UNSIGNED NOT NULL DEFAULT 0," +
+												"FOREIGN KEY(country_id) references country(id)," +
 												"FOREIGN KEY(region_id) references region(id));"; 
 	protected static String dropTable = "DROP TABLE IF EXISTS `state`;";
 	protected static String[] createIndexes = {"CREATE INDEX IF NOT EXISTS state_PRIMARY ON state(id);", 
-										   "CREATE INDEX IF NOT EXISTS state_region_id ON state(region_id);"};
+										   "CREATE INDEX IF NOT EXISTS state_region_id ON state(region_id);",
+										   "CREATE INDEX IF NOT EXISTS state_country_id ON state(country_id);"};
 	protected static String selectStates = "SELECT id, state_name FROM state ORDER BY (state_name);";
-	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id ORDER BY (-state.id);";
+	protected static String listStates = "SELECT * FROM state JOIN region ON state.region_id = region.id " +
+			"JOIN country ON country.id = state.country_id ORDER BY (-state.id);";
 	protected static String saveStateOnlineURL = "/dashboard/savestateonline/";
 	protected static String getStateOnlineURL = "/dashboard/getstatesonline/";
 	protected static String saveStateOfflineURL = "/dashboard/savestateoffline/";
 	protected String table_name = "state";
-	protected String[] fields = {"id", "state_name", "region_id", "start_date"};
+	protected String[] fields = {"id", "state_name", "region_id", "start_date", "country_id"};
 	
 	public StatesData() {
 		super();
@@ -224,9 +243,11 @@ public class StatesData extends BaseData {
 	public List serialize(JsArray<Type> stateObjects){
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
+		CountriesData country = new CountriesData();
 		for(int i = 0; i < stateObjects.length(); i++){
 			RegionsData.Data r = region.new Data(stateObjects.get(i).getRegion().getPk(), stateObjects.get(i).getRegion().getRegionName(), stateObjects.get(i).getRegion().getStartDate());
-			Data state = new Data(stateObjects.get(i).getPk(), stateObjects.get(i).getStateName(), stateObjects.get(i).getStartDate(), r );
+			CountriesData.Data c = country.new Data(stateObjects.get(i).getCountry().getPk(), stateObjects.get(i).getCountry().getCountryName(), stateObjects.get(i).getCountry().getStartDate());
+			Data state = new Data(stateObjects.get(i).getPk(), stateObjects.get(i).getStateName(), stateObjects.get(i).getStartDate(), r, c );
 			states.add(state);
 		}
 		
@@ -242,6 +263,7 @@ public class StatesData extends BaseData {
 		BaseData.dbOpen();
 		List states = new ArrayList();
 		RegionsData region = new RegionsData();
+		CountriesData country = new CountriesData();
 		String listTemp;
 		// Checking whether to return all villages or only limited number of villages
 		if(pageNum.length == 0) {
@@ -256,7 +278,8 @@ public class StatesData extends BaseData {
 			try {
 				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {
 					RegionsData.Data r = region.new Data(this.getResultSet().getFieldAsString(4),  this.getResultSet().getFieldAsString(5), this.getResultSet().getFieldAsString(6)) ;
-					Data state = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r);
+					CountriesData.Data c = country.new Data(this.getResultSet().getFieldAsString(7),  this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9)) ;
+					Data state = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), this.getResultSet().getFieldAsString(3), r, c);
 					states.add(state);
 				}				
 			} catch (DatabaseException e) {
@@ -339,7 +362,20 @@ public class StatesData extends BaseData {
 			html = html + "<option value = \"" + region.getId() +"\">" + region.getRegionName() + "</option>";
 		}
 		html = html + "</select>";
-		return html;
+		
+		CountriesData countryData = new CountriesData();
+		List countries = countryData.getAllCountriesOffline();
+		CountriesData.Data country;
+		
+		String countryHtml = "<select name=\"country\" id=\"id_country\">" + 
+		"<option value='' selected='selected'>---------</option>";
+		for(int i=0; i< countries.size(); i++){
+			country = (CountriesData.Data)countries.get(i);
+			countryHtml = countryHtml + "<option value = \"" + country.getId() +"\">" + country.getCountryName() + "</option>";
+		}
+		
+		countryHtml = countryHtml + "</select>";
+		return html + countryHtml;
 	}
 	
 	public Object getAddPageData(){

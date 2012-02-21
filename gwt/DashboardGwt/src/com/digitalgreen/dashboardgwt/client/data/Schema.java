@@ -14,6 +14,7 @@ public class Schema {
 		try {
 			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
+			BaseData.getDb().execute(CountriesData.createTable);
 			BaseData.getDb().execute(RegionsData.createTable);
 			BaseData.getDb().execute(EquipmentHoldersData.createTable);
 			BaseData.getDb().execute(ReviewersData.createTable);
@@ -59,6 +60,7 @@ public class Schema {
 	public static void createIndexes() {
 		try {
 			ArrayList<String> indexList = new ArrayList<String>(70);
+			Collections.addAll(indexList, CountriesData.createIndexes);
 			Collections.addAll(indexList, RegionsData.createIndexes);
 			Collections.addAll(indexList, EquipmentHoldersData.createIndexes);
 			Collections.addAll(indexList, ReviewersData.createIndexes);
@@ -107,6 +109,7 @@ public class Schema {
 		try {
 			BaseData.dbOpen();
 			BaseData.dbStartTransaction();
+			BaseData.getDb().execute(CountriesData.dropTable);
 			BaseData.getDb().execute(RegionsData.dropTable);
 			BaseData.getDb().execute(EquipmentHoldersData.dropTable);
 			BaseData.getDb().execute(ReviewersData.dropTable);
