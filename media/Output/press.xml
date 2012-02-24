@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>BillGates</TITLE>
+		<HEADLINE>International Fund for Agricultural Development Governing Council</HEADLINE>
+		<REFERENCE>http://www.gatesfoundation.org/speeches-commentary/Pages/bill-gates-2012-ifad.aspx</REFERENCE>
+		<PRESSDATE>Thu, 23 February 2012</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"Technology as simple as a digital video camera can remake agricultural extension. In India, a group of women farmers started videotaping themselves providing training in farming techniques. They called the project Digital Green, and they have a plan to reach 1 million farmers across 10,000 villages in the next three years. "</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>
+
+	<TEAM>
 		<TITLE>TechSangam</TITLE>
 		<HEADLINE>An agricultural extension innovation going viral: Digital Green</HEADLINE>
 		<REFERENCE>http://www.techsangam.com/2011/09/28/an-agricultural-extension-innovation-going-viral-digital-green/</REFERENCE>
