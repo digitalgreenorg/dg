@@ -9,9 +9,9 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding model 'Country'
-        db.create_table(u'country', (
+        db.create_table(u'COUNTRY', (
             ('id', self.gf('dashboard.fields.BigAutoField')(primary_key=True)),
-            ('country_name', self.gf('django.db.models.fields.CharField')(unique='True', max_length=100, db_column='REGION_NAME')),
+            ('country_name', self.gf('django.db.models.fields.CharField')(unique='True', max_length=100, db_column='COUNTRY_NAME')),
             ('start_date', self.gf('django.db.models.fields.DateField')(null=True, db_column='START_DATE', blank=True)),
         ))
         db.send_create_signal('dashboard', ['Country'])
@@ -23,7 +23,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         
         # Deleting model 'Country'
-        db.delete_table(u'country')
+        db.delete_table(u'COUNTRY')
 
         # Deleting field 'State.country'
         db.delete_column(u'STATE', 'country_id')
@@ -104,8 +104,8 @@ class Migration(SchemaMigration):
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'})
         },
         'dashboard.country': {
-            'Meta': {'object_name': 'Country', 'db_table': "u'country'"},
-            'country_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'REGION_NAME'"}),
+            'Meta': {'object_name': 'Country', 'db_table': "u'COUNTRY'"},
+            'country_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'COUNTRY_NAME'"}),
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'})
         },

@@ -126,11 +126,11 @@ class Region(models.Model):
     
 class Country(models.Model):
     id = BigAutoField(primary_key = True)
-    country_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
+    country_name = models.CharField(max_length=100, db_column='COUNTRY_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     
     class Meta:
-        db_table = u'country'
+        db_table = u'COUNTRY'
         verbose_name_plural = "countries"
 
     def __unicode__(self):
