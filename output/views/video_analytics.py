@@ -143,7 +143,7 @@ def video_monthwise_bar_settings(request):
 
 def video(request):
     id = int(request.GET['id'])
-    vid = Video.objects.get(pk=id)
+    vid = Video.objects.select_related().get(pk=id)
     vid.prod_duration = vid.video_production_end_date+datetime.timedelta(days=1) - vid.video_production_start_date
     
     tot_vid_scr = vid.screening_set.count()
