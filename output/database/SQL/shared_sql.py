@@ -119,6 +119,7 @@ def overview(geog, id, from_date, to_date, partners, type):
         sql_ds['select'].append('COUNT(DISTINCT VRAP.practices_id) as tot_pra')
         sql_ds['from'].append('VIDEO_related_agricultural_practices VRAP')
         sql_ds['lojoin'].append(['VIDEO VID','VID.id = VRAP.video_id'])
+        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
     elif(type=='person'):
@@ -162,6 +163,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_inn_ds['select'].extend(["VRAP.practices_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
         sql_inn_ds['from'].append("VIDEO VID");
         sql_inn_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
+        sql_inn_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         filter_partner_geog_date(sql_inn_ds,'VID','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("practices_id");
 
