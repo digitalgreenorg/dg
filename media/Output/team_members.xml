@@ -51,6 +51,14 @@
 		<NAME>Akbar Gulzar</NAME>		
 	</TEAM>
 	<TEAM>
+		<TITLE>Manager Administration and Finance</TITLE>
+		<ARTIST>/media/Output/Images/anand.png</ARTIST>    
+    	<DESC>Anand Kumar has around 23 years of experience with range of Private Corporate and National and International Development agencies in the area of office administration and operations. Before joining Digital Green he was Sr. Consultant-Administration and Programme, with the Institute for Human Development.He is graduate in economics (hons), PG Diploma in Personnel Management and Industrial Relation, MA in Economics and MBA in HR. He loves interacting with people to learn from their experience. He loves long driving to the interior of the villages to understand the people better. With his experience in operations, he wishes to contribute effectively in Digital Green's dedication for socio economicand environmental sustainability of small farmer livelihoods. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>anand@digitalgreen.org</MAILID>
+		<NAME>Anand Kumar</NAME>		
+	</TEAM>
+	<TEAM>
 		<TITLE>Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/nadagouda1.png</ARTIST>    
     	<DESC>Hi, I am Dr. Nadagouda.  I am a development professional with over two decades of experience of working with farmers. I am a veterinarian by profession with a post-graduate diploma in rural management from IRMA.  I have worked in cooperative, developmental and business sectors at various management levels.  </DESC>
@@ -120,17 +128,7 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>shekhar@digitalgreen.org</MAILID>
 		<NAME>Chandra Shekhar</NAME>		
-	</TEAM>
-	
-	
-	<TEAM>
-		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/amrita_1.png</ARTIST>
-    	<DESC>Hi, I am Amrita. I hold a bachelors degree in Agriculture from G. B. Pant University of Agriculture and Technology, Pantnagar and master's in Business Administration with specialization in Agri Business Management from VAMNICOM, Pune. I have three and a half years of experience in different corporates.  I have started my career with a field job in State Bank of India and gradually moved onto take the responsibility of knowledge management for Mahindra Samriddhi at Mumbai. I have travelled across the country while performing the previous roles. The work being done by Digital Green to educate the farmers by use of information and communication technology is commendable and is leading to sustained social change. I have a firm believe that as Digital Green team, will keep on stepping forward towards food security and improving rural livelihoods. I am happy to be a part of the young and energetic team. My hobbies are reading, traveling and listening to music.</DESC>    	
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>amrita@digitalgreen.org</MAILID>
-		<NAME>Amrita Singh</NAME>		
-	</TEAM>
+	</TEAM>	
 	
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
@@ -175,6 +173,31 @@
 	</TEAM>
 	
 	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/zakir.png</ARTIST>    
+    	<DESC>Hi, I am Syed Zakir Hussain. I did MSW from Jamia Millia Islamia, New Delhi. During the course I worked with HIV AIDS and psychiatric patients and on education as well.  I did my internship with PRADAN working on "Value chain Analysis" of Chick Pea which gave me an opportunity to understand the rural India. After MSW I joined Chronic Care Foundation, which works on Non Communicable Chronic Diseases in partnership with different NGOs/Govt. agencies across India. There I learnt partnership development, organisational management and enhanced my skills in project planning, budgeting, implementation and financial management etc. I play cricket and football and interested in reading biographies of great personalities.  </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>zakir@digitalgreen.org</MAILID>
+		<NAME>Zakir Hussain</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Administrative Executive</TITLE>
+		<ARTIST>/media/Output/Images/akhilesh1.png</ARTIST>    
+    	<DESC>Akhilesh has a Bachelors degree from Barkatullah University Bhopal majoring in Sociology and is a Post Graduate in Economics. His tryst with Development sector began with his stint with Narmada Mahila Sangh a federation of SHGs promoted by PRADAN in Betul and Hoshangabad. He has also worked with the IFAD-funded Tejaswini Project as a Location Coordinator where he was responsible for the overall programmatic and administrative functioning of the project in Balaghat District of Madhya Pradesh. He has also worked for the Moser Baer Trust before joining Digital Green as an Administrative Executive. Apart from work, his loves include reading books, listening to old Hindi songs and travelling. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>akhilesh@digitalgreen.org</MAILID>
+		<NAME>Akhilesh Soni</NAME>		
+	</TEAM>	
+	<TEAM>
+		<TITLE>Admin and HR Executive</TITLE>
+		<ARTIST>/media/Output/Images/aswini.png</ARTIST>    
+    	<DESC>Hi, I am Aswini. I hold a Master's degree in Business Administration with specialization in Finance from St. Ann's College, Osmania University, Hyderabad. I have two years of corporate work experience. I started my career with Intern at SBH, Hyderabad and gradually moved onto take the responsibility of Admin and Operations for MEDHA POWER and INFRATECH INDIA PVT Ltd, Hyderabad. Though I hail from Agriculture and Rural background but never had an opportunity to have a closer look of it and I am very much impressed by the work carried out by Digital Green to educate the farmers by use of information and communication technology which is admirable and is leading to continual social change. I am happy to be a part of the young and spirited team, as Digital Green team will keep on stepping forward towards and fulfil organisational expectations. My hobbies are Singing and Cooking </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>aswini@digitalgreen.org</MAILID>
+		<NAME>Aswini Karanam</NAME>		
+	</TEAM>	
+	<TEAM>
 		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/rahul1.png</ARTIST>    
     	<DESC>About my past, I have completed my dual-degree program ( M.Sc.(Hons.) Economics and B.E. (Hons.) Computer Science) from BITS, Pilani. Prior to Digital Green, I have had the opportunity to intern at Microsoft Research, India and work, for a brief time, at D. E Shaw India Software Pvt Ltd. Since my college days, I have found writing good programs and solving problems through programming very enjoyable, which I hope to pursue throughout my career. Digital Green has shown to be effective. I believe that, Digital Green, when applied on a larger scale, will show significant results in improving the livelihood of innumerable small farmers. As a part of its Systems team, I hope to contribute to the technology and help Digital Green achieve this noble cause.  </DESC>
@@ -197,30 +220,6 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sreenivasula@digitalgreen.org</MAILID>
 		<NAME>G S Reddy</NAME>		
-	</TEAM>
-		
-	<TEAM>
-		<TITLE>Operations Executive</TITLE>
-		<ARTIST>/media/Output/Images/debika1.png</ARTIST>    
-    	<DESC>Debika holds a Bachelor's as well as a Master's degree in History (with a specialisation in Social History) from Presidency College, University of Calcutta. She has also received her Master's Degree on Rural Development in Developing Countries from the University of Rome, La Sapienza. Before joining Digital Green, she served as a Research and Documentation Executive in a Nonprofit, Udyogini, working for livelihood and enterprise promotion of the rural poor women in six states of the country. . She has also worked with an Italian Donor Agency, Pangeaonlus as a Focal Point and Research Liaison Officer in India. She hopes to have a long-term association with Digital Green's mission of coupling Rural Development and IT for the benefit of the farmer households. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>debika@digitalgreen.org</MAILID>
-		<NAME>Debika Goswami</NAME>		
-	</TEAM>
-	<TEAM>
-		<TITLE>Administrative Executive</TITLE>
-		<ARTIST>/media/Output/Images/akhilesh1.png</ARTIST>    
-    	<DESC>Akhilesh has a Bachelors degree from Barkatullah University Bhopal majoring in Sociology and is a Post Graduate in Economics. His tryst with Development sector began with his stint with Narmada Mahila Sangh a federation of SHGs promoted by PRADAN in Betul and Hoshangabad. He has also worked with the IFAD-funded Tejaswini Project as a Location Coordinator where he was responsible for the overall programmatic and administrative functioning of the project in Balaghat District of Madhya Pradesh. He has also worked for the Moser Baer Trust before joining Digital Green as an Administrative Executive. Apart from work, his loves include reading books, listening to old Hindi songs and travelling. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>akhilesh@digitalgreen.org</MAILID>
-		<NAME>Akhilesh Soni</NAME>		
-	</TEAM>
-	<TEAM>
-		<TITLE>Manager Administration and Finance</TITLE>
-		<ARTIST>/media/Output/Images/anand.png</ARTIST>    
-    	<DESC>Anand Kumar has around 23 years of experience with range of Private Corporate and National and International Development agencies in the area of office administration and operations. Before joining Digital Green he was Sr. Consultant-Administration and Programme, with the Institute for Human Development.He is graduate in economics (hons), PG Diploma in Personnel Management and Industrial Relation, MA in Economics and MBA in HR. He loves interacting with people to learn from their experience. He loves long driving to the interior of the villages to understand the people better. With his experience in operations, he wishes to contribute effectively in Digital Green's dedication for socio economicand environmental sustainability of small farmer livelihoods. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>anand@digitalgreen.org</MAILID>
-		<NAME>Anand Kumar</NAME>		
-	</TEAM>
+	</TEAM>	
+	
 </CATALOG>
