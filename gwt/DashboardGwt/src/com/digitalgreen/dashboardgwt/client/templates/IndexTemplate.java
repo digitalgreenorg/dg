@@ -463,154 +463,168 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"</tbody>" +
 		"</table>";
 	
-	final static private String indexContentHtml = "<div id='content' style='float:left;'>" +
-							"<h1>Administration</h1>" +
-								"<div id='content-main'>" +
-									"<div class='module'>" +
-     								"<table summary='Models available in the Dashboard application.'>" +
-     									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
-	     									"<tr>" +
-	 										"<th id='country-1' scope='row'>" +
-												"</th>" +
-												"<td id='country-2'>" +
-												"</td>" +
-											"</tr>" +
-     										"<tr>" +
-	     										"<th id='r-1' scope='row'>" +
-	 											"</th>" +
-	 											"<td id='r-2'>" +
-	 											"</td>" +
-	 										"</tr>" +
-     										"<tr>" +
-     											"<th id='st-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='st-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
- 											
-     											"<th id='di-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='di-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='b-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='b-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='vi-1' scope='row'>" +
-     											"</th>"  +
-     											"<td id='vi-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='a-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='a-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='aa-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='aa-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pg-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='pg-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pe-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='pe-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pr-1'scope='row'>" +
-     											"</th>" +
-     											"<td id='pr-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-	 											"<th id='pap-1'scope='row'>" +
-	 											"</th>" +
-	 											"<td id='pap-2'>" +
-	 											"</td>" +
-	 										"</tr>" +
-     										"<tr>" +
-     											"<th id='l-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='l-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='v-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='v-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='s-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='s-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='e-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='e-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='t-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='t-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
- 												"<th id='tar-1' scope='row'>" +
- 												"</th>" +
- 												"<td id='tar-2'>" +
- 												"</td>" +
- 											"</tr>" +
-     										"<tr>" +
- 											"<th id='p-1' scope='row'>" +
- 											"</th>" +
- 											"<td id='p-2'>" +
- 											"</td>" +
- 										"</tr>" +
- 										"<tr>" +
-											"<th id='d-1' scope='row'>" +
-											"</th>" +
-											"<td id='d-2'>" +
-											"</td>" +
-										"</tr>" +
-										"<tr>" +
-											"<th id='f-1' scope='row'>" +
-											"</th>" +
-											"<td id='f-2'>" +
-											"</td>" +
-										"</tr>" +
-     									"</table>" +
-     								"</div>" +
-     							"</div>" +
-     							"<div id='dashboard-tools' style='clear:both; width:100%;'>" +
-								"<div class='module'>" +
- 								"<table summary='Tools available in the Dashboard application.'>" +
- 									"<caption><a href='#' class='section'>Tools</a></caption>" +
- 									"<tr>" +
-										"<th id='der-1' scope='row'>" +
-										"</th>" +
-										"<td id='der-2'>" +
-										"</td>" +
-									"</tr>" +
-										"</table>" +
-									"</div>" +
-								"</div>";
-
+	final static private String indexContentHtml = "<div id='content' style='float:left;'>\n" + 
+			"	<h1>Administration</h1>\n" + 
+			"	<div id='content-main'>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Geographies</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='country-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='country-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='r-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='r-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='st-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='st-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='di-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='di-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='b-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='b-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>			\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Videos</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='l-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='l-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pr-1'scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pr-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='v-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='v-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Villages</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='vi-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='vi-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pg-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pg-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pe-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pe-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='a-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='a-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='aa-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='aa-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='s-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='s-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pap-1'scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pap-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>			\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Administration</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='p-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='p-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='d-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='d-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='f-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='f-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='t-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='t-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='tar-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='tar-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='e-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='e-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"	</div>\n" + 
+			"	<div id='dashboard-tools' style='clear:both; width:100%;'>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Tools available in the Dashboard application.'>\n" + 
+			"				<caption><a href='#' class='section'>Tools</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='der-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='der-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"	</div>\n" + 
+			"</div>";
 }
