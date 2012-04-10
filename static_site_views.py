@@ -195,6 +195,11 @@ def careerhr(request):
     
     return render_to_response('base_career_hr.html')
 
+def careeres(request):
+    
+    return render_to_response('base_career_es.html')
+
+
 def careernpc(request):
     
     return render_to_response('base_career_npc.html')
@@ -234,10 +239,17 @@ def villagepage(request):
     return render_to_response('village_page.html')
 
 def farmerbook(request):
-    return render_to_response('farmerbook_home.html')
+    return render_to_response('farmerbook.html')
 
 def grouppage(request):
     return render_to_response('group_page.html')
+
+def ajaxtest1(request):
+    if request.is_ajax():
+        return render_to_response('test1.html')
+    else:
+        message = "Hello"
+        return render_to_response('test1.html')
 
 def retreat11(request):
     
