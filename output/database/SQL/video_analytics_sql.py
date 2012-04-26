@@ -102,15 +102,6 @@ def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 
-def video_min_date(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("MIN(VIDEO_PRODUCTION_END_DATE) as date")
-    sql_ds['from'].append("VIDEO VID");
-    sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
-    filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
-    return join_sql_ds(sql_ds)
-
-
 #####################################
 ###  SQLs for VIDEO profile page ####
 #####################################

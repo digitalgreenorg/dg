@@ -33,13 +33,6 @@ def adoption_module(request):
         main_stats.update(adopt_rate = 0)
         main_stats.update(avg_ado_per_farmer = 0)
         
-    #ratio of manifested expressed interest
-    #ratio_exp_int_data = run_query(adoption_analytics_sql.adoption_exp_interest_to_adoption(geog, id, from_date, to_date, partners))[0]
-    #if ratio_exp_int_data['tot_exp_int']:
-    #    main_stats.update(ratio_exp_int = float(ratio_exp_int_data['tot_exp_int_ado'])/ratio_exp_int_data['tot_exp_int'])
-    #else:
-    #    main_stats.update(ratio_exp_int = 0)
-        
     #Probability of Adoption
     tot_att = run_query_raw(shared_sql.tot_attendance(geog, id, from_date, to_date, partners))[0][0]
     if(tot_att != 0):
@@ -68,7 +61,7 @@ def adoption_module(request):
     else:
         main_stats.update(avg_ado_per_scr = 0)
     
-    search_box_params = views.common.get_search_box(request, adoption_analytics_sql.adoption_min_date)
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])

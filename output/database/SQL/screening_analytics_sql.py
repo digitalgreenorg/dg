@@ -1,13 +1,5 @@
 from output.database.utility import *
 
-def screening_min_date(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("MIN(DATE) as date")
-    sql_ds['from'].append("SCREENING SC")
-    filter_partner_geog_date(sql_ds,'SC','SC.DATE',geog,id,from_date,to_date,partners)
-    return join_sql_ds(sql_ds);
-
-
 #values_to_fetch is for restricting calculated values.
 #values_to_fetch is a list of combination of 'tot_dist_per', 'tot_per', 'tot_scr', 'dates'
 def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners, values_to_fetch=None):

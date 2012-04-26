@@ -272,4 +272,19 @@ def adoption_rate(geog, id, to_date,partners):
     filter_partner_geog_date(sql_ds, "VP", "DUMMY", geog, id, None, None, partners)
     
     return join_sql_ds(sql_ds);
+
+def get_start_date(geog, id):
+    geog = geog.upper()
+    sql_ds = get_init_sql_ds()
+    if geog is None:
+        sql_ds['select'].append("MIN(START_DATE) as DATE")
+        sql_ds['from'].append("COUNTRY C")
+    elif geog in ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']:
+        sql_ds['select'].append("START_DATE AS date")
+        sql_ds['from'].append(geog + " " + geog[0])
+        sql_ds['where'].append("id = " + str(id))
+    else:
+        raise Exception("Invalid Geography " + geog)
+        
+    return join_sql_ds(sql_ds)
     

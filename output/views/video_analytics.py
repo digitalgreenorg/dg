@@ -1,12 +1,14 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse
-from django.db.models import Count
 from dashboard.models import *
-import datetime, math
-from output.database.SQL  import video_analytics_sql, shared_sql
+from django.db.models import Count
+from django.http import Http404, HttpResponse
+from django.shortcuts import *
 from output import views
+from output.database.SQL import video_analytics_sql, shared_sql
+from output.database.utility import run_query, run_query_dict, \
+    run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
-from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
+import datetime
+import math
 
 
 #Main view for the video module. Render's the main HTML page.
@@ -22,7 +24,7 @@ def video_module(request):
     tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
-    search_box_params = views.common.get_search_box(request, video_analytics_sql.video_min_date)
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])

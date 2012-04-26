@@ -102,7 +102,7 @@ def overview_module(request):
     
 
 #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any
-    search_box_params = views.common.get_search_box(request, overview_analytics_sql.overview_min_date)
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])

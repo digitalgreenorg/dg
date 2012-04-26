@@ -17,7 +17,7 @@ def screening_module(request):
         raise Http404()
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
     
-    search_box_params = views.common.get_search_box(request, screening_analytics_sql.screening_min_date)
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])

@@ -51,7 +51,7 @@ def breadcrumbs_options(geog,id):
     return return_val
 
 #Returns a dictionary containing parameters for the search box on the right hand side of the page.
-def get_search_box(request, min_date_func=None):
+def get_search_box(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partner = utility.get_dates_partners(request);
     search_box_params = {}
@@ -61,10 +61,7 @@ def get_search_box(request, min_date_func=None):
         search_box_params['is_date_selected'] = 1
     else:
         search_box_params['is_date_selected'] = 0
-        if(min_date_func):
-            from_date =  (run_query(min_date_func(geog, id, from_date, to_date, partner)))[0]['date']
-        else:
-            from_date = None
+        from_date =  (run_query(shared_sql.get_start_date(geog, id)))[0]['date']
         if(not from_date):
             from_date = datetime.date.today()
         to_date = datetime.date.today()
