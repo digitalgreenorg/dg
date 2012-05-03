@@ -273,15 +273,15 @@
 					for(var index=0; index<gradeArray.length; index++) {
 						if (gradeArray[index][0] == bel_vil_ids[i]) {
 							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/darkgreen_markerA.png'});	
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/darkgreen_MarkerA.png'});	
 							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/blue_markerB.png'});	
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orange_MarkerB.png'});	
 							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellow_markerC.png'});	
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellow_MarkerC.png'});	
 							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/red_markerD.png'});	
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/red_MarkerD.png'});	
 							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellow_markerC.png'});	
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellow_MarkerC.png'});	
 							}
 							markers.push(marker);
 							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
@@ -392,7 +392,7 @@
 					<img rel="popover" data-original-title="Pankajini Ray" data-content="Adoption Rate: 55%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053256.jpg">
 				</a>
 			
-				<a href="javascript:void(0);" onclick="personClick(10000000042493)">
+				<a href="javascript:void(0);" onclick="personClick(10000000053259)">
 					<img rel="popover" data-original-title="Indumati Naik" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000042493.jpg">
 				</a>
 			
@@ -487,12 +487,12 @@
 				</div>
 				<div style=" margin-top:3px;">
 					<a href="javascript:void(0);" onclick=""  style="margin-right:5px; float:left;color: #524D4D;font-weight: bold;">
-					<img src="/media/Output/Images/partner/access_logo1.png" style="width:45px; height:30px;"></a> 
+					<img src="/media/Output/Images/partner/access_logo1.PNG" style="width:45px; height:30px;"></a> 
 					<div><a href='http://www.accessdev.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">ACCESS </a></span>is active in 193 villages reaching 8,788 farmers</div>
 				</div>				
 				
 				<div style="margin-top:3px;"><a href="javascript:void(0);" onclick=""  style="color: #524D4D;font-weight: bold;">
-					<img src="/media/Output/Images/partner/varrat_logo1.PNG" style="margin-right:5px;width:45px; height:30px; float:left; "></a> 
+					<img src="/media/Output/Images/partner/varrat_logo1.png" style="margin-right:5px;width:45px; height:30px; float:left; "></a> 
 					<div><a href='http://www.ngogateway.org/user_homepage/index.php?id=239' target='_blank'><span style="color: #524D4D;font-weight: bold;">VARRAT </a></span>is active in 130 villages reaching 8,676 farmers</div>
 				</div>			
 		</div>
