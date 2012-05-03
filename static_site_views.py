@@ -1,6 +1,8 @@
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
 from output.views.common import home_with_analytics
+from farmerbook import farmer_book_views
+from farmerbook.farmer_book_views import get_leaderboard_data
 #Mindless views for plain HTML pages on the main website
 def home(request):
     if request.get_host() == "sandbox.digitalgreen.org":
@@ -239,17 +241,12 @@ def villagepage(request):
     return render_to_response('village_page.html')
 
 def farmerbook(request):
-    return render_to_response('farmerbook.html')
+    top_adopters_stats =[]    
+    #top_adopters_stats = get_leaderboard_data()
+    return render_to_response('farmerbook.html', dict(top_adopters_stats = top_adopters_stats))
 
 def grouppage(request):
     return render_to_response('group_page.html')
-
-def ajaxtest1(request):
-    if request.is_ajax():
-        return render_to_response('test1.html')
-    else:
-        message = "Hello"
-        return render_to_response('test1.html')
 
 def retreat11(request):
     
