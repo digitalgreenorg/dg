@@ -315,4 +315,7 @@ function ajax_tab_click(clicked, village_id) {
 			//and show the first n (show_per_page) elements
 			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
 </script>
+<script type="text/javascript">
+    mixpanel.track("Village Page Loaded")
+</script>
 </div>
