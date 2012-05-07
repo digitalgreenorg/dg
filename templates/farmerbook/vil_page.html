@@ -225,6 +225,7 @@ function person_click(person_id) {
 		  }
 		  //alert('Load was performed.');
 		 // alert($("div#content").html());
+		  mixpanel.track("Person Page Loaded")
 		  });
 }
 
@@ -237,6 +238,7 @@ function groupClick(group_id) {
 		  }
 		  //alert('Load was performed.');
 		 // alert($("div#content").html());
+		  mixpanel.track("Group Page Loaded")
 		  });
 }
 
@@ -259,6 +261,7 @@ function ajax_tab_click(clicked, village_id) {
 		//$(".produced a").css("color","#ffffff");
 		$(".giftsli").addClass("tabsliselect");
 		$(".giftsli").removeAttr('href');
+		 mixpanel.track("Videos Produced page Loaded")
 	} else if (clicked=="videos_watched") {
 		$("div#top_tabcontent").html("");
 		$("div#top_tabcontent").html(videos_watched_html);
@@ -268,6 +271,7 @@ function ajax_tab_click(clicked, village_id) {
 		//$(".produced a").css("color","#ffffff");
 		$(".playli").addClass("tabsliselect");
 		$(".playli").removeAttr('href');
+		
 	}
 	//alert($("div#top_tabcontent").html());
 	//$("li").removeClass("active");	
@@ -314,8 +318,5 @@ function ajax_tab_click(clicked, village_id) {
 			
 			//and show the first n (show_per_page) elements
 			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
-</script>
-<script type="text/javascript">
-    mixpanel.track("Village Page Loaded")
 </script>
 </div>

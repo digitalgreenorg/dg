@@ -96,7 +96,9 @@
 								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
 					  $('#myModal').show();
 					
-					  $('#myModal').modal();					  				  
+					  $('#myModal').modal();
+					 
+					 mixpanel.track("Person Page Loaded");
 					  
 					});
 		}
@@ -115,7 +117,9 @@
 								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
 					  $('#myModal').show();
 					
-					  $('#myModal').modal();					  				  
+					  $('#myModal').modal();
+					
+					  mixpanel.track("Village Page Loaded")
 					  
 					});
 		}
