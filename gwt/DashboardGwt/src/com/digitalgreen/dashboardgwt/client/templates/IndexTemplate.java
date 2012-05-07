@@ -28,6 +28,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -61,29 +62,64 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		IndexTemplate.progressBar(progressEvent.getProgressMark());
 	}
 	
-	private void goOfflineOnline(){
+	private void goOfflineOnline(boolean internet, boolean gears, int dbNotDownloaded, boolean dbHasUnsyncRows){
+
 		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
 		RootPanel.get("controlPanel").add(bodyHtml);
 		Image onlineOfflineButton = Image.wrap(RootPanel.get("onlineOfflineButtonId").getElement());
 		final Image downloadButton = Image.wrap(RootPanel.get("downloadButtonId").getElement());
 		final Image uploadButton = Image.wrap(RootPanel.get("uploadButtonId").getElement());
 		String modeText = "";
-		if(!ApplicationConstants.getCurrentOnlineStatus()) {
-			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+		//nandini
+		/*if internet is disconnected - disable all buttons.
+		else
+			if offline 
+				if new rows added -> upload, disable go online
+				else -> download, enable go online
+			else online
+				if db download complete -> download, enable Go Offline
+				else -> download -> download, disable go offline
+		*/
+		if (!internet){ // UI State C' D'
+			modeText = "Connected in offline mode";
 			downloadButton.setStyleName("buttonHideClass");
 			uploadButton.setStyleName("buttonHideClass");
-			modeText = "Connected in offline mode";
-		} else {
-			onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
-			downloadButton.setStyleName("buttonShowClass");
-			uploadButton.setStyleName("buttonShowClass");
-			modeText = "Connected in online mode";
-		}
-		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
-		if(!(Boolean)this.requestContext.getArgs().get("showOfflineReady")) {
+			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
 			onlineOfflineButton.setStyleName("buttonHideClass");
-			uploadButton.setStyleName("buttonHideClass");
 		}
+		else {
+			if (!ApplicationConstants.getCurrentOnlineStatus()) { // Offline Mode
+				modeText = "Connected in offline mode";
+				if (dbHasUnsyncRows) { // UI State D
+					downloadButton.setStyleName("buttonHideClass");
+					uploadButton.setStyleName("buttonShowClass");
+					onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+					onlineOfflineButton.setStyleName("buttonHideClass");
+				}
+				else { // UI State C
+					downloadButton.setStyleName("buttonHideClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+					onlineOfflineButton.setStyleName("buttonShowClass");
+				}
+			}
+			else {
+				modeText = "Connected in online mode";
+				if (dbNotDownloaded==0) { // Db Downloaded
+					downloadButton.setStyleName("buttonShowClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
+					onlineOfflineButton.setStyleName("buttonShowClass");
+				}
+				else { // Db not downloaded
+					downloadButton.setStyleName("buttonShowClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
+					onlineOfflineButton.setStyleName("buttonHideClass");
+				}
+			}
+		}
+		
 		modeText += "<span id='dotsId'><img class='dotsClass' src='/media/img/admin/dots.gif' /></span>";
 		HTMLPanel modeTextHtml = new HTMLPanel(modeText);
 		modeTextHtml.getElement().setId("modeTextAndDotsId");
@@ -107,58 +143,60 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			}
 		};
 		t.schedule(1000);
+		if (onlineOfflineButton.getStyleName().contains("buttonShowClass")) {
+			onlineOfflineButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	   BaseTemplate operationUi = new BaseTemplate();
+			    	   if (ApplicationConstants.getCurrentOnlineStatus()){
+			    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
+			    		   		"<br /><div id='progressBar'></div>");
+			    		   EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    		   requestContext.getArgs().put("action", "gooffline");
+			    	   }
+			    	   else{
+			    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going online");
+			    		   requestContext.getArgs().put("action", "goonline");
+			    	   }
+			    		   
+			    	   Index index = new Index(requestContext);
+			    	   index.response();
+			      }
+		    });
+		}
+
+		if (uploadButton.getStyleName().contains("buttonShowClass")) {
+			uploadButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	  BaseTemplate operationUi = new BaseTemplate();
+			    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
+			    	  		"<br /><div id='progressBar'></div>");
+			    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	  requestContext.getArgs().put("action", "sync");
+			    	  Index index = new Index(requestContext);
+			    	  index.response();
+			      }
+		    });
+		}
 		
-		onlineOfflineButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   BaseTemplate operationUi = new BaseTemplate();
-		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
-		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
-		    		   		"<br /><div id='progressBar'></div>");
-		    		   EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    		   requestContext.getArgs().put("action", "gooffline");
-		    	   }
-		    	   else{
-		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going online");
-		    		   requestContext.getArgs().put("action", "goonline");
-		    	   }
-		    		   
-		    	   Index index = new Index(requestContext);
-		    	   index.response();
-		      }
-	    });
-		
-		uploadButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
-		    		  return;
-		    	  }
-		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
-		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	  requestContext.getArgs().put("action", "sync");
-		    	  Index index = new Index(requestContext);
-		    	  index.response();
-		      }
-	    });
-		
-		downloadButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
-		    		  return;
-		    	  }
-		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
-		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	  requestContext.getArgs().put("action", "resync");
-		    	  Index index = new Index(requestContext);
-		    	  index.response();
-		      }		      
-	    });
+		if (downloadButton.getStyleName()=="buttonShowClass") {
+			downloadButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
+			    		  return;
+			    	  }
+			    	  BaseTemplate operationUi = new BaseTemplate();
+			    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
+			    	  		"<br /><div id='progressBar'></div>");
+			    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	  requestContext.getArgs().put("action", "resync");
+			    	  Index index = new Index(requestContext);
+			    	  index.response();
+			      }		      
+		    });
+		}
 	}
 	
 	private void addHyperlink(String id, String linkTxt, String tokenTxt, final BaseServlet servlet) {
@@ -378,7 +416,20 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		HTMLPanel bulletsHtml = new HTMLPanel(this.bulletsBodyHtml);
 		bulletsHtml.setStyleName("bulletsClass");
 		RootPanel.get("sub-container").add(bulletsHtml);
-		goOfflineOnline();
+		IndexData indexData = new IndexData();
+		try {
+			String debug = "Internet is connected." + indexData.isInternetConnected() + "\n" +
+					//"isGearsAvailable: " + indexData.isGearsAvailable() + "\n" + 
+					"db not downloaded: " + indexData.dbNotDownloaded(ApplicationConstants.getUsernameCookie()) + "\n" +
+					"db has unsync rows: " + indexData.dbHasUnsyncedRows();
+					
+			//Window.alert(debug);
+			goOfflineOnline(indexData.isInternetConnected(), true/*indexData.isGearsAvailable()*/, indexData.dbNotDownloaded(ApplicationConstants.getUsernameCookie()), indexData.dbHasUnsyncedRows());
+		}
+		catch (DatabaseException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	final static private String bulletsBodyHtml = 

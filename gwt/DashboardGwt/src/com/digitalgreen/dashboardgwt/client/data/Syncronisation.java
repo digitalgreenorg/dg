@@ -136,7 +136,7 @@ public class Syncronisation {
 						EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 						offset = 0;
 						if(currentIndex == ApplicationConstants.tableIDs.length){
-							updateSyncStatusInUserTable("0", "0");
+							updateSyncStatusInUserTable("0", "" + ApplicationConstants.tableIDs.length);
 							Schema.createIndexes();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");

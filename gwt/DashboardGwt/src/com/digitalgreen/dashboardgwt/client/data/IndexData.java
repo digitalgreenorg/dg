@@ -1,7 +1,9 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
+import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
 
 public class IndexData extends BaseData {
@@ -11,7 +13,7 @@ public class IndexData extends BaseData {
 	public final static int STATUS_READY = 0;
 	public final static int STATUS_DB_NOT_OPEN = 1;
 	public final static int STATUS_SCHEMA_NOT_READY = 2;
-	
+	public final static int STATUS_DB_NOT_COMPLETE = 3;
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
@@ -95,6 +97,63 @@ public class IndexData extends BaseData {
 		String postData = "username=" + username;
 		this.post(RequestContext.SERVER_HOST + this.postURL, postData);
 		return true;
+	}
+	
+	public static native boolean isInternetConnected() /*-{
+		return navigator.onLine;
+	}-*/;
+	
+	/*public static native boolean isGearsAvailable() /*-{
+		Window.alert("Window.Google " + window.google + " & " + "Google.gears " + google.gears);
+		if (window.google!=null && google.gears!=null) {
+			return true;
+		}
+		return false;
+	}-*/;
+	
+	public boolean dbHasUnsyncedRows() {
+		if(!BaseData.dbOpen()) {
+			// if no DB, then no Unsynced rows :)
+			return false;
+		}
+		this.select(FormQueueData.countUnsyncTableRow);
+		ResultSet resultSet = this.getResultSet();
+		if (resultSet!=null && resultSet.isValidRow()) {
+			try {
+				int totalUnsyncRows = resultSet.getFieldAsInt(0);
+				if (totalUnsyncRows!=0) {
+					BaseData.dbClose();
+					return true;
+				}
+			} catch(DatabaseException e) {
+				//Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		return false;
+	}
+	
+	public int dbNotDownloaded(String username) throws DatabaseException {
+		if(!BaseData.dbOpen()) {
+			return IndexData.STATUS_DB_NOT_OPEN;
+		}
+		this.select(LoginData.selectUser , username);
+		ResultSet resultSet = this.getResultSet();
+		if(resultSet!=null && this.isValidResultSet()) {
+			resultSet.close();
+			this.select(LoginData.getSyncStatus, username);
+			resultSet = this.getResultSet();
+			if (resultSet.isValidRow()) {
+				int last_table_index = resultSet.getFieldAsInt(1);
+				if (last_table_index == ApplicationConstants.tableIDs.length) {
+					BaseData.dbClose();
+					return IndexData.STATUS_READY;
+				}
+			}
+			
+		}
+		BaseData.dbClose();
+		return IndexData.STATUS_SCHEMA_NOT_READY; // return 0
 	}
 	
 	public int checkIfOfflineReady(String username){
