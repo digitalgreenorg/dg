@@ -7,18 +7,14 @@ import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
 
 import java.util.HashMap;
-import java.util.List;
 
-import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.FormQueueData;
-import com.digitalgreen.dashboardgwt.client.data.StatesData;
 import com.digitalgreen.dashboardgwt.client.data.Syncronisation;
 import com.digitalgreen.dashboardgwt.client.data.IndexData;
 import com.digitalgreen.dashboardgwt.client.data.LoginData;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.templates.BaseTemplate;
 import com.digitalgreen.dashboardgwt.client.templates.IndexTemplate;
-import com.digitalgreen.dashboardgwt.client.templates.StatesTemplate;
 import com.google.gwt.gears.client.GearsException;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.gears.client.localserver.ManagedResourceStoreCompleteHandler;

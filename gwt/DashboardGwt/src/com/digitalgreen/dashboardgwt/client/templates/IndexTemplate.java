@@ -212,7 +212,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 	
 	@Override
 	public void fill() {
-		IndexData.Data indexPageData = (Data) this.requestContext.getArgs().get("index_page_data");
 		super.setBodyStyle("dashboard");
 		HTMLPanel indexHtml = new HTMLPanel(indexContentHtml);
 		super.setContentPanel(indexHtml);
@@ -391,6 +390,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("der-1", "<a href='#dashboard/error/'>Data Inconsistencies</a>", "dashboard/error", new DashboardError(requestContext));
+		IndexData.Data indexPageData = (Data) this.requestContext.getArgs().get("index_page_data");
 		String tot_errors = indexPageData.getDashboardErrorCount();
 		Label error_label = new Label();
 		//Determine style

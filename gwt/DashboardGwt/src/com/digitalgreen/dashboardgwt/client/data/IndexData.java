@@ -14,6 +14,7 @@ public class IndexData extends BaseData {
 	public final static int STATUS_DB_NOT_OPEN = 1;
 	public final static int STATUS_SCHEMA_NOT_READY = 2;
 	public final static int STATUS_DB_NOT_COMPLETE = 3;
+	protected static String getDashboardErrorCountSQL = "SELECT dashboard_error_count FROM user;";
 	
 	public static class Type extends BaseData.Type{
 		protected Type() {}
@@ -67,7 +68,20 @@ public class IndexData extends BaseData {
 	}
 	
 	public Data getIndexPageDataOffline() {
-		return new Data(null);
+		BaseData.dbOpen();
+		this.select(this.getDashboardErrorCountSQL);
+		ResultSet rs = this.getResultSet();
+		String count = null;
+		if(rs.isValidRow()) {
+			try {
+				count = new Integer(rs.getFieldAsInt(0)).toString();
+			} catch (DatabaseException e) {
+				BaseData.dbClose();
+				e.printStackTrace();
+			}
+		}
+		BaseData.dbClose();
+		return new Data(count);
 	}
 	
 	public Object getIndexPageData(){
