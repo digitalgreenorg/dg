@@ -1,6 +1,7 @@
 package com.digitalgreen.dashboardgwt.client.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -22,11 +23,13 @@ public class FormQueueData extends BaseData {
 		private String queryString;
 		private String syncStatus;
 		private String action;
+		private long timestamp;
 
 		public Data(String table_id, String global_pk_id, String queryString) {
 			this.table_id = table_id;
 			this.global_pk_id = global_pk_id;
 			this.queryString = queryString;
+			this.timestamp = (new Date()).getTime();
 		}
 		
 		public void setAction(String action) {
@@ -46,7 +49,8 @@ public class FormQueueData extends BaseData {
 					this.global_pk_id,
 					this.queryString,
 					this.syncStatus,
-					this.action);
+					this.action,
+					String.valueOf(this.timestamp));
 		}	
 	}
 	
@@ -57,14 +61,15 @@ public class FormQueueData extends BaseData {
 										  "global_pk_id BIGINT UNSIGNED NOT NULL, " +
 										  "querystring VARCHAR NOT NULL, " +
 										  "sync_status BOOLEAN, " +
-										  "action CHAR(1) NOT NULL);";
+										  "action CHAR(1) NOT NULL," +
+										  "timestamp BIGINT UNSIGNED NOT NULL);";
 	protected static String dropTable = "DROP TABLE IF EXISTS `formqueue`;";
 	protected static String getUnsyncTableRow = "SELECT * FROM `formqueue` WHERE sync_status=0 ORDER BY id LIMIT 1";
 	protected static String countUnsyncTableRow = "SELECT COUNT(1) FROM `formqueue` WHERE sync_status=0";
 	protected static String updateSyncStatusOfARow = "UPDATE `formqueue` SET sync_status=1 WHERE id=?" ;
 	protected static String getMaxGlobalPkId = "SELECT MAX(global_pk_id) FROM `formqueue`;";
 	protected String table_name = "formqueue";
-	protected String[] fields = {"id", "table_id", "global_pk_id", "querystring", "sync_status", "action"};
+	protected String[] fields = {"id", "table_id", "global_pk_id", "querystring", "sync_status", "action", "timestamp"};
 	
 	public FormQueueData() {
 		super();
