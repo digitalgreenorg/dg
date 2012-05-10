@@ -123,7 +123,7 @@
 	
 	<TEAM>
 		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/shekhar1.png</ARTIST>    
+		<ARTIST>/media/Output/Images/shekhar.png</ARTIST>    
     	<DESC>Hi, This is Chandra Shekhar from Jharkhand.  I pursued my Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar.  My career interest is working for rural development through which small and marginal farmers will better their livelihoods in a manner that is socially, economically and environmentally sustainable.  Joining Digital Green has given me a new strategy in my thinking process to work with the rural community and a new methodology to address the rural concern through efficient extension system.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>shekhar@digitalgreen.org</MAILID>
@@ -179,6 +179,33 @@
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>zakir@digitalgreen.org</MAILID>
 		<NAME>Zakir Hussain</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/abhinav.png</ARTIST>    
+    	<DESC>Hi, I am Abhinav. I did my PGDRM from Institute of Rural Management Anand (IRMA). Before that, I worked with Accenture Services Pvt. Ltd. I pursued B. Tech in Information Technology from Cochin University of Science and Technology. I worked in the villages of Bihar, Andhra Pradesh, and Gujarat while studying at IRMA. I worked with Agha Khan Rural Support Programme (AKRSP), Society for Elimination of Rural Poverty (SERP), and AMUL during my fieldwork and internships. My areas of interest are financial and technological inclusion for rural sector, overall integrated development, and policy making. My hobbies include playing badminton, cricket and listening gazhals and rock. I like travelling to new places, interacting with people. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>abhinav@digitalgreen.org</MAILID>
+		<NAME>Abhinav Kumar</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/saumit.png</ARTIST>    
+    	<DESC>Saumit has just completed MBA in Rural Management from KIIT School of Rural Management, Bhubaneswar. Prior to this he had completed Bachelor in Computer Application. Having qualification in Rural Management combined with Computer Application, he has a great aspiration to work for Digital Green. His passion and interest to work in development sector and specifically for the small and marginal farmers livelihood security has prompted him to think about joining Digital Green. He strongly believes that ICT based extension system, on which Digital Green works, can make the changes he has envisaged. He strongly believes that he will contribute to the organization in achieving its goal as part of the team by using the knowledge that he has acquired during his professional course and gain quality experience out of that. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>saumit@digitalgreen.org</MAILID>
+		<NAME>Saumit Das</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/krishna.png</ARTIST>    
+    	<DESC>I hold a Post Graduate Diploma in Rural Management from the Institute of Rural Management, Anand (IRMA) and a Bachelor's degree in Electrical and Electronics Engineering from Vasavi College of Engineering, Osmania University, Hyderabad. The very mention of adventure fascinates me and I have indulged in adventure sports like paragliding, white water rafting, cliff jumping, river crossing and a lot of trekking in the Himalayas. I am also an avid movie buff and a keen listener of classic rock The three internships while at IRMA, which for most part were based in rural areas, have gone a long way in building a strong rural perspective which I believe would be indispensable to me while at Digital Green given the area of work the organization is involved in. I am excited to be a part of a young and dynamic organization like Digital Green and look forward to an enriching association. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>krishna@digitalgreen.org</MAILID>
+		<NAME>Krishna Raj</NAME>
 	</TEAM>
 	
 	<TEAM>
