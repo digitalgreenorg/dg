@@ -87,7 +87,7 @@ public class Syncronisation {
 					JSONObject resultObj = JSONParser.parse(results).isObject();
 					String err_count = resultObj.get("dashboard_error_count").toString();
 					String last_id = resultObj.get("last_id").toString();
-					user.insert(last_id, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0", ApplicationConstants.getUserRoleCookie(), err_count);
+					user.insert(last_id, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), ApplicationConstants.getCurrentOnlineStatus()? "1":"0", "1", "0", ApplicationConstants.getUserRoleCookie(), err_count);
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();

@@ -97,7 +97,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 					onlineOfflineButton.setStyleName("buttonHideClass");
 				}
 				else { // UI State C
-					downloadButton.setStyleName("buttonHideClass");
+					downloadButton.setStyleName("buttonShowClass");
 					uploadButton.setStyleName("buttonHideClass");
 					onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
 					onlineOfflineButton.setStyleName("buttonShowClass");
@@ -183,9 +183,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		if (downloadButton.getStyleName()=="buttonShowClass") {
 			downloadButton.addClickHandler(new ClickHandler() {
 			      public void onClick(ClickEvent event) {
-			    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
-			    		  return;
-			    	  }
 			    	  BaseTemplate operationUi = new BaseTemplate();
 			    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
 			    	  		"<br /><div id='progressBar'></div>");
