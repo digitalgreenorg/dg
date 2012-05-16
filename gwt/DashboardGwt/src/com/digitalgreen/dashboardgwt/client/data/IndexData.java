@@ -72,7 +72,7 @@ public class IndexData extends BaseData {
 		this.select(this.getDashboardErrorCountSQL);
 		ResultSet rs = this.getResultSet();
 		String count = null;
-		if(rs.isValidRow()) {
+		if(rs!=null && rs.isValidRow()) {
 			try {
 				count = new Integer(rs.getFieldAsInt(0)).toString();
 			} catch (DatabaseException e) {
