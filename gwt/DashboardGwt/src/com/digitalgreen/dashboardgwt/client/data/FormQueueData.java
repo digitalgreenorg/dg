@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.google.gwt.gears.client.database.DatabaseException;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 public class FormQueueData extends BaseData {

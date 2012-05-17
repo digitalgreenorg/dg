@@ -3,7 +3,6 @@ package com.digitalgreen.dashboardgwt.client.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
