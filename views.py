@@ -242,11 +242,17 @@ def get_key_for_user(request):
                 cursor = connection.cursor()
                 cursor.execute(query_string, query_args)
                 transaction.commit_unless_managed()
-                return HttpResponse(str(id))
+                id_str = id
             else:
-                return HttpResponse(str(result[0].get('id')))
+                id_str = result[0].get('id')
         else:
             return HttpResponse("0")
+        districts = get_user_districts(request)
+        dict = {
+            'dashboard_error_count': Error.objects.filter(district__in =  districts).filter(notanerror=0).count(),
+            'last_id' : id_str
+        }
+        return HttpResponse(cjson.encode(dict), status=201)
     else:
         return HttpResponse("error")
 

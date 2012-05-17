@@ -95,13 +95,6 @@
 					{{#person_list}}<option value="{{ value }}">{{ string }}</option>{{/person_list}}
 				</select>
 			</td>
-			<td class="interested">
-				<input {{#interested}}checked="checked"{{/interested}} type="checkbox" name="personmeetingattendance_set-0-interested" id="id_personmeetingattendance_set-0-interested">
-			</td>
-			<td class="expressed_question">
-		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
-		    </td>
-		
 		    <td class="expressed_adoption_video">
 		        <select id="id_personmeetingattendance_set-0-expressed_adoption_video" name="personmeetingattendance_set-0-expressed_adoption_video" style="max-width:400px">
 					{{#selected_expressed_adoption_video}}
@@ -116,7 +109,12 @@
 					{{/video_list}}
 				</select>
 		    </td>
-
+		    <td class="expressed_question">
+		        <input type="text" maxlength="500" value="{{expressed_question_comment}}" name="personmeetingattendance_set-0-expressed_question" class="vTextField" id="id_personmeetingattendance_set-0-expressed_question">
+		    </td>
+		    <td class="interested">
+				<input {{#interested}}checked="checked"{{/interested}} type="checkbox" name="personmeetingattendance_set-0-interested" id="id_personmeetingattendance_set-0-interested">
+			</td>
 		</tr>
 	</script>
 	
