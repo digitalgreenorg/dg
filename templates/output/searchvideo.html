@@ -117,40 +117,50 @@
 				Select Geography
 			</div>
 			<div class='searchbody'>
-				<div id='selectbody'>				
-							<div class='searchbody1' id='state'>
-				   				<select class='select geog' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					    			<option value='-1'>Select State</option>
+				<div id='selectbody'>
+							<div class='searchbody1' id='country'>
+				   				<select class='select geog' name='country' id = 'countryId' onChange="dochange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
 										{% for key,item in search_box_params.geog_val.0.items %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 				    			</select>				
-							</div>
-							<div class='searchbody1' id='district'>
-				    			<select class='select geog' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
-					    			<option value='-1'>Select District</option>
+							</div>			
+							<div class='searchbody1' id='state'>
+				   				<select class='select geog' name='state' id = 'stateId' onChange="dochange('district', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select State</option>
 					    			{%if search_box_params.geog_val.1 %}
 										{% for key,item in search_box_params.geog_val.1.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}										
+				    			</select>				
+							</div>
+							<div class='searchbody1' id='district'>
+				    			<select class='select geog' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select District</option>
+					    			{%if search_box_params.geog_val.2 %}
+										{% for key,item in search_box_params.geog_val.2.items %}
 											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 									{%endif%}						
 				    			</select>	
 							</div>
 							<div class='searchbody1' id='block'>
-				    			<select class='select geog' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
+				    			<select class='select geog' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
 					   		 		<option value='-1'>Select Block</option>
-					   		 		{%if search_box_params.geog_val.2 %}
-										{% for key,item in search_box_params.geog_val.2.items %}
+					   		 		{%if search_box_params.geog_val.3 %}
+										{% for key,item in search_box_params.geog_val.3.items %}
 											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 									{%endif%}						
 				    			</select>				
 							</div>			
 							<div class='searchbody1' id='village'>
-				   	 			<select class='select geog' name='village' id = 'villageId'  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
+				   	 			<select class='select geog' name='village' id = 'villageId'  {% if not search_box_params.geog_val.4 %}disabled='disabled' {% endif %}>
 					    			<option value='-1'>Select Village</option>	
-										{%if search_box_params.geog_val.3 %}
-											{% for key,item in search_box_params.geog_val.3.items %}
+										{%if search_box_params.geog_val.4 %}
+											{% for key,item in search_box_params.geog_val.4.items %}
 												<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 											{%endfor%}
 										{%endif%}					    								

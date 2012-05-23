@@ -13,7 +13,7 @@ def adoption_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None,'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
     
@@ -84,7 +84,7 @@ def adoption_pie_graph_mf_ratio(request):
 def adoption_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None,'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -102,10 +102,8 @@ def adoption_geog_pie_data(request):
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     for item in ado_prod:
         append_str = geog_name[item['id']][0]+';'+str(item['tot_ado'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
+        if(geog is None or geog.upper()!= "VILLAGE"):
+            append_str += url+'&'.join(get_req_url + ["id="+str(item['id'])])
         append_str += ";Ratio of Adoptions in "+geog_name[item['id']][0]
         return_val.append(append_str)
 

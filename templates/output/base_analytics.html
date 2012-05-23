@@ -1,5 +1,5 @@
-
 {% extends "base_all_analytics.html" %}
+{% load analytics_extra_tags %}
 
 {% block title %} DigitalGreen - Progress Dashboard{% endblock %}
 
@@ -51,16 +51,24 @@
 				});
 			}
 			
-			var geog = 'country', id = '1';
+			var geog = null, id = '1';
 			$("select").each(function() {
 				if($(this).val()==-1)
 					return false;
 				geog = $(this).attr('name');
 				id = $(this).val();
 			});
-			url.push("geog="+geog);
-			url.push("id="+id);
-			window.location.href = base_url+'?'+url.join('&');
+			if(geog != null) {
+				url.push("geog="+geog);
+				url.push("id="+id)
+			};
+			
+			if(url.length > 0) {
+				window.location.href = base_url+'?'+url.join('&');
+			}
+			else {
+				window.location.href = base_url;
+			};
 			
 		}
     		
@@ -103,11 +111,11 @@
 			<a id='analyticsnavlink' href="#">Select Dashboard <img src="/media/Output/Images/navbtn1.png" alt=""></a>
 			<div id='analyticsnav1'>
 				<ul>
-					<li> <a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
-					<li> <a href="{% if search_box_params %}/analytics/video_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
-					<li> <a href="{% if search_box_params %}/analytics/screening_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
-					<li> <a href="{% if search_box_params %}/analytics/adoption_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
-					<li> <a href="{% if search_box_params %}/analytics/target_table?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/target_table?geog=country&id=1{%endif%}" title='Targets Dashboard'>Targets Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/target_table{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/target_table?geog=country&id=1{%endif%}" title='Targets Dashboard'>Targets Statistics</a></li>
 				</ul>
 			</div>
 		</div>
@@ -122,7 +130,7 @@
 	&nbsp; 
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
-		<a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
+		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
 	{% endblock analyticsbreadcrums %}
 
 </div>
@@ -171,40 +179,50 @@
 						</tr>
 					</table>
 				</div>
-				<div id='selectbody'>				
-							<div class='searchbody1' id='state'>
-				   				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
-					    			<option value='-1'>Select State</option>
+				<div id='selectbody'>
+							<div class='searchbody1' id='country'>
+				   				<select class='select' name='country' id = 'countryId' onChange="dochange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
 										{% for key,item in search_box_params.geog_val.0.items %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 				    			</select>				
+							</div>				
+							<div class='searchbody1' id='state'>
+				   				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select State</option>
+									{%if search_box_params.geog_val.1 %}
+										{% for key,item in search_box_params.geog_val.1.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}
+				    			</select>				
 							</div>
 							<div class='searchbody1' id='district'>
-				    			<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+				    			<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
 					    			<option value='-1'>Select District</option>
-					    			{%if search_box_params.geog_val.1 %}
-										{% for key,item in search_box_params.geog_val.1.items %}
+					    			{%if search_box_params.geog_val.2 %}
+										{% for key,item in search_box_params.geog_val.2.items %}
 											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 									{%endif%}						
 				    			</select>	
 							</div>
 							<div class='searchbody1' id='block'>
-				    			<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
+				    			<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)"  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
 					   		 		<option value='-1'>Select Block</option>
-					   		 		{%if search_box_params.geog_val.2 %}
-										{% for key,item in search_box_params.geog_val.2.items %}
+					   		 		{%if search_box_params.geog_val.3 %}
+										{% for key,item in search_box_params.geog_val.3.items %}
 											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 										{%endfor%}
 									{%endif%}						
 				    			</select>				
 							</div>			
 							<div class='searchbody1' id='village'>
-				   	 			<select class='select' name='village' id = 'villageId'  {% if not search_box_params.geog_val.3 %}disabled='disabled' {% endif %}>
+				   	 			<select class='select' name='village' id = 'villageId'  {% if not search_box_params.geog_val.4 %}disabled='disabled' {% endif %}>
 					    			<option value='-1'>Select Village</option>	
-										{%if search_box_params.geog_val.3 %}
-											{% for key,item in search_box_params.geog_val.3.items %}
+										{%if search_box_params.geog_val.4 %}
+											{% for key,item in search_box_params.geog_val.4.items %}
 												<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
 											{%endfor%}
 										{%endif%}					    								

@@ -17,7 +17,7 @@ def video_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
 
@@ -74,7 +74,7 @@ def video_type_wise_pie(request):
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -92,10 +92,8 @@ def video_geog_pie_data(request):
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     for item in vid_prod:
         append_str = geog_name[item['id']][0]+';'+str(item['tot_pro'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
+        if(geog is None or geog.upper()!= "VILLAGE"):
+            append_str += url+'&'.join(get_req_url + ["id="+str(item['id'])])
         append_str += ";Ratio of Video Productions in "+geog_name[item['id']][0]
         return_val.append(append_str)
 
@@ -184,12 +182,13 @@ def video(request):
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
     else:
-        rel_vids = list(rel_vids_prac)
+        rel_vids = set(rel_vids_prac)
         rel_vids_lang = rel_vids_all.exclude(pk__in=rel_vids_prac.values_list('pk',flat=True)).filter(language = vid.language)
-        rel_vids.extend(list(rel_vids_lang[:9-len(rel_vids)]))
+        rel_vids.update(list(rel_vids_lang[:9-len(rel_vids)]))
         if(len(rel_vids)< 9):
-            rel_vids.extend(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
-        
+            rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
+
+    rel_vids = sorted(list(rel_vids), key=lambda x: x.viewers, reverse=True)        
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
                                                      tot_vid_adopt = tot_vid_adopt, \
@@ -254,6 +253,8 @@ def video_search(request):
     search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
     if(geog):
         geog = geog.upper();
+        if(geog=="COUNTRY"):
+            vids = vids.filter(village__block__district__state__country__id = int(id))
         if(geog=="STATE"):
             vids = vids.filter(village__block__district__state__id = int(id))
         elif(geog=="DISTRICT"):
@@ -262,9 +263,7 @@ def video_search(request):
             vids = vids.filter(village__block__id = int(id))
         elif(geog=="VILLAGE"):
             vids = vids.filter(village__id = int(id))
-        search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
-    else:
-        search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
+    search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
     
     if(partners):
         vids = vids.filter(village__block__district__partner__id__in = map(int,partners))

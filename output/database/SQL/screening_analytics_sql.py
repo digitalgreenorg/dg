@@ -12,7 +12,7 @@ def totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners, v
         sql_ds['select'].append("COUNT(DISTINCT SC.id) as tot_scr");
     if(values_to_fetch==None or 'dates' in values_to_fetch):
         sql_ds['select'].append("DATEDIFF(MAX(SC.DATE),MIN(SC.DATE))+1 as tot_days");
-    if(values_to_fetch==None or 'tot_scr' in values_to_fetch or 'dates' in values_to_fetch or geog!="COUNTRY" or from_date or to_date or partners):
+    if(values_to_fetch==None or 'tot_scr' in values_to_fetch or 'dates' in values_to_fetch or geog!=None or from_date or to_date or partners):
         sql_ds['from'].append("SCREENING SC");
     if(values_to_fetch==None or 'tot_dist_per' in values_to_fetch or 'tot_per' in values_to_fetch):
         if sql_ds['from']:
@@ -49,7 +49,7 @@ def screening_practice_scatter(geog,id, from_date, to_date, partners):
     sql_ds['from'].append("SCREENING_videoes_screened SVS")
     sql_ds['join'].append(["VIDEO_related_agricultural_practices VRP","VRP.video_id = SVS.video_id"])
     sql_ds['join'].append(["PRACTICES P", "P.id = VRP.practices_id"])
-    if((from_date and to_date) or geog.lower()!='country' or partners):
+    if((from_date and to_date) or geog is not None or partners):
         sql_ds['join'].append(["SCREENING SC","SVS.screening_id = SC.id"])
     filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date, partners);
     sql_ds['group by'].append("practice_name")

@@ -6,7 +6,7 @@ def search_drop_down_list(geog, geog_parent, id):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(['id', geog.upper()+'_NAME as name'])
     sql_ds['from'].append(geog.upper())
-    if(geog.upper() != "STATE"):
+    if(geog.upper() != "COUNTRY"):
         sql_ds['where'].append(geog_parent.lower()+'_id = '+str(id))
     sql_ds['order by'].append('name')
     
@@ -17,30 +17,33 @@ def search_drop_down_list(geog, geog_parent, id):
 #               id - id of 'geog' if is_child = false else it's parent geog's id
 #               is_child: flag(0/1) if the options are one level below then selected
 #                               e.g for district 'x', option for x's blocks must be presented with nothing pre-selected.
-def breadcrumbs_options_sql(geog,id, is_child):
-    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE'];
+def breadcrumbs_options_sql(geog, id, is_child):
+    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE','COUNTRY'];
 
-    if(geog=='STATE'):
-        return 'SELECT id, STATE_NAME as name FROM STATE'
+    if(geog=='COUNTRY'):
+        return 'SELECT id, COUNTRY_NAME as name FROM COUNTRY'
 
     par_geog = geog_list[geog_list.index(geog)+1];
 
+    sql_ds = get_init_sql_ds()
     if(is_child == 1):
-        return construct_query(""" SELECT id, {{geog}}_NAME
-                FROM {{geog}}
-                WHERE {{par_geog|lower}}_id = {{id}}
-        """,dict(geog=geog,id=id,par_geog=par_geog))
+        sql_ds['select'].extend(['id', geog+'_NAME'])
+        sql_ds['from'].append(geog)
+        sql_ds['where'].append(par_geog.lower()+'_id = '+str(id))
+    else:
+        #SQL for filtering all geography below the parent geog. For e.g. - Will filter all India states, if Bihar is passed in geog, id
+        sql_ds['select'].extend([geog[0] + '1.id' ,"%s1.%s_NAME" %(geog[0], geog.upper()), "%s1.%s_id" % (geog[0], par_geog)])
+        sql_ds['from'].append("%s %s1" % (geog, geog[0]))
+        sql_ds['join'].append(["%s %s2" % (geog, geog[0]),'%s1.%s_id = %s2.%s_id' %(geog[0], par_geog, geog[0], par_geog)])
+        sql_ds['where'].append("%s2.id = %s" % (geog[0], str(id)))
 
-    return construct_query("""SELECT {{geog|first}}1.id ,{{geog|first}}1.{{geog|upper}}_NAME, {{geog|first}}1.{{par_geog}}_id
-    FROM {{geog}} {{geog|first}}1, {{geog}} {{geog|first}}2
-    WHERE {{geog|first}}1.{{par_geog|lower}}_id = {{geog|first}}2.{{par_geog|lower}}_id
-            and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
+    return join_sql_ds(sql_ds)
 
 
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
 #Returns '' if geography!= country or geography!=state
 def get_partners_sql(geog, id):
-    if geog not in ["COUNTRY", "STATE"]:
+    if geog not in [None, "COUNTRY", "STATE"]:
         return ''
 
     sql_ds = get_init_sql_ds()
@@ -49,38 +52,60 @@ def get_partners_sql(geog, id):
     sql_ds['join'].append(["PARTNERS P", "P.id = D.partner_id"])
     if (geog=="STATE"):
         sql_ds['where'].append("D.state_id = "+str(id))
+    elif(geog=="COUNTRY"):
+        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
+        sql_ds['where'].append("S.country_id = " + str(id))
 
     return join_sql_ds(sql_ds);
 
 def child_geog_list(geog, id, from_date, to_date, partners):
-    if(geog == "COUNTRY"):
-        sql = "SELECT DISTINCT S.id, STATE_NAME AS name from STATE S"
+    sql_ds = get_init_sql_ds()
+    if(geog == None):
+        sql_ds['select'].extend(['DISTINCT C.id', 'COUNTRY_NAME AS name'])
+        sql_ds['from'].append("COUNTRY C")
         if(partners):
-            sql+=  """ JOIN DISTRICT D ON (D.state_id = S.id)
-                      WHERE D.partner_id in ("""+','.join(partners)+")"
+            sql_ds['join'].append(['STATE S', 'S.country_id = C.id'])
+            sql_ds['join'].append(['DISTRICT D', 'D.state_id = S.id'])
+            sql_ds['where'].append("D.partner_id in ("+','.join(partners)+")")
+    elif(geog == "COUNTRY"):
+        sql_ds['select'].extend(['DISTINCT S.id', 'STATE_NAME AS name'])
+        sql_ds['from'].append("STATE S")
+        sql_ds['where'].append("S.country_id = " + str(id))
+        if(partners):
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
+            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
+            if(filtered_partner_list):
+                sql_ds['join'].append(["DISTRICT D", "S.id = D.state_id"])
+                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == "STATE"):
-        sql = """SELECT DISTINCT D.id, DISTRICT_NAME AS name from DISTRICT D
-                          WHERE state_id = """+str(id)
+        sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
+        sql_ds['from'].append("DISTRICT D")
+        sql_ds['where'].append("state_id = " + str(id))
         if(partners):
             dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
             filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(filtered_partner_list):
-                sql += " AND D.partner_id in ("+','.join(filtered_partner_list)+")"
+                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == 'DISTRICT'):
-        sql="SELECT id, BLOCK_NAME as name FROM BLOCK where district_id = "+str(id)
+        sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
+        sql_ds['from'].append('BLOCK B')
+        sql_ds['where'].append("district_id = " + str(id))
     elif(geog == "BLOCK"):
-        sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE block_id = "+str(id)
+        sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
+        sql_ds['from'].append("VILLAGE V")
+        sql_ds['where'].append("block_id = " + str(id))
     elif(geog == "VILLAGE"):
+        sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
+        sql_ds['from'].append("VILLAGE V")
+        sql_ds['where'].append("id = " + str(id))
         sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE id = "+str(id);
-    else:
-        sql = ''
 
-    return sql;
+    return join_sql_ds(sql_ds);
 
 #Query for the table in overview module and pie graphs.
 #Parameter Required:'type' can be (production/screening/adoption/practice/person/village)
 def overview(geog, id, from_date, to_date, partners, type):
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
 
     if(geog == 'VILLAGE'):
         geog_child = 'VILLAGE'
@@ -89,10 +114,7 @@ def overview(geog, id, from_date, to_date, partners, type):
 
     date_field = main_tab_abb = ''
     sql_ds = get_init_sql_ds();
-    if(geog=="VILLAGE"):
-        sql_ds['select'].append("village_id as id")
-    else:
-        sql_ds['select'].append(geog_child[0]+".id as id")
+    sql_ds['select'].append(geog_child.lower()+"_id as id")
     if(type == 'production'):
         sql_ds['select'].append('COUNT(DISTINCT VID.id) as tot_pro')
         sql_ds['from'].append('VIDEO VID')
@@ -134,13 +156,12 @@ def overview(geog, id, from_date, to_date, partners, type):
             sql_ds['where'].append("P.date_of_joining is not NULL")
             main_tab_abb = 'P'
             date_field = "P.date_of_joining"
-    if(geog=="COUNTRY"):
-        #Hacking attach_geog_date for attaching geography till state in country case.
-        attach_geog_date(sql_ds,main_tab_abb,date_field,'STATE',0, from_date,to_date)
-        sql_ds['where'].pop();
-        if(partners):
-            sql_ds['where'].append("D.id in (SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partners)+"))")
-        sql_ds['lojoin'].append(['STATE S','S.id = D.state_id']);
+    if(geog==None):
+         #Hacking attach_geog_date for attaching geography till state in country case.
+         attach_geog_date(sql_ds,main_tab_abb,date_field,'COUNTRY',0, from_date,to_date)
+         sql_ds['where'].pop();
+         if(partners):
+             sql_ds['where'].append("district_id in (SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partners)+"))")
     else:
         filter_partner_geog_date(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)
 
@@ -157,7 +178,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
 
     if(type=='practice'):
         sql_ds['select'].extend(["date", "COUNT(*)"])
-
+        
         sql_inn_ds = get_init_sql_ds();
         sql_inn_ds['select'].extend(["VRAP.practices_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
         sql_inn_ds['from'].append("VIDEO VID");
@@ -187,12 +208,12 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
     elif(type=='adoption'):
         sql_ds['select'].extend(["DATE_OF_ADOPTION AS date", "count(*)"])
         sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP");
-        if(geog!="COUNTRY" or partners):
+        if(geog!=None or partners):
             sql_ds['join'].append(["PERSON P","P.id = PAP.person_id"])
             filter_partner_geog_date(sql_ds,'P','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("DATE_OF_ADOPTION");
     elif(type=='village'):
-        if(geog not in ["COUNTRY", "STATE", "DISTRICT"]):
+        if(geog not in [None, "COUNTRY", "STATE", "DISTRICT"]):
             return ""
         sql_ds['select'].extend(["DISTINCT DATE as date, village_id"])
         sql_ds['from'].append("SCREENING SC")
@@ -217,8 +238,10 @@ def target_lines(geog,id, from_date, to_date, partners, type):
     elif(geog == 'DISTRICT'):
         sql_ds['where'].append("D_T.district_id = "+str(id))
     elif(geog == "COUNTRY"):
+        sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
+        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
+        sql_ds['where'].append("S.country_id = "+str(id))
         if(partners):
-            sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
             sql_ds['where'].append("D.partner_id IN ("+','.join(partners)+")")
     else:
         return '';
@@ -258,7 +281,7 @@ def tot_attendance(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(PMA.id) as count")
     sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
-    if geog != "COUNTRY" or partners or (from_date and to_date):
+    if geog is not None or partners or (from_date and to_date):
         sql_ds['lojoin'].append(["SCREENING SC", "SC.id = PMA.screening_id"])
         filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners)
         
@@ -274,10 +297,10 @@ def adoption_rate(geog, id, to_date,partners):
     return join_sql_ds(sql_ds);
 
 def get_start_date(geog, id):
-    geog = geog.upper()
+    geog = geog.upper() if geog is not None else None
     sql_ds = get_init_sql_ds()
     if geog is None:
-        sql_ds['select'].append("MIN(START_DATE) as DATE")
+        sql_ds['select'].append("MIN(START_DATE) AS date")
         sql_ds['from'].append("COUNTRY C")
     elif geog in ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']:
         sql_ds['select'].append("START_DATE AS date")

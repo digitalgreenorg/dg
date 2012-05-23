@@ -12,7 +12,7 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, ru
 def screening_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
@@ -130,7 +130,7 @@ def screening_mf_ratio(request):
 def screening_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -147,10 +147,8 @@ def screening_geog_pie_data(request):
     return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
     for item in scr_geog:
         append_str = geog_name[item['id']][0]+';'+str(item['tot_scr'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
+        if(geog is None or geog.upper()!= "VILLAGE"):
+            append_str += url+'&'.join(get_req_url + ["id="+str(item['id'])])
         append_str += ";Ratio of disseminations in "+geog_name[item['id']][0]
         return_val.append(append_str)
 
@@ -164,7 +162,7 @@ def screening_geog_pie_data(request):
 #        values_to_fetch can be None, which will fetch all
 def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, values_to_fetch=None):
     return_dict = {}
-    if geog == 'COUNTRY' and not(from_date or to_date or partners):
+    if geog == None and not(from_date or to_date or partners):
         if values_to_fetch == None or ('dist_att' in values_to_fetch and 'avg_att_per_sc' in values_to_fetch):
             pma_data = PersonMeetingAttendance.objects.aggregate(tot_dist_per=Count('person', distinct=True), tot_per=Count('id'))
         elif 'dist_att' in values_to_fetch:

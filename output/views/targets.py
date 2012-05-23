@@ -16,7 +16,7 @@ def target_table(request):
     if(not from_date):
         from_date = str(datetime.date(today_date.year,today_date.month,1))
     if(not to_date):
-        to_date = str(datetime.date(today_date.year+(today_date.month+1)/12,(today_date.month+1)%12,1) - datetime.timedelta(days=1))
+        to_date = str(datetime.date(today_date.year+(today_date.month+1)/12,(today_date.month+1)%12, 1) - datetime.timedelta(days=1))
     
     if(datetime.date(*[int(i) for i in str(from_date).split('-')]) > datetime.date(*[int(i) for i in str(to_date).split('-')])):
         raise Http404; 
@@ -57,6 +57,10 @@ def target_table(request):
     target_vals = run_query(get_targets(geog, id, from_date, to_date, partners))[0]
     
     search_box_params = views.common.get_search_box(request)
+    #overrider search_box from_date and to_date 
+    search_box_params['from_date'] = str(from_date)
+    search_box_params['to_date'] = str(to_date)
+    
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
     if(get_req_url): get_req_url = '&'+get_req_url

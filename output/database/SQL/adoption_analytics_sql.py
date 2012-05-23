@@ -7,7 +7,7 @@ def adoption_tot_ado(geog, id, from_date, to_date, partners):
     sql_ds['select'].append("COUNT(DISTINCT person_id) as tot_farmers")
     sql_ds['select'].append("COUNT(DISTINCT practice_id) as tot_prac")
     sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP")
-    if(geog != "COUNTRY" or partners):
+    if(geog is not None or partners):
         sql_ds['lojoin'].append(["PERSON P", "P.id = PAP.person_id"]);
         filter_partner_geog_date(sql_ds,'P','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
     else:
@@ -50,7 +50,7 @@ def adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partne
     inner_sql_ds = get_init_sql_ds();
     inner_sql_ds['select'].append("DISTINCT person_id")
     inner_sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP")
-    if(geog != "COUNTRY" or partners):
+    if(geog is not None or partners):
         inner_sql_ds['lojoin'].append(["PERSON P", "P.id = PAP.person_id"]);
         filter_partner_geog_date(inner_sql_ds,'P','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
     else:

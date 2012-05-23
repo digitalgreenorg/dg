@@ -23,26 +23,26 @@ def test_output(request,geog,id=None):
 
 
 #function for breadcrumbs
-#returns a list of geog upto state
+#returns a list of geog upto country
 #Datastructure returned is [{state_id:((state_name),true if this should be marked as selected else it's not nested tuple),..},
 #                                                  {district_id: ---do---  ,district_id:.........}]
 def breadcrumbs_options(geog,id):
+    if(geog is None):
+        return breadcrumbs_options('COUNTRY',-1);
+    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE','COUNTRY'];
     id = int(id)
-    if(geog=='COUNTRY'):
-        return breadcrumbs_options('STATE',-1);
-    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE'];
     return_val = []
 
     if(geog!='VILLAGE'):
         return_val.append(run_query_dict_list(shared_sql.breadcrumbs_options_sql(geog_list[geog_list.index(geog)-1],id,1),'id'))
     #Starting from the passed geog, we'll calculate 'options' and append to return_val,
-    #and end up at top most geog 'state'.
+    #and end up at top most geog 'country'.
     for i in range(geog_list.index(geog),len(geog_list)):
         geog = geog_list[i]
         query_return = run_query_dict_list(shared_sql.breadcrumbs_options_sql(geog,id,0),'id')
         if(id!=-1):
             query_return[id].append('true')
-        if(geog!='STATE'):
+        if(geog!='COUNTRY'):
             id  = query_return[id][1]
 
         return_val.append(query_return);
@@ -69,7 +69,7 @@ def get_search_box(request):
     search_box_params['from_date'] = str(from_date)
     search_box_params['to_date'] = str(to_date)
     search_box_params['geog_val'] = breadcrumbs_options(geog,id)
-    search_box_params['cur_geog'] = geog.lower()
+    search_box_params['cur_geog'] = geog.lower() if geog != None else None
     search_box_params['cur_id'] = id
     search_box_params['base_url'] = request.path
 
@@ -77,7 +77,10 @@ def get_search_box(request):
 
 #Helper function to return geog, id from request object.
 def get_geog_id(request):
-    return request.GET['geog'].upper(),int(request.GET['id'])
+    if "id" in request.GET and 'geog' in request.GET:
+        return request.GET['geog'].upper(),int(request.GET['id'])
+    else:
+        return None, None
 
 
 #Returns a dictionary of list of PARTNER_NAME, id
@@ -109,9 +112,9 @@ def drop_down_val(request):
         id = int(id)
     else:
         raise Http404()
-    geog_list = ['state','district','block','village']
-    if geog=='state':
-        geog_parent = 'state'
+    geog_list = ['country','state','district','block','village']
+    if geog=='country':
+        geog_parent = 'country'
     else:
         geog_parent = geog_list[geog_list.index(geog)-1]
 
