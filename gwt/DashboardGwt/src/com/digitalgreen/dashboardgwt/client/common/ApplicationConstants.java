@@ -35,7 +35,6 @@ import com.digitalgreen.dashboardgwt.client.data.VideoRelatedAgriculturalPractic
 import com.digitalgreen.dashboardgwt.client.data.VideosData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 
 public class ApplicationConstants {
 	

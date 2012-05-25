@@ -28,6 +28,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -61,29 +62,64 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		IndexTemplate.progressBar(progressEvent.getProgressMark());
 	}
 	
-	private void goOfflineOnline(){
+	private void goOfflineOnline(boolean internet, boolean gears, int dbNotDownloaded, boolean dbHasUnsyncRows){
+
 		HTMLPanel bodyHtml = new HTMLPanel(this.bodyContentHtml);
 		RootPanel.get("controlPanel").add(bodyHtml);
 		Image onlineOfflineButton = Image.wrap(RootPanel.get("onlineOfflineButtonId").getElement());
 		final Image downloadButton = Image.wrap(RootPanel.get("downloadButtonId").getElement());
 		final Image uploadButton = Image.wrap(RootPanel.get("uploadButtonId").getElement());
 		String modeText = "";
-		if(!ApplicationConstants.getCurrentOnlineStatus()) {
-			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+		//nandini
+		/*if internet is disconnected - disable all buttons.
+		else
+			if offline 
+				if new rows added -> upload, disable go online
+				else -> download, enable go online
+			else online
+				if db download complete -> download, enable Go Offline
+				else -> download -> download, disable go offline
+		*/
+		if (!internet){ // UI State C' D'
+			modeText = "Connected in offline mode";
 			downloadButton.setStyleName("buttonHideClass");
 			uploadButton.setStyleName("buttonHideClass");
-			modeText = "Connected in offline mode";
-		} else {
-			onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
-			downloadButton.setStyleName("buttonShowClass");
-			uploadButton.setStyleName("buttonShowClass");
-			modeText = "Connected in online mode";
-		}
-		onlineOfflineButton.setStyleName("onlineOfflineButtonClass");
-		if(!(Boolean)this.requestContext.getArgs().get("showOfflineReady")) {
+			onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
 			onlineOfflineButton.setStyleName("buttonHideClass");
-			uploadButton.setStyleName("buttonHideClass");
 		}
+		else {
+			if (!ApplicationConstants.getCurrentOnlineStatus()) { // Offline Mode
+				modeText = "Connected in offline mode";
+				if (dbHasUnsyncRows) { // UI State D
+					downloadButton.setStyleName("buttonHideClass");
+					uploadButton.setStyleName("buttonShowClass");
+					onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+					onlineOfflineButton.setStyleName("buttonHideClass");
+				}
+				else { // UI State C
+					downloadButton.setStyleName("buttonShowClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/online-icon.png");
+					onlineOfflineButton.setStyleName("buttonShowClass");
+				}
+			}
+			else {
+				modeText = "Connected in online mode";
+				if (dbNotDownloaded==0) { // Db Downloaded
+					downloadButton.setStyleName("buttonShowClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
+					onlineOfflineButton.setStyleName("buttonShowClass");
+				}
+				else { // Db not downloaded
+					downloadButton.setStyleName("buttonShowClass");
+					uploadButton.setStyleName("buttonHideClass");
+					onlineOfflineButton.setUrl("/media/img/admin/offline-icon.png");
+					onlineOfflineButton.setStyleName("buttonHideClass");
+				}
+			}
+		}
+		
 		modeText += "<span id='dotsId'><img class='dotsClass' src='/media/img/admin/dots.gif' /></span>";
 		HTMLPanel modeTextHtml = new HTMLPanel(modeText);
 		modeTextHtml.getElement().setId("modeTextAndDotsId");
@@ -107,58 +143,57 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			}
 		};
 		t.schedule(1000);
+		if (onlineOfflineButton.getStyleName().contains("buttonShowClass")) {
+			onlineOfflineButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	   BaseTemplate operationUi = new BaseTemplate();
+			    	   if (ApplicationConstants.getCurrentOnlineStatus()){
+			    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
+			    		   		"<br /><div id='progressBar'></div>");
+			    		   EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    		   requestContext.getArgs().put("action", "gooffline");
+			    	   }
+			    	   else{
+			    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going online");
+			    		   requestContext.getArgs().put("action", "goonline");
+			    	   }
+			    		   
+			    	   Index index = new Index(requestContext);
+			    	   index.response();
+			      }
+		    });
+		}
+
+		if (uploadButton.getStyleName().contains("buttonShowClass")) {
+			uploadButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	  BaseTemplate operationUi = new BaseTemplate();
+			    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
+			    	  		"<br /><div id='progressBar'></div>");
+			    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	  requestContext.getArgs().put("action", "sync");
+			    	  Index index = new Index(requestContext);
+			    	  index.response();
+			      }
+		    });
+		}
 		
-		onlineOfflineButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	   RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	   BaseTemplate operationUi = new BaseTemplate();
-		    	   if (ApplicationConstants.getCurrentOnlineStatus()){
-		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going offline.  Your offline settings are being downloaded." +
-		    		   		"<br /><div id='progressBar'></div>");
-		    		   EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    		   requestContext.getArgs().put("action", "gooffline");
-		    	   }
-		    	   else{
-		    		   operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Going online");
-		    		   requestContext.getArgs().put("action", "goonline");
-		    	   }
-		    		   
-		    	   Index index = new Index(requestContext);
-		    	   index.response();
-		      }
-	    });
-		
-		uploadButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
-		    		  return;
-		    	  }
-		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Uploading your data to the main server" +
-		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	  requestContext.getArgs().put("action", "sync");
-		    	  Index index = new Index(requestContext);
-		    	  index.response();
-		      }
-	    });
-		
-		downloadButton.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {
-		    	  if(!ApplicationConstants.getCurrentOnlineStatus()) {
-		    		  return;
-		    	  }
-		    	  BaseTemplate operationUi = new BaseTemplate();
-		    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
-		    	  		"<br /><div id='progressBar'></div>");
-		    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
-		    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
-		    	  requestContext.getArgs().put("action", "resync");
-		    	  Index index = new Index(requestContext);
-		    	  index.response();
-		      }		      
-	    });
+		if (downloadButton.getStyleName()=="buttonShowClass") {
+			downloadButton.addClickHandler(new ClickHandler() {
+			      public void onClick(ClickEvent event) {
+			    	  BaseTemplate operationUi = new BaseTemplate();
+			    	  operationUi.showGlassDoorMessage("<img style='margin-bottom: -3px;' src='/media/img/admin/ajax-loader.gif' /> Downloading your data from the main server" +
+			    	  		"<br /><div id='progressBar'></div>");
+			    	  EventBus.get().addHandler(ProgressEvent.TYPE, new IndexTemplate());
+			    	  RequestContext requestContext = new RequestContext(RequestContext.METHOD_POST);
+			    	  requestContext.getArgs().put("action", "resync");
+			    	  Index index = new Index(requestContext);
+			    	  index.response();
+			      }		      
+		    });
+		}
 	}
 	
 	private void addHyperlink(String id, String linkTxt, String tokenTxt, final BaseServlet servlet) {
@@ -174,7 +209,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 	
 	@Override
 	public void fill() {
-		IndexData.Data indexPageData = (Data) this.requestContext.getArgs().get("index_page_data");
 		super.setBodyStyle("dashboard");
 		HTMLPanel indexHtml = new HTMLPanel(indexContentHtml);
 		super.setContentPanel(indexHtml);
@@ -353,6 +387,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		requestContext.getArgs().put("pageNum", "1");
 		addHyperlink("der-1", "<a href='#dashboard/error/'>Data Inconsistencies</a>", "dashboard/error", new DashboardError(requestContext));
+		IndexData.Data indexPageData = (Data) this.requestContext.getArgs().get("index_page_data");
 		String tot_errors = indexPageData.getDashboardErrorCount();
 		Label error_label = new Label();
 		//Determine style
@@ -378,7 +413,20 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		HTMLPanel bulletsHtml = new HTMLPanel(this.bulletsBodyHtml);
 		bulletsHtml.setStyleName("bulletsClass");
 		RootPanel.get("sub-container").add(bulletsHtml);
-		goOfflineOnline();
+		IndexData indexData = new IndexData();
+		try {
+			String debug = "Internet is connected." + indexData.isInternetConnected() + "\n" +
+					//"isGearsAvailable: " + indexData.isGearsAvailable() + "\n" + 
+					"db not downloaded: " + indexData.dbNotDownloaded(ApplicationConstants.getUsernameCookie()) + "\n" +
+					"db has unsync rows: " + indexData.dbHasUnsyncedRows();
+					
+			//Window.alert(debug);
+			goOfflineOnline(indexData.isInternetConnected(), true/*indexData.isGearsAvailable()*/, indexData.dbNotDownloaded(ApplicationConstants.getUsernameCookie()), indexData.dbHasUnsyncedRows());
+		}
+		catch (DatabaseException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	final static private String bulletsBodyHtml = 
@@ -463,154 +511,168 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"</tbody>" +
 		"</table>";
 	
-	final static private String indexContentHtml = "<div id='content' style='float:left;'>" +
-							"<h1>Administration</h1>" +
-								"<div id='content-main'>" +
-									"<div class='module'>" +
-     								"<table summary='Models available in the Dashboard application.'>" +
-     									"<caption><a href='dashboard/' class='section'>Dashboard</a></caption>" +
-	     									"<tr>" +
-	 										"<th id='country-1' scope='row'>" +
-												"</th>" +
-												"<td id='country-2'>" +
-												"</td>" +
-											"</tr>" +
-     										"<tr>" +
-	     										"<th id='r-1' scope='row'>" +
-	 											"</th>" +
-	 											"<td id='r-2'>" +
-	 											"</td>" +
-	 										"</tr>" +
-     										"<tr>" +
-     											"<th id='st-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='st-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
- 											
-     											"<th id='di-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='di-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='b-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='b-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='vi-1' scope='row'>" +
-     											"</th>"  +
-     											"<td id='vi-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='a-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='a-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='aa-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='aa-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pg-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='pg-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pe-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='pe-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='pr-1'scope='row'>" +
-     											"</th>" +
-     											"<td id='pr-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-	 											"<th id='pap-1'scope='row'>" +
-	 											"</th>" +
-	 											"<td id='pap-2'>" +
-	 											"</td>" +
-	 										"</tr>" +
-     										"<tr>" +
-     											"<th id='l-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='l-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='v-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='v-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='s-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='s-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='e-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='e-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
-     											"<th id='t-1' scope='row'>" +
-     											"</th>" +
-     											"<td id='t-2'>" +
-     											"</td>" +
-     										"</tr>" +
-     										"<tr>" +
- 												"<th id='tar-1' scope='row'>" +
- 												"</th>" +
- 												"<td id='tar-2'>" +
- 												"</td>" +
- 											"</tr>" +
-     										"<tr>" +
- 											"<th id='p-1' scope='row'>" +
- 											"</th>" +
- 											"<td id='p-2'>" +
- 											"</td>" +
- 										"</tr>" +
- 										"<tr>" +
-											"<th id='d-1' scope='row'>" +
-											"</th>" +
-											"<td id='d-2'>" +
-											"</td>" +
-										"</tr>" +
-										"<tr>" +
-											"<th id='f-1' scope='row'>" +
-											"</th>" +
-											"<td id='f-2'>" +
-											"</td>" +
-										"</tr>" +
-     									"</table>" +
-     								"</div>" +
-     							"</div>" +
-     							"<div id='dashboard-tools' style='clear:both; width:100%;'>" +
-								"<div class='module'>" +
- 								"<table summary='Tools available in the Dashboard application.'>" +
- 									"<caption><a href='#' class='section'>Tools</a></caption>" +
- 									"<tr>" +
-										"<th id='der-1' scope='row'>" +
-										"</th>" +
-										"<td id='der-2'>" +
-										"</td>" +
-									"</tr>" +
-										"</table>" +
-									"</div>" +
-								"</div>";
-
+	final static private String indexContentHtml = "<div id='content' style='float:left;'>\n" + 
+			"	<h1>Administration</h1>\n" + 
+			"	<div id='content-main'>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Geographies</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='country-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='country-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='r-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='r-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='st-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='st-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='di-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='di-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='b-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='b-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>			\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Videos</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='l-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='l-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pr-1'scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pr-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='v-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='v-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Villages</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='vi-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='vi-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pg-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pg-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pe-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pe-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='a-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='a-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='aa-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='aa-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='s-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='s-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='pap-1'scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='pap-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>			\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Models available in the Dashboard application.'>\n" + 
+			"				<caption><a href='dashboard/' class='section'>Administration</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='p-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='p-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='d-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='d-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='f-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='f-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='t-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='t-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='tar-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='tar-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"				<tr>\n" + 
+			"					<th id='e-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='e-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"	</div>\n" + 
+			"	<div id='dashboard-tools' style='clear:both; width:100%;'>\n" + 
+			"		<div class='module'>\n" + 
+			"			<table summary='Tools available in the Dashboard application.'>\n" + 
+			"				<caption><a href='#' class='section'>Tools</a></caption>\n" + 
+			"				<tr>\n" + 
+			"					<th id='der-1' scope='row'>\n" + 
+			"					</th>\n" + 
+			"					<td id='der-2'>\n" + 
+			"					</td>\n" + 
+			"				</tr>\n" + 
+			"			</table>\n" + 
+			"		</div>\n" + 
+			"	</div>\n" + 
+			"</div>";
 }
