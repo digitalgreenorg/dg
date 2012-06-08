@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Farmerbook | Digitalgreen</title>
+    
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Farmerbook DigitalGreen Farmer Facebook Pictures Photos Images">
+    <meta name="description" content="DigitalGreen Farmers details">
+
+    <!-- Le styles -->
+	<link href="/media/farmerbook/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/media/farmerbook/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="/media/farmerbook/css/farmer_page.css" rel="stylesheet"/>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100%;}
+	  #map_canvas img{max-width:none}
+	  .vidsWatchedItem { width:120px; margin-left:5px !important;}
+	  #map_left_panel{
+	  width:240px;
+	  background-color: #D5D5D5;
+	  border: 1px solid #E1E1E8;
+	  position:absolute;
+	  top:40px;  /* adjust value accordingly */
+	  margin-left: 10px;  /* adjust value accordingly */
+	  }
+	  
+	  #map_right_panel{
+	  width:228px;
+	  background-color: #D5D5D5;
+	  border: 1px solid #E1E1E8;
+	  position:absolute;
+	  top:40px;  /* adjust value accordingly */
+	  margin-left: 1098px;  /* adjust value accordingly */
+	  }
+	  #top_bar{
+		width:100%;
+		height:40px;
+		border: 1px solid #6D9D30;
+
+	  }
+	  #page_navigation a{
+		padding:3px;
+		border:1px solid gray;
+		margin:2px;
+		color:black;
+		text-decoration:none
+	}
+	.active_page{
+		background:darkgreen;
+		color:white !important;
+	}
+	.user_info_caption {
+		margin: 3px 15px 0 0;
+		width: 250px;
+		font-size: 12px;
+		font-weight: 200;
+		text-shadow: 0 1px 0 white;
+		color: #555555;
+	
+	}
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/markerclusterer.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-carousal.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-transition.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>	
+	
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+	<script type='text/javascript'>	
+
+		$(document).ready(function() {
+		     $('#myModal').hide();
+			//$('.carousel').carousel({ interval: 200000	});
+			$('.carousel').carousel({ pause: true, interval: false});			
+		});
+		
+		function personClick(person_id) {
+			$("div#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						alert(msg + xhr.status + " " + xhr.statusText);
+					  }
+					  //alert('Load was performed.');
+					  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+					  $('#myModal').show();
+					
+					  $('#myModal').modal();
+					 
+					 mixpanel.track("Person Page Loaded");
+					  
+					});
+		}
+		
+		function villageClick(vil_id) {
+		    $('#myModal').hide();
+			$("div#myModal").before("<div id='loading_image'><img style='margin-left:330px;margin-top:20px;' src='/media/farmerbook//images/loading.gif' /></div>");
+			$("div#myModal").load('/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						alert(msg + xhr.status + " " + xhr.statusText);
+					  }
+					  $('#loading_image').remove();
+					  //alert('Load was performed.');
+					  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+					  $('#myModal').show();
+					
+					  $('#myModal').modal();
+					
+					  mixpanel.track("Village Page Loaded");
+					  
+					});
+		}
+		
+		
+		
+		function previous(){
+	
+			new_page = parseInt($('#current_page').val()) - 1;
+			//if there is an item before the current active link run the function
+			if($('.active_page').prev('.page_link').length==true){
+				go_to_page(new_page);
+			}
+			
+		}
+
+		function next(){
+			new_page = parseInt($('#current_page').val()) + 1;
+			//if there is an item after the current active link run the function
+			if($('.active_page').next('.page_link').length==true){
+				go_to_page(new_page);
+			}
+			
+		}
+		function go_to_page(page_num){
+			//get the number of items shown per page
+			var show_per_page = parseInt($('#show_per_page').val());
+			
+			//get the element number where to start the slice from
+			start_from = page_num * show_per_page;
+			
+			//get the element number where to end the slice
+			end_on = start_from + show_per_page;
+			
+			//hide all children elements of pag_content div, get specific items and show them
+			$('#pag_content').children().css('display', 'none').slice(start_from, end_on).css('display', 'block');
+			
+			/*get the page link that has longdesc attribute of the current page and add active_page class to it
+			and remove that class from previously active page link*/
+			$('.page_link[longdesc=' + page_num +']').addClass('active_page').siblings('.active_page').removeClass('active_page');
+			
+			//update the current page input field
+			$('#current_page').val(page_num);
+		}
+		
+		
+		function initialize() {
+			$(function(){
+			   $("[rel=popover]").popover();
+			});
+			var center = new google.maps.LatLng(21.7, 79.7);
+			var options = {
+			  'zoom': 5,
+			  'center': center,
+			  'mapTypeId': google.maps.MapTypeId.HYBRID,
+			  'panControl': false,
+				'panControlOptions': {
+				  position: google.maps.ControlPosition.TOP_RIGHT
+				},
+			  'zoomControl': true,
+		      'zoomControlOptions': {
+		        style: google.maps.ZoomControlStyle.BIG,
+  				position: google.maps.ControlPosition.TOP_RIGHT
+		       },
+			};
+
+			var map = new google.maps.Map(document.getElementById("map_canvas"), options);
+			var markers = [];
+			
+			function MakeInfoWindowEvent(map, marker, i) {  
+				return function() {
+				   $("div#myModal").load('/getvillagepage?village_id='+i, function(response, status, xhr) {
+					  if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						alert(msg + xhr.status + " " + xhr.statusText);
+					  }
+					  //alert('Load was performed.');
+					  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+					  $('#myModal').show();
+					
+					  $('#myModal').modal();
+					  mixpanel.track("Village Page Loaded");
+					  
+					});
+				};				
+			 }
+			
+			var gradeArray = [[10000000000538,'A'],[10000000000537,'A'],[10000000020106,'A'],[7000001207,'A'],[10000000000305,'A'],[10000000000536,'A'],[10000000000342,'A'],[10000000019968,'A'],[10000000000309,'A'],[10000000020104,'A'],[10000000000341,'A'],[10000000019988,'A'],[10000000019967,'A'],[10000000000307,'A'],[10000000019865,'B'],[10000000000389,'B'],[10000000020119,'B'],[10000000019860,'B'],[10000000019985,'B'],[10000000019864,'B'],[10000000019873,'B'],[10000000019874,'B'],[10000000000507,'B'],[10000000020105,'B'],[10000000019969,'B'],[10000000020444,'B'],[10000000020572,'B'],[10000000000313,'B'],[10000000019841,'B'],[10000000019835,'B'],[10000000019975,'B'],[10000000020120,'B'],[10000000019978,'B'],[10000000000306,'B'],[10000000020370,'B'],[47000051353,'B'],[10000000000249,'B'],[10000000019922,'B'],[10000000020394,'B'],[10000000000074,'B'],[10000000000504,'B'],[10000000019862,'B'],[10000000000103,'B'],[47000052364,'B'],[10000000019918,'B'],[10000000000102,'B'],[10000000000099,'B'],[10000000020110,'B'],[47000001122,'B'],[47000056970,'B'],[10000000000031,'B'],[10000000019913,'B'],[10000000019842,'B'],[47000001038,'C'],[34000003805,'C'],[10000000000096,'C'],[10000000000406,'C'],[10000000000100,'C'],[10000000000119,'C'],[10000000000514,'C'],[10000000019834,'C'],[10000000019883,'C'],[10000000019854,'C'],[10000000019891,'C'],[10000000019889,'C'],[10000000000217,'C'],[10000000020448,'C'],[10000000000093,'C'],[10000000000122,'C'],[10000000000120,'D'],[10000000000393,'D'],[10000000000230,'D'],[10000000000053,'D'],[47000001044,'D'],[10000000000067,'D'],[10000000000394,'D'],[10000000019880,'D'],[10000000020020,'D'],[10000000000048,'D'],[10000000000052,'D'],[10000000018676,'D'],[10000000019902,'D'],[10000000019901,'D']];
+			$.getJSON("/getvillages",function(json){
+				$.each(json,function(i){
+					vil_id = json[i];			
+					var latLng = new google.maps.LatLng(23.0800 + 0.5 * Math.random(), 85.2800 + 1 * Math.random());
+					markers[i] = new google.maps.Marker({'position': latLng, 'icon': '/media/farmerbook/images/yellowc.png'});			  
+					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+				});
+				var bel_vil_ids = new Array(10000000019913, 10000000020394, 10000000000514, 10000000019834, 10000000019835, 10000000019841, 10000000019842)
+				for(var i=0; i<bel_vil_ids.length; i++) {
+					//var vil_id = i;
+					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
+					var marker ;//= new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});; 
+					for(var index=0; index<gradeArray.length; index++) {
+						if (gradeArray[index][0] == bel_vil_ids[i]) {
+							if(gradeArray[index][1] == 'A') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
+							} else if(gradeArray[index][1] == 'B') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
+							} else if(gradeArray[index][1] == 'C') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							} else if(gradeArray[index][1] == 'D') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
+							} else {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							}
+							markers.push(marker);
+							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
+							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+						}
+						
+					}
+					//alert('markign');
+					
+				}
+				
+				var mys_vil_ids = new Array(47000001038, 47000001044, 47000001122, 47000051353, 47000052364, 47000056970)
+				for(var i=0; i<mys_vil_ids.length; i++) {
+					var latLng = new google.maps.LatLng(12.3024 + 0.1 * Math.random(), 76.6386 + 0.1 * Math.random());
+					var marker// = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/blue_markerA.png'});
+					for(var index=0; index<gradeArray.length; index++) {
+						if (gradeArray[index][0] == bel_vil_ids[i]) {
+							if(gradeArray[index][1] == 'A') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
+							} else if(gradeArray[index][1] == 'B') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
+							} else if(gradeArray[index][1] == 'C') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							} else if(gradeArray[index][1] == 'D') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
+							} else {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							}
+							markers.push(marker);
+							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
+							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+						}
+						
+					}
+					//markers.push(marker);
+					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mys_vil_ids[i]));
+				}
+				
+				var dhr_vil_ids = new Array(10000000000048, 10000000000217, 10000000000230, 10000000018676, 10000000019901, 10000000019902)
+				for(var i=0; i<dhr_vil_ids.length; i++) {
+					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
+					var marker = new google.maps.Marker({'position': latLng});
+					for(var index=0; index<gradeArray.length; index++) {
+						if (gradeArray[index][0] == bel_vil_ids[i]) {
+							if(gradeArray[index][1] == 'A') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
+							} else if(gradeArray[index][1] == 'B') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
+							} else if(gradeArray[index][1] == 'C') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							} else if(gradeArray[index][1] == 'D') {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
+							} else {
+								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
+							}
+							markers.push(marker);
+							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
+							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+						}
+						
+					}
+					//markers.push(marker);
+					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
+				}
+				var markerCluster = new MarkerClusterer(map, markers);
+				for(var i=0; i<markers.length; i++) {
+					//markers[i].setMap(map);
+				}
+					
+			});						
+		}
+		</script>
+
+<!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
+for(e=0;e<g.length;e++)(function(a){b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}})(g[e]);c._i.push([a,d,f])};window.mixpanel=c})(document,[]);
+mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->		
+  </head>
+
+  <body onload="initialize()" style="font-family: Calibri; font-weight: normal;">
+	<div class="navbar navbar-fixed-top">
+        <div class="container" style="background-color:#6D9D30;width:100%">
+          <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
+		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
+		  <div>
+			<input type="text" class="span2" style="float:right; margin-left:10px; margin-top:6px;margin-right:3px;margin-bottom:0px;" placeholder="search coming soon...">
+			
+		  </div>
+        </div>      
+    </div>
+	<div id="map_canvas" style=""></div>
+	<div id="map_left_panel">
+	<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Farmers</span> </div>
+	<div style="border: 2px solid #6D9D30;margin-top:2px;"></div>
+	<!--<div id='img_container'>
+			{% for person in top_adopters_stats %}
+				<a href="javascript:void(0);" onclick="personClick({{ person.id }})" >
+					<img rel="popover" data-original-title="{{person.name}}" data-content="Adoption Rate: {{person.adoption_rate|floatformat:0}}%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/{{ person.id }}.jpg">
+				</a>
+			{% endfor %}
+	</div>-->
+				<a href="javascript:void(0);" onclick="personClick(40000022215)">
+					<img rel="popover" data-original-title="Basappa Somanakoppa" data-content="Adoption Rate: 75%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022215.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058416)">
+					<img rel="popover" data-original-title="RAGHUNATH LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058416.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058409)">
+					<img rel="popover" data-original-title="NILAKANTA LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058409.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058406)">
+					<img rel="popover" data-original-title="DHANURJAY LOKEI" data-content="Adoption Rate: 69%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058406.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000029610)">
+					<img rel="popover" data-original-title="Basavanneppa Kamadhenu" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000029610.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000022240)">
+					<img rel="popover" data-original-title="Pakkirappa Katagi" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022240.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(6000009672)">
+					<img rel="popover" data-original-title="Sarojini B Shivapur" data-content="Adoption Rate: 67%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/6000009672.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000023530)">
+					<img rel="popover" data-original-title="Yallavva Kutri" data-content="Adoption Rate: 63%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000023530.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053260)">
+					<img rel="popover" data-original-title="Subhadra Dandpat" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053260.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000043229)">
+					<img rel="popover" data-original-title="Abanti Sethy" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000043229.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(40000020424)">
+					<img rel="popover" data-original-title="Channappa Dhanigonda" data-content="Adoption Rate: 60%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000020424.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000011640)">
+					<img rel="popover" data-original-title="Mithila Mohanta" data-content="Adoption Rate: 59%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000011640.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000042137)">
+					<img rel="popover" data-original-title="Rita Nayak" data-content="Adoption Rate: 59%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000042137.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053254)">
+					<img rel="popover" data-original-title="Padmabati Singh" data-content="Adoption Rate: 58%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053254.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053251)">
+					<img rel="popover" data-original-title="Pana Singh" data-content="Adoption Rate: 58%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053251.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053253)">
+					<img rel="popover" data-original-title="Chhabirani Singh" data-content="Adoption Rate: 56%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053253.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053256)">
+					<img rel="popover" data-original-title="Pankajini Ray" data-content="Adoption Rate: 55%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053256.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053259)">
+					<img rel="popover" data-original-title="Indumati Naik" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053259.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000040708)">
+					<img rel="popover" data-original-title="Jahaji Naik" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000040708.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000046012)">
+					<img rel="popover" data-original-title="Sabita Nayak" data-content="Adoption Rate: 52%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000046012.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000058407)">
+					<img rel="popover" data-original-title="KAMALACHAN LOKEI" data-content="Adoption Rate: 50%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000058407.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053259)">
+					<img rel="popover" data-original-title="Subasini Das" data-content="Adoption Rate: 50%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053259.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000046007)">
+					<img rel="popover" data-original-title="Padmini Nayak" data-content="Adoption Rate: 48%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000046007.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000044992)">
+					<img rel="popover" data-original-title="Binati Mohanta" data-content="Adoption Rate: 48%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000044992.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000062128)">
+					<img rel="popover" data-original-title="KARTIK TAMARBI" data-content="Adoption Rate: 46%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000062128.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000053252)">
+					<img rel="popover" data-original-title="Basanti Singh" data-content="Adoption Rate: 45%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000053252.jpg">
+				</a>
+			
+				<a href="javascript:void(0);" onclick="personClick(10000000015782)">
+					<img rel="popover" data-original-title="Chandamani Mohanta" data-content="Adoption Rate: 45%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000015782.jpg">
+				</a>			
+	</div>
+	
+	<div id="map_right_panel">
+			<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Service Providers</span> </div>
+			<div style="border: 2px solid #6D9D30;margin-top:2px;">
+			
+				<div class="sp_details_container" style="height:auto;">
+					
+						<img src="/media/farmerbook/images/csp_1.png">				
+					
+					
+					<div class="sp_details"> 
+					<a href="javascript:void(0);"  style="color: #524D4D;font-weight: bold;">
+					Rewati Devi</a> <span>facilitated 300 screenings and 230 adoptions.</span>
+					</div>
+					
+				</div>
+			
+				<div class="sp_details_container" style="height:auto;">					
+						<img src="/media/farmerbook/images/csp_2.png">				
+					
+					<div class="sp_details"> <a href="javascript:void(0);" onclick=""  
+						style="color: #524D4D;font-weight: bold;">Manohar Kumar</a> <span>facilitated 276 screenings and 178 adoptions.</span></div>
+				</div>
+
+				<div class="sp_details_container" style="height:auto;">
+					
+						<img src="/media/farmerbook/images/csp_3.png">				
+					
+					
+					<div class="sp_details"> <a href="javascript:void(0);" onclick=""  
+					style="color: #524D4D;font-weight: bold;">Vijaya Devi</a> 
+					<span>facilitated 200 screenings and 130 adoptions.</span></div>
+					
+				</div>
+			
+				<div class="sp_details_container" style="height:auto;">					
+					
+						<img src="/media/farmerbook/images/csp_4.png">					
+					
+					<div class="sp_details"> <a href="javascript:void(0);" onclick=""  
+						style="color: #524D4D;font-weight: bold;">Pramila Mohanta</a> <span>facilitated 200 screenings and 230 adoptions.</span></div>
+				</div>
+		</div>		
+	</div>
+	<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Partners</span> </div>
+			<div style="border: 2px solid #6D9D30;margin-top:2px;"></div>
+				<div style=" margin-top:3px;"><a href="javascript:void(0);" onclick=""  
+					style="color: #524D4D;font-weight: bold;">
+					<img src="/media/Output/Images/partner/asa_logo1.PNG" style="margin-right:5px;width:45px; height:30px;float:left;"></a> 
+					<div><a href='http://www.asaindia.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">ASA </a></span>is active in 297 villages reaching 17,607 farmers</div>
+				</div>
+				<div style=" margin-top:3px;">
+					<a href="javascript:void(0);" onclick=""  style="margin-right:5px; float:left;color: #524D4D;font-weight: bold;">
+					<img src="/media/Output/Images/partner/access_logo1.PNG" style="width:45px; height:30px;"></a> 
+					<div><a href='http://www.accessdev.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">ACCESS </a></span>is active in 193 villages reaching 8,788 farmers</div>
+				</div>				
+				
+				<div style="margin-top:3px;"><a href="javascript:void(0);" onclick=""  style="color: #524D4D;font-weight: bold;">
+					<img src="/media/Output/Images/partner/varrat_logo1.png" style="margin-right:5px;width:45px; height:30px; float:left; "></a> 
+					<div><a href='http://www.ngogateway.org/user_homepage/index.php?id=239' target='_blank'><span style="color: #524D4D;font-weight: bold;">VARRAT </a></span>is active in 130 villages reaching 8,676 farmers</div>
+				</div>			
+		</div>
+	<div id="myModal" class="modal" style="width:1020px; min-height:570px;"></div>
+	
+	 <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster 
+    <script src="/media/farmerbook/js/jquery.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-transition.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-alert.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-modal.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-dropdown.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-scrollspy.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-tab.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-popover.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-button.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-collapse.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-carousel.js"></script>
+    <script src="/media/farmerbook/js/bootstrap-typeahead.js"></script>-->
+<script type="text/javascript">
+    mixpanel.track("Landing Page Loaded");
+</script>
+  </body>
+</html>

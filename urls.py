@@ -5,7 +5,7 @@ from views import *
 from django.contrib.auth.views import login, logout
 from django.conf import settings
 from static_site_views import home
-
+from farmerbook import farmer_book_views
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -144,5 +144,10 @@ urlpatterns = patterns('',
     (r'^dashboard/practicesforperson/((?P<person_id>\d*)/)?$', practices_seen_by_farmer),
     (r'^dashboard/practicesinvideos/$', practices_in_videos),
     (r'^$',home),
+    (r'^getvillagepage/?$', farmer_book_views.get_village_page),
+    (r'^getpersonpage/?$', farmer_book_views.get_person_page),
+    (r'^getgrouppage/?$', farmer_book_views.get_group_page),
+    (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
+    (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )

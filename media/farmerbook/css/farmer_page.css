@@ -2,7 +2,6 @@
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
     height: 800px;
-    margin-left: 165px;
     width: 250px;
 	position:absolute;
 }
@@ -10,7 +9,7 @@
 .vil_left_panel {
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
-    height: 1130px;
+    height: 540px;
     margin-left: 165px;
     width: 250px;
 	position:absolute;
@@ -18,7 +17,7 @@
 .vil_tabcontent {
 	border: 1px solid #009E0F;
 	width: 740px;
-	height:270px;
+	height:313px;
 }
 
 .vil_section_title {
@@ -76,7 +75,7 @@
 	color: #000000;
     font-size: 13px;
 	text-align: right;
-	margin-top: 15px;
+	margin-top: 0px;
 }
 
 #progress_bar_content {
@@ -168,7 +167,13 @@
 {
 	background-color:#683f04;	
 	color:White;	
-}			
+}
+
+.tabsliselect2
+{
+	background-color:#683f04;	
+	color:White;	
+}	
 
 #tabsli:hover
 {
@@ -201,6 +206,8 @@
 }
 .video_title {
 	width:120px; 
+	height:36px;
+	overflow:hidden;
 	margin-top:10px;
 	float:left;
 	margin-right:8px;
@@ -302,4 +309,33 @@ margin-left:50px;
 	height:70px;
 	margin-left:15px;
 	margin-top:5px;
+}
+
+.farmer_image {
+	margin-left:2px;
+	margin-top:2px;
+	width:75px;
+	height:55px;
+}
+
+
+.bar p {
+    color: black;
+    font-size: 12px;
+    text-align: center;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+}
+
+.sp_details_container {
+	width:100px; 
+	height:300px;
+	padding-left:5px; 
+	padding-right:5px;
+	border: 1px solid #6D9D30;
+	margin-right:0px;
+	margin-top:10px;	
+	float:left;
+}
+.sp_details {
+	width:100px;	
 }
