@@ -1,7 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.data.validation;
 
-import com.google.gwt.user.client.Window;
-
 public class TimeValidator extends BaseValidator {
 
 	public TimeValidator(String value) {
@@ -38,7 +36,7 @@ public class TimeValidator extends BaseValidator {
 			} catch(Exception e) {
 				return false;
 			}
-			return valueInt >= 0 && valueInt <= 60;
+			return valueInt >= 0 && valueInt < 60;
 		}
 		else {
 			return false;
@@ -65,7 +63,7 @@ public class TimeValidator extends BaseValidator {
 	@Override
 	public boolean validate() {
 		if(!super.validate()) {
-			errorString += reqiuredFieldErrorMessage;
+			errorString += requiredFieldErrorMessage;
 			return false;
 		} else if(this.getValue() == null){
 			return true;

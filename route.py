@@ -14,8 +14,7 @@ def analytics_route(request, func_name):
     from output.views.video_analytics import *
     from output.views.adoption_analytics import *
     from output.views.targets import *
-    from output.views.common import drop_down_val, overview_line_graph
-    
+    from output.views.common import drop_down_val, overview_line_graph    
     return locals()[func_name](request)
 
 #MAIN Route, urls.py routes everything except admin to this function.

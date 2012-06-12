@@ -9,7 +9,6 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.BaseData;
 import com.digitalgreen.dashboardgwt.client.data.DashboardErrorData;
 import com.digitalgreen.dashboardgwt.client.templates.DashboardErrorTemplate;
-import com.google.gwt.user.client.Window;
 
 public class DashboardError extends BaseServlet {
 	

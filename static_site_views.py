@@ -1,6 +1,8 @@
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
 from output.views.common import home_with_analytics
+from farmerbook import farmer_book_views
+from farmerbook.farmer_book_views import get_leaderboard_data
 #Mindless views for plain HTML pages on the main website
 def home(request):
     if request.get_host() == "sandbox.digitalgreen.org":
@@ -195,6 +197,11 @@ def careerhr(request):
     
     return render_to_response('base_career_hr.html')
 
+def careeres(request):
+    
+    return render_to_response('base_career_es.html')
+
+
 def careernpc(request):
     
     return render_to_response('base_career_npc.html')
@@ -223,6 +230,13 @@ def tech(request):
     
     return render_to_response('technology.html')
 
+def photos(request):
+    
+    return render_to_response('photos.html')
+
+def webvideos(request):
+    return render_to_response('web_videos.html')
+
 def keyfacts(request):
     return render_to_response('key_facts.html')
 
@@ -234,7 +248,9 @@ def villagepage(request):
     return render_to_response('village_page.html')
 
 def farmerbook(request):
-    return render_to_response('farmerbook_home.html')
+    top_adopters_stats =[]    
+    #top_adopters_stats = get_leaderboard_data()
+    return render_to_response('farmerbook.html', dict(top_adopters_stats = top_adopters_stats))
 
 def grouppage(request):
     return render_to_response('group_page.html')
