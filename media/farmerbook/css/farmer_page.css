@@ -42,9 +42,7 @@
 }
 
 #img_container {
-	height: 150px;
-    margin-top: 5px;
-    width: 200px;    
+	margin-top: 5px;    
 }
 
 #district_label {
@@ -314,7 +312,7 @@ margin-left:50px;
 .farmer_image {
 	margin-left:2px;
 	margin-top:2px;
-	width:75px;
+	width:55px;
 	height:55px;
 }
 
