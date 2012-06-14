@@ -78,7 +78,7 @@ def get_village_page(request):
     left_panel_stats['tot_videos'] = Video.objects.filter(screening__village__id = village_id).distinct().count()
     left_panel_stats['tot_questions'] = PersonMeetingAttendance.objects.filter(person__in = farmerbook_farmers, person__village__id = village_id).exclude(expressed_question = '').count()
     left_panel_stats['tot_adoptions'] = PersonAdoptPractice.objects.filter(person__in = farmerbook_farmers, person__village__id = village_id).count()
-    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name')
+    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date')
