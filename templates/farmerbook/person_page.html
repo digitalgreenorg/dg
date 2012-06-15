@@ -1,0 +1,152 @@
+<div class="modal-body" style="padding:3px; border:5px solid #666666;">
+<div id = "content" >
+<div class='left_panel' style="height:540px;">
+	<div class="left_panel_top">
+		<div id="district_label" >{{ left_panel_stats.farmer_details.0.5 }} | {{ left_panel_stats.farmer_details.0.6 }}</div>
+			<img id="img_container" src='https://s3.amazonaws.com/dg_farmerbook/2/{{ left_panel_stats.farmer_details.0.0 }}.jpg'>
+		<div id="name_label" > {{ left_panel_stats.farmer_details.0.1 }}</div>
+		<div style="text-align:center; margin-top:2px; margin-bottom:2px;"><div class="btn btn-success" > Follow </div></div>
+		<div class="group_label" > {{ left_panel_stats.farmer_details.0.2 }}  {{ left_panel_stats.farmer_details.0.3 }} </div>
+		<div class="group_label" > <a href="javascript:void(0)" onclick="villageClick({{ left_panel_stats.farmer_details.0.8 }})">{{ left_panel_stats.farmer_details.0.4 }}</a></div>
+		<div id="progress_bar_label" > Adoption Rate </div>
+		<div class="progress progress-striped">
+			<div class="bar "  style="width: {{ left_panel_stats.views_adoptions.2 }}%; "><p> {{ left_panel_stats.views_adoptions.2 }}%</p></div>
+		</div>
+		<div id = 'progress_bar_content'>
+			<div style="margin-right:20px; float:left; font-weight:bold"> {{ left_panel_stats.farmer_details.0.7 }} </div>
+			<div style="margin-right:45px; float:left; font-weight:bold"> 
+				{{ left_panel_stats.views_adoptions.0 }}				
+			</div>
+			<div style="margin-right:0px; float:left; font-weight:bold"> 
+				{{ left_panel_stats.views_adoptions.1 }}				
+			</div>
+			<div style="clear:both;"></div>
+			<div style="margin-right:57px; float:left;"> Joined </div>
+			<div style="margin-right:25px; float:left;"> Views	</div>
+			<div style="margin-right:0px; float:left;"> Adopted </div>		
+		</div>
+	</div>
+	<div class="left_panel_bottom">
+		<div class='horizontal_line'> </div>
+		<div class= 'statsLabel'> Questions Asked</div>
+		<div class = 'statsValue'> {{ left_panel_stats.questions_asked }} </div>
+		<div class='horizontal_line'> </div>
+		<div class= 'statsLabel'> Adoptions</div>
+		<div class = 'statsValue'>	{{ left_panel_stats.views_adoptions.1|default:"0" }} </div>
+		<div class='horizontal_line'> </div>
+		<div class = "imgContainerLabel">Service Provider</div>
+		<img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''>		
+		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.service_provider.0.1 }} ({{left_panel_stats.partner.0.1}})</div>
+		<div style='clear:both;'></div>
+	</div>
+</div>
+
+<div class='content_top' style="margin-left:255px;height:540px;">
+	<div id="closeButton" style="float:right; margin-top:0px;margin-left:0px;">  <a class="close" data-dismiss="modal">X</a> </div>
+	<div id="tabs">
+		<div id='toptabs'> 
+			<ul>
+				<li id='tabsli' class='playli tabsliselect' onClick="ajax_tab_click('videos_watched', {{ left_panel_stats.vil_details.0.0 }} )">
+				 <span>Videos Watched ( {{ left_panel_stats.videos_watched }} )</span></a> </li>
+				<li id='tabsli' class='giftsli' onClick="ajax_tab_click('videos_produced', {{ left_panel_stats.vil_details.0.0 }} )" > 
+				<span>Videos Featured ( {{ left_panel_stats.videos_featured }} )</span></a> </li>				
+			</ul>
+		</div>
+		<div class='vil_tabcontent' id="top_tabcontent" style="height:180px;" style='width:100%; margin:0px;'>
+			<div class="carousel slide span8" id="myCarousel" style="width:710px;margin-bottom:10px;">
+				<div class="carousel-inner" style='height:180px;'>				
+				{% for vid in videos_watched_stats %}
+						{% if forloop.counter0|divisibleby:"5" %}				    
+								<div class="item{% if forloop.first %} active{%endif%}">							
+								<ul class="thumbnails" style="margin-left:28px; margin-top:5px;">										
+						{% endif%}
+						<li class="vidsWatchedItem">
+							{% if vid.interested %}
+								{% if vid.adopted %}
+							    <div class="thumbnail" style="border: 1px solid green;">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+									<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								</a>
+								</div>
+								<div style="margin-top:-20px;"><span class="label label-success">adopted</span></div>
+								{% else %}
+								<div class="thumbnail" style="border: 1px solid yellow;">
+									<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+									<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+									</a>
+								</div>
+								<div style="margin-top:-20px;"><span class="label label-warning">interested</span></div>
+								{% endif %}
+							{% else %}
+							<div class="thumbnail">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+								<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								</a>
+							</div>
+							{% endif %}
+							<div class="video_title" style="margin-top:0px;" ><a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title }}</a> </div>
+							{% if vid.last_seen_date %}
+								<div class="question" style="margin-top:0px;">Last seen on <br>{{ vid.last_seen_date|date:"M d, Y" }} </div>
+							{% endif %}							
+							{% if vid.question %}
+							    <div class="question" style="margin-top:0px;">{{ vid.question }} </div>
+							{% endif %}
+						</li>
+						{% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}						    
+							</div>							
+							</ul>										
+						{% endif%}
+				{% endfor %}					
+				</div>
+				<a data-slide="prev" href="#myCarousel" class="left carousel-control" style="margin-left:-40px;"><</a>
+				<a data-slide="next" href="#myCarousel" class="carousel-control" style="margin-left:650px !important">></a>
+			</div>
+    	</div>
+		<div style="height:1px;"> </div>		
+		
+		<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;color:#6D9D30">Related Farmers</span> </div>
+			<div style='border-bottom:3px solid #009E0F;'></div>
+			<div style='border: 1px solid #009E0F;height:311px;'>
+			<div class="carousel slide span8" id="lbCarousel" style="width:710px;">
+				<div class="carousel-inner" style="height:300px;">				
+				{% for person in top_adopters_stats %}
+						{% if forloop.counter0|divisibleby:"3" %}				    
+								<div class="item{% if forloop.first %} active{%endif%}">							
+								<ul class="thumbnails" style="margin-left:24px; margin-top:1px;height:310px;">										
+						{% endif%}
+						<li style="margin-left:2px;margin-top:-9px;">
+							<div  class= 'farmer_details_container'>
+							<img  src="https://s3.amazonaws.com/dg_farmerbook/2/{{ person.id }}.jpg">							
+							<div class='farmer_name'> <a href="javascript:void(0);" onclick="person_click({{ person.id }})">{{ person.name }}</a> </div>
+							<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last adopted({{ person.date_of_adoption|date:"M d,Y" }}) : {{ person.title }} on  </div>
+							<div id="progress_bar_label" style="margin-right:5px;"> Adoption Rate </div>
+							<div class="progress progress-striped">
+							  <div class="bar "  style="width: {{ person.adoption_rate|floatformat:0 }}%; "><p> {{ person.adoption_rate|floatformat:0 }}%</p></div>
+							</div>
+							<div id = 'progress_bar_content'>
+								<div style="margin-right:10px; float:left; font-weight:bold; width:80px"> {{ person.date_of_joining|date:"M d,Y" }} </div>
+								<div style="margin-right:33px; float:left; font-weight:bold; width:25px"> {{ person.views }} </div>
+								<div style="margin-right:0px; float:left; font-weight:bold"> {{ person.adoptions }}	</div>
+								<div style="clear:both;"></div>
+								<div style="margin-right:57px; float:left;"> Joined </div>
+								<div style="margin-right:25px; float:left;"> Views	</div>
+								<div style="margin-right:0px; float:left;"> Adopted </div>		
+							</div>
+							</div>
+						</li>
+						{% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}						    
+							</div>							
+							</ul>										
+						{% endif%}
+				{% endfor %}					
+				</div>
+				<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left:-34px;"><</a>
+				<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left:650px !important">></a>
+			</div>
+			</div>
+		</div>			
+    </div>		
+  </div>
+</div>
+</div>

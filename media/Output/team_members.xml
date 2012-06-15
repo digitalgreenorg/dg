@@ -29,7 +29,7 @@
 	<TEAM>
 		<TITLE>Regional Program Coordinator</TITLE>
 		<ARTIST>/media/Output/Images/avinash3.png</ARTIST>    
-    	<DESC>Hi, I am Avinash Upadhyay. I have over 8 years of involvement in the development sector. In these years I have primarily worked with 2 leading Indian organizations SRIJAN and RCDC- Centre for forestry and Governance apart from short stints at PRAXIS and Admax in the middle level management positions. I have worked in many of the Indian states in areas of research, advocacy, campaigning and trade development and linkage. </DESC>
+    	<DESC>Avinash has more than 12 years of involvement in the development sector, with an emphasis on natural resource management and agriculture. His experience includes project management, research, advocacy, campaigning, trade development and linkage and monitoring and evaluation. Prior to Digital Green Avinash has worked with 2 leading Indian organizations SRIJAN and RCDC- Centre for forestry and Governance apart from short stints at PRAXIS and Admax in the middle level management positions across various states in India.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>avinash@digitalgreen.org</MAILID>
 		<NAME>Avinash Upadhyay</NAME>		
@@ -45,7 +45,7 @@
 	<TEAM>
 		<TITLE>Regional Program Coordinator</TITLE>
 		<ARTIST>/media/Output/Images/gulzar1.png</ARTIST>    
-    	<DESC>Hi, I am Gulzar. I have twenty years of experience in RD, ICT business and social development.  I had the opportunity to serve people in post conflict Afghanistan through the Aga Khan Development Network which led to my commitment to development sector. My personal vision of equitable society connects to the vision of Digital Green which aims to bring cost-effectiveness to the agricultural extension services and thus improve the agricultural practices that can improve the socio-economic status of the marginalized and small landholder farmers. </DESC>
+    	<DESC>Gulzar has twenty years of experience in RD, ICT business and social development. He had the opportunity to serve people in post conflict Afghanistan through the Aga Khan Development Network which led to his commitment to development sector. His personal vision of equitable society connects to the vision of Digital Green which aims to bring cost-effectiveness to the agricultural extension services and thus improve the agricultural practices that can improve the socio-economic status of the marginalized and small landholder farmers. </DESC>
     	<COMPANY>Digital Green</COMPANY>
 		<MAILID>gulzar@digitalgreen.org</MAILID>
 		<NAME>Akbar Gulzar</NAME>		
@@ -61,11 +61,21 @@
 	<TEAM>
 		<TITLE>Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/nadagouda1.png</ARTIST>    
-    	<DESC>Hi, I am Dr. Nadagouda.  I am a development professional with over two decades of experience of working with farmers. I am a veterinarian by profession with a post-graduate diploma in rural management from IRMA.  I have worked in cooperative, developmental and business sectors at various management levels.  </DESC>
+    	<DESC>Dr. Nadagouda is a development professional with over two decades of experience of working with farmers. He is a veterinarian by profession with a post-graduate diploma in rural management from IRMA. He has worked in cooperative, developmental and business sectors at various management levels. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>nadagouda@digitalgreen.org</MAILID>
 		<NAME>S.B. Nadagouda</NAME>		
 	</TEAM>
+	
+	<TEAM>
+		<TITLE>State Manager</TITLE>
+		<ARTIST>/media/Output/Images/pawan_o.png</ARTIST>    
+    	<DESC>Pawan Ojha studied agriculture sciences and rural development from School of Agriculture Sciences and Rural Development (SASRD), Nagaland University and has more than 14 years of experience in development sector with comprehensive grassroots engagements as well as leadership positions. He has worked in PRADAN with a deep believe in the ability of rural people to take charge of their lives and livelihoods and was engaged with community to develop and manage watershed projects, micro-lift irrigation schemes, women self-help groups and microenterprises in the remote villages of Jharkhand. He has deep interest in promoting sustainable livelihoods for small and marginal farmers, specifically by developing their skills for enhancing productivity and collectivizing them to have better bargaining power in the market. Working with Digital Green would help him in developing his knowledge in ICT, and use it for the purpose of capturing the positive experiences and utilizing them for replication for reaching large number of families by adopting the good practices for improving their lives.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>pawan@digitalgreen.org</MAILID>
+		<NAME>Pawan Ojha</NAME>
+	</TEAM>
+	
 	<TEAM>
 		<TITLE>Senior Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/sriram1.png</ARTIST>
@@ -105,7 +115,7 @@
 	<TEAM>
 		<TITLE>Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/shreyaaggarwal.png</ARTIST>
-		<DESC>While travelling around rural India two years back, I was repeatedly told by farmers that foremost on their list of concerns was limited access to water and information. This is why I joined Digital Green. I hope that by working here I will be able to bridge at least some of the gap that exists in bringing good quality information to farmers. For the last three years, I have worked in the development sector on issues such as education, health and livelihoods. After completing a MA Development Studies from the Institute of Development Studies (IDS), University of Sussex, I worked in the United Kingdom as a research consultant with IDS on participatory learning initiatives and as a volunteer with PLAN UK on its Because I am a Girl Project. I then decided to come back to India to be closer to the hot bed of path breaking and high impact development work. For a few months I worked as a communications consultant with BAIRD's CMC and as a researcher with PRADAN. I then joined a public policy think tank, Centre for Civil Society, as a research associate. Besides research, I was able to get diverse experience in fund-raising, organizational strategy planning, program management and advocacy. I now hope to use this knowledge and experience in contributing to achieving the Digital Green vision of sustainable rural development. In my spare time I like travelling, reading and painting. </DESC>
+		<DESC>Shreya joined Digital Green to bridge at least some of the gap that exists in bringing good quality information to farmers. She has worked in the development sector on issues such as education, health and livelihoods. After completing a MA Development Studies from the Institute of Development Studies (IDS), University of Sussex, she worked in the United Kingdom as a research consultant with IDS on participatory learning initiatives and as a volunteer with PLAN UK on its Because I am a Girl Project. She then decided to come back to India to be closer to the hot bed of path breaking and high impact development work. For a few months she worked as a communications consultant with BAIRD's CMC and as a researcher with PRADAN. She then joined a public policy think tank, Centre for Civil Society, as a research associate. Besides research, she was able to get diverse experience in fund-raising, organizational strategy planning, program management and advocacy. She now hopes to use this knowledge and experience in contributing to achieving the Digital Green vision of sustainable rural development. In her spare time Shreya likes to travel, read and paint. </DESC>
 
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>shreya@digitalgreen.org</MAILID>
@@ -123,8 +133,8 @@
 	
 	<TEAM>
 		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/shekhar1.png</ARTIST>    
-    	<DESC>Hi, This is Chandra Shekhar from Jharkhand.  I pursued my Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar.  My career interest is working for rural development through which small and marginal farmers will better their livelihoods in a manner that is socially, economically and environmentally sustainable.  Joining Digital Green has given me a new strategy in my thinking process to work with the rural community and a new methodology to address the rural concern through efficient extension system.  </DESC>
+		<ARTIST>/media/Output/Images/shekhar.png</ARTIST>    
+    	<DESC>Chandra Shekhar is a native of Jharkhand. He pursued Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar. His career interest is working for rural development through which small and marginal farmers can improve their livelihood opportunities in a manner that is socially, economically and environmentally sustainable. Joining Digital Green has enabled him to develop a strategic thinking process which assists him to work with the rural community and he has also learnt a new methodology to address the rural concern through efficient extension system. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>shekhar@digitalgreen.org</MAILID>
 		<NAME>Chandra Shekhar</NAME>		
@@ -133,7 +143,7 @@
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/salil1.png</ARTIST>    
-    	<DESC>I am Kumar Satyam Salil. I was born on 21st Nov in Dhanbad, Jharkhand. I did my schooling from Banka, Bihar and completed my Intermediate from Patna. I did my graduation from Dr.PDKV Akola, Maharashtra, majoring in Horticulture. After completing my graduation, I studied Master of Business Administration(Agri and Food business) from Amity University, Noida in 2009. I came in digitalGREEN in the month of October with a noble aim of working for Indian poor farmers at a grass root level. My vision for digitalGREEN is to create revolution in Indian farming community by motivating them to adopt good practices of farming and other livelihood programmes. </DESC>
+    	<DESC>Kumar Satyam Salil is a horticulture graduate from Dr. PDKV Akola, Maharashtra, and an MBA in agriculture and food business from Amity University, Noida. He worked with handygo.com in the initial phase of the project Behtar Jindagi, agriculture and allied sector based Interactive Voice Response System (IVRS). He loves the digital green approach as it gives community a platform where they can share their experiences and learn from each other apart from the message conveyed by digital media. He played cricket and badminton as an active player until completion of academics and never misses any chance of playing the same.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>satyam@digitalgreen.org</MAILID>
 		<NAME>Satyam Salil</NAME>		
@@ -149,7 +159,7 @@
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/rashmi1.png</ARTIST>    
-    	<DESC>Hi, I am Rashmi Kanthi. I received my bachelor's in agriculture from University of Agricultural Sciences, Dharwad and master's in information and communication technology, in agriculture and rural development, from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar. Earlier I was an intern with Digital Green but since May 2010, I have joined as a full time employee. From the days of my internship and to date, Digital Green has helped me learn and understand different facets of development. It has also given me an opportunity to explore my potentials, as well as challenge my limitations and overcome them. I find each day at Digital Green, both challenging and exciting, which keeps me constantly motivated. On a personal front, Digital Green has helped me believe in myself, more than ever </DESC>
+    	<DESC>Rashmi Kanthi received her bachelor's in Agriculture from University of Agricultural Sciences, Dharwad and Master's in Information and Communication Technology, in Agriculture and Rural development, from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar. Earlier she was an intern with Digital Green and in May 2010, she joined as a full time employee. From the days of her internship to this date, Digital Green has helped her learn and understand different facets of development. It has also given her an opportunity to explore her potentials, as well as challenge her limitations and overcome them. She finds each day at Digital Green, both challenging and exciting, which keeps her constantly motivated. On a personal front, Digital Green has helped her believe in herself, more than ever. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>rashmi@digitalgreen.org</MAILID>
 		<NAME>Rashmi Kanthi</NAME>		
@@ -157,7 +167,7 @@
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/sudha2.png</ARTIST>    
-    	<DESC>Hello, I am Sudha Jha.  I joined the Digital Green team at the Partners Meeting and National Retreat of Digital Green in Karnataka.  I officially joined at the Torpa block in Jharkhand and from there I'm coming to know the real challenges and work that Digital Green does. I am a native of Madubani, Bihar but my family now lives in Dehradun, Uttarakhand.  I like to read books, listen to music, watch movies, dance and travel.  </DESC>    	
+    	<DESC>Sudha Jha is from Dehradun, Uttarakhand. She graduated from G.B pant University of Agriculture and Technology. She has worked with Udyogini, which helps poor women in remote areas of India to build micro enterprises and become entrepreneurs. She also worked with Sassakawa leprosy foundation for developing enterprise activity with leprosy affected people.  Further, she has worked for RBH (Rural Business Hub in Uttarakhand) which is working in honey production and links rural producers especially women with markets through professional market partners. She also imparts TEST (Training for Enterprise Support Team) program on micro-enterprise development and management. Her objective is to enrich her knowledge, skills and aptitude thereby, giving the best to the development sector. She loves to dance and travel.</DESC>    	
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sudha@digitalgreen.org</MAILID>
 		<NAME>Sudha Jha</NAME>		
@@ -175,12 +185,102 @@
 	<TEAM>
 		<TITLE>Assistant Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/zakir.png</ARTIST>    
-    	<DESC>Hi, I am Syed Zakir Hussain. I did MSW from Jamia Millia Islamia, New Delhi. During the course I worked with HIV AIDS and psychiatric patients and on education as well.  I did my internship with PRADAN working on "Value chain Analysis" of Chick Pea which gave me an opportunity to understand the rural India. After MSW I joined Chronic Care Foundation, which works on Non Communicable Chronic Diseases in partnership with different NGOs/Govt. agencies across India. There I learnt partnership development, organisational management and enhanced my skills in project planning, budgeting, implementation and financial management etc. I play cricket and football and interested in reading biographies of great personalities.  </DESC>    	
+    	<DESC>Syed Zakir Hussain did his Masters in Social Work (MSW) from Jamia Millia Islamia, New Delhi. During the course he worked with HIV AIDS and psychiatric patients and on education as well. He did his internship with PRADAN working on "Value chain Analysis" of Chick Pea which gave him an opportunity to understand rural India. After MSW he joined Chronic Care Foundation, which works on Non Communicable Chronic Diseases in partnership with different NGOs/Govt. agencies across India. There he learnt partnership development, organisational management and enhanced his skills in project planning, budgeting, implementation and financial management etc. He plays cricket. </DESC>    	
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>zakir@digitalgreen.org</MAILID>
 		<NAME>Zakir Hussain</NAME>		
 	</TEAM>
 	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/abhinav.png</ARTIST>    
+    	<DESC>Abhinav did his Postgraduate Diploma in Rural Management (PGDRM) from of Rural Management Anand (IRMA). Prior to joining IRMA he worked with Accenture Services Pvt. Ltd. He pursued B. Tech in Information Technology from Cochin University of Science and Technology. He also worked in the villages of Bihar, Andhra Pradesh, and  Gujarat while studying at IRMA. He also worked with Agha Khan Rural Support Programme (AKRSP), Society for Elimination of Rural Poverty (SERP), and AMUL during his fieldwork and internships. His areas of interest are financial and technological inclusion for rural sector, overall integrated development, and policy making. Abhinav's hobbies include playing badminton, cricket and listening gazhals and rock. He likes travelling to new places, interacting with people. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>abhinav@digitalgreen.org</MAILID>
+		<NAME>Abhinav Kumar</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/saumit.png</ARTIST>    
+    	<DESC>Saumit has just completed MBA in Rural Management from KIIT School of Rural Management, Bhubaneswar. Prior to this he had completed Bachelor in Computer Application. Having qualification in Rural Management combined with Computer Application, he has a great aspiration to work for Digital Green. His passion and interest to work in development sector and specifically for the small and marginal farmers livelihood security has prompted him to think about joining Digital Green. He strongly believes that ICT based extension system, on which Digital Green works, can make the changes he has envisaged. He strongly believes that he will contribute to the organization in achieving its goal as part of the team by using the knowledge that he has acquired during his professional course and gain quality experience out of that. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>saumit@digitalgreen.org</MAILID>
+		<NAME>Saumit Das</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/krishna.png</ARTIST>    
+    	<DESC>Krishna Raj holds a Post Graduate Diploma in Rural Management from the Institute of Rural Management, Anand (IRMA) and a Bachelor's degree in Electrical and Electronics Engineering from Vasavi College of Engineering, Osmania University, and Hyderabad. The very mention of adventure fascinates him and he has indulged in adventure sports like paragliding, white water rafting, cliff jumping, river crossing and a lot of trekking in the Himalayas. He is also an avid movie buff and a keen listener of classic rock. He has done three internships while at IRMA, which for most part were based in rural areas, the internships have gone a long way in building a strong rural perspective which he believes would be indispensable to him while at Digital Green given the area of work the organization is involved in. He is excited to be a part of a young and dynamic organization like Digital Green and looks forward to an enriching association.</DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>krishna@digitalgreen.org</MAILID>
+		<NAME>Krishna Raj</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/disha.png</ARTIST>    
+    	<DESC>Disha Batra, has graduated from Tata Institute of Social Sciences specializing in Dalit and Tribal Social Work. She has worked with several Police stations dealing with cases of violence. She has also worked with certain rights based organizations like Manava Haq Abhiyaan dealing with the cases of Dalit atrocities and human rights. Also, she has been a part of the team of Centre for Social Equity and Inclusion, working in Bihar for the inclusion of Dalit Children and Youth at the school level. Lately, she worked with an organization working on human rights and civil liberties, called People's Union for Civil Liberties. It gave her an exposure to the high degree of insensitivity of the state towards the marginalized. Disha's sole reason for taking up Digital Green was the organization's bottom's up approach. Apart from this, she has a great interest in theatre. She have also been a part of her college theatre team and anchored for a community radio for two years. She likes travelling, is fond of music and meeting up new people. She believes that the reason which keeps her going for the profession is that every day is a new day and a new challenge. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>disha@digitalgreen.org</MAILID>
+		<NAME>Disha Batra</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/aprajita.png</ARTIST>    
+    	<DESC>Aprajita holds post graduate degree in Social Work from Tata Institute of Social Sciences, Mumbai. She has specialized in Women Centered Social Work and hence believes in identifying and locating gender in each and every sphere of work. She has done her internships in issues of psychosocial impact of Cancer, Reproductive and Sexual Health, Political participation of women and Violence against women. Prior to this, she did her graduation in B.Tech Biotechnology from Vellore Institute of Technology, Vellore. Having qualifications of science and technology along with social sciences perspective inspired Aprajita to work for Digital Green. She strongly feels that technology is the creation of society, which should be used for the upliftment and betterment of the society at large. It is highly important to use the knowledge and technology in a more constructive way so that the information is disseminated and knowledge is gained from everyone and especially the people who are at the margins of the community. The entire approach of Digital Green made her think that, this could be one of the ways where technology can used to re-organise the agricultural sector and in a way make the entire process more participatory and empowering. She likes travelling around different places, reading books, listening music and cooking. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>aprajita@digitalgreen.org</MAILID>
+		<NAME>Aprajita Pandey</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/rachana.png</ARTIST>    
+    	<DESC>Rachana Iyer has completed her Masters of Arts in Social Work from the Tata Institute of Social Sciences, Mumbai. She has completed her undergraduate study from the University of Wollongong (Dubai) in Bachelors in Business Administration with a specialization in Marketing. During her two years of study, she has done fieldwork with the Young Women's Christian Association, working for women empowerment in an urban slum setting and at a Community Based Rehabilitation of persons with disabilities initiative of TISS - Edelgive Fellowship working in rural Maharashtra. She has also done her block field work at Disha Kendra; rights based organization working in Karjat, where she worked towards building a proposal and initiating their work in the field of disability. Rachana has also completed her MA dissertation titled 'Voices of Strength: Violence experienced by women with disabilities' (A study in M Ward, Mumbai).  She wants to integrate her field work experience in the field of disability along with working in rural areas and aims to contribute to Digital Green with it. Rachana interests are: writing poetry, dance movement therapy, reading and photography.  She is looking forward to growing and learning from everyone at DG during her work here. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>rachana1@digitalgreen.org</MAILID>
+		<NAME>Rachana Iyer</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/pallavi1.png</ARTIST>    
+    	<DESC>Pallavi, a postgraduate in Social Work from the Tata Institute of Social Sciences, Mumbai has specialized in Community Organization and Development Practice. The association that she developed and work that she carried out with the World Wide Fund for Nature, Make-A-Wish Foundation and Sarojini Naidu Centre for Women's Studies, Jamia Millia Islamia during her graduation has honed her social sector understanding and skills. During her post graduation, she interned with the Pratham Education Foundation and carried out fieldwork with different organizations such as World Welfare Children's Trust, National Alliance of People's Movements and Kislay which enabled her to acquire knowledge on gamut of issues like education, rehabilitation and labour rights. At digital Green she intends to dwell upon and practically understand the different problems being faced by the farmers and work on the same to improve their socio-economic status She plans to build upon the inherent traditional knowledge base of the farmers and promote the requisite innovative practices. She also further intends to amplify her experience and knowledge in the process of contributing to the best of her ability towards the goals of the organization. </DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>pallavi@digitalgreen.org</MAILID>
+		<NAME>Pallavi Lal</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/ritu.png</ARTIST>    
+    	<DESC>Ritu Raj hails from Nainital, Uttarakhand. She has completed her schooling from All Saints' College, Nainital and has a bachelor's degree in History from St. Stephen's College Delhi. Further, she has completed post graduation in Social Work from TISS, Mumbai. Ritu looks forward to engage with Digital Green as her pursuit of knowledge continues and she says "with each step I embark on a new and exciting journey, as each piece of the puzzle is placed with perfect precision, slowly the complete picture becomes clearer".  Being a social science student her curiosity for the complexities of the Indian society is always on the rise and through her different academic engagement she has tried to delve deeper in to her understanding regarding the Indian socio economic make up. She looks forward to engage with Digital and work towards the upliftment of one of the most vulnerable sections of the Indian populace the 'Indian Farmer'. Her vision for Digital Green is to become one of the leading Ngo in the field of Sustainable Development and work towards skill enhancement of the marginal farmers which would enable them to enhance their productivity and compete in the market dominated economy. Ritu's hobbies are diverse she likes dancing, reading and travelling to new places and engaging with different communities and learning about new cultures.</DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>ritu@digitalgreen.org</MAILID>
+		<NAME>Ritu Raj</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Program Manager</TITLE>
+		<ARTIST>/media/Output/Images/ashish.png</ARTIST>    
+    	<DESC>Ashish has received a master's in Social Work with Community Organization and Development Practice as Field of Practice from Tata Institute of Social Sciences, Mumbai and a bachelor's in Information Technology engineering, Uttar Pradesh Technical University. Prior joining TISS he worked with Infosys Technologies Limited as a Software Engineer. He has got field experience of both rural and urban India through Rural Practicum, Fieldwork, Block field work and Internship. During his master's he worked with Slum Rehabilitation Society in Mumbai. In the same year he was placed with Shramjeevi Sangathana in Thane district of Maharashtra for rural practicum. He completed his summer internship with Tata Power Limited, Mumbai. In second year he was placed with Kudumbashree, Kerala State Poverty Eradication Mission in Kerala. In the same year he was placed with TISS M East ward project. His interests include rights based approach strategy for empowering marginalized groups and use of technology in developmental sector for sustainable growth. He loves traveling and singing. The intervention of Digital Green in agriculture sector while working with marginalized and small land holder farmers excites him.</DESC>    	
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>ashish@digitalgreen.org</MAILID>
+		<NAME>Ashish Gupta</NAME>
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Apprentice</TITLE>
+		<ARTIST>/media/Output/Images/pawan_c.png</ARTIST>    
+    	<DESC>Pawan Chaturvedi  is a native of Pauri Garhwal, Uttarakhand. He completed his  B tech in Bio-Chemical Engineering from Kumaon Engineering College Dwarahat, Uttarakhand and then also completed a Diploma in Electronics Engineering from Government Polytechnic  Dehradun, Uttarakhand. Prior to joining Digital green he has worked with Paper Product Ltd  for 1 year and  Lupin Ltd for another year. Despite working for corporates and having a qualitfying degree which is not exactly meant for development work he was always drawn towards the development sector.He has been impressed by  Digital Green as  it tries to promote a participatory communication technology in agriculture extension which is leading to continuous social change,He likes the fact that Digital Green combines digital devices with human process to to hasten social progress.He loves to play Cricket and Volley ball. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>chaturvedi@digitalgreen.org</MAILID>
+		<NAME>Pavan Chaturvedi</NAME>
+	</TEAM>	
+			
 	<TEAM>
 		<TITLE>Administrative Executive</TITLE>
 		<ARTIST>/media/Output/Images/akhilesh1.png</ARTIST>    
@@ -192,15 +292,25 @@
 	<TEAM>
 		<TITLE>Admin and HR Executive</TITLE>
 		<ARTIST>/media/Output/Images/aswini.png</ARTIST>    
-    	<DESC>Hi, I am Aswini. I hold a Master's degree in Business Administration with specialization in Finance from St. Ann's College, Osmania University, Hyderabad. I have two years of corporate work experience. I started my career with Intern at SBH, Hyderabad and gradually moved onto take the responsibility of Admin and Operations for MEDHA POWER and INFRATECH INDIA PVT Ltd, Hyderabad. Though I hail from Agriculture and Rural background but never had an opportunity to have a closer look of it and I am very much impressed by the work carried out by Digital Green to educate the farmers by use of information and communication technology which is admirable and is leading to continual social change. I am happy to be a part of the young and spirited team, as Digital Green team will keep on stepping forward towards and fulfil organisational expectations. My hobbies are Singing and Cooking </DESC>
+    	<DESC>Aswini holds a Master's degree in Business Administration with specialization in Finance from St. Ann's College, Osmania University, and Hyderabad. She has two years of corporate work experience. She started her career with Intern at SBH, Hyderabad and gradually moved onto take the responsibility of Admin and Operations for MEDHA POWER and INFRATECH INDIA PVT Ltd, Hyderabad. Though she hails from Agriculture and Rural background but never had an opportunity to have a closer look of it. She is very impressed by the work carried out by Digital Green to educate the farmers by using information and communication technology which is admirable and is leading to continual social change. She is happy to be a part of the young and spirited team, as Digital Green team will keep on stepping forward towards and fulfil organisational expectations. Her hobbies are singing and cooking. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>aswini@digitalgreen.org</MAILID>
 		<NAME>Aswini Karanam</NAME>		
-	</TEAM>	
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assitant Manager</TITLE>
+		<ARTIST>/media/Output/Images/sheeba.png</ARTIST>    
+    	<DESC>A highly motivated professional with a positive 'can-do' attitude and flexible approach. She loves challenges and is keen to constantly widen her experiences. She takes pride in her professionalism and her strong interpersonal skills to communicate with people at all levels. She is a graduate in Physics (Hons.) from Guwahati University and also holds a post graduate diploma in Human Resource management. A Competent professional with over 8 years of diversified professional experience in Corporate HR, Training and Development and handling various facets of General Administration. Based on the research that she has done about Digital Green, She well understand that this is a company with very strong value systems and best practices and it contains the challenge to keep her on her toes. Digital Green's unique and innovative concept of combining the technology and Social organisation for improving the livelihoods of poor farmers really inspires her to join this company because she feels this is an ideal place where her background, experience and skills can be put to use and make things happen and help her achieve her goals. About her hobbies and interests, she has a passion for travelling and exploring. Apart from this, she loves painting and listening to any kind of music that caught her interest. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>sheeba@digitalgreen.org</MAILID>
+		<NAME>Sheeba Kumar</NAME>		
+	</TEAM>
+		
 	<TEAM>
 		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/rahul1.png</ARTIST>    
-    	<DESC>About my past, I have completed my dual-degree program ( M.Sc.(Hons.) Economics and B.E. (Hons.) Computer Science) from BITS, Pilani. Prior to Digital Green, I have had the opportunity to intern at Microsoft Research, India and work, for a brief time, at D. E Shaw India Software Pvt Ltd. Since my college days, I have found writing good programs and solving problems through programming very enjoyable, which I hope to pursue throughout my career. Digital Green has shown to be effective. I believe that, Digital Green, when applied on a larger scale, will show significant results in improving the livelihood of innumerable small farmers. As a part of its Systems team, I hope to contribute to the technology and help Digital Green achieve this noble cause.  </DESC>
+    	<DESC>Rahul has completed a dual-degree program (M.Sc. (Hons.) Economics and B.E. (Hons.) Computer Science) from BITS, Pilani. Prior to Digital Green, he was an intern at Microsoft Research, India and worked, for a brief time, at D. E Shaw India Software Pvt Ltd. Since college days, he has found writing good programs and solving problems through programming very enjoyable, which he hopes to pursue throughout his career. Digital Green has proven to be effective and he believes Digital Green, when applied on a larger scale, will show significant result in improving the livelihood of innumerable small farmers. As a part of its Systems team, he hopes to contribute to the technology and help Digital Green achieve this noble cause. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>rahul@digitalgreen.org</MAILID>
 		<NAME>Rahul Agrawal</NAME>		
@@ -216,10 +326,37 @@
 	<TEAM>
 		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/sreenu1.png</ARTIST>    
-    	<DESC>Hi, My name is G.Sreenivasula Reddy. My home town is kadapa, Andhra Pradesh. I joined Digital Green as an intern in Systems Department and later joined as an Assistant Research Software Development Engineer. I pursued my graduation in ICT at Dhirubhai Ambani Institute of Infomation and Communication Technology (DA-IICT) Gandhinagar, Gujarat. I firmly believe that ICT has a key role to play in developing the disadvantaged sections of the society.  </DESC>
+    	<DESC>G.Sreenivasula Reddy hails from a town called Kadapa in Andhra Pradesh. He joined Digital Green as an intern in Systems Department and later joined as an Assistant Research Software Development Engineer. He pursued his graduation in ICT at Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT) Gandhinagar, Gujarat. He firmly believes that ICT has a key role to play in developing the disadvantaged sections of the society. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<MAILID>sreenivasula@digitalgreen.org</MAILID>
 		<NAME>G S Reddy</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Systems Engineer</TITLE>
+		<ARTIST>/media/Output/Images/yash.png</ARTIST>    
+    	<DESC> Yash has completed his BTech from IIIT-Delhi in the field of computer science in 2012. During his bachelors, he has done various internships in the Image Analysis and Biometrics Group at IIIT-Delhi (http://research.iiitd.edu.in/groups/iab/index.html) . He has also interned under Dr Devi Parikh at Toyota Technological Institute at Chicago (http://www.ttic.edu/) in 2011 on the field of computer vision. Yash is highly motivated to work with Digital Green and support its motive. As a member of the systems team, he aims to contribute to the technical aspect of Digital Green and help Digital Green reach new heights.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>yash@digitalgreen.org</MAILID>
+		<NAME>Yash Seth</NAME>		
+	</TEAM>	
+	
+	<TEAM>
+		<TITLE>Assistant Systems Engineer</TITLE>
+		<ARTIST>/media/Output/Images/tanmay.png</ARTIST>    
+    	<DESC> Tanmay has graduated from IIIT-Delhi with BTech (Honors) in Computer Science Engineering. His academic experiences include Internship at Toyota Technological Institute at Chicago, Undergraduate Research Assistant at IAB Lab, IIIT-Delhi and Teaching Assistant for Introduction to Programming at IIIT-Delhi. In the past, he has volunteered for Diabetic Selfcare Foundation on several occasions. He is an avid Chess player and also enjoys Cricket and Football. Tanmay is very excited to be a part of Digital Green and hopes to contributes towards this wonderful concept.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>tanmay@digitalgreen.org</MAILID>
+		<NAME>Tanmay Verma</NAME>		
+	</TEAM>
+	
+	<TEAM>
+		<TITLE>Assistant Systems Engineer</TITLE>
+		<ARTIST>/media/Output/Images/shrey.png</ARTIST>    
+    	<DESC> Shrey Jairath did B-Tech with Honours in Computer Science from IIIT-Delhi. Besides some internship with research groups at IIIT- Delhi, he did a summer internship at Citrix, Bangalore. He is keen to work on projects which can in any possible way enhance the quality of life. Apart from this, his aim is to excel in the field of Computer Science. He believes the best thing about this field is that it is far easier to "create something" in this field than in any other field. For him Digital Green is an opportunity to positively affect a large population of India involved in agriculture. Also, he feels the start-up like nature of Digital Green would provide him a steep learning curve. </DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>shrey@digitalgreen.org</MAILID>
+		<NAME>Shrey Jairath</NAME>		
 	</TEAM>	
 	
 </CATALOG>
