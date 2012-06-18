@@ -763,7 +763,7 @@ def get_videos_online(request, offset, limit):
         videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen)).distinct()
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)         
-            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil))
+            videos_text = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil))
             video_with_prod_start_date = video_with_prod_start_month = video_with_prod_start_year = Video.objects.none()
             video_with_prod_end_date = video_with_prod_end_month = video_with_prod_end_year = Video.objects.none()
             try: 
@@ -790,8 +790,7 @@ def get_videos_online(request, offset, limit):
                 video_with_prod_end_year = videos.filter(Q(video_production_end_date__year=searchText))
             except ValueError:
                 pass
-            videos = videos | video_with_prod_start_date | video_with_prod_start_month | video_with_prod_start_year
-            videos = videos | video_with_prod_end_date | video_with_prod_end_month | video_with_prod_end_year
+            videos = videos_text | video_with_prod_start_date | video_with_prod_start_month | video_with_prod_start_year | video_with_prod_end_date | video_with_prod_end_month | video_with_prod_end_year
             videos = videos.distinct().order_by("-id")
         count = videos.count()
         videos = videos[offset:limit]
