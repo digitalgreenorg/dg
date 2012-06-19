@@ -132,6 +132,7 @@ def drop_down_val(request):
     return HttpResponse(html)
 
 
+
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
 #type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
 #       Based on the 'type', it generates the data for that set only
@@ -170,11 +171,6 @@ def overview_line_graph(request):
     else:
         person_rs = []
     
-    if('village' in type):
-        village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id,from_date=from_date, to_date=to_date, partners=partners));
-    else:
-        village_rs = []
-
     if('prod_tar' in type):
         prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
     else:
@@ -210,43 +206,6 @@ def overview_line_graph(request):
         start_date = min(start_date,*(prod_tar_rs.keys()))
         
     
-   ###Calculating village operational on each day.
-    
-    #village_rs -> temp. temp is a dictionary of date vs list of village IDS
-    temp = {}
-    for i in village_rs:
-        if i[0] in temp:
-            temp[i[0]].append(i[1])
-        else:
-            temp[i[0]] = [i[1]]
-          
-   #vil_vals is cumulatively added list of villages for every date.
-   #i.e. vil_vals is a dictionary of date to list of villages that had screening on any date before that.  
-    vil_vals = {}
-    min_date = start_date;
-    max_date = today
-    if(min_date in temp):
-    	vil_vals[min_date] = temp[min_date]
-    else:
-    	vil_vals[min_date] = []
-    min_date = min_date + datetime.timedelta(days=1)
-    while min_date <= max_date:
-    	vil_vals[min_date] = vil_vals[min_date - datetime.timedelta(days=1)][:]
-    	if min_date in temp:
-    		vil_vals[min_date].extend(temp[min_date])
-    	min_date = min_date + datetime.timedelta(days=1)
-    	
-    min_date =  start_date + datetime.timedelta(days=61)
-    
-    while min_date <= max_date:
-    	vil_vals[max_date] = len(set(vil_vals[max_date][len(vil_vals[(max_date - datetime.timedelta(days=61))]):]))
-    	max_date = max_date - datetime.timedelta(days=1)	
-    while start_date <= max_date:
-    	vil_vals[max_date]  = len(set(vil_vals[max_date]))
-    	max_date = max_date - datetime.timedelta(days=1)
-		
-    #End of Village Operational calculation
-
     diff = (today - start_date).days
 
     str_list = []
@@ -278,7 +237,6 @@ def overview_line_graph(request):
         if('prac' in type): append_str +=  str(sum_prac)+';'
         if('person' in type): append_str += str(sum_person)+';'
         if(geog in ["COUNTRY","STATE","DISTRICT"]):
-        	if('village' in type): append_str += str(vil_vals[iter_date])+';'
         	if('prod_tar' in type): append_str += str(sum_vid_tar)+';'
         	if('screen_tar' in type): append_str += str(sum_sc_tar)+';'
         	if('adopt_tar' in type): append_str += str(sum_adopt_tar)+';'
@@ -312,9 +270,6 @@ def overview_line_graph(request):
         settings.append("<graph gid='"+str(i)+"'><title>Total Farmers</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
         i= i+1
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
-    	if('village' in type):
-			settings.append("<graph gid='"+str(i)+"'><title>Operational Villages</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-			i= i+1
         if('prod_tar' in type):
             settings.append("<graph gid='"+str(i)+"'><title>Video Production Target</title><hidden>true</hidden><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
             i= i+1
@@ -418,29 +373,22 @@ class MyDate:
         else:
             return 0
 
-
-#Private function used in month-wise bar data.
-def make_dict(dic):
-    min = int(dic[0]['YEAR'])
-    max = int(dic[-1]['YEAR'])+1
-
-    return_val = {}
-    for y in range(min,max):
-        return_val[y] = {}
-        for item in dic:
-            if int(item['YEAR'])>y:
-                break
-            if int(item['YEAR'])==y:
-                return_val[y][int(item['MONTH'])] = item['count']
-
-
-    return return_val
 #used to render data for month bar data in modules
 #sqlFunc is the func for the SQL query generator
 def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     rs = run_query(sqlFunc(**args));
     if rs:
-        dic = make_dict(rs)
+        min = int(rs[0]['YEAR'])
+        max = int(rs[-1]['YEAR'])+1
+    
+        dic = {}
+        for y in range(min,max):
+            dic[y] = {}
+            for item in rs:
+                if int(item['YEAR'])>y:
+                    break
+                if int(item['YEAR'])==y:
+                    dic[y][int(item['MONTH'])] = item['count']
     else:
         return HttpResponse(' ');
 

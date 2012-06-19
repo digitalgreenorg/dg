@@ -11,9 +11,9 @@ def get_csp_identified(geog, id, from_date, to_date, partners):
 def get_village_operational(geog, id, date_var, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT village_id) as count")
-    sql_ds['from'].append("SCREENING SC")
+    sql_ds['from'].append("screening_myisam SCM")
     prev_date = str(datetime.date(*[int(i) for i in str(date_var).split('-')]) - datetime.timedelta(days=60))
-    filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,prev_date,date_var,partners)
+    filter_partner_geog_date(sql_ds,"SCM","SCM.date",geog,id,prev_date,date_var,partners)
     return join_sql_ds(sql_ds);
 
 def get_storyboard_prepared(geog, id, from_date, to_date, partners):

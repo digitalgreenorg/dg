@@ -84,20 +84,10 @@ def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_
     if(geog is None or geog not in geog_list):
         return
 
-    if(geog=="VILLAGE"):
-        sql_ds['where'].append(par_table_id+".village_id = "+str(id))
-        return
-
-    sql_ds['lojoin'].append(["VILLAGE V","V.id = "+par_table_id+".village_id"])
-    for g in geog_list[1:]:
-        prev_geog = geog_list[geog_list.index(g)-1];
-        if(geog == g):
-            if(type(id) == types.ListType):
-                sql_ds['where'].append(prev_geog[0]+"."+geog.lower()+"_id in ("+','.join(id)+")")
-            else:
-                sql_ds['where'].append(prev_geog[0]+"."+geog.lower()+"_id = "+str(id))
-            break;
-        sql_ds['lojoin'].append([g+" "+g[0],prev_geog[0]+"."+g.lower()+"_id = "+g[0]+".id"])
+    if(type(id) == types.ListType):
+        sql_ds['where'].append("%s.%s_id in (%s)" %(par_table_id, geog.lower(), ','.join(id)))
+    else:
+        sql_ds['where'].append("%s.%s_id = %s" %(par_table_id, geog.lower(), str(id)))
 
 #Function to get from_date and to_date from Request object
 def get_dates_partners(request):
@@ -129,7 +119,7 @@ def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_
             dist_part_list = [str(x[0]) for x in dist_part if str(x[0]) in partner_id]
             if(dist_part_list):
                 partner_sql = ["SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(dist_part_list)+")"]
-                sql_ds['where'].append("D.id in ("+partner_sql[0]+")")
+                sql_ds['where'].append("district_id in ("+partner_sql[0]+")")
 
     attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
 

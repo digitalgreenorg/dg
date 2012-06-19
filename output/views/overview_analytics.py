@@ -95,11 +95,7 @@ def overview_module(request):
     country_data.update(avg_scr = tot_val['avg_sc_per_day'])
     
     #Adoption Rate
-    adopt_rate_data = run_query(shared_sql.adoption_rate(geog, id, date_var, partners))[0]
-    if(adopt_rate_data and adopt_rate_data['tot_per']):
-        country_data.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
-    else:
-        country_data.update(adopt_rate = 0)
+    country_data.update(adopt_rate = views.adoption_analytics.adoption_rate(geog, id, to_date, partners))
     #Distinct videos screened
     country_data.update(vid_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count'])
     

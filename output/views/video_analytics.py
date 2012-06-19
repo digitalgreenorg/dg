@@ -21,9 +21,10 @@ def video_module(request):
     if(geog not in geog_list):
         raise Http404()
 
-    tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    tot_vid = tot_val = run_query_raw(shared_sql.get_totals(geog, id, from_date, to_date, partners, "tot_vid"))[0][0];
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
+    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
+    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls)
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
