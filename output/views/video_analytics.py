@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.http import Http404, HttpResponse
 from django.db.models import Count
 from dashboard.models import *
-import datetime, math
+import datetime, math,json
 from output.database.SQL  import video_analytics_sql, shared_sql
 from output import views
 from output.views.common import get_geog_id
@@ -87,17 +87,17 @@ def video_geog_pie_data(request):
     geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
 
     return_val = []
-    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    #return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    return_val.append(["title","val"])
     for item in vid_prod:
-        append_str = geog_name[item['id']][0]+';'+str(item['tot_pro'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
-        append_str += ";Ratio of Video Productions in "+geog_name[item['id']][0]
-        return_val.append(append_str)
+        return_val.append([geog_name[item['id']][0],item['tot_pro']])
+       # if(geog.upper()!= "VILLAGE"):
+       #     temp_get_req_url = get_req_url[:]
+       #    temp_get_req_url.append("id="+str(item['id']))
+       #     append_str += url+'&'.join(temp_get_req_url)
+        #append_str += ";Ratio of Video Productions in "+geog_name[item['id']][0]
 
-    return HttpResponse('\n'.join(return_val))
+    return HttpResponse(json.dumps(return_val))
 
     ####################
     ## Scatter Charts ##
@@ -128,13 +128,6 @@ def video_monthwise_bar_data(request):
     from_date, to_date, partners = get_dates_partners(request)
     return views.common.month_bar_data(video_analytics_sql.video_month_bar, setting_from_date = from_date, setting_to_date = to_date, \
                                        geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
-
-#Settings generator for Month-wise Bar graph
-def video_monthwise_bar_settings(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.month_bar_settings(video_analytics_sql.video_month_bar, "Video Production", \
-                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
 ###########################
@@ -309,9 +302,5 @@ def video_search(request):
 
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
-    id = int(request.GET['id'])
-    return views.common.month_bar_data(video_analytics_sql.get_screening_month_bar_for_video, setting_from_date = None, setting_to_date = None, id = id);
-
-def video_screening_month_bar_setting(request):
-    id = int(request.GET['id'])
-    return views.common.month_bar_settings(video_analytics_sql.get_screening_month_bar_for_video, "Total Dissemintions", id = id);
+    video_id = int(request.GET['id'])
+    return views.common.month_bar_data(video_analytics_sql.get_screening_month_bar_for_video, setting_from_date = None, setting_to_date = None, id = video_id);

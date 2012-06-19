@@ -280,7 +280,8 @@
 					</div>
 				</div>
 				<div id="flashcontent">
-						<strong>You need to upgrade your Flash Player</strong>
+										<strong>You need to upgrade your Flash Player</strong>
+				
 				</div>					
 			</div>			
 		</div>
@@ -300,22 +301,38 @@
 
 	
 <!-- amline script--> 
-	
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>	
 	<script type="text/javascript">
-		var line_data = '';
-		var line_settings = '';
+	google.load("visualization", "1", {packages:["corechart"]});
+	  google.setOnLoadCallback(drawCharts);
+	 
+	  function drawCharts() {
+		
+	    	
+	   
+		//var line_data = '';
+		//var line_settings = '';
+		
 		$.ajax({ type: "GET", 
 				dataType: 'json',
 				async: false,
 				url: "/analytics/overview_line_graph?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}", 
 				data:{type:['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']},
-				success: function(obj) {
-						line_data = obj.data;
-						line_settings = obj.settings;
-						
-				}
+				success: function(json){
+		            var data = google.visualization.arrayToDataTable(json,false);
+		
+		            var options = {
+		                    height:390,
+		                    width:1100
+		                  };
+
+		
+		            var chart = new google.visualization.LineChart(document.getElementById('flashcontent'));
+		            chart.draw(data, options);
+		}
 		});	 
-		var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
+		}
+		/*var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
 		so2.addParam("wmode", "transparent");
 		so2.addVariable("path", "/media/Output/amline/");
 		so2.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
@@ -328,7 +345,7 @@
 		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
 		so1.addVariable("chart_data",escape(line_data));
 		so1.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
-		so1.write("flashcontent");				
+		so1.write("flashcontent");*/				
 
 	 </script>
 

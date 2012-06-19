@@ -2,7 +2,7 @@ from django.shortcuts import *
 from django.db.models import Count, Min, Max
 from django.http import Http404, HttpResponse
 from dashboard.models import *
-import datetime
+import datetime,json
 from output.database.SQL  import screening_analytics_sql, shared_sql
 from output import views
 from output.views.common import get_geog_id
@@ -15,7 +15,7 @@ def screening_module(request):
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
-    tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
+    #tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
     
     search_box_params = views.common.get_search_box(request, screening_analytics_sql.screening_min_date)
 
@@ -24,10 +24,10 @@ def screening_module(request):
     if(get_req_url): get_req_url = '&'+get_req_url
 
     return render_to_response('screening_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_scr=tot_val['tot_scr'],\
-                                                          tot_att=tot_val['dist_att'], \
-                                                          avg_scr=tot_val['avg_sc_per_day'], \
-                                                          avg_att=tot_val['avg_att_per_sc'], \
+                                                          tot_scr=0,#tot_val['tot_scr'],\
+                                                          tot_att=0,#tot_val['dist_att'], \
+                                                          avg_scr=0,#tot_val['avg_sc_per_day'], \
+                                                          avg_att=0,#tot_val['avg_att_per_sc'], \
                                                           get_req_url = get_req_url
                                                           ))
 
@@ -41,10 +41,11 @@ def screening_tot_lines(request):
     rows = run_query_raw(screening_analytics_sql.screening_raw_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append(';'.join([str(x) for x in row]))
+        return_val.append([str(row[0])] + map(float, list(row)[1:]))
 
+    return_val.insert(0,["Date","Total Attendance","Total Expressed Interest","Total Expressed Adoption","Total Expressed Question"])
     if(return_val):
-        return HttpResponse('\n'.join(return_val))
+        return HttpResponse(json.dumps(return_val))
 
     return HttpResponse(';;;;')
 
@@ -55,10 +56,10 @@ def screening_percent_lines(request):
     rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append(';'.join([str(x) for x in row]))
-
+        return_val.append([str(row[0])]+[float(str(x)) for x in list(row)[1:]])
+    return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
     if(return_val):
-        return HttpResponse('\n'.join(return_val))
+        return HttpResponse(json.dumps(return_val)  )
 
     return HttpResponse(';;;;')
 
@@ -68,21 +69,21 @@ def screening_per_day_line(request):
     rows = run_query_raw(screening_analytics_sql.screening_per_day(geog, id, from_date, to_date, partners))
     if (not rows):
         return HttpResponse(';')
-
+    #print rows
     return_val = []
     prev_date = rows[0][0]
-    return_val.append(';'.join([str(x) for x in rows[0]]))
-
+    return_val.append([str(rows[0][0]),int(rows[0][1])])
     day_one_delta = datetime.timedelta(days=1)
     for row in rows[1:]:
         prev_date += day_one_delta;
         while (prev_date!=row[0]):
-            return_val.append(str(prev_date)+';0')
+            return_val.append([str(prev_date),0])
             prev_date += day_one_delta;
 
-        return_val.append(str(row[0])+';'+str(row[1]))
-
-    return HttpResponse('\n'.join(return_val))
+        return_val.append([str(row[0]),int(row[1])])
+        
+    return_val.insert(0,["Date","Total Disseminations"])
+    return HttpResponse(json.dumps(return_val))
 
 
     ###############
@@ -96,12 +97,6 @@ def screening_monthwise_bar_data(request):
     return views.common.month_bar_data(screening_analytics_sql.screening_month_bar, setting_from_date = from_date, setting_to_date = to_date, \
                                        geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
 
-#Settings generator for Month-wise Bar graph
-def screening_monthwise_bar_settings(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.month_bar_settings(screening_analytics_sql.screening_month_bar, "Disseminations", \
-                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
     ####################
     ## Scatter Chart  ##
@@ -143,18 +138,22 @@ def screening_geog_pie_data(request):
     scr_geog = run_query(shared_sql.overview(geog,id, from_date, to_date, partners,'screening'))
     geog_name = run_query_dict(shared_sql.child_geog_list(geog,id, from_date, to_date, partners,),'id')
 
+#    return_val = []
+#    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+#    for item in scr_geog:
+#        append_str = geog_name[item['id']][0]+';'+str(item['tot_scr'])
+#        if(geog.upper()!= "VILLAGE"):
+#            temp_get_req_url = get_req_url[:]
+#            temp_get_req_url.append("id="+str(item['id']))
+#            append_str += url+'&'.join(temp_get_req_url)
+#        append_str += ";Ratio of disseminations in "+geog_name[item['id']][0]
+#        return_val.append(append_str)
+#    
     return_val = []
-    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    return_val.append(['title','value','url'])
     for item in scr_geog:
-        append_str = geog_name[item['id']][0]+';'+str(item['tot_scr'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
-        append_str += ";Ratio of disseminations in "+geog_name[item['id']][0]
-        return_val.append(append_str)
-
-    return HttpResponse('\n'.join(return_val))
+        return_val.append([geog_name[item['id']][0],item['tot_scr']])    
+    return HttpResponse(json.dumps(return_val))
 
 
 #Returns total distinct attendees, average attendance per screening, average screening per day

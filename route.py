@@ -19,14 +19,14 @@ def analytics_route(request, func_name):
     return locals()[func_name](request)
 
 #MAIN Route, urls.py routes everything except admin to this function.
-#It firt checks for alias in global_dict.
+#It first checks for alias in global_dict.
 #Then it checks for patterns 'analytics/..'
 #else it calls the view with the recieved 'func_name'
 def route(request, func_name):
     if(func_name == ''):
         return home(request)
     if(func_name in global_dict):
-        func_name = glocal_dict['func_name']
+        func_name = global_dict['func_name']
     else:
         x = re.match('analytics/(.+)',func_name, re.I)
         if(x):

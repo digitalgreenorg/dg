@@ -6,7 +6,7 @@ from output.database.SQL  import adoption_analytics_sql, video_analytics_sql, sc
 from output import views
 from output.views.common import get_geog_id
 from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
-import datetime
+import datetime, json
 
 
 def adoption_module(request):
@@ -106,17 +106,17 @@ def adoption_geog_pie_data(request):
     geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
 
     return_val = []
-    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    return_val.append(['name','value'])
     for item in ado_prod:
-        append_str = geog_name[item['id']][0]+';'+str(item['tot_ado'])
-        if(geog.upper()!= "VILLAGE"):
-            temp_get_req_url = get_req_url[:]
-            temp_get_req_url.append("id="+str(item['id']))
-            append_str += url+'&'.join(temp_get_req_url)
-        append_str += ";Ratio of Adoptions in "+geog_name[item['id']][0]
+        append_str = [geog_name[item['id']][0],item['tot_ado']]
+        #if(geog.upper()!= "VILLAGE"):
+         #   temp_get_req_url = get_req_url[:]
+          #  temp_get_req_url.append("id="+str(item['id']))
+           # append_str += url+'&'.join(temp_get_req_url)
+        #append_str += ";Ratio of Adoptions in "+geog_name[item['id']][0]
         return_val.append(append_str)
 
-    return HttpResponse('\n'.join(return_val))
+    return HttpResponse(json.dumps(return_val))
 
 
 def adoption_practice_wise_scatter(request):
@@ -132,11 +132,6 @@ def adoption_monthwise_bar_data(request):
                                        geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
 
 #Settings generator for Month-wise Bar graph
-def adoption_monthwise_bar_settings(request):
-    geog, id = get_geog_id(request)
-    from_date, to_date, partners = get_dates_partners(request)
-    return views.common.month_bar_settings(adoption_analytics_sql.adoption_month_bar, "Adoptions", \
-                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
 def adoption_rate_line(request):
@@ -144,8 +139,9 @@ def adoption_rate_line(request):
     from_date, to_date, partners = get_dates_partners(request)
     adoption_rate_stats = run_query_raw(adoption_analytics_sql.adoption_rate_line(geog, id, from_date, to_date, partners))
     
-    return_val = ["%s;%.2f" %(str(date), (active * 100)/tot) for date, active, tot in adoption_rate_stats]
-    return HttpResponse("\n".join(return_val))
+    return_val = [[str(date), float((active * 100)/tot)] for date, active, tot in adoption_rate_stats]
+    return_val.insert(0,['Date','Adoption Rate'])
+    return HttpResponse(json.dumps(return_val))
     
 
 #===============================================================================
