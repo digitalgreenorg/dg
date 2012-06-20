@@ -256,6 +256,10 @@ class Block(models.Model):
     def __unicode__(self):
         return self.block_name
 
+class VillageFarmerbookManager(models.Manager):
+    def get_query_set(self):
+        return super(VillageFarmerbookManager, self).get_query_set().filter(person__image_exists=True).distinct()
+
 class Village(models.Model):
     id = BigAutoField(primary_key = True)
     village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME')
@@ -265,6 +269,10 @@ class Village(models.Model):
     road_connectivity = models.CharField(max_length=100, db_column='ROAD_CONNECTIVITY', blank=True)
     control = models.NullBooleanField(null=True, db_column='CONTROL', blank=True)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
+    
+    objects = models.Manager() #The default manager
+    farmerbook_village_objects = VillageFarmerbookManager() #The manager for farmerbook
+    
     class Meta:
         db_table = u'VILLAGE'
         unique_together = ("village_name","block")
@@ -313,6 +321,10 @@ class PersonGroups(models.Model):
         return  u'%s (%s)' % (self.group_name, self.village)
         #return self.group_name
 
+class FarmerbookManager(models.Manager):
+    def get_query_set(self):
+        return super(FarmerbookManager, self).get_query_set().filter(image_exists=True)
+
 class Person(models.Model):
     id = BigAutoField(primary_key = True)
     person_name = models.CharField(max_length=100, db_column='PERSON_NAME')
@@ -327,6 +339,11 @@ class Person(models.Model):
     relations = models.ManyToManyField('self', symmetrical=False, through='PersonRelations',related_name ='rel',null=True,blank=True)
     adopted_agricultural_practices = models.ManyToManyField('Practices',through='PersonAdoptPractice',null=True, blank=True)
     date_of_joining = models.DateField(null=True, blank=True)
+    #changes done for farmerbook. one new Boolean field image_exists added
+    image_exists = models.BooleanField(default=False)
+    
+    objects = models.Manager() #The default manager
+    farmerbook_objects = FarmerbookManager() #The manager for farmerbook
     
     class Meta:
         db_table = u'PERSON'

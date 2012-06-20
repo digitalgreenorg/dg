@@ -5,7 +5,7 @@ from views import *
 from forms import *
 from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ValidationError
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.template import Context, Template
@@ -760,14 +760,40 @@ def get_videos_online(request, offset, limit):
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
-        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen))
+        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen)).distinct()
         if(searchText):
-            vil = villages.filter(village_name__icontains = searchText)            
-            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("-id")[offset:limit]
-
-        count = videos.distinct().count()
-        videos = videos.distinct()[offset:limit]
+            vil = villages.filter(village_name__icontains = searchText)         
+            videos_text = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil))
+            video_with_prod_start_date = video_with_prod_start_month = video_with_prod_start_year = Video.objects.none()
+            video_with_prod_end_date = video_with_prod_end_month = video_with_prod_end_year = Video.objects.none()
+            try: 
+                video_with_prod_start_date = videos.filter(Q(video_production_start_date=searchText))
+            except ValidationError:
+                pass
+            try:
+                video_with_prod_start_month = videos.filter(Q(video_production_start_date__month=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_start_year = videos.filter(Q(video_production_start_date__year=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_end_date = videos.filter(Q(video_production_end_date=searchText))
+            except ValidationError:
+                pass 
+            try:
+                video_with_prod_end_month = videos.filter(Q(video_production_end_date__month=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_end_year = videos.filter(Q(video_production_end_date__year=searchText))
+            except ValueError:
+                pass
+            videos = videos_text | video_with_prod_start_date | video_with_prod_start_month | video_with_prod_start_year | video_with_prod_end_date | video_with_prod_end_month | video_with_prod_end_year
+            videos = videos.distinct().order_by("-id")
+        count = videos.count()
+        videos = videos[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:
@@ -1760,24 +1786,45 @@ def get_attendance(request, id):
 def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('screenings')
+    searchText = request.GET.get('searchText')
+    villages = get_user_villages(request)
+    count = Screening.objects.filter(village__in = villages).distinct().count()
+    screenings = Screening.objects.filter(village__in = villages)
+    if(searchText):
+        vil = villages.filter(village_name__icontains = searchText)
+        screening_in_village=screenings.filter(Q(village__in = vil))
+        screening_on_date = Screening.objects.none()
+        screening_on_day = Screening.objects.none()
+        screening_on_month = Screening.objects.none()
+        screening_on_year = Screening.objects.none()
+        try:
+            screening_on_date=screenings.filter(Q(date=searchText))
+        except ValidationError:
+            pass
+        try:
+            screening_on_day=screenings.filter(Q(date__day=searchText))
+        except ValueError:
+            pass
+        try:
+            screening_on_month=screenings.filter(Q(date__month=searchText))
+        except ValueError:
+            pass
+        try:
+            screening_on_year=screenings.filter(Q(date__year=searchText))
+        except ValueError:
+            pass
+        screenings = screening_in_village | screening_on_date | screening_on_day | screening_on_month | screening_on_year
+        count = len(screenings)
+        screenings = screenings.order_by("date")[offset:limit]
     else:
-        searchText = request.GET.get('searchText')
-        villages = get_user_villages(request)
-        count = Screening.objects.filter(village__in = villages).distinct().count()
-        screenings = Screening.objects.filter(village__in = villages)
-        if(searchText):
-            vil = villages.filter(village_name__icontains = searchText)
-            count = screenings.filter(Q(village__in = vil) | Q(date__icontains = searchText) ).count()
-            screenings = screenings.filter(Q(village__in = vil) | Q(date__icontains = searchText)).distinct().order_by("date")[offset:limit]
-        else:
-            screenings = Screening.objects.filter(village__in = villages).distinct().order_by("-id")[offset:limit]
-        if(screenings):
-            json_subcat = serializers.serialize("json", screenings, relations=('village',))
-        else:
-            json_subcat = 'EOF'
-        response = HttpResponse(json_subcat, mimetype="application/javascript")
-        response['X-COUNT'] = count
-        return response
+        screenings = screenings.order_by("-id")[offset:limit]
+    if(screenings):
+        json_subcat = serializers.serialize("json", screenings, relations=('village',))
+    else:
+        json_subcat = 'EOF'
+    response = HttpResponse(json_subcat, mimetype="application/javascript")
+    response['X-COUNT'] = count
+    return response
 
 def save_screening_offline(request, id):
     if request.method == 'POST':
