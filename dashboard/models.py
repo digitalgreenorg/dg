@@ -655,11 +655,37 @@ pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
+class TopPractice(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+
+class SubPractice(models.Model):    
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+
+class PracticeUtility(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+
+class PracticeType(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+
+class PracticeSubject(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+
 class Practices(models.Model):
     id = BigAutoField(primary_key = True)
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
     seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
     summary = models.TextField(db_column='SUMMARY', blank=True)
+    top_practice = BigForeignKey(TopPractice)
+    sub_practice = BigForeignKey(SubPractice, null=True)
+    utility = BigForeignKey(PracticeUtility, null=True)
+    type = BigForeignKey(PracticeType, null=True)
+    subject = BigForeignKey(PracticeSubject, null=True)
+    
     class Meta:
         db_table = u'PRACTICES'
         verbose_name = "Practice"
