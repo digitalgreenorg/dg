@@ -695,7 +695,7 @@ class PracticeSubject(models.Model):
 class Practices(models.Model):
     id = BigAutoField(primary_key = True)
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
-    seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
+    seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY', blank=True)
     summary = models.TextField(db_column='SUMMARY', blank=True)
     top_practice = BigForeignKey(TopPractice)
     sub_practice = BigForeignKey(SubPractice, null=True)
