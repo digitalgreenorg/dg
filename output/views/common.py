@@ -1,18 +1,17 @@
 from dashboard.models import *
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
-from output import views
+from django.template import Template, Context
 from output.database import utility
 from output.database.SQL import shared_sql, overview_analytics_sql, \
     screening_analytics_sql
+from output.database.SQL.shared_sql import practice_options_sql
 from output.database.utility import run_query, run_query_raw, run_query_dict, \
     run_query_dict_list, construct_query, get_dates_partners
 import datetime
-import django
 import json
-import re
 import random
-
+import re
 
 def home_with_analytics():
     tot_scr = Screening.objects.count()
@@ -78,6 +77,81 @@ def get_search_box(request, min_date_func=None):
 
     return search_box_params
 
+def practice_change(request):
+    
+    top_prac=request.GET.get('top_prac')
+    sub_prac=request.GET.get('sub_prac')
+    util=request.GET.get('util')
+    type=request.GET.get('type')
+    sub=request.GET.get('sub')
+    if(top_prac=="-1"):
+       top_prac=None
+    if(sub_prac=="-1"):
+       sub_prac=None
+    if(util=="-1"):
+       util=None
+    if(type=="-1"):
+       type=None
+    if(sub=="-1"):
+       sub=None        
+    
+    sql_result = practice_options(top_prac,sub_prac,util,type,sub)
+    
+    html_top_prac = """
+    <option value='-1'>Any Practice</option>
+    {% for key,item in sql_result.0 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_sub_prac = """
+    <option value='-1'>Any Sub Practice</option>
+    {% for key,item in sql_result.1 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_util = """
+    <option value='-1'>Any Utility</option>
+    {% for key,item in sql_result.2 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_type = """
+    <option value='-1'>Any Type</option>
+    {% for key,item in sql_result.3 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_sub = """
+    <option value='-1'>Any Subject</option>
+    {% for key,item in sql_result.4 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    
+    def render_option(option_string, context_dict):
+        html = Template(option_string)
+        return html.render(Context(context_dict))  
+    
+    return HttpResponse(json.dumps(map(render_option, [html_top_prac, html_sub_prac, html_util, html_type, html_sub], [dict(sql_result=sql_result)] * 5)))
+                                             
+def practice_options(top, subp, util, type, sub):
+    tuple_val=run_query_raw(practice_options_sql(top, subp, util, type, sub))
+    list_dict=[{}, {}, {}, {}, {}]
+    for i in range(len(tuple_val)):
+        val=tuple_val[i]
+        for j in range(len(val)/2):
+            if(val[j*2]!=None):
+                list_dict[j][val[j*2]]=[val[(j*2)+1]]
+                
+    args = [top, subp, util, type, sub]                
+    for i in range(len(args)):
+        if args[i] is not None:
+            list_dict[i][int(args[i])].append('true')
+    
+    list_dict = [sorted(i.iteritems(), key=lambda x: x[1][0]) for i in list_dict]
+
+    return list_dict
+
 #Helper function to return geog, id from request object.
 def get_geog_id(request):
     return request.GET['geog'].upper(),int(request.GET['id'])
@@ -119,15 +193,15 @@ def drop_down_val(request):
         geog_parent = geog_list[geog_list.index(geog)-1]
 
 
-    temp = """
+    html_option = """
     <option value='-1'>Select {{geog|title}}</option>
     {% for row in rs %}
     <option value="{{row.id}}">{{row.name}}</option>
     {%endfor%}
     """
-    t = django.template.Template(temp);
+    t = Template(html_option);
     rs = run_query(shared_sql.search_drop_down_list(geog=geog,geog_parent=geog_parent,id=id));
-    html = t.render(django.template.Context(dict(geog=geog,rs=rs)))
+    html = t.render(Context(dict(geog=geog,rs=rs)))
 
     return HttpResponse(html)
 

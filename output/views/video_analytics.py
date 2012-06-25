@@ -204,7 +204,14 @@ def video_search(request):
     to_date = request.GET.get('to_date')
     sort = request.GET.get('sort')
     sort_order = request.GET.get('sort_order')
+    top_prac=request.GET.get('top_prac')
+    sub_prac=request.GET.get('sub_prac')
+    util=request.GET.get('util')
+    type=request.GET.get('type')
+    sub=request.GET.get('sub')
+    
     search_box_params = {}
+    
 
     vids = Video.objects.annotate(adoptions=Count('personadoptpractice'))
     
@@ -286,6 +293,19 @@ def video_search(request):
         else:
             vids = vids.order_by('-adoptions', 'id')
         
+    if(top_prac!=None):
+        vids=vids.filter(related_agricultural_practices__top_practice=int(top_prac))
+    if(sub_prac!=None):
+        vids=vids.filter(related_agricultural_practices__sub_practice=int(sub_prac))
+    if(util!=None):
+        vids=vids.filter(related_agricultural_practices__utility=int(util))
+    if(type!=None):
+        vids=vids.filter(related_agricultural_practices__type=int(type))
+    if(sub!=None):
+        vids=vids.filter(related_agricultural_practices__subject=int(sub))
+                    
+    search_box_params['prac_level'] = views.common.practice_options(top_prac,sub_prac,util,type,sub)
+    
     
     #for paging
     vid_count = vids.count()

@@ -150,7 +150,7 @@ def screening_geog_pie_data(request):
 #        return_val.append(append_str)
 #    
     return_val = []
-    return_val.append(['title','value','url'])
+    return_val.append(['title','value'])
     for item in scr_geog:
         return_val.append([geog_name[item['id']][0],item['tot_scr']])    
     return HttpResponse(json.dumps(return_val))

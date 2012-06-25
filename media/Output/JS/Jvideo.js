@@ -143,7 +143,8 @@ function videodefaultload(){
 //Function to enable/disable and fill option in Selects for region select drop downs
 function dochange(src, val) {
     $.ajax({ type: "GET", 
-            url: "/analytics/drop_down_val?geog="+src+"&id="+val,
+            url: "/analytics/drop_down_val/",
+            data: {"geog": src, "id":val},
             success: function(html) {                    
             var flag = false;
             $(".geog").each(function() {
@@ -158,6 +159,7 @@ function dochange(src, val) {
  });
 }
 
+
 function go(page) {
     var url = new Array();
     
@@ -167,7 +169,8 @@ function go(page) {
     if($("#uploads").val()!='-1') url.push("videouploaded="+$("#uploads").val());
     if($("div#sort_order").hasClass("arrow_down") && $("#sortfilter").val() != "-1") url.push("sort_order=asc");
     
-    partners = $("#partners").val();
+    
+    var partners = $("#partners").val();
     for(i=0;i<partners.length;i++) {
         if(partners[i] !='-1')
             url.push("partner="+partners[i]);
@@ -186,13 +189,13 @@ function go(page) {
     }
     
     if($("#lang").val()!='-1')  url.push("lang="+$("#lang").val());
-    season = $("#season").val();
+    var season = $("#season").val();
     for(i=0;i<season.length;i++) {
         if(season[i] != '-1')
             url.push("season="+season[i]);
     }
     
-    practice = $("#practice").val();
+    var practice = $("#practice").val();
     for(i=0;i<practice.length;i++) {
         if(practice[i] != '-1')
             url.push("prac="+practice[i]);
@@ -200,9 +203,15 @@ function go(page) {
     if($("#inlinedatepicker1").html()!="") url.push("from_date="+$("#inlinedatepicker1").html());
     if($("#inlinedatepicker2").html()!="") url.push("to_date="+$("#inlinedatepicker2").html());
     if(page != null) url.push("page="+page);
-    
+    if(document.getElementById('top_prac').value != -1) url.push("top_prac="+document.getElementById('top_prac').value)
+    if(document.getElementById('sub_prac').value != -1) url.push("sub_prac="+document.getElementById('sub_prac').value);
+    if(document.getElementById('util').value != -1) url.push("util="+document.getElementById('util').value);
+    if(document.getElementById('type').value != -1) url.push("type="+document.getElementById('type').value);
+    if(document.getElementById('sub').value != -1) url.push("sub="+document.getElementById('sub').value);
     if(url.length>0) 
         window.location.href = '?'+url.join('&');
+    else
+    	window.location.href= '.';
 }
 
 /* This is run when the page is fully loaded */
