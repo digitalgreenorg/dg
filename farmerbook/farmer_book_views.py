@@ -7,7 +7,48 @@ from django.db.models import Count
 import datetime
 from django.template.loader import render_to_string
 import datetime
-from django.db.models import Sum,Max,Count
+from django.db.models import Sum, Max, Count
+
+def get_home_page(request):
+    top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])   
+    csp_stats = Screening.objects.values('animator').annotate(screenings = Count('animator')).values_list('animator', 
+                                                                                                          'animator__name',
+                                                                                                          'screenings',
+                                                                                                          'animator__total_adoptions')
+    for csp in csp_stats:
+        top_csp_stats [csp[0]][0] = csp[0]
+        top_csp_stats [csp[0]][1] = csp[1]
+        top_csp_stats [csp[0]][2] = csp[2]
+        top_csp_stats [csp[0]][3] = csp[3]
+        if csp[2] > 20:
+            top_csp_stats [csp[0]][4] = float(csp[3])/csp[2]
+    
+    # sorting on Adoptions_per_screening and keeping first 4
+    top_csp_stats = sorted(top_csp_stats.items(), key = lambda(k, v):(v[4],k),
+                            reverse=True)[:4]  
+    
+    id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
+               10000000000406, 10000000000450, 10000000019320, 10000000019321, 10000000019348, 10000000019419, 
+               10000000019420, 10000000019422, 10000000019426, 10000000019428, 10000000019430, 10000000019431, 
+               10000000019435, 10000000019453, 10000000019495, 10000000019502, 10000000019505, 10000000019506, 
+               10000000019507, 10000000019508, 10000000019515, 10000000019541, 10000000019554, 10000000019696, 
+               10000000019793, 10000000019808, 10000000019823, 10000000019826, 10000000019831, 10000000019844, 
+               10000000019895, 10000000019979, 10000000020020]   
+    
+    csp_leader_stats= []                         
+    for obj in top_csp_stats:
+        if(obj[0] in id_list):
+                photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
+        else:
+                photo_link =  "/media/farmerbook/images/sample_csp.jpg"
+        print obj[0]        
+        csp_leader_stats.append({'id': obj[0],
+                                         'name': obj[1][1],
+                                         'screenings': obj[1][2],
+                                         'photo_link': photo_link,
+                                         'adoptions': obj[1][3]})
+                                    
+    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats))
 
 def get_leaderboard_data():
     village_ids = Village.farmerbook_village_objects.all().values_list('id', flat=True)

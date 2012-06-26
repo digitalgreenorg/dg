@@ -247,11 +247,6 @@ def farmerpage(request):
 def villagepage(request):
     return render_to_response('village_page.html')
 
-def farmerbook(request):
-    top_adopters_stats =[]    
-    #top_adopters_stats = get_leaderboard_data()
-    return render_to_response('farmerbook.html', dict(top_adopters_stats = top_adopters_stats))
-
 def grouppage(request):
     return render_to_response('group_page.html')
 
