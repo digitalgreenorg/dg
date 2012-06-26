@@ -351,6 +351,8 @@ def get_csp_page(request):
                                                                                                     'village_name', 
                                                                                                     'block__district__district_name', 
                                                                                                     'block__district__state__state_name')
+    
+        
     left_panel_stats['total_adoptions'] = Animator.objects.get(id = csp_id).total_adoptions
     
     
@@ -372,8 +374,10 @@ def get_csp_page(request):
             vids_stats_dict[id][1] += 1
     
   
-    
-    per_vid_adoption = PersonAdoptPractice.objects.filter( video__in = vids_id,
+    if left_panel_stats['start_date'] == None:
+        per_vid_adoption = []
+    else:    
+        per_vid_adoption = PersonAdoptPractice.objects.filter( video__in = vids_id,
                                                            person__village__in = assigned_vill_id,
                                                            date_of_adoption__gte = left_panel_stats['start_date']).values('video__id').annotate(adopt_count=Count('person__id')) 
     for vid_id in per_vid_adoption:
@@ -431,7 +435,7 @@ def get_csp_page(request):
                10000000019895, 10000000019979, 10000000020020]        
     top_related_stats = []
     for obj in top_related_list:
-            print obj
+            
             if(obj[0] in id_list):
                 photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
             else:

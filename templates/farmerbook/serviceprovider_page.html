@@ -20,8 +20,9 @@
 		<center>{{ left_panel_stats.vil_details.0.2 }},
 			{{left_panel_stats.vil_details.0.3 }}</center>
 	</div>
+	{% if left_panel_stats.start_date %}
 	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
-	
+	{% endif %}
 </div>
 
 <div class="left_panel_bottom" style="padding-top: 0px;">
