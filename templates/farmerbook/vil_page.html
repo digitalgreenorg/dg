@@ -40,7 +40,7 @@
 		</div>
 		<div class='horizontal_line'> </div>
 		<div class = "imgContainerLabel">Service Provider</div>
-		<img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''>		
+		<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})"><img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''></a>		
 		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.service_provider.0.1 }} ({{left_panel_stats.partner.0.1}})</div>
 		
 		<div style='clear:both;'></div>
@@ -242,6 +242,20 @@ function groupClick(group_id) {
 		  });
 }
 
+
+function cspClick(csp_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  
+		  });
+}
+
 function ajax_tab_click(clicked, village_id) {    
     if(clicked=="videos_produced") {
 		videos_watched_html = $("div#top_tabcontent").html();
@@ -282,41 +296,41 @@ function ajax_tab_click(clicked, village_id) {
 			
 }
 
-	var show_per_page = 4; 
-			//getting the amount of elements inside pag_content div
-			var number_of_items = $('#pag_content').children().size();
-			//calculate the number of pages we are going to have
-			var number_of_pages = Math.ceil(number_of_items/show_per_page);
-			
-			//set the value of our hidden input fields
-			$('#current_page').val(0);
-			$('#show_per_page').val(show_per_page);
-			
-			//now when we got all we need for the navigation let's make it '
-			
-			/* 
-			what are we going to have in the navigation?
-				- link to previous page
-				- links to specific pages
-				- link to next page
-			*/
-			var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';
-			var current_link = 0;
-			while(number_of_pages > current_link){
-				navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
-				current_link++;
-			}
-			navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
-			
-			$('#page_navigation').html(navigation_html);
-			
-			//add active_page class to the first page link
-			$('#page_navigation .page_link:first').addClass('active_page');
-			
-			//hide all the elements inside pag_content div
-			$('#pag_content').children().css('display', 'none');
-			
-			//and show the first n (show_per_page) elements
-			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
+var show_per_page = 4; 
+//getting the amount of elements inside pag_content div
+var number_of_items = $('#pag_content').children().size();
+//calculate the number of pages we are going to have
+var number_of_pages = Math.ceil(number_of_items/show_per_page);
+
+//set the value of our hidden input fields
+$('#current_page').val(0);
+$('#show_per_page').val(show_per_page);
+
+//now when we got all we need for the navigation let's make it '
+
+/* 
+what are we going to have in the navigation?
+	- link to previous page
+	- links to specific pages
+	- link to next page
+*/
+var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';
+var current_link = 0;
+while(number_of_pages > current_link){
+	navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+	current_link++;
+}
+navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
+
+$('#page_navigation').html(navigation_html);
+
+//add active_page class to the first page link
+$('#page_navigation .page_link:first').addClass('active_page');
+
+//hide all the elements inside pag_content div
+$('#pag_content').children().css('display', 'none');
+
+//and show the first n (show_per_page) elements
+$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
 </script>
 </div>

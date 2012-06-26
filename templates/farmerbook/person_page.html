@@ -35,7 +35,8 @@
 		<div class = 'statsValue'>	{{ left_panel_stats.views_adoptions.1|default:"0" }} </div>
 		<div class='horizontal_line'> </div>
 		<div class = "imgContainerLabel">Service Provider</div>
-		<img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''>		
+		<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})"><img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''></a>	
+		
 		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.service_provider.0.1 }} ({{left_panel_stats.partner.0.1}})</div>
 		<div style='clear:both;'></div>
 	</div>
@@ -149,4 +150,5 @@
     </div>		
   </div>
 </div>
+
 </div>

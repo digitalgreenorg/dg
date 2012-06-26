@@ -1,0 +1,297 @@
+<html>
+<head></head>
+<body>
+
+	<div class="modal-body"
+		style="padding: 3px; border: 5px solid #666666;">
+<div id="content" style="width: 710px;">
+<div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
+<div class="left_panel_top">
+	<div id="name_label">
+		<center>{{ left_panel_stats.csp_details.0.1 }}</center>
+	</div>
+	<div id="district_label" ><center>
+	{% for v in left_panel_stats.csp_villages %}
+						{{v|lower|capfirst}}{% if not forloop.last %},  {% endif%}
+						{% endfor %}</center>
+						</div>
+						<center><img id="img_container" src='/media/farmerbook/images/sample_csp.jpg'></center>
+						<div id="district_label" style="font-size:110%">
+		<center>{{ left_panel_stats.vil_details.0.2 }},
+			{{left_panel_stats.vil_details.0.3 }}</center>
+	</div>
+	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
+	
+</div>
+
+<div class="left_panel_bottom" style="padding-top: 0px;">
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Screenings</div>
+<div class='statsValue'>{{left_panel_stats.screenings_disseminated }}</div>
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Adoptions</div>
+<div class='statsValue'>{{ left_panel_stats.total_adoptions }}</div>
+<div class='horizontal_line'></div>
+
+			
+
+<div class='group_members'>
+	<div class="section_title">
+		<span style="font-size: 90%; margin-left: -5px; color: #6D9D30">Groups ( {{left_panel_stats.nalloted_groups }} )</span>
+</div>
+<input type='hidden' id='current_page' /> <input type='hidden'
+	id='show_per_page' />
+
+<div id="pag_content">
+	{% for group in left_panel_stats.alloted_groups %}
+	<div
+		style="width: 100px; height: 70px; float: left; margin-bottom: 10px; margin-left: 2px;">
+		<a href='javascript:void(0);'
+			onclick="groupClick({{ group.0 }})"><img
+			title='{{ group.1 }}' class="group_image"
+			src=" http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg"
+			id="nap257" style=""></a>
+	</div>
+	{% endfor %}
+</div>
+<div id='page_navigation' style='clear:both;margin-bottom: 5px;'></div>
+		</div>
+	</div>
+</div>
+
+<div class='content_top' style="margin-left: 255px; height: auto;">
+<div id="closeButton"
+	style="float: right; margin-top: -5px; margin-left: 5px;">
+	<a class="close" data-dismiss="modal">x</a>
+</div>
+<div id="tabs">
+	<div id='toptabs'>
+		<ul>
+			<li id='tabsli' class='giftsli'>
+			<span>Videos Disseminated ( {{left_panel_stats.videos_disseminated }} )</span></a>
+		</li>
+	</ul>
+</div>
+</div>
+
+<div class='vil_tabcontent' id="top_tabcontent"
+	style="height: 270px;" style='width:100%; margin:0px;'>
+<div class="carousel slide span8" id="myCarousel"
+	style="width: 710px; margin-bottom: 0px;">
+	<div class="carousel-inner">
+		{% for vid in videos_watched_stats %} 
+		{% if forloop.counter0|divisibleby:"5" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
+				{% endif%}
+				<li class="vidsWatchedItem">
+					<div class="thumbnail">
+						<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'> <img title="Last seen on {{ vid.last_seen_date|date:" M d, Y" }} " src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+						</a>
+					</div>
+					<div class="video_title" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top: 0px;">
+						<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>{{ vid.title }}</a>
+					</div> 
+					<div class="question" style="margin-top: 0px;">{{ vid.farmers_attended }} attended</div>
+					{% if vid.adopters %}
+					<div class="question" style="margin-top: 0px;">{{ vid.adopters }} adopters</div> 
+					{% endif %} 
+							{% if vid.questioners %}
+						<div class="question" style="margin-top: 0px;">{{vid.questioners }} questioners</div> 
+						{% endif %} 
+						{% if vid.interested %}
+					<div class="question" style="margin-top: 0px;">{{ vid.interested }} interested</div> 
+					{% endif %}
+					<div class="question" style="margin-top: 0px;">Screened {{ vid.screenings }} times </div>
+					<div class="question" style="margin-top: 0px;">Last Screened: {{ vid.last_seen_date }} </div>
+				</li>
+				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%}
+		 {% endfor %}
+	</div>
+	<a data-slide="prev" href="#myCarousel"
+		class="left carousel-control" style="margin-left: -40px;"><</a>
+	<a data-slide="next" href="#myCarousel" class="carousel-control"
+		style="margin-left: 650px !important">></a>
+	</div>
+</div>
+
+<div style="height: 1px;"></div>
+	<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Service Providers</span> </div>
+			<div style='border-bottom:3px solid #009E0F;'></div>
+			<div style='border: 1px solid #009E0F;height:311px;'>
+<div class="carousel slide span8" id="lbCarousel"
+	style="width: 710px;">
+	<div class="carousel-inner" style="height: 300px;">
+		{% for person in top_related_stats %} {% if forloop.counter0|divisibleby:"3" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
+				{% endif%}
+				<li style="margin-left: 2px; margin-top: -9px;">
+					<div class='farmer_details_container'>
+						<img src={{person.photo_link}}>
+						<div class='csp_name'>
+							<a href="javascript:void(0);"
+								onclick="cspClick({{ person.id }})">{{ person.name }}</a>
+						</div>
+
+						<div  style="margin-top: 0px;font-weight:bold;font-color:green">{{person.screenings }} Screenings</div>
+						
+						<div id="progress_bar_label" style="margin-right:5px;">Adoptions per Screening</div>
+							<div class="progress progress-striped">
+							  <div class="bar "  style="width: {{person.ratewidth|floatformat:1 }}% ;"><p> {{ person.rate|floatformat:1 }}</p></div>
+							</div>
+						
+						
+
+					</div>
+				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%} 
+		{% endfor %}
+	</div>
+	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
+	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+			</div>
+
+		</div>
+</div>
+
+
+	</div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+var videos_watched_html;
+function person_click(person_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  mixpanel.track("Person Page Loaded")
+		  });
+}
+
+function groupClick(group_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  mixpanel.track("Group Page Loaded")
+		  });
+}
+
+
+function cspClick(csp_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  
+		  });
+}
+
+function ajax_tab_click(clicked, village_id) {    
+    if(clicked=="videos_produced") {
+		videos_watched_html = $("div#top_tabcontent").html();
+		//alert(videos_watched_html);
+		$("div#top_tabcontent").html("");
+		//alert('here in ajax tab click');
+		$("div#top_tabcontent").load('/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		  //alert($("div#top_tabcontent").html());
+		});
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".giftsli").addClass("tabsliselect");
+		$(".giftsli").removeAttr('href');
+		 mixpanel.track("Videos Produced page Loaded")
+	} else if (clicked=="videos_watched") {
+		$("div#top_tabcontent").html("");
+		$("div#top_tabcontent").html(videos_watched_html);
+		//alert(videos_watched_html);
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".playli").addClass("tabsliselect");
+		$(".playli").removeAttr('href');
+		
+	}
+	//alert($("div#top_tabcontent").html());
+	//$("li").removeClass("active");	
+	//$("#home").addClass("active");
+	
+
+			
+			
+}
+
+	var show_per_page = 4; 
+			//getting the amount of elements inside pag_content div
+			var number_of_items = $('#pag_content').children().size();
+			//calculate the number of pages we are going to have
+			var number_of_pages = Math.ceil(number_of_items/show_per_page);
+			
+			//set the value of our hidden input fields
+			$('#current_page').val(0);
+			$('#show_per_page').val(show_per_page);
+			
+			//now when we got all we need for the navigation let's make it '
+			
+			/* 
+			what are we going to have in the navigation?
+				- link to previous page
+				- links to specific pages
+				- link to next page
+			*/
+			var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';
+			var current_link = 0;
+			while(number_of_pages > current_link){
+				navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+				current_link++;
+			}
+			navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
+			
+			$('#page_navigation').html(navigation_html);
+			
+			//add active_page class to the first page link
+			$('#page_navigation .page_link:first').addClass('active_page');
+			
+			//hide all the elements inside pag_content div
+			$('#pag_content').children().css('display', 'none');
+			
+			//and show the first n (show_per_page) elements
+			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
+</script>
+		</div>
+</body>
+</html>
+
+
+

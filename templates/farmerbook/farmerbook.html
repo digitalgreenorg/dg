@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <title>Farmerbook | Digitalgreen</title>
     
@@ -70,7 +72,7 @@
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-transition.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-modal.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
-	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>	
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>
 	
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -78,7 +80,8 @@
     <![endif]-->
 
 	<script type='text/javascript'>	
-
+	
+	
 		$(document).ready(function() {
 		     $('#myModal').hide();
 			//$('.carousel').carousel({ interval: 200000	});
@@ -103,6 +106,7 @@
 					});
 		}
 		
+	
 		function villageClick(vil_id) {
 		    $('#myModal').hide();
 			$("div#myModal").before("<div id='loading_image'><img style='margin-left:330px;margin-top:20px;' src='/media/farmerbook//images/loading.gif' /></div>");
@@ -304,6 +308,24 @@
 					
 			});						
 		}
+		
+		function cspClick(csp_id) {
+			$("#myModal").html("");
+			$("#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				  }
+				  //alert('Load was performed.');
+				 // alert($("div#content").html());
+				  
+				  });
+		}
+		
+		
+		
+		
+		
 		</script>
 
 <!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
@@ -334,7 +356,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			{% endfor %}
 	</div>-->
 				<a href="javascript:void(0);" onclick="personClick(40000022215)">
-					<img rel="popover" data-original-title="Basappa Somanakoppa" data-content="Adoption Rate: 75%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022215.jpg">
+					<img rel="popover" data-original-title="Basappa Somanakoppa" data-content="Adoption Rate: 75%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/40000022215.jpg" >
 				</a>
 			
 				<a href="javascript:void(0);" onclick="personClick(10000000058416)">
