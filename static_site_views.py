@@ -30,6 +30,10 @@ def melissaho(request):
    
     return render_to_response('mellisaho.html')
 
+def aishwaryaratan(request):
+   
+    return render_to_response('aishwaryaratan.html')
+
 def srikantvasan(request):
    
     return render_to_response('srikantvasan.html')
