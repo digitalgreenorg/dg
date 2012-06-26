@@ -32,7 +32,8 @@
 			<div id="pag_content">
 			{% for group in left_panel_stats.vil_groups %}
 				<div style="width:100px; height:70px;float:left; margin-bottom:10px;margin-left:2px;">
-					<a href='javascript:void(0);' onclick="groupClick({{ group.0 }})"><img title='{{ group.1 }}' class="group_image" src="/media/farmerbook/images/vil1.jpg" id="nap257" style=""></a>
+					<a href='javascript:void(0);' onclick="groupClick({{ group.0 }})"><img title='{{ group.1 }}' class="group_image" 
+					src="http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg" id="nap257" style=""></a>
 				</div>
 			{% endfor %}
 			</div>

@@ -297,6 +297,23 @@
 					//markers.push(marker);
 					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
 				}
+				
+				var mbnr_vil_ids = new Array(10000000020271, 10000000020439, 10000000020509);
+				for(var i=0; i< mbnr_vil_ids.length; i++) {
+					var latLng = new google.maps.LatLng(16.42 + 0.2 * Math.random(), 77.58 + 0.1 * Math.random());
+					var marker = new google.maps.Marker({'position': latLng});
+					
+					marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
+					markers.push(marker);
+					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mbnr_vil_ids[i]));
+					//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+						
+						
+					
+					//markers.push(marker);
+					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
+				}			
+				
 				var markerCluster = new MarkerClusterer(map, markers);
 				for(var i=0; i<markers.length; i++) {
 					//markers[i].setMap(map);
