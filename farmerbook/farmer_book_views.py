@@ -493,5 +493,15 @@ def get_csp_page(request):
                                                                 videos_watched_stats = sorted_videos_watched_stats, 
                                                                 top_related_stats = top_related_stats))
         
+def get_partner_page(request):
+        
+    partner_id = int(request.GET['partner_id'])
     
+    #left panel stats dict hold values related to left panel of village page
+    left_panel_stats = {} 
+    left_panel_stats['partner_details'] = District.objects.filter(partner = partner_id).values_list('partner__id',
+                                                                                                    'partner__partner_name',
+                                                                                                    'district_name',
+                                                                                                    'state__state_name')
     
+    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats))
