@@ -11,9 +11,6 @@
 		<div class= 'statsLabel'> Active Farmers</div>
 		<div class = 'statsValue'> {{ left_panel_stats.tot_farmers.0 }} </div>
 		<div class='horizontal_line'> </div>
-		<div class= 'statsLabel'> Videos Watched</div>
-		<div class = 'statsValue'> {{ left_panel_stats.tot_videos }} </div>
-		<div class='horizontal_line'> </div>
 		<div class= 'statsLabel'> Questions Asked</div>
 		<div class = 'statsValue'> {% if  left_panel_stats.vil_details.0.0 == 10000000019913 %}
 					9
@@ -33,16 +30,24 @@
 			{% for group in left_panel_stats.vil_groups %}
 				<div style="width:100px; height:70px;float:left; margin-bottom:10px;margin-left:2px;">
 					<a href='javascript:void(0);' onclick="groupClick({{ group.0 }})"><img title='{{ group.1 }}' class="group_image" 
-					src="http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg" id="nap257" style=""></a>
+					src="http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg" style=""></a>
 				</div>
 			{% endfor %}
 			</div>
-			<div id='page_navigation' style='margin-bottom:5px;'></div>			
+			<div id='page_navigation' style='margin-bottom:5px;clear:both;'></div>			
 		</div>
 		<div class='horizontal_line'> </div>
-		<div class = "imgContainerLabel">Service Provider</div>
-		<img  style= "float:left; width:100px; height:50px; margin-left: 5px;"src=''>		
-		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.service_provider.0.1 }} ({{left_panel_stats.partner.0.1}})</div>
+		<div class = "section_title"><span style="font-size:90%; margin-left:-5px;color:#6D9D30">Service Provider</span></div>
+		<div class='service_provider_container'>
+			<div style='width:100px;float:left;'>
+				<div  style= "width:100px; height:100px; margin-left: 2px;border: 1px solid green;"src=''></div>
+				<div>{{ left_panel_stats.service_provider.0.1 }}</div>				
+			</div>
+			<div style='width:100px;float:right;'>
+				<div style= "width:100px; height:100px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''></div>
+				<div style="margin-left:-30px;">{{ left_panel_stats.partner.0.1 }}</div>
+			</div>
+		</div>
 		
 		<div style='clear:both;'></div>
 	</div>
@@ -53,9 +58,15 @@
 	<div id="tabs">
 		<div id='toptabs'> 
 			<ul>
-				<li id='tabsli' class='playli tabsliselect' onClick="ajax_tab_click('videos_watched', {{ left_panel_stats.vil_details.0.0 }} )"> <span>Videos Watched ( {{ left_panel_stats.tot_videos }} )</span></a> </li>
+				<li id='tabsli' class='playli tabsliselect' onClick="ajax_tab_click('videos_watched', {{ left_panel_stats.vil_details.0.0 }} )"> 
+					<span>Videos Watched ( {{ left_panel_stats.tot_videos }} )</span></a> 
+				</li>
+				{% if left_panel_stats.videos_produced%}
 				<li id='tabsli' class='giftsli' onClick="ajax_tab_click('videos_produced', {{ left_panel_stats.vil_details.0.0 }} )" > 
-				<span>Videos Produced ( {{ left_panel_stats.videos_produced }} )</span></a> </li>				
+					<span>Videos Produced ( {{ left_panel_stats.videos_produced }} )</span></a> 
+				</li>
+				{% endif %}
+								
 			</ul>
 		</div>
 		<div class='vil_tabcontent' id="top_tabcontent" style="height:190px;" style='width:100%; margin:0px;'>
@@ -72,18 +83,32 @@
 								<img title="Last seen on {{ vid.last_seen_date|date:"M d, Y" }} " src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
-							<div class="video_title" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top:0px;" >
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title }}</a> 
-							</div>							
-							{% if vid.adopters %}
-								<div class="question" style="margin-top:0px;">{{ vid.adopters }} adopters </div>
+							{% if vid.adopters %}							
+							<div style='margin-top:-90px;position:absolute;'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters }}  </span></div>
+							{% endif %}
+												
+							{% if vid.interested %}
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}  </span> </div>
 							{% endif %}
 							{% if vid.questioners %}
-							    <div class="question" style="margin-top:0px;">{{ vid.questioners }} questioners </div>
+								{% if vid.interested %}
+									<div style=' margin-top:-40px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+								{% else %}
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+								{% endif %}
+								
 							{% endif %}
-							{% if vid.interested %}
-							    <div class="question" style="margin-top:0px;">{{ vid.interested }} interested </div>
+							
+							<div class="ellipsis multiline" style="width: 100px; height: 40px;" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top:0px;" >
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title }}</a> 
+							</div>	
+							{% if vid.disseminations %}
+							    <div class="question" style="margin-top:0px;">{{ vid.disseminations }} disseminations </div>
 							{% endif %}
+							{% if vid.atten %}
+								<div class="question" style="margin-top:0px;">{{ vid.atten }} attendance </div>
+							{% endif %}
+							
 						</li>
 						{% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}						    
 							</div>							
@@ -301,18 +326,18 @@ function ajax_tab_click(clicked, village_id) {
 				- links to specific pages
 				- link to next page
 			*/
-			var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';
+			var navigation_html='' ;//= '<a class="previous_link" href="javascript:previous();">Prev</a>';
 			var current_link = 0;
 			while(number_of_pages > current_link){
-				navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+				navigation_html += '<a class="normalSlide" href="javascript:go_to_page(' + current_link +')" title="Jump to page ' + (current_link + 1) +'" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
 				current_link++;
 			}
-			navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
+			//navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
 			
 			$('#page_navigation').html(navigation_html);
 			
 			//add active_page class to the first page link
-			$('#page_navigation .page_link:first').addClass('active_page');
+			$('#page_navigation .normalSlide:first').addClass('activeSlide');
 			
 			//hide all the elements inside pag_content div
 			$('#pag_content').children().css('display', 'none');

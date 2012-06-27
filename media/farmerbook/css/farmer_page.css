@@ -26,8 +26,8 @@
 	text-align:center;
 }
 .left_panel_top {
-	padding-left:25px;
-	padding-right:25px;
+	padding-left:0px;
+	padding-right:0px;
 }
 
 .left_panel_bottom {
@@ -98,7 +98,7 @@
 }
 
 .statsValue {
-    color: #00FF00;
+    color: #009E0F;
     font-size: 20px;
     text-align: right;
     margin-top: 5px;
@@ -305,7 +305,7 @@ margin-left:50px;
 .group_image {
 	width:100px;
 	height:70px;
-	margin-left:15px;
+	margin-left:5px;
 	margin-top:5px;
 }
 
@@ -316,7 +316,9 @@ margin-left:50px;
 	height:55px;
 }
 
-
+.service_provider_container {
+	margin-left:5px;
+}
 .bar p {
     color: black;
     font-size: 12px;
