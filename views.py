@@ -760,14 +760,40 @@ def get_videos_online(request, offset, limit):
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
         videos_seen = set(Person.objects.filter(village__in = villages).values_list('screening__videoes_screened', flat=True))
-        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen))
+        videos = Video.objects.filter(Q(village__in = villages) | Q(id__in = videos_seen)).distinct()
         if(searchText):
-            vil = villages.filter(village_name__icontains = searchText)            
-            videos = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil) | \
-                   Q(video_production_start_date__icontains = searchText) | Q(video_production_end_date__icontains = searchText) ).order_by("-id")[offset:limit]
-
-        count = videos.distinct().count()
-        videos = videos.distinct()[offset:limit]
+            vil = villages.filter(village_name__icontains = searchText)         
+            videos_text = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil))
+            video_with_prod_start_date = video_with_prod_start_month = video_with_prod_start_year = Video.objects.none()
+            video_with_prod_end_date = video_with_prod_end_month = video_with_prod_end_year = Video.objects.none()
+            try: 
+                video_with_prod_start_date = videos.filter(Q(video_production_start_date=searchText))
+            except ValidationError:
+                pass
+            try:
+                video_with_prod_start_month = videos.filter(Q(video_production_start_date__month=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_start_year = videos.filter(Q(video_production_start_date__year=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_end_date = videos.filter(Q(video_production_end_date=searchText))
+            except ValidationError:
+                pass 
+            try:
+                video_with_prod_end_month = videos.filter(Q(video_production_end_date__month=searchText))
+            except ValueError:
+                pass
+            try:
+                video_with_prod_end_year = videos.filter(Q(video_production_end_date__year=searchText))
+            except ValueError:
+                pass
+            videos = videos_text | video_with_prod_start_date | video_with_prod_start_month | video_with_prod_start_year | video_with_prod_end_date | video_with_prod_end_month | video_with_prod_end_year
+            videos = videos.distinct().order_by("-id")
+        count = videos.count()
+        videos = videos[offset:limit]
         if(videos):
             json_subcat = serializers.serialize("json", videos, relations=('village',))
         else:

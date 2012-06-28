@@ -43,13 +43,7 @@
 		border: 1px solid #6D9D30;
 
 	  }
-	  #page_navigation a{
-		padding:3px;
-		border:1px solid gray;
-		margin:2px;
-		color:black;
-		text-decoration:none
-	}
+	  
 	.active_page{
 		background:darkgreen;
 		color:white !important;
@@ -63,6 +57,18 @@
 		color: #555555;
 	
 	}
+	.ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+	}
+
+	.ellipsis.multiline {
+		white-space: normal;
+	}
+	
+	.activeSlide {text-decoration:none;color:#999;background-position:0 -26px;cursor:default;}
+	.normalSlide {background-image:url(/media/farmerbook/images/bg_control_nav.png);color:#333;cursor:pointer;display:inline-block;position:relative;font-size:1.7em;height:13px;margin:0px 0 0 4px;outline:none;text-align:left;text-decoration:none;text-indent:-999em;width:13px;}
+
     </style>
 	
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -108,6 +114,7 @@
 		
 	
 		function villageClick(vil_id) {
+			alert('in village click');
 		    $('#myModal').hide();
 			$("div#myModal").before("<div id='loading_image'><img style='margin-left:330px;margin-top:20px;' src='/media/farmerbook//images/loading.gif' /></div>");
 			$("div#myModal").load('/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
@@ -122,10 +129,11 @@
 					  $('#myModal').show();
 					
 					  $('#myModal').modal();
-					
+					$(".ellipsis").ellipsis();
 					  mixpanel.track("Village Page Loaded");
 					  
 					});
+			
 		}
 		
 		function cspClick(csp_id) {
@@ -202,7 +210,7 @@ function partnerClick(partner_id) {
 			
 			/*get the page link that has longdesc attribute of the current page and add active_page class to it
 			and remove that class from previously active page link*/
-			$('.page_link[longdesc=' + page_num +']').addClass('active_page').siblings('.active_page').removeClass('active_page');
+			$('.normalSlide[longdesc=' + page_num +']').addClass('activeSlide').siblings('.activeSlide').removeClass('activeSlide');
 			
 			//update the current page input field
 			$('#current_page').val(page_num);
@@ -340,6 +348,23 @@ function partnerClick(partner_id) {
 					//markers.push(marker);
 					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
 				}
+				
+				var mbnr_vil_ids = new Array(10000000020271, 10000000020439, 10000000020509);
+				for(var i=0; i< mbnr_vil_ids.length; i++) {
+					var latLng = new google.maps.LatLng(16.42 + 0.2 * Math.random(), 77.58 + 0.1 * Math.random());
+					var marker = new google.maps.Marker({'position': latLng});
+					
+					marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
+					markers.push(marker);
+					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mbnr_vil_ids[i]));
+					//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+						
+						
+					
+					//markers.push(marker);
+					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
+				}			
+				
 				var markerCluster = new MarkerClusterer(map, markers);
 				for(var i=0; i<markers.length; i++) {
 					//markers[i].setMap(map);
@@ -347,7 +372,6 @@ function partnerClick(partner_id) {
 					
 			});						
 		}
-		
 		
 		(function($) {
 	        $.fn.ellipsis = function()
@@ -388,12 +412,6 @@ function partnerClick(partner_id) {
 	        };
 	})(jQuery);
 
-		
-	
-		
-		
-		
-		
 		</script>
 
 <!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
