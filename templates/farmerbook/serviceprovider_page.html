@@ -1,4 +1,9 @@
-<div class="modal-body" style="padding: 3px; border: 5px solid #666666;">
+<html>
+<head></head>
+<body>
+
+	<div class="modal-body"
+		style="padding: 3px; border: 5px solid #666666;">
 <div id="content" style="width: 710px;">
 <div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
 <div class="left_panel_top">
@@ -52,7 +57,15 @@
 </div>
 <div id='page_navigation' style='clear:both;margin-bottom: 5px;'></div>
 		</div>
-	</div>
+	
+	
+<
+		<div class = "imgContainerLabel">Partner</div>
+		<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})"><img  style= "float:left; width:100px; height:30px; margin-left: 5px;"src=''></a>	
+		
+		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.partner_details.0.1 }}({{left_panel_stats.partner_details.0.1}}) </div>
+		<div style='clear:both;'></div>	
+</div>
 </div>
 
 <div class='content_top' style="margin-left: 255px; height: auto;">
@@ -81,26 +94,38 @@
 			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
 				{% endif%}
 				<li class="vidsWatchedItem">
-					<div class="thumbnail">
-						<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'> <img title="Last seen on {{ vid.last_seen_date|date:" M d, Y" }} " src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
-						</a>
-					</div>
-					<div class="video_title" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top: 0px;">
-						<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>{{ vid.title }}</a>
-					</div> 
-					<div class="question" style="margin-top: 0px;">{{ vid.farmers_attended }} attended</div>
-					{% if vid.adopters %}
-					<div class="question" style="margin-top: 0px;">{{ vid.adopters }} adopters</div> 
-					{% endif %} 
+							<div class="thumbnail">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+								<img title="Last seen on {{ vid.last_seen_date|date:"M d, Y" }} " src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								</a>
+							</div>
+							{% if vid.adopters %}							
+							<div style='margin-top:-90px;position:absolute;'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters }}  </span></div>
+							{% endif %}
+
+							{% if vid.interested %}
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}  </span> </div>
+							{% endif %}
 							{% if vid.questioners %}
-						<div class="question" style="margin-top: 0px;">{{vid.questioners }} questioners</div> 
-						{% endif %} 
-						{% if vid.interested %}
-					<div class="question" style="margin-top: 0px;">{{ vid.interested }} interested</div> 
-					{% endif %}
-					<div class="question" style="margin-top: 0px;">Screened {{ vid.screenings }} times </div>
-					<div class="question" style="margin-top: 0px;">Last Screened: {{ vid.last_seen_date }} </div>
-				</li>
+								{% if vid.interested %}
+									<div style=' margin-top:-40px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+								{% else %}
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+								{% endif %}
+
+							{% endif %}
+
+							<div class="ellipsis multiline" style="width: 100px; height: 40px;" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top:0px;" >
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title }}</a> 
+							</div>	
+							{% if vid.screenings %}
+							    <div class="question" style="margin-top:0px;">{{ vid.screenings }} disseminations </div>
+							{% endif %}
+							{% if vid.farmers_attended %}
+								<div class="question" style="margin-top:0px;">{{ vid.farmers_attended }} attended </div>
+							{% endif %}
+
+						</li>
 				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
 		</div>
 		</ul>
@@ -155,12 +180,149 @@
 			</div>
 
 		</div>
-       </div>
-   </div>
- </div>
-
 </div>
 
+
+	</div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+var videos_watched_html;
+function person_click(person_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  mixpanel.track("Person Page Loaded")
+		  });
+}
+
+function groupClick(group_id) {
+	$("#myModal").html("");
+	$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		 // alert($("div#content").html());
+		  mixpanel.track("Group Page Loaded")
+		  });
+}
+
+
+
+
+
+function partnerClick(partner_id) {
+	
+	$("div#myModal").load('/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
+					 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+		  $('#myModal').show();
+		
+		  $('#myModal').modal();
+		 
+		 mixpanel.track("Person Page Loaded");
+		  
+		});	
+	
+}
+
+function ajax_tab_click(clicked, village_id) {    
+    if(clicked=="videos_produced") {
+		videos_watched_html = $("div#top_tabcontent").html();
+		//alert(videos_watched_html);
+		$("div#top_tabcontent").html("");
+		//alert('here in ajax tab click');
+		$("div#top_tabcontent").load('/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		  //alert($("div#top_tabcontent").html());
+		});
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".giftsli").addClass("tabsliselect");
+		$(".giftsli").removeAttr('href');
+		 mixpanel.track("Videos Produced page Loaded")
+	} else if (clicked=="videos_watched") {
+		$("div#top_tabcontent").html("");
+		$("div#top_tabcontent").html(videos_watched_html);
+		//alert(videos_watched_html);
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".playli").addClass("tabsliselect");
+		$(".playli").removeAttr('href');
+		
+	}
+	//alert($("div#top_tabcontent").html());
+	//$("li").removeClass("active");	
+	//$("#home").addClass("active");
+	
+
+			
+			
+}
+
+	var show_per_page = 4; 
+			//getting the amount of elements inside pag_content div
+			var number_of_items = $('#pag_content').children().size();
+			//calculate the number of pages we are going to have
+			var number_of_pages = Math.ceil(number_of_items/show_per_page);
+			
+			//set the value of our hidden input fields
+			$('#current_page').val(0);
+			$('#show_per_page').val(show_per_page);
+			
+			//now when we got all we need for the navigation let's make it '
+			
+			/* 
+			what are we going to have in the navigation?
+				- link to previous page
+				- links to specific pages
+				- link to next page
+			*/
+			var navigation_html='' ;//= '<a class="previous_link" href="javascript:previous();">Prev</a>';
+			var current_link = 0;
+			while(number_of_pages > current_link){
+				navigation_html += '<a class="normalSlide" href="javascript:go_to_page(' + current_link +')" title="Jump to page ' + (current_link + 1) +'" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+				current_link++;
+			}
+			//navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
+			
+			$('#page_navigation').html(navigation_html);
+			
+			//add active_page class to the first page link
+			$('#page_navigation .normalSlide:first').addClass('activeSlide');
+			
+			//hide all the elements inside pag_content div
+			$('#pag_content').children().css('display', 'none');
+			
+			//and show the first n (show_per_page) elements
+			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
+</script>
+		</div>
+</body>
+</html>
 
 
 

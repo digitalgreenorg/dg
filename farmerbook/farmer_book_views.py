@@ -393,6 +393,7 @@ def get_csp_page(request):
                                                                                                     'block__district__district_name', 
                                                                                                     'block__district__state__state_name')
     
+    
         
     left_panel_stats['total_adoptions'] = Animator.objects.get(id = csp_id).total_adoptions
     
@@ -451,9 +452,12 @@ def get_csp_page(request):
     csp_district= Animator.objects.filter(id = csp_id).values_list('village__block__district__id', flat = True)
     related_info = Animator.objects.filter(village__block__district__id = csp_district).values('id').annotate(num_screening = Count('screening')).values_list('id',
                                                                                                                                                               'name',
-                                                                                                                                                              'num_screening',
+                                                                                                                                                         'num_screening',
                                                                                                                                                               'total_adoptions')
     
+    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name') 
+    print left_panel_stats['partner_details']
+       
     for related_id in related_info:
         views_dict[related_id[0]][0] = related_id[1]
         views_dict[related_id[0]][1] = related_id[2]
@@ -500,8 +504,66 @@ def get_partner_page(request):
     #left panel stats dict hold values related to left panel of village page
     left_panel_stats = {} 
     left_panel_stats['partner_details'] = District.objects.filter(partner = partner_id).values_list('partner__id',
-                                                                                                    'partner__partner_name',
-                                                                                                    'district_name',
-                                                                                                    'state__state_name')
+                                                                                              'partner__partner_name',
+                                                                                                    'state__state_name',
+                                                                                                    'id')[:1]
+    print str(datetime.datetime.now())                                                                                                
+    screenings_partner = Screening.objects.filter(village__block__district__partner = partner_id).values_list('id')                                                                                                  
+    screening_list = set(i[0] for i in screenings_partner)
+    print str(datetime.datetime.now())
+    district_list = set(i[3] for i in left_panel_stats['partner_details'])
+    print district_list
+    pers = Person.objects.filter(village__block__district__partner = partner_id).values_list('id', flat = True)
+    left_panel_stats['total_farmers'] = pers.count()
     
-    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats))
+    pma = PersonMeetingAttendance.objects.filter(screening__in = screening_list).values_list('screening__videoes_screened__id',
+                                                                                           'interested', 
+                                                                                           'expressed_question')   
+    vids_id= set(i[0] for i in pma)
+    vids_details = Video.objects.filter(id__in = vids_id).values_list('id', 'title', 'youtubeid')
+    left_panel_stats['videos_disseminated'] = len(vids_details)
+    farmer_att = Screening.objects.filter(id__in = screening_list).values('videoes_screened__id').annotate(screening_per_vid = Count('id', distinct=True),
+                                                                                                         fcount=Count('farmers_attendance__id'),
+                                                                                                         last_seen_date = Max('date'))
+    vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
+    
+    for v_id,interest,question in pma:
+        if(interest):
+            vids_stats_dict[v_id][0] += 1
+        if(question != ""):
+            vids_stats_dict[v_id][1] += 1
+    
+  
+   
+    per_vid_adoption = PersonAdoptPractice.objects.filter( video__in = vids_id,
+                                                           person__village__block__district__partner = partner_id).values('video__id').annotate(adopt_count=Count('person__id')) 
+    total_adoption_partner = 0
+    for vid_id in per_vid_adoption:
+        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        total_adoption_partner += vid_id['adopt_count']
+    left_panel_stats['adoptions'] = total_adoption_partner
+        
+    for vid_id in farmer_att:
+        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['fcount']
+        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['screening_per_vid']
+        vids_stats_dict[vid_id['videoes_screened__id']][5] =  vid_id['last_seen_date']
+        
+   
+        
+    #videos_watched_stats contain list of dictionaries containing stats of video titles
+    videos_watched_stats = []
+    for obj in vids_details:
+        videos_watched_stats.append({'id':obj[0], 
+                                    'title':obj[1],
+                                    'youtubeid':obj[2],
+                                    'adopters':vids_stats_dict[obj[0]][2],
+                                    'interested':vids_stats_dict[obj[0]][0], 
+                                    'last_seen_date':vids_stats_dict[obj[0]][5], 
+                                    'questioners': vids_stats_dict[obj[0]][1],
+                                    'farmers_attended': vids_stats_dict[obj[0]][3],
+                                    'screenings':vids_stats_dict[obj[0]][4]})
+      
+    sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
+            
+    
+    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats,videos_watched_stats = sorted_videos_watched_stats))
