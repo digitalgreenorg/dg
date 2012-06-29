@@ -546,21 +546,20 @@ def get_partner_page(request):
     
 
     vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
-    fcount = defaultdict(lambda:[0])
     
-    for id,interest,question in pma:
-        vids_stats_dict[id][3] += 1
+    for v_id,interest,question in pma:
+        vids_stats_dict[v_id][3] += 1
         if(interest):
-            vids_stats_dict[id][0] += 1
+            vids_stats_dict[v_id][0] += 1
         if(question != ""):
-            vids_stats_dict[id][1] += 1
+            vids_stats_dict[v_id][1] += 1
     
   
 
     per_vid_adoption = PersonAdoptPractice.objects.filter( video__in = vids_id,
-                                                           person__village__block__district__in = partner_district).values('video__id').annotate(adopt_count=Count('person__id')) 
+                                                           person__village__block__district__in = partner_district).values('video').annotate(adopt_count=Count('person')) 
     for vid_id in per_vid_adoption:
-        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        vids_stats_dict[vid_id['video']][2] = vid_id['adopt_count']
         
     for vid_id in farmer_att:
         vids_stats_dict[vid_id['videoes_screened']][4] =  vid_id['screening_per_vid']
