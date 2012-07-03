@@ -1,31 +1,28 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse, QueryDict
-from dashboard.models import *
-from views import *
-from forms import *
-from django.forms.models import modelformset_factory
-from django.forms.models import inlineformset_factory
+import cjson
+import datetime
+import operator
+import re
+
+from django.conf.urls.defaults import *
+from django.contrib import auth
+from django.core import serializers
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
 from django.core.urlresolvers import reverse
-from django.template.loader import get_template
-from django.template import Context, Template
-from django.shortcuts import render_to_response
 from django.db import connection, transaction
 from django.db.models import Q
-from output.database.utility import run_query, run_query_dict
-import datetime
-import cjson
-import re
-from django.core import serializers
-from django.contrib import auth
-
-# autocomplete widget
-import operator
-from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
+from django.forms.models import inlineformset_factory, modelformset_factory
+from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
+from django.shortcuts import *
+from django.template import Context, Template
+from django.template.loader import get_template
 from django.utils.encoding import smart_str
-from django.conf.urls.defaults import *
 
+from dashboard.models import *
+from output.database.utility import run_query, run_query_dict
+from forms import *
+from filter_utils import filter_objects_for_date
+from views import *
 
 def search(request):
     """
@@ -764,33 +761,9 @@ def get_videos_online(request, offset, limit):
         if(searchText):
             vil = villages.filter(village_name__icontains = searchText)         
             videos_text = videos.filter( Q(id__icontains = searchText) | Q(title__icontains = searchText) | Q(village__in = vil))
-            video_with_prod_start_date = video_with_prod_start_month = video_with_prod_start_year = Video.objects.none()
-            video_with_prod_end_date = video_with_prod_end_month = video_with_prod_end_year = Video.objects.none()
-            try: 
-                video_with_prod_start_date = videos.filter(Q(video_production_start_date=searchText))
-            except ValidationError:
-                pass
-            try:
-                video_with_prod_start_month = videos.filter(Q(video_production_start_date__month=searchText))
-            except ValueError:
-                pass
-            try:
-                video_with_prod_start_year = videos.filter(Q(video_production_start_date__year=searchText))
-            except ValueError:
-                pass
-            try:
-                video_with_prod_end_date = videos.filter(Q(video_production_end_date=searchText))
-            except ValidationError:
-                pass 
-            try:
-                video_with_prod_end_month = videos.filter(Q(video_production_end_date__month=searchText))
-            except ValueError:
-                pass
-            try:
-                video_with_prod_end_year = videos.filter(Q(video_production_end_date__year=searchText))
-            except ValueError:
-                pass
-            videos = videos_text | video_with_prod_start_date | video_with_prod_start_month | video_with_prod_start_year | video_with_prod_end_date | video_with_prod_end_month | video_with_prod_end_year
+            video_with_prod_start_date = filter_objects_for_date(videos, 'video_production_start_date', searchText)
+            video_with_prod_end_date = filter_objects_for_date(videos, 'video_production_end_date', searchText)
+            videos = videos_text | video_with_prod_start_date | video_with_prod_end_date
             videos = videos.distinct().order_by("-id")
         count = videos.count()
         videos = videos[offset:limit]
@@ -1793,27 +1766,8 @@ def get_screenings_online(request, offset, limit):
     if(searchText):
         vil = villages.filter(village_name__icontains = searchText)
         screening_in_village=screenings.filter(Q(village__in = vil))
-        screening_on_date = Screening.objects.none()
-        screening_on_day = Screening.objects.none()
-        screening_on_month = Screening.objects.none()
-        screening_on_year = Screening.objects.none()
-        try:
-            screening_on_date=screenings.filter(Q(date=searchText))
-        except ValidationError:
-            pass
-        try:
-            screening_on_day=screenings.filter(Q(date__day=searchText))
-        except ValueError:
-            pass
-        try:
-            screening_on_month=screenings.filter(Q(date__month=searchText))
-        except ValueError:
-            pass
-        try:
-            screening_on_year=screenings.filter(Q(date__year=searchText))
-        except ValueError:
-            pass
-        screenings = screening_in_village | screening_on_date | screening_on_day | screening_on_month | screening_on_year
+        screening_on_date = filter_objects_for_date(screenings, 'date', searchText)
+        screenings = screening_in_village | screening_on_date
         count = len(screenings)
         screenings = screenings.order_by("date")[offset:limit]
     else:
