@@ -1,11 +1,11 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse
-from django.db.models import Min
 from dashboard.models import *
-from output.database.SQL  import adoption_analytics_sql, video_analytics_sql, screening_analytics_sql, shared_sql
+from django.db.models import Min
+from django.http import Http404, HttpResponse
+from django.shortcuts import *
 from output import views
-from output.views.common import get_geog_id
+from output.database.SQL  import adoption_analytics_sql, video_analytics_sql, screening_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
+from output.views.common import get_geog_id
 import datetime, json
 
 
@@ -138,7 +138,7 @@ def adoption_rate_line(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     adoption_rate_stats = run_query_raw(adoption_analytics_sql.adoption_rate_line(geog, id, from_date, to_date, partners))
-    
+
     return_val = [[str(date), float((active * 100)/tot)] for date, active, tot in adoption_rate_stats]
     return_val.insert(0,['Date','Adoption Rate'])
     return HttpResponse(json.dumps(return_val))

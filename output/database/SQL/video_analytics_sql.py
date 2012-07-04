@@ -92,13 +92,23 @@ def video_type_wise_pie(geog, id, from_date, to_date, partners):
 
 def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(VID.id) as count"])
+    ##Change
+    sql_ds['select'].extend(["PRACTICE_NAME as name","top_prac.name as top","sub_prac.name as sub","util.name as utility","type.name as prac_type","sub.name as subject", "COUNT(VID.id) as count"])
+    #sql_ds['select'].extend(["PRACTICE_NAME as name","COUNT(VID.id) as count"])
+    ##
     sql_ds['from'].append("VIDEO VID");
     sql_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
     sql_ds['join'].append(["PRACTICES P","VRAP.practices_id = P.id"])
+    ##Change
+    sql_ds['lojoin'].append(["DASHBOARD_TOPPRACTICE top_prac","top_prac.id = P.top_practice_id"])
+    sql_ds['lojoin'].append(["DASHBOARD_SUBPRACTICE sub_prac","sub_prac.id = P.sub_practice_id"])
+    sql_ds['lojoin'].append(["DASHBOARD_PRACTICEUTILITY util","util.id = P.utility_id"])
+    sql_ds['lojoin'].append(["DASHBOARD_PRACTICETYPE type","type.id = P.type_id"])
+    sql_ds['lojoin'].append(["DASHBOARD_PRACTICESUBJECT sub","sub.id = P.subject_id"])
+    ##
     sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append("PRACTICE_NAME")
+    sql_ds['group by'].append("P.id")
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 

@@ -13,6 +13,19 @@ import json
 import random
 import re
 
+##DELETE
+from output.database.SQL  import video_analytics_sql, shared_sql
+
+def test(request):
+    return render_to_response('test.html')
+
+def test_data(request):
+    geog="country"
+    id = 1
+    from_date, to_date, partners = None,None,[]
+    return scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
+
 def home_with_analytics():
     tot_scr = Screening.objects.count()
     tot_vid = Video.objects.filter(video_suitable_for = 1).count()
@@ -413,23 +426,24 @@ def scatter_chart_data(sqlFunc, **args):
     count_dict = {}
     for item in rs:
         if item['count'] in count_dict:
-            count_dict[item['count']].append(item['name'])
+            count_dict[item['count']].append([item['name'],item['top'],item['sub'],item['utility'],item['prac_type'],item['subject']])
         else:
-            count_dict[item['count']] = [item['name']]
-
+            count_dict[item['count']] = [[item['name'],item['top'],item['sub'],item['utility'],item['prac_type'],item['subject']]]
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
-    return_val = [['x','y','value','','description']]
+    return_val = [['practice_name','Top Practice','Sub Practice','Utility','Type','Subject','','','','Number']]
 
     random.seed();
-    for tot,pracs in count_dict.iteritems():
-        flag = [0] * x_axis_len
-        for prac in pracs:
+    for tot, pracs_arr in count_dict.iteritems():
+        for pracs in pracs_arr:
+            flag = [0] * x_axis_len
             x = random.randrange(1,x_axis_len)
             while(flag[x] != 0):
                 x = random.randrange(1,x_axis_len)
             flag[x] = 1
-            return_val.append([prac,x,tot,"",tot])
+            return_val.append([pracs[0],pracs[1],pracs[2],pracs[3],pracs[4],pracs[5],x,tot,"",tot])
+        
+    print len(return_val)
 
     return HttpResponse(json.dumps(return_val))
 

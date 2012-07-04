@@ -22,49 +22,47 @@
 
 	{% block contentbody %}
 		{{block.super}}		
-		<div id='contentstat'>	
-			<div id='table1'>
-				<div id='divstattitle'>
-					<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-						<tr>
-							<td class='divtitletablename'> <div id='divstattitlename'>Key Statistics</div> </td>
-							<td class='divtitletableimg'>  </td>
-						</tr>
-					</table>								
+<div id='contentstat'>	
+	<div id='table1'>
+		<div id='divstattitle'>
+			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+			<tr>
+				<td class='divtitletablename'> <div id='divstattitlename'>Key Statistics</div> </td>
+				<td class='divtitletableimg'>  </td>
+			</tr>
+			</table>								
+		</div>
+		<table id='table1stat' cellspacing='0' cellpadding='0'> 				
+		<tr>
+			<td class='table1statdesc'>
+			<div class='statdesc'>
+				<div class='statdescname'>	Total number of videos produced	</div>
+				<div id='statdescimg'> 	
+					<div id='statdescimg1'>	
+						The total number of videos that have been <br/>
+						produced across in a chosen geography						
+					</div>								
 				</div>
-				<table id='table1stat' cellspacing='0' cellpadding='0'> 				
-					<tr>
-						<td class='table1statdesc'>
-							<div class='statdesc'>
-								<div class='statdescname'>	Total number of videos produced	</div>
-								<div id='statdescimg'> 	
-									<div id='statdescimg1'>	
-										The total number of videos that have been <br/>
-										produced across in a chosen geography						
-									</div>								
-								</div>
-							</div>
-							<div class='statnumber'>
-								<div class='statdesnumber'>	{{tot_video}} videos	</div>
-							</div>																				
-						</td>
-						
-						<td class='table1statdesc'>
-							<div class='statdesc'>
-								<div class='statdescname'>	Total number of distinct videos screened	</div>
-								<div id='statdescimg'> 
-									<div id='statdescimg1'>	
-										The total number of videos that have <br/>
-										been screened to the farmer groups						
-									</div>								
-								</div>
-							</div>
-							<div class='statnumber'>
-								<div class='statdesnumber'>	{{tot_vids_screened}} videos	</div>
-							</div>													
-						</td>
-						
-						<td class='table1statdesc'>
+			</div>
+			<div class='statnumber'>
+				<div class='statdesnumber'>	{{tot_video}} videos	</div>
+			</div>																				
+			</td>	
+			<td class='table1statdesc'>
+				<div class='statdesc'>
+					<div class='statdescname'>	Total number of distinct videos screened	</div>
+					<div id='statdescimg'> 
+						<div id='statdescimg1'>	
+						The total number of videos that have <br/>
+						been screened to the farmer groups						
+						</div>								
+					</div>
+				</div>
+				<div class='statnumber'>
+					<div class='statdesnumber'>	{{tot_vids_screened}} videos	</div>
+				</div>													
+			</td>
+			<td class='table1statdesc'>
 							<div class='statdesc'>
 								<div class='statdescname'>	Average time taken to produce a video	</div>
 								<div id='statdescimg'>
@@ -78,74 +76,101 @@
 								<div class='statdesnumber'>	{{tot_average|floatformat:2|default:'0'}} days	</div>
 							</div>																			
 						</td>
-						
-					</tr>
-					
-				</table>				
+		</tr>
+		</table>				
+		</div>					
+	</div>
+	<div id='divstattitle'>
+		<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
+		<tr>
+			<td class='divtitletablename'> <div id='divstattitlename'>Graphs</div> </td>
+			<td class='divtitletableimg'>  </td>
+		</tr>
+		</table>								
+	</div>
+	<div id='contenttable'>	
+		<table cellpadding="0" cellspacing="0" border="0" id="graphtable">
+		<tr>
+			<td id="graphtabletd">					
+			<div id="graphdiv1">
+				<div id="graphdiv1title">
+					<div id="graphdiv1titledesc" >									
+						<div id="subgraphdiv1titledesc1"> Geographic distribution of Videos </div>
+							<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(geog_wise_pie1,"Geographic distribution of Videos")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+					</div>
+				</div>
+				<div class="graphdiv1desc" id="flash_area_geogwise_pie">								
+				</div>												
+			</div>
+			<div id="graphdiv1">
+				<div id="graphdiv1title"> 
+					<div id="graphdiv1titledesc" >									
+						<div id="subgraphdiv1titledesc1"> Videos Produced per Month </div>
+						<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(monthbar1,"Videos Produced per Month")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+					</div>															
+				</div>
+				<div class="graphdiv1desc" id="flash_area_monthwise_bar">								
+				</div>						
 			</div>					
-		</div>
-		
-		<div id='divstattitle'>
-			<table id='divtitletable'  cellspacing='0' cellpadding='0'>						
-				<tr>
-					<td class='divtitletablename'> <div id='divstattitlename'>Graphs</div> </td>
-					<td class='divtitletableimg'>  </td>
-				</tr>
-			</table>								
-		</div>
+			</td>
+		</tr>
+		<tr>
+			<td id="graphtabletd">					
+			<div id="graphdiv1">
+				<div id="graphdiv1title"> 
+					<div id="graphdiv1titledesc" >									
+						<div id="subgraphdiv1titledesc1"> Videos Produced over Time </div>
+						<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(videoprod_line1,"Videos Produced over Time")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+					</div>	
+				</div>
+				<div class="graphdiv1desc" id = "flash_area_vid_prod_time">						
+				</div>						
+			</div>
+			<div id="graphdiv1" >
+				<div id="graphdiv1title"> 
+					<div id="graphdiv1titledesc" >									
+						<div id="subgraphdiv1titledesc1"> Videos per Practice </div>
+							<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(practice1,"Videos per Practice")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+					</div>									
+				</div>
+				<div  style="width:75px;float:left;">
+					<select class='select prac' name='prac_n' id='practice' onChange="chartDraw(getElementById('top_prac').value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,this.value)">
+						<option value=0 >Top Practice</option>
+						<option value=1 >Sub Practice</option>
+						<option value=2 >Utility</option>
+						<option value=3 >  Type</option>
+						<option value=4 selected='selected'>Subject</option>
+					</select>				
+				</div>
+				<div style="width:70px;float:left;">
+					<select class='select top_prac' name='top_prac_n' id='top_prac' onChange="ValChange( this.value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+						<option selected='selected'>Any</option>
+					</select>								
+				</div>
+				<div style="width:75px;float:left;">
+					<select class='select sub_prac' name='sub_prac_n' id='sub_prac' onChange="ValChange(document.getElementById('top_prac').value,this.value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:75px;float:left;">
+					<select class='select utility' name='util_n' id='util' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,this.value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:75px;float:left;">
+					<select class='select type' name='type_n' id='type' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,this.value,getElementById('sub').value,getElementById('practice').value)">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:75px;float:left;">
+					<select class='select subject' name='sub_n' id='sub' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,this.value,getElementById('practice').value)">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:75px;margin-left:440px;"> <input id='Reset1' type='reset' onclick="init()"  value="Reset"> </div>
 				
-		<div id='contenttable'>	
-			<table cellpadding="0" cellspacing="0" border="0" id="graphtable">
-				<tr>
-					<td id="graphtabletd">					
-						<div id="graphdiv1">
-							<div id="graphdiv1title">
-								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Geographic distribution of Videos </div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(geog_wise_pie1,"Geographic distribution of Videos")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
-								</div>
-							</div>
-							<div class="graphdiv1desc" id="flash_area_geogwise_pie">								
-							</div>												
-						</div>
-						
-						<div id="graphdiv1">
-							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Videos Produced per Month </div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(monthbar1,"Videos Produced per Month")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
-								</div>															
-							</div>
-							<div class="graphdiv1desc" id="flash_area_monthwise_bar">								
-							</div>						
-						</div>					
-					</td>
-				</tr>
-				<tr>
-					<td id="graphtabletd">					
-						<div id="graphdiv1">
-							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Videos Produced over Time </div>
-
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(videoprod_line1,"Videos Produced over Time")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
-
-								</div>	
-							</div>
-							<div class="graphdiv1desc" id = "flash_area_vid_prod_time">						
-							</div>						
-						</div>
-						<div id="graphdiv1">
-							<div id="graphdiv1title"> 
-								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Videos per Practice </div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(practice1,"Videos per Practice")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
-
-								</div>									
-							</div>
-							<div class="graphdiv1desc" id = "flash_area_practice_type_scatter" >
-							</div>						
-						</div>					
+				<div class="graphdiv1desc" style="min-height:385px;" id = "flash_area_practice_type_scatter" ></div>						
+			</div>					
 					</td>
 				</tr>
 				<tr>
@@ -277,9 +302,9 @@
 	type_wise_pie1.addVariable("data_file", escape('/analytics/video_type_wise_pie?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}'));
 	//type_wise_pie1.write("flash_area_video_type_pie");
 	
-	*/
-	google.load("visualization", "1", {packages:["corechart"]});
-	  google.setOnLoadCallback(drawChart);
+	*/	
+	google.load("visualization", "1", {packages:["corechart","controls"]});
+	google.setOnLoadCallback(drawChart);
 	 
 	  function drawChart() {
 		  	drawChart1();
@@ -403,21 +428,146 @@
 	practice.write("flash_area_practice_type_scatter");
 	*/
 	function drawChart7() {
-	  	  $.getJSON('/analytics/video_practice_wise_scatter/?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}', function(json){
-		            var data = google.visualization.arrayToDataTable(json,false);
-		
-		            var options = {
-		                    hAxis: {title: 'Practices'},
-		                    vAxis: {title: 'Number of Videos'},
-		                    bubble: {textStyle: {color: 'none'}},
-		                    colorAxis:{legend:null}
-		                  };
-
-		
-		            var chart = new google.visualization.BubbleChart(document.getElementById('flash_area_practice_type_scatter'));
-		            chart.draw(data, options);
-		  });
-	    }
+		$.getJSON('/analytics/video_practice_wise_scatter/?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}', function(json){
+            data = google.visualization.arrayToDataTable(json,false);
+				
+			pieChart = new google.visualization.ChartWrapper({
+			'chartType': 'BubbleChart',
+			'containerId': 'flash_area_practice_type_scatter',
+			'options': {
+  					'title': 'Number of Videos per practices',
+	                'hAxis': {title: 'Practice level'},
+	                'vAxis': {title: 'Number of Videos'},
+	                'bubble': {textStyle: {color: 'none'}},
+	                'legend': {position:'none'}
+			},
+			'dataTable' : google.visualization.data.group(data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+			                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+			                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+			                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
+			});
+				fillSelect(data.getDistinctValues(1),"top_prac","Any");
+				fillSelect(data.getDistinctValues(2),"sub_prac","Any");
+				fillSelect(data.getDistinctValues(3),"util","Any");
+				fillSelect(data.getDistinctValues(4),"type","Any");
+				fillSelect(data.getDistinctValues(5),"sub","Any");
+            init();
+  });	    }
+	
+	  function chartDraw(top_prac,sub_prac,util,type,sub,number) {
+		  var plot_view=new google.visualization.DataView(data);
+		  var params=new Array;
+		  if (top_prac!="Any")
+		  {
+			  params.push({column: 1, value: top_prac });
+		  }
+		  if (sub_prac!="Any")
+		  {
+			  params.push({column: 2, value: sub_prac });
+		  }
+		  if (util!="Any")
+		  {
+			  params.push({column: 3, value: util });
+		  }
+		  if (type!="Any")
+		  {
+			  params.push({column: 4, value: type });
+		  }
+		  if (sub!="Any")
+		  {
+			  params.push({column: 5, value: sub });
+		  }
+		  if(params.length>0)
+			  {
+			  plot_view.setRows(plot_view.getFilteredRows(params));  
+			  }
+		  
+		  var filtered_data=  google.visualization.data.group(plot_view,[parseInt(number)+1],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
+				                                                                                    {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+				                                                                                    {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+				                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
+		  var null_filtered_data=new google.visualization.DataView(filtered_data);
+		  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
+		  pieChart.setDataTable(null_filtered_data);
+				  pieChart.draw();
+	  }
+	  
+	  function custom_rand(values) {
+		  return values[Math.floor((Math.random()*values.length)+1)];
+		}
+	  
+	  function fillSelect(values,sel_id,sel) {
+		  var null_ind=values.indexOf(null);
+		  if(null_ind!=-1)
+			  {
+			  	values.splice(null_ind,1);
+			  }
+		  
+		  var html_values="";
+		  i=0;
+		  html_values=html_values+"<option selected='selected'>Any</option>"
+		  for (item in values){
+			  if(values[item]==sel)
+				  {
+				  	html_values=html_values+"<option selected='selected'>"+values[item]+"</option>"
+				  }
+			  else
+				  {
+				  	html_values=html_values+"<option>"+values[item]+"</option>"
+				  }
+		  i=i+1;
+		  }
+		  $("#"+sel_id).html(html_values);
+	  }
+	  
+	  function ValChange(top_prac,sub_prac,util,type,sub,number) {
+		  //alert(top_prac+";"+sub_prac+";"+util+";"+type+sub)
+		  var data_view=new google.visualization.DataView(data);
+		  var params=new Array;
+		  if (top_prac!="Any")
+		  {
+			  params.push({column: 1, value: top_prac });
+		  }
+		  if (sub_prac!="Any")
+		  {
+			  params.push({column: 2, value: sub_prac });
+		  }
+		  if (util!="Any")
+		  {
+			  params.push({column: 3, value: util });
+		  }
+		  if (type!="Any")
+		  {
+			  params.push({column: 4, value: type });
+		  }
+		  if (sub!="Any")
+		  {
+			  params.push({column: 5, value: sub });
+		  }
+		  if(params.length>0)
+		  {
+		  	data_view.setRows(data_view.getFilteredRows(params));
+		  }
+		  fillSelect(data_view.getDistinctValues(1),"top_prac",top_prac);
+		  fillSelect(data_view.getDistinctValues(2),"sub_prac",sub_prac);
+		  fillSelect(data_view.getDistinctValues(3),"util",util);
+		  fillSelect(data_view.getDistinctValues(4),"type",type);
+		  fillSelect(data_view.getDistinctValues(5),"sub",sub);
+		  chartDraw(top_prac,sub_prac,util,type,sub,number);
+		  
+	  }
+	  function init()
+	  {
+		  	fillSelect(data.getDistinctValues(1),"top_prac","Any");
+			fillSelect(data.getDistinctValues(2),"sub_prac","Any");
+			fillSelect(data.getDistinctValues(3),"util","Any");
+			fillSelect(data.getDistinctValues(4),"type","Any");
+			fillSelect(data.getDistinctValues(5),"sub","Any");
+			html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
+			$("#practice").html(html);
+			chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
+			
+		}
 
 	/*
 	
