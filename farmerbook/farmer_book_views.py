@@ -8,6 +8,12 @@ import datetime
 from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 
+
+
+def get_admin_panel(request):
+    
+    return render_to_response('admin_panel.html')
+    
 def get_home_page(request):
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])   
     csp_stats = Screening.objects.values('animator').annotate(screenings = Count('animator')).values_list('animator', 
@@ -40,7 +46,7 @@ def get_home_page(request):
                 photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
         else:
                 photo_link =  "/media/farmerbook/images/sample_csp.jpg"
-        print obj[0]        
+        
         csp_leader_stats.append({'id': obj[0],
                                          'name': obj[1][1],
                                          'screenings': obj[1][2],
@@ -408,6 +414,7 @@ def get_csp_page(request):
                                                                                                     'block__district__district_name', 
                                                                                                     'block__district__state__state_name')
     
+    left_panel_stats['vil_names'] = set(i[1].split('(')[0] for i in left_panel_stats['vil_details'])
     
         
     left_panel_stats['total_adoptions'] = Animator.objects.get(id = csp_id).total_adoptions
@@ -463,7 +470,7 @@ def get_csp_page(request):
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     
     # Related CSP's
-    views_dict = defaultdict(lambda:[0, 0, 0, 0])
+    views_dict = defaultdict(lambda:[0, 0, 0, 0, 0])
     csp_district= Animator.objects.filter(id = csp_id).values_list('village__block__district__id', flat = True)
     related_info = Animator.objects.filter(village__block__district__id = csp_district).values('id').annotate(num_screening = Count('screening')).values_list('id',
                                                                                                                                                               'name',
@@ -471,14 +478,14 @@ def get_csp_page(request):
                                                                                                                                                               'total_adoptions')
     
     left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name') 
-    print left_panel_stats['partner_details']
-       
+    
     for related_id in related_info:
         views_dict[related_id[0]][0] = related_id[1]
         views_dict[related_id[0]][1] = related_id[2]
         if views_dict[related_id[0]][1] > 0:
             views_dict[related_id[0]][2] = related_id[3] 
             views_dict[related_id[0]][3] = float(views_dict[related_id[0]][2])/views_dict[related_id[0]][1]
+        views_dict[related_id[0]][4] = Animator.objects.filter(id = related_id[0]).aggregate(start = Min('screening__date'))['start']
        
        
     # Sorting and limiting to 10 related CSP's
@@ -505,8 +512,10 @@ def get_csp_page(request):
                                          'screenings': obj[1][1],
                                          'photo_link': photo_link,
                                          'rate': obj[1][3],
-                                         'ratewidth': (obj[1][3]/15)*100})
-     
+                                         'adoptions': obj[1][2],
+                                         'ratewidth': (obj[1][3]/15)*100,
+                                         'start': obj[1][4]})
+    
     
     return render_to_response('serviceprovider_page.html', dict(left_panel_stats = left_panel_stats, 
                                                                 videos_watched_stats = sorted_videos_watched_stats, 
@@ -522,10 +531,12 @@ def get_partner_page(request):
                                                                                                     'partner__partner_name',
                                                                                                     'state__state_name',
                                                                                                     'id',
-                                                                                                    'partner__date_of_association')
+                                                                                                    'partner__date_of_association',
+                                                                                                    'district_name')
     
     partner_district = set(i[3] for i in left_panel_stats['partner_details'])
-                                                                                                    
+    
+    left_panel_stats['assigned_districts'] = set(i[5] for i in left_panel_stats['partner_details'])                                                                                                
     left_panel_stats['total_adoptions'] = Animator.objects.filter(partner = partner_id).values('partner').annotate(tot = Sum('total_adoptions')).values_list('tot')[0][0]
     left_panel_stats['farmers'] = Person.objects.filter(village__block__district__in = partner_district).count()
     left_panel_stats['number_villages'] = Village.objects.filter(block__district__in = partner_district).count()
@@ -538,9 +549,11 @@ def get_partner_page(request):
                                                                        'title', 
                                                                        'youtubeid')
         
-    pma = Screening.objects.filter(village__block__district__in = partner_district, videoes_screened__in = vids_id).values_list('videoes_screened',
-                                                                                           'personmeetingattendance__interested', 
-                                                                                           'personmeetingattendance__expressed_question')   
+    screening_list = Screening.objects.filter(village__block__district__in = partner_district, videoes_screened__in = vids_id).values_list('id',flat=True)
+                                              
+    pma= PersonMeetingAttendance.objects.filter(screening__in = screening_list).values_list('screening__videoes_screened','interested','expressed_question')
+    
+                                                                                              
     
     left_panel_stats['Screenings'] = Screening.objects.filter(village__block__district__in = partner_district).count()
     
@@ -581,5 +594,16 @@ def get_partner_page(request):
       
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['screenings'], reverse=True)
     
+    partner_stats_dict = defaultdict(lambda:[0, 0, 0])
+    other_partner_info = Partners.objects.exclude(id = partner_id).values_list('id','partner_name')
+    for partner_id,partner_name in other_partner_info:
+        partner_stats_dict[partner_id][0] = partner_id
+        partner_stats_dict[partner_id][1] = partner_name
+        partner_stats_dict[partner_id][2] = Screening.objects.filter(village__block__district__partner = partner_id).count()
+        
+        sorted_partner_stats = sorted(partner_stats_dict.items(), key = lambda(k, v):(v[2],k), reverse=True)   
     
-    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats ,  videos_watched_stats = sorted_videos_watched_stats))
+    
+    
+    
+    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats ,  videos_watched_stats = sorted_videos_watched_stats, partner_stats = sorted_partner_stats))

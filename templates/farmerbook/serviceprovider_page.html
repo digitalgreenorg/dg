@@ -7,19 +7,18 @@
 <div id="content" style="width: 710px;">
 <div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
 <div class="left_panel_top">
-	<div id="name_label">
-		<center>{{ left_panel_stats.csp_details.0.1 }}</center>
-	</div>
-	<div id="district_label" ><center>
-	{% for v in left_panel_stats.csp_villages %}
-						{{v|lower|capfirst}}{% if not forloop.last %},  {% endif%}
+
+<div id="district_label" >{{ left_panel_stats.vil_details.0.2 }} | {{ left_panel_stats.vil_details.0.3 }}</div>
+			<center><img id="img_container" src='/media/farmerbook/images/sample_csp.jpg'></center>
+		<div id="name_label" > <center>{{ left_panel_stats.csp_details.0.1  }}</center></div>
+		<div id="district_label" ><center>
+	{% for v in left_panel_stats.vil_names %}
+						{{v|lower|capfirst}}{% if not forloop.last %}|  {% endif%}
 						{% endfor %}</center>
 						</div>
-						<center><img id="img_container" src='/media/farmerbook/images/sample_csp.jpg'></center>
-						<div id="district_label" style="font-size:110%">
-		<center>{{ left_panel_stats.vil_details.0.2 }},
-			{{left_panel_stats.vil_details.0.3 }}</center>
-	</div>
+						
+
+
 	{% if left_panel_stats.start_date %}
 	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
 	{% endif %}
@@ -153,18 +152,35 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-						<img src={{person.photo_link}}>
+						<center><img src={{person.photo_link}}>
 						<div class='csp_name'>
 							<a href="javascript:void(0);"
 								onclick="cspClick({{ person.id }})">{{ person.name }}</a>
-						</div>
+						</div></center>
 
-						<div  style="margin-top: 0px;font-weight:bold;font-color:green">{{person.screenings }} Screenings</div>
-						
-						<div id="progress_bar_label" style="margin-right:5px;">Adoptions per Screening</div>
+<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
 							<div class="progress progress-striped">
 							  <div class="bar "  style="width: {{person.ratewidth|floatformat:1 }}% ;"><p> {{ person.rate|floatformat:1 }}</p></div>
 							</div>
+
+		<div id = 'progress_bar_content'>
+			<div style="margin-right:20px; float:left; font-weight:bold"> {{ person.start }} </div>
+			<div style="margin-right:55px; float:left; font-weight:bold"> 
+				{{ person.screenings}}				
+			</div>
+			<div style="margin-right:0px; float:left; font-weight:bold"> 
+				{{ person.adoptions}}				
+			</div>
+			<div style="clear:both;"></div>
+			<div style="margin-left:0px; float:left;"> Started </div>
+			<div style="margin-left:35px; float:left;"> Screenings	</div>
+			<div style="margin-left:10px; float:left;"> Adoptions </div>		
+		</div>
+
+
+						
+						
+						
 						
 						
 
