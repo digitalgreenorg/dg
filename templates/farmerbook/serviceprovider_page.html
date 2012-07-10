@@ -23,14 +23,15 @@
 	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
 	{% endif %}
 </div>
-
+{% load humanize %}
+{% load customtags%}
 <div class="left_panel_bottom" style="padding-top: 0px;">
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Screenings</div>
-<div class='statsValue'>{{left_panel_stats.screenings_disseminated }}</div>
+<div class='statsValue'>{{left_panel_stats.screenings_disseminated|intcomma }}</div>
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Adoptions</div>
-<div class='statsValue'>{{ left_panel_stats.total_adoptions }}</div>
+<div class='statsValue'>{{ left_panel_stats.total_adoptions|intcomma }}</div>
 <div class='horizontal_line'></div>
 
 			
@@ -39,8 +40,7 @@
 	<div class="section_title">
 		<span style="font-size: 90%; margin-left: -5px; color: #6D9D30">Groups ( {{left_panel_stats.nalloted_groups }} )</span>
 </div>
-<input type='hidden' id='current_page' /> <input type='hidden'
-	id='show_per_page' />
+<input type='hidden' id='current_page' /> <input type='hidden' id='show_per_page' />
 
 <div id="pag_content">
 	{% for group in left_panel_stats.alloted_groups %}
@@ -67,7 +67,7 @@
 </div>
 </div>
 
-<div class='content_top' style="margin-left: 255px; height: auto;">
+<div class='content_top' style="margin-left: 255px; height: 550px;">
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
 	<a class="close" data-dismiss="modal">x</a>
@@ -95,11 +95,11 @@
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-								<img title="Last seen on {{ vid.last_seen_date|date:"M d, Y" }} " src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								<img title="{{ vid.title|lower|capfirst}}" src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
 							{% if vid.adopters %}							
-							<div style='margin-top:-90px;position:absolute;'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters }}  </span></div>
+							<div style='margin-top:-20px; margin-left:85px; position:absolute;'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters }}  </span></div>
 							{% endif %}
 
 							{% if vid.interested %}
@@ -107,22 +107,29 @@
 							{% endif %}
 							{% if vid.questioners %}
 								{% if vid.interested %}
-									<div style=' margin-top:-40px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
 								{% else %}
 									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
 								{% endif %}
 
 							{% endif %}
 
-							<div class="ellipsis multiline" style="width: 100px; height: 40px;" title="Last seen on {{ vid.last_seen_date|date:'M d, Y' }} " style="margin-top:0px;" >
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title }}</a> 
+							<div class="question" style="margin-top:0px;">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
 							</div>	
-							{% if vid.screenings %}
-							    <div class="question" style="margin-top:0px;">{{ vid.screenings }} disseminations </div>
-							{% endif %}
-							{% if vid.farmers_attended %}
-								<div class="question" style="margin-top:0px;">{{ vid.farmers_attended }} attended </div>
-							{% endif %}
+							
+							
+									{% if vid.screenings %}
+									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
+									{% endif %}
+									{% if vid.farmers_attended %}
+									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
+									{% endif %}
+
+							
+							
+								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
+							
 
 						</li>
 				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
@@ -158,27 +165,26 @@
 								onclick="cspClick({{ person.id }})">{{ person.name }}</a>
 						</div></center>
 
+
+
 <div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+
 							<div class="progress progress-striped">
 							  <div class="bar "  style="width: {{person.ratewidth|floatformat:1 }}% ;"><p> {{ person.rate|floatformat:1 }}</p></div>
 							</div>
 
 		<div id = 'progress_bar_content'>
-			<div style="margin-right:20px; float:left; font-weight:bold"> {{ person.start }} </div>
-			<div style="margin-right:55px; float:left; font-weight:bold"> 
-				{{ person.screenings}}				
-			</div>
-			<div style="margin-right:0px; float:left; font-weight:bold"> 
-				{{ person.adoptions}}				
-			</div>
+			<div style="margin-left:0px; float:left; font-weight:bold"> {{ person.start|date:"M Y" }}</div>
+			<div style="margin-left:35px; float:left; font-weight:bold"> {{ person.screenings}}</div>
+			<div style="margin-left:30px; float:left; font-weight:bold;"> {{ person.adoptions}}</div>
 			<div style="clear:both;"></div>
 			<div style="margin-left:0px; float:left;"> Started </div>
-			<div style="margin-left:35px; float:left;"> Screenings	</div>
+			<div style="margin-left:35px; float:left;"> Screenings</div>
 			<div style="margin-left:10px; float:left;"> Adoptions </div>		
 		</div>
 
 
-						
+					
 						
 						
 						
@@ -299,7 +305,7 @@ function ajax_tab_click(clicked, village_id) {
 			
 }
 
-	var show_per_page = 4; 
+	var show_per_page = 2; 
 			//getting the amount of elements inside pag_content div
 			var number_of_items = $('#pag_content').children().size();
 			//calculate the number of pages we are going to have
