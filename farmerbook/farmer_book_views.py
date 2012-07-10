@@ -555,6 +555,7 @@ def get_partner_page(request):
     else:
         left_panel_stats['rate'] = 0
         left_panel_stats['pbar_width'] = 0
+    left_panel_stats['photo_link'] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
     
 #    vids_details = Video.objects.filter(id__in = vids_id).values_list('id',
 #                                                                       'title', 
@@ -606,7 +607,7 @@ def get_partner_page(request):
 #    sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['screenings'], reverse=True)
     
     
-    partner_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0])
+    partner_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0, 0])
     other_partner_info = Partners.objects.exclude(id = partner_id).values_list('id','partner_name','date_of_association')
     for partner_id,partner_name,startdate in other_partner_info:
         partner_stats_dict[partner_id][0] = partner_id
@@ -621,7 +622,8 @@ def get_partner_page(request):
             partner_stats_dict[partner_id][3] = ""
             partner_stats_dict[partner_id][4]= 0
             partner_stats_dict[partner_id][6]= 0
-        partner_stats_dict[partner_id][5] = partner_stats_dict[partner_id][4] / 10 ;
+        partner_stats_dict[partner_id][5] = partner_stats_dict[partner_id][4] / 10.0
+        partner_stats_dict[partner_id][7] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
         
     sorted_partner_stats = sorted(partner_stats_dict.items(), key = lambda(k, v):(v[4],k), reverse=True)   
     

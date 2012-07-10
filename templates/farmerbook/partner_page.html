@@ -17,7 +17,7 @@
 						{% endfor %}</center>
 						</div>
 	
-	<center><img id="img_container" src='/media/farmerbook/images/sample_csp.jpg'></center>
+	<center><img id="img_container" src={{left_panel_stats.photo_link}}></center>
 	{% if  left_panel_stats.partner_details.0.4 %}
 	<div class="group_label" > <center> Started: {{ left_panel_stats.partner_details.0.4 }}</center></div>
 	{% endif %}
@@ -58,7 +58,7 @@
 <div class='content_top' style="margin-left: 255px; height: auto;">
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
-	<a class="close" data-dismiss="modal"></a>
+	<a class="close" data-dismiss="modal">x</a>
 </div>
 <div style="height: 1px;"></div>
 	<div class='related_farmer'>
@@ -74,7 +74,7 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-					<center><img src='/media/farmerbook/images/sample_csp.jpg'>
+					<center><img src={{partner.1.7}}>
 						<div class='csp_name'>
 							<a href="javascript:void(0);"
 								onclick="partnerClick({{ partner.1.0 }})">{{ partner.1.1 }}</a>
