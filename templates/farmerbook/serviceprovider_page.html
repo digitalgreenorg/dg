@@ -106,17 +106,17 @@
 								</a>
 							</div>
 							{% if vid.adopters %}							
-							<div style='margin-top:-20px; margin-left:85px; position:absolute;'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters }}  </span></div>
+							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
 							{% if vid.interested %}
-							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}  </span> </div>
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
 							{% endif %}
 							{% if vid.questioners %}
 								{% if vid.interested %}
-									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% else %}
-									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}  </span> </div>
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% endif %}
 
 							{% endif %}
