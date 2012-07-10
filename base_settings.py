@@ -82,5 +82,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'django.contrib.humanize',
     'south',
+    'farmerbook'
    )
 
