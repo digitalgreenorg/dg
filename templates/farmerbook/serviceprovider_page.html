@@ -23,6 +23,13 @@
 	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
 	{% endif %}
 </div>
+
+<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+<div class="progress progress-striped">
+<div class="bar "  style="width: {{left_panel_stats.adoption_rate_width|floatformat:1 }}% ;"><p> {{left_panel_stats.adoption_rate|floatformat:1 }}</p>
+</div>
+</div>
+		
 {% load humanize %}
 {% load customtags%}
 <div class="left_panel_bottom" style="padding-top: 0px;">
@@ -34,7 +41,7 @@
 <div class='statsValue'>{{ left_panel_stats.total_adoptions|intcomma }}</div>
 <div class='horizontal_line'></div>
 
-			
+	
 
 <div class='group_members'>
 	<div class="section_title">
@@ -173,18 +180,20 @@
 							  <div class="bar "  style="width: {{person.ratewidth|floatformat:1 }}% ;"><p> {{ person.rate|floatformat:1 }}</p></div>
 							</div>
 
-		<div id = 'progress_bar_content'>
-			<div style="margin-left:0px; float:left; font-weight:bold"> {{ person.start|date:"M Y" }}</div>
-			<div style="margin-left:35px; float:left; font-weight:bold"> {{ person.screenings}}</div>
-			<div style="margin-left:30px; float:left; font-weight:bold;"> {{ person.adoptions}}</div>
-			<div style="clear:both;"></div>
-			<div style="margin-left:0px; float:left;"> Started </div>
-			<div style="margin-left:35px; float:left;"> Screenings</div>
-			<div style="margin-left:10px; float:left;"> Adoptions </div>		
-		</div>
 
 
-					
+		<table width="200">		
+			<tr>
+				<td align="left">{{ person.start|date:"M Y" }}</td>
+				<td align="center"> {{ person.screenings|intcomma}}</td>
+				<td align="right"> {{ person.adoptions|intcomma}}</td>
+			</tr>
+			<tr>
+				<td align="left"><b> Started</b></td>
+				<td align="center"><b> Screenings</b></td>
+				<td align="right"><b>Adoptions</b></td>
+			</tr>
+		</table>	
 						
 						
 						

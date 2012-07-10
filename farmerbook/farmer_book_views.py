@@ -420,6 +420,11 @@ def get_csp_page(request):
         
     left_panel_stats['total_adoptions'] = Animator.objects.get(id = csp_id).total_adoptions
     
+    if(left_panel_stats['screenings_disseminated']):
+        left_panel_stats['adoption_rate'] =  float(left_panel_stats['total_adoptions'])/left_panel_stats['screenings_disseminated']
+    else:
+        left_panel_stats['adoption_rate'] = 0 
+    left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate']/20.0) * 100
     
     pma = PersonMeetingAttendance.objects.filter(screening__animator = csp_id).values_list('screening__videoes_screened__id',
                                                                                            'interested', 
@@ -473,13 +478,10 @@ def get_csp_page(request):
     # Related CSP's
     views_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
     csp_district= Animator.objects.filter(id = csp_id).values_list('village__block__district__id', flat = True)
-    related_info = Animator.objects.filter(village__block__district__id = csp_district).values('id').annotate(num_screening = Count('screening')).values_list('id',
+    related_info = Animator.objects.filter(village__block__district__id = csp_district).exclude(id = csp_id).values('id').annotate(num_screening = Count('screening')).values_list('id',
                                                                                                                                                               'name',
                                                                                                                                                          'num_screening',
                                                                                                                                                               'total_adoptions')
-    
-    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name') 
-    
     for related_id in related_info:
         views_dict[related_id[0]][0] = related_id[1]
         views_dict[related_id[0]][1] = related_id[2]
@@ -493,6 +495,8 @@ def get_csp_page(request):
     # Sorting and limiting to 10 related CSP's
     sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[3],k), reverse=True)
     top_related_list = sorted_list_stats[:10] 
+    
+    left_panel_stats['partner_details'] = District.objects.filter(id = csp_district).values_list('partner__id','partner__partner_name')
      
     # For those in list(image of csp exists), give s3 link , otherwise sample image   
     id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
@@ -516,7 +520,7 @@ def get_csp_page(request):
                                          'photo_link': photo_link,
                                          'rate': obj[1][3],
                                          'adoptions': obj[1][2],
-                                         'ratewidth': (obj[1][3]/15)*100,
+                                         'ratewidth': (obj[1][3]/20.0)*100,
                                          'start': obj[1][4]})
     
     
@@ -544,6 +548,13 @@ def get_partner_page(request):
     left_panel_stats['farmers'] = Person.objects.filter(village__block__district__partner__id = partner_id).count()
     left_panel_stats['number_villages'] = Village.objects.filter(block__district__partner__id = partner_id).count()
     left_panel_stats['Screenings'] = Screening.objects.filter(village__block__district__partner__id = partner_id).count()
+    if(left_panel_stats['Screenings']):
+        months = ((datetime.date.today() - left_panel_stats['partner_details'][0][4]).days)/30.0
+        left_panel_stats['rate'] =  left_panel_stats['Screenings'] / months
+        left_panel_stats['pbar_width'] =  left_panel_stats['rate'] / 10.0
+    else:
+        left_panel_stats['rate'] = 0
+        left_panel_stats['pbar_width'] = 0
     
 #    vids_details = Video.objects.filter(id__in = vids_id).values_list('id',
 #                                                                       'title', 
