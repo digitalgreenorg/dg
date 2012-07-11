@@ -128,18 +128,16 @@ def get_village_page(request):
     left_panel_stats['tot_videos'] = Video.objects.filter(screening__village__id = village_id).distinct().count()
     left_panel_stats['tot_questions'] = PersonMeetingAttendance.objects.filter(person__village__id = village_id).exclude(expressed_question = '').count()
     left_panel_stats['tot_adoptions'] = PersonAdoptPractice.objects.filter(person__village__id = village_id).count()
-    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
+    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id).distinct().values_list('id', 'group_name')
+    left_panel_stats['num_of_groups'] = len(left_panel_stats['vil_groups'])
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date')
     left_panel_stats['start_date'] = Person.objects.filter(village__id = village_id).exclude(date_of_joining=None).values_list('date_of_joining', flat=True).order_by('date_of_joining')[0]
+
     #rightpanel top contents
-    #some problem in retrieving screening__date from Video Objects
-    #vids_watched = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'screening__date')[0:5]
     vids_id = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id',flat = True)
     vids_id = list(vids_id)
-    #vids_details = PersonAdoptPractice.objects.filter(video__id__in = vids_id, person__village__id = village_id).values('video__id').annotate(num_of_adoptions = Count('person')).values_list('video__id', 'video__title', 'video__youtubeid', 'num_of_adoptions')
-    
     vids_details = Video.objects.filter(id__in = vids_id).distinct().values_list('id', 'title', 'youtubeid')
     vid_adoptions = Video.objects.filter(id__in = vids_id, personadoptpractice__person__village__id = village_id).annotate(
                                         num_of_adoptions = Count('personadoptpractice')).values('id', 'num_of_adoptions')
@@ -168,7 +166,7 @@ def get_village_page(request):
         videos_watched_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 
                                      'adopters':vids_stats_dict[obj[0]][5],'interested':vids_stats_dict[obj[0]][0], 'last_seen_date':vids_stats_dict[obj[0]][4], 
                                      'questioners': vids_stats_dict[obj[0]][1], 'atten':vids_stats_dict[obj[0]][2], 'disseminations': vids_stats_dict[obj[0]][3]})
-    newlist = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
+    sorted_list = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     #right panel bottom contents. Leader boards of farmers
     #get all persons from village who attended any screening in village
     screenings_attended = PersonMeetingAttendance.objects.filter(person__in = farmerbook_farmers, person__village__id = village_id).values_list('person_id', flat=True)
@@ -222,7 +220,7 @@ def get_village_page(request):
         if obj[0] in d:
             top_viewers_stats.append({'id': obj[0], 'name': d[obj[0]][0][0], 'title': d[obj[0]][0][1], 'date_of_adoption': d[obj[0]][0][2], 'date_of_joining': d[obj[0]][0][3], 'views': obj[1][0], 'adoptions': obj[1][1], 'adoption_rate': obj[1][2]})
     
-    return render_to_response('vil_page.html', dict(top_viewers_stats=top_viewers_stats, left_panel_stats = left_panel_stats, videos_watched_stats = newlist, top_adopters_stats = top_adopters_stats))
+    return render_to_response('vil_page.html', dict(top_viewers_stats=top_viewers_stats, left_panel_stats = left_panel_stats, videos_watched_stats = sorted_list, top_adopters_stats = top_adopters_stats))
 
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
