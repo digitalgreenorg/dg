@@ -552,7 +552,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					<img rel="popover" data-original-title="Chandamani Mohanta" data-content="Adoption Rate: 45%" class="farmer_image" src="http://s3.amazonaws.com/dg_farmerbook/2/10000000015782.jpg">
 				</a>			
 	</div>
-	
+	{% load humanize %}
 	<div id="map_right_panel">
 			<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Service Providers</span> </div>
@@ -566,7 +566,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					
 					<div class="sp_details"> 
 					<a href="javascript:void(0);" onclick="cspClick({{csp.id}})" style="color: #524D4D;font-weight: bold;">
-					{{csp.name}}</a> <span>facilitated {{csp.screenings}} screenings and {{csp.adoptions}} adoptions.</span>
+					{{csp.name}}</a> <span>facilitated {{csp.screenings|intcomma}} screenings and {{csp.adoptions|intcomma}} adoptions.</span>
 					</div>
 					
 				</div>
@@ -583,20 +583,14 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 	<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Partners</span> </div>
 			<div style="border: 2px solid #6D9D30;margin-top:2px;"></div>
-				<div style=" margin-top:3px;"><a href='javascript:void(0);' onclick="partnerClick(10000000000008)" style="color: #524D4D;font-weight: bold;">
-					<img src="/media/Output/Images/partner/asa_logo1.PNG" style="margin-right:5px;width:45px; height:30px;float:left;"></a> 
-					<div><a href='http://www.asaindia.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">ASA </a></span>is active in 297 villages reaching 17,607 farmers</div>
+			{% for partner in partner_leader_stats %}
+			
+				<div style=" margin-top:3px;"><a href='javascript:void(0);' onclick="partnerClick({{partner.1.0}})" style="color: #524D4D;font-weight: bold;">
+					<img src="http://s3.amazonaws.com/dg_farmerbook/partner/{{partner.1.0}}.jpg"" style="margin-right:5px;width:45px; height:30px;float:left;"></a> 
+					<div><a href='http://www.asaindia.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">{{partner.1.1}} </a></span>serves {{partner.1.2|intcomma}} villages reaching {{partner.1.3|intcomma}} farmers</div>
 				</div>
-				<div style=" margin-top:3px;">
-					<a href="javascript:void(0);" onclick="partnerClick(10000000000007)"  style="margin-right:5px; float:left;color: #524D4D;font-weight: bold;">
-					<img src="/media/Output/Images/partner/access_logo1.PNG" style="width:45px; height:30px;"></a> 
-					<div><a href='http://www.accessdev.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">ACCESS </a></span>is active in 193 villages reaching 8,788 farmers</div>
-				</div>				
-				
-				<div style="margin-top:3px;"><a href="javascript:void(0);" onclick="partnerClick(10000000000010)"  style="color: #524D4D;font-weight: bold;">
-					<img src="/media/Output/Images/partner/varrat_logo1.png" style="margin-right:5px;width:45px; height:30px; float:left; "></a> 
-					<div><a href='http://www.ngogateway.org/user_homepage/index.php?id=239' target='_blank'><span style="color: #524D4D;font-weight: bold;">VARRAT </a></span>is active in 130 villages reaching 8,676 farmers</div>
-				</div>			
+				{% endfor %}
+						
 		</div>
 	<div id="myModal" class="modal" style="width:1020px; min-height:570px;"></div>
 	
