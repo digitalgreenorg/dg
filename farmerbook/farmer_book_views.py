@@ -53,8 +53,23 @@ def get_home_page(request):
                                          'screenings': obj[1][2],
                                          'photo_link': photo_link,
                                          'adoptions': obj[1][3]})
-                                    
-    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats))
+        
+    
+    top_partner_stats = defaultdict(lambda:[0, 0, 0, 0])     
+    partner_info = Partners.objects.all().annotate(num_vill = Count('district__block__village', distinct = True),
+                                                   num_farmers = Count('district__block__village__person')).values_list('id',
+                                                                                                             'partner_name',
+                                                                                                             'num_vill',
+                                                                                                             'num_farmers')
+    for partner in partner_info:
+        top_partner_stats [partner[0]][0] = partner[0]
+        top_partner_stats [partner[0]][1] = partner[1]
+        top_partner_stats [partner[0]][2] = partner[2]
+        top_partner_stats [partner[0]][3] = partner[3]
+        print top_partner_stats
+    top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
+                          
+    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats))
 
 
 def get_leaderboard_data():
@@ -294,7 +309,7 @@ def get_group_page(request):
     left_panel_stats['questions'] = PersonMeetingAttendance.objects.filter(person__group__id = group_id).exclude(expressed_question = "").count()
     left_panel_stats['adoptions'] = PersonAdoptPractice.objects.filter(person__group__id = group_id).count()
     left_panel_stats['adoption_rate'] = float(left_panel_stats['adoptions']) /left_panel_stats['screenings']
-    left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/10.0 
+    left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/5.0 
     min_joining = Person.objects.filter(group__id = group_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat =True)
     left_panel_stats['start_date'] = min_joining[0]
     
@@ -360,7 +375,7 @@ def get_group_page(request):
         views_dict[related_id[0]][2] = Screening.objects.filter(personmeetingattendance__person__group__id = related_id[0]).distinct().count()
         views_dict[related_id[0]][3] = PersonAdoptPractice.objects.filter(person__group__id = related_id[0]).count()
         views_dict[related_id[0]][4] = float(views_dict[related_id[0]][3]) / views_dict[related_id[0]][2]
-        views_dict[related_id[0]][5] = (views_dict[related_id[0]][4]* 100)/10.0 
+        views_dict[related_id[0]][5] = (views_dict[related_id[0]][4]* 100)/5.0 
         views_dict[related_id[0]][6] = "http://s3.amazonaws.com/dg_farmerbook/group/" + str(related_id[0]) + ".jpg"
         min_joining = Person.objects.filter(group__id = related_id[0]).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat = True)
         views_dict[related_id[0]][7] = min_joining[0]
