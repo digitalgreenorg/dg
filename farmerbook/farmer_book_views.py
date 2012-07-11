@@ -203,13 +203,11 @@ def get_village_page(request):
         if min_joining:
             views_dict[related_id[0]][7] = min_joining[0]
         else:
-            views_dict[related_id[0]][7] = ""
-        
+            views_dict[related_id[0]][7] = ""        
                
     # Sorting and limiting to 10 related CSP's
     sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[5],k), reverse=True)
     top_related_list = sorted_list_stats[:10]
-    print top_related_list
     return render_to_response('vil_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = sorted_list, top_related_list = top_related_list))
 
 def get_person_page(request):
