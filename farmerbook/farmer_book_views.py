@@ -303,98 +303,129 @@ def get_person_page(request):
 
 def get_group_page(request):
     group_id = int(request.GET['group_id'])
-    vil_id = Village.objects.filter(persongroups__id = group_id).values_list('id', flat=True)
-    #left panel stats dict hold values related to left panel of village page
+    
     left_panel_stats = {}
-    persons_id = Person.objects.filter(group__id = group_id).values_list('id', flat=True)
-    #problem with videos_produced query
-    left_panel_stats['videos_produced'] = Video.objects.filter(farmers_shown__person__id__in = persons_id).distinct().count()
-    left_panel_stats['group_members'] = Person.objects.filter(group__id = group_id).distinct().count()
-    left_panel_stats['videos_watched'] = Video.objects.filter(screening__personmeetingattendance__person__group__id = group_id).distinct().count()
-    left_panel_stats['tot_questions'] = PersonMeetingAttendance.objects.filter(person__group__id = group_id).exclude(expressed_question = '').count()
-    left_panel_stats['tot_adoptions'] = PersonAdoptPractice.objects.filter(person__group__id = group_id).count()
-    left_panel_stats['partner'] = Partners.objects.filter(district__block__village__id = vil_id).values_list('id', 'partner_name')
-    left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = vil_id).order_by('-id').values_list('id', 'name')[:1]
-    left_panel_stats['group_details'] = PersonGroups.objects.filter(id = group_id).values_list('id', 'group_name','village__village_name' ,'village__block__block_name' ,'village__block__district__district_name', 'village__block__district__state__state_name', 'village__id')
-    start_date = Person.objects.filter(group__id = group_id).exclude(date_of_joining=None).order_by('date_of_joining').values_list('date_of_joining', flat=True)
-    if(start_date):
-        left_panel_stats['start_date'] = start_date[0]
-    else:
-        left_panel_stats['start_date'] = ""
-    #rightpanel top contents
-    #some problem in retrieving screening__date from Video Objects
-    #vids_watched = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'screening__date')[0:5]
-    vids_id = Video.objects.filter(screening__personmeetingattendance__person__group__id = group_id).distinct().values_list('id', flat = True)
-    vids_id = list(vids_id)
-    vids_details = Video.objects.filter(id__in = vids_id).distinct().values_list('id', 'title', 'youtubeid')
-    pma = PersonMeetingAttendance.objects.filter(person__group__id = group_id, screening__videoes_screened__id__in = vids_id).distinct().values_list('screening__videoes_screened__id','interested', 'expressed_question')   
-    vids_stats_dict = defaultdict(lambda:[0, 0, 0])
-    for l, m, n in pma:
-        if(m):
-            vids_stats_dict[l][0] += 1
-        if(n != ""):
-            vids_stats_dict[l][1] += 1
-    for item in vids_stats_dict:
-        vids_stats_dict[item][2] = PersonAdoptPractice.objects.filter(person__group__id = group_id, video__id = item).count()        
+    left_panel_stats['group_details'] = PersonGroups.objects.filter(id = group_id).values_list('group_name',
+                                                                                              'person__village__id',
+                                                                                              'person__village__village_name',
+                                                                                              'person__village__block__district__district_name',
+                                                                                              'person__village__block__district__state__state_name',
+                                                                                              'person__village__block__district__partner__id',
+                                                                                              'person__village__block__district__partner__partner_name',
+                                                                                              'person__village__animator__id',
+                                                                                              'person__village__animator__name',
+                                                                                              'id')
+    
+    left_panel_stats['members_count'] = Person.objects.filter(group = group_id).count()
+    left_panel_stats['screenings'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).distinct().count()
+    left_panel_stats['questions'] = PersonMeetingAttendance.objects.filter(person__group__id = group_id).exclude(expressed_question = "").count()
+    left_panel_stats['adoptions'] = PersonAdoptPractice.objects.filter(person__group__id = group_id).count()
+    left_panel_stats['adoption_rate'] = float(left_panel_stats['adoptions']) /left_panel_stats['screenings']
+    left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/10.0 
+    min_joining = Person.objects.filter(group__id = group_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat =True)
+    left_panel_stats['start_date'] = min_joining[0]
+    
+    
+    
+   
+    
+    pma = PersonMeetingAttendance.objects.filter(person__group__id = group_id).values_list('screening__videoes_screened__id',
+                                                                                           'interested', 
+                                                                                           'expressed_question')   
+    vids_id= set(i[0] for i in pma)
+    vids_details = Video.objects.filter(id__in = vids_id).values_list('id', 'title', 'youtubeid')
+    left_panel_stats['videos_disseminated'] = len(vids_details)
+    farmer_att = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).values('videoes_screened__id').annotate(screening_per_vid = Count('id', distinct=True),
+                                                                                                         fcount=Count('farmers_attendance__id'),
+                                                                                                         last_seen_date = Max('date'))
+    vids_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0])
+    
+    for id,interest,question in pma:
+        if(interest):
+            vids_stats_dict[id][0] += 1
+        if(question != ""):
+            vids_stats_dict[id][1] += 1
+    
+  
+    if left_panel_stats['adoptions'] == None:
+        per_vid_adoption = []
+    else:    
+        per_vid_adoption = PersonAdoptPractice.objects.filter(person__group__id = group_id).values('video__id').annotate(adopt_count=Count('person__id')) 
+    for vid_id in per_vid_adoption:
+        vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
+        
+    for vid_id in farmer_att:
+        vids_stats_dict[vid_id['videoes_screened__id']][3] =  vid_id['fcount']
+        vids_stats_dict[vid_id['videoes_screened__id']][4] =  vid_id['screening_per_vid']
+        vids_stats_dict[vid_id['videoes_screened__id']][5] =  vid_id['last_seen_date']
+        
+   
+        
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
     for obj in vids_details:
-        last_seen_date = Video.objects.filter(id = obj[0]).order_by('-screening__date').values_list('screening__date', flat=True)[0]
-        videos_watched_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 'adopters':vids_stats_dict[obj[0]][2],'interested':vids_stats_dict[obj[0]][0], 'last_seen_date':last_seen_date, 'questioners': vids_stats_dict[obj[0]][1]})
-    #right panel bottom contents. Leader boards of farmers
-    #get all persons from village who attended any screening in village
-    screenings_attended = PersonMeetingAttendance.objects.filter(person__image_exists=True, person__group__id = group_id).values_list('person_id', flat=True)
-    views_dict = defaultdict(lambda:[0, 0, 0])
-    #get number of viewings for each farmer
-    for i in screenings_attended:
-        views_dict[i][0] += 1
-    #get number of adoptions for each farmer
-    adoptions = PersonAdoptPractice.objects.filter(person__image_exists=True, person__group__id = group_id).values_list('person_id', flat=True)
-    adoptions_dict = defaultdict(int)
-    for i in adoptions:
-        adoptions_dict[i] += 1
-    #appending adoptions and adoption rate of farmers in views_dict
-    for k,v in views_dict.iteritems():
-        if k in adoptions_dict:
-            views_dict[k][1] = adoptions_dict[k]
-            views_dict[k][2] = float((views_dict[k][1] / float(views_dict[k][0])) * 100)
-    sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[2], k), reverse=True)
-    top_adopters_list = sorted_list_stats
-    top_adopters_id_list = []
-    for i in top_adopters_list:
-        top_adopters_id_list.append(i[0])
-    #get last adopted video
-    #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
-    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
-    #remove duplicates and append recent date
-    d = defaultdict(list)
-    for item in last_adopted_details:
-        if item[0] not in d:
-            d[item[0]].append([item[1], item[2], item[3], item[4]])
-    top_adopters_stats = []
-    for obj in top_adopters_list:
-        if obj[0] in d:
-            top_adopters_stats.append({'id': obj[0], 'name': d[obj[0]][0][0], 'title': d[obj[0]][0][1], 'date_of_adoption': d[obj[0]][0][2], 'date_of_joining': d[obj[0]][0][3], 'views': obj[1][0], 'adoptions': obj[1][1], 'adoption_rate': obj[1][2]})
+        videos_watched_stats.append({'id':obj[0], 
+                                    'title':obj[1],
+                                    'youtubeid':obj[2],
+                                    'adopters':vids_stats_dict[obj[0]][2],
+                                    'interested':vids_stats_dict[obj[0]][0], 
+                                    'last_seen_date':vids_stats_dict[obj[0]][5], 
+                                    'questioners': vids_stats_dict[obj[0]][1],
+                                    'farmers_attended': vids_stats_dict[obj[0]][3],
+                                    'screenings':vids_stats_dict[obj[0]][4]})
+      
+    sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     
-    sorted_views_stats = sorted(views_dict.items(), key = lambda(k, v):(v[0], k), reverse=True)
-    top_viewers_list = sorted_views_stats
-    top_viewers_id_list = []
-    for i in top_viewers_list:
-        top_viewers_id_list.append(i[0])
-    #get last adopted video
-    #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
-    last_adopted_details = Person.objects.filter(id__in = top_viewers_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
-    #remove duplicates and append recent date
-    d = defaultdict(list)
-    for item in last_adopted_details:
-        if item[0] not in d:
-            d[item[0]].append([item[1], item[2], item[3], item[4]])
-    top_viewers_stats = []
-    for obj in top_viewers_list:
-        if obj[0] in d:
-            top_viewers_stats.append({'id': obj[0], 'name': d[obj[0]][0][0], 'title': d[obj[0]][0][1], 'date_of_adoption': d[obj[0]][0][2], 'date_of_joining': d[obj[0]][0][3], 'views': obj[1][0], 'adoptions': obj[1][1], 'adoption_rate': obj[1][2]})
     
-    return render_to_response('person_group_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = videos_watched_stats, top_adopters_stats = top_adopters_stats, top_viewers_stats = top_viewers_stats))
+    views_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0, 0])
+    group_village = PersonGroups.objects.filter(id = group_id).values_list('village__id')
+    related_info = PersonGroups.objects.filter(village__id = group_village).exclude(id = group_id).values_list('id','group_name')
+#    Screening.objects.filter(personmeetingattendance__person__group__id__in= related_info).values('personmeetingattendance__person__group__id').annotate(num_screening = Count('id')).values_list('id','name','num_screening','total_adoptions')
+    for related_id in related_info:
+        views_dict[related_id[0]][0] = related_id[0]
+        views_dict[related_id[0]][1] = related_id[1] 
+        views_dict[related_id[0]][2] = Screening.objects.filter(personmeetingattendance__person__group__id = related_id[0]).distinct().count()
+        views_dict[related_id[0]][3] = PersonAdoptPractice.objects.filter(person__group__id = related_id[0]).count()
+        views_dict[related_id[0]][4] = float(views_dict[related_id[0]][3]) / views_dict[related_id[0]][2]
+        views_dict[related_id[0]][5] = (views_dict[related_id[0]][4]* 100)/10.0 
+        views_dict[related_id[0]][6] = "http://s3.amazonaws.com/dg_farmerbook/group/" + str(related_id[0]) + ".jpg"
+        min_joining = Person.objects.filter(group__id = related_id[0]).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat = True)
+        views_dict[related_id[0]][7] = min_joining[0]
+        
+               
+    # Sorting and limiting to 10 related CSP's
+    sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[5],k), reverse=True)
+    top_related_list = sorted_list_stats[:10] 
+    
+     
+    # For those in list(image of csp exists), give s3 link , otherwise sample image   
+#    id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
+#               10000000000406, 10000000000450, 10000000019320, 10000000019321, 10000000019348, 10000000019419, 
+#               10000000019420, 10000000019422, 10000000019426, 10000000019428, 10000000019430, 10000000019431, 
+#               10000000019435, 10000000019453, 10000000019495, 10000000019502, 10000000019505, 10000000019506, 
+#               10000000019507, 10000000019508, 10000000019515, 10000000019541, 10000000019554, 10000000019696, 
+#               10000000019793, 10000000019808, 10000000019823, 10000000019826, 10000000019831, 10000000019844, 
+#               10000000019895, 10000000019979, 10000000020020]        
+#    top_related_stats = []
+#    for obj in top_related_list:
+#            
+#            if(obj[0] in id_list):
+#                photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
+#            else:
+#                photo_link =  "/media/farmerbook/images/sample_csp.jpg"
+#            top_related_stats.append({'id': obj[0],
+#                                         'name': obj[1][0],
+#                                         'screenings': obj[1][1],
+#                                         'freq_screening': obj[1][5],
+#                                         'photo_link': photo_link,
+#                                         'rate': obj[1][3],
+#                                         'adoptions': obj[1][2],
+#                                         'ratewidth': (obj[1][3]/20.0)*100,
+#                                         'start': obj[1][4]})
+    
+    
+    return render_to_response('person_group_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = sorted_videos_watched_stats, top_related_stats = top_related_list))
+
 
 def get_csp_page(request):
     csp_id = int(request.GET['csp_id'])
