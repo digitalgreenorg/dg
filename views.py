@@ -18,7 +18,7 @@ import cjson
 import re
 from django.core import serializers
 from django.contrib import auth
-
+from django.utils import simplejson
 # autocomplete widget
 import operator
 from django.http import HttpResponse, HttpResponseNotFound
@@ -209,6 +209,9 @@ def feeds_persons_village(request, village_id):
 #
 def redirect_url(request):
     return HttpResponseRedirect('/coco/home.html')
+    
+def redirect_to_perf(request):
+    return render_to_response('perf_analysis.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -1761,8 +1764,11 @@ def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('screenings')
     else:
+        #print "get"
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
+        
+        #print str(len(villages))
         count = Screening.objects.filter(village__in = villages).distinct().count()
         screenings = Screening.objects.filter(village__in = villages)
         if(searchText):
@@ -1779,6 +1785,96 @@ def get_screenings_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+def get_screenings_for_perf_online(request):
+    count = Screening.objects.distinct().count()
+    screenings = Screening.objects.distinct().order_by("-id")[int(request.GET['offset']):int(request.GET['limit'])]
+    if(screenings):
+        json_subcat = serializers.serialize("json", screenings)
+    else:
+        json_subcat = 'EOF'
+    response = HttpResponse(json_subcat, mimetype="application/javascript")
+    response['X-COUNT'] = count
+    return response
+
+def get_screenings_for_perf_online_serv(request):
+    start_index =int(request.GET['iDisplayStart'])
+    end_index = start_index+int(request.GET['iDisplayLength'])
+    global_search = request.GET['sSearch']
+    sort_on = request.GET['iSortCol_0']
+    sort_dir=request.GET['sSortDir_0']
+    s_echo =request.GET['sEcho'];
+    
+    col_to_attr_dict={"0":"date","1":"village__village_name","2":"location"}
+    total_count = Screening.objects.distinct().count()
+    filtered_count=total_count
+    # #print "1"
+    
+   
+    #start_index=1
+    #end_index=5
+    
+    #search it
+    screenings=None
+    if(global_search!=""):
+        screenings = Screening.objects.filter(Q(location__icontains=(global_search))|Q(village__village_name__icontains=global_search))
+        filtered_count=screenings.count()
+    else:
+        screenings = Screening.objects.all()
+    
+    #sort it
+    sort_param=None
+    if(sort_dir=="desc"):
+        sort_param = "-"+col_to_attr_dict[sort_on]
+    else:
+        sort_param = col_to_attr_dict[sort_on]
+    
+    print "sort_param= "+sort_param
+    screenings=screenings.order_by(sort_param)
+    
+    #slice it
+    screenings=screenings[start_index:end_index]
+   
+   #send it
+    aadata=[]
+    for scr in screenings:
+        data=[]
+        data.append(str(scr.date))
+        data.append(str(scr.village))
+        data.append(str(scr.location))
+        aadata.append(data)
+    #s_echo=1
+    send_dict = { "sEcho" : s_echo,
+    "iTotalRecords":  total_count,
+    "iTotalDisplayRecords": filtered_count,
+    "aaData": aadata
+    }
+    
+    
+    json_subcat = simplejson.dumps(send_dict)
+    
+    print json_subcat
+    # json_subcat = '{\
+  # "sEcho":'+ request.GET['sEcho']+',\
+  # "iTotalRecords": '+ str(total_count)+',\
+  # "iTotalDisplayRecords":'+ str(total_count)+',\
+  # "aaData": [\
+    # [\
+      # "Gecko",\
+      # "Firefox 1.0",\
+      # "Win 98+ / OSX.2+"\
+    # ],\
+    # [\
+      # "Gecko",\
+      # "Firefox 1.5",\
+      # "Win 98+ / OSX.2+"\
+    # ]]}'
+    
+    response = HttpResponse(json_subcat, mimetype="application/javascript")
+    # response['X-COUNT'] = count
+    #print json_subcat
+    return response
+
+    
 def save_screening_offline(request, id):
     if request.method == 'POST':
         if(not id):

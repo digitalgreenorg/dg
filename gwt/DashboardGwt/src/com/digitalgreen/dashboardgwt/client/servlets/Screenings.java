@@ -122,7 +122,7 @@ public class Screenings extends BaseServlet {
 									List screenings = screeningsData.getListingOnline(results);
 									getServlet().getRequestContext().getArgs().put("listing", screenings);
 								}
-								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));						
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);						
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
@@ -157,7 +157,7 @@ public class Screenings extends BaseServlet {
 									requestContext.getArgs().put("totalRows", screeningsData.getCount());
 								}
 								requestContext.getArgs().put("listing", screenings);
-								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),false);
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected local error. Please contact support");

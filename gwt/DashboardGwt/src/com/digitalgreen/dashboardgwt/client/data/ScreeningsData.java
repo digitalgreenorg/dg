@@ -434,7 +434,7 @@ public class ScreeningsData extends BaseData {
 		return this.serialize(this.asArrayOfData(json));		
 	}
 	
-	public List getScreeningsListingOffline(String... pageNum){
+	/*public List getScreeningsListingOffline(String... pageNum){
 		BaseData.dbOpen();
 		List screenings = new ArrayList();
 		VillagesData village = new VillagesData();
@@ -453,6 +453,48 @@ public class ScreeningsData extends BaseData {
 						"FROM screening sc, village vil " +
 						"WHERE sc.village_id = vil.id AND (vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%' OR sc.DATE LIKE '%"+pageNum[1]+"%')" +" ORDER BY(sc.date) " 
 									+ " LIMIT "+ Integer.toString(offset)+" , "+Integer.toString(pageSize)+ ";";
+			}
+		}
+		this.select(listTemp);
+		if (this.getResultSet().isValidRow()){
+			try {
+				for (int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()) {					
+					VillagesData.Data v = village.new Data(this.getResultSet().getFieldAsString(8), this.getResultSet().getFieldAsString(9));					
+					Data screening = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1), 
+											this.getResultSet().getFieldAsString(2),this.getResultSet().getFieldAsString(3), 
+											this.getResultSet().getFieldAsString(4),this.getResultSet().getFieldAsString(5),
+											this.getResultSet().getFieldAsString(6),this.getResultSet().getFieldAsString(7), v);					
+					screenings.add(screening);
+				}
+			}
+			catch (DatabaseException e) {
+				Window.alert("Database Exception : " + e.toString());
+				BaseData.dbClose();
+			}
+		}
+		BaseData.dbClose();
+		return screenings;
+	}*/
+	
+	public List getScreeningsListingOffline(String... pageNum){
+		BaseData.dbOpen();
+		List screenings = new ArrayList();
+		VillagesData village = new VillagesData();
+		String listTemp;
+		// Checking whether to return all screenings or only limited number of screenings
+		if(pageNum.length == 0) {
+			listTemp = listScreenings;
+		}
+		else {
+			int offset = (Integer.parseInt(pageNum[0]) - 1)*pageSize;
+			if(pageNum.length == 1) {
+				listTemp = listScreenings + ";";
+			} else {
+				listTemp = "SELECT sc.id, sc.DATE, sc.start_time,sc.end_time, sc.location, sc.target_person_attendance," +
+						"sc.target_audience_interest, sc.target_adoptions, sc.village_id,vil.village_name " +
+						"FROM screening sc, village vil " +
+						"WHERE sc.village_id = vil.id AND (vil.VILLAGE_NAME" +	" LIKE '%"+pageNum[1]+"%' OR sc.DATE LIKE '%"+pageNum[1]+"%')" +" ORDER BY(sc.date) " 
+						+ ";";
 			}
 		}
 		this.select(listTemp);

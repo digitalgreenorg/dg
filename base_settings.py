@@ -57,6 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -66,6 +67,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	os.path.join(PROJECT_PATH, 'templates'),
+	os.path.join(PROJECT_PATH, 'templates/search'),
 	os.path.join(PROJECT_PATH, 'templates/output'),
 	os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
@@ -78,6 +80,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     #'django.contrib.sites',
     'django.contrib.admindocs',
+    'haystack',
     'dashboard',
     'debug_toolbar',
     'south',

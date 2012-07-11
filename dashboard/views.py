@@ -16,3 +16,6 @@ def feed_animators(request, village_id):
 def test_view(request):
 	    #Book.objects.filter(title__icontains=q)
 	    return render_to_response('results.html',{'body': "hi"}),
+        
+        
+        

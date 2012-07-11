@@ -64,6 +64,43 @@ public class ScreeningsTemplate extends BaseTemplate {
 			}
 			ScreeningsTemplate.loadPerson(id);
 		}
+		//call_datatable();
+	}
+	public void fill(boolean connectivity) {
+		String templateType = "Screening";
+		String templatePlainType = "dashboard/screening/add/";
+		RequestContext requestContext = new RequestContext();
+		HashMap args = new HashMap();
+		args.put("action", "add");
+		requestContext.setArgs(args);
+		requestContext.setForm(this.formTemplate);
+		Screenings addScreeningServlet = new Screenings(requestContext);
+		RequestContext saveRequestContext = new RequestContext(RequestContext.METHOD_POST);
+		saveRequestContext.setForm(this.formTemplate);
+		Screenings saveScreening = new Screenings(saveRequestContext);
+		// Draw the content of the template depending on the request type (GET/POST)
+		
+		
+		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
+		//Now add listings
+		List<Hyperlink> links =  this.fillListings();
+		// Add it to the rootpanel
+		super.fill();
+		
+		// Now add hyperlinks
+		super.fillDgListPage(templatePlainType, templateType, screeningsListFormHtml, addScreeningServlet, links);
+		// Now add any submit control buttons
+		this.displayCalendar();
+		super.fillDgFormPage(saveScreening);	
+		if(!this.getRequestContext().getArgs().get("action").equals("list")) {
+			String id ="0";
+			if(this.requestContext.getArgs().get("action").equals("edit")) {
+				id = (String) this.requestContext.getArgs().get("id");
+			}
+			ScreeningsTemplate.loadPerson(id);
+		}
+		if(!connectivity)
+			call_datatable();
 	}
 	
 	public List<Hyperlink> fillListings(){
@@ -78,6 +115,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 				String tableRows ="";
 				String style;
 				ScreeningsData.Data screening;
+				List<ScreeningsData.Data> screenings_for_array= new ArrayList<ScreeningsData.Data>();
+				List<String> try1 = new ArrayList<String>();
 				RequestContext requestContext = null;
 				for (int row = 0; row <screenings.size(); ++row) {
 					if(row%2==0)
@@ -92,17 +131,68 @@ public class ScreeningsTemplate extends BaseTemplate {
 					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
 							screening.getDate() + "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
 					tableRows += "<tr class='" +style+ "'>" +
-								  "<td><input type='checkbox' class='action-select' value='"+ screening.getId() + "' name='_selected_action' /></td>" +
 								  "<th id = 'row" + row + "'></th>" + 
 									"<td>"+ screening.getVillage().getVillageName() + "</td>"+
 									"<td>"+ screening.getLocation()+"</td>" +
 								"</tr>";
+					screenings_for_array.add(screening);
+					try1.add(screening.getVillage().getVillageName());
 				}
+				//screeningsListFormHtml = screeningsListFormHtml +"</tbody></table>";
+				//screeningJsArray(try1);
+				
 				screeningsListFormHtml = screeningsListFormHtml + tableRows + "</tbody></table>";
+				
 			}
 		}
 		return links;
 	}
+	
+	 /*var vil = screening.getVillage().getVillageName();
+    var date =screening.getDate();
+    var loc= screening.getLocation();
+    var tuple = new Array();
+    tuple[0] = date;
+    tuple[1] = vil;
+    tuple[2] = loc;
+    table_data.push(tuple);
+    */
+	
+	public static native void call_datatable() /*-{
+	var start =new Date().getTime();
+	$wnd.$('#table1').dataTable({"bDeferRender": true,});
+	var end =new Date().getTime();
+	var time = end-start;
+	$wnd.alert("time= "+time);
+	
+	
+	}-*/;
+	
+	public static native void screeningJsArray(List<String> all_screenings) /*-{
+		try{
+			$wnd.alert("running");
+	var table_data = new Array();
+	//for( i=0;i<all_screenings.length;i++)
+	{
+       var tuple = new Array();
+    	tuple[0] = "date1";
+    	tuple[1] = "village1";
+    	tuple[2]="location1";
+    	//tuple[3]="dum1";
+       table_data.push(tuple);
+    	
+	
+	}
+	$wnd.$('#table1').dataTable({
+             "aaData": table_data,
+             "bStateSave": true,});
+             $wnd.alert("done");
+	}
+             catch(e){
+             	$wnd.alert('An error has occurred: '+e.message)
+             } 
+		
+}-*/;
 	
 	public static native void loadPerson(String id) /*-{
 			$wnd.screening_page_offline.init(id);
@@ -129,13 +219,10 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</label>" +
 						"<button type='submit' class='button' title='Run the selected action' name='index' value='0'>Go</button>" +
 					"</div>" +
-					"<table cellspacing='0'>" +
+					"<table id='table1' class='display' cellspacing='0'>" +
 						"<thead>" +
 							"<tr>" +
-								"<th>" +
-									"<input type='checkbox' id='action-toggle' />" +
-								"</th>" +
-								"<th>" +
+									"<th>" +
 									"<a href='?ot=asc&amp;o=1'>" +
 										"Date" +
 									"</a>" +

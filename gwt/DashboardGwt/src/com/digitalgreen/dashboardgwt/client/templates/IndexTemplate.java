@@ -318,7 +318,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("r-2", "<a href='#dashboard/region/add' class='addlink'>Add</a>", "dashboard/region/add", new Regions(requestContext));
-		
+                    
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
 		requestContext.getArgs().put("pageNum", "1");

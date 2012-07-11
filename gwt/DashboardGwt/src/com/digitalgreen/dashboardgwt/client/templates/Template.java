@@ -43,6 +43,13 @@ public class Template implements TemplateInterface {
 		}
 	}
 	
+	public void fill(boolean connectivity) {
+		if( this.getRequestContext().hasErrorMessages()) {
+			RootPanel.get("info-space").insert(this.getFormattedErrors(), 0);	
+		} else if(this.getRequestContext().hasMessages()) {
+			RootPanel.get("info-space").insert(this.getFormattedMessages(), 0);
+		}
+	}
 	public void ajaxFill(RequestContext requestContext) {
 		
 	}

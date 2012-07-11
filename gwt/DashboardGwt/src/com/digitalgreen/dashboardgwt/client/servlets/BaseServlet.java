@@ -57,6 +57,9 @@ public class BaseServlet implements ServletInterface{
 	public void fillTemplate(Template template) {
 		template.fill();
 	}
+	public void fillTemplate(Template template,boolean connectivity) {
+		template.fill(connectivity);
+	}
 	
 	public void ajaxFillTemplate(Template template, RequestContext requestContext) {
 		template.ajaxFill(requestContext);

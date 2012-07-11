@@ -14,8 +14,9 @@
   <!-- Other module inherits                                      -->
   <inherits name="com.google.gwt.http.HTTP" />
   <inherits name="com.google.gwt.json.JSON" />
- 
-  
+  <script src="/media/DataTables-1.9.2/media/js/jquery.dataTables.js"></script>
+  <!--<style src="/media/DataTables-1.9.2/media/css/demo_table.css"> </style>-->
+  <stylesheet src="/media/DataTables-1.9.2/media/css/demo_table.css"/>
  
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.digitalgreen.dashboardgwt.client.DashboardGwt'/>
