@@ -179,6 +179,10 @@ def get_village_page(request):
         vids_stats_dict[vid_id][5] = num_adopt
         total_adopt = total_adopt + num_adopt
     left_panel_stats['tot_adoptions'] = total_adopt
+    #for progress bar below village picture
+    left_panel_stats['screenings'] = Screening.objects.filter(village__id = village_id).count()
+    left_panel_stats['adoption_rate'] = float(left_panel_stats['tot_adoptions']) /left_panel_stats['screenings']
+    left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/5.0
     
     videos_watched_stats = []
     for obj in vids_details:
@@ -219,7 +223,7 @@ def get_person_page(request):
     #person_id = 6000002570
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
-    left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id')
+    left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
     person_views = PersonMeetingAttendance.objects.filter(person__id = person_id).distinct().count()
     person_adoptions = PersonAdoptPractice.objects.filter(person__id = person_id).distinct().count()
     if(person_adoptions):
