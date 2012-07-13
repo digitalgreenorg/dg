@@ -81,8 +81,10 @@ INSTALLED_APPS = (
     'dashboard',
     'debug_toolbar',
     'raven.contrib.django',
+    'django.contrib.humanize',
     'south',
-)
+    'farmerbook'
+   )
 
 LOGGING = {
     'version': 1,

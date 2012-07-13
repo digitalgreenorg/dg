@@ -1,7 +1,7 @@
 .left_panel {
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
-    height: 800px;
+    height: 543px;
     width: 250px;
 	position:absolute;
 }
@@ -9,7 +9,7 @@
 .vil_left_panel {
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
-    height: 540px;
+    height: 543px;
     margin-left: 165px;
     width: 250px;
 	position:absolute;
@@ -26,8 +26,8 @@
 	text-align:center;
 }
 .left_panel_top {
-	padding-left:25px;
-	padding-right:25px;
+	padding-left:5px;
+	padding-right:5px;
 }
 
 .left_panel_bottom {
@@ -38,7 +38,8 @@
 	background-color: #FFFFFF;
     height: 800px;
     margin-left: 415px;
-    width: 740px;	
+    width: 740px;
+    height:554px;	
 }
 
 #img_container {
@@ -98,7 +99,7 @@
 }
 
 .statsValue {
-    color: #00FF00;
+    color: #009E0F;
     font-size: 20px;
     text-align: right;
     margin-top: 5px;
@@ -305,7 +306,7 @@ margin-left:50px;
 .group_image {
 	width:100px;
 	height:70px;
-	margin-left:15px;
+	margin-left:5px;
 	margin-top:5px;
 }
 
@@ -316,7 +317,9 @@ margin-left:50px;
 	height:55px;
 }
 
-
+.service_provider_container {
+	margin-left:5px;
+}
 .bar p {
     color: black;
     font-size: 12px;
