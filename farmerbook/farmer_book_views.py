@@ -9,10 +9,7 @@ from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 import get_id_with_images
 
-
-
-def get_admin_panel(request):
-    
+def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
     
 def get_home_page(request):
@@ -262,7 +259,7 @@ def get_person_page(request):
         if(interest):
             vids_stats_dict[id][0] += 1
         if(question != ""):
-            vids_stats_dict[id][1] += 1
+            vids_stats_dict[id][1] = question
     
   
     if person_adoptions == None:
@@ -285,10 +282,10 @@ def get_person_page(request):
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
-                                    'adopters':vids_stats_dict[obj[0]][2],
+                                    'adopted':vids_stats_dict[obj[0]][2],
                                     'interested':vids_stats_dict[obj[0]][0], 
                                     'last_seen_date':vids_stats_dict[obj[0]][5], 
-                                    'questioners': vids_stats_dict[obj[0]][1],
+                                    'question': vids_stats_dict[obj[0]][1],
                                     'farmers_attended': vids_stats_dict[obj[0]][3],
                                     'screenings':vids_stats_dict[obj[0]][4]})
 
