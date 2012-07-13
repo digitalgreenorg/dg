@@ -423,34 +423,18 @@ def get_group_page(request):
     # Sorting and limiting to 10 related CSP's
     sorted_list_stats = sorted(views_dict.items(), key = lambda(k, v):(v[5],k), reverse=True)
     top_related_list = sorted_list_stats[:10] 
+    top_related_stats = []
+    for obj in top_related_list:
+            top_related_stats.append({'id': obj[1][0],
+                                         'name': obj[1][1],
+                                         'screenings': obj[1][2],
+                                         'photo_link': obj[1][6],
+                                         'rate': obj[1][4],
+                                         'adoptions': obj[1][3],
+                                         'ratewidth': (obj[1][5]),
+                                         'start': obj[1][7]})
      
-    # For those in list(image of csp exists), give s3 link , otherwise sample image   
-#    id_list = [10000000000346, 10000000000348, 10000000000350, 10000000000381, 10000000000402, 10000000000403, 
-#               10000000000406, 10000000000450, 10000000019320, 10000000019321, 10000000019348, 10000000019419, 
-#               10000000019420, 10000000019422, 10000000019426, 10000000019428, 10000000019430, 10000000019431, 
-#               10000000019435, 10000000019453, 10000000019495, 10000000019502, 10000000019505, 10000000019506, 
-#               10000000019507, 10000000019508, 10000000019515, 10000000019541, 10000000019554, 10000000019696, 
-#               10000000019793, 10000000019808, 10000000019823, 10000000019826, 10000000019831, 10000000019844, 
-#               10000000019895, 10000000019979, 10000000020020]        
-#    top_related_stats = []
-#    for obj in top_related_list:
-#            
-#            if(obj[0] in id_list):
-#                photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
-#            else:
-#                photo_link =  "/media/farmerbook/images/sample_csp.jpg"
-#            top_related_stats.append({'id': obj[0],
-#                                         'name': obj[1][0],
-#                                         'screenings': obj[1][1],
-#                                         'freq_screening': obj[1][5],
-#                                         'photo_link': photo_link,
-#                                         'rate': obj[1][3],
-#                                         'adoptions': obj[1][2],
-#                                         'ratewidth': (obj[1][3]/20.0)*100,
-#                                         'start': obj[1][4]})
-    
-    
-    return render_to_response('person_group_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = sorted_videos_watched_stats, top_related_stats = top_related_list))
+    return render_to_response('person_group_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = sorted_videos_watched_stats, top_related_stats = top_related_stats))
 
 def get_csp_page(request):
     csp_id = int(request.GET['csp_id'])
@@ -566,7 +550,6 @@ def get_csp_page(request):
 #               10000000019895, 10000000019979, 10000000020020]        
     top_related_stats = []
     for obj in top_related_list:
-            
             if(obj[0] in id_list):
                 photo_link = "http://s3.amazonaws.com/dg_farmerbook/csp/" + str(obj[0]) + ".jpg"
             else:
@@ -580,7 +563,6 @@ def get_csp_page(request):
                                          'adoptions': obj[1][2],
                                          'ratewidth': (obj[1][3]/20.0)*100,
                                          'start': obj[1][4]})
-    
     
     return render_to_response('serviceprovider_page.html', dict(left_panel_stats = left_panel_stats, 
                                                                 videos_watched_stats = sorted_videos_watched_stats, 
@@ -675,18 +657,24 @@ def get_partner_page(request):
             partner_stats_dict[partner_id][3] = startdate
             months = ((datetime.date.today() - partner_stats_dict[partner_id][3]).days)/30.0
             partner_stats_dict[partner_id][4] = partner_stats_dict[partner_id][2] / months
-            partner_stats_dict[partner_id][6] =  Animator.objects.filter(partner__id = partner_id).values('partner').annotate(tot = Sum('total_adoptions')).values_list('tot')[0][0]
+            partner_stats_dict[partner_id][5] =  Animator.objects.filter(partner__id = partner_id).values('partner').annotate(tot = Sum('total_adoptions')).values_list('tot')[0][0]
         else:
             partner_stats_dict[partner_id][3] = ""
             partner_stats_dict[partner_id][4]= 0
-            partner_stats_dict[partner_id][6]= 0
-        partner_stats_dict[partner_id][5] = partner_stats_dict[partner_id][4] / 10.0
-        partner_stats_dict[partner_id][7] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
+            partner_stats_dict[partner_id][5]= 0
+        partner_stats_dict[partner_id][6] = "http://s3.amazonaws.com/dg_farmerbook/partner/" + str(partner_id) + ".jpg"
         
-    sorted_partner_stats = sorted(partner_stats_dict.items(), key = lambda(k, v):(v[4],k), reverse=True)   
+    sorted_partner_list = sorted(partner_stats_dict.items(), key = lambda(k, v):(v[4],k), reverse=True)   
     
+    top_related_stats = []
+    for obj in sorted_partner_list:
+            top_related_stats.append({'id': obj[1][0],
+                                         'name': obj[1][1],
+                                         'screenings': obj[1][2],
+                                         'photo_link': obj[1][6],
+                                         'rate': obj[1][4],
+                                         'adoptions': obj[1][5],
+                                         'ratewidth': (obj[1][4]/10.0),
+                                         'start': obj[1][3]})
     
-    
-    
-    #return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats ,  videos_watched_stats = sorted_videos_watched_stats, partner_stats = sorted_partner_stats))
-    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats , partner_stats = sorted_partner_stats))
+    return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats , partner_stats = top_related_stats))
