@@ -80,22 +80,21 @@ def video_geog_pie_data(request):
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = ";;;/analytics/video_module?"
+    url = "/analytics/video_module?"
 
 
     vid_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'production'))
     geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
 
     return_val = []
-    #return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
-    return_val.append(["title","val"])
+    return_val.append(["title","val",'url'])
     for item in vid_prod:
-        return_val.append([geog_name[item['id']][0],item['tot_pro']])
-       # if(geog.upper()!= "VILLAGE"):
-       #     temp_get_req_url = get_req_url[:]
-       #    temp_get_req_url.append("id="+str(item['id']))
-       #     append_str += url+'&'.join(temp_get_req_url)
-        #append_str += ";Ratio of Video Productions in "+geog_name[item['id']][0]
+        if(geog.upper()!= "VILLAGE"):
+            temp_get_req_url = get_req_url[:]
+            temp_get_req_url.append("id="+str(item['id']))
+            return_val.append([geog_name[item['id']][0],item['tot_pro'],url+'&'.join(temp_get_req_url)])
+        else:
+            return_val.append([geog_name[item['id']][0],item['tot_pro'],''])
 
     return HttpResponse(json.dumps(return_val))
 

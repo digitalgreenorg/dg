@@ -15,7 +15,7 @@ def screening_module(request):
     geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
-    #tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
+    tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
     
     search_box_params = views.common.get_search_box(request, screening_analytics_sql.screening_min_date)
 
@@ -24,10 +24,10 @@ def screening_module(request):
     if(get_req_url): get_req_url = '&'+get_req_url
 
     return render_to_response('screening_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_scr=0,#tot_val['tot_scr'],\
-                                                          tot_att=0,#tot_val['dist_att'], \
-                                                          avg_scr=0,#tot_val['avg_sc_per_day'], \
-                                                          avg_att=0,#tot_val['avg_att_per_sc'], \
+                                                          tot_scr=tot_val['tot_scr'],\
+                                                          tot_att=tot_val['dist_att'], \
+                                                          avg_scr=tot_val['avg_sc_per_day'], \
+                                                          avg_att=tot_val['avg_att_per_sc'], \
                                                           get_req_url = get_req_url
                                                           ))
 
@@ -56,7 +56,7 @@ def screening_percent_lines(request):
     rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append([str(row[0])]+[float(str(x)) for x in list(row)[1:]])
+        return_val.append([str(row[0])]+[float(x) for x in list(row)[1:]])
     return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
     if(return_val):
         return HttpResponse(json.dumps(return_val)  )
@@ -69,7 +69,6 @@ def screening_per_day_line(request):
     rows = run_query_raw(screening_analytics_sql.screening_per_day(geog, id, from_date, to_date, partners))
     if (not rows):
         return HttpResponse(';')
-    #print rows
     return_val = []
     prev_date = rows[0][0]
     return_val.append([str(rows[0][0]),int(rows[0][1])])
@@ -133,26 +132,20 @@ def screening_geog_pie_data(request):
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = ";;;/analytics/screening_module?"
+    url = "/analytics/screening_module?"
 
     scr_geog = run_query(shared_sql.overview(geog,id, from_date, to_date, partners,'screening'))
     geog_name = run_query_dict(shared_sql.child_geog_list(geog,id, from_date, to_date, partners,),'id')
-
-#    return_val = []
-#    return_val.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
-#    for item in scr_geog:
-#        append_str = geog_name[item['id']][0]+';'+str(item['tot_scr'])
-#        if(geog.upper()!= "VILLAGE"):
-#            temp_get_req_url = get_req_url[:]
-#            temp_get_req_url.append("id="+str(item['id']))
-#            append_str += url+'&'.join(temp_get_req_url)
-#        append_str += ";Ratio of disseminations in "+geog_name[item['id']][0]
-#        return_val.append(append_str)
-#    
+    
     return_val = []
     return_val.append(['title','value','url'])
     for item in scr_geog:
-        return_val.append([geog_name[item['id']][0],item['tot_scr']])    
+        if(geog.upper()!= "VILLAGE"):
+            temp_get_req_url = get_req_url[:]
+            temp_get_req_url.append("id="+str(item['id']))
+            return_val.append([geog_name[item['id']][0],item['tot_scr'],url+'&'.join(temp_get_req_url)])
+        else:
+            return_val.append([geog_name[item['id']][0],item['tot_scr'],''])       
     return HttpResponse(json.dumps(return_val))
 
 

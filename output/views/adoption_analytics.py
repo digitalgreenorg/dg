@@ -1,11 +1,11 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse
-from django.db.models import Min
 from dashboard.models import *
-from output.database.SQL  import adoption_analytics_sql, video_analytics_sql, screening_analytics_sql, shared_sql
+from django.db.models import Min
+from django.http import Http404, HttpResponse
+from django.shortcuts import *
 from output import views
-from output.views.common import get_geog_id
+from output.database.SQL  import adoption_analytics_sql, video_analytics_sql, screening_analytics_sql, shared_sql
 from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
+from output.views.common import get_geog_id
 import datetime, json
 
 
@@ -99,22 +99,21 @@ def adoption_geog_pie_data(request):
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = ";;;/analytics/adoption_module?"
+    url = "/analytics/adoption_module?"
 
 
     ado_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'adoption'))
     geog_name = run_query_dict(shared_sql.child_geog_list(geog, id, from_date, to_date, partners),'id')
 
     return_val = []
-    return_val.append(['name','value'])
+    return_val.append(['name','value','url'])
     for item in ado_prod:
-        append_str = [geog_name[item['id']][0],item['tot_ado']]
-        #if(geog.upper()!= "VILLAGE"):
-         #   temp_get_req_url = get_req_url[:]
-          #  temp_get_req_url.append("id="+str(item['id']))
-           # append_str += url+'&'.join(temp_get_req_url)
-        #append_str += ";Ratio of Adoptions in "+geog_name[item['id']][0]
-        return_val.append(append_str)
+        if(geog.upper()!= "VILLAGE"):
+            temp_get_req_url = get_req_url[:]
+            temp_get_req_url.append("id="+str(item['id']))
+            return_val.append([geog_name[item['id']][0],item['tot_ado'],url+'&'.join(temp_get_req_url)])
+        else:
+            return_val.append([geog_name[item['id']][0],item['tot_ado'],''])
 
     return HttpResponse(json.dumps(return_val))
 

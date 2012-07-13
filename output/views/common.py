@@ -288,24 +288,24 @@ def overview_line_graph(request):
     #For settings
     header=['date']
     if('prod' in graph_type):
-        header.append('prod')
+        header.append('Total Videos Produced')
     if('screen' in graph_type):
-        header.append('screen')
+        header.append('Total Disseminations')
     if('adopt' in graph_type):
-        header.append('adopt')
+        header.append('Total Adoptions')
     if('prac' in graph_type):
-        header.append('prac')
+        header.append('Total Practices')
     if('person' in graph_type):
-        header.append('person')
+        header.append('Total Farmers')
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
         if('village' in graph_type):
-            header.append('village')
+            header.append('Village')
         if('prod_tar' in graph_type):
-            header.append('prod_tar')
+            header.append('Video Production Target')
         if('screen_tar' in graph_type):
-            header.append('screen_tar')
+            header.append('Disseminations Target')
         if('adopt_tar' in graph_type):
-            header.append('adopt_tar')
+            header.append('Adoptions Target')
     str_list.insert(0,header)
     return HttpResponse(json.dumps(str_list))
 
@@ -345,7 +345,7 @@ def scatter_chart_data(sqlFunc, **args):
 
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
-    return_val = [['x','y','value','','description']]
+    return_val = [['NAME','','','','NUMBER']]
 
     random.seed();
     for tot,pracs in count_dict.iteritems():
