@@ -92,25 +92,34 @@
 			$('.carousel').carousel({ pause: true, interval: false});			
 		});
 		
-		function personClick(person_id) {
+		function showLoading() {
 			$("div#myModal").html("<div class='modal-body' ><div id='loading_image' style='position:absolute; top:50%;left:45%;'>"+
 							"<img src='/media/farmerbook//images/loading.gif' /></div></div>");
 			$('#myModal').show();
 			$('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
-							 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
+							 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);			
+		}
+		
+		function removeLoading() {
+			$('#loading_image').remove();
+		}
+		
+		function personClick(person_id) {
+			showLoading();
 			$("div#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
 					  if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						alert(msg + xhr.status + " " + xhr.statusText);
 					  }
 					  //alert('Load was performed.');
+					  removeLoading();
 					  $('#myModal').modal();					 
 					  mixpanel.track("Person Page Loaded");					  
 					});
 		}
 		
 		function groupClick(group_id) {
-			$("#myModal").html("");
+			showLoading();
 			$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
@@ -121,38 +130,29 @@
 		}
 		
 		function villageClick(vil_id) {
-			alert('village click');
-			//$('#myModal').hide();
-			$("div#myModal").html("<div class='modal-body' ><div id='loading_image'><img style='margin-left:330px;margin-top:20px;' src='/media/farmerbook//images/loading.gif' /></div></div>");
+			showLoading();
 			$("div#myModal").load('/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
-					  if (status == "error") {
-						var msg = "Sorry but there was an error: ";
-						alert(msg + xhr.status + " " + xhr.statusText);
-					  }
-					  $('#loading_image').remove();
-					  //alert('Load was performed.');
-					  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
-								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
-					  //$('#myModal').show();					
-					  $('#myModal').modal();
-					  mixpanel.track("Village Page Loaded");
-					  
-					});
+				  if (status == "error") {
+					var msg = "Sorry but there was an error: ";
+					alert(msg + xhr.status + " " + xhr.statusText);
+				 }
+				  removeLoading();				
+				  $('#myModal').modal();
+				  mixpanel.track("Village Page Loaded");
+				  
+			});
 			
 		}
 		
 		function cspClick(csp_id) {
-			
+			showLoading();
 			$("div#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
 				  }
 				  //alert('Load was performed.');
-				  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
-							 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
-				  $('#myModal').show();
-				
+				  removeLoading();				
 				  $('#myModal').modal();
 				 
 				 mixpanel.track("Person Page Loaded");
@@ -162,33 +162,26 @@
 		}		
 		
 		function partnerClick(partner_id) {
-			
+			showLoading();
 			$("div#myModal").load('/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
 				  }
-				  //alert('In partner click');
-				  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
-							 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
-				  $('#myModal').show();
-				
-				  $('#myModal').modal();
-				 
-				 mixpanel.track("Person Page Loaded");
+				  removeLoading();				
+				  $('#myModal').modal();				 
+				 mixpanel.track("Partner Page Loaded");
 				  
 				});	
 			
 		}
 		
-		function previous(){
-	
+		function previous(){	
 			new_page = parseInt($('#current_page').val()) - 1;
 			//if there is an item before the current active link run the function
 			if($('.active_page').prev('.page_link').length==true){
 				go_to_page(new_page);
-			}
-			
+			}			
 		}
 
 		function next(){

@@ -44,15 +44,17 @@
 		{% endif %}
 		<div class='service_provider_container'>		
 			<div class = "section_title"><span style="font-size:90%; margin-left:-10px;color:#6D9D30">Service Provider</span></div>
-			<div style='width:100px;float:left;'>
-				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
-					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
-					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
+			{% if left_panel_stats.service_provider.0.1 %}
+				<div style='width:100px;float:left;'>
+					<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
+						<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
+						<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
+					</div>
+					<div style="width:100px; overflow:hidden;">
+						<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">{{ left_panel_stats.service_provider.0.1 }}</a>
+					</div>				
 				</div>
-				<div style="width:100px; overflow:hidden;">
-					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">{{ left_panel_stats.service_provider.0.1 }}</a>
-				</div>				
-			</div>
+			{% endif %}
 			<div style='width:100px;float:right;'>
 				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
 					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})">
@@ -67,7 +69,7 @@
 	</div>
 </div>
 
-<div class='content_top' style="margin-left:255px;height:540px;">
+<div class='content_top' style="margin-left:255px;">
 	<div id="closeButton" style="float:right; margin-top:0px;margin-left:0px;">  <a class="close" data-dismiss="modal">X</a> </div>
 	<div id="tabs">
 		<div id='toptabs'> 

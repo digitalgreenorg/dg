@@ -19,7 +19,7 @@
 	
 	<center><img id="img_container" src={{left_panel_stats.photo_link}}></center>
 	{% if  left_panel_stats.partner_details.0.4 %}
-	<div class="group_label" > <center> Started: {{ left_panel_stats.partner_details.0.4 }}</center></div>
+	<div class="group_label" > <center> Started: {{ left_panel_stats.partner_details.0.4|date:"M d, Y" }}</center></div>
 	{% endif %}
 						<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
 						<div class="progress progress-striped">
@@ -43,19 +43,11 @@
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Adoptions</div>
 <div class='statsValue'>{{ left_panel_stats.total_adoptions|intcomma  }}</div>
-<div class='horizontal_line'></div>
-
-			
-
-
-	
-	
-
-		
+<div class='horizontal_line'></div>		
 </div>
 </div>
 
-<div class='content_top' style="margin-left: 255px; height: auto;">
+<div class='content_top' style="margin-left: 255px;">
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
 	<a class="close" data-dismiss="modal">x</a>
@@ -74,23 +66,23 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-					<center><img src={{partner.1.7}}>
+					<center><img src={{partner.photo_link}}>
 						<div class='csp_name'>
 							<a href="javascript:void(0);"
-								onclick="partnerClick({{ partner.1.0 }})">{{ partner.1.1 }}</a>
+								onclick="partnerClick({{ partner.id }})">{{ partner.name }}</a>
 						</div></center>
 
-						<div  style="margin-top: 0px;font-weight:bold;font-color:green"><center>{{partner.1.2|intcomma  }} Screenings</center></div>
+						<div  style="margin-top: 0px;font-weight:bold;font-color:green"><center>{{partner.screenings|intcomma  }} Screenings</center></div>
 						<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
 						<div class="progress progress-striped">
-							  <div class="bar "  style="width: {{partner.1.5|floatformat:1 }}% ;"><p> {{ partner.1.4|floatformat:1 }}</p></div>
+							  <div class="bar "  style="width: {{partner.ratewidth|floatformat:1 }}% ;"><p> {{ partner.rate|floatformat:1 }}</p></div>
 							</div>
 						
 		<table width="200">		
 			<tr>
-				<td align="left">{{ partner.1.3|date:"M Y" }}</td>
-				<td align="center"> {{ partner.1.2|intcomma}}</td>
-				<td align="right"> {{ partner.1.6|intcomma}}</td>
+				<td align="left">{{ partner.start_date|date:"M Y" }}</td>
+				<td align="center"> {{ partner.screenings|intcomma}}</td>
+				<td align="right"> {{ partner.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
 				<td align="left"><b> Started</b></td>
@@ -115,131 +107,11 @@
 			</div>
 
 		</div>
-
-
-
 </div>
 
 
 	</div>
 </div>
-
-
-
-
-
-
-<script type="text/javascript">
-var videos_watched_html;
-function person_click(person_id) {
-	$("#myModal").html("");
-	$("#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		 // alert($("div#content").html());
-		  mixpanel.track("Person Page Loaded")
-		  });
-}
-
-function groupClick(group_id) {
-	$("#myModal").html("");
-	$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		 // alert($("div#content").html());
-		  mixpanel.track("Group Page Loaded")
-		  });
-}
-
-
-
-
-
-
-
-function ajax_tab_click(clicked, village_id) {    
-    if(clicked=="videos_produced") {
-		videos_watched_html = $("div#top_tabcontent").html();
-		//alert(videos_watched_html);
-		$("div#top_tabcontent").html("");
-		//alert('here in ajax tab click');
-		$("div#top_tabcontent").load('/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		  //alert($("div#top_tabcontent").html());
-		});
-		$("li").removeClass("tabsliselect");
-		//$("#tabsli a").css("color","#330000");
-		//$(".produced a").css("color","#ffffff");
-		$(".giftsli").addClass("tabsliselect");
-		$(".giftsli").removeAttr('href');
-		 mixpanel.track("Videos Produced page Loaded")
-	} else if (clicked=="videos_watched") {
-		$("div#top_tabcontent").html("");
-		$("div#top_tabcontent").html(videos_watched_html);
-		//alert(videos_watched_html);
-		$("li").removeClass("tabsliselect");
-		//$("#tabsli a").css("color","#330000");
-		//$(".produced a").css("color","#ffffff");
-		$(".playli").addClass("tabsliselect");
-		$(".playli").removeAttr('href');
-		
-	}
-	//alert($("div#top_tabcontent").html());
-	//$("li").removeClass("active");	
-	//$("#home").addClass("active");
-	
-
-			
-			
-}
-
-	var show_per_page = 4; 
-			//getting the amount of elements inside pag_content div
-			var number_of_items = $('#pag_content').children().size();
-			//calculate the number of pages we are going to have
-			var number_of_pages = Math.ceil(number_of_items/show_per_page);
-			
-			//set the value of our hidden input fields
-			$('#current_page').val(0);
-			$('#show_per_page').val(show_per_page);
-			
-			//now when we got all we need for the navigation let's make it '
-			
-			/* 
-			what are we going to have in the navigation?
-				- link to previous page
-				- links to specific pages
-				- link to next page
-			*/
-			var navigation_html='' ;//= '<a class="previous_link" href="javascript:previous();">Prev</a>';
-			var current_link = 0;
-			while(number_of_pages > current_link){
-				navigation_html += '<a class="normalSlide" href="javascript:go_to_page(' + current_link +')" title="Jump to page ' + (current_link + 1) +'" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
-				current_link++;
-			}
-			//navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';
-			
-			$('#page_navigation').html(navigation_html);
-			
-			//add active_page class to the first page link
-			$('#page_navigation .normalSlide:first').addClass('activeSlide');
-			
-			//hide all the elements inside pag_content div
-			$('#pag_content').children().css('display', 'none');
-			
-			//and show the first n (show_per_page) elements
-			$('#pag_content').children().slice(0, show_per_page).css('display', 'block');
-</script>
 		</div>
 </body>
 </html>

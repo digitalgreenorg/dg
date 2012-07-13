@@ -7,17 +7,20 @@
 			<center><img id="img_container" style="width:100px; height:100px; border: 1px solid #6D9D30;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.csp_details.0.0}}.jpg"></center>
 		<div id="name_label" > <center>{{ left_panel_stats.csp_details.0.1  }}</center></div>
 		<div id="district_label" ><center>
-	{% for v in left_panel_stats.vil_names %}
-						{{v|lower|capfirst}}{% if not forloop.last %}|  {% endif%}
-						{% endfor %}</center>
-						</div>
+		{% for v in left_panel_stats.vil_details %}
+			<a href="javascript:void(0)" onclick='villageClick({{v.0}})'>
+			{{v.1|lower|capfirst}}</a>
+			{% if not forloop.last %}|  {% endif%}
+		{% endfor %}
+			</center>
+		</div>
 	{% if left_panel_stats.start_date %}
-	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date }}</center></div>
+	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }}</center></div>
 	{% endif %}
 </div>
 
 <div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
-<div class="progress progress-striped">
+<div class="progress progress-striped" style="margin-bottom:5px;">
 <div class="bar "  style="width: {{left_panel_stats.adoption_rate_width|floatformat:1 }}% ;"><p> {{left_panel_stats.adoption_rate|floatformat:1 }}</p>
 </div>
 </div>
@@ -54,19 +57,19 @@
 	{% endfor %}
 </div>
 <div id='page_navigation' style='clear:both;margin-bottom: 5px;'></div>
-		</div>
-	
-	
-
+</div>
 		<div class = "imgContainerLabel">Partner</div>
-		<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})"><img  style= "float:left; width:100px; height:30px; margin-left: 5px;"src=''></a>	
-		
-		<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.partner_details.0.1 }}({{left_panel_stats.partner_details.0.1}}) </div>
-		<div style='clear:both;'></div>	
+		<div style= "width:100px; height:70px; margin-right:10px;margin-left:5px; border: 1px solid green;"src=''>
+			<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})">
+			<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.partner_details.0.0}}.jpg"></a>
+		</div>
+		<div style="width:100px; margin-left:5px; overflow:hidden;">
+			<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})">{{ left_panel_stats.partner_details.0.1 }}</a>
+		</div>
 </div>
 </div>
 
-<div class='content_top' style="margin-left: 255px; height: 550px;">
+<div class='content_top' style="margin-left: 255px;">
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
 	<a class="close" data-dismiss="modal">x</a>
@@ -177,13 +180,13 @@
 		<table width="200">		
 			<tr>
 				<td align="left">{{ person.start|date:"M Y" }}</td>
-				<td align="center"> {{ person.screenings|intcomma}}</td>
-				<td align="right"> {{ person.adoptions|intcomma}}</td>
+				<td align="left"> {{ person.screenings|intcomma}}</td>
+				<td align="left"> {{ person.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
 				<td align="left"><b> Started</b></td>
-				<td align="center"><b> Screenings</b></td>
-				<td align="right"><b>Adoptions</b></td>
+				<td align="left"><b> Screenings</b></td>
+				<td align="left"><b>Adoptions</b></td>
 			</tr>
 		</table>	
 						

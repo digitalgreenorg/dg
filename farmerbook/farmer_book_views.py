@@ -351,11 +351,9 @@ def get_group_page(request):
     left_panel_stats['adoption_rate_width'] = (left_panel_stats['adoption_rate'] * 100)/5.0 
     min_joining = Person.objects.filter(group__id = group_id).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat =True)
     left_panel_stats['start_date'] = min_joining[0]
-    
-    
-    
-   
-    
+    if not left_panel_stats['start_date']:
+        left_panel_stats['start_date'] = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).annotate(mindate = Min('date')).values_list('mindate', flat=True)[0]
+        
     pma = PersonMeetingAttendance.objects.filter(person__group__id = group_id).values_list('screening__videoes_screened__id',
                                                                                            'interested', 
                                                                                            'expressed_question')   
@@ -417,6 +415,8 @@ def get_group_page(request):
         views_dict[related_id[0]][5] = (views_dict[related_id[0]][4]* 100)/5.0 
         views_dict[related_id[0]][6] = "http://s3.amazonaws.com/dg_farmerbook/group/" + str(related_id[0]) + ".jpg"
         min_joining = Person.objects.filter(group__id = related_id[0]).annotate(startdate = Min('date_of_joining')).values_list('startdate', flat = True)
+        if not min_joining[0]:
+            min_joining = Screening.objects.filter(personmeetingattendance__person__group__id = group_id).annotate(mindate = Min('date')).values_list('mindate', flat=True)
         views_dict[related_id[0]][7] = min_joining[0]
         
                
@@ -432,7 +432,7 @@ def get_group_page(request):
                                          'rate': obj[1][4],
                                          'adoptions': obj[1][3],
                                          'ratewidth': (obj[1][5]),
-                                         'start': obj[1][7]})
+                                         'start_date': obj[1][7]})
      
     return render_to_response('person_group_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = sorted_videos_watched_stats, top_related_stats = top_related_stats))
 
@@ -456,7 +456,6 @@ def get_csp_page(request):
                                                                                                     'block__district__district_name', 
                                                                                                     'block__district__state__state_name')
     
-    left_panel_stats['vil_names'] = set(i[1].split('(')[0] for i in left_panel_stats['vil_details'])
     
         
     left_panel_stats['total_adoptions'] = Animator.objects.get(id = csp_id).total_adoptions
@@ -675,6 +674,6 @@ def get_partner_page(request):
                                          'rate': obj[1][4],
                                          'adoptions': obj[1][5],
                                          'ratewidth': (obj[1][4]/10.0),
-                                         'start': obj[1][3]})
+                                         'start_date': obj[1][3]})
     
     return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats , partner_stats = top_related_stats))

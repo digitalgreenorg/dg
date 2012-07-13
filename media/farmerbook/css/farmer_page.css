@@ -1,7 +1,7 @@
 .left_panel {
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
-    height: 800px;
+    height: 543px;
     width: 250px;
 	position:absolute;
 }
@@ -9,7 +9,7 @@
 .vil_left_panel {
 	background-color: #FFFFFF;
     border: 1px solid #009E0F;
-    height: 540px;
+    height: 543px;
     margin-left: 165px;
     width: 250px;
 	position:absolute;
@@ -38,7 +38,8 @@
 	background-color: #FFFFFF;
     height: 800px;
     margin-left: 415px;
-    width: 740px;	
+    width: 740px;
+    height:554px;	
 }
 
 #img_container {
