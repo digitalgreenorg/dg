@@ -39,17 +39,29 @@
 <div class='statsLabel'>Adoptions</div>
 <div class='statsValue'>{{ left_panel_stats.adoptions|intcomma }}</div>
 <div class='horizontal_line'></div>
-
-	
-<div class = "imgContainerLabel">Partner</div>
-<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.group_details.0.5}})"><img  style= "float:left; width:90px; height:60px; margin-left: 5px;"src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.group_details.0.5}}.jpg"></a>	
-<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.group_details.0.6 }} </div>
-<div style='clear:both;'></div>	
 </div>
 </div>
-<div class = "imgContainerLabel">Service Provider</div>
-<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.group_details.0.7}})"><img  style= "float:left; width:60px; height:60px; margin-left: 5px;"src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.group_details.0.7}}.jpg"></a>	
-<div class = "imgLabel" style='margin-top:10px;text-align:left;'> {{ left_panel_stats.group_details.0.8 }} </div>
+<div class='service_provider_container'>		
+			<div class = "section_title"><span style="font-size:90%; margin-left:-10px;color:#6D9D30">Service Provider</span></div>
+			<div style='width:100px;float:left;'>
+				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.group_details.0.7}})">
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.group_details.0.7}}.jpg"></a>
+				</div>
+				<div style="width:100px; overflow:hidden;">
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.group_details.0.7}})">{{ left_panel_stats.group_details.0.8 }}</a>
+				</div>				
+			</div>
+			<div style='width:100px;float:right;'>
+				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.group_details.0.5}})">
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.group_details.0.5}}.jpg"></a>
+				</div>
+				<div style="width:100px; overflow:hidden; margin-left:-30px;">
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.group_details.0.5}})">{{ left_panel_stats.group_details.0.6 }}</a>
+				</div>
+			</div>
+</div>
 <div style='clear:both;'></div>	
 </div>
 </div>
@@ -58,7 +70,7 @@
 <div class='content_top' style="margin-left: 255px; height: 550px;">
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
-	<a class="close" data-dismiss="modal">x</a>
+	<a class="close" data-dismiss="modal">X</a>
 </div>
 <div id="tabs">
 	<div id='toptabs'>

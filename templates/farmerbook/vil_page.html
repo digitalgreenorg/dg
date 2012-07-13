@@ -25,9 +25,11 @@
 		<div class= 'statsLabel'> Active Farmers</div>
 		<div class = 'statsValue'> {{ left_panel_stats.tot_farmers.0 }} </div>
 		<div class='horizontal_line'> </div>
-		<div class= 'statsLabel'> Questions Asked</div>
-		<div class = 'statsValue'> 	{{ left_panel_stats.tot_questions }} </div>
-		<div class='horizontal_line'> </div>
+		{% if left_panel_stats.tot_questions %}
+			<div class= 'statsLabel'> Questions Asked</div>
+			<div class = 'statsValue'> 	{{ left_panel_stats.tot_questions }} </div>
+			<div class='horizontal_line'> </div>
+		{% endif %}
 		<div class= 'statsLabel'> Adoptions</div>
 		<div class = 'statsValue'> {{ left_panel_stats.tot_adoptions }} </div>
 		<div class='horizontal_line'> </div>
@@ -49,12 +51,12 @@
 		<div class='horizontal_line'> </div>
 
 		<div class='service_provider_container'>
-		<div class = "section_title"><span style="font-size:90%; margin-left:-5px;color:#6D9D30">Service Provider</span></div>
+		<div class = "section_title"><span style="font-size:90%; margin-left:-10px;color:#6D9D30">Service Provider</span></div>
 		
 			<div style='width:100px;float:left;'>
 				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
 					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
-					<img  style= "float:left; width:100px; height:70px;"src=''></a>
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
 				</div>
 				<div style="width:100px; overflow:hidden;">
 					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">{{ left_panel_stats.service_provider.0.1 }}</a>

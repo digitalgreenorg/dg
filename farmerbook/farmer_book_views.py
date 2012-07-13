@@ -293,13 +293,13 @@ def get_person_page(request):
     village_id = Person.objects.filter(id=person_id).values_list('village__id', flat=True)
     group_id = Person.objects.filter(id=person_id).values_list('group__id', flat=True)
     #get all persons from village who attended any screening in village
-    screenings_attended = PersonMeetingAttendance.objects.filter(person__image_exists=True, person__village__id = village_id).values_list('person_id', flat=True)
+    screenings_attended = PersonMeetingAttendance.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__village__id = village_id).values_list('person_id', flat=True)
     views_dict = defaultdict(lambda:[0, 0, 0])
     #get number of viewings for each farmer
     for i in screenings_attended:
         views_dict[i][0] += 1
     #get number of adoptions for each farmer
-    adoptions = PersonAdoptPractice.objects.filter(person__image_exists=True, person__village__id = village_id).values_list('person_id', flat=True)
+    adoptions = PersonAdoptPractice.objects.exclude(person__id = person_id).filter(person__image_exists=True, person__village__id = village_id).values_list('person_id', flat=True)
     adoptions_dict = defaultdict(int)
     for i in adoptions:
         adoptions_dict[i] += 1
@@ -315,7 +315,7 @@ def get_person_page(request):
         top_adopters_id_list.append(i[0])
     #get last adopted video
     #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
-    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).exclude(id = person_id).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
+    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
     #remove duplicates and append recent date
     d = defaultdict(list)
     for item in last_adopted_details:
