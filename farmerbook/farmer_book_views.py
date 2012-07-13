@@ -265,7 +265,7 @@ def get_person_page(request):
     if person_adoptions == None:
         per_vid_adoption = []
     else:    
-        per_vid_adoption = PersonAdoptPractice.objects.filter(person__id = person_id).values('video__id').annotate(adopt_count=Count('person__id')) 
+        per_vid_adoption = PersonAdoptPractice.objects.filter(person__id = person_id).values('video__id').annotate(adopt_count=Count('id')) 
     for vid_id in per_vid_adoption:
         vids_stats_dict[vid_id['video__id']][2] = vid_id['adopt_count']
         
@@ -282,7 +282,7 @@ def get_person_page(request):
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
-                                    'adopters':vids_stats_dict[obj[0]][2],
+                                    'adopted':vids_stats_dict[obj[0]][2],
                                     'interested':vids_stats_dict[obj[0]][0], 
                                     'last_seen_date':vids_stats_dict[obj[0]][5], 
                                     'questioners': vids_stats_dict[obj[0]][1],
@@ -315,7 +315,7 @@ def get_person_page(request):
         top_adopters_id_list.append(i[0])
     #get last adopted video
     #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
-    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
+    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).exclude(id = person_id).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
     #remove duplicates and append recent date
     d = defaultdict(list)
     for item in last_adopted_details:
