@@ -645,9 +645,9 @@ def get_partner_page(request):
 #      
 #    sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['screenings'], reverse=True)
     
-    
+    id_list = get_id_with_images.get_partner_list()
     partner_stats_dict = defaultdict(lambda:[0, 0, 0, 0, 0, 0, 0, 0])
-    other_partner_info = Partners.objects.exclude(id = partner_id).values_list('id','partner_name','date_of_association')
+    other_partner_info = Partners.objects.filter(id__in = id_list).exclude(id = partner_id).values_list('id','partner_name','date_of_association')
     for partner_id,partner_name,startdate in other_partner_info:
         partner_stats_dict[partner_id][0] = partner_id
         partner_stats_dict[partner_id][1] = partner_name
