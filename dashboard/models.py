@@ -527,7 +527,7 @@ class Animator(models.Model):
     partner = BigForeignKey(Partners)
     village = BigForeignKey(Village, db_column = 'home_village_id')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
-    total_adoptions = models.PositiveIntegerField(default=0) 
+    total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
     class Meta:
         db_table = u'ANIMATOR'
