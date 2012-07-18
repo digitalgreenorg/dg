@@ -333,7 +333,7 @@ EOREGEX
 			         ORDER BY master_log_file;";
 			
 		
-			#echo " -- Finding binary logs to process\n";
+			echo " -- Finding binary logs to process\n";
 			$stmt = my_mysql_query($sql, $this->dest) or die1($sql . "\n" . mysql_error() . "\n");
 			$processedLogs = 0;
 			while($row = mysql_fetch_assoc($stmt)) {
@@ -343,7 +343,7 @@ EOREGEX
 				if ($row['exec_master_log_pos'] < 4) $row['exec_master_log_pos'] = 4;
 				$execCmdLine = sprintf("%s --base64-output=decode-rows -v -R --start-position=%d --stop-position=%d %s", $this->cmdLine, $row['exec_master_log_pos'], $row['master_log_size'], $row['master_log_file']);
 				$execCmdLine .= " 2>&1";
-				#echo  "-- $execCmdLine\n";
+				echo  "-- $execCmdLine\n";
 				$proc = popen($execCmdLine, "r");
 				if(!$proc) {
 					die1('Could not read binary log using mysqlbinlog\n');
@@ -362,7 +362,7 @@ EOREGEX
 				pclose($proc);
 			}
 
-			if($processedLogs) ++$count;
+			++$count;
 
 			#we back off further each time up to maximum
 			if(!empty($this->settings['flexcdc']['sleep_increment']) && !empty($this->settings['flexcdc']['sleep_maximum'])) {
@@ -452,7 +452,7 @@ EOREGEX
 		$has_logs = false;	
 		while($row = mysql_fetch_array($stmt)) {
 			if(!$has_logs) {
-				my_mysql_query("CREATE TEMPORARY table log_list (log_name char(50), primary key(log_name))",$this->dest) or die1(mysql_error());
+				my_mysql_query("CREATE table log_list (log_name char(50), primary key(log_name))",$this->dest) or die1(mysql_error());
 				$has_logs = true;
 			}
 			$sql = sprintf("INSERT INTO `" . $this->binlog_consumer_status . "` (server_id, master_log_file, master_log_size, exec_master_log_pos) values (%d, '%s', %d, 0) ON DUPLICATE KEY UPDATE master_log_size = %d ;", $this->serverId,$row['Log_name'], $row['File_size'], $row['File_size']);
@@ -471,7 +471,7 @@ EOREGEX
 			my_mysql_query($sql, $this->dest) or die1($sql . "\n" . mysql_error() . "\n");
 		} 
 
-		$sql = "DROP TEMPORARY table log_list";
+		$sql = "DROP table log_list";
 		my_mysql_query($sql, $this->dest) or die1("Could not drop TEMPORARY TABLE log_list\n");
 		
 	}

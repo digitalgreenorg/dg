@@ -105,4 +105,4 @@ if(empty($settings['flexcdc']['error_log'])) {
 
 $cdc = new FlexCDC($settings);
 #capture changes forever (-1):
-$cdc->capture_changes(-1);
+$cdc->capture_changes(1);
