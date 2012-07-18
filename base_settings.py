@@ -81,5 +81,6 @@ INSTALLED_APPS = (
     'dashboard',
     'debug_toolbar',
     'south',
+    'video_practice_map'
 )
 
