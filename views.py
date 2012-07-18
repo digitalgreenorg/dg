@@ -1797,82 +1797,93 @@ def get_screenings_for_perf_online(request):
     return response
 
 def get_screenings_for_perf_online_serv(request):
-    start_index =int(request.GET['iDisplayStart'])
-    end_index = start_index+int(request.GET['iDisplayLength'])
-    global_search = request.GET['sSearch']
-    sort_on = request.GET['iSortCol_0']
-    sort_dir=request.GET['sSortDir_0']
-    s_echo =request.GET['sEcho'];
-    
-    col_to_attr_dict={"0":"date","1":"village__village_name","2":"location"}
-    total_count = Screening.objects.distinct().count()
-    filtered_count=total_count
-    # #print "1"
-    
-   
-    #start_index=1
-    #end_index=5
-    
-    #search it
-    screenings=None
-    if(global_search!=""):
-        screenings = Screening.objects.filter(Q(location__icontains=(global_search))|Q(village__village_name__icontains=global_search))
-        filtered_count=screenings.count()
+    if request.method == 'POST':
+        return redirect('screenings')
     else:
-        screenings = Screening.objects.all()
-    
-    #sort it
-    sort_param=None
-    if(sort_dir=="desc"):
-        sort_param = "-"+col_to_attr_dict[sort_on]
-    else:
-        sort_param = col_to_attr_dict[sort_on]
-    
-    print "sort_param= "+sort_param
-    screenings=screenings.order_by(sort_param)
-    
-    #slice it
-    screenings=screenings[start_index:end_index]
-   
-   #send it
-    aadata=[]
-    for scr in screenings:
-        data=[]
-        data.append(str(scr.date))
-        data.append(str(scr.village))
-        data.append(str(scr.location))
-        aadata.append(data)
-    #s_echo=1
-    send_dict = { "sEcho" : s_echo,
-    "iTotalRecords":  total_count,
-    "iTotalDisplayRecords": filtered_count,
-    "aaData": aadata
-    }
-    
-    
-    json_subcat = simplejson.dumps(send_dict)
-    
-    print json_subcat
-    # json_subcat = '{\
-  # "sEcho":'+ request.GET['sEcho']+',\
-  # "iTotalRecords": '+ str(total_count)+',\
-  # "iTotalDisplayRecords":'+ str(total_count)+',\
-  # "aaData": [\
-    # [\
-      # "Gecko",\
-      # "Firefox 1.0",\
-      # "Win 98+ / OSX.2+"\
-    # ],\
-    # [\
-      # "Gecko",\
-      # "Firefox 1.5",\
-      # "Win 98+ / OSX.2+"\
-    # ]]}'
-    
-    response = HttpResponse(json_subcat, mimetype="application/javascript")
-    # response['X-COUNT'] = count
-    #print json_subcat
-    return response
+        start_index =int(request.GET['iDisplayStart'])
+        end_index = start_index+int(request.GET['iDisplayLength'])
+        global_search = request.GET['sSearch']
+        sort_on = request.GET['iSortCol_0']
+        sort_dir=request.GET['sSortDir_0']
+        s_echo =request.GET['sEcho'];
+        
+        col_to_attr_dict={"0":"id","1":"date","2":"village__village_name","3":"location"}
+        
+        villages = get_user_villages(request)
+        print(request.session.get('user_id'))
+        print len(villages)
+        total_count = Screening.objects.filter(village__in = villages).distinct().count()
+        screenings_for_user = Screening.objects.filter(village__in = villages)
+        
+        filtered_count=total_count
+        
+        #search it
+        screenings=None
+        
+        if(global_search!=""):
+            screenings = screenings_for_user.filter(Q(location__icontains=(global_search))|Q(village__village_name__icontains=global_search))
+            filtered_count=screenings.count()
+        else:
+            screenings = Screening.objects.filter(village__in = villages).distinct()
+            
+        #sort it
+        sort_param=None
+        if(sort_dir=="desc"):
+            sort_param = "-"+col_to_attr_dict[sort_on]
+        else:
+            sort_param = col_to_attr_dict[sort_on]
+        
+        print "sort_param= "+sort_param
+        screenings=screenings.order_by(sort_param)
+        
+        #slice it
+        screenings=screenings[start_index:end_index]
+       
+       #send it
+        aadata=[]
+        for scr in screenings:
+            data={}
+            # data.append(str(scr.date))
+            # data.append(str(scr.village))
+            # data.append(str(scr.location))
+            data["0"] = str(scr.id)
+            data["1"] = str(scr.date)
+            data["2"] = str(scr.village)
+            data["3"]=str(scr.location)
+            data["DT_RowClass"] = "row"
+            aadata.append(data)
+        #s_echo=1
+        send_dict = { "sEcho" : s_echo,
+        "iTotalRecords":  total_count,
+        "iTotalDisplayRecords": filtered_count,
+        "aaData": aadata
+            
+        }
+        
+        
+        json_subcat = simplejson.dumps(send_dict)
+        
+        print json_subcat
+        # json_subcat = '{\
+      # "sEcho":'+ request.GET['sEcho']+',\
+      # "iTotalRecords": '+ str(total_count)+',\
+      # "iTotalDisplayRecords":'+ str(total_count)+',\
+      # "aaData": [\
+        # [\
+          # "Gecko",\
+          # "Firefox 1.0",\
+          # "Win 98+ / OSX.2+"\
+        # ],\
+        # [\
+          # "Gecko",\
+          # "Firefox 1.5",\
+          # "Win 98+ / OSX.2+"\
+        # ]]}'
+        
+        response = HttpResponse(json_subcat, mimetype="application/javascript")
+        # response['X-COUNT'] = count
+        #print json_subcat
+        return response
 
     
 def save_screening_offline(request, id):

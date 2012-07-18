@@ -335,6 +335,14 @@ public class ScreeningsData extends BaseData {
 	protected String[] fields = {"id", "date", "start_time", "end_time", "location", "target_person_attendance", "target_audience_interest",
 									"target_adoptions","village", "fieldofficer", "animator"}; 
 	
+	
+	protected String get_online_url = "/dashboard/getscreeningsforperfonline_server/";
+	
+	@Override
+	public String GetOnlineUrl(){
+		
+		return get_online_url;
+	}
 	public ScreeningsData() {
 		super();
 	}
@@ -566,7 +574,7 @@ public class ScreeningsData extends BaseData {
 	}
 	
 	// Get all information/data to displayt he screening list page.
-	public Object getListPageData(String... pageNum) {
+	/*public Object getListPageData(String... pageNum) {
 		if(BaseData.isOnline()) {
 			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
 			int limit = offset+pageSize;
@@ -577,11 +585,14 @@ public class ScreeningsData extends BaseData {
 				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+ Integer.toString(offset) + "/" 
 						+ Integer.toString(limit)+ "/");
 			}
-		} else {
+		
+			//dataOnlineCallbacks.onlineSuccessCallback("");
+		} 
+		else {
 			return true;
 		}
 		return false;	
-	}
+	}*/
 	
 	public String retrieveFilteredDataAndConvertResultIntoHtml(){
 		StringBuilder sbHtml = new StringBuilder();

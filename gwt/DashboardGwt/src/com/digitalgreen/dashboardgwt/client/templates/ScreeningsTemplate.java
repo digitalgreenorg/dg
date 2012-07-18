@@ -17,8 +17,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ScreeningsTemplate extends BaseTemplate {
@@ -31,7 +33,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	}
 		
 	@Override
-	public void fill() {
+	/*public void fill() {
 		String templateType = "Screening";
 		String templatePlainType = "dashboard/screening/add/";
 		RequestContext requestContext = new RequestContext();
@@ -65,8 +67,9 @@ public class ScreeningsTemplate extends BaseTemplate {
 			ScreeningsTemplate.loadPerson(id);
 		}
 		//call_datatable();
-	}
+	}*/
 	public void fill(boolean connectivity) {
+		//Window.alert("fill()");
 		String templateType = "Screening";
 		String templatePlainType = "dashboard/screening/add/";
 		RequestContext requestContext = new RequestContext();
@@ -83,7 +86,8 @@ public class ScreeningsTemplate extends BaseTemplate {
 		
 		super.fillDGTemplate(templateType, screeningsListHtml, screeningsAddHtml, addDataToElementID);
 		//Now add listings
-		List<Hyperlink> links =  this.fillListings();
+		
+		List<Hyperlink> links =  this.fillListings(connectivity);
 		// Add it to the rootpanel
 		super.fill();
 		
@@ -99,24 +103,32 @@ public class ScreeningsTemplate extends BaseTemplate {
 			}
 			ScreeningsTemplate.loadPerson(id);
 		}
-		if(!connectivity)
-			call_datatable();
+		else{
+			if(!connectivity){
+				//Window.alert("offline datatable call");
+				call_datatable();
+			
+			}
+			else
+				call_datatable_online("/dashboard/getscreeningsforperfonline_server/",this);
+		}
+		//Window.alert("finished");
 	}
 	
-	public List<Hyperlink> fillListings(){
+	public List<Hyperlink> fillListings(boolean connectivity){
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		List<Hyperlink> links = new ArrayList<Hyperlink>();
 		// If we're unsure, just default to list view
-		if(queryArg.equals("list")) {
+		if(queryArg.equals("list")&&!connectivity) {
 			// 	Add Listings
 			List screenings = (List)queryArgs.get("listing");			
 			if(screenings  != null){
 				String tableRows ="";
 				String style;
 				ScreeningsData.Data screening;
-				List<ScreeningsData.Data> screenings_for_array= new ArrayList<ScreeningsData.Data>();
-				List<String> try1 = new ArrayList<String>();
+				//List<ScreeningsData.Data> screenings_for_array= new ArrayList<ScreeningsData.Data>();
+				//List<String> try1 = new ArrayList<String>();
 				RequestContext requestContext = null;
 				for (int row = 0; row <screenings.size(); ++row) {
 					if(row%2==0)
@@ -129,14 +141,15 @@ public class ScreeningsTemplate extends BaseTemplate {
 					requestContext.getArgs().put("id", screening.getId());
 					requestContext.setForm(this.formTemplate);
 					links.add(this.createHyperlink("<a href='#dashboard/screening/"+ screening.getId() +"/'>" +
-							screening.getDate() + "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
-					tableRows += "<tr class='" +style+ "'>" +
-								  "<th id = 'row" + row + "'></th>" + 
+							screening.getId()+ "</a>", "dashboard/screening/"+ screening.getId() +"/", new Screenings(requestContext)));
+					tableRows += "<tr>" +
+								  "<th id = 'row" + row + "'></th>" +
+								  	"<td>"+ screening.getDate()  +"</td>"+
 									"<td>"+ screening.getVillage().getVillageName() + "</td>"+
 									"<td>"+ screening.getLocation()+"</td>" +
 								"</tr>";
-					screenings_for_array.add(screening);
-					try1.add(screening.getVillage().getVillageName());
+					//screenings_for_array.add(screening);
+					//try1.add(screening.getVillage().getVillageName());
 				}
 				//screeningsListFormHtml = screeningsListFormHtml +"</tbody></table>";
 				//screeningJsArray(try1);
@@ -145,6 +158,10 @@ public class ScreeningsTemplate extends BaseTemplate {
 				
 			}
 		}
+		
+		if(queryArg.equals("list")&&connectivity)
+			screeningsListFormHtml = screeningsListFormHtml+ "</tbody></table>";
+		
 		return links;
 	}
 	
@@ -158,12 +175,101 @@ public class ScreeningsTemplate extends BaseTemplate {
     table_data.push(tuple);
     */
 	
+	public static native void call_datatable_online(String url,ScreeningsTemplate inst) /*-{
+	//var start =new Date().getTime();
+	//$wnd.alert(str);
+	$wnd.$('#table1').dataTable({
+     "sAjaxSource": url,
+     "bProcessing": true,
+     "bServerSide": true,
+      //     "fnInitComplete": function(oSettings, json) {
+      //alert( 'DataTables has finished its initialisation.' );
+      //$entry(inst.@com.digitalgreen.dashboardgwt.client.data.BaseData::datatable_manipulate()());
+    //},
+     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+     
+     	//$wnd.$(nRow).attr('id', 'row'+iDisplayIndex);
+      	$wnd.$($wnd.$(nRow).children()[0]).attr('id', 'row'+iDisplayIndex);
+      	      	$wnd.$($wnd.$(nRow).children()[0]).css('font-weight', 'bold');
+      	//var str = inst.@com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate::datatable_manipulate_row(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(iDisplayIndex,aData[0],aData[1],aData[2],aData[3]);
+        //$wnd.alert(nRow +typeof(nRow));
+        //$wnd.alert(iDisplayIndex);
+        //$wnd.alert(iDisplayIndexFull);
+       // $wnd.$(nRow).html( str );
+        
+        
+     
+    },    //"sAjaxSource": "scripts/server_processing.php"
+      
+          
+    "fnDrawCallback": function( oSettings ) {
+    	
+      //alert( 'DataTables has redrawn the table'+String(oSettings['_iDisplayLength']));
+      var str = inst.@com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate::datatable_manipulate_row(I)(oSettings['_iDisplayLength']);
+       
+    }
+      
+     });
+	//var end =new Date().getTime();
+	//var time = end-start;
+	//$wnd.alert("time= "+time);
+	
+	
+	}-*/;
+	
+	
+	public void datatable_manipulate_row(int page_length)
+	{
+		/*Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChildCount()));
+		//Window.alert(RootPanel.get("table1").getElement().getChild(2).toString());
+		Window.alert((RootPanel.get("table1").getElement().getInnerHTML()));
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getChildCount()));//getFirstChild().getFirstChild().getNodeValue());
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getFirstChild().getChildCount()));
+		com.google.gwt.dom.client.Element row = RootPanel.get("table1").getElement().getChild(1).getFirstChild().getFirstChild().getParentElement();//setNodeValue("nice!!!");//getNodeValue());
+	    Window.alert(row.getInnerHTML());
+	    row.setInnerHTML(" <td class=' sorting_1'><a href='http://www.google.com'>10000000043562<a></td><td class=''>2011-02-16</td><td class=''>Shrey </td>");*/
+		for(int index=0;index<page_length;index++)
+		{
+			String id= (RootPanel.get("row"+index).getElement().getInnerText());
+			//Window.alert(RootPanel.get("row"+index).getElement().getNodeValue());
+			RequestContext requestContext = null;
+			requestContext = new RequestContext();
+			requestContext.getArgs().put("action", "edit");
+			requestContext.getArgs().put("id", id);
+			requestContext.setForm(this.formTemplate);
+		
+			//Window.alert(id+date);
+			Hyperlink link= (this.createHyperlink("<a href='#dashboard/screening/"+ id +"/'>" +
+					id + "</a>", "dashboard/screening/"+ id +"/", new Screenings(requestContext)));
+			
+			/*String row="<th>"+link.getHTML()+"</th>" + 
+					  	"<td>"+ date +"</td>"+
+						"<td>"+ village + "</td>"+
+						"<td>"+ location+"</td>" ;
+				*/	
+			//InlineHTML h_row= new InlineHTML();
+			//HTML  html_row = new HTML(row);
+			//Window.alert(row);
+			//Window.alert(link.getHTML());
+			//Window.alert(new InlineHTML("<tr><td>shrey</td></tr>").toString());
+			//for(int i = 0; i < links.size(); i++){
+			//RootPanel.get("table_body").add(html_row);
+			RootPanel.get("row"+index).getElement().setInnerText("");
+			RootPanel.get("row"+index).add(link);
+		}
+		//}
+		
+		//return row;
+		
+	}
+	
+	
 	public static native void call_datatable() /*-{
-	var start =new Date().getTime();
+	//var start =new Date().getTime();
 	$wnd.$('#table1').dataTable({"bDeferRender": true,});
-	var end =new Date().getTime();
-	var time = end-start;
-	$wnd.alert("time= "+time);
+	//var end =new Date().getTime();
+	//var time = end-start;
+	//$wnd.alert("time= "+time);
 	
 	
 	}-*/;
@@ -206,12 +312,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	final private String addDataToElementID[] = {"id_village", "id_animator", "id_videoes_screened", "id_fieldofficer", "id_farmer_groups_targeted"};
 	
 	// Fill ids:  data-rows
-	private String screeningsListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
-							"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
-							"<input type='text' id='searchbar' value='' name='q' size='40'>" +
-							"<input id='search' type='button' value='Search'>" +
-						"</div>"+
-						"<div class='actions'>" +
+	private String screeningsListFormHtml = "<div class='actions'>" +
 						"<label>Action: <select name='action'>" +
 							"<option value='' selected='selected'>---------</option>" +
 							"<option value='delete_selected'>Delete selected screenings</option>" +
@@ -219,27 +320,25 @@ public class ScreeningsTemplate extends BaseTemplate {
 						"</label>" +
 						"<button type='submit' class='button' title='Run the selected action' name='index' value='0'>Go</button>" +
 					"</div>" +
-					"<table id='table1' class='display' cellspacing='0'>" +
+					"<table id='table1' class='display'>" +
 						"<thead>" +
 							"<tr>" +
 									"<th>" +
-									"<a href='?ot=asc&amp;o=1'>" +
-										"Date" +
-									"</a>" +
-								"</th>" +
+										"ID" +
+									"</th>" +
+										"<th>"+
+											"Date"+
+										"</th>"+
 								"<th>" +
-									"<a href='?ot=asc&amp;o=2'>" +
 										"Village" +
-									"</a>" +
 								"</th>" +
 								"<th>" +
-									"<a href='?ot=asc&amp;o=3'>" +
 										"Location" +
 									"</a>" +
 								"</th>" +
 							"</tr>" +
 						"</thead>" +
-						"<tbody>";
+						"<tbody id='table_body'>";
 
 	// Fill ids:  listing-form-body, add-link
 	final private String screeningsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +

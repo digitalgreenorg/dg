@@ -36,6 +36,7 @@ public class Template implements TemplateInterface {
 	}
 	
 	public void fill() {
+		//Window.alert("suprsuperfill()");
 		if( this.getRequestContext().hasErrorMessages()) {
 			RootPanel.get("info-space").insert(this.getFormattedErrors(), 0);	
 		} else if(this.getRequestContext().hasMessages()) {

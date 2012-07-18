@@ -54,7 +54,7 @@ public class Screenings extends BaseServlet {
 							getServlet().getRequestContext().getArgs().put("addPageData", resultObj.get("form").isString().stringValue());
 							
 							//getServlet().getRequestContext().getArgs().put("addPageData", addData);
-							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
 							
 							//getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
 							//getServlet().getRequestContext().setErrorMessage(results) ;
@@ -114,7 +114,7 @@ public class Screenings extends BaseServlet {
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							String count = this.getResponse().getHeader("X-COUNT");
+							/*String count = this.getResponse().getHeader("X-COUNT");
 							getServlet().getRequestContext().getArgs().put("totalRows", count);
 							if(this.getStatusCode() == 200) {
 								ScreeningsData screeningsData = new ScreeningsData();
@@ -127,7 +127,9 @@ public class Screenings extends BaseServlet {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
 								getServlet().redirectTo(new Index(requestContext));
-							}
+							}*/
+							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
+							
 						}
 
 						public void onlineErrorCallback(int errorCode) {
@@ -172,9 +174,11 @@ public class Screenings extends BaseServlet {
 					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
+					//Window.alert("enterd");
 					Form form = this.requestContext.getForm();
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
+							//Window.alert("Callback()");
 							JSONObject resultObj = JSONParser.parse(results).isObject();
 							String formString = resultObj.get("form").isString().stringValue();
 							
@@ -185,7 +189,7 @@ public class Screenings extends BaseServlet {
 									}
 								}
 								getServlet().getRequestContext().getArgs().put("addPageData", formString);
-								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
@@ -209,7 +213,7 @@ public class Screenings extends BaseServlet {
 								// Got whatever info we need to display for this GET request, so go ahead
 								// and display it by filling in the template.  No need to redirect.
 								getServlet().getRequestContext().getArgs().put("addPageData", (String)addData);
-								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()));
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),false);
 							} else {
 								RequestContext requestContext = new RequestContext();
 								requestContext.setErrorMessage("Unexpected local error. Please contact support");

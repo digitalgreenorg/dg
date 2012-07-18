@@ -8,6 +8,7 @@ import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
+import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
@@ -19,7 +20,9 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -301,9 +304,13 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected static String createTable = "";
 	protected static String dropTable = "";
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
-
+	protected String get_online_url = "";
 	public BaseData() {}
 
+	public String GetOnlineUrl(){
+		
+		return get_online_url;
+	}
 	public BaseData(OnlineOfflineCallbacks callbacks) {
 		this.dataOnlineCallbacks = callbacks;
 	}
@@ -681,6 +688,82 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 		}
 	}
 	
+	public Object getListPageData(String... pageNum) {
+		if(BaseData.isOnline()) {
+			/*int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
+			int limit = offset+pageSize;
+			if(pageNum.length > 1 ) {
+				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+
+						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
+			} else {
+				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+ Integer.toString(offset) + "/" 
+						+ Integer.toString(limit)+ "/");
+			}*/
+		
+			dataOnlineCallbacks.onlineSuccessCallback("");
+			
+			//call_datatable_online(GetOnlineUrl(),this);
+		
+		} 
+		else {
+			return true;
+		}
+		return false;	
+	}
+	
+	public void datatable_manipulate()
+	{
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChildCount()));
+		//Window.alert(RootPanel.get("table1").getElement().getChild(2).toString());
+		Window.alert((RootPanel.get("table1").getElement().getInnerHTML()));
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getChildCount()));//getFirstChild().getFirstChild().getNodeValue());
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getFirstChild().getChildCount()));
+		com.google.gwt.dom.client.Element row = RootPanel.get("table1").getElement().getChild(1).getFirstChild().getFirstChild().getParentElement();//setNodeValue("nice!!!");//getNodeValue());
+	    Window.alert(row.getInnerHTML());
+	    row.setInnerHTML(" <td class=' sorting_1'><a href='http://www.google.com'>10000000043562<a></td><td class=''>2011-02-16</td><td class=''>Shrey </td>");
+	}
+	
+	public String datatable_manipulate_row()
+	{
+		/*Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChildCount()));
+		//Window.alert(RootPanel.get("table1").getElement().getChild(2).toString());
+		Window.alert((RootPanel.get("table1").getElement().getInnerHTML()));
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getChildCount()));//getFirstChild().getFirstChild().getNodeValue());
+		Window.alert(String.valueOf(RootPanel.get("table1").getElement().getChild(1).getFirstChild().getChildCount()));
+		com.google.gwt.dom.client.Element row = RootPanel.get("table1").getElement().getChild(1).getFirstChild().getFirstChild().getParentElement();//setNodeValue("nice!!!");//getNodeValue());
+	    Window.alert(row.getInnerHTML());
+	    row.setInnerHTML(" <td class=' sorting_1'><a href='http://www.google.com'>10000000043562<a></td><td class=''>2011-02-16</td><td class=''>Shrey </td>");*/
+		return "<td class=' sorting_1'><a href='http://www.google.com'>10000000043562<a></td><td class=''>2011-02-16</td><td class=''>Shrey </td>";
+	}
+	
+	public static native void call_datatable_online(String str,BaseData inst) /*-{
+	//var start =new Date().getTime();
+	//$wnd.alert(str);
+	$wnd.$('#table1').dataTable({
+     "sAjaxSource": str,
+       "bProcessing": true,
+            "bServerSide": true,
+      //     "fnInitComplete": function(oSettings, json) {
+      //alert( 'DataTables has finished its initialisation.' );
+      //$entry(inst.@com.digitalgreen.dashboardgwt.client.data.BaseData::datatable_manipulate()());
+    //},
+    "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+      // Bold the grade for all 'A' grade browsers
+      //if ( aData[4] == "A" )
+      {
+      	var str =(inst.@com.digitalgreen.dashboardgwt.client.data.BaseData::datatable_manipulate_row()());
+        $wnd.alert(str);
+        $wnd.$('tr', nRow).html( str );
+      }
+    }    //"sAjaxSource": "scripts/server_processing.php"
+      
+     });
+	//var end =new Date().getTime();
+	//var time = end-start;
+	//$wnd.alert("time= "+time);
+	
+	
+	}-*/;
 	//Returns total number of rows retrieved in Listing case for Pagination
 	//count is used to determine number of pages to display
 	public String getCount() {

@@ -63,9 +63,16 @@ public class BaseTemplate extends Template {
 	
 	@Override
 	public void fill() {
+		//Window.alert("inside super.fill()");
 		RootPanel.get("user-name").add(new HTMLPanel("b", ApplicationConstants.getUsernameCookie() + "."));
+		//Window.alert("at logout");
+		
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
+		//Window.alert("at getcontentpanel");
+		//Window.alert(this.getContentPanel().toString());
+		//Window.alert("at sub-container");
 		RootPanel.get("sub-container").add(this.getContentPanel());
+		//Window.alert("afetr sub-conatiner");
 		super.fill();
 	}
 	
@@ -74,6 +81,7 @@ public class BaseTemplate extends Template {
 		      String inputListFormHtml, 
 		      final BaseServlet servlet, 
 		      List<Hyperlink> links) {
+		//Window.alert("fillDgListPage()");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		//If we're unsure, just default to list view
@@ -81,7 +89,7 @@ public class BaseTemplate extends Template {
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
 			//Calculating number of pages to display
-			int numberOfPages;
+			/*int numberOfPages;
 			List<Hyperlink> pageLinks = new ArrayList<Hyperlink>();
 			int totalRows = Integer.parseInt((String)queryArgs.get("totalRows"));
 			int pageSize = ApplicationConstants.getPageSize();
@@ -119,6 +127,9 @@ public class BaseTemplate extends Template {
 			else {
 				vPanel.add(new HTML(totalCountHtml));
 			}			
+			
+					
+			RootPanel.get("pagination-footer").add(vPanel);	*/	
 			Hyperlink addLink = new Hyperlink();
 			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
@@ -136,8 +147,6 @@ public class BaseTemplate extends Template {
 			for(int i = 0; i < links.size(); i++){
 				RootPanel.get("row"+i).add(links.get(i));
 			}
-					
-			RootPanel.get("pagination-footer").add(vPanel);			
 			//SearchUI is Added only for some child templates
 			if(RootPanel.get("search") != null) {
 				final Button searchButton = Button.wrap(RootPanel.get("search").getElement());
@@ -195,6 +204,7 @@ public class BaseTemplate extends Template {
 		Hyperlink addLink = new Hyperlink(linkText, true, tokenText); 
 		addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					//Window.alert("click!");
 					Template.addLoadingMessage();
 					servlet.response();
 				}
@@ -205,10 +215,12 @@ public class BaseTemplate extends Template {
 	protected void fillDGTemplate(String templateType, 
 								  String listHtml,
 								  String addHtml, String addDataToElementID[]) {
+		//Window.alert("inside fillDgTemplate");
 		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		if(queryArg.equals("add") || queryArg.equals("edit")) {
+			
 			this.postForm = new FormPanel();
 			this.postForm.getElement().setId("add-form");
 			this.postForm.setAction(RequestContext.getServerUrl() + 
@@ -245,6 +257,7 @@ public class BaseTemplate extends Template {
 	}
 	
 	protected void fillDgFormPage(final BaseServlet servlet) {
+		//Window.alert("fillDgFormPage()");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		if(this.getRequestContext().getMethodTypeCtx().equals(RequestContext.METHOD_GET) && 
