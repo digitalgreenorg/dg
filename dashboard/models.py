@@ -614,7 +614,7 @@ class Video(models.Model):
     supplementary_video_produced = BigForeignKey('self',null=True, blank=True)
     video_suitable_for = models.IntegerField(choices=SUITABLE_FOR,db_column='VIDEO_SUITABLE_FOR')
     remarks = models.TextField(blank=True, db_column='REMARKS')
-    related_agricultural_practices = models.ManyToManyField('Practices')
+    related_agricultural_practices = models.ManyToManyField('Practices', blank=True)
     farmers_shown = models.ManyToManyField(Person)
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
