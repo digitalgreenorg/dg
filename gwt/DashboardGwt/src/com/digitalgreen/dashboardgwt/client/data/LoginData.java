@@ -35,10 +35,11 @@ public class LoginData extends BaseData {
 	  " dirty_bit CHAR(1)," +
 	  " last_sync_table_index INT," +
 	  " user_role CHAR(1), " +
+	  " user_status INT," +
 	  " dashboard_error_count INT);";
 
 	protected static String dropTable = "DROP TABLE IF EXISTS `user`;";
-	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?, ?, ?);";
+	protected static String insertRow = "INSERT INTO user VALUES (? ,?,?,?,?,?,?,?,?);";
 	protected static String authenticateUser = "SELECT username, user_role FROM user WHERE username=? AND password = ?";
 	protected static String selectUser = "SELECT username FROM user WHERE username=?";
 	protected static String updateUser = "UPDATE `user` SET last_inserted_id=? WHERE username = ? AND password = ?";
@@ -85,8 +86,8 @@ public class LoginData extends BaseData {
 		this.update(updateSyncStatus, dirty_bit, last_sync_table_index, username);
 	}
 	
-	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index, String user_role, String dashboard_errors) {
-		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index, user_role, dashboard_errors);
+	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index, String user_role,String user_status,String dashboard_errors) {
+		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index, user_role,user_status, dashboard_errors);
 	}
 	
 	public Object authenticate(String username, String password) {

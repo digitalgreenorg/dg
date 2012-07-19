@@ -11,6 +11,7 @@ public class OnlineOfflineCallbacks {
 	
 	public OnlineOfflineCallbacks(BaseServlet servlet) {
 		this.servlet = servlet;
+		this.uploadInterrupted=false;
 	}
 	
 	public OnlineOfflineCallbacks(BaseServlet servlet, boolean uploadInterrupted) {
