@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from dashboard.models import Video, TopPractice, SubPractice, PracticeUtility, PracticeType, PracticeSubject
+from dashboard.models import PracticeMain, PracticeSub, PracticeSector, \
+    PracticeSubSector, PracticeSubject, Video
 from django.contrib.auth import logout
 from video_practice_map.models import *
 import json
@@ -47,6 +48,9 @@ def home(request):
                 if review_videos.count() != 0:
                     next_action = 'review'
                     vid = review_videos[0]
+            else:
+                pass
+                #TODO: End of App. Clear skip video or All work done.
         else:
             vid = assign_videos[0]
     review_vid_pr = None
@@ -107,7 +111,7 @@ def form_submit(request):
 def practice_filter_options(request):
     pr = PracticeCombination.objects.all()
     field_arr = ['top_practice', 'sub_practice', 'utility', 'type', 'subject']
-    model_arr = [TopPractice, SubPractice, PracticeUtility, PracticeType, PracticeSubject]
+    model_arr = [PracticeSector, PracticeSubSector, PracticeMain, PracticeSub, PracticeSubject]
     output_arr = []
     for model, field in zip(model_arr, field_arr):
         if request.GET[field]:
@@ -121,11 +125,11 @@ def practice_filter_options(request):
         else:
             output_arr.append('')
             
-    default_selects = ["<option value=''>Select Main Practice</option>",
-                       "<option value=''>Select Sub Practice</option>",
-                       "<option value=''>Select Utility</option>",
-                       "<option value=''>Select type of Practice</option>",
-                       "<option value=''>Select Crop or Product</option>"]
+    default_selects = ["<option value=''>Select Sector</option>",
+                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Practice</option>",
+                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Subject</option>"]
     t = Template("{% for obj in list %}<option value='{{obj.0}}'>{{obj.1}}</option>{% endfor %}")            
     for i, field in enumerate(field_arr):
         if not request.GET[field]:
@@ -138,14 +142,14 @@ def practice_filter_options(request):
     return HttpResponse(json.dumps(output_arr))
 
 def all_practice_options(request=None):
-    model_arr = [TopPractice, SubPractice, PracticeUtility, PracticeType, PracticeSubject]
+    model_arr = [PracticeSector, PracticeSubSector, PracticeMain, PracticeSub, PracticeSubject]
     value_arr = [model.objects.values_list('id', 'name').order_by('name') for model in model_arr]
     if request:
-        output_arr = ["<option value=''>Select Main Practice</option>",
-                      "<option value=''>Select Sub Practice</option>",
-                      "<option value=''>Select Utility</option>",
-                      "<option value=''>Select type of Practice</option>",
-                      "<option value=''>Select Crop or Product</option>"]
+        output_arr = ["<option value=''>Select Sector</option>",
+                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Practice</option>",
+                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Subject</option>"]
         t = Template("{% for obj in list %}<option value='{{obj.0}}'>{{obj.1}}</option>{% endfor %}")
         for i, value in enumerate(value_arr):
             output_arr[i] = output_arr[i] + t.render(Context(dict(list=value)))

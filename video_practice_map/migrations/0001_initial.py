@@ -11,10 +11,10 @@ class Migration(SchemaMigration):
         # Adding model 'PracticeCombination'
         db.create_table('video_practice_map_practicecombination', (
             ('id', self.gf('dashboard.fields.BigAutoField')(primary_key=True)),
-            ('top_practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.TopPractice'])),
-            ('sub_practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.SubPractice'], null=True)),
-            ('utility', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeUtility'], null=True)),
-            ('type', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeType'], null=True)),
+            ('top_practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeSector'])),
+            ('sub_practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeSubSector'], null=True)),
+            ('utility', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeMain'], null=True)),
+            ('type', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeSub'], null=True)),
             ('subject', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PracticeSubject'], null=True)),
         ))
         db.send_create_signal('video_practice_map', ['PracticeCombination'])
@@ -24,8 +24,19 @@ class Migration(SchemaMigration):
             ('id', self.gf('dashboard.fields.BigAutoField')(primary_key=True)),
             ('video', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.Video'])),
             ('practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['video_practice_map.PracticeCombination'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True)),
+            ('review_user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='reviewed_practices', null=True, to=orm['auth.User'])),
+            ('review_approved', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
         ))
         db.send_create_signal('video_practice_map', ['VideoPractice'])
+
+        # Adding model 'SkippedVideo'
+        db.create_table('video_practice_map_skippedvideo', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('video', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.Video'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+        ))
+        db.send_create_signal('video_practice_map', ['SkippedVideo'])
 
 
     def backwards(self, orm):
@@ -36,8 +47,40 @@ class Migration(SchemaMigration):
         # Deleting model 'VideoPractice'
         db.delete_table('video_practice_map_videopractice')
 
+        # Deleting model 'SkippedVideo'
+        db.delete_table('video_practice_map_skippedvideo')
+
 
     models = {
+        'auth.group': {
+            'Meta': {'object_name': 'Group'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
+            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
+        },
+        'auth.permission': {
+            'Meta': {'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
+            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        'auth.user': {
+            'Meta': {'object_name': 'User'},
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
+            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
@@ -159,6 +202,11 @@ class Migration(SchemaMigration):
             'relative': ('dashboard.fields.BigForeignKey', [], {'related_name': "'relative'", 'to': "orm['dashboard.Person']"}),
             'type_of_relationship': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'TYPE_OF_RELATIONSHIP'"})
         },
+        'dashboard.practicemain': {
+            'Meta': {'object_name': 'PracticeMain', 'db_table': "u'practice_main'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
         'dashboard.practices': {
             'Meta': {'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
@@ -166,18 +214,23 @@ class Migration(SchemaMigration):
             'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'})
         },
+        'dashboard.practicesector': {
+            'Meta': {'object_name': 'PracticeSector', 'db_table': "u'practice_sector'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesub': {
+            'Meta': {'object_name': 'PracticeSub', 'db_table': "u'practice_sub'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
         'dashboard.practicesubject': {
             'Meta': {'object_name': 'PracticeSubject', 'db_table': "u'practice_subject'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
-        'dashboard.practicetype': {
-            'Meta': {'object_name': 'PracticeType', 'db_table': "u'practice_type'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
-        'dashboard.practiceutility': {
-            'Meta': {'object_name': 'PracticeUtility', 'db_table': "u'practice_utility'"},
+        'dashboard.practicesubsector': {
+            'Meta': {'object_name': 'PracticeSubSector', 'db_table': "u'practice_subsector'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
@@ -200,16 +253,6 @@ class Migration(SchemaMigration):
             'region': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Region']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'STATE_NAME'"})
-        },
-        'dashboard.subpractice': {
-            'Meta': {'object_name': 'SubPractice', 'db_table': "u'sub_practice'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
-        'dashboard.toppractice': {
-            'Meta': {'object_name': 'TopPractice', 'db_table': "u'top_practice'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'dashboard.video': {
             'Meta': {'unique_together': "(('title', 'video_production_start_date', 'video_production_end_date', 'village'),)", 'object_name': 'Video', 'db_table': "u'VIDEO'"},
@@ -261,16 +304,25 @@ class Migration(SchemaMigration):
         'video_practice_map.practicecombination': {
             'Meta': {'object_name': 'PracticeCombination'},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'sub_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.SubPractice']", 'null': 'True'}),
+            'sub_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubSector']", 'null': 'True'}),
             'subject': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubject']", 'null': 'True'}),
-            'top_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.TopPractice']"}),
-            'type': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeType']", 'null': 'True'}),
-            'utility': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeUtility']", 'null': 'True'})
+            'top_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSector']"}),
+            'type': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSub']", 'null': 'True'}),
+            'utility': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeMain']", 'null': 'True'})
+        },
+        'video_practice_map.skippedvideo': {
+            'Meta': {'object_name': 'SkippedVideo'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
+            'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
         },
         'video_practice_map.videopractice': {
             'Meta': {'object_name': 'VideoPractice'},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['video_practice_map.PracticeCombination']"}),
+            'review_approved': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'review_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reviewed_practices'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
             'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
         }
     }

@@ -5,87 +5,110 @@ from south.v2 import DataMigration
 from django.db import models
 
 class Migration(DataMigration):
-    def populate_top_practice(self, orm):
-        initial_unique_names = ['Poultry', 'Gotary', 'Plant Propagation', 'Plant Extract', 'Land Utilization', 
-                                'Nursery Bed Preparation and Seed Sowing', 'Soil Moisture Conservation', 
-                                'Land Preparation and Seed Sowing', 'Pisciculture', 'Sericulture', 'Post Harvest Management', 
-                                'Alternate Source of Energy', 'Farming', 'Soil Sampling', 'Harvesting', 'Group Activity', 'Concept', 
-                                'Seed Production', 'Seed Sowing', 'Construction', 'Soil Erosion', 'Intercropping', 'Piggery', 
-                                'Nutrient Management', 'Kitchen Garden', 'Plant Protection', 'Lac Culture', 
-                                'Training', 'Seed Grading', 'Orchard', 'Seed Selection', 'Seedling Treatment', 
-                                'Water Conservation', 'Seed Treatment', 'Improved Farming Technique', 'Gender', 'Transplantation', 
-                                'Disinfectant', 'Social', 'Seed Treatment and Seed Sowing', 'Health and Hygiene', 'Environmental', 
-                                'Seedling Treatment and Transplantation', 'Livelihood Activity', 'Care and Treatment', 'Selection', 
-                                'Vaccination', 'Micro Finance', 'Agriculture', 'Interculture', 'Duckery (Batak Paalan)', 
-                                'Feed and Care', 'Land Preparation', 'Seed Testing', 'Irrigation Management', 'Nursery Bed Preparation', 
-                                'Artificial Insemination', 'Seed Germination Test', 'Floriculture']
+
+    def populate_sector(self, orm):
+        initial_unique_names = ['Agriculture','Animal Husbandry','Financial Management',
+                                'Health','Institutional','Miscellaneous','Pisciculture',
+                                'Sericulture','Social Issues']
+        
         for name in initial_unique_names:
-            orm.TopPractice.objects.create(name=name)
+            orm.PracticeSector.objects.create(name=name)
     
-    def populate_sub_practice(self, orm):
-        initial_unique_names = ['Disease Protection', 'Marking', 'Management', 'Weed Management', 'Visioning', 'Accounting System', 
-                                'Storage', 'Pit Filling', 'Pesticide Preparation', 'Integrated Farming', 'Compost Treatment', 
-                                'Application', 'Literacy', 'Feeding', 'Compost Protection', 'Treatment', 'Digging', 'Usage', 
-                                'Fumigation', 'IPM', 'Hoeing', 'Earthing-up and Fertilizer Application', 
-                                'Weeding and Fertilizer Application', 'Seed Distribution', 'Sprinklers', 'Fertilizer Preparation', 
-                                'Fertilizer Application', 'Rodent Control', 'Utilization', 'Liquid Compost Preparation', 'Aggregation', 
-                                'Bio Gas', 'Enrichment', 'Earthing-up', 'Grafting', 'Budding', 'Liquid Compost', 'Sun Drying', 'Furrow', 
-                                'Empowerment', 'Site Selection', 'Compost Preparation', 'Group Farming', 'Lopping', 'Bank Linkage', 
-                                'Cluster Meeting', 'Pesticide Application', 'Preparation', 'Rearing', 'Supplements', 'Threshing', 
-                                'Staking', 'Solarization', 'Business Plan', 'Gobar Gas', 'Rouging', 'Controlled Condition', 
-                                'Compost Enrichment', 'Group Meeting', 'Micro Nutrient Management', 'Pit Digging', 'Yield Comparison', 
-                                'Mass Meeting', 'Pest and Disease Management', 'Mixed Cropping', 'Pruning', 'Preservation', 'Manuring', 
-                                'INM', 'Nipping', 'Thinning', 'Liquid Compost Application', 'Staking and Weeding', 'Mulching', 
-                                'Hoeing and Fertilizer Application', 'Line Sowing', 'Priming', 'Pitcher Pot', 'Medicinal Preparation', 
-                                'Credit Disbursement']
+    def populate_sub_sector(self, orm):
+        initial_unique_names = ['Adult management','Breed Mangement','Community Participation',
+                                'Crop Intensification','Crop Management',
+                                'Digital Green Concept Video','Education','Environment',
+                                'Feed and Fodder Management','Fish Rearing',
+                                'Health and Disease management','Horticulture',
+                                'Institution Building','Land Management',
+                                'Legal Rights','Maternal','Micro-Finance',
+                                'Moriculture','Nursery Management','Nutrient Management',
+                                'Nutrition','Pest and disease Management','Plant Propogation',
+                                'Post Harvest Management','Reproductive','Seed Management',
+                                'Silkworm Management','Success Stories','Water Management',
+                                'Watershed Management','Women Empowerment','Young Ones management']
         for name in initial_unique_names:
-            orm.SubPractice.objects.create(name=name)
+            orm.PracticeSubSector.objects.create(name=name)
             
-    def populate_utility(self, orm):
-        initial_unique_names = ['Benefits', 'Experience', 'Prevention', 'Precautions', 'Awareness']
+    def populate_main_practice(self, orm):
+        initial_unique_names = ['Breeding','Bulls and Bullock Management','Compost and Manure',
+                                'Curative','Cuttings','Disease control','Dry and Pregnant Animal Management',
+                                'Drying','Early Management Practices','Erosion Control','Feed','Feed Supplements',
+                                'Feeding','Fertility Mangement','Fertilizer Application','Fertilizer Preparation',
+                                'Fish Culture Ponds','Floriculture','Fodder','Forest Rights','Grading and packaging',
+                                'Grafting','Harvesting','Heifer Management','Housing System','Integrated Nutrient Management',
+                                'Interculture','Interculture in Nursery','Irrigation Management','Irrigation Methods',
+                                'Land Preparation','Layering','Marketing','Micro-Credit','Micro-Nutrient Mangement',
+                                'Milch Animal Management','Monitoring','National Rural Employment Guarantee Act',
+                                'Nursery Bed Preparation','Orchard Mangement','People\'s Organization','Pest Control','Post Harvest',
+                                'Preventive','Production','Rearing','Rodent Control','Seed Production','Seed Selection','Seed Storage',
+                                'Seed Testing','Seed Treatment','Selection','Self Help Groups','Site Selection','Soil Treatment','Sowing',
+                                'Storage','Stripping','System of Rice Intensification','System of Wheat Intensification','Threshing',
+                                'Water Harvesting','Weeding']
         for name in initial_unique_names:
-            orm.PracticeUtility.objects.create(name=name)
+            orm.PracticeMain.objects.create(name=name)
                 
-    def populate_type(self, orm):
-        initial_unique_names = ['Organic', 'Indigenous', 'Chemical', 'Mechanical', 'Herbal', 'Biological', 'Physical (Fencing)']
+    def populate_sub_practice(self, orm):
+        initial_unique_names = ['30-40 structure','Accounting','Agronomic (Rouging)','Agronomic Site Selection',
+                                'Air','Artificial Insemination','Banana Graft/Four Flap','Bark','Basket',
+                                'Biological','Book Keeping','Branding','Bridge','Broadcasting','Brushing of catterpillars',
+                                'Bud','Bunding','Business Planning','Certification','Check Dams','Chemical','Cleft','Compound',
+                                'Concept Seeding','Conservation','Cultural','Dehorning','Deworming','Dibbling','Disease control',
+                                'Drip','Earthing up','Embakments','Eye','Farm Pond','Farm Yard Manure','Fish Rearing Pond',
+                                'Fish Stocking Pond','Flat Bed Nursery','Flood','Formation','Fumigation','Genetic','Germination test',
+                                'Governace','Grading','Grass','Green Manure Ex Situ','Green Manure In Situ','Grooming',
+                                'Growth and Diversification','Gully Control','Gypsum Application','Hardening','Hatchery Pond',
+                                'Hoeing','Identification of Symptoms','Inarch','Indore','Integrated Pest Management','Intercropping',
+                                'Leaching','Leaf','Liming','Line Sowing','Line sowing','Liquid Compost','Lopping','Manual',
+                                'Marketing','Mechanical','Mechanical (Ploughing)','Mechanized','Medicine','Membership','Mineral Mixture',
+                                'Mulching','Multiple Ovulation Embryo Transfer','NADEP','Natural','Networking','Nipping','Nursery',
+                                'Nursery Pond','Operations and Management','Organic','Pasture Cropping','Pest and Disease Management',
+                                'Physical','Physical test (Brine)','Pitcher','Pot Manure','Potting and repotting',
+                                'Pre-treatment (Primimg)','Preparation','Pricing','Prunning','Purity Test','Raised Nursery','Reeling',
+                                'Root','Sanitation','Scion','Seed Drill','Seed Selection for fish','Seed Storage Structure','Shelter',
+                                'Simple','Site Selection','Soil Sampling','Soil Testing','Splice','Sprinkler','Stabilization','Staking',
+                                'Stem','Stone Basins','Stool/Mound','Strip Cropping','Structures','Sun','Surge','Terracing','Testing',
+                                'Thinning','Tip','Transplantation','Treatment','Trenching','Urea Molasses Block','Vaccination','Varietal Identification',
+                                'Variety Selection','Veneer','Vermicompost','Vermiwash','Viability Test (TZ test )','Wadi','Watering','Weaning',
+                                'Weaving','Weed test','Weeding','Whip andTongue','Yield comparison']
         for name in initial_unique_names:
-            orm.PracticeType.objects.create(name=name)
+            orm.PracticeSub.objects.create(name=name)
                 
     def populate_practice_subject(self, orm):
-        intial_unique_names = ['Black Gram (Udad)', 'Sponge Gourd', 'Green Gram', 'Rapeseed', 'Groundnut', 'Handicraft', 'Marigold', 
-                               'Goat', 'Pumpkin', 'Fodder', 'Pheromone Trap', 'Larva', 'Stop Dam', 'Bean', 'Brinjal', 'Sugandhraj', 
-                               'Eucalyptus', 'Potato', 'Chinese Spinach', 'Coconut', 'Grass', 'Tassar Silk', 'Bottle Gourd (Lauki)', 
-                               'Sheep Manure', 'Paddy (SRI)', '30-40 Model', 'Green Pea', 'Milk', 'Lemon', 'Vegetables', 'Jowar', 
-                               'Amla', 'Orange', 'Sunflower', 'Pea', 'Paddy', 'Wheat', 'Besharam', 'Sugandhi', 'Green Manure', 
-                               'Red Gram', 'Watermelon', 'Cauliflower (Phool Gobhi)', 'Pigeon Pea', 'Azolla', 'Elephant Grass', 
-                               'Carom Seed (Ajwain)', 'Gram', 'SHG', 'Farm Waste', 'Bitter Gourd (Karela)', 'Dhatura', 'Butter Milk', 
-                               'Vermiwash', 'Ginger', 'Turnip', 'Semarua', 'Pond', 'Guava', 'Rain Water', 'Chilli (Mirch)', 'Maize', 
-                               'Grape', 'Sagwan', 'Babul (Sarkari bamul)', 'Spinach', 'Babul (Raj bamul)', 'Nadep', 'digitalGREEN', 
-                               'Yam', 'Dairy', 'Galleria', 'Mulberry Silk', 'Ridge Gourd', 'Papaya', 'Finance', 'Weed', 
-                               'Garlic', 'Dry Fodder', 'Cucumber', 'Gliricidia', 'Basil (Tulsi)', '5% Model', 'Tomato', 
-                               'Cow Dung (Gobar)', 'Onion', 'SRI', 'Well', 'Finger Millet (Ragi)', 'French Bean', 'Ber', 'Livestock', 
-                               'Feed', 'Lentils', 'Radish', 'Sangar', 'Coriander (Dhania)', 'Pulses', 'Duck', 'Jack Fruit', 'SWI', 
-                               'Red Spinach', 'NREGA', 'Jatropha', 'Pointed Gourd', 'Vermicompost', 'Capsicum (Shimla Mirch)', 'Banana', 
-                               'Lady\'s Finger', 'Fenugreek (Methi)', 'Mustard (Rai)', 'Leafy Vegetables', 'Sugarcane', 'Pomegranate', 
-                               'FYM', 'Cow Pea', 'Mulberry', 'Linseed', 'Wheat (SWI)', 'Barsim', 'Kabuli (Bold) Gram', 'Poultry', 
-                               'Fiber Sheet', 'Polyhouse', 'Cabbage (Patta Gobhi)', 'Grains', 'Green Fodder', 'Colocasia', 'Sesame', 
-                               'Mango', 'Custard Apple', 'Kanakamar', 'Pot', 'Cucurbits', 'Molt', 'Neem', 'Carrot', 'Soybean', 
-                               'Amaranthus (Lal Bhaji)', 'Cotton']
+        intial_unique_names = ['Adult','Amaranthus (Lal Bhaji)','Amla (Gooseberry)','Bamboo','Banana',
+                               'Basil (Tulsi)','Bengalgram (Chana)','Bitter Gourd (Karela)','Black Gram (Udad)',
+                               'Bottle Gourd (Lauki)','Brinjal (Baingan)','Buffalo','Bullocks','Cabbage (Patta Gobhi)',
+                               'Capsicum (Shimla Mirch)','Carom Seed (Ajwain)','Carrot (Gajar)','Cauliflower (Phool Gobhi)',
+                               'Chicken','Child','Chilli (Mirch)','Cluster Bean (Gawar)','Coconut','Colocasia (Arabi)',
+                               'Coriander (Dhania)','Cotton (Kapas)','Cow','Cow Pea (Lobhia)','Cucumber','Custard Apple (Sharifa/Seetafal)',
+                               'Dhatura','Duck','Elephant Grass','Eucalyptus','Fenugreek (Methi)','Finger Millet (Ragi)','Fish',
+                               'French Bean (Fansi)','Galleria','Garlic (Lehsun)','Gherkins (Thendli)','Ginger (Adrak)','Gliricidia',
+                               'Goat','Grape','Infant','Jack Fruit (Kathal)','Jatropha','Jujube (Ber)','Lady Finger','Lemon',
+                               'Linseed (Alasi)','Maize','Mango','Marigold','Mint (Pudina)','Mulberry','Mushroom','Mustard (Rai)',
+                               'Neem','Onion','Orange','Paddy','Papaya','Pea','Pig','Pointed Gourd (Parval)','Pomegranate',
+                               'Potato','Pumpkin','Radish','Ridge Gourd (Turai)','Sesame','Sheep','Silk','Snake Gourd (Parval)',
+                               'Sorghum (Jowar)','Soybean','Spinach','Sponge Gourd (Gilki/Chikni Turai)','Sugarcane','Sunflower',
+                               'Tomato','Turmeric (Haldi)','Turnip','Watermelon','Wheat','Women','Yam (Sooran)']
         for name in intial_unique_names:
             orm.PracticeSubject.objects.create(name=name)
 
     def forwards(self, orm):
-        self.populate_practice_subject(orm)
+        self.populate_sector(orm)
+        self.populate_sub_sector(orm)
+        self.populate_main_practice(orm)
         self.populate_sub_practice(orm)
-        self.populate_top_practice(orm)
-        self.populate_type(orm)
-        self.populate_utility(orm)
+        self.populate_practice_subject(orm)
         print "Created new levels of practices"
-        
-
 
     def backwards(self, orm):
         "Write your backwards methods here."
+        orm.PracticeSector.objects.all().delete()
+        orm.PracticeSubSector.objects.all().delete()
+        orm.PracticeMain.objects.all().delete()
+        orm.PracticeSub.objects.all().delete()
+        orm.PracticeSubject.objects.all().delete()
+        
+        print "Deleted all the pre-filled practice levels"
 
 
     models = {
@@ -339,6 +362,11 @@ class Migration(DataMigration):
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']", 'db_column': "'person_id'"}),
             'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
+        'dashboard.practicemain': {
+            'Meta': {'object_name': 'PracticeMain', 'db_table': "u'practice_main'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
         'dashboard.practices': {
             'Meta': {'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
@@ -346,18 +374,23 @@ class Migration(DataMigration):
             'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'})
         },
+        'dashboard.practicesector': {
+            'Meta': {'object_name': 'PracticeSector', 'db_table': "u'practice_sector'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesub': {
+            'Meta': {'object_name': 'PracticeSub', 'db_table': "u'practice_sub'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
         'dashboard.practicesubject': {
             'Meta': {'object_name': 'PracticeSubject', 'db_table': "u'practice_subject'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
-        'dashboard.practicetype': {
-            'Meta': {'object_name': 'PracticeType', 'db_table': "u'practice_type'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
-        'dashboard.practiceutility': {
-            'Meta': {'object_name': 'PracticeUtility', 'db_table': "u'practice_utility'"},
+        'dashboard.practicesubsector': {
+            'Meta': {'object_name': 'PracticeSubSector', 'db_table': "u'practice_subsector'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
@@ -411,11 +444,6 @@ class Migration(DataMigration):
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'STATE_NAME'"})
         },
-        'dashboard.subpractice': {
-            'Meta': {'object_name': 'SubPractice', 'db_table': "u'sub_practice'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
         'dashboard.target': {
             'Meta': {'unique_together': "(('district', 'month_year'),)", 'object_name': 'Target'},
             'adoption_per_dissemination': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -448,11 +476,6 @@ class Migration(DataMigration):
             'villages_certification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'what_not_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'what_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        },
-        'dashboard.toppractice': {
-            'Meta': {'object_name': 'TopPractice', 'db_table': "u'top_practice'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'dashboard.training': {
             'Meta': {'unique_together': "(('training_start_date', 'training_end_date', 'village'),)", 'object_name': 'Training', 'db_table': "u'TRAINING'"},
