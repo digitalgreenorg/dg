@@ -115,7 +115,7 @@
 				{% endfor %}
 			</select>
 			<select name='sub_practice'  title="Sub Sector"  class='practice'>
-				<option value=''>Select Sub Sector</option>
+				<option value=''>Select Sub-sector</option>
 				{% for obj in practice_tups.1 %}
 					<option value='{{obj.0}}'>{{obj.1}}</option>
 				{% endfor %}
@@ -127,7 +127,7 @@
 				{% endfor %}
 			</select>
 			<select name='type'  title="Sub Practice" class='span2 practice'>
-				<option value=''>Select Sub Practice</option>
+				<option value=''>Select Sub-practice</option>
 				{% for obj in practice_tups.3 %}
 					<option value='{{obj.0}}'>{{obj.1}}</option>
 				{% endfor %}
@@ -154,11 +154,11 @@
 			    <table class="table table-striped">
     				<thead>
     					<tr>
-						    <th>Main Practice</th>
-						    <th>Sub Practice</th>
-						    <th>Utility</th>
-						    <th>Practice Type</th>
-						    <th>Crop/Product</th>
+						    <th>Sector</th>
+						    <th>Sub-Sector</th>
+						    <th>Practice</th>
+						    <th>Sub-practice</th>
+						    <th>Subject</th>
 						</tr>
     				</thead>
     				<tbody>
@@ -186,32 +186,32 @@
 			<div id='assign_new_practice_box' class='well' style="display:none;margin-top:20px;">
 				<h3>Select a new practice</h3><p></p>
 				<fieldset>
-				<select name='top_practice' title="Main Practice" class='practice'>
-					<option value=''>Select Main Practice</option>
+				<select name='top_practice' title="Sector" class='practice'>
+					<option value=''>Select Sector</option>
 					{% for obj in practice_tups.0 %}
 						<option value='{{obj.0}}'>{{obj.1}}</option>
 					{% endfor %}
 				</select>
-				<select name='sub_practice'  title="Sub Practice"  class='practice'>
-					<option value=''>Select Sub Practice</option>
+				<select name='sub_practice'  title="Sub-sector"  class='practice'>
+					<option value=''>Select Sub-sector</option>
 					{% for obj in practice_tups.1 %}
 						<option value='{{obj.0}}'>{{obj.1}}</option>
 					{% endfor %}
 				</select>
-				<select name='utility'  title="Practice Utility"class='span2 practice'>
-					<option value=''>Select Utility</option>
+				<select name='utility'  title="Practice"class='span2 practice'>
+					<option value=''>Select Practice</option>
 					{% for obj in practice_tups.2 %}
 						<option value='{{obj.0}}'>{{obj.1}}</option>
 					{% endfor %}
 				</select>
-				<select name='type'  title="Practice Type" class='span2 practice'>
-					<option value=''>Select type of Practice</option>
+				<select name='type'  title="Sub-practice" class='span2 practice'>
+					<option value=''>Select Sub-practice</option>
 					{% for obj in practice_tups.3 %}
 						<option value='{{obj.0}}'>{{obj.1}}</option>
 					{% endfor %}
 				</select>
-				<select name='subject' title="Crop or Product" class='practice'>
-					<option value=''>Select Crop or Product</option>
+				<select name='subject' title="Subject" class='practice'>
+					<option value=''>Select Subject</option>
 					{% for obj in practice_tups.4 %}
 						<option value='{{obj.0}}'>{{obj.1}}</option>
 					{% endfor %}

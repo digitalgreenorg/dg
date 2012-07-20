@@ -126,9 +126,9 @@ def practice_filter_options(request):
             output_arr.append('')
             
     default_selects = ["<option value=''>Select Sector</option>",
-                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Sub-sector</option>",
                        "<option value=''>Select Practice</option>",
-                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Sub-practice</option>",
                        "<option value=''>Select Subject</option>"]
     t = Template("{% for obj in list %}<option value='{{obj.0}}'>{{obj.1}}</option>{% endfor %}")            
     for i, field in enumerate(field_arr):
@@ -146,9 +146,9 @@ def all_practice_options(request=None):
     value_arr = [model.objects.values_list('id', 'name').order_by('name') for model in model_arr]
     if request:
         output_arr = ["<option value=''>Select Sector</option>",
-                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Sub-sector</option>",
                        "<option value=''>Select Practice</option>",
-                       "<option value=''>Select Sub Sector</option>",
+                       "<option value=''>Select Sub-practice</option>",
                        "<option value=''>Select Subject</option>"]
         t = Template("{% for obj in list %}<option value='{{obj.0}}'>{{obj.1}}</option>{% endfor %}")
         for i, value in enumerate(value_arr):
