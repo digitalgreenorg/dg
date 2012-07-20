@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	 <title>Map Videos to New Practices</title>
+	 <meta name="author" content="rahul at digitalgreen">
+	 <link href="/media/farmerbook/css/bootstrap.min.css" rel="stylesheet">
+     <link href="/media/farmerbook/css/bootstrap-responsive.min.css" rel="stylesheet">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	 <style>
+	 body {
+        padding-top: 60px; 
+      }
+      
+     html, body {
+        background-color: #eee;
+      }
+      
+      /* The white background content wrapper */
+      .container > .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; 
+        -webkit-border-radius: 10px 10px 10px 10px;
+           -moz-border-radius: 10px 10px 10px 10px;
+                border-radius: 10px 10px 10px 10px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+      }
+      
+     
+	 </style>
+	 
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+    	<div class="container">
+    		<ul class="nav">
+  				<li class='navbar-text'>User: <strong>{{ user.username }}</strong></li>
+				<li class="divider-vertical"></li>
+				<li class='navbar-text' style='color: white'>Contribution: <strong>{{ user.associated_count }}</strong> associated &<strong> {{ user.reviewed_count }}</strong> reviewed</li>
+				<li class="divider-vertical"></li>
+  			</ul> 
+  			<form class="navbar-form pull-left" action="/videotask/set_options/" method="get">
+  				<select class='span2' name='lang' onchange="this.form.submit();">
+  					<option {% if not selected_lang or selected_lang == "-1" %}selected="selected"{% endif %} value="-1">Any Language</option>
+					<option {% if selected_lang == 10000000000148 %}selected="selected"{% endif %} value="10000000000148">Bareli</option>
+					<option {% if selected_lang == 10000000000150 %}selected="selected"{% endif %} value="10000000000150">Bhili</option>
+					<option {% if selected_lang == 10000000000147 %}selected="selected"{% endif %} value="10000000000147">Gondi</option>
+					<option {% if selected_lang == 10000000000001 %}selected="selected"{% endif %} value="10000000000001">Hindi</option>
+					<option {% if selected_lang == 10000000000123 %}selected="selected"{% endif %} value="10000000000123">Ho</option>
+					<option {% if selected_lang == 10000000000127 %}selected="selected"{% endif %} value="10000000000127">Kannada</option>
+					<option {% if selected_lang == 10000000000151 %}selected="selected"{% endif %} value="10000000000151">Malvi</option>
+					<option {% if selected_lang == 10000000000003 %}selected="selected"{% endif %} value="10000000000003">Mundari</option>
+					<option {% if selected_lang == 10000000000149 %}selected="selected"{% endif %} value="10000000000149">Narsinghpuria</option>
+					<option {% if selected_lang == 10000000000128 %}selected="selected"{% endif %} value="10000000000128">Neemadi</option>
+					<option {% if selected_lang == 10000000000125 %}selected="selected"{% endif %} value="10000000000125">Oriya</option>
+					<option {% if selected_lang == 10000000000157 %}selected="selected"{% endif %} value="10000000000157">Oromifa</option>
+					<option {% if selected_lang == 10000000000155 %}selected="selected"{% endif %} value="10000000000155">Paraja</option>
+					<option {% if selected_lang == 10000000000004 %}selected="selected"{% endif %} value="10000000000004">Sadri</option>
+					<option {% if selected_lang == 10000000000132 %}selected="selected"{% endif %} value="10000000000132">Santhali</option>
+					<option {% if selected_lang == 10000000000156 %}selected="selected"{% endif %} value="10000000000156">Telugu</option>
+					<option {% if selected_lang == 10000000000152 %}selected="selected"{% endif %} value="10000000000152">Thethi</option>
+				</select>	
+				<select class='span2' name='state' onchange="this.form.submit();">
+					<option {% if not selected_state or selected_state == "-1" %}selected="selected"{% endif %} value="-1">Any State</option>
+					<option {% if selected_state == 10000000000007 %}selected="selected"{% endif %} value="10000000000007">Andhra Pradesh</option>
+					<option {% if selected_state == 10000000000006 %}selected="selected"{% endif %} value="10000000000006">Bihar</option>
+					<option {% if selected_state == 10000000000002 %}selected="selected"{% endif %} value="10000000000002">Jharkhand</option>
+					<option {% if selected_state == 10000000000005 %}selected="selected"{% endif %} value="10000000000005">Karnataka</option>
+					<option {% if selected_state == 10000000000001 %}selected="selected"{% endif %} value="10000000000001">Madhya Pradesh</option>
+					<option {% if selected_state == 10000000000003 %}selected="selected"{% endif %} value="10000000000003">Orissa</option>
+					<option {% if selected_state == 10000000000008 %}selected="selected"{% endif %} value="10000000000008">Oromia</option>
+				</select>
+			</form>
+  			<ul class="nav pull-right">
+  				<li><a href="/videotask/logout/">Logout</a></li>
+  			</ul>
+    	</div>
+    </div>
+  </div>
+  <div class="container"><div class="content">
+  	
+	<hr>
+	{% if not vid %}
+	<div class='row'>
+		{% if selected_lang or selected_state %}
+			<div class="span10 alert alert-error">				 
+						<h3>No videos found for your selection. Try changing the options above.</h3>					
+			</div>
+		{% else %}
+			<div class="span10 alert alert-info">				 
+				<h3>All videos have been associated and reviewed. :-)</h3>					
+			</div>
+		{% endif %}
+	</div>
+	{% else %}
+		{% if task_type == "assign" %}
+		<p>
+		<h1>Assign a new practice to the Video</h1>
+		</p>
+		<div id='practice_form_error' class="alert alert-error" style="display:none;">
+   			<strong>Error!</strong> Please select all options.
+   		</div>
+		<form class='well' id='practice_select' action="/videotask/form_submit/" method="post">
+			
+			<input type="hidden" name="action" value="{{task_type}}" />
+			<input type="hidden" name="vid_id" value="{{vid.id}}" />
+			<fieldset>
+			<select name='top_practice' title="Sector" class='practice'>
+				<option value=''>Select Sector</option>
+				{% for obj in practice_tups.0 %}
+					<option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+			</select>
+			<select name='sub_practice'  title="Sub Sector"  class='practice'>
+				<option value=''>Select Sub Sector</option>
+				{% for obj in practice_tups.1 %}
+					<option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+			</select>
+			<select name='utility'  title="Practice"class='span2 practice'>
+				<option value=''>Select Practice</option>
+				{% for obj in practice_tups.2 %}
+					<option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+			</select>
+			<select name='type'  title="Sub Practice" class='span2 practice'>
+				<option value=''>Select Sub Practice</option>
+				{% for obj in practice_tups.3 %}
+					<option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+			</select>
+			<select name='subject' title="Subject" class='practice'>
+				<option value=''>Select Subject</option>
+				{% for obj in practice_tups.4 %}
+					<option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+			</select>
+			<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
+			</fieldset>
+			<fieldset>
+			<hr>
+			<input class="btn btn-primary" name='yes' type="submit" value="Yes, submit">
+			<input class="btn" type="submit" name='skip' value="I don't know, skip">
+			</fieldset>
+		</form>
+		{%else%}{% if task_type == "review" %}
+		<p>
+			<h1>Review this Practice-Video Combination</h1>
+		</p>
+			<div class='row'><div class='span12'>
+			    <table class="table table-striped">
+    				<thead>
+    					<tr>
+						    <th>Main Practice</th>
+						    <th>Sub Practice</th>
+						    <th>Utility</th>
+						    <th>Practice Type</th>
+						    <th>Crop/Product</th>
+						</tr>
+    				</thead>
+    				<tbody>
+    					<tr>
+    						<td>{{new_pr.top_practice}}</td>
+    						<td>{{new_pr.sub_practice|default_if_none:"None"}}</td>
+    						<td>{{new_pr.utility|default_if_none:"None"}}</td>
+    						<td>{{new_pr.type|default_if_none:"None"}}</td>
+    						<td>{{new_pr.subject|default_if_none:"None"}}</td>
+    					</tr>
+    				</tbody>
+    			</table>
+			</div></div>
+		<form id='practice_select' action="/videotask/form_submit/" method="post">
+			<input type="hidden" name="action" value="{{task_type}}" />
+			<input type="hidden" name="vid_id" value="{{vid.id}}" />
+			<div class='row'><div class='span12'>
+				<input class='btn btn-primary' type="submit" name='accept' value="Yes. Approved">
+				<a href="#" class="btn" onclick="showNewPracticeBox();">Doesn't seem right</a>
+				<input class="btn" type="submit" name='skip' value="I don't know, skip">
+			</div></div>
+			<div id='practice_form_error' class="alert alert-error" style="display:none;margin-top:20px;">
+   				<strong>Error!</strong> Please select all options.
+   			</div>
+			<div id='assign_new_practice_box' class='well' style="display:none;margin-top:20px;">
+				<h3>Select a new practice</h3><p></p>
+				<fieldset>
+				<select name='top_practice' title="Main Practice" class='practice'>
+					<option value=''>Select Main Practice</option>
+					{% for obj in practice_tups.0 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='sub_practice'  title="Sub Practice"  class='practice'>
+					<option value=''>Select Sub Practice</option>
+					{% for obj in practice_tups.1 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='utility'  title="Practice Utility"class='span2 practice'>
+					<option value=''>Select Utility</option>
+					{% for obj in practice_tups.2 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='type'  title="Practice Type" class='span2 practice'>
+					<option value=''>Select type of Practice</option>
+					{% for obj in practice_tups.3 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='subject' title="Crop or Product" class='practice'>
+					<option value=''>Select Crop or Product</option>
+					{% for obj in practice_tups.4 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
+				</fieldset>
+				<fieldset>
+				<input class="btn btn-primary" name='yes' type="submit" value="Submit">
+				</fieldset>
+			</div>
+		</form>
+		{% endif %}{% endif %}
+	
+	 <div class='row'>
+	 	<div id='videoembed' class="span8">
+			{% if vid.youtubeid %}                   
+	         <script type="text/javascript">
+	         	document.write("<object width='100%' height='100%'>");
+	            document.write("<param value='http://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' name='movie'>");
+	            document.write("<param value='transparent' name='wmode'>");
+	            document.write("<param value='true' name='allowFullScreen'>"); 
+	            document.write("<param value='always' name='allowscriptaccess'>");
+	            document.write("<embed width='100%' height='400px' src='http://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' wmode='transparent' allowfullscreen='true' allowscriptaccess='always' type='application/x-shockwave-flash'>");
+	            document.write("</object>");                            
+	          </script>
+	        {% else %}
+	        	<div class="alert alert-info">				 
+					<h3>This video is not on YouTube yet.</h3>					
+				</div>
+			{% endif %}
+         </div>
+         <div class="span4">
+          	<div class="row-fluid">
+				<h2>{{vid.title}}</h2>
+			</div>
+			<div class="row-fluid">
+				<p><strong>ID:</strong> {{vid.id}}</p>
+			</div>
+			<div class="row-fluid">
+				<p><strong>Language:</strong> {{vid.language.language_name}}</p>
+			</div>
+			<div class="row-fluid">
+				<p><strong>Village:</strong> {{vid.village.village_name}}, {{vid.village.block.district.district_name}}, {{vid.village.block.district.state.state_name}}</p>
+			</div>
+			<div class="row-fluid">
+				<p><strong>Production Start Date:</strong> {{ vid.video_production_start_date|date:"d M Y" }}</p>
+			</div>
+			<div class="row-fluid">
+				<p><strong>Production End Date:</strong> {{ vid.video_production_end_date|date:"d M Y" }}</p>
+			</div>
+			<div class="row-fluid">
+				<p><strong>Current Practice of Video:</strong> {%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name.upper}}{%if not forloop.last%}, {%endif%}{%endfor%}</p>
+			</div>
+			<div class="row-fluid">
+				<a class='btn btn-info' href="http://digitalgreen.org/analytics/video/?id={{vid.id}}" target="_blank">Analytics Video Page</a>
+			</div>
+		</div>
+	</div>
+	<hr>
+{% endif %}
+  </div></div>
+  
+  <script type="text/javascript">
+  	function practiceChange() {
+  		var select_data = {};
+		$(".practice").each(function() {
+		 select_data[$(this).attr('name')] = $(this).val();
+		});
+		$.getJSON('/videotask/practice_filter_options/', select_data, function(data) {
+				var i = 0;
+				$(".practice").each(function() {
+					$(this).html(data[i]);
+					if($(this).children('option').length == 1) 
+						$(this).attr('disabled','disabled');
+					i = i + 1;
+				});
+			});
+  	}
+  	function resetPractice() {
+  		$.getJSON('/videotask/all_practice_options/', function(data) {
+				var i = 0;
+				$(".practice").each(function() {
+					$(this).removeAttr('disabled');
+					$(this).html(data[i]);
+					i = i + 1;
+				});
+			}
+		);
+  	}
+  	
+  	function showNewPracticeBox() {
+  		$("#assign_new_practice_box").show();
+  	}
+  	
+  	$(function() {
+ 		$(".practice").change(practiceChange);
+ 		$('form').click(function(event) {
+			$(this).data('clicked',$(event.target))
+		});
+		
+ 		$("#practice_select").submit(function() {
+ 			if ($(this).data('clicked').is('[name=skip]') || $(this).data('clicked').is('[name=accept]'))
+ 				return true;
+		    
+ 			var validated = true;
+ 			$(".practice").each(function() {
+ 				if($(this).val() == "")
+ 					validated = false;
+ 			});
+ 			
+ 			if(!validated) {
+ 				$("#practice_form_error").show();
+ 			}
+ 			else {
+ 				$(".practice").each(function() {
+ 					$(this).removeAttr('disabled');
+ 				});
+ 			}
+ 			
+ 			return validated;
+ 		});
+	});
+  </script>
+</body>
+</html>

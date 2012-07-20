@@ -674,6 +674,59 @@ pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
+class PracticeSector(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_sector'
+
+class PracticeSubSector(models.Model):    
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_subsector'
+
+
+class PracticeMain(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_main'
+
+
+class PracticeSub(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_sub'
+
+
+class PracticeSubject(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_subject'
+
 class Practices(models.Model):
     id = BigAutoField(primary_key = True)
     practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')

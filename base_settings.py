@@ -83,7 +83,8 @@ INSTALLED_APPS = (
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',
-    'farmerbook'
+    'farmerbook',
+    'practice_entry_app',
    )
 
 LOGGING = {

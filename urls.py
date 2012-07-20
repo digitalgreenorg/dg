@@ -153,5 +153,6 @@ urlpatterns = patterns('',
     (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    (r'^videotask/', include('video_practice_map.urls')),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )
