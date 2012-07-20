@@ -52,8 +52,6 @@ public class Screenings extends BaseServlet {
 							
 							getServlet().getRequestContext().setErrorMessage(resultObj.get("errors").isString().stringValue());
 							getServlet().getRequestContext().getArgs().put("addPageData", resultObj.get("form").isString().stringValue());
-							
-							//getServlet().getRequestContext().getArgs().put("addPageData", addData);
 							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
 							
 							//getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -114,20 +112,6 @@ public class Screenings extends BaseServlet {
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							/*String count = this.getResponse().getHeader("X-COUNT");
-							getServlet().getRequestContext().getArgs().put("totalRows", count);
-							if(this.getStatusCode() == 200) {
-								ScreeningsData screeningsData = new ScreeningsData();
-								if(!results.equals("EOF")){
-									List screenings = screeningsData.getListingOnline(results);
-									getServlet().getRequestContext().getArgs().put("listing", screenings);
-								}
-								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);						
-							} else {
-								RequestContext requestContext = new RequestContext();
-								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
-								getServlet().redirectTo(new Index(requestContext));
-							}*/
 							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
 							
 						}
@@ -174,11 +158,9 @@ public class Screenings extends BaseServlet {
 					}
 				}
 				else if(queryArg.equals("add") || queryArg.equals("edit")){
-					//Window.alert("enterd");
 					Form form = this.requestContext.getForm();
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							//Window.alert("Callback()");
 							JSONObject resultObj = JSONParser.parse(results).isObject();
 							String formString = resultObj.get("form").isString().stringValue();
 							

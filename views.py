@@ -1764,11 +1764,8 @@ def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('screenings')
     else:
-        #print "get"
         searchText = request.GET.get('searchText')
         villages = get_user_villages(request)
-        
-        #print str(len(villages))
         count = Screening.objects.filter(village__in = villages).distinct().count()
         screenings = Screening.objects.filter(village__in = villages)
         if(searchText):
@@ -1809,6 +1806,7 @@ def get_screenings_for_perf_online_serv(request):
         
         col_to_attr_dict={"0":"id","1":"date","2":"village__village_name","3":"location"}
         
+        #get user villages and related screenings
         villages = get_user_villages(request)
         print(request.session.get('user_id'))
         print len(villages)
@@ -1839,50 +1837,24 @@ def get_screenings_for_perf_online_serv(request):
         #slice it
         screenings=screenings[start_index:end_index]
        
-       #send it
+        #send it
         aadata=[]
         for scr in screenings:
             data={}
-            # data.append(str(scr.date))
-            # data.append(str(scr.village))
-            # data.append(str(scr.location))
             data["0"] = str(scr.id)
             data["1"] = str(scr.date)
             data["2"] = str(scr.village)
             data["3"]=str(scr.location)
             data["DT_RowClass"] = "row"
             aadata.append(data)
-        #s_echo=1
         send_dict = { "sEcho" : s_echo,
         "iTotalRecords":  total_count,
         "iTotalDisplayRecords": filtered_count,
         "aaData": aadata
-            
         }
-        
-        
         json_subcat = simplejson.dumps(send_dict)
-        
         print json_subcat
-        # json_subcat = '{\
-      # "sEcho":'+ request.GET['sEcho']+',\
-      # "iTotalRecords": '+ str(total_count)+',\
-      # "iTotalDisplayRecords":'+ str(total_count)+',\
-      # "aaData": [\
-        # [\
-          # "Gecko",\
-          # "Firefox 1.0",\
-          # "Win 98+ / OSX.2+"\
-        # ],\
-        # [\
-          # "Gecko",\
-          # "Firefox 1.5",\
-          # "Win 98+ / OSX.2+"\
-        # ]]}'
-        
         response = HttpResponse(json_subcat, mimetype="application/javascript")
-        # response['X-COUNT'] = count
-        #print json_subcat
         return response
 
     

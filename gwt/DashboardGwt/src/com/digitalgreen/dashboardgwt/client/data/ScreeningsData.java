@@ -573,26 +573,6 @@ public class ScreeningsData extends BaseData {
 		return false;
 	}
 	
-	// Get all information/data to displayt he screening list page.
-	/*public Object getListPageData(String... pageNum) {
-		if(BaseData.isOnline()) {
-			int offset = (Integer.parseInt(pageNum[0])-1)*pageSize;
-			int limit = offset+pageSize;
-			if(pageNum.length > 1 ) {
-				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+
-						Integer.toString(offset)+"/"+Integer.toString(limit)+"/" + "?searchText="+pageNum[1]);
-			} else {
-				this.get(RequestContext.SERVER_HOST + ScreeningsData.getScreeningOnlineURL+ Integer.toString(offset) + "/" 
-						+ Integer.toString(limit)+ "/");
-			}
-		
-			//dataOnlineCallbacks.onlineSuccessCallback("");
-		} 
-		else {
-			return true;
-		}
-		return false;	
-	}*/
 	
 	public String retrieveFilteredDataAndConvertResultIntoHtml(){
 		StringBuilder sbHtml = new StringBuilder();

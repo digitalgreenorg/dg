@@ -63,16 +63,9 @@ public class BaseTemplate extends Template {
 	
 	@Override
 	public void fill() {
-		//Window.alert("inside super.fill()");
 		RootPanel.get("user-name").add(new HTMLPanel("b", ApplicationConstants.getUsernameCookie() + "."));
-		//Window.alert("at logout");
-		
 		RootPanel.get("logout").insert(logoutHyperlink(), 0);
-		//Window.alert("at getcontentpanel");
-		//Window.alert(this.getContentPanel().toString());
-		//Window.alert("at sub-container");
 		RootPanel.get("sub-container").add(this.getContentPanel());
-		//Window.alert("afetr sub-conatiner");
 		super.fill();
 	}
 	
@@ -81,55 +74,12 @@ public class BaseTemplate extends Template {
 		      String inputListFormHtml, 
 		      final BaseServlet servlet, 
 		      List<Hyperlink> links) {
-		//Window.alert("fillDgListPage()");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		//If we're unsure, just default to list view
 		if(queryArg.equals("list")) {
 			HTMLPanel listFormHtml = new HTMLPanel(inputListFormHtml);
 			RootPanel.get("listing-form-body").insert(listFormHtml, 0);
-			//Calculating number of pages to display
-			/*int numberOfPages;
-			List<Hyperlink> pageLinks = new ArrayList<Hyperlink>();
-			int totalRows = Integer.parseInt((String)queryArgs.get("totalRows"));
-			int pageSize = ApplicationConstants.getPageSize();
-			int maxPagesToDisplayPerRow = ApplicationConstants.getMaxPagesToDisplayPerRow();
-			numberOfPages = ((totalRows%pageSize) > 0)?(totalRows/pageSize)+1:(totalRows/pageSize);
-			//For displaying total number of rows of child class
-			String totalCountHtml = "<b>"+Integer.toString(totalRows)+" "+ templatePlainType+"s</b>" ;
-			VerticalPanel vPanel = new VerticalPanel();
-			//Need Paging if number of pages are greater than 1
-			if(numberOfPages > 1) {
-				//create Links for number of pages
-				for(int i=1; i <= numberOfPages ; i++){
-					pageLinks.add(createPageHyperlink("<a href='#page/"+ Integer.toString(i) +"/'>" + Integer.toString(i) + "</a>",
-							"page/"+ Integer.toString(i) +"/",
-							servlet,Integer.toString(i),(String)queryArgs.get("operation"),(String)queryArgs.get("searchText")));
-				}				
-				//Adding links to Html by horizontal panel and vertical panel
-				//Maximum number of pages in single horizontal row is 49
-				int numberOfHpanels = (pageLinks.size()/maxPagesToDisplayPerRow)+1;
-				for(int j=0; j< numberOfHpanels; j++) {
-					HorizontalPanel hpanel = new HorizontalPanel();
-					hpanel.setBorderWidth(1);
-					for(int i = 0; i < maxPagesToDisplayPerRow; i++){
-						if(j == 0 && i == 0) {
-							hpanel.add(new HTML(totalCountHtml));
-						}
-						int linkIndex = (j*maxPagesToDisplayPerRow)+i;
-						if(linkIndex < pageLinks.size()) {
-							hpanel.add((Hyperlink)pageLinks.get(linkIndex));
-						}						
-					}
-					vPanel.add(hpanel);
-				}
-			}
-			else {
-				vPanel.add(new HTML(totalCountHtml));
-			}			
-			
-					
-			RootPanel.get("pagination-footer").add(vPanel);	*/	
 			Hyperlink addLink = new Hyperlink();
 			addLink.setHTML("<a class='addlink' href='#" + 
 					templateType + 
@@ -204,7 +154,6 @@ public class BaseTemplate extends Template {
 		Hyperlink addLink = new Hyperlink(linkText, true, tokenText); 
 		addLink.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					//Window.alert("click!");
 					Template.addLoadingMessage();
 					servlet.response();
 				}
@@ -215,7 +164,6 @@ public class BaseTemplate extends Template {
 	protected void fillDGTemplate(String templateType, 
 								  String listHtml,
 								  String addHtml, String addDataToElementID[]) {
-		//Window.alert("inside fillDgTemplate");
 		super.setBodyStyle("dashboard-screening change-form");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
@@ -257,7 +205,6 @@ public class BaseTemplate extends Template {
 	}
 	
 	protected void fillDgFormPage(final BaseServlet servlet) {
-		//Window.alert("fillDgFormPage()");
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		if(this.getRequestContext().getMethodTypeCtx().equals(RequestContext.METHOD_GET) && 
