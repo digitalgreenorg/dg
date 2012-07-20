@@ -168,7 +168,6 @@ public class BaseTemplate extends Template {
 		HashMap queryArgs = this.getRequestContext().getArgs();
 		String queryArg = (String)queryArgs.get("action");
 		if(queryArg.equals("add") || queryArg.equals("edit")) {
-			
 			this.postForm = new FormPanel();
 			this.postForm.getElement().setId("add-form");
 			this.postForm.setAction(RequestContext.getServerUrl() + 

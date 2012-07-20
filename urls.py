@@ -12,8 +12,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^coco/perf_analysis', redirect_to_perf),
-    #(r'^dashboard/getscreeningsforperfonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_screenings_for_perf_online),
-    #(r'^dashboard/getscreeningsforperfonline/(([?offset=](?P<offset>\d*))([&limit=](?P<limit>\d*)))?$', get_screenings_for_perf_online),
     (r'^dashboard/getscreeningsforperfonline/$', get_screenings_for_perf_online),
     (r'^dashboard/getscreeningsforperfonline_server/$', get_screenings_for_perf_online_serv),
     (r'^search/', include('haystack.urls')),

@@ -52,6 +52,8 @@ public class Screenings extends BaseServlet {
 							
 							getServlet().getRequestContext().setErrorMessage(resultObj.get("errors").isString().stringValue());
 							getServlet().getRequestContext().getArgs().put("addPageData", resultObj.get("form").isString().stringValue());
+							
+							//getServlet().getRequestContext().getArgs().put("addPageData", addData);
 							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
 							
 							//getServlet().getRequestContext().setMethodTypeCtx(RequestContext.METHOD_GET);
@@ -112,8 +114,13 @@ public class Screenings extends BaseServlet {
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
-							
+							if(this.getStatusCode() == 200) {
+								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
+							} else {
+								RequestContext requestContext = new RequestContext();
+								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
+								getServlet().redirectTo(new Index(requestContext));
+							}
 						}
 
 						public void onlineErrorCallback(int errorCode) {

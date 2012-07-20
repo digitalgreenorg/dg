@@ -8,7 +8,6 @@ import java.util.Date;
 import com.digitalgreen.dashboardgwt.client.common.ApplicationConstants;
 import com.digitalgreen.dashboardgwt.client.common.Form;
 import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
-import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.data.validation.BaseValidator;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
@@ -20,9 +19,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -304,13 +301,9 @@ public class BaseData implements OfflineDataInterface, OnlineDataInterface {
 	protected static String createTable = "";
 	protected static String dropTable = "";
 	protected OnlineOfflineCallbacks dataOnlineCallbacks;
-	protected String get_online_url = "";
+	
 	public BaseData() {}
 
-	public String GetOnlineUrl(){
-		
-		return get_online_url;
-	}
 	public BaseData(OnlineOfflineCallbacks callbacks) {
 		this.dataOnlineCallbacks = callbacks;
 	}

@@ -17,10 +17,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ScreeningsTemplate extends BaseTemplate {
@@ -123,22 +121,22 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	 
 	public static native void call_datatable_online(String url,ScreeningsTemplate inst) /*-{
-	$wnd.$('#table1').dataTable({
-     "sAjaxSource": url,
-     "bProcessing": true,
-     "bServerSide": true,
-     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-      $wnd.$($wnd.$(nRow).children()[0]).attr('id', 'row'+iDisplayIndex);
-      	      	$wnd.$($wnd.$(nRow).children()[0]).css('font-weight', 'bold');
-      
-    },
-     "fnDrawCallback": function( oSettings ) {
-      var str = inst.@com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate::datatable_manipulate_row(I)(oSettings['_iDisplayLength']);
-       
-    }
-      
-     });
-	
+		$wnd.$('#table1').dataTable({
+	     		"sAjaxSource": url,
+	     		"bProcessing": true,
+	     		"bServerSide": true,
+	     		"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+	      			$wnd.$($wnd.$(nRow).children()[0]).attr('id', 'row'+iDisplayIndex);
+	      	      		$wnd.$($wnd.$(nRow).children()[0]).css('font-weight', 'bold');
+	      
+	    		},
+	     		"fnDrawCallback": function( oSettings ) {
+	      			var str = inst.@com.digitalgreen.dashboardgwt.client.templates.ScreeningsTemplate::datatable_manipulate_row(I)(oSettings['_iDisplayLength']);
+	       
+	    		}
+	      
+	   	});
+		
 	}-*/;
 	
 	
@@ -162,7 +160,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 	
 	
 	public static native void call_datatable() /*-{
-	$wnd.$('#table1').dataTable({"bDeferRender": true,});
+		$wnd.$('#table1').dataTable({"bDeferRender": true,});
 	}-*/;
 	
 	
@@ -189,22 +187,21 @@ public class ScreeningsTemplate extends BaseTemplate {
 					"<table id='table1' class='display'>" +
 						"<thead>" +
 							"<tr>" +
-									"<th>" +
-										"ID" +
-									"</th>" +
-										"<th>"+
-											"Date"+
-										"</th>"+
 								"<th>" +
-										"Village" +
+									"ID" +
+								"</th>" +
+								"<th>"+
+									"Date"+
+								"</th>"+
+								"<th>" +
+									"Village" +
 								"</th>" +
 								"<th>" +
-										"Location" +
-									"</a>" +
+									"Location" +
 								"</th>" +
 							"</tr>" +
 						"</thead>" +
-						"<tbody id='table_body'>";
+						"<tbody>";
 
 	// Fill ids:  listing-form-body, add-link
 	final private String screeningsListHtml = "<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />" +
