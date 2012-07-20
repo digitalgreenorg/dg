@@ -672,7 +672,7 @@ pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
-class TopPractice(models.Model):
+class PracticeSector(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -680,9 +680,9 @@ class TopPractice(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'top_practice'
+        db_table = u'practice_sector'
 
-class SubPractice(models.Model):    
+class PracticeSubSector(models.Model):    
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -690,10 +690,10 @@ class SubPractice(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'sub_practice'
+        db_table = u'practice_subsector'
 
 
-class PracticeUtility(models.Model):
+class PracticeMain(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -701,10 +701,10 @@ class PracticeUtility(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'practice_utility'
+        db_table = u'practice_main'
 
 
-class PracticeType(models.Model):
+class PracticeSub(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -712,7 +712,7 @@ class PracticeType(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'practice_type'
+        db_table = u'practice_sub'
 
 
 class PracticeSubject(models.Model):

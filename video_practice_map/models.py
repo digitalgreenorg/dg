@@ -1,16 +1,16 @@
 from dashboard.fields import *
-from dashboard.models import TopPractice, SubPractice, PracticeUtility, \
-    PracticeType, PracticeSubject, Video
+from dashboard.models import PracticeMain, PracticeSub, PracticeSector, \
+    PracticeSubSector, PracticeSubject, Video
 from django.contrib.auth.models import User
 from django.db import models
 # Create your models here.
 
 class PracticeCombination(models.Model):
     id = BigAutoField(primary_key = True)
-    top_practice = BigForeignKey(TopPractice)
-    sub_practice = BigForeignKey(SubPractice, null=True)
-    utility = BigForeignKey(PracticeUtility, null=True)
-    type = BigForeignKey(PracticeType, null=True)
+    top_practice = BigForeignKey(PracticeSector) #Didn't rename variable to 'sector' to avoid unnecessary labor. This going to removed anyway.
+    sub_practice = BigForeignKey(PracticeSubSector, null=True)
+    utility = BigForeignKey(PracticeMain, null=True)
+    type = BigForeignKey(PracticeSub, null=True)
     subject = BigForeignKey(PracticeSubject, null=True)
     
 class VideoPractice(models.Model):
