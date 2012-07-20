@@ -84,7 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'south',
     'farmerbook',
-    'practice_entry_app',
+    'video_practice_map',
    )
 
 LOGGING = {
