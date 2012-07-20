@@ -114,13 +114,8 @@ public class Screenings extends BaseServlet {
 				if(queryArg.equals("list")){
 					ScreeningsData screeningsData = new ScreeningsData(new OnlineOfflineCallbacks(this) {
 						public void onlineSuccessCallback(String results) {
-							if(this.getStatusCode() == 200) {
 								getServlet().fillTemplate(new ScreeningsTemplate(getServlet().getRequestContext()),true);
-							} else {
-								RequestContext requestContext = new RequestContext();
-								requestContext.setErrorMessage("Unexpected error occured in retriving data. Please contact support");
-								getServlet().redirectTo(new Index(requestContext));
-							}
+							
 						}
 
 						public void onlineErrorCallback(int errorCode) {
