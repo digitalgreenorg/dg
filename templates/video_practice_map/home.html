@@ -5,7 +5,9 @@
 	 <meta name="author" content="rahul at digitalgreen">
 	 <link href="/media/farmerbook/css/bootstrap.min.css" rel="stylesheet">
      <link href="/media/farmerbook/css/bootstrap-responsive.min.css" rel="stylesheet">
+     <link href="/media/css/jquery.loadmask.css" rel="stylesheet" type="text/css" />
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	 <script type="text/javascript" src="/media/js/jquery.loadmask.min.js"></script>
 	 <style>
 	 body {
         padding-top: 60px; 
@@ -103,49 +105,51 @@
 		<div id='practice_form_error' class="alert alert-error" style="display:none;">
    			<strong>Error!</strong> Please select all options.
    		</div>
-		<form class='well' id='practice_select' action="/videotask/form_submit/" method="post">
-			
-			<input type="hidden" name="action" value="{{task_type}}" />
-			<input type="hidden" name="vid_id" value="{{vid.id}}" />
-			<fieldset>
-			<select name='top_practice' title="Sector" class='practice'>
-				<option value=''>Select Sector</option>
-				{% for obj in practice_tups.0 %}
-					<option value='{{obj.0}}'>{{obj.1}}</option>
-				{% endfor %}
-			</select>
-			<select name='sub_practice'  title="Sub Sector"  class='practice'>
-				<option value=''>Select Sub-sector</option>
-				{% for obj in practice_tups.1 %}
-					<option value='{{obj.0}}'>{{obj.1}}</option>
-				{% endfor %}
-			</select>
-			<select name='utility'  title="Practice"class='span2 practice'>
-				<option value=''>Select Practice</option>
-				{% for obj in practice_tups.2 %}
-					<option value='{{obj.0}}'>{{obj.1}}</option>
-				{% endfor %}
-			</select>
-			<select name='type'  title="Sub Practice" class='span2 practice'>
-				<option value=''>Select Sub-practice</option>
-				{% for obj in practice_tups.3 %}
-					<option value='{{obj.0}}'>{{obj.1}}</option>
-				{% endfor %}
-			</select>
-			<select name='subject' title="Subject" class='practice'>
-				<option value=''>Select Subject</option>
-				{% for obj in practice_tups.4 %}
-					<option value='{{obj.0}}'>{{obj.1}}</option>
-				{% endfor %}
-			</select>
-			<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
-			</fieldset>
-			<fieldset>
-			<hr>
-			<input class="btn btn-primary" name='yes' type="submit" value="Yes, submit">
-			<input class="btn" type="submit" name='skip' value="I don't know, skip">
-			</fieldset>
-		</form>
+   		<div id='form_id'>
+			<form class='well' id='practice_select' action="/videotask/form_submit/" method="post">
+				
+				<input type="hidden" name="action" value="{{task_type}}" />
+				<input type="hidden" name="vid_id" value="{{vid.id}}" />
+				<fieldset>
+				<select name='top_practice' title="Sector" class='practice'>
+					<option value=''>Select Sector</option>
+					{% for obj in practice_tups.0 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='sub_practice'  title="Sub Sector"  class='practice'>
+					<option value=''>Select Sub-sector</option>
+					{% for obj in practice_tups.1 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='utility'  title="Practice"class='span2 practice'>
+					<option value=''>Select Practice</option>
+					{% for obj in practice_tups.2 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='type'  title="Sub Practice" class='span2 practice'>
+					<option value=''>Select Sub-practice</option>
+					{% for obj in practice_tups.3 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<select name='subject' title="Subject" class='practice'>
+					<option value=''>Select Subject</option>
+					{% for obj in practice_tups.4 %}
+						<option value='{{obj.0}}'>{{obj.1}}</option>
+					{% endfor %}
+				</select>
+				<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
+				</fieldset>
+				<fieldset>
+				<hr>
+				<input class="btn btn-primary" name='yes' type="submit" value="Yes, submit">
+				<input class="btn" type="submit" name='skip' value="I don't know, skip">
+				</fieldset>
+			</form>
+		</div>
 		{%else%}{% if task_type == "review" %}
 		<p>
 			<h1>Review this Practice-Video Combination</h1>
@@ -172,57 +176,59 @@
     				</tbody>
     			</table>
 			</div></div>
-		<form id='practice_select' action="/videotask/form_submit/" method="post">
-			<input type="hidden" name="action" value="{{task_type}}" />
-			<input type="hidden" name="vid_id" value="{{vid.id}}" />
-			<div class='row'><div class='span12'>
-				<input class='btn btn-primary' type="submit" name='accept' value="Yes. Approved">
-				<a href="#" class="btn" onclick="showNewPracticeBox();">Doesn't seem right</a>
-				<input class="btn" type="submit" name='skip' value="I don't know, skip">
-			</div></div>
-			<div id='practice_form_error' class="alert alert-error" style="display:none;margin-top:20px;">
-   				<strong>Error!</strong> Please select all options.
-   			</div>
-			<div id='assign_new_practice_box' class='well' style="display:none;margin-top:20px;">
-				<h3>Select a new practice</h3><p></p>
-				<fieldset>
-				<select name='top_practice' title="Sector" class='practice'>
-					<option value=''>Select Sector</option>
-					{% for obj in practice_tups.0 %}
-						<option value='{{obj.0}}'>{{obj.1}}</option>
-					{% endfor %}
-				</select>
-				<select name='sub_practice'  title="Sub-sector"  class='practice'>
-					<option value=''>Select Sub-sector</option>
-					{% for obj in practice_tups.1 %}
-						<option value='{{obj.0}}'>{{obj.1}}</option>
-					{% endfor %}
-				</select>
-				<select name='utility'  title="Practice"class='span2 practice'>
-					<option value=''>Select Practice</option>
-					{% for obj in practice_tups.2 %}
-						<option value='{{obj.0}}'>{{obj.1}}</option>
-					{% endfor %}
-				</select>
-				<select name='type'  title="Sub-practice" class='span2 practice'>
-					<option value=''>Select Sub-practice</option>
-					{% for obj in practice_tups.3 %}
-						<option value='{{obj.0}}'>{{obj.1}}</option>
-					{% endfor %}
-				</select>
-				<select name='subject' title="Subject" class='practice'>
-					<option value=''>Select Subject</option>
-					{% for obj in practice_tups.4 %}
-						<option value='{{obj.0}}'>{{obj.1}}</option>
-					{% endfor %}
-				</select>
-				<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
-				</fieldset>
-				<fieldset>
-				<input class="btn btn-primary" name='yes' type="submit" value="Submit">
-				</fieldset>
+			<div id='form_id'>
+				<form id='practice_select' action="/videotask/form_submit/" method="post">
+					<input type="hidden" name="action" value="{{task_type}}" />
+					<input type="hidden" name="vid_id" value="{{vid.id}}" />
+					<div class='row'><div class='span12'>
+						<input class='btn btn-primary' type="submit" name='accept' value="Yes. Approved">
+						<a href="#" class="btn" onclick="showNewPracticeBox();">Doesn't seem right</a>
+						<input class="btn" type="submit" name='skip' value="I don't know, skip">
+					</div></div>
+					<div id='practice_form_error' class="alert alert-error" style="display:none;margin-top:20px;">
+		   				<strong>Error!</strong> Please select all options.
+		   			</div>
+					<div id='assign_new_practice_box' class='well' style="display:none;margin-top:20px;">
+						<h3>Select a new practice</h3><p></p>
+						<fieldset>
+						<select name='top_practice' title="Sector" class='practice'>
+							<option value=''>Select Sector</option>
+							{% for obj in practice_tups.0 %}
+								<option value='{{obj.0}}'>{{obj.1}}</option>
+							{% endfor %}
+						</select>
+						<select name='sub_practice'  title="Sub-sector"  class='practice'>
+							<option value=''>Select Sub-sector</option>
+							{% for obj in practice_tups.1 %}
+								<option value='{{obj.0}}'>{{obj.1}}</option>
+							{% endfor %}
+						</select>
+						<select name='utility'  title="Practice"class='span2 practice'>
+							<option value=''>Select Practice</option>
+							{% for obj in practice_tups.2 %}
+								<option value='{{obj.0}}'>{{obj.1}}</option>
+							{% endfor %}
+						</select>
+						<select name='type'  title="Sub-practice" class='span2 practice'>
+							<option value=''>Select Sub-practice</option>
+							{% for obj in practice_tups.3 %}
+								<option value='{{obj.0}}'>{{obj.1}}</option>
+							{% endfor %}
+						</select>
+						<select name='subject' title="Subject" class='practice'>
+							<option value=''>Select Subject</option>
+							{% for obj in practice_tups.4 %}
+								<option value='{{obj.0}}'>{{obj.1}}</option>
+							{% endfor %}
+						</select>
+						<a href="#" class="btn" style='margin-bottom:9px;' onclick="resetPractice();"><i class="icon-refresh"></i> Reset</a>
+						</fieldset>
+						<fieldset>
+						<input class="btn btn-primary" name='yes' type="submit" value="Submit">
+						</fieldset>
+					</div>
+				</form>
 			</div>
-		</form>
 		{% endif %}{% endif %}
 	
 	 <div class='row'>
@@ -276,6 +282,7 @@
   
   <script type="text/javascript">
   	function practiceChange() {
+  		$("#form_id").mask("Loading...");
   		var select_data = {};
 		$(".practice").each(function() {
 		 select_data[$(this).attr('name')] = $(this).val();
@@ -288,9 +295,11 @@
 						$(this).attr('disabled','disabled');
 					i = i + 1;
 				});
+				$("#form_id").unmask();
 			});
   	}
   	function resetPractice() {
+  		$("#form_id").mask("Loading...");
   		$.getJSON('/videotask/all_practice_options/', function(data) {
 				var i = 0;
 				$(".practice").each(function() {
@@ -298,6 +307,7 @@
 					$(this).html(data[i]);
 					i = i + 1;
 				});
+				$("#form_id").unmask();
 			}
 		);
   	}
@@ -326,6 +336,7 @@
  				$("#practice_form_error").show();
  			}
  			else {
+ 				$("#form_id").mask("Loading...");
  				$(".practice").each(function() {
  					$(this).removeAttr('disabled');
  				});
