@@ -25,6 +25,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str
 from django.conf.urls.defaults import *
+from haystack.query import SQ,SearchQuerySet
 
 
 def search(request):
@@ -1806,7 +1807,6 @@ def get_screenings_for_perf_online_serv(request):
         
         col_to_attr_dict={"0":"id","1":"date","2":"village__village_name","3":"location"}
         
-        #get user villages and related screenings
         villages = get_user_villages(request)
         print(request.session.get('user_id'))
         print len(villages)
@@ -1837,25 +1837,121 @@ def get_screenings_for_perf_online_serv(request):
         #slice it
         screenings=screenings[start_index:end_index]
        
-        #send it
+       #send it
         aadata=[]
         for scr in screenings:
             data={}
+            # data.append(str(scr.date))
+            # data.append(str(scr.village))
+            # data.append(str(scr.location))
             data["0"] = str(scr.id)
             data["1"] = str(scr.date)
             data["2"] = str(scr.village)
             data["3"]=str(scr.location)
             data["DT_RowClass"] = "row"
             aadata.append(data)
+        #s_echo=1
         send_dict = { "sEcho" : s_echo,
         "iTotalRecords":  total_count,
         "iTotalDisplayRecords": filtered_count,
         "aaData": aadata
+            
         }
+        
+        
         json_subcat = simplejson.dumps(send_dict)
+        
         print json_subcat
+        # json_subcat = '{\
+      # "sEcho":'+ request.GET['sEcho']+',\
+      # "iTotalRecords": '+ str(total_count)+',\
+      # "iTotalDisplayRecords":'+ str(total_count)+',\
+      # "aaData": [\
+        # [\
+          # "Gecko",\
+          # "Firefox 1.0",\
+          # "Win 98+ / OSX.2+"\
+        # ],\
+        # [\
+          # "Gecko",\
+          # "Firefox 1.5",\
+          # "Win 98+ / OSX.2+"\
+        # ]]}'
+        
         response = HttpResponse(json_subcat, mimetype="application/javascript")
+        # response['X-COUNT'] = count
+        #print json_subcat
         return response
+
+        
+# def get_screenings_for_perf_online_serv(request):
+    # if request.method == 'POST':
+        # return redirect('screenings')
+    # else:
+        # start_index =int(request.GET['iDisplayStart'])
+        # end_index = start_index+int(request.GET['iDisplayLength'])
+        # global_search = request.GET['sSearch']
+        # sort_on = request.GET['iSortCol_0']
+        # sort_dir=request.GET['sSortDir_0']
+        # s_echo =request.GET['sEcho'];
+        
+        # col_to_attr_dict={"0":"id","1":"date","2":"village__village_name","3":"location"}
+        
+        # #get user villages and related screenings
+        # villages = get_user_villages(request)
+        # print "user id= "+str(request.session.get('user_id'))
+        # print "total scrs="+str(SearchQuerySet().all().count())
+        # sq = SQ()
+        # for v in villages:
+            # sq.add(SQ(village_id=v.id), SQ.OR)
+        # sqs = SearchQuerySet().filter(sq)
+        # total_count = sqs.count()
+        # filtered_count=total_count
+        # print "total scrs for user="+str(sqs.count())
+        
+        # #search it
+        # if(global_search!=""):
+            # sqs = sqs.filter(content=global_search).models(Screening)
+            # filtered_count = sqs.count()
+            # print "searched scrs"+str(sqs.count())
+        # else:
+            # pass
+            
+        # #sort it
+        # sort_param=None
+        # if(sort_dir=="desc"):
+            # sort_param = "-"+col_to_attr_dict[sort_on]
+        # else:
+            # sort_param = col_to_attr_dict[sort_on]
+        # sqs = sqs.order_by(sort_param)
+        # print "sort done on sort_param= "+sort_param+ " "+str(sqs.count())
+        
+        # #slice it
+        # sqs = sqs[start_index:end_index]
+        # print "sliced"
+        # sys.stdout.flush()
+        # #send it
+        # aadata=[]
+        # print sqs[0].id
+        # print sqs[0].date
+        # print sqs[0].village_name
+        # print sqs[0].location
+        # # for scr in sqs:
+            # # data={}
+            # # data["0"] = "shrey"
+            # # data["1"] = "shrey"
+            # # data["2"] = "shrey"
+            # # data["3"]= "shrey"
+            # # aadata.append(data)
+        # send_dict = { "sEcho" : s_echo,
+        # "iTotalRecords":  total_count,
+        # "iTotalDisplayRecords": filtered_count,
+        # "aaData": aadata
+        # }
+        # json_subcat = simplejson.dumps(send_dict)
+        # print "sending"+json_subcat
+        # response = HttpResponse(json_subcat, mimetype="application/javascript")
+        # return response
 
     
 def save_screening_offline(request, id):
