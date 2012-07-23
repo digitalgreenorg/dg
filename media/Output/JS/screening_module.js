@@ -141,6 +141,7 @@ function practice_bubble(json) {
 	options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10},textColor: '#ffffff'};
 	options['vAxis']= {title: 'Number of Disseminations',gridlines:{count:10}, maxValue: yrange.max };
 	options['sizeAxis']={maxSize: 20};
+	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 
 
 	var practice_bubble_chart = new google.visualization.ChartWrapper({

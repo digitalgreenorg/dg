@@ -63,10 +63,10 @@ function language_bubble(json) {
 	var xrange=language_bubble_chart_data.getColumnRange(1);
 	var yrange=language_bubble_chart_data.getColumnRange(2);
 	var options = jQuery.extend(true, {}, bubble_options);
-	options['hAxis']= {title: 'Languages',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10}};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10}, maxValue: yrange.max };
+	options['hAxis']= {title: 'Languages',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
+	options['vAxis']= {title: 'Number of Videos',gridlines:{count:12}, maxValue: yrange.max };
 	options['sizeAxis']={maxSize: 20};
-
+	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 	var language_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_language_bubble',
@@ -85,8 +85,8 @@ function geog_pie(json) {
 	geog_pie_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, pie_options);
 	options['sliceVisibilityThreshold']=1.0/10000;
-	options['legend'] = { position: 'right', textStyle: {fontSize: 14},alignment: 'center' };
-	options['chartArea']={left:100,top:30,width:"70%",height:"70%"};
+	//options['legend'] = { position: 'right', textStyle: {fontSize: 14},alignment: 'center' };
+	//options['chartArea']={left:100,top:30,width:"70%",height:"70%"};
 	geog_pie_chart = new google.visualization.ChartWrapper({
 		'chartType':'PieChart',
 		'containerId':'javascript_geogwise_pie',
@@ -117,8 +117,8 @@ function type_pie(json) {
 
 	var type_pie_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, pie_options);
-	options['chartArea']={left:100,top:30,width:"80%",height:"70%"};
-	options['legend'] = { position: 'right', textStyle: {fontSize: 14},alignment: 'center' };
+	//options['chartArea']={width:"60%"};
+	options['legend'] = { position: 'bottom', textStyle: {fontSize: 10},alignment: 'start' };
 
 	var type_pie_chart = new google.visualization.ChartWrapper({
 		'chartType':'PieChart',

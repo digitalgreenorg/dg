@@ -35,7 +35,7 @@ var bubble_options={colors: ['00CC33','#7edc32','#26d52f','#909504','#f9c423','#
 function geog_pie(json) {
 	geog_pie_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, pie_options);
-	options['sliceVisibilityThreshold']=1.0/10000;
+	options['sliceVisibilityThreshold']=1.0/100000000;
 	geog_pie_chart = new google.visualization.ChartWrapper({
 		'chartType':'PieChart',
 		'containerId':'javascript_geogwise_pie',
@@ -91,7 +91,7 @@ function practice_bubble(json) {
 	options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10},textColor: '#ffffff'};
 	options['vAxis']= {title: 'Number of Adoptions',gridlines:{count:10}, maxValue: yrange.max };
 	options['sizeAxis']={maxSize: 20};
-
+	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 	var practice_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_type_bubble',
