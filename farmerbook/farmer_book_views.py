@@ -171,13 +171,13 @@ def get_village_page(request):
     left_panel_stats['tot_questions'] = question_count
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     for vid_id in vid_scr_atten:
-        vids_stats_dict[vid_id['videoes_screened']][2] =  vid_id['atten']
-        vids_stats_dict[vid_id['videoes_screened']][3] =  vid_id['num_scr']
-        vids_stats_dict[vid_id['videoes_screened']][4] =  vid_id['last_seen_date']
+        vids_stats_dict[vid_id['videoes_screened']][3] =  vid_id['atten']
+        vids_stats_dict[vid_id['videoes_screened']][4] =  vid_id['num_scr']
+        vids_stats_dict[vid_id['videoes_screened']][5] =  vid_id['last_seen_date']
     
     total_adopt = 0
     for vid_id,num_adopt in vid_adoptions:
-        vids_stats_dict[vid_id][5] = num_adopt
+        vids_stats_dict[vid_id][2] = num_adopt
         total_adopt = total_adopt + num_adopt
         
     left_panel_stats['tot_adoptions'] = total_adopt
@@ -188,9 +188,11 @@ def get_village_page(request):
     
     videos_watched_stats = []
     for obj in vids_details:
+        stat_text = make_text_from_stats(obj,vids_stats_dict)
         videos_watched_stats.append({'id':obj[0], 'title':obj[1], 'youtubeid':obj[2], 
-                                     'adopters':vids_stats_dict[obj[0]][5],'interested':vids_stats_dict[obj[0]][0], 'last_seen_date':vids_stats_dict[obj[0]][4], 
-                                     'questioners': vids_stats_dict[obj[0]][1], 'atten':vids_stats_dict[obj[0]][2], 'disseminations': vids_stats_dict[obj[0]][3]})
+                                     'adopters':vids_stats_dict[obj[0]][2],'interested':vids_stats_dict[obj[0]][0], 'last_seen_date':vids_stats_dict[obj[0]][5], 
+                                     'questioners': vids_stats_dict[obj[0]][1], 'atten':vids_stats_dict[obj[0]][3], 'disseminations': vids_stats_dict[obj[0]][4],
+                                     'fulltext': stat_text})
     sorted_list = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     #right panel bottom contents. Leader boards of related villages
     #get all persons from village who attended any screening in village
@@ -390,6 +392,7 @@ def get_group_page(request):
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
     for obj in vids_details:
+        stat_text = make_text_from_stats(obj,vids_stats_dict)
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
@@ -398,7 +401,8 @@ def get_group_page(request):
                                     'last_seen_date':vids_stats_dict[obj[0]][5], 
                                     'questioners': vids_stats_dict[obj[0]][1],
                                     'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4]})
+                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'fulltext': stat_text})
       
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     
@@ -505,6 +509,7 @@ def get_csp_page(request):
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
     for obj in vids_details:
+        stat_text = make_text_from_stats(obj,vids_stats_dict)
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
@@ -513,7 +518,8 @@ def get_csp_page(request):
                                     'last_seen_date':vids_stats_dict[obj[0]][5], 
                                     'questioners': vids_stats_dict[obj[0]][1],
                                     'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4]})
+                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'fulltext': stat_text})
       
     sorted_videos_watched_stats = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     
@@ -703,3 +709,20 @@ def get_partner_page(request):
                                          'start_date': obj[1][3]})
     
     return render_to_response('partner_page.html', dict(left_panel_stats = left_panel_stats , partner_stats = top_related_stats))
+
+# function to return the string displayed on tooltip 
+
+def make_text_from_stats(obj,vids_stats_dict):
+    text_to_return = ""
+    if(vids_stats_dict[obj[0]][4]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][4])+ "</b>" + " Disseminations <br />"
+    if(vids_stats_dict[obj[0]][3]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][3])+ "</b>" +  " Farmers Attended <br />"
+    if(vids_stats_dict[obj[0]][0]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][0]) + "</b>" +  " Interested <br />"
+    if(vids_stats_dict[obj[0]][1]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][1]) + "</b>" + " Questioners <br />"
+    if(vids_stats_dict[obj[0]][2]):
+        text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][2])+ "</b>"  + " Adopters <br />"
+    return text_to_return
+    

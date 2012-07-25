@@ -112,11 +112,11 @@
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-								<img title="{{ vid.title|lower|capfirst}}" src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								<img rel="popover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
 							{% if vid.adopters %}							
-							<div style='margin-top:-20px; margin-left:-85px;position:relative;right:-40px'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+							<div style='margin-top:-20px; margin-left:0px;position:relative;right:-40px'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
 							{% if vid.interested %}
@@ -236,6 +236,9 @@
 
 
 <script type="text/javascript">
+			$(function(){
+			   $("[rel=popover]").popover();
+			});
 var videos_watched_html;
 function ajax_tab_click(clicked, village_id) {
     if(clicked=="videos_produced") {
