@@ -11,6 +11,8 @@ from django.template import Template, Context
 
 @login_required(login_url='/videotask/login/')
 def home(request):
+    list_status = {}                  # to manage status of list of assigned videos, done skipped etc 
+    list_status['done'] = None
     next_action = "assign"
     if 'count' in request.session:
         request.session['count'] = request.session['count'] + 1
@@ -48,9 +50,12 @@ def home(request):
                 if review_videos.count() != 0:
                     next_action = 'review'
                     vid = review_videos[0]
+                else:
+                    list_status = assigned_task_over(user,list_status)
             else:
-                pass
-                #TODO: End of App. Clear skip video or All work done.
+                list_status = assigned_task_over(user,list_status)
+               
+
         else:
             vid = assign_videos[0]
     review_vid_pr = None
@@ -63,8 +68,20 @@ def home(request):
                                                                    selected_lang=language,
                                                                    selected_state=state,
                                                                    practice_tups = all_practice_options(),
-                                                                   new_pr = review_vid_pr))
+                                                                   new_pr = review_vid_pr,
+                                                                   list_status=list_status))
+    
+def assigned_task_over(user, list_status):
+    skipped_videos = SkippedVideo.objects.filter(user = user).values_list('video', flat = True)
+    if skipped_videos.count() == 0:
+        list_status['done'] = 1
+    return list_status
 
+@login_required(login_url='/videotask/login/')
+def reset_skipped(request):
+    SkippedVideo.objects.filter(user = request.user).all().delete()
+    return HttpResponseRedirect('/videotask/home/')
+    
 @login_required(login_url='/videotask/login/')
 def set_options(request):
     for key, value in request.GET.iteritems():
