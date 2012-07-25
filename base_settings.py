@@ -85,3 +85,4 @@ INSTALLED_APPS = (
     'farmerbook'
    )
 
+
