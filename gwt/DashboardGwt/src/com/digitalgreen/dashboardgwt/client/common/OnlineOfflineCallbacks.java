@@ -7,16 +7,9 @@ import com.google.gwt.http.client.Response;
 public class OnlineOfflineCallbacks {
 	private BaseServlet servlet;
 	private Response response;
-	protected boolean uploadInterrupted = false;
 	
 	public OnlineOfflineCallbacks(BaseServlet servlet) {
 		this.servlet = servlet;
-		this.uploadInterrupted=false;
-	}
-	
-	public OnlineOfflineCallbacks(BaseServlet servlet, boolean uploadInterrupted) {
-		this.servlet = servlet;
-		this.uploadInterrupted = uploadInterrupted;
 	}
 	
 	public BaseServlet getServlet() {
