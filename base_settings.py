@@ -79,21 +79,9 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     'debug_toolbar',
     'django.contrib.humanize',
     'south',
     'farmerbook'
    )
-=======
-   # 'debug_toolbar',
-    'south',
-=======
-   # 'debug_toolbar',
-    'south',
->>>>>>> Stashed changes
-    'video_practice_map',
-)
->>>>>>> Stashed changes
 
