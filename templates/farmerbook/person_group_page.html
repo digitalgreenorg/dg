@@ -163,10 +163,12 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-						<center><img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+						<center>
+						<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
+						<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+						</a>
 						<div class='csp_name'>
-							<a href="javascript:void(0);"
-								onclick="groupClick({{ group.id }})">{{ group.name }}</a>
+							<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
 						</div></center>
 
 
@@ -182,13 +184,13 @@
 		<table width="200">		
 			<tr>
 				<td align="left">{{ group.start_date|date:"M Y" }}</td>
-				<td align="left"> {{ group.screenings|intcomma}}</td>
-				<td align="left"> {{ group.adoptions|intcomma}}</td>
+				<td align="center"> {{ group.screenings|intcomma}}</td>
+				<td align="center"> {{ group.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
-				<td align="left"><b> Started</b></td>
-				<td align="left"><b> Screenings</b></td>
-				<td align="left"><b>Adoptions</b></td>
+				<td align="left"><b> Joined</b></td>
+				<td align="center"><b> Screenings</b></td>
+				<td align="center"><b>Adoptions</b></td>
 			</tr>
 		</table>	
 						
