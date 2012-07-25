@@ -79,7 +79,6 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-    # 'debug_toolbar',
     'south',
     'video_practice_map',
 )
