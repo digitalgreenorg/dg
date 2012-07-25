@@ -79,10 +79,8 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-    'debug_toolbar',
-    'django.contrib.humanize',
+    # 'debug_toolbar',
     'south',
-    'farmerbook'
-   )
-
+    'video_practice_map',
+)
 
