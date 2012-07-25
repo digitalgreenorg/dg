@@ -80,7 +80,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.admindocs',
     'dashboard',
-    'south',
-    'video_practice_map',
+    'debug_toolbar',
 )
 
