@@ -313,7 +313,7 @@ public class VideosData extends BaseData {
 			StringValidator facilitator = new StringValidator(facilitatorLabel, this.village.getId(), false, false, 1, 100);
 			StringValidator cameraOperator = new StringValidator(cameraOperatorLabel, this.cameraoperator.getId(), false, false, 1, 100);
 			ManyToManyValidator relatedAgriculturalPractices = new ManyToManyValidator(relatedAgriculturalPracticesLabel,
-					this.related_agricultural_practices, false);
+					this.related_agricultural_practices, true);
 			ManyToManyValidator farmersShown = new ManyToManyValidator(farmersShownLabel, this.farmers_shown, false);
 			StringValidator actors = new StringValidator(actorsLabel, this.actors, false, false, 1, 1);
 			StringValidator pictureQuality = new StringValidator( pictureQualityLabel, this.picture_quality, true, false, 0, 200,true);
