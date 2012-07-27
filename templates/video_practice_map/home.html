@@ -85,18 +85,33 @@
   <div class="container"><div class="content">
   	
 	<hr>
-	{% if not vid %}
-	<div class='row'>
-		{% if selected_lang or selected_state %}
-			<div class="span10 alert alert-error">				 
-						<h3>No videos found for your selection. Try changing the options above.</h3>					
-			</div>
-		{% else %}
-			<div class="span10 alert alert-info">				 
-				<h3>All videos have been associated and reviewed. :-)</h3>					
-			</div>
-		{% endif %}
-	</div>
+	{% if not vid  %}
+		<div class='row'>
+			{% if can_change_filter and can_reset_skipped %}
+				<div class="span10 alert alert-error">				 
+					<h3>No videos found for your selection. Try changing the options above OR attempt your skipped videos.</h3>					
+				</div>
+			{% else %}{% if can_change_filter %}
+				<div class="span10 alert alert-error">				 
+					<h3>No videos found for your selection. Try changing the options above.</h3>					
+				</div>
+			{% else %}{% if can_reset_skipped %}
+				<div class="span10 alert alert-error">				 
+					<h3>No more videos to work with. Attempt your skipped videos</h3>					
+				</div>
+			{% else %}
+				<div class="span10 alert alert-error">				 
+					<h3>All videos have been associated and reviewed. :-)</h3>					
+				</div>
+			{% endif %}{% endif %}{% endif %}
+			{% if can_reset_skipped %}
+  		</div>
+				<div class='row'>
+					<div class='span9 offset3'>
+						<a href="/videotask/reset_skipped/" class="btn btn-large btn-primary" style="text-align:center;" onclick="resetPractice();"> Attempt Skipped Videos </a>
+					</div>
+			{% endif %}
+		</div>
 	{% else %}
 		{% if task_type == "assign" %}
 		<p>

@@ -11,6 +11,8 @@ from django.template import Template, Context
 
 @login_required(login_url='/videotask/login/')
 def home(request):
+    can_change_filter = can_reset_skipped = False # For showing message on no video for assign or review. 
+                                                  # There can be skipped vidoes or videos in other filter options (language/state) 
     next_action = "assign"
     if 'count' in request.session:
         request.session['count'] = request.session['count'] + 1
@@ -25,7 +27,7 @@ def home(request):
     user = request.user
     user.associated_count = VideoPractice.objects.filter(user=user).count()
     user.reviewed_count = VideoPractice.objects.filter(review_user=user).count()
-    videos = Video.objects.exclude(id__in = SkippedVideo.objects.filter(user=user).values_list('video',flat=True))
+    videos = Video.objects.exclude(skippedvideo__user = user)
     if language:
         videos = videos.filter(language__id = language)
     if state:
@@ -48,23 +50,38 @@ def home(request):
                 if review_videos.count() != 0:
                     next_action = 'review'
                     vid = review_videos[0]
+                else:
+                    can_change_filter, can_reset_skipped = get_end_of_videos_status(user, language, state)
             else:
-                pass
-                #TODO: End of App. Clear skip video or All work done.
+                can_change_filter, can_reset_skipped = get_end_of_videos_status(user, language, state)
+               
+
         else:
             vid = assign_videos[0]
     review_vid_pr = None
     if vid and next_action == "review":
         review_vid_pr = VideoPractice.objects.get(review_user=None, video=vid).practice 
                 
-    return render_to_response("video_practice_map/home.html", dict(vid=vid, 
-                                                                   user=user, 
-                                                                   task_type=next_action,
-                                                                   selected_lang=language,
-                                                                   selected_state=state,
-                                                                   practice_tups = all_practice_options(),
-                                                                   new_pr = review_vid_pr))
+    return render_to_response("video_practice_map/home.html", dict(vid=vid, user=user, task_type=next_action, selected_lang=language,
+                                                                   selected_state=state, practice_tups = all_practice_options(), new_pr = review_vid_pr, 
+                                                                   can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped))
+                                                                   
+    
+def get_end_of_videos_status(user, language, state):
+    can_change_filter = can_reset_skipped = False
+    if SkippedVideo.objects.filter(user = user).values_list('video', flat = True).count() != 0:
+        can_reset_skipped = True
+    if (language is not None or state is not None) and \
+       (VideoPractice.objects.filter(review_user=None).exclude(user=user).exists() or \
+        Video.objects.exclude(skippedvideo__user=user).exclude(id__in = VideoPractice.objects.values_list('video',flat=True).distinct()).exists()):
+           can_change_filter = True
+    return can_change_filter, can_reset_skipped
 
+@login_required(login_url='/videotask/login/')
+def reset_skipped(request):
+    SkippedVideo.objects.filter(user = request.user).delete()
+    return HttpResponseRedirect('/videotask/home/')
+    
 @login_required(login_url='/videotask/login/')
 def set_options(request):
     for key, value in request.GET.iteritems():
