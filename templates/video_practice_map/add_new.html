@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	 <title>Map Videos to New Practices</title>
+	 <meta name="author" content="rahul at digitalgreen">
+	 <link href="/media/farmerbook/css/bootstrap.min.css" rel="stylesheet">
+     <link href="/media/farmerbook/css/bootstrap-responsive.min.css" rel="stylesheet">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+     <script src="/media/farmerbook/js/bootstrap-tab.js"></script>
+	 <style>
+	 body {
+        padding-top: 60px; 
+      }
+     
+     html, body {
+        background-color: #eee;
+      }
+      
+      /* The white background content wrapper */
+      .container > .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; 
+        -webkit-border-radius: 10px 10px 10px 10px;
+           -moz-border-radius: 10px 10px 10px 10px;
+                border-radius: 10px 10px 10px 10px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+      }
+      select.level_multi_select {
+     	height: 160px;
+     } 
+	 </style>
+	 
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+    	<div class="container">
+    		<ul class="nav">
+  				<li class='navbar-text'>User: <strong>{{ user.username }}</strong></li>
+				<li class="divider-vertical"></li>
+  			</ul> 
+  			<ul class="nav pull-right">
+  				<li><a href="/videotask/logout/">Logout</a></li>
+  			</ul>
+    	</div>
+    </div>
+  </div>
+  <div class="container"><div class="content">
+  	{% if msg %}
+	<div class="alert alert-success">
+    	{{ msg }}
+    </div>
+    {% endif %}
+  	<p>
+		<h1>Add New Entries</h1>
+	</p>
+  	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#combination" data-toggle="tab">Combinations</a></li>
+	  <li><a href="#sector" data-toggle="tab">Sector</a></li>
+	  <li><a href="#subsector" data-toggle="tab">Sub-Sector</a></li>
+	  <li><a href="#practice" data-toggle="tab">Practice</a></li>
+	  <li><a href="#subpractice" data-toggle="tab">Sub-Practice</a></li>
+	  <li><a href="#subject" data-toggle="tab">Subject</a></li>
+	</ul>
+	<div class="tab-content">
+	  <div class="tab-pane active" id="combination">
+	  <form action='/videotask/add/' method='post'>
+	  <input type="hidden" name="form_type" value="combinations" />
+	  <div class='row-fluid' style="margin-bottom: 5px">
+	  	<div class='span2'>Sector</div>
+	  	<div class='span3'>Sub-Sector</div>
+	  	<div class='span3'>Practice</div>
+	  	<div class='span2'>Sub-practice</div>
+	  	<div class='span2'>Subject</div>
+	  </div>
+	  
+	  <div class='row-fluid'>
+			<select name='sector' multiple="multiple" class='span2 level_multi_select'>
+				{% for obj in sectors %}
+				 <option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+              </select>
+	  
+			<select name='sub_sector' multiple="multiple" class='span3 level_multi_select'>
+                {% for obj in sub_sectors %}
+				 <option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+              </select>
+              
+             <select name='main_practice' multiple="multiple" class='span3 level_multi_select'>
+             	<option value='none'>None</option>
+                {% for obj in main_practices %}
+				 <option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+              </select>
+             
+             <select name='sub_practice' multiple="multiple" class='span2 level_multi_select'>
+             	<option value='none'>None</option>
+                {% for obj in sub_practices %}
+				 <option value='{{obj.0}}'>{{obj.1}}</option>
+				{% endfor %}
+              </select>
+              <select name='subject' multiple="multiple" class='span2 level_multi_select'>
+              	<option value='none'>None</option>
+                {% for sector_name, subject_list in subjects.items %}
+                 <optgroup label="{{sector_name}}">
+	                 {% for obj in subject_list %}
+					 <option value='{{obj.0}}'>{{obj.1}}</option>
+					 {% endfor %}
+				 </optgroup>
+				{% endfor %}
+              </select>
+		</div>
+		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+	  </form>
+	  </div>
+	  <div class="tab-pane" id="sector">
+	  	<form class='form-horizontal' action="/videotask/add/" method="post">
+	  		<input type="hidden" name="form_type" value="sector" />
+	  		<div class="control-group">
+				<label class="control-label" for="input01">Sector name</label>
+				<div class="controls">
+					<input type="text" name="name" class="input-xlarge" placeholder="e.g. Agriculture" id='input01'>
+				</div>
+			</div>
+	  		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+         	 </div>
+	  	</form>
+	  </div>
+	  <div class="tab-pane" id="subsector">
+	  	<form class='form-horizontal' action="/videotask/add/" method="post">
+	  		<input type="hidden" name="form_type" value="subsector" />
+	  		<div class="control-group">
+				<label class="control-label" for="input01">Sub-sector name</label>
+				<div class="controls">
+					<input type="text" name="name" class="input-xlarge" placeholder="e.g. Nursery Management" id='input01'>
+				</div>
+			</div>
+	  		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+         	 </div>
+	  	</form>
+	  </div>
+	  <div class="tab-pane" id="practice">
+	  	<form class='form-horizontal' action="/videotask/add/" method="post">
+	  		<input type="hidden" name="form_type" value="practice" />
+	  		<div class="control-group">
+				<label class="control-label" for="input01">Practice name</label>
+				<div class="controls">
+					<input type="text" name="name" class="input-xlarge" placeholder="e.g. Erosion Control" id='input01'>
+				</div>
+			</div>
+	  		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+         	 </div>
+	  	</form>
+	  </div>
+	  <div class="tab-pane" id="subpractice">
+	  	<form class='form-horizontal' action="/videotask/add/" method="post">
+	  		<input type="hidden" name="form_type" value="subpractice" />
+	  		<div class="control-group">
+				<label class="control-label" for="input01">Sub-practice name</label>
+				<div class="controls">
+					<input type="text" name="name" class="input-xlarge" placeholder="e.g. Farm Yard Manure" id='input01'>
+				</div>
+			</div>
+	  		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+         	 </div>
+	  	</form>
+	  </div>
+	  <div class="tab-pane" id="subject">
+	  	<form class='form-horizontal' action="/videotask/add/" method="post">
+	  		<input type="hidden" name="form_type" value="subject" />
+	  		<div class="control-group">
+				<label class="control-label" for="input01">Subject name</label>
+				<div class="controls">
+					<input type="text" name="name" class="input-xlarge" placeholder="e.g. Bengalgram (Chana)" id='input01'>
+				</div>
+			</div>
+	  		<div class="form-actions">
+            	<button class="btn btn-primary" type="submit">Submit</button>
+         	 </div>
+	  	</form>
+	  </div>
+	</div>
+  </div></div>
+</body>
+</html>

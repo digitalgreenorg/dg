@@ -1,13 +1,13 @@
-from django.contrib.auth import authenticate, login
+from collections import defaultdict
+from dashboard.models import PracticeMain, PracticeSub, PracticeSector, \
+    PracticeSubSector, PracticeSubject, Video
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from dashboard.models import PracticeMain, PracticeSub, PracticeSector, \
-    PracticeSubSector, PracticeSubject, Video
-from django.contrib.auth import logout
+from django.template import Template, Context
 from video_practice_map.models import *
 import json
-from django.template import Template, Context
 
 @login_required(login_url='/videotask/login/')
 def home(request):
@@ -174,4 +174,69 @@ def all_practice_options(request=None):
         return HttpResponse(json.dumps(output_arr))
     else:
         return value_arr
+    
+@login_required(login_url='/videotask/login/')
+def add_new(request):
+    if request.user.username.lower() != 'sreenu':
+        return HttpResponseRedirect('/videotask/home/')
+    msg = None
+    
+    if request.POST:    
+        if request.POST['form_type'] == "combinations":
+            sectors = map(int, request.POST.getlist('sector'))
+            sub_sectors = map(int, request.POST.getlist('sub_sector'))
+            main_practices = map(lambda x: None if x == 'none' else int(x), request.POST.getlist('main_practice'))
+            sub_practices = map(lambda x: None if x == 'none' else int(x), request.POST.getlist('sub_practice'))
+            subjects = map(lambda x: None if x == 'none' else int(x), request.POST.getlist('subject'))
+            if not(sectors and sub_sectors and main_practices and sub_practices and subjects):
+                msg = "One or more level is missing. Nothing saved."
+            else:               
+                count = 0
+                for sector in sectors:
+                    for sub_sector in sub_sectors:
+                        for main_practice in main_practices:
+                            for sub_practice in sub_practices:
+                                for subject in subjects:
+                                    obj, created = PracticeCombination.objects.get_or_create(top_practice_id=sector, sub_practice_id=sub_sector,
+                                                                                             utility_id=main_practice, type_id=sub_practice,
+                                                                                             subject_id=subject)
+                                    if created:
+                                        count = count + 1
+                                    
+                msg = "%d combinations added." % (count)
+        elif request.POST['form_type'] in ('sector', 'subsector', 'practice', 'subpractice', 'subject'):
+            if not request.POST['name']:
+                msg = "Please enter name for %s" % (request.POST['form_type'].title())
+            else:
+                model_class = dict(sector=PracticeSector, subsector=PracticeSubSector, practice=PracticeMain,
+                                   subpractice=PracticeSub, subject=PracticeSubject)
+                obj, created = model_class[request.POST['form_type']].objects.get_or_create(name=request.POST['name'])
+                if created:
+                    msg = "%s - %s created." % (request.POST['form_type'].title(), request.POST['name'])
+                else:
+                    msg = "%s - %s already exists." % (request.POST['form_type'].title(), request.POST['name'])
+
+    all_sectors = PracticeSector.objects.values_list('id', 'name').order_by('name')
+    all_subsectors = PracticeSubSector.objects.values_list('id', 'name').order_by('name')
+    all_main = PracticeMain.objects.values_list('id', 'name').order_by('name')
+    all_subpr = PracticeSub.objects.values_list('id', 'name').order_by('name')
+    sector_subject_tups = PracticeCombination.objects.exclude(subject=None). values_list('top_practice__name', 
+                                                                                 'subject__id', 
+                                                                                 'subject__name').distinct().order_by('subject__name')
+    all_subjects = defaultdict(list)
+    for sector_sub_tup in sector_subject_tups:
+        all_subjects[sector_sub_tup[0]].append(list(sector_sub_tup)[1:])
+    not_associated = PracticeSubject.objects.exclude(id__in = set([i[1] for i in sector_subject_tups])).values_list('id', 'name').order_by('name')
+    if not_associated:
+        all_subjects['Not Associated'] = not_associated
+    all_subjects = dict(all_subjects) # Template screws up defaultdict for iterating
+    
+    return render_to_response("video_practice_map/add_new.html", dict(user=request.user,
+                                                                      sectors=all_sectors,
+                                                                      sub_sectors=all_subsectors,
+                                                                      main_practices=all_main,
+                                                                      sub_practices=all_subpr,
+                                                                      subjects=all_subjects,
+                                                                      msg=msg))
+    
     

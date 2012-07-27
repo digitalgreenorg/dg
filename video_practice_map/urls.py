@@ -11,4 +11,5 @@ patterns('video_practice_map.views',
     url(r'^all_practice_options/$', 'all_practice_options'),
     url(r'^form_submit/$', 'form_submit'),
     url(r'^reset_skipped/$', 'reset_skipped'),
+    url(r'add/$', 'add_new'),
 )
