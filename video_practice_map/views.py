@@ -134,6 +134,7 @@ def practice_filter_options(request):
         if request.GET[field]:
             if request.GET[field] == "None":
                 output_arr.append("<option value='None'>None</option>")
+                pr = pr.filter(**{field:None})
             else:
                 id = int(request.GET[field])
                 obj = model.objects.get(id=id)
