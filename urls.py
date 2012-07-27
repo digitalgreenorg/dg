@@ -13,6 +13,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^api/', include('dashboard.urls')),
     (r'^feeds/persons/$', feed_person_html_on_person_group),
     (r'^feeds/persons/modified/$', feed_person_html_on_person_group_modified),
     (r'^feeds/person_pract/$',feed_person_prac_pg_anim),
