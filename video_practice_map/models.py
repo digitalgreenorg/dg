@@ -13,6 +13,9 @@ class PracticeCombination(models.Model):
     type = BigForeignKey(PracticeSub, null=True)
     subject = BigForeignKey(PracticeSubject, null=True)
     
+    class Meta:
+        unique_together = ("top_practice", "sub_practice", "utility", "type", "subject")
+    
 class VideoPractice(models.Model):
     id = BigAutoField(primary_key = True)
     video = BigForeignKey(Video)
