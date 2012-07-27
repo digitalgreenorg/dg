@@ -302,14 +302,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pe-2", "<a href='#dashboard/person/add' class='addlink'>Add</a>", "dashboard/person/add", new Persons(requestContext));
-	
-		requestContext = new RequestContext();
-		requestContext.getArgs().put("action", "list");
-		requestContext.getArgs().put("pageNum", "1");
-		addHyperlink("pr-1", "<a href='#dashboard/practices/'>Practices</a>", "dashboard/practices", new Practices(requestContext));
-		requestContext = new RequestContext();
-		requestContext.getArgs().put("action", "add");
-		addHyperlink("pr-2", "<a href='#dashboard/practices/add' class='addlink'>Add</a>", "dashboard/practices/add", new Practices(requestContext));
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
@@ -556,12 +548,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"					<th id='l-1' scope='row'>\n" + 
 			"					</th>\n" + 
 			"					<td id='l-2'>\n" + 
-			"					</td>\n" + 
-			"				</tr>\n" + 
-			"				<tr>\n" + 
-			"					<th id='pr-1'scope='row'>\n" + 
-			"					</th>\n" + 
-			"					<td id='pr-2'>\n" + 
 			"					</td>\n" + 
 			"				</tr>\n" + 
 			"				<tr>\n" + 
