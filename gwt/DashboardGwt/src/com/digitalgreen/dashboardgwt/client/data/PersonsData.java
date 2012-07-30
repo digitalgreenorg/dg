@@ -682,21 +682,6 @@ public class PersonsData extends BaseData {
 		}
 		html = html + "</select>";
 
-		PracticesData practiceData = new PracticesData();
-		List practices = practiceData.getAllPracticesOffline();
-		PracticesData.Data practice;
-		for (int inline = 0; inline < 3; inline++) {
-			html += "<select name=\"personadoptpractice_set-" + inline
-					+ "-practice\" id=\"id_personadoptpractice_set-" + inline
-					+ "-practice\">"
-					+ "<option selected='selected' value=''>---------</option>";
-			for (int i = 0; i < practices.size(); i++) {
-				practice = (PracticesData.Data) practices.get(i);
-				html = html + "<option value = \"" + practice.getId() + "\">"
-						+ practice.getPracticeName() + "</option>";
-			}
-			html = html + "</select>";
-		}
 		return html;
 	}
 

@@ -18,7 +18,6 @@ import com.digitalgreen.dashboardgwt.client.servlets.Partners;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
-import com.digitalgreen.dashboardgwt.client.servlets.Practices;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.digitalgreen.dashboardgwt.client.servlets.States;

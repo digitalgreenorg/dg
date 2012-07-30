@@ -91,9 +91,6 @@ public class VideosData extends BaseData {
 			super();
 			this.related_agricultural_practices = new ArrayList();
 			this.farmers_shown = new ArrayList();
-			this.addManyToManyRelationship("practice", 
-					(new VideoRelatedAgriculturalPracticesData()), 
-					"related_agricultural_practices");
 			this.addManyToManyRelationship("person", 
 					(new VideoFarmersShownData()), 
 					"farmers_shown");
@@ -569,7 +566,6 @@ public class VideosData extends BaseData {
 		AnimatorsData cameraoperator = new AnimatorsData();
 		ReviewersData reviewer = new ReviewersData();
 		VideosData video1 = new VideosData();
-		PracticesData practice = new PracticesData();
 		PersonsData person = new PersonsData();
 		
 		for(int i = 0; i < videoObjects.length(); i++){
@@ -797,16 +793,6 @@ public class VideosData extends BaseData {
 		for(int i=0; i< cameraoperators.size(); i++){
 			cameraoperator = (AnimatorsData.Data)cameraoperators.get(i);
 			html = html + "<option value = \"" + cameraoperator.getId() +"\">" + cameraoperator.getAnimatorName() + "</option>";
-		}
-		html = html + "</select>";
-		
-		PracticesData practicesData = new PracticesData();
-		List practices = practicesData.getAllPracticesOffline();
-		PracticesData.Data practice;
-		html = html+ "<select id='id_related_agricultural_practices' name='related_agricultural_practices' multiple='multiple'>";
-		for(int i=0; i<practices.size(); i++){
-			practice = (PracticesData.Data)practices.get(i);
-			html = html+ "<option value = \"" + practice.getId() + "\">" + practice.getPracticeName() + "</option>";
 		}
 		html = html + "</select>";
 		
