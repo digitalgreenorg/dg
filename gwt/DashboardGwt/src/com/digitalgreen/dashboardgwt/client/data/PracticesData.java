@@ -302,22 +302,7 @@ public class PracticesData extends BaseData {
 	}
 	
 	public List getAllPracticesOffline(){
-		BaseData.dbOpen();
 		List practices = new ArrayList();
-		this.select(selectPractices);
-		if(this.getResultSet().isValidRow()){
-			try {
-				for(int i = 0; this.getResultSet().isValidRow(); ++i, this.getResultSet().next()){
-					Data practice = new Data(this.getResultSet().getFieldAsString(0), this.getResultSet().getFieldAsString(1));
-					practices.add(practice);
-				}
-			}
-			catch(DatabaseException e){
-				Window.alert("Database Exception : " + e.toString());
-				BaseData.dbClose();
-			}
-		}
-		BaseData.dbClose();
 		return practices;
 	}
 	

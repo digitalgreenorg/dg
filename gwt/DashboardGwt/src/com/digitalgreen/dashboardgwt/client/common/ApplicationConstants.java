@@ -44,8 +44,8 @@ public class ApplicationConstants {
 	
 	public static String[] tableIDs = {	"7","8","9","10","11","12","13",
 										"14","15","16", "17","18", "19","20","21",
-										"22","23","37","24", "25","26", "28","27",
-										"38","39","29","40","41","30","31","34","42"};
+										"22","23","37","24", "25","26","27",
+										"39","29","40","41","30","31","34","42"};
 
 	public static HashMap mappingBetweenTableIDAndDataObject;
 	
@@ -156,12 +156,8 @@ public class ApplicationConstants {
 		mappingBetweenTableIDAndDataObject.put(AnimatorSalaryPerMonthData.tableID, animatorSalaryPerMonthData);
 		LanguagesData languagesData = new LanguagesData();
 		mappingBetweenTableIDAndDataObject.put(LanguagesData.tableID, languagesData);
-		PracticesData practicesData = new PracticesData();
-		mappingBetweenTableIDAndDataObject.put(PracticesData.tableID, practicesData);
 		VideosData videosData = new VideosData();
 		mappingBetweenTableIDAndDataObject.put(VideosData.tableID, videosData);
-		VideoRelatedAgriculturalPracticesData videoRelatedAgriculturalPracticesData = new VideoRelatedAgriculturalPracticesData();
-		mappingBetweenTableIDAndDataObject.put(VideoRelatedAgriculturalPracticesData.tableID, videoRelatedAgriculturalPracticesData);
 		VideoFarmersShownData videoFarmersShownData = new VideoFarmersShownData();
 		mappingBetweenTableIDAndDataObject.put(VideoFarmersShownData.tableID, videoFarmersShownData);
 		ScreeningsData screeningsData = new ScreeningsData();
