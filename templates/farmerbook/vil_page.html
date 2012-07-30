@@ -107,7 +107,7 @@
 									<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 									</a>
 								</div>
-								{% if vid.adopters %}							
+								<!-- {% if vid.adopters %}							
 								<div style='margin-top:-20px; margin-left:85px;align:left;position:absolute'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 								{% endif %}
 								{% if vid.interested %}
@@ -119,13 +119,13 @@
 									{% else %}
 										<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 									{% endif %}
-								{% endif %}
+								{% endif %} -->
 								<div class="question" style="margin-top:0px;">
 									<a title="{{vid.title}}" href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >
 										{{ vid.title|lower|capfirst|truncchar:30 }}
 									</a> 
 								</div>
-								{% if vid.disseminations %}
+								<!-- {% if vid.disseminations %}
 									<div style=' margin-top:-95px;position:absolute;'>
 										<span class='label label-info' title='disseminations'>
 											<i class='icon-facetime-video icon-white'></i> {{ vid.disseminations}}  
@@ -138,7 +138,7 @@
 										<i class='icon-user icon-white'></i>{{ vid.atten }}  
 										</span> 
 									</div>
-								{% endif %}
+								{% endif %} -->
 								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
 							</li>
 							 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}

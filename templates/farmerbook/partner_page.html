@@ -65,6 +65,48 @@
 	style="float: right; margin-top: -5px; margin-left: 5px;">
 	<a class="close" data-dismiss="modal">x</a>
 </div>
+<div id="tabs">
+	<div id='toptabs'>
+		<ul>
+			<li id='tabsli' class='giftsli'>
+			<span>Top Villages</span></a>
+		</li>
+	</ul>
+</div>
+</div>
+<div class='vil_tabcontent' id="top_tabcontent"
+	style="height: 190px;" style='width:100%; margin:0px;'>
+<div class="carousel slide span8" id="myCarousel"
+	style="width: 710px; margin-bottom: 0px;">
+	<div class="carousel-inner">
+		{% for village in top_vill %} 
+		{% if forloop.counter0|divisibleby:"5" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
+				{% endif%}
+				<li class="vidsWatchedItem">
+							<div class="thumbnail">
+								<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})" target='_blank'>
+								<img rel="custompopover" data-content="Screenings :  <b>{{village.2}}</b>"  src="http://s3.amazonaws.com/dg_farmerbook/village/{{village.0}}.jpg" alt="">
+								</a>
+							</div>
+							<div class='csp_name'>
+							<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})"><center>{{ village.1}}</center></a>
+							</div></center>
+							
+						</li>
+				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%}
+		 {% endfor %}
+	</div>
+	<a data-slide="prev" href="#myCarousel"
+		class="left carousel-control" style="margin-left: -40px;"><</a>
+	<a data-slide="next" href="#myCarousel" class="carousel-control"
+		style="margin-left: 650px !important">></a>
+	</div>
+</div>
 <div style="height: 1px;"></div>
 	<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Other Partners</span> </div>
@@ -120,7 +162,12 @@
 
 	</div>
 </div>
-		</div>
+<script type="text/javascript">
+			$(function(){
+			   $("[rel=custompopover]").custompopover();
+			});
+</script
+</div>
 </body>
 </html>
 
