@@ -34,6 +34,10 @@ function drawCharts() {
 	$.getJSON('/analytics/video_practice_wise_scatter/?'+search_params, function(json){practice_bubble(json)});
 	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['prod', 'prod_tar']}, function(json){total_line(json)});
 }
+
+function remove_loader(div_id){
+	document.getElementById(div_id).style.backgroundImage = "none";
+}
 function monthwise_column(json) {
 
 	var monthwise_column_chart_data = google.visualization.arrayToDataTable(json,false);
@@ -41,14 +45,13 @@ function monthwise_column(json) {
 	options['chartArea']={left:70,top:20,width:"80%",height:"80%"};
 	options['vAxis']= {title: 'Number of Videos'};
 	options['legend']= {position: 'bottom'};
-
 	var monthwise_column_chart = new google.visualization.ChartWrapper({
 		'chartType':'ColumnChart',
 		'containerId':'javascript_monthwise_column',
 		'options':options,
 		'dataTable':monthwise_column_chart_data
 	});
-
+	remove_loader(monthwise_column_chart.getContainerId());
 	monthwise_column_chart.draw();
 	exp_monthwise_column_chart=new google.visualization.ChartWrapper({
 		'chartType':'ColumnChart',
@@ -60,19 +63,23 @@ function monthwise_column(json) {
 function language_bubble(json) {
 
 	var language_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
-	var xrange=language_bubble_chart_data.getColumnRange(1);
-	var yrange=language_bubble_chart_data.getColumnRange(2);
-	var options = jQuery.extend(true, {}, bubble_options);
-	options['hAxis']= {title: 'Languages',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:12}, maxValue: yrange.max };
-	options['sizeAxis']={maxSize: 20};
-	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	if(json.length>1)
+	{
+		var xrange=language_bubble_chart_data.getColumnRange(1);
+		var yrange=language_bubble_chart_data.getColumnRange(2);
+		var options = jQuery.extend(true, {}, bubble_options);
+		options['hAxis']= {title: 'Languages',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
+		options['vAxis']= {title: 'Number of Videos',gridlines:{count:12}, maxValue: yrange.max };
+		options['sizeAxis']={maxSize: 20};
+		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	}
 	var language_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_language_bubble',
 		'options':options,
 		'dataTable':language_bubble_chart_data
 	});
+	remove_loader(language_bubble_chart.getContainerId());
 	language_bubble_chart.draw(json);
 	exp_language_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
@@ -93,6 +100,7 @@ function geog_pie(json) {
 		'options':options,
 		'dataTable':geog_pie_chart_data
 	});
+	remove_loader(geog_pie_chart.getContainerId());
 	geog_pie_chart.draw();
 	google.visualization.events.addListener(geog_pie_chart, 'select', geog_pie_click);
 	exp_geog_pie_chart=new google.visualization.ChartWrapper({
@@ -126,6 +134,7 @@ function type_pie(json) {
 		'options':options,
 		'dataTable':type_pie_chart_data
 	});
+	remove_loader(type_pie_chart.getContainerId());
 	type_pie_chart.draw(json);
 	exp_type_pie_chart=new google.visualization.ChartWrapper({
 		'chartType':'PieChart',
@@ -134,22 +143,25 @@ function type_pie(json) {
 	});
 }
 function practice_bubble(json) {
-
 	var practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
-	var xrange=practice_bubble_chart_data.getColumnRange(1);
-	var yrange=practice_bubble_chart_data.getColumnRange(2);
-	var options = jQuery.extend(true, {}, bubble_options);
-	options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10} };
-	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
-	options['sizeAxis']={maxSize: 20};
+	if(json.length>1)
+	{
+		var xrange=practice_bubble_chart_data.getColumnRange(1);
+		var yrange=practice_bubble_chart_data.getColumnRange(2);
+		var options = jQuery.extend(true, {}, bubble_options);
+		options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
+		options['vAxis']= {title: 'Number of Videos',gridlines:{count:10} };
+		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+		options['sizeAxis']={maxSize: 20};
 
+	}
 	var practice_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_bubble',
 		'options':options,
 		'dataTable':practice_bubble_chart_data
 	});
+	remove_loader(practice_bubble_chart.getContainerId());
 	practice_bubble_chart.draw();
 	exp_practice_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
@@ -172,7 +184,7 @@ function total_line(json) {
 		'options':options,
 		'dataTable':total_line_chart_data
 	});
-
+	remove_loader(total_line_chart.getContainerId());
 	total_line_chart.draw();
 	exp_total_line_chart=new google.visualization.ChartWrapper({
 		'chartType':'LineChart',
@@ -190,6 +202,7 @@ function gender_pie(json) {
 		'options':options,
 		'dataTable':gender_pie_chart_data
 	});
+	remove_loader(gender_pie_chart.getContainerId());
 	gender_pie_chart.draw();
 	exp_gender_pie_chart=new google.visualization.ChartWrapper({
 		'chartType':'PieChart',
@@ -209,6 +222,7 @@ function actor_pie(json) {
 		'options':options,
 		'dataTable':actor_pie_chart_data
 	});
+	remove_loader(actor_pie_chart.getContainerId());
 	actor_pie_chart.draw();
 	exp_actor_pie_chart=new google.visualization.ChartWrapper({
 		'chartType':'PieChart',

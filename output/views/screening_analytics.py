@@ -61,15 +61,15 @@ def screening_percent_lines(request):
     if(return_val):
         return HttpResponse(json.dumps(return_val)  )
 
-    return HttpResponse(';;;;')
+    return HttpResponse(json.dumps(return_val)  )
 
 def screening_per_day_line(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partners = get_dates_partners(request);
     rows = run_query_raw(screening_analytics_sql.screening_per_day(geog, id, from_date, to_date, partners))
+    return_val=[["Date","Total Disseminations"]]
     if (not rows):
-        return HttpResponse(';')
-    return_val = []
+        return HttpResponse(json.dumps(return_val))
     prev_date = rows[0][0]
     return_val.append([str(rows[0][0]),int(rows[0][1])])
     day_one_delta = datetime.timedelta(days=1)
@@ -81,7 +81,6 @@ def screening_per_day_line(request):
 
         return_val.append([str(row[0]),int(row[1])])
         
-    return_val.insert(0,["Date","Total Disseminations"])
     return HttpResponse(json.dumps(return_val))
 
 

@@ -320,12 +320,12 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
     if not rs:
         return HttpResponse(json.dumps(str_list))
     
-        for key, value in pieNameDict.iteritems():
-            if(key in rs):
-                str_list.append([value,rs[key][0]])
-            else:
-                str_list.append([value,0])
-
+    for key, value in pieNameDict.iteritems():
+        if(key in rs):
+            str_list.append([value,rs[key][0]])
+        else:
+            str_list.append([value,0])
+            
     return HttpResponse(json.dumps(str_list))
 
 #generic function to render data for Scatter Charts
