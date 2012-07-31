@@ -71,6 +71,10 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
 )
 
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_PATH, 'whoosh')
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,6 +82,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     #'django.contrib.sites',
     'django.contrib.admindocs',
+    'haystack',
     'dashboard',
     'debug_toolbar',
     'raven.contrib.django',

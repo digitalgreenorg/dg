@@ -23,3 +23,6 @@ curl --dump-header - -H "Content-Type: application/json" --user username:passwor
 
 # Delete a country
 curl --dump-header - -H "Content-Type: application/json" --user username:password -X DELETE  http://localhost:8000/api/v1/country/4/
+
+# Search in District model (using haystack)
+curl -H "Accept: application/json" --user username:password http://127.0.0.1:8000/api/v1/district/search/?q=Uttar%20Pradesh
