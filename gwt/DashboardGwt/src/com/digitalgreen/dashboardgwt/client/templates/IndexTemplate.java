@@ -25,6 +25,7 @@ import com.digitalgreen.dashboardgwt.client.servlets.Targets;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.gears.client.database.DatabaseException;
@@ -374,6 +375,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
 		
+		Hyperlink link = new Hyperlink("<a href='dashboard/classifyvideo'>Classify Videos</a>", true, "dashboard/classifyvideo"); 
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+			Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
+			}	
+		});
+		RootPanel.get("cv-1").add(link);
+		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		requestContext.getArgs().put("pageNum", "1");
@@ -656,6 +665,10 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"					<td id='der-2'>\n" + 
 			"					</td>\n" + 
 			"				</tr>\n" + 
+			"               <tr>\n" + 
+			"					<th id='cv-1' scope='row'>\n" + 
+			"					</th>\n" +
+			"               </tr>\n"+
 			"			</table>\n" + 
 			"		</div>\n" + 
 			"	</div>\n" + 
