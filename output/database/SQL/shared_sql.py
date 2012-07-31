@@ -316,4 +316,6 @@ def caculate_start_date(geog, id):
     sql_ds['select'].append("MIN(date) AS date")
     sql_ds['from'].append("village_precalculation_copy VPC")
     if geog is not None:
-        sql_ds['where'].append("%s_id = %s", geog.lower(), str(id))
+        sql_ds['where'].append("%s_id = %s" % (geog.lower(), str(id)))
+
+    return join_sql_ds(sql_ds)

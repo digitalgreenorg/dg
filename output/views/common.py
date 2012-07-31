@@ -171,7 +171,7 @@ def overview_line_graph(request):
     else:
         person_rs = []
     
-    if('prod_tar' in type):
+    if('prod_tar' in graph_type):
         prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
     else:
         prod_tar_rs = []
@@ -230,15 +230,15 @@ def overview_line_graph(request):
             sum_adopt_tar += adopt_tar_rs[iter_date][0]
 
         append_str = [str(iter_date)]
-        if('prod' in graph_type): append_str.append(sum_vid)
-        if('screen' in graph_type): append_str.append(sum_sc)
-        if('adopt' in graph_type): append_str.append(sum_adopt)
-        if('prac' in graph_type): append_str.append(sum_prac)
-        if('person' in graph_type): append_str.append(sum_person)
+        if('prod' in graph_type): append_str.append(float(sum_vid))
+        if('screen' in graph_type): append_str.append(float(sum_sc))
+        if('adopt' in graph_type): append_str.append(float(sum_adopt))
+        if('prac' in graph_type): append_str.append(float(sum_prac))
+        if('person' in graph_type): append_str.append(float(sum_person))
         if(geog in ["COUNTRY","STATE","DISTRICT"]):
-            if('prod_tar' in graph_type): append_str.append(sum_vid_tar)
-            if('screen_tar' in graph_type): append_str.append(sum_sc_tar)
-            if('adopt_tar' in graph_type): append_str.append(sum_adopt_tar)
+            if('prod_tar' in graph_type): append_str.append(float(sum_vid_tar))
+            if('screen_tar' in graph_type): append_str.append(float(sum_sc_tar))
+            if('adopt_tar' in graph_type): append_str.append(float(sum_adopt_tar))
 
         str_list.append(append_str)
 
