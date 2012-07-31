@@ -1,9 +1,5 @@
 package com.digitalgreen.dashboardgwt.client.data.validation;
 
-import java.util.ArrayList;
-
-import com.google.gwt.user.client.Window;
-
 public class BaseValidator {
 	protected boolean nullable = true;
 	protected boolean blank = true;
@@ -11,7 +7,7 @@ public class BaseValidator {
 	protected String childLabel = null;
 	protected String errorString = "Invalid field entries : ";
 	//Validation Error Messages format
-	protected final String reqiuredFieldErrorMessage = "Is a required field";
+	protected final String requiredFieldErrorMessage = "Is a required field";
 	protected final String maximumCharactersErrorMessage = "Maximum number of characters allowed are ";
 	protected final String specialCharactersErrorMessage = "Should not contain any special characters ";
 	protected final String dateFormatErrorMessage = "Should be formatted as 'YYYY-MM-DD'.";

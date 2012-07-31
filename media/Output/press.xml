@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Digital Green meets Hillary Clinton</TITLE>
+		<HEADLINE>Clinton calls for larger collaboration between Indian, U.S entrepreneurs.</HEADLINE>
+		<REFERENCE>http://www.newstrackindia.com/newsdetails/2012/05/08/128-Clinton-calls-for-larger-collaboration-between-Indian-U-S-entrepreneurs.html</REFERENCE>
+		<PRESSDATE>Tue, 8 May 2012</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"For decades, scientists, engineers and social innovators from India and United States have worked side-by-side, the most famous example perhaps are the agricultural improvements that led to the Green Revolution. Today I met entrepreneurs from an organisation called 'Digital Green', who are carrying on that work."</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>	
+	
+	<TEAM>
+		<TITLE>Norman Borlaug Award</TITLE>
+		<HEADLINE>IFA Recognizes Two Laureates for Norman Borlaug Award</HEADLINE>
+		<REFERENCE>http://www.farmchemicalsinternational.com/news/aroundtheindustry/?storyid=3496</REFERENCE>
+		<PRESSDATE>Tue, 24 April 2012</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"The International Fertilizer Association (IFA) will recognize two laureates for the 2012 IFA Norman Borlaug Award. Dr. Greta Gabinete of the Philippines, the second woman in the history of the award and Mr. Rikin Gandhi of India, have completed work in providing extension services to farmers. "</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>	
+	
+	<TEAM>
+		<TITLE>BillGates</TITLE>
+		<HEADLINE>International Fund for Agricultural Development Governing Council</HEADLINE>
+		<REFERENCE>http://www.gatesfoundation.org/speeches-commentary/Pages/bill-gates-2012-ifad.aspx</REFERENCE>
+		<PRESSDATE>Thu, 23 February 2012</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"Technology as simple as a digital video camera can remake agricultural extension. In India, a group of women farmers started videotaping themselves providing training in farming techniques. They called the project Digital Green, and they have a plan to reach 1 million farmers across 10,000 villages in the next three years. "</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>
+
+	<TEAM>
 		<TITLE>TechSangam</TITLE>
 		<HEADLINE>An agricultural extension innovation going viral: Digital Green</HEADLINE>
 		<REFERENCE>http://www.techsangam.com/2011/09/28/an-agricultural-extension-innovation-going-viral-digital-green/</REFERENCE>

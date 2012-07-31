@@ -32,7 +32,7 @@ public class IntegerValidator extends BaseValidator {
 	@Override
 	public boolean validate() {
 		if (!super.validate()) {
-			errorString += reqiuredFieldErrorMessage;
+			errorString += requiredFieldErrorMessage;
 			return false;
 		} else if (this.getValue() == null) {
 			return true;

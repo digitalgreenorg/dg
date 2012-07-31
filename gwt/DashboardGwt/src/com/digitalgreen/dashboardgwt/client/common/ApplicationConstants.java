@@ -35,7 +35,6 @@ import com.digitalgreen.dashboardgwt.client.data.VideoRelatedAgriculturalPractic
 import com.digitalgreen.dashboardgwt.client.data.VideosData;
 import com.digitalgreen.dashboardgwt.client.data.VillagesData;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 
 public class ApplicationConstants {
 	
@@ -50,7 +49,7 @@ public class ApplicationConstants {
 
 	public static HashMap mappingBetweenTableIDAndDataObject;
 	
-	public final static int PAGESIZE = 10000;
+	public final static int PAGESIZE = 3000;
 	
 	//Below Constants and their getter methods are for pagination
 	public final static int pageSize = 100;

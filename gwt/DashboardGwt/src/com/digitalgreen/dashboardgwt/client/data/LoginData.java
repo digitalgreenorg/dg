@@ -6,10 +6,7 @@ import com.digitalgreen.dashboardgwt.client.common.OnlineOfflineCallbacks;
 import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FormPanel;
 
 public class LoginData extends BaseData {
 	
@@ -37,16 +34,17 @@ public class LoginData extends BaseData {
 	  " app_status CHAR(1)," +
 	  " dirty_bit CHAR(1)," +
 	  " last_sync_table_index INT," +
-	  " user_role CHAR(1));";
+	  " user_role CHAR(1), " +
+	  " dashboard_error_count INT);";
 
 	protected static String dropTable = "DROP TABLE IF EXISTS `user`;";
-	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?, ?);";
+	protected static String insertRow = "INSERT INTO user VALUES (?, ? , ?, ? , ?, ?, ?, ?);";
 	protected static String authenticateUser = "SELECT username, user_role FROM user WHERE username=? AND password = ?";
 	protected static String selectUser = "SELECT username FROM user WHERE username=?";
 	protected static String updateUser = "UPDATE `user` SET last_inserted_id=? WHERE username = ? AND password = ?";
 	protected static String getSyncStatus = "SELECT dirty_bit, last_sync_table_index FROM `user` WHERE username = ?";
 	protected static String updateSyncStatus = "UPDATE `user` SET dirty_bit=?, last_sync_table_index=? where username = ?;";
-	protected static String postURL = "/dashboard/login/"; 
+	protected static String postURL = "/dashboard/login/";
 	
 	public LoginData() {
 		super();
@@ -87,12 +85,12 @@ public class LoginData extends BaseData {
 		this.update(updateSyncStatus, dirty_bit, last_sync_table_index, username);
 	}
 	
-	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index, String user_role) {
-		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index, user_role);
+	public void insert(String primaryKey, String username, String password, String app_status, String dirty_bit, String last_sync_table_index, String user_role, String dashboard_errors) {
+		this.insert(insertRow, primaryKey, username, password, app_status, dirty_bit, last_sync_table_index, user_role, dashboard_errors);
 	}
 	
 	public Object authenticate(String username, String password) {
-		if(this.isOnline()){
+		if(BaseData.isOnline()){
 			String postData = "username=" + username + "&password=" + password;
 			this.post(RequestContext.SERVER_HOST + LoginData.postURL, postData);
 		} else {

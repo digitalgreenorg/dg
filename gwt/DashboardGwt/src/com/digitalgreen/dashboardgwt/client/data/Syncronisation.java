@@ -9,6 +9,8 @@ import com.digitalgreen.dashboardgwt.client.common.RequestContext;
 import com.digitalgreen.dashboardgwt.client.servlets.BaseServlet;
 import com.digitalgreen.dashboardgwt.client.servlets.Index;
 import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.digitalgreen.dashboardgwt.client.common.events.EventBus;
 import com.digitalgreen.dashboardgwt.client.common.events.ProgressEvent;
@@ -82,7 +84,10 @@ public class Syncronisation {
 			public void onlineSuccessCallback(String results) {
 				if(!results.equals("0")) {
 					LoginData user = new LoginData();
-					user.insert(results, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), "1", "1", "0", ApplicationConstants.getUserRoleCookie());
+					JSONObject resultObj = JSONParser.parse(results).isObject();
+					String err_count = resultObj.get("dashboard_error_count").toString();
+					String last_id = resultObj.get("last_id").toString();
+					user.insert(last_id, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), ApplicationConstants.getCurrentOnlineStatus()? "1":"0", "1", "0", ApplicationConstants.getUserRoleCookie(), err_count);
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
@@ -136,7 +141,7 @@ public class Syncronisation {
 						EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / ApplicationConstants.tableIDs.length) * 100)));
 						offset = 0;
 						if(currentIndex == ApplicationConstants.tableIDs.length){
-							updateSyncStatusInUserTable("0", "0");
+							updateSyncStatusInUserTable("0", "" + ApplicationConstants.tableIDs.length);
 							Schema.createIndexes();
 							RequestContext requestContext = new RequestContext();
 							requestContext.setMessage("Your data has been downloaded.  Local database is in sync with the main server.");

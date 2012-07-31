@@ -167,7 +167,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_inn_ds['from'].append("video_myisam VIDM");
         filter_partner_geog_date(sql_inn_ds,'VIDM','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("practice_id");
-
+        
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');
     elif(type=='person'):
