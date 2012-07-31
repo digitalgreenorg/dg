@@ -101,9 +101,9 @@ def adoption_geog_pie_data(request):
         if(geog is None or geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
-            return_val.append([geog_name[item['id']][0],item['tot_ado'],url+'&'.join(temp_get_req_url)])
+            return_val.append([geog_name[item['id']][0], float(item['tot_ado']) ,url+'&'.join(temp_get_req_url)])
         else:
-            return_val.append([geog_name[item['id']][0],item['tot_ado'],''])
+            return_val.append([geog_name[item['id']][0], float(item['tot_ado']), ''])
 
     return HttpResponse(json.dumps(return_val))
 

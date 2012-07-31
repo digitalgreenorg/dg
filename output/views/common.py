@@ -392,7 +392,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
             loop_from.addMonth(1)
             continue
         if(loop_from.y in dic and loop_from.m in dic[loop_from.y]):
-            data[loop_from.m - 1].append(dic[loop_from.y][loop_from.m])
+            data[loop_from.m - 1].append(float(dic[loop_from.y][loop_from.m]))
         else:
             data[loop_from.m - 1].append(0)
 

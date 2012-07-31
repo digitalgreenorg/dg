@@ -49,7 +49,10 @@ def screening_tot_lines(request):
     rows = run_query_raw(screening_analytics_sql.screening_raw_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append([str(row[0])] + map(float, list(row)[1:]))
+        if row[-1] == 0:
+            return_val.append([str(row[0])] + [0.0, 0.0, 0.0, 0.0]) #when total screening = 0. Division by zero will raise exception
+        else:
+            return_val.append([str(row[0])] + map(lambda x: round(x/row[-1], 2), list(row)[1:-1])) #dividing by tot_screening to average out
 
     return_val.insert(0,["Date","Total Attendance","Total Expressed Interest","Total Expressed Adoption","Total Expressed Question"])
     if(return_val):
@@ -61,10 +64,21 @@ def screening_percent_lines(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partners = get_dates_partners(request);
     
-    rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
+    rows = run_query(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append([str(row[0])]+[float(x) for x in list(row)[1:]])
+        if row['tot_exp_att'] == 0:
+            rel_att = rel_exp_ado = 0
+        else:
+            rel_att = (row['tot_per'] * 100)/row['tot_exp_att']
+            rel_exp_ado = (row['tot_ado'] * 100)/row['tot_exp_att']
+        if row['tot_per'] == 0:
+            rel_exp_int = rel_exp_ques = 0
+        else:
+            rel_exp_int = (row['tot_int'] * 100)/row['tot_per']
+            rel_exp_ques = (row['tot_que'] * 100)/row['tot_per']
+        return_val.append([str(row['date'])]+ map(lambda x: round(x, 2) ,[rel_att, rel_exp_int, rel_exp_ado, rel_exp_ques]))
+
     return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
     if(return_val):
         return HttpResponse(json.dumps(return_val))
@@ -150,9 +164,9 @@ def screening_geog_pie_data(request):
         if(geog is None or geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
-            return_val.append([geog_name[item['id']][0],item['tot_scr'],url+'&'.join(temp_get_req_url)])
+            return_val.append([geog_name[item['id']][0], float(item['tot_scr']), url+'&'.join(temp_get_req_url)])
         else:
-            return_val.append([geog_name[item['id']][0],item['tot_scr'],''])       
+            return_val.append([geog_name[item['id']][0], float(item['tot_scr']), ''])       
     return HttpResponse(json.dumps(return_val))
 
 #Returns total distinct attendees, average attendance per screening, average screening per day
