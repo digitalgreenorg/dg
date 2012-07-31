@@ -17,17 +17,25 @@ def screening_module(request):
         raise Http404()
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
     
+    adjusted_to_date = to_date if to_date else datetime.date.today()
+    tot_active_vid_data = run_query(screening_analytics_sql.average_video_by_active_data(geog, id, from_date, adjusted_to_date, partners))[0]
+    if tot_active_vid_data['tot_active_per']:
+        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_active_per']
+    else:
+        avg_vid_by_active = 0
+    
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
     if(get_req_url): get_req_url = '&'+get_req_url
 
-    return render_to_response('screening_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_scr=tot_val['tot_scr'],\
-                                                          tot_att=tot_val['dist_att'], \
-                                                          avg_scr=tot_val['avg_sc_per_day'], \
-                                                          avg_att=tot_val['avg_att_per_sc'], \
+    return render_to_response('screening_module.html',dict(search_box_params = search_box_params,
+                                                          tot_scr=tot_val['tot_scr'],
+                                                          tot_att=tot_val['dist_att'],
+                                                          avg_scr=tot_val['avg_sc_per_day'],
+                                                          avg_att=tot_val['avg_att_per_sc'],
+                                                          avg_vid_by_active = avg_vid_by_active,
                                                           get_req_url = get_req_url
                                                           ))
 

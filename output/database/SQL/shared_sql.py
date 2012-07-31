@@ -287,7 +287,9 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
 
 def adoption_rate_totals(geog, id, to_date,partners):
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(['SUM(total_adopted_attendees) AS tot_adopt_per ', 'SUM(total_active_attendees) AS tot_per', 'SUM(total_adoption_by_active) AS tot_active_adop'])
+    sql_ds['select'].extend(['SUM(total_adopted_attendees) AS tot_adopt_per ', 
+                             'SUM(total_active_attendees) AS tot_per', 
+                             'SUM(total_adoption_by_active) AS tot_active_adop'])
     sql_ds['from'].append("village_precalculation_copy VPC")
     sql_ds['where'].append("date = '%s'" % str(to_date))
     filter_partner_geog_date(sql_ds, "VPC", "DUMMY", geog, id, None, None, partners)

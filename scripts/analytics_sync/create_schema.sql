@@ -132,6 +132,7 @@ CREATE TABLE `village_precalculation_copy` (
   `total_adopted_attendees` int(10) unsigned NOT NULL DEFAULT '0',
   `total_active_attendees` int(10) unsigned NOT NULL DEFAULT '0',
   `total_adoption_by_active` int(10) unsigned NOT NULL DEFAULT '0',
+  `total_video_seen_by_active` int(10) unsigned NOT NULL DEFAULT '0',
   `village_id` bigint(20) unsigned DEFAULT NULL,
   `block_id` bigint(20) unsigned DEFAULT NULL,
   `district_id` bigint(20) unsigned DEFAULT NULL,
