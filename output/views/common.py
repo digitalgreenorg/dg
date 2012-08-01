@@ -273,14 +273,14 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
     rs = run_query_dict(sqlFunc(**args),'pie_key')
     str_list = [['Gender','value']]
     if not rs:
-        return HttpResponse(';')
-    else:
-        for key, value in pieNameDict.iteritems():
-            if(key in rs):
-                str_list.append([value,rs[key][0]])
-            else:
-                str_list.append([value,0])
-
+        return HttpResponse(json.dumps(str_list))
+    
+    for key, value in pieNameDict.iteritems():
+        if(key in rs):
+            str_list.append([value,rs[key][0]])
+        else:
+            str_list.append([value,0])
+            
     return HttpResponse(json.dumps(str_list))
 
 #generic function to render data for Scatter Charts
@@ -288,8 +288,9 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
 #Pre-requisite: SQL function should generate name, count & in that order.(Other variable names would throw error)
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
+    return_val = [['',-1,-1,-1,0]]
     if not rs:
-        return HttpResponse(' ');
+        return HttpResponse(json.dumps([[]]));
 
     count_dict = {}
     for item in rs:
@@ -300,7 +301,6 @@ def scatter_chart_data(sqlFunc, **args):
 
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
-    return_val = [['NAME','','','','NUMBER']]
 
     random.seed();
     for tot,pracs in count_dict.iteritems():
@@ -369,7 +369,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
                 if int(item['YEAR'])==y:
                     dic[y][int(item['MONTH'])] = item['count']
     else:
-        return HttpResponse(json.dumps([['dummy'],[None]]));
+        return HttpResponse(json.dumps([['Name','Value']]));
 
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'

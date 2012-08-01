@@ -10,6 +10,11 @@ function drawCharts() {
 	$.getJSON('/analytics/overview_line_graph/'+search_params,{type:['adopt', 'adopt_tar']}, function(json){total_line(json);});
 
 }
+
+function remove_loader(div_id){
+	document.getElementById(div_id).style.backgroundImage = "none";
+}
+
 var geog_pie_chart;
 var geog_pie_chart_data;
 var exp_geog_pie_chart;
@@ -35,7 +40,7 @@ var bubble_options={colors: ['00CC33','#7edc32','#26d52f','#909504','#f9c423','#
 function geog_pie(json) {
 	geog_pie_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, pie_options);
-	options['sliceVisibilityThreshold']=1.0/10000;
+	options['sliceVisibilityThreshold']=1.0/100000000;
 	geog_pie_chart = new google.visualization.ChartWrapper({
 		'chartType':'PieChart',
 		'containerId':'javascript_geogwise_pie',
@@ -74,7 +79,7 @@ function monthwise_column(json) {
 		'options':options,
 		'dataTable':monthwise_column_chart_data
 	});
-
+	remove_loader(monthwise_column_chart.getContainerId());
 	monthwise_column_chart.draw();
 	exp_monthwise_column_chart=new google.visualization.ChartWrapper({
 		'chartType':'ColumnChart',
@@ -85,19 +90,23 @@ function monthwise_column(json) {
 function practice_bubble(json) {
 
 	var practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
-	var xrange=practice_bubble_chart_data.getColumnRange(1);
-	var yrange=practice_bubble_chart_data.getColumnRange(2);
-	var options = jQuery.extend(true, {}, bubble_options);
-	options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10},textColor: '#ffffff'};
-	options['vAxis']= {title: 'Number of Adoptions',gridlines:{count:10}, maxValue: yrange.max };
-	options['sizeAxis']={maxSize: 20};
-
+	if(json.length>1)
+	{
+		var xrange=practice_bubble_chart_data.getColumnRange(1);
+		var yrange=practice_bubble_chart_data.getColumnRange(2);
+		var options = jQuery.extend(true, {}, bubble_options);
+		options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10},textColor: '#ffffff'};
+		options['vAxis']= {title: 'Number of Adoptions',gridlines:{count:10}, maxValue: yrange.max };
+		options['sizeAxis']={maxSize: 20};
+		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	}
 	var practice_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_type_bubble',
 		'options':options,
 		'dataTable':practice_bubble_chart_data
 	});
+	remove_loader(practice_bubble_chart.getContainerId());
 	practice_bubble_chart.draw();
 	exp_practice_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
@@ -139,13 +148,14 @@ function total_line(json) {
 		'options':options,
 		'dataTable':total_line_chart_data
 	});
-
+	remove_loader(total_line_chart.getContainerId());
 	total_line_chart.draw();
 	exp_total_line_chart=new google.visualization.ChartWrapper({
 		'chartType':'LineChart',
 		'options':options,
 		'dataTable':total_line_chart_data
 	});
+	$("span").remove();
 }
 function percent_line(json) {
 	var percent_line_chart_data = google.visualization.arrayToDataTable(json,false);
@@ -159,10 +169,12 @@ function percent_line(json) {
 		'options':options,
 		'dataTable':percent_line_chart_data
 	});
+	remove_loader(percent_line_chart.getContainerId());
 	percent_line_chart.draw();
 	exp_percent_line_chart=new google.visualization.ChartWrapper({
 		'chartType':'LineChart',
 		'options':options,
 		'dataTable':percent_line_chart_data
 	});
+	
 }

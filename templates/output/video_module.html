@@ -10,9 +10,6 @@
 
 {% block jsfile %}  
     {{block.super}}
-    <script type="text/javascript" src="/media/Output/ampie/swfobject.js"></script>
-	<script type="text/javascript" src="/media/Output/amcolumn/swfobject.js"></script>
-	<script type="text/javascript" src="/media/Output/amxy/swfobject.js"></script>
     <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>          
 {% endblock jsfile %}	
 
@@ -106,7 +103,7 @@
 									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_geog_pie_chart,"Geographic distribution of Videos")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>
 							</div>
-							<div class="graphdiv1desc" id="javascript_geogwise_pie">								
+							<div class="graphdiv1desc" id="javascript_geogwise_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">								
 							</div>												
 						</div>
 						
@@ -117,7 +114,7 @@
 									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_monthwise_column_chart,"Videos Produced per Month")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>															
 							</div>
-							<div class="graphdiv1desc" id="javascript_monthwise_column">								
+							<div class="graphdiv1desc" id="javascript_monthwise_column" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">								
 							</div>						
 						</div>					
 					</td>
@@ -133,7 +130,7 @@
 
 								</div>	
 							</div>
-							<div class="graphdiv1desc" id = "javascript_total_line">						
+							<div class="graphdiv1desc" id = "javascript_total_line" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">						
 							</div>						
 						</div>
 						<div id="graphdiv1">
@@ -144,7 +141,7 @@
 
 								</div>									
 							</div>
-							<div class="graphdiv1desc" id = "javascript_practice_bubble" >
+							<div class="graphdiv1desc" id = "javascript_practice_bubble" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
 							</div>						
 						</div>					
 					</td>
@@ -158,7 +155,7 @@
 									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_language_bubble_chart,"Videos per Language")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>								
 							</div>
-							<div class="graphdiv1desc" id = "javascript_language_bubble" >
+							<div class="graphdiv1desc" id = "javascript_language_bubble" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
 							</div>						
 						</div>
 						<div id="graphdiv1">
@@ -168,7 +165,7 @@
 									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_type_pie_chart,"Videos per Type")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>								
 							</div>
-							<div class="graphdiv1desc" id = "javascript_type_pie" >
+							<div class="graphdiv1desc" id = "javascript_type_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
 							</div>						
 						</div>					
 					</td>
@@ -182,9 +179,9 @@
 								<div id="graphdiv0titledesc3" >	Videos per Actor </div>
 							</div>	
 							<div id="graphdiv0desc">
-								<div class="subgraphdiv0desc1" id="javascript_gender_pie" > </div>
+								<div class="subgraphdiv0desc1" id="javascript_gender_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;"> </div>
 								<div class="subgraphdiv0desc2" > </div>
-								<div class="subgraphdiv0desc3" id="javascript_actor_pie"> </div>								
+								<div class="subgraphdiv0desc3" id="javascript_actor_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;"> </div>								
 							</div>																													
 						</div>					
 					</td>
@@ -204,7 +201,7 @@
     </div>
 </div> 
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="/media/Output/JS/jsapi.js"></script>
 <script type="text/javascript" src="/media/Output/JS/video_module.js"></script>
 
 {% endblock contentbody %}
