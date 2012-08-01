@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
@@ -375,10 +376,10 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
 		
-		Hyperlink link = new Hyperlink("<a href='dashboard/classifyvideo'>Classify Videos</a>", true, "dashboard/classifyvideo"); 
+		Anchor link = new Anchor("Classify video", true,"#dashboard/classifyvideo"); 
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-			Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
+				Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
 			}	
 		});
 		RootPanel.get("cv-1").add(link);
