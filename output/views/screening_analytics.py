@@ -200,7 +200,7 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
                 from_date = run_query_raw(shared_sql.caculate_start_date(geog, id))[0][0]
             if not from_date:
                 from_date = datetime.date.today()
-            tot_days = (datetime.date.today() - from_date).days
+            tot_days = (datetime.date.today() - from_date).days + 1
         return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days else 0
     
     return return_dict

@@ -71,7 +71,8 @@ class AnalyticsSync():
                                         JOIN VILLAGE v on v.id = vid.village_id
                                         JOIN BLOCK b on b.id = v.block_id
                                         JOIN DISTRICT d on d.id = b.district_id
-                                        JOIN STATE s on s.id = d.state_id""")
+                                        JOIN STATE s on s.id = d.state_id
+                                        WHERE vid.VIDEO_SUITABLE_FOR = 1""")
             print "Finished insert into Video_myisam"
                                         
             #person_meeting_attendance_myisam

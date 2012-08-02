@@ -12,16 +12,11 @@ from django.db.models import Min, F
 from dashboard.models import *
 
 #Village Start Dates
-vils = Village.objects.annotate(min_sc = Min("screening__date"), min_vid = Min("video__video_production_start_date"))
+vils = Village.objects.annotate(min_sc = Min("screening__date"))
 update_blocks = []
 for vil in vils:
-    min_date_list = filter(lambda x: x != None, [vil.min_sc, vil.min_vid])
-    if min_date_list:
-        min_date = min(min_date_list)
-    else:
-        min_date = None
-    if type(vil.start_date) != type(min_date) or vil.start_date != min_date:
-        vil.start_date = min_date
+    if type(vil.start_date) != type(vil.min_sc) or vil.start_date != vil.min_sc:
+        vil.start_date = vil.min_sc
         vil.save()
         update_blocks.append(vil.block.id)
         
