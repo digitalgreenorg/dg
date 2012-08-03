@@ -20,7 +20,7 @@ def adoption_module(request):
     totals = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_att', 'tot_ado', 'tot_scr']))[0]
     #total adoptions, total distinct practice adopted, distinct farmer adopting
     main_stats = run_query(adoption_analytics_sql.adoption_tot_ado(geog, id, from_date, to_date, partners))[0]
-    main_stats['tot_ado'] = totals['tot_ado']
+    main_stats['tot_ado'] = totals['tot_ado'] if totals['tot_ado'] is not None else 0
     
     #Adoption rate
     date_var = to_date if to_date else str(datetime.date.today())
@@ -33,7 +33,7 @@ def adoption_module(request):
         main_stats.update(avg_ado_per_farmer = 0)
         
     #Probability of Adoption
-    if(totals['tot_att'] != 0):
+    if(totals['tot_att'] and main_stats['tot_ado']):
         main_stats.update(adopt_prob = float(main_stats['tot_ado'])/float(totals['tot_att']) * 100)
     else:
         main_stats.update(adopt_prob = 0)
@@ -47,13 +47,13 @@ def adoption_module(request):
         
     #Avg adoption per Video
     tot_vids_seen = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    if tot_vids_seen:
+    if tot_vids_seen and main_stats['tot_ado']:
         main_stats.update(avg_ado_per_vid = float(main_stats['tot_ado']) / tot_vids_seen)
     else:
         main_stats.update(avg_ado_per_vid = 0)
         
     #Avg adoption per Screening
-    if(totals['tot_scr']):
+    if(totals['tot_scr'] and main_stats['tot_ado']):
         main_stats.update(avg_ado_per_scr = float(main_stats['tot_ado']) / float(totals['tot_scr']))
     else:
         main_stats.update(avg_ado_per_scr = 0)

@@ -183,6 +183,8 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
         sql_values_to_fetch.add('tot_scr')
     
     tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
+    if tot_val['tot_scr'] is None:
+        tot_val['tot_scr'] = 0 
     
     if(values_to_fetch==None or 'dist_att' in values_to_fetch):
         query_result = run_query_raw(screening_analytics_sql.distinct_attendees(geog, id, from_date, to_date, partners))[0];
@@ -190,7 +192,7 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
     if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
         return_dict['tot_scr'] = tot_val['tot_scr']
     if(values_to_fetch==None or 'avg_att_per_sc' in values_to_fetch):
-            return_dict['avg_att_per_sc'] = float(tot_val['tot_att'])/float(tot_val['tot_scr']) if tot_val['tot_scr'] != 0 else 0
+            return_dict['avg_att_per_sc'] = float(tot_val['tot_att'])/float(tot_val['tot_scr']) if tot_val['tot_scr'] else 0
     if(values_to_fetch==None or 'avg_sc_per_day' in values_to_fetch):
         if from_date and to_date:
             tot_days = (datetime.date(*[int(i) for i in to_date.split('-')]) - datetime.date(*[int(i) for i in from_date.split('-')])).days + 1;
@@ -201,6 +203,6 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
             if not from_date:
                 from_date = datetime.date.today()
             tot_days = (datetime.date.today() - from_date).days + 1
-        return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days else 0
+        return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days and tot_val['tot_scr'] else 0
     
     return return_dict
