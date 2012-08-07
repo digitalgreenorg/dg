@@ -2,50 +2,6 @@
 <!-- Edited by XMLSpy® -->
 <CATALOG>
 	<TEAM>
-		<NAME>G.N.S Reddy</NAME>
-		<POSITION>Vice President</POSITION>    
-    	<COUNTRY>India</COUNTRY>
-		<COMPANY>BAIF Research Development Foundation</COMPANY>
-		<PAGELINK>http://timesfoundation.indiatimes.com/articleshow/1022481.cms</PAGELINK>
-		<YEAR>1984</YEAR>
-	</TEAM>	
-	<TEAM>
-		<NAME>Aishwarya Ratan</NAME>
-		<POSITION>Associate Researcher</POSITION>    
-    	<COUNTRY>India</COUNTRY>
-		<COMPANY>Microsoft Research India</COMPANY>
-		<PAGELINK>http://research.microsoft.com/en-us/people/aratan/</PAGELINK>
-		<YEAR>1985</YEAR>
-	</TEAM>	
-	<TEAM>
-		<NAME>Indrani Medhi</NAME>
-		<POSITION>Associate Researcher</POSITION>    
-    	<COUNTRY>India</COUNTRY>
-		<COMPANY>Microsoft Research India</COMPANY>
-		<PAGELINK>http://research.microsoft.com/en-us/people/indranim/default.aspx</PAGELINK>
-	</TEAM>
-	<TEAM>
-		<NAME>Tejesh Shah</NAME>
-		<POSITION>Director</POSITION>    
-    	<COUNTRY> India </COUNTRY>
-		<COMPANY>Topos Developers</COMPANY>
-		<PAGELINK>http://www.facebook.com/digitalgreenorg#!/profile.php?id=4803921&amp;ref=ts</PAGELINK>
-	</TEAM>
-	<TEAM>
-		<NAME>Vanaja Ramprasad</NAME>
-		<POSITION>Founder and Director</POSITION>    
-    	<COUNTRY>India</COUNTRY>
-		<COMPANY>GREEN Foundation</COMPANY>
-		<PAGELINK>http://www.greenconserve.com/team.html/</PAGELINK>
-	</TEAM>
-	<TEAM>
-		<NAME>Kentaro Toyama</NAME>
-		<POSITION>Visiting Senior Researcher</POSITION>    
-    	<COUNTRY>USA</COUNTRY>
-		<COMPANY>University of California, Berkeley School of Information</COMPANY>
-		<PAGELINK>http://www.kentarotoyama.org/</PAGELINK>
-	</TEAM>
-	<TEAM>
 		<NAME>Rajesh Veeraraghavan</NAME>
 		<POSITION>Doctoral Candidate</POSITION>    
     	<COUNTRY>USA</COUNTRY>
@@ -66,4 +22,48 @@
         <COMPANY>U.S. Congress</COMPANY>
         <PAGELINK>http://digitalgreen.org/melissaho/</PAGELINK>
     </TEAM>
+    <TEAM>
+		<NAME>Kentaro Toyama</NAME>
+		<POSITION>Visiting Senior Researcher</POSITION>    
+    	<COUNTRY>USA</COUNTRY>
+		<COMPANY>University of California, Berkeley School of Information</COMPANY>
+		<PAGELINK>http://www.kentarotoyama.org/</PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>G.N.S Reddy</NAME>
+		<POSITION>Vice President</POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>BAIF Research Development Foundation</COMPANY>
+		<PAGELINK>http://timesfoundation.indiatimes.com/articleshow/1022481.cms</PAGELINK>
+		<YEAR>1984</YEAR>
+	</TEAM>	
+	<TEAM>
+		<NAME>Aishwarya Ratan</NAME>
+		<POSITION>Director, the Global Financial Inclusion (GFI) Initiative</POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>Yale University and Innovations for Poverty Action</COMPANY>
+		<PAGELINK>http://digitalgreen.org/aishwaryaratan/</PAGELINK>
+		<YEAR>1985</YEAR>
+	</TEAM>	
+	<TEAM>
+		<NAME>Indrani Medhi</NAME>
+		<POSITION>Associate Researcher</POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>Microsoft Research India</COMPANY>
+		<PAGELINK>http://research.microsoft.com/en-us/people/indranim/default.aspx</PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>Vanaja Ramprasad</NAME>
+		<POSITION>Founder and Director</POSITION>    
+    	<COUNTRY>India</COUNTRY>
+		<COMPANY>GREEN Foundation</COMPANY>
+		<PAGELINK>http://www.greenconserve.com/team.html/</PAGELINK>
+	</TEAM>
+	<TEAM>
+		<NAME>Tejesh Shah</NAME>
+		<POSITION>Director</POSITION>    
+    	<COUNTRY> India </COUNTRY>
+		<COMPANY>Topos Developers</COMPANY>
+		<PAGELINK>http://www.facebook.com/digitalgreenorg#!/profile.php?id=4803921&amp;ref=ts</PAGELINK>
+	</TEAM>
 </CATALOG>

@@ -1,0 +1,71 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} DigitalGreen - Board members - Aishwarya Lakshmi Ratan{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />  
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+
+{% block pagetitle %} {{ block.super }}Aishwarya Lakshmi Ratan {% endblock pagetitle %}
+
+{% block breadcrums %}  
+
+	{{ block.super }}
+	 {% block breadcrumsmore %}  
+	 	<a href='/team'> Team </a> / 
+	 	<a href='/teamboard'>Board members</a> /
+	 	<span style='font-size:0.9em; font-weight:bold;'> Aishwarya Lakshmi Ratan </span> 
+	 {% endblock breadcrumsmore %} 
+	 
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+		
+	<div class='pagetitle'>
+		Aishwarya Lakshmi Ratan
+	</div>
+	
+	<div class='teamcontent'>
+		Aishwarya is the Director of the Global Financial Inclusion (GFI)
+Inititative at Yale University. Aishwarya joined Yale and the team at
+Innovations for Poverty Action in New Haven in June 2011. In her years
+at the Microsoft Research Lab in Bangalore Aishwarya gained extensive
+experience leading projects on the role of technology in enabling
+social and economic development and poverty alleviation. She has an
+undergraduate degree in Economics from Wellesley College and a
+Master's degree in Public Administration and International Development
+(MPA/ID) from the Kennedy School of Government at Harvard University.
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+	</div>
+{% endblock mainbodycontentleft %}	
+
+
+{% block mainbodycontentright %}
+		
+	<div id='explorediv1' style='margin-top:3px'>		
+		<div class='exploredescdiv'>			
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/teamboard"><img src="/media/Output/Images/searchimg2.png" alt="">EXPLORE<br/>Learn about other Board Members</a>						
+			</div> 
+			<br/>
+		</div>			
+	</div>
+	
+	
+{% endblock mainbodycontentright %}		
+	

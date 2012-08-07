@@ -551,6 +551,8 @@ class Animator(models.Model):
     partner = BigForeignKey(Partners)
     village = BigForeignKey(Village, db_column = 'home_village_id')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
+    total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
+    
     class Meta:
         db_table = u'ANIMATOR'
         unique_together = ("name", "gender", "partner","village")
@@ -695,6 +697,59 @@ class Video(models.Model):
 pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
+
+class PracticeSector(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_sector'
+
+class PracticeSubSector(models.Model):    
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_subsector'
+
+
+class PracticeMain(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_main'
+
+
+class PracticeSub(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_sub'
+
+
+class PracticeSubject(models.Model):
+    id = BigAutoField(primary_key = True)
+    name = models.CharField(max_length=500)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        db_table = u'practice_subject'
 
 class Practices(models.Model):
     id = BigAutoField(primary_key = True)
