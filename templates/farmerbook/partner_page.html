@@ -1,35 +1,46 @@
 <html>
 <head></head>
 <body>
-
-	<div class="modal-body"
-		style="padding: 3px; border: 5px solid #666666;">
+{% load humanize %}
+<div class="modal-body" style="padding: 3px; border: 5px solid #666666;">
 <div id="content" style="width: 710px;">
 <div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
 <div class="left_panel_top">
-<div id="district_label" >{{left_panel_stats.partner_details.0.2 }}</div>
+<div id="district_label" >
+	{% for state in left_panel_stats.assigned_states %}
+		{{state|lower|capfirst}}{% if not forloop.last %}|  {% endif%}
+	{% endfor %}
+</div>
 	<div id="name_label">
-		<center>{{ left_panel_stats.partner_details.0.1 }}</center>
+		<center><a href={{left_panel_stats.site_link}}  target='_blank' > {{ left_panel_stats.partner_details.0.1 }}</a></center>
 	</div>
 	<div id="district_label" ><center>
 	{% for v in left_panel_stats.assigned_districts %}
-						{{v|lower|capfirst}}{% if not forloop.last %}|  {% endif%}
-						{% endfor %}</center>
-						</div>
+		{{v|lower|capfirst}}{% if not forloop.last %}|  {% endif%}
+	{% endfor %}</center>
+	</div>
 	
-	<center><img id="img_container" src={{left_panel_stats.photo_link}}></center>
+	<center><a href={{left_panel_stats.site_link}}  target='_blank' ><img id="img_container" src={{left_panel_stats.photo_link}}></a></center>
 	{% if  left_panel_stats.partner_details.0.4 %}
 	<div class="group_label" > <center> Started: {{ left_panel_stats.partner_details.0.4|date:"M d, Y" }}</center></div>
 	{% endif %}
-						<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
-						<div class="progress progress-striped">
-							  <div class="bar "  style="width: {{left_panel_stats.pbar_width|floatformat:1 }}% ;"><p> {{ left_panel_stats.rate|floatformat:1 }}</p></div>
-							</div>
-						
-
-	
+	<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
+		<div class="progress progress-striped">
+			<div class="bar "  style="width: {{left_panel_stats.pbar_width|floatformat:1 }}% ;"><p> {{ left_panel_stats.rate|floatformat:1 }}</p></div>
+		</div>
+		<table style="width:250px;">		
+			<tr>
+				<td align="left">{{ left_panel_stats.partner_details.0.4|date:"M Y" }}</td>
+				<td align="center">{{ left_panel_stats.Screenings|intcomma  }}</td>
+				<td align="center"> {{ left_panel_stats.total_adoptions|intcomma}}</td>
+			</tr>
+			<tr>
+				<td align="left"><b>Joined</b></td>
+				<td align="center"><b>Screenings</b></td>
+				<td align="center"><b>Adoptions</b></td>
+			</tr>
+		</table>	
 </div>
-{% load humanize %}
 <div class="left_panel_bottom" style="padding-top: 0px;">
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Villages</div>
@@ -38,12 +49,14 @@
 <div class='statsLabel'>Farmers</div>
 <div class='statsValue'>{{left_panel_stats.farmers|intcomma  }}</div>
 <div class='horizontal_line'></div>
+<!--
 <div class='statsLabel'>Screenings</div>
 <div class='statsValue'>{{ left_panel_stats.Screenings|intcomma  }}</div>
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Adoptions</div>
 <div class='statsValue'>{{ left_panel_stats.total_adoptions|intcomma  }}</div>
 <div class='horizontal_line'></div>		
+-->
 </div>
 </div>
 
@@ -51,6 +64,48 @@
 <div id="closeButton"
 	style="float: right; margin-top: -5px; margin-left: 5px;">
 	<a class="close" data-dismiss="modal">x</a>
+</div>
+<div id="tabs">
+	<div id='toptabs'>
+		<ul>
+			<li id='tabsli' class='giftsli'>
+			<span>Top Villages</span></a>
+		</li>
+	</ul>
+</div>
+</div>
+<div class='vil_tabcontent' id="top_tabcontent"
+	style="height: 190px;" style='width:100%; margin:0px;'>
+<div class="carousel slide span8" id="myCarousel"
+	style="width: 710px; margin-bottom: 0px;">
+	<div class="carousel-inner">
+		{% for village in top_vill %} 
+		{% if forloop.counter0|divisibleby:"5" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
+				{% endif%}
+				<li class="vidsWatchedItem">
+							<div class="thumbnail">
+								<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})" target='_blank'>
+								<img rel="custompopover" data-content="Screenings :  <b>{{village.2}}</b>"  src="http://s3.amazonaws.com/dg_farmerbook/village/{{village.0}}.jpg" alt="">
+								</a>
+							</div>
+							<div class='csp_name'>
+							<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})"><center>{{ village.1}}</center></a>
+							</div></center>
+							
+						</li>
+				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%}
+		 {% endfor %}
+	</div>
+	<a data-slide="prev" href="#myCarousel"
+		class="left carousel-control" style="margin-left: -40px;"><</a>
+	<a data-slide="next" href="#myCarousel" class="carousel-control"
+		style="margin-left: 650px !important">></a>
+	</div>
 </div>
 <div style="height: 1px;"></div>
 	<div class='related_farmer'>
@@ -66,35 +121,30 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-					<center><img src={{partner.photo_link}}>
+					<center><a href="javascript:void(0);" onclick="partnerClick({{ partner.id }})">
+					<img src={{partner.photo_link}}>
+					</a>
 						<div class='csp_name'>
-							<a href="javascript:void(0);"
-								onclick="partnerClick({{ partner.id }})">{{ partner.name }}</a>
-						</div></center>
-
-						<div  style="margin-top: 0px;font-weight:bold;font-color:green"><center>{{partner.screenings|intcomma  }} Screenings</center></div>
-						<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
-						<div class="progress progress-striped">
-							  <div class="bar "  style="width: {{partner.ratewidth|floatformat:1 }}% ;"><p> {{ partner.rate|floatformat:1 }}</p></div>
-							</div>
+							<a href="javascript:void(0);" onclick="partnerClick({{ partner.id }})">{{ partner.name }}</a>
+						</div>
+					</center>
+					<div id="progress_bar_label" style="margin-right:5px;"><center>Screenings per Month</center></div>
+					<div class="progress progress-striped">
+						 <div class="bar "  style="width: {{partner.ratewidth|floatformat:1 }}% ;"><p> {{ partner.rate|floatformat:1 }}</p></div>
+					</div>
 						
-		<table width="200">		
-			<tr>
-				<td align="left">{{ partner.start_date|date:"M Y" }}</td>
-				<td align="center"> {{ partner.screenings|intcomma}}</td>
-				<td align="right"> {{ partner.adoptions|intcomma}}</td>
-			</tr>
-			<tr>
-				<td align="left"><b> Started</b></td>
-				<td align="center"><b> Screenings</b></td>
-				<td align="right"><b>Adoptions</b></td>
-			</tr>
-		</table>		
-		
-						
-						
-						
-
+					<table style="width:200px;">		
+						<tr>
+							<td align="left">{{ partner.start_date|date:"M Y" }}</td>
+							<td align="center"> {{ partner.screenings|intcomma}}</td>
+							<td align="center"> {{ partner.adoptions|intcomma}}</td>
+						</tr>
+						<tr>
+							<td align="left"><b>Joined</b></td>
+							<td align="center"><b>Screenings</b></td>
+							<td align="center"><b>Adoptions</b></td>
+						</tr>
+					</table>		
 					</div>
 				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
 		</div>
@@ -112,7 +162,12 @@
 
 	</div>
 </div>
-		</div>
+<script type="text/javascript">
+			$(function(){
+			   $("[rel=custompopover]").custompopover();
+			});
+</script
+</div>
 </body>
 </html>
 
