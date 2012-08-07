@@ -106,15 +106,16 @@
 								</div>
 							{% endif %}
 							{% if vid.question %}
-							{% if vid.interested %}
-							    <div style="margin-top:-45px;"><span class='label label-important' title='{{vid.question}}'>
-									<i class='icon-question-sign icon-white'></i></span>
-								</div>
-							{% else %}
-								<div style="margin-top:-20px;"><span class='label label-important' title='{{vid.question}}'>
-									<i class='icon-question-sign icon-white'></i></span>
-								</div>
-							{% endif %}
+								{% if vid.interested %}
+									<div style="margin-top:-45px;"><span class='label label-important' title='{{vid.question}}'>
+										<i class='icon-question-sign icon-white'></i></span>
+									</div>
+									<div style="height:25px;"></div>
+								{% else %}
+									<div style="margin-top:-20px;"><span class='label label-important' title='{{vid.question}}'>
+										<i class='icon-question-sign icon-white'></i></span>
+									</div>
+								{% endif %}
 							{% endif %}
 							<div class="video_title" style="margin-top:0px;" >
 								<a title="{{vid.title}}" href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
