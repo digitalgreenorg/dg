@@ -1370,7 +1370,7 @@ def save_animatorassignedvillage_offline(request, id):
             return HttpResponse("0")
 
 def save_persongroup_online(request,id):
-    PersonFormSet = inlineformset_factory(PersonGroups, Person, extra=30)
+    PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations',), extra=30)
     if request.method == 'POST':
         if(id):
             persongroup = PersonGroups.objects.get(id = id)
