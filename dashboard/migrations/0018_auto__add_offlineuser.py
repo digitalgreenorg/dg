@@ -1,27 +1,30 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'OfflineUser'
         db.create_table('dashboard_offlineuser', (
-            ('user_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('offline_pk_id', self.gf('dashboard.fields.PositiveBigIntegerField')()),
         ))
         db.send_create_signal('dashboard', ['OfflineUser'])
-        db.execute('insert into dashboard_offlineuser(user_ptr_id, offline_pk_id) select user_id as user_ptr_id, id as offline_pk_id from user')
+        db.execute('insert into dashboard_offlineuser(user_id, offline_pk_id) select user_id, id as offline_pk_id from user')
         db.delete_table('user')
-    
+
+
     def backwards(self, orm):
         db.create_table('user', (
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, primary_key=True)),
             ('id', self.gf('dashboard.fields.PositiveBigIntegerField')()),
         ))
-        db.execute('insert into user(user_id, id) select user_ptr_id as user_id, offline_pk_id as id from dashboard_offlineuser')
+        db.execute('insert into user(user_id, id) select user_id, offline_pk_id as id from dashboard_offlineuser')
         # Deleting model 'OfflineUser'
         db.delete_table('dashboard_offlineuser')
     
@@ -75,6 +78,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'partner': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
+            'total_adoptions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
             'village': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'db_column': "'home_village_id'"})
         },
         'dashboard.animatorassignedvillage': {
@@ -203,9 +207,10 @@ class Migration(SchemaMigration):
             'village': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
         },
         'dashboard.offlineuser': {
-            'Meta': {'object_name': 'OfflineUser', '_ormbases': ['auth.User']},
+            'Meta': {'object_name': 'OfflineUser'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'offline_pk_id': ('dashboard.fields.PositiveBigIntegerField', [], {}),
-            'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'dashboard.partners': {
             'Meta': {'object_name': 'Partners', 'db_table': "u'PARTNERS'"},
@@ -281,12 +286,37 @@ class Migration(SchemaMigration):
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']", 'db_column': "'person_id'"}),
             'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
+        'dashboard.practicemain': {
+            'Meta': {'object_name': 'PracticeMain', 'db_table': "u'practice_main'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
         'dashboard.practices': {
             'Meta': {'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'practice_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '200', 'db_column': "'PRACTICE_NAME'"}),
             'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'})
+        },
+        'dashboard.practicesector': {
+            'Meta': {'object_name': 'PracticeSector', 'db_table': "u'practice_sector'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesub': {
+            'Meta': {'object_name': 'PracticeSub', 'db_table': "u'practice_sub'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesubject': {
+            'Meta': {'object_name': 'PracticeSubject', 'db_table': "u'practice_subject'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesubsector': {
+            'Meta': {'object_name': 'PracticeSubSector', 'db_table': "u'practice_subsector'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'dashboard.region': {
             'Meta': {'object_name': 'Region', 'db_table': "u'REGION'"},

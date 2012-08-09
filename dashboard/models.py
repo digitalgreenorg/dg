@@ -106,23 +106,39 @@ EQUIPMENT_PURPOSE = (
 
 
 class OfflineUserManager(models.Manager):
-    def get_offline_pk(self, user, flag_create):
+    def get_offline_pk(self, username, flag_create):
+        """
+        username, flag_create
+        """
+        user = User.objects.get(username=username)
+        if user is None:
+            # Log "Anonymous User Access"
+            return None
         try:
-            offline_user = OfflineUser.objects.get(id=user.id)
+            offline_user = OfflineUser.objects.get(user=user)
         except ObjectDoesNotExist:
             if flag_create:
                 BILLION_CONSTANT = 1000000000
-                id = (user.id * BILLION_CONSTANT) + 1000
-                offline_user = OfflineUser(user)
-                offline_user.offline_pk_id = id
+                offline_id = (int(user.id) * BILLION_CONSTANT) + 1000
+                offline_user = OfflineUser()
+                offline_user.user = user
+                offline_user.offline_pk_id = offline_id
                 offline_user.save()
             else:
                 return None
         return offline_user.offline_pk_id
     
-    def set_offline_pk(self, user, offline_pk):
+    def set_offline_pk(self, offline_pk):
+        user_id = int(offline_pk)/1000000000
+        if user_id < 1:
+            # Log generated id does not correspond to the correct format
+            return False
+        user = User.objects.get(id=user_id)
+        if user is None:
+            # Log "Anonymous User Access"
+            return False
         try:
-            offline_user = OfflineUser.objects.get(id=user.id)
+            offline_user = OfflineUser.objects.get(user=user)
         except DoesNotExist:
             return False
         min_auto_increment = 10000000000000
@@ -133,7 +149,8 @@ class OfflineUserManager(models.Manager):
         offline_user.save()
         return True
 
-class OfflineUser(User):
+class OfflineUser(models.Model):
+    user = models.ForeignKey(User)
     offline_pk_id = PositiveBigIntegerField()
     objects = OfflineUserManager()
 
