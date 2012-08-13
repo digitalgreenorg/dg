@@ -161,9 +161,9 @@ function practice_bubble(json) {
 		'containerId':'javascript_practice_bubble',
 		'options':options,
 		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
-		                                                                            {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
-		                                                                            {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
-		                                                                            {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
+		                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+		                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+		                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 	});
 	fillSelect(data.getDistinctValues(1),"top_prac","Any");
 	fillSelect(data.getDistinctValues(2),"sub_prac","Any");
@@ -171,135 +171,134 @@ function practice_bubble(json) {
 	fillSelect(data.getDistinctValues(4),"type","Any");
 	fillSelect(data.getDistinctValues(5),"sub","Any");
 	init();
-
+	
 	remove_loader(practice_bubble_chart.getContainerId());
 	practice_bubble_chart.draw();
 	exp_practice_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'options':options,
 		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
-		                                                                            {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
-		                                                                            {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
-		                                                                            {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
-	});
+	                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+	                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+	                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 });
 }
+			
 
-
-function chartDraw(top_prac,sub_prac,util,type,sub,number) {
-	var plot_view=new google.visualization.DataView(data);
-	var params=new Array;
-	if (top_prac!="Any")
-	{
-		params.push({column: 1, value: top_prac });
+  function chartDraw(top_prac,sub_prac,util,type,sub,number) {
+	  var plot_view=new google.visualization.DataView(data);
+	  var params=new Array;
+	  if (top_prac!="Any")
+	  {
+		  params.push({column: 1, value: top_prac });
+	  }
+	  if (sub_prac!="Any")
+	  {
+		  params.push({column: 2, value: sub_prac });
+	  }
+	  if (util!="Any")
+	  {
+		  params.push({column: 3, value: util });
+	  }
+	  if (type!="Any")
+	  {
+		  params.push({column: 4, value: type });
+	  }
+	  if (sub!="Any")
+	  {
+		  params.push({column: 5, value: sub });
+	  }
+	  if(params.length>0)
+		  {
+		  plot_view.setRows(plot_view.getFilteredRows(params));  
+		  }
+	  
+	  var filtered_data=  google.visualization.data.group(plot_view,[parseInt(number)+1],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
+			                                                                                    {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+			                                                                                    {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+			                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
+	  var null_filtered_data=new google.visualization.DataView(filtered_data);
+	  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
+	  pieChart.setDataTable(null_filtered_data);
+			  pieChart.draw();
+  }
+  
+  function custom_rand(values) {
+	  return values[Math.floor((Math.random()*values.length)+1)];
 	}
-	if (sub_prac!="Any")
-	{
-		params.push({column: 2, value: sub_prac });
+  
+  function fillSelect(values,sel_id,sel) {
+	  var null_ind=values.indexOf(null);
+	  if(null_ind!=-1)
+		  {
+		  	values.splice(null_ind,1);
+		  }
+	  
+	  var html_values="";
+	  i=0;
+	  html_values=html_values+"<option selected='selected'>Any</option>"
+	  for (item in values){
+		  if(values[item]==sel)
+			  {
+			  	html_values=html_values+"<option selected='selected'>"+values[item]+"</option>"
+			  }
+		  else
+			  {
+			  	html_values=html_values+"<option>"+values[item]+"</option>"
+			  }
+	  i=i+1;
+	  }
+	  $("#"+sel_id).html(html_values);
+  }
+  
+  function ValChange(top_prac,sub_prac,util,type,sub,number) {
+	  //alert(top_prac+";"+sub_prac+";"+util+";"+type+sub)
+	  var data_view=new google.visualization.DataView(data);
+	  var params=new Array;
+	  if (top_prac!="Any")
+	  {
+		  params.push({column: 1, value: top_prac });
+	  }
+	  if (sub_prac!="Any")
+	  {
+		  params.push({column: 2, value: sub_prac });
+	  }
+	  if (util!="Any")
+	  {
+		  params.push({column: 3, value: util });
+	  }
+	  if (type!="Any")
+	  {
+		  params.push({column: 4, value: type });
+	  }
+	  if (sub!="Any")
+	  {
+		  params.push({column: 5, value: sub });
+	  }
+	  if(params.length>0)
+	  {
+	  	data_view.setRows(data_view.getFilteredRows(params));
+	  }
+	  fillSelect(data_view.getDistinctValues(1),"top_prac",top_prac);
+	  fillSelect(data_view.getDistinctValues(2),"sub_prac",sub_prac);
+	  fillSelect(data_view.getDistinctValues(3),"util",util);
+	  fillSelect(data_view.getDistinctValues(4),"type",type);
+	  fillSelect(data_view.getDistinctValues(5),"sub",sub);
+	  chartDraw(top_prac,sub_prac,util,type,sub,number);
+	  
+  }
+  function init()
+  {
+	  	fillSelect(data.getDistinctValues(1),"top_prac","Any");
+		fillSelect(data.getDistinctValues(2),"sub_prac","Any");
+		fillSelect(data.getDistinctValues(3),"util","Any");
+		fillSelect(data.getDistinctValues(4),"type","Any");
+		fillSelect(data.getDistinctValues(5),"sub","Any");
+		html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
+		$("#practice").html(html);
+		chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
+		
 	}
-	if (util!="Any")
-	{
-		params.push({column: 3, value: util });
-	}
-	if (type!="Any")
-	{
-		params.push({column: 4, value: type });
-	}
-	if (sub!="Any")
-	{
-		params.push({column: 5, value: sub });
-	}
-	if(params.length>0)
-	{
-		plot_view.setRows(plot_view.getFilteredRows(params));  
-	}
-
-	var filtered_data=  google.visualization.data.group(plot_view,[parseInt(number)+1],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
-	                                                                                    {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
-	                                                                                    {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
-	                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
-	var null_filtered_data=new google.visualization.DataView(filtered_data);
-	null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
-	pieChart.setDataTable(null_filtered_data);
-	pieChart.draw();
-}
-
-function custom_rand(values) {
-	return values[Math.floor((Math.random()*values.length)+1)];
-}
-
-function fillSelect(values,sel_id,sel) {
-	var null_ind=values.indexOf(null);
-	if(null_ind!=-1)
-	{
-		values.splice(null_ind,1);
-	}
-
-	var html_values="";
-	i=0;
-	html_values=html_values+"<option selected='selected'>Any</option>"
-	for (item in values){
-		if(values[item]==sel)
-		{
-			html_values=html_values+"<option selected='selected'>"+values[item]+"</option>"
-		}
-		else
-		{
-			html_values=html_values+"<option>"+values[item]+"</option>"
-		}
-		i=i+1;
-	}
-	$("#"+sel_id).html(html_values);
-}
-
-function ValChange(top_prac,sub_prac,util,type,sub,number) {
-	//alert(top_prac+";"+sub_prac+";"+util+";"+type+sub)
-	var data_view=new google.visualization.DataView(data);
-	var params=new Array;
-	if (top_prac!="Any")
-	{
-		params.push({column: 1, value: top_prac });
-	}
-	if (sub_prac!="Any")
-	{
-		params.push({column: 2, value: sub_prac });
-	}
-	if (util!="Any")
-	{
-		params.push({column: 3, value: util });
-	}
-	if (type!="Any")
-	{
-		params.push({column: 4, value: type });
-	}
-	if (sub!="Any")
-	{
-		params.push({column: 5, value: sub });
-	}
-	if(params.length>0)
-	{
-		data_view.setRows(data_view.getFilteredRows(params));
-	}
-	fillSelect(data_view.getDistinctValues(1),"top_prac",top_prac);
-	fillSelect(data_view.getDistinctValues(2),"sub_prac",sub_prac);
-	fillSelect(data_view.getDistinctValues(3),"util",util);
-	fillSelect(data_view.getDistinctValues(4),"type",type);
-	fillSelect(data_view.getDistinctValues(5),"sub",sub);
-	chartDraw(top_prac,sub_prac,util,type,sub,number);
-
-}
-function init()
-{
-	fillSelect(data.getDistinctValues(1),"top_prac","Any");
-	fillSelect(data.getDistinctValues(2),"sub_prac","Any");
-	fillSelect(data.getDistinctValues(3),"util","Any");
-	fillSelect(data.getDistinctValues(4),"type","Any");
-	fillSelect(data.getDistinctValues(5),"sub","Any");
-	html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
-	$("#practice").html(html);
-	chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
-
-}
 
 function total_line(json) {
 
