@@ -2,7 +2,7 @@ from collections import defaultdict
 import json
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import Template, Context
@@ -12,6 +12,7 @@ from video_practice_map.models import VideoPractice,SkippedVideo
 
 
 @login_required(login_url='/videotask/login/')
+@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url='/videotask/login/')
 def home(request):
     can_change_filter = can_reset_skipped = False # For showing message on no video for assign or review. 
                                                   # There can be skipped vidoes or videos in other filter options (language/state) 
@@ -182,9 +183,8 @@ def all_practice_options(request=None):
         return value_arr
     
 @login_required(login_url='/videotask/login/')
+@user_passes_test(lambda u: u.groups.filter(name='Practice Creators').count() > 0, login_url='/videotask/login/')
 def add_new(request):
-    if request.user.username.lower() != 'sreenu':
-        return HttpResponseRedirect('/videotask/home/')
     msg = None
     
     if request.POST:    

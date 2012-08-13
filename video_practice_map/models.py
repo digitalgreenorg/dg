@@ -12,7 +12,11 @@ class VideoPractice(models.Model):
     user = models.ForeignKey(User, null=True)
     review_user = models.ForeignKey(User, null=True, related_name='reviewed_practices')
     review_approved = models.NullBooleanField(null=True)
+    def __unicode__(self):
+        return self.video.title
     
 class SkippedVideo(models.Model):
     video = BigForeignKey(Video)
     user = models.ForeignKey(User)
+    def __unicode__(self):
+        return self.user.username + " "+self.video.title
