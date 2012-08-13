@@ -274,35 +274,21 @@
 				</div>
 			</div>
 			
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>			
+	<script type="text/javascript" src="/media/Output/JS/jsapi.js"></script>			
 	<script>
-	
-		google.load("visualization", "1", {packages:["corechart"]});
-	  	google.setOnLoadCallback(bar_chart);
-	  	/*
-        var monthbar = new SWFObject("/media/Output/amcolumn/amcolumn.swf", "amcolumn", "640", "250", "8", "#FFFFFF");
-        monthbar.addParam("wmode", "transparent");
-        monthbar.addVariable("path", "/media/Output/amcolumn/");
-        monthbar.addVariable("settings_file", encodeURIComponent("/media/Output/amcolumn/amcolumn_settings.xml"));
-    
-        var additional_chart_settings = '';
-        var additional_chart_settings= $.ajax({ type: "GET", url: "/analytics/video_screening_month_bar_setting?id={{vid.id}}", async: false }).responseText;
-        monthbar.addVariable("additional_chart_settings", encodeURIComponent('<settings>'+additional_chart_settings+'<labels><label lid="0"><y>100</y><text><![CDATA[<font face="Calibri">No. of Dissemintaions</font>]]></text></label></labels></settings>'));
-        monthbar.addVariable("data_file", escape('/analytics/video_screening_month_bar_data?id={{vid.id}}'));   
-        monthbar.addVariable("preloader_color", "#999999");
-        monthbar.write("bar_graph")
-    	*/
+    	google.load("visualization", "1", {packages:["corechart"]});
+    	google.setOnLoadCallback(bar_chart);
     	function bar_chart() {
-  	  	  $.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
-  		            var data = google.visualization.arrayToDataTable(json,false);
-  		
-  		            var options = {};
+    		$.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
+    			var data = google.visualization.arrayToDataTable(json,false);
 
-  		
-  		            var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
-  		            chart.draw(data, options);
-  		  });
-  	    }
+    			var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],
+    					bar : {groupWidth: '80%'}};
+
+    			var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
+    			chart.draw(data, column_options);
+    		});
+    	}
 
     </script>
     

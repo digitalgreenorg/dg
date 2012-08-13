@@ -375,24 +375,24 @@ def overview_line_graph(request):
     #For settings
     header=['date']
     if('prod' in graph_type):
-        header.append('prod')
+        header.append('Total Videos Produced')
     if('screen' in graph_type):
-        header.append('screen')
+        header.append('Total Disseminations')
     if('adopt' in graph_type):
-        header.append('adopt')
+        header.append('Total Adoptions')
     if('prac' in graph_type):
-        header.append('prac')
+        header.append('Total Practices')
     if('person' in graph_type):
-        header.append('person')
+        header.append('Total Farmers')
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
         if('village' in graph_type):
-            header.append('village')
+            header.append('Village')
         if('prod_tar' in graph_type):
-            header.append('prod_tar')
+            header.append('Video Production Target')
         if('screen_tar' in graph_type):
-            header.append('screen_tar')
+            header.append('Disseminations Target')
         if('adopt_tar' in graph_type):
-            header.append('adopt_tar')
+            header.append('Adoptions Target')
     str_list.insert(0,header)
     return HttpResponse(json.dumps(str_list))
 
@@ -405,14 +405,14 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
     rs = run_query_dict(sqlFunc(**args),'pie_key')
     str_list = [['Gender','value']]
     if not rs:
-        return HttpResponse(';')
-    else:
-        for key, value in pieNameDict.iteritems():
-            if(key in rs):
-                str_list.append([value,rs[key][0]])
-            else:
-                str_list.append([value,0])
-
+        return HttpResponse(json.dumps(str_list))
+    
+    for key, value in pieNameDict.iteritems():
+        if(key in rs):
+            str_list.append([value,rs[key][0]])
+        else:
+            str_list.append([value,0])
+            
     return HttpResponse(json.dumps(str_list))
 
 #generic function to render data for Scatter Charts
@@ -421,7 +421,7 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
     if not rs:
-        return HttpResponse(' ');
+        return HttpResponse(json.dumps([[]]));
 
     count_dict = {}
     for item in rs:
@@ -432,7 +432,6 @@ def scatter_chart_data(sqlFunc, **args):
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
     return_val = [['practice_name','Top Practice','Sub Practice','Utility','Type','Subject','','','','Number']]
-
     random.seed();
     for tot, pracs_arr in count_dict.iteritems():
         for pracs in pracs_arr:
@@ -509,7 +508,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     if rs:
         dic = make_dict(rs)
     else:
-        return HttpResponse(json.dumps([['dummy'],[None]]));
+        return HttpResponse(json.dumps([['Name','Value']]));
 
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
