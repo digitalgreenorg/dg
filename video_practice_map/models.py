@@ -24,6 +24,9 @@ class VideoPractice(models.Model):
     review_user = models.ForeignKey(User, null=True, related_name='reviewed_practices')
     review_approved = models.NullBooleanField(null=True)
     
+    class Meta:
+        unique_together = ("video", "review_user")
+
 class SkippedVideo(models.Model):
     video = BigForeignKey(Video)
     user = models.ForeignKey(User)
