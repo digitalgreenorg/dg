@@ -39,6 +39,31 @@ def breadcrumbs_options_sql(geog,id, is_child):
 
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
 #Returns '' if geography!= country or geography!=state
+
+def practice_options_sql(top, subp, util, type, sub):
+    sql_ds =  get_init_sql_ds()
+    sql_ds['select'].extend(["TP.ID","TP.name","SP.ID","SP.name","UTIL.ID","UTIL.name","TYPE.ID","TYPE.name","SUB.ID","SUB.name"])
+    sql_ds['from'].append("PRACTICES P")
+    sql_ds['lojoin'].append(["dashboard_toppractice TP", "TP.id = P.top_practice_id"])
+    sql_ds['lojoin'].append(["dashboard_subpractice SP", "SP.id = P.sub_practice_id"])
+    sql_ds['lojoin'].append(["dashboard_practicetype TYPE", "TYPE.id = P.type_id"])
+    sql_ds['lojoin'].append(["dashboard_practiceutility UTIL", "UTIL.id = P.utility_id"])
+    sql_ds['lojoin'].append(["dashboard_practicesubject SUB", "SUB.id = P.subject_id"])
+    if(top):
+        sql_ds['where'].append('top_practice_id = %s' % top)
+    if(subp):
+        sql_ds['where'].append('sub_practice_id = %s' % subp)
+    if(util):
+        sql_ds['where'].append('utility_id = %s' % util)
+    if(type):
+        sql_ds['where'].append('type_id = %s' % type)
+    if(sub):
+        sql_ds['where'].append('subject_id = %s' % sub)
+        
+    return join_sql_ds(sql_ds)
+        
+        
+
 def get_partners_sql(geog, id):
     if geog not in ["COUNTRY", "STATE"]:
         return ''

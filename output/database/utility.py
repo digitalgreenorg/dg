@@ -11,7 +11,6 @@ def construct_query(var, context_dict):
 def run_query_raw(query_string, *query_args):
     if(not query_string):
         return ()
-    return_list = []
     cursor = connection.cursor()
     cursor.execute(query_string, query_args)
     return cursor.fetchall()

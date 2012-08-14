@@ -715,7 +715,6 @@ class PracticeSubtopic(models.Model):
     class Meta:
         db_table = u'practice_subtopic'
 
-
 class PracticeSubject(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
@@ -735,8 +734,7 @@ class Practices(models.Model):
     practice_subsector = BigForeignKey(PracticeSubSector, null=True)
     practice_topic = BigForeignKey(PracticeTopic, null=True)
     practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
-    practice_subject = BigForeignKey(PracticeSubject, null=True)
-    
+    practice_subject = BigForeignKey(PracticeSubject, null=True)    
     class Meta:
         db_table = u'PRACTICES'
         verbose_name = "Practice"
