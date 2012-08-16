@@ -26,6 +26,11 @@ class VideoPractice(models.Model):
     
     class Meta:
         unique_together = ("video", "review_user")
+    def save(self, *args, **kwargs):
+        if VideoPractice.objects.filter(video=self.video,review_user=self.review_user).count()>0:
+            return
+        else:
+            super(VideoPractice, self).save(*args, **kwargs) 
 
 class SkippedVideo(models.Model):
     video = BigForeignKey(Video)
