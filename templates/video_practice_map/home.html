@@ -195,6 +195,7 @@
 				<form id='practice_select' action="/videotask/form_submit/" method="post">
 					<input type="hidden" name="action" value="{{task_type}}" />
 					<input type="hidden" name="vid_id" value="{{vid.id}}" />
+                    <input type="hidden" name="vid_pr_id" value="{{vid_pr_id}}" />
 					<div class='row'><div class='span12'>
 						<input class='btn btn-primary' type="submit" name='accept' value="Yes. Approved">
 						<a href="#" class="btn" onclick="showNewPracticeBox();">Doesn't seem right</a>

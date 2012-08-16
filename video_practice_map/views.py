@@ -59,11 +59,14 @@ def home(request):
         else:
             vid = assign_videos[0]
     review_vid_pr = None
+    vid_pr_id=None
     if vid and next_action == "review":
-        review_vid_pr = VideoPractice.objects.get(review_user=None, video=vid).practice 
+        vid_pr=VideoPractice.objects.get(review_user=None, video=vid)
+        review_vid_pr = vid_pr.practice 
+        vid_pr_id = vid_pr.id
                 
     return render_to_response("video_practice_map/home.html", dict(vid=vid, user=user, task_type=next_action, selected_lang=language,
-                                                                   selected_state=state, practice_tups = all_practice_options(), new_pr = review_vid_pr, 
+                                                                   selected_state=state, practice_tups = all_practice_options(), new_pr = review_vid_pr,vid_pr_id=vid_pr_id, 
                                                                    can_change_filter=can_change_filter, can_reset_skipped=can_reset_skipped))
                                                                    
     
@@ -97,6 +100,11 @@ def logout_view(request):
 @login_required(login_url='/videotask/login/')
 def form_submit(request):
     if request.POST:
+        if request.POST['action'] == 'review':
+            check_vp = VideoPractice.objects.get(id=int(request.POST['vid_pr_id']))
+            if check_vp.review_approved is not None:
+                return HttpResponseRedirect('/videotask/home/')
+        
         if 'yes' in request.POST:  #Submitted a new practice
             field_arr = ['top_practice', 'sub_practice', 'utility', 'type', 'subject']
             selected_vals = []
