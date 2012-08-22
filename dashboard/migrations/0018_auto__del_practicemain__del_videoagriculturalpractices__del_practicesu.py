@@ -42,7 +42,7 @@ class Migration(SchemaMigration):
         # Deleting field 'PersonMeetingAttendance.matched_adoption'
         db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'matched_adoption_id')
         # Adding field 'Video.related_practice'
-        db.add_column(u'VIDEO', 'related_practice', self.gf('dashboard.fields.BigForeignKey')(default=1, to=orm['dashboard.Practices']), keep_default=False)
+        db.add_column(u'VIDEO', 'related_practice', self.gf('dashboard.fields.BigForeignKey')(null = True, blank = True, to=orm['dashboard.Practices']), keep_default=False)
         # Adding unique constraint on 'Practices', fields ['practice_subtopic', 'practice_topic', 'practice_subject', 'practice_sector', 'practice_subsector']
         db.create_unique(u'PRACTICES', ['practice_subtopic_id', 'practice_topic_id', 'practice_subject_id', 'practice_sector_id', 'practice_subsector_id'])
     
