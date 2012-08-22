@@ -148,7 +148,7 @@ function practice_bubble(json) {
 	var options = jQuery.extend(true, {}, bubble_options);
 	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
 	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
-	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
 	options['title']='Number of Videos per practices';
 
@@ -290,7 +290,7 @@ function practice_bubble(json) {
 		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
-		html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
+		html="<option value=0 >Sector</option><option value=1 >Subsector</option><option value=2 >Topic</option><option value=3 >subtopic</option><option value=4 selected='selected'>Subject</option>";
 		$("#practice").html(html);
 		chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
 		
