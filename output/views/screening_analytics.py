@@ -137,7 +137,7 @@ def screening_geog_pie_data(request):
     geog_name = run_query_dict(shared_sql.child_geog_list(geog,id, from_date, to_date, partners,),'id')
     
     return_val = []
-    return_val.append(['title','value'])
+    return_val.append(['title','value','url'])
     for item in scr_geog:
         if(geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]

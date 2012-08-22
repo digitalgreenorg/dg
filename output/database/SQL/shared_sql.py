@@ -141,9 +141,8 @@ def overview(geog, id, from_date, to_date, partners, type):
         main_tab_abb = "P"
         date_field = "PAP.DATE_OF_ADOPTION"
     elif(type=='practice'):
-        sql_ds['select'].append('COUNT(DISTINCT VRAP.practices_id) as tot_pra')
-        sql_ds['from'].append('VIDEO_related_agricultural_practices VRAP')
-        sql_ds['lojoin'].append(['VIDEO VID','VID.id = VRAP.video_id'])
+        sql_ds['select'].append('COUNT(DISTINCT VID.related_practice_id) as tot_pra')
+        sql_ds['from'].append('VIDEO VID')
         sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
@@ -185,12 +184,11 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['select'].extend(["date", "COUNT(*)"])
 
         sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["VRAP.practices_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
+        sql_inn_ds['select'].extend(["VID.related_practice_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
         sql_inn_ds['from'].append("VIDEO VID");
-        sql_inn_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
         sql_inn_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         filter_partner_geog_date(sql_inn_ds,'VID','dummy',geog,id,None,None,partners)
-        sql_inn_ds['group by'].append("practices_id");
+        sql_inn_ds['group by'].append("related_practice_id");
 
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');

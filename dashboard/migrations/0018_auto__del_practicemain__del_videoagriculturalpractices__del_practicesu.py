@@ -35,8 +35,14 @@ class Migration(SchemaMigration):
         db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_adoption_practice_id')
         # Deleting field 'PersonMeetingAttendance.expressed_interest_practice'
         db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_interest_practice_id')
+        # Deleting field 'PersonMeetingAttendance.expressed_adoption'        
+        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'EXPRESSED_ADOPTION')
+        # Deleting field 'PersonMeetingAttendance.expressed_interest'
+        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'EXPRESSED_INTEREST')
+        # Deleting field 'PersonMeetingAttendance.matched_adoption'
+        db.delete_column(u'PERSON_MEETING_ATTENDANCE', 'matched_adoption_id')
         # Adding field 'Video.related_practice'
-        db.add_column(u'VIDEO', 'related_practice', self.gf('dashboard.fields.BigForeignKey')(default=1, to=orm['dashboard.Practices']), keep_default=False)
+        db.add_column(u'VIDEO', 'related_practice', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.Practices']), keep_default=False)
         # Adding unique constraint on 'Practices', fields ['practice_subtopic', 'practice_topic', 'practice_subject', 'practice_sector', 'practice_subsector']
         db.create_unique(u'PRACTICES', ['practice_subtopic_id', 'practice_topic_id', 'practice_subject_id', 'practice_sector_id', 'practice_subsector_id'])
     
@@ -83,6 +89,12 @@ class Migration(SchemaMigration):
         db.add_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_adoption_practice', self.gf('dashboard.fields.BigForeignKey')(related_name='expressed_adoption_practice', null=True, to=orm['dashboard.Practices'], blank=True), keep_default=False)
         # Adding field 'PersonMeetingAttendance.expressed_interest_practice'
         db.add_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_interest_practice', self.gf('dashboard.fields.BigForeignKey')(related_name='expressed_interest_practice', null=True, to=orm['dashboard.Practices'], blank=True), keep_default=False)
+        # Adding field 'PersonMeetingAttendance.expressed_adoption'
+        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_adoption', self.gf('django.db.models.fields.CharField')(default='', max_length=500, db_column='EXPRESSED_ADOPTION', blank=True), keep_default=False)
+        # Adding field 'PersonMeetingAttendance.expressed_interest'
+        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'expressed_interest', self.gf('django.db.models.fields.CharField')(default='', max_length=500, db_column='EXPRESSED_INTEREST', blank=True), keep_default=False)
+        # Adding field 'PersonMeetingAttendance.matched_adoption'
+        db.add_column(u'PERSON_MEETING_ATTENDANCE', 'matched_adoption', self.gf('dashboard.fields.BigForeignKey')(to=orm['dashboard.PersonAdoptPractice'], null=True, blank=True), keep_default=False)
         # Deleting field 'Video.related_practice'
         db.delete_column(u'VIDEO', 'related_practice_id')
     

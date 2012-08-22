@@ -5,27 +5,13 @@ def adoption_tot_ado(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].append("COUNT(DISTINCT PAP.id) AS tot_ado")
     sql_ds['select'].append("COUNT(DISTINCT person_id) as tot_farmers")
-    sql_ds['select'].append("COUNT(DISTINCT practice_id) as tot_prac")
+    sql_ds['select'].append("COUNT(DISTINCT video_id) as tot_prac")
     sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP")
     if(geog != "COUNTRY" or partners):
         sql_ds['lojoin'].append(["PERSON P", "P.id = PAP.person_id"]);
         filter_partner_geog_date(sql_ds,'P','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
     else:
         filter_partner_geog_date(sql_ds,'PAP','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
-        
-    return join_sql_ds(sql_ds)
-
-def adoption_exp_interest_to_adoption(geog, id, from_date, to_date, partners):
-    sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(matched_adoption_id) AS tot_exp_int_ado, COUNT(*) AS tot_exp_int")
-    sql_ds['from'].append('PERSON_MEETING_ATTENDANCE PMA')
-    sql_ds['where'].append("interested = 1")
-    if(from_date or to_date):
-        sql_ds['lojoin'].append(["SCREENING SC", "SC.id = PMA.screening_id"]);
-    if(geog != "COUNTRY" or partners):
-       sql_ds['lojoin'].append(["PERSON P", "P.id = PMA.person_id"]);
-
-    filter_partner_geog_date(sql_ds,'P','SC.DATE',geog,id,from_date,to_date,partners)
         
     return join_sql_ds(sql_ds)
 
@@ -82,7 +68,7 @@ def adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partne
         filter_partner_geog_date(inner_sql_ds,'PAP','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
         
     inner_sql_ds['group by'].append("PAP.person_id")
-    inner_sql_ds['group by'].append("PAP.practice_id")
+    inner_sql_ds['group by'].append("video_id")
     inner_sql_ds['having'].append("COUNT(*) > 1")
     
     sql_ds = get_init_sql_ds();

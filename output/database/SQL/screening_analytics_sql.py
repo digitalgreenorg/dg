@@ -65,8 +65,8 @@ def screening_practice_scatter(geog,id, from_date, to_date, partners):
 
 def screening_raw_attendance(geog,id,from_date,to_date,partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["DATE","COUNT(person_id) AS tot_per", "COUNT(expressed_interest_practice_id) AS tot_int", \
-                             "COUNT(expressed_adoption_practice_id) as tot_ado, COUNT(expressed_question_practice_id) as tot_que"])
+    sql_ds['select'].extend(["DATE","COUNT(person_id) AS tot_per", "SUM(interested) AS tot_int", \
+                             "COUNT(expressed_adoption_video) as tot_ado, SUM(if(expressed_question = '', 0, 1)) as tot_que"])
     sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
     sql_ds['join'].append(["SCREENING SC","SC.id = PMA.screening_id"])
     filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners);
@@ -87,8 +87,8 @@ def screening_percent_attendance(geog, id, from_date, to_date, partners):
     sql_ds_group = get_init_sql_ds(); #sql for person group_id and total strength
     sql_ds_main = get_init_sql_ds(); #sql joining above two sqls
 
-    sql_ds_att['select'].extend(['DATE', 'group_id', 'COUNT(person_id) as tot_per', 'COUNT(expressed_interest_practice_id) as tot_int', \
-                                 'COUNT(expressed_question_practice_id) AS tot_que', 'COUNT(expressed_adoption_practice_id) AS tot_ado']);
+    sql_ds_att['select'].extend(['DATE', 'group_id', 'COUNT(person_id) as tot_per', 'SUM(interested) as tot_int', \
+                                 'SUM(if(expressed_question = "", 0, 1)) AS tot_que', 'COUNT(expressed_adoption_video) AS tot_ado']);
 
     sql_ds_att['from'].append("PERSON_MEETING_ATTENDANCE PMA")
     sql_ds_att['join'].append(["PERSON P", "P.id = PMA.person_id"])

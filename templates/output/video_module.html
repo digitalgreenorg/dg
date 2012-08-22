@@ -143,28 +143,28 @@
 						<option value=4 selected='selected'>Subject</option>
 					</select>				
 				</div>
-				<div style="width:70px;float:left;">
-					<select class='select top_prac' name='top_prac_n' id='top_prac' onChange="ValChange( this.value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+				<div style="width:100px;float:left;">
+					<select class='select sec' name='sec_n' id='sec' onChange="ValChange( this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,getElementById('practice').value)">
 						<option selected='selected'>Any</option>
 					</select>								
 				</div>
 				<div style="width:75px;float:left;">
-					<select class='select sub_prac' name='sub_prac_n' id='sub_prac' onChange="ValChange(document.getElementById('top_prac').value,this.value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+					<select class='select subsec' name='subsec_n' id='subsec' onChange="ValChange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,getElementById('practice').value)">
 						<option selected='selected'>Any</option>
 					</select>				
 				</div>
 				<div style="width:75px;float:left;">
-					<select class='select utility' name='util_n' id='util' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,this.value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+					<select class='select topity' name='top_n' id='top' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value,getElementById('practice').value)">
 						<option selected='selected'>Any</option>
 					</select>				
 				</div>
 				<div style="width:75px;float:left;">
-					<select class='select type' name='type_n' id='type' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,this.value,getElementById('sub').value,getElementById('practice').value)">
+					<select class='select subtop' name='subtop_n' id='subtop' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value,getElementById('practice').value)">
 						<option selected='selected'>Any</option>
 					</select>				
 				</div>
 				<div style="width:75px;float:left;">
-					<select class='select subject' name='sub_n' id='sub' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,this.value,getElementById('practice').value)">
+					<select class='select subject' name='sub_n' id='sub' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value,getElementById('practice').value)">
 						<option selected='selected'>Any</option>
 					</select>				
 				</div>

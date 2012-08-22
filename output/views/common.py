@@ -426,12 +426,12 @@ def scatter_chart_data(sqlFunc, **args):
     count_dict = {}
     for item in rs:
         if item['count'] in count_dict:
-            count_dict[item['count']].append([item['name'],item['top'],item['sub'],item['utility'],item['prac_type'],item['subject']])
+            count_dict[item['count']].append([item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']])
         else:
-            count_dict[item['count']] = [[item['name'],item['top'],item['sub'],item['utility'],item['prac_type'],item['subject']]]
+            count_dict[item['count']] = [[item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']]]
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
-    return_val = [['practice_name','Top Practice','Sub Practice','Utility','Type','Subject','','','','Number']]
+    return_val = [['practice_name','Sector','Sub Sector','Topic','Sub Topic','Subject','','','','Number']]
     random.seed();
     for tot, pracs_arr in count_dict.iteritems():
         for pracs in pracs_arr:
@@ -441,8 +441,6 @@ def scatter_chart_data(sqlFunc, **args):
                 x = random.randrange(1,x_axis_len)
             flag[x] = 1
             return_val.append([pracs[0],pracs[1],pracs[2],pracs[3],pracs[4],pracs[5],x,tot,"",tot])
-        
-    print len(return_val)
 
     return HttpResponse(json.dumps(return_val))
 

@@ -3,7 +3,8 @@ google.setOnLoadCallback(drawCharts);
 
 var geog_pie_chart;
 var geog_pie_chart_data;
-
+var practice_bubble_chart;
+var practice_bubble_chart_data;
 var exp_geog_pie_chart;
 var exp_gender_pie_chart;
 var actor_pie_chart;
@@ -143,20 +144,15 @@ function type_pie(json) {
 	});
 }
 function practice_bubble(json) {
-	var practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
-	if(json.length>1)
-	{
-		var xrange=practice_bubble_chart_data.getColumnRange(1);
-		var yrange=practice_bubble_chart_data.getColumnRange(2);
-		var options = jQuery.extend(true, {}, bubble_options);
-		options['hAxis']= {title: 'Practice level',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:12},textColor: '#ffffff'};
-		options['vAxis']= {title: 'Number of Videos',gridlines:{count:10} };
-		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
-		options['sizeAxis']={maxSize: 20};
-		options['title']='Number of Videos per practices';
+	practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
+	var options = jQuery.extend(true, {}, bubble_options);
+	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
+	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
+	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	options['sizeAxis']={maxSize: 20,minSize:10};
+	options['title']='Number of Videos per practices';
 
-	}
-	var practice_bubble_chart = new google.visualization.ChartWrapper({
+	practice_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_bubble',
 		'options':options,
@@ -165,11 +161,11 @@ function practice_bubble(json) {
 		                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
 		                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 	});
-	fillSelect(data.getDistinctValues(1),"top_prac","Any");
-	fillSelect(data.getDistinctValues(2),"sub_prac","Any");
-	fillSelect(data.getDistinctValues(3),"util","Any");
-	fillSelect(data.getDistinctValues(4),"type","Any");
-	fillSelect(data.getDistinctValues(5),"sub","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
 	init();
 	
 	remove_loader(practice_bubble_chart.getContainerId());
@@ -185,24 +181,24 @@ function practice_bubble(json) {
 }
 			
 
-  function chartDraw(top_prac,sub_prac,util,type,sub,number) {
-	  var plot_view=new google.visualization.DataView(data);
+  function chartDraw(sec,subsec,top,subtop,sub,number) {
+	  var plot_view=new google.visualization.DataView(practice_bubble_chart_data);
 	  var params=new Array;
-	  if (top_prac!="Any")
+	  if (sec!="Any")
 	  {
-		  params.push({column: 1, value: top_prac });
+		  params.push({column: 1, value: sec });
 	  }
-	  if (sub_prac!="Any")
+	  if (subsec!="Any")
 	  {
-		  params.push({column: 2, value: sub_prac });
+		  params.push({column: 2, value: subsec });
 	  }
-	  if (util!="Any")
+	  if (top!="Any")
 	  {
-		  params.push({column: 3, value: util });
+		  params.push({column: 3, value: top });
 	  }
-	  if (type!="Any")
+	  if (subtop!="Any")
 	  {
-		  params.push({column: 4, value: type });
+		  params.push({column: 4, value: subtop });
 	  }
 	  if (sub!="Any")
 	  {
@@ -219,12 +215,13 @@ function practice_bubble(json) {
 			                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
 	  var null_filtered_data=new google.visualization.DataView(filtered_data);
 	  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
-	  pieChart.setDataTable(null_filtered_data);
-			  pieChart.draw();
+	  alert(null_filtered_data.getNumberOfRows());
+	  practice_bubble_chart.setDataTable(null_filtered_data);
+	  practice_bubble_chart.draw();
   }
   
   function custom_rand(values) {
-	  return values[Math.floor((Math.random()*values.length)+1)];
+	  return values[Math.floor((Math.random()*values.length))];
 	}
   
   function fillSelect(values,sel_id,sel) {
@@ -251,25 +248,24 @@ function practice_bubble(json) {
 	  $("#"+sel_id).html(html_values);
   }
   
-  function ValChange(top_prac,sub_prac,util,type,sub,number) {
-	  //alert(top_prac+";"+sub_prac+";"+util+";"+type+sub)
-	  var data_view=new google.visualization.DataView(data);
+  function ValChange(sec,subsec,top,subtop,sub,number) {
+	  var data_view=new google.visualization.DataView(practice_bubble_chart_data);
 	  var params=new Array;
-	  if (top_prac!="Any")
+	  if (sec!="Any")
 	  {
-		  params.push({column: 1, value: top_prac });
+		  params.push({column: 1, value: sec });
 	  }
-	  if (sub_prac!="Any")
+	  if (subsec!="Any")
 	  {
-		  params.push({column: 2, value: sub_prac });
+		  params.push({column: 2, value: subsec });
 	  }
-	  if (util!="Any")
+	  if (top!="Any")
 	  {
-		  params.push({column: 3, value: util });
+		  params.push({column: 3, value: top });
 	  }
-	  if (type!="Any")
+	  if (subtop!="Any")
 	  {
-		  params.push({column: 4, value: type });
+		  params.push({column: 4, value: subtop });
 	  }
 	  if (sub!="Any")
 	  {
@@ -279,21 +275,21 @@ function practice_bubble(json) {
 	  {
 	  	data_view.setRows(data_view.getFilteredRows(params));
 	  }
-	  fillSelect(data_view.getDistinctValues(1),"top_prac",top_prac);
-	  fillSelect(data_view.getDistinctValues(2),"sub_prac",sub_prac);
-	  fillSelect(data_view.getDistinctValues(3),"util",util);
-	  fillSelect(data_view.getDistinctValues(4),"type",type);
+	  fillSelect(data_view.getDistinctValues(1),"sec",sec);
+	  fillSelect(data_view.getDistinctValues(2),"subsec",subsec);
+	  fillSelect(data_view.getDistinctValues(3),"top",top);
+	  fillSelect(data_view.getDistinctValues(4),"subtop",subtop);
 	  fillSelect(data_view.getDistinctValues(5),"sub",sub);
-	  chartDraw(top_prac,sub_prac,util,type,sub,number);
+	  chartDraw(sec,subsec,top,subtop,sub,number);
 	  
   }
   function init()
   {
-	  	fillSelect(data.getDistinctValues(1),"top_prac","Any");
-		fillSelect(data.getDistinctValues(2),"sub_prac","Any");
-		fillSelect(data.getDistinctValues(3),"util","Any");
-		fillSelect(data.getDistinctValues(4),"type","Any");
-		fillSelect(data.getDistinctValues(5),"sub","Any");
+	  	fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
 		html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
 		$("#practice").html(html);
 		chartDraw("Any","Any","Any","Any","Any",$("#practice").val());

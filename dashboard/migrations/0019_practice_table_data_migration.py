@@ -7,18 +7,25 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
         orm['dashboard.practices'].objects.all().delete()
         for practicecomb in orm['video_practice_map.practicecombination'].objects.all():
-            orm['dashboard.practices'].objects.create(id=practicecomb.id,practice_name=None,practice_sector=practicecomb.top_practice,practice_subject=practicecomb.subject,practice_subsector=practicecomb.sub_practice,practice_subtopic=practicecomb.type,practice_topic=practicecomb.utility,seasonality=None,summary='')
+            practice_name=practicecomb.top_practice.name+";"
+            practice_name += ';' if practicecomb.sub_practice is None else practicecomb.sub_practice.name+";"
+            practice_name += ';' if practicecomb.utility is None else practicecomb.utility.name+";"
+            practice_name += ';' if practicecomb.type is None else practicecomb.type.name+";"
+            practice_name += ';' if practicecomb.subject is None else practicecomb.subject.name+";"
+            orm['dashboard.practices'].objects.create(id=practicecomb.id,practice_name=practice_name,practice_sector=practicecomb.top_practice,practice_subject=practicecomb.subject,practice_subsector=practicecomb.sub_practice,practice_subtopic=practicecomb.type,practice_topic=practicecomb.utility,seasonality=None,summary='')
         
-                
+        for vid_prac in orm['video_practice_map.videopractice'].objects.all():
+            if vid_prac.review_approved == 1:
+                vid = orm['dashboard.video'].objects.get(id=vid_prac.video.id)
+                vid.related_practice = orm['dashboard.practices'].objects.get(id=vid_prac.practice.id);
+                vid.save()
+         
+               
     def backwards(self, orm):
-        "Write your backwards methods here."
         for practicecomb in  orm['video_practice_map.practicecombination'].objects.all():
             orm['dashboard.practices'].objects.get(id=practicecomb.id).delete()
-    
-
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -243,13 +250,10 @@ class Migration(DataMigration):
         },
         'dashboard.personmeetingattendance': {
             'Meta': {'object_name': 'PersonMeetingAttendance', 'db_table': "u'PERSON_MEETING_ATTENDANCE'"},
-            'expressed_adoption': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_ADOPTION'", 'blank': 'True'}),
             'expressed_adoption_video': ('dashboard.fields.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'to': "orm['dashboard.Video']"}),
-            'expressed_interest': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_INTEREST'", 'blank': 'True'}),
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_column': "'INTERESTED'", 'db_index': 'True'}),
-            'matched_adoption': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PersonAdoptPractice']", 'null': 'True', 'blank': 'True'}),
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'screening': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Screening']"})
         },
@@ -492,7 +496,7 @@ class Migration(DataMigration):
         'video_practice_map.videopractice': {
             'Meta': {'object_name': 'VideoPractice'},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['video_practice_map.PracticeCombination']"}),
+            'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Practices']"}),
             'review_approved': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'review_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reviewed_practices'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
