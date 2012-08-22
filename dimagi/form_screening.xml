@@ -34,17 +34,17 @@
 			<bind nodeset="/data/time" type="xsd:time" />
 			<bind nodeset="/data/selected_village" />
 			<bind nodeset="/data/selected_group" />
-			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[group_id=/data/selected_group]/id))"/>
+			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[selected(/data/selected_group,group_id)]/id))"/>
 			<bind nodeset="/data/number_of_attendees_display"/>
 			<bind nodeset="/data/attendance_record"/>
 			<bind nodeset="/data/attendance_record/index" type="xsd:string" calculate="position(..)"/>
 			<bind nodeset="/data/attendance_record/attendee_name_display"/>			
 			<bind nodeset="/data/attendance_record/attendee_id" calculate="selected-at(/data/attendee_ids, current()/../index)"/>
-			<bind nodeset="/data/attendance_record/attendee_name" calculate="instance('person')/person_list/person[group_id=/data/selected_group and id=current()/../attendee_id]/name"/>
+			<bind nodeset="/data/attendance_record/attendee_name" calculate="instance('person')/person_list/person[selected(/data/selected_group,group_id) and id=current()/../attendee_id]/name"/>
 			<bind nodeset="/data/attendance_record/attended"  required="true()"/>
 			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0"/>
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0"/>
-			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('person')/person_list/person[group_id=/data/selected_group])))"/>
+			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('person')/person_list/person[selected(/data/selected_group,group_id)])))"/>
 			<itext>
 				<translation lang="en" default="">
 					<text id="number_of_attendees_display-label">
@@ -60,7 +60,7 @@
 						<value><output ref="/data/attendance_record/attendee_name" /></value>
 					</text-->
 					<text id="question_asked-label">
-						<value>Question Asked:</value>
+						<value>Question Asked</value>
 					</text>
 					<text id="attended-label">
 						<value><output ref="/data/attendance_record/attendee_name" /></value>
@@ -72,7 +72,7 @@
 						<value>No</value>
 					</text>
 					<text id="interested-label">
-						<value>Interested?</value>
+						<value>Interested</value>
 					</text>
 					<text id="interested_yes-label">
 						<value>Yes</value>
@@ -81,19 +81,19 @@
 						<value>No</value>
 					</text>
 					<text id="selected_village-label">
-						<value>Village:</value>
+						<value>Village</value>
 					</text>
 					<text id="selected_mediator-label">
-						<value>Mediator:</value>
+						<value>Mediator</value>
 					</text>
 					<text id="selected_group-label">
-						<value>Group:</value>
+						<value>Group</value>
 					</text>
 					<text id="date-label">
-						<value>Date:</value>
+						<value>Date</value>
 					</text>
 					<text id="time-label">
-						<value>Time:</value>
+						<value>Time</value>
 					</text>
 				</translation>
 			</itext>
@@ -120,13 +120,13 @@
 				<value ref="id"/>
 			</itemset>
 		</select1>
-		<select1 ref="/data/selected_group">
+		<select ref="/data/selected_group">
 			<label ref="jr:itext('selected_group-label')"/>
 			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
-		</select1>
+		</select>
 		<trigger ref="/data/number_of_attendees_display">
 			<label ref="jr:itext('number_of_attendees_display-label')"/>
 		</trigger>
