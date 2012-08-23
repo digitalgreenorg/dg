@@ -102,7 +102,7 @@ function practice_bubble(json) {
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_type_bubble',
 		'options':options,
-		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
 		                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
 		                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
 		                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
@@ -112,18 +112,17 @@ function practice_bubble(json) {
 	fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
 	fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
 	fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
-	init();
-	
 	remove_loader(practice_bubble_chart.getContainerId());
-	practice_bubble_chart.draw();
 	exp_practice_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'options':options,
-		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
 	                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
 	                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
 	                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
-});
+	});
+	init();
+	practice_bubble_chart.draw();
 }
 			
 
@@ -162,6 +161,7 @@ function practice_bubble(json) {
 	  var null_filtered_data=new google.visualization.DataView(filtered_data);
 	  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
 	  practice_bubble_chart.setDataTable(null_filtered_data);
+	  exp_practice_bubble_chart.setDataTable(null_filtered_data);
 	  document.getElementById("javascript_practice_type_bubble").style.height="300px";
 	  practice_bubble_chart.draw();
   }
