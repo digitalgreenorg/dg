@@ -39,16 +39,16 @@
     //alert(""+video_suitable_for+uploaded+partners+lang+season+pracs);
     }   
 
-    function doPracchange(top_prac,sub_prac,util,type,sub) {
+    function doPracchange(sec,subsec,top,subtop,sub) {
         $.ajax({ type: "GET", 
                 url: "/analytics/practice_change/",
-                data: {"top_prac":top_prac,"sub_prac":sub_prac,"util":util,"type":type,"sub":sub},
+                data: {"sec":sec,"subsec":subsec,"top":top,"subtop":subtop,"sub":sub},
                 success: function(json) {
                 var arr=JSON.parse(json)
-               $("#"+"top_prac").html(arr[0]);
-               $("#"+"sub_prac").html(arr[1]);
-               $("#"+"util").html(arr[2]);
-               $("#"+"type").html(arr[3]);
+               $("#"+"sec").html(arr[0]);
+               $("#"+"subsec").html(arr[1]);
+               $("#"+"top").html(arr[2]);
+               $("#"+"subtop").html(arr[3]);
                $("#"+"sub").html(arr[4]);
                 
           }
@@ -265,13 +265,13 @@
 				<div id='inlinedatepicker2' class='datepickcalender'>{{search_box_params.to_date}}</div>				
 			</div>				
 			<div class='searchtitle'>
-				Select Practice
+				Select Sector
 			</div>
 			<div class='searchbody'>
 				<div id='selectbody'>				
 					<div class='searchbody1' id='searchbody1_1'>
-				   		<select class='select prac' name='top_prac_n 'id='top_prac' onChange="doPracchange(this.value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Practice</option>
+				   		<select class='select prac' name='sec_n 'id='sec' onChange="doPracchange(this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Sector</option>
 								{% for key, item in search_box_params.prac_level.0 %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 								{%endfor%}
@@ -280,13 +280,13 @@
 				</div>				
 			</div>
 			<div class='searchtitle'>
-				Select Sub Practice
+				Select Subsector
 			</div>
 			<div class='searchbody'>
 				<div id='selectbody'>				
 					<div class='searchbody1' id='searchbody1_2'>
-				   		<select class='select prac' name='sub_prac_n' id='sub_prac' onChange="doPracchange(document.getElementById('top_prac').value,this.value,getElementById('util').value,getElementById('type').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Sub Practice</option>
+				   		<select class='select prac' name='subsec_n' id='subsec' onChange="doPracchange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Subsector</option>
 								{% for key, item in search_box_params.prac_level.1 %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 								{%endfor%}
@@ -295,13 +295,13 @@
 				</div>				
 			</div>
 			<div class='searchtitle'>
-				Select Practice Utility
+				Select Topic
 			</div>
 			<div class='searchbody'>
 				<div id='selectbody'>				
 					<div class='searchbody1' id='searchbody1_3'>
-				   		<select class='select prac' name='util_prac_n' id='util' onChange="doPracchange(document.getElementById('top_prac').value,getElementById('sub_prac').value,this.value,getElementById('type').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Utility</option>
+				   		<select class='select prac' name='sec_n' id='top' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Topic</option>
 								{% for key, item in search_box_params.prac_level.2 %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 								{%endfor%}
@@ -310,13 +310,13 @@
 				</div>				
 			</div>
 			<div class='searchtitle'>
-				Select Practice Type
+				Select Subtopic
 			</div>
 			<div class='searchbody'>
 				<div id='selectbody'>				
 					<div class='searchbody1' id='searchbody1_4'>
-				   		<select class='select prac' name='top_prac_n' id='type' onChange="doPracchange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,this.value,getElementById('sub').value)">
-					  		<option value='-1'>Any Type</option>
+				   		<select class='select prac' name='sec_n' id='subtop' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value)">
+					  		<option value='-1'>Any Subtopic</option>
 								{% for key, item in search_box_params.prac_level.3 %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
 								{%endfor%}
@@ -325,12 +325,12 @@
 				</div>				
 			</div>
 			<div class='searchtitle'>
-				Select Practice Subject
+				Select Subject
 			</div>
 			<div class='searchbody'>
 				<div id='selectbody'>				
 					<div class='searchbody1' id='searchbody1_5'>
-				   		<select class='select prac' name='top_prac_n' id='sub' onChange="doPracchange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,this.value)">
+				   		<select class='select prac' name='sec_n' id='sub' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value)">
 					  		<option value='-1'>Any Subject</option>
 								{% for key, item in search_box_params.prac_level.4 %}
 											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>

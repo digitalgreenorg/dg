@@ -92,44 +92,44 @@ def get_search_box(request, min_date_func=None):
 
 def practice_change(request):
     
-    top_prac=request.GET.get('top_prac')
-    sub_prac=request.GET.get('sub_prac')
-    util=request.GET.get('util')
-    type=request.GET.get('type')
+    sec=request.GET.get('sec')
+    subsec=request.GET.get('subsec')
+    top=request.GET.get('top')
+    subtop=request.GET.get('subtop')
     sub=request.GET.get('sub')
-    if(top_prac=="-1"):
-       top_prac=None
-    if(sub_prac=="-1"):
-       sub_prac=None
-    if(util=="-1"):
-       util=None
-    if(type=="-1"):
-       type=None
+    if(sec=="-1"):
+        sec=None
+    if(subsec=="-1"):
+        subsec=None
+    if(top=="-1"):
+        top=None
+    if(subtop=="-1"):
+        subtop=None
     if(sub=="-1"):
-       sub=None        
+        sub=None        
     
-    sql_result = practice_options(top_prac,sub_prac,util,type,sub)
+    sql_result = practice_options(sec,subsec,top,subtop,sub)
     
-    html_top_prac = """
-    <option value='-1'>Any Practice</option>
+    html_sec = """
+    <option value='-1'>Any Sector</option>
     {% for key,item in sql_result.0 %}
         <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
     {%endfor%}
     """
-    html_sub_prac = """
-    <option value='-1'>Any Sub Practice</option>
+    html_subsec = """
+    <option value='-1'>Any Subsector</option>
     {% for key,item in sql_result.1 %}
         <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
     {%endfor%}
     """
-    html_util = """
-    <option value='-1'>Any Utility</option>
+    html_top = """
+    <option value='-1'>Any Topic</option>
     {% for key,item in sql_result.2 %}
         <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
     {%endfor%}
     """
-    html_type = """
-    <option value='-1'>Any Type</option>
+    html_subtop = """
+    <option value='-1'>Any Suctopic</option>
     {% for key,item in sql_result.3 %}
         <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
     {%endfor%}
@@ -145,10 +145,10 @@ def practice_change(request):
         html = Template(option_string)
         return html.render(Context(context_dict))  
     
-    return HttpResponse(json.dumps(map(render_option, [html_top_prac, html_sub_prac, html_util, html_type, html_sub], [dict(sql_result=sql_result)] * 5)))
+    return HttpResponse(json.dumps(map(render_option, [html_sec, html_subsec, html_top, html_subtop, html_sub], [dict(sql_result=sql_result)] * 5)))
                                              
-def practice_options(top, subp, util, type, sub):
-    tuple_val=run_query_raw(practice_options_sql(top, subp, util, type, sub))
+def practice_options(sec, subsec, top, subtop, sub):
+    tuple_val=run_query_raw(practice_options_sql(sec, subsec, top, subtop, sub))
     list_dict=[{}, {}, {}, {}, {}]
     for i in range(len(tuple_val)):
         val=tuple_val[i]
@@ -156,7 +156,7 @@ def practice_options(top, subp, util, type, sub):
             if(val[j*2]!=None):
                 list_dict[j][val[j*2]]=[val[(j*2)+1]]
                 
-    args = [top, subp, util, type, sub]                
+    args = [sec, subsec, top, subtop, sub]                
     for i in range(len(args)):
         if args[i] is not None:
             list_dict[i][int(args[i])].append('true')
@@ -418,7 +418,7 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
 #generic function to render data for Scatter Charts
 #sqlFunc is the function which renders the SQL query.
 #Pre-requisite: SQL function should generate name, count & in that order.(Other variable names would throw error)
-def scatter_chart_data(sqlFunc, **args):
+def practice_scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
     if not rs:
         return HttpResponse(json.dumps([[]]));
@@ -441,6 +441,35 @@ def scatter_chart_data(sqlFunc, **args):
                 x = random.randrange(1,x_axis_len)
             flag[x] = 1
             return_val.append([pracs[0],pracs[1],pracs[2],pracs[3],pracs[4],pracs[5],x,tot,"",tot])
+
+    return HttpResponse(json.dumps(return_val))
+
+
+def scatter_chart_data(sqlFunc, **args):
+    rs = run_query(sqlFunc(**args))
+    return_val = [['',-1,-1,-1,0]]
+    if not rs:
+        return HttpResponse(json.dumps([[]]));
+
+    count_dict = {}
+    for item in rs:
+        if item['count'] in count_dict:
+            count_dict[item['count']].append(item['name'])
+        else:
+            count_dict[item['count']] = [item['name']]
+
+    x_axis_len = max([len(x) for x in count_dict.values()]) * 2
+    if(x_axis_len<10): x_axis_len = 10;
+
+    random.seed();
+    for tot,pracs in count_dict.iteritems():
+        flag = [0] * x_axis_len
+        for prac in pracs:
+            x = random.randrange(1,x_axis_len)
+            while(flag[x] != 0):
+                x = random.randrange(1,x_axis_len)
+            flag[x] = 1
+            return_val.append([prac,x,tot,"",tot])
 
     return HttpResponse(json.dumps(return_val))
 

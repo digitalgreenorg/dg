@@ -203,10 +203,10 @@ function go(page) {
     if($("#inlinedatepicker1").html()!="") url.push("from_date="+$("#inlinedatepicker1").html());
     if($("#inlinedatepicker2").html()!="") url.push("to_date="+$("#inlinedatepicker2").html());
     if(page != null) url.push("page="+page);
-    if(document.getElementById('top_prac').value != -1) url.push("top_prac="+document.getElementById('top_prac').value)
-    if(document.getElementById('sub_prac').value != -1) url.push("sub_prac="+document.getElementById('sub_prac').value);
-    if(document.getElementById('util').value != -1) url.push("util="+document.getElementById('util').value);
-    if(document.getElementById('type').value != -1) url.push("type="+document.getElementById('type').value);
+    if(document.getElementById('sec').value != -1) url.push("sec="+document.getElementById('sec').value)
+    if(document.getElementById('subsec').value != -1) url.push("subsec="+document.getElementById('subsec').value);
+    if(document.getElementById('top').value != -1) url.push("top="+document.getElementById('top').value);
+    if(document.getElementById('subtop').value != -1) url.push("subtop="+document.getElementById('subtop').value);
     if(document.getElementById('sub').value != -1) url.push("sub="+document.getElementById('sub').value);
     if(url.length>0) 
         window.location.href = '?'+url.join('&');

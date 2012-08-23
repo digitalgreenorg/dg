@@ -215,8 +215,8 @@ function practice_bubble(json) {
 			                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
 	  var null_filtered_data=new google.visualization.DataView(filtered_data);
 	  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
-	  alert(null_filtered_data.getNumberOfRows());
 	  practice_bubble_chart.setDataTable(null_filtered_data);
+	  document.getElementById("javascript_practice_bubble").style.height="300px";
 	  practice_bubble_chart.draw();
   }
   
@@ -290,11 +290,35 @@ function practice_bubble(json) {
 		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
-		html="<option value=0 >Sector</option><option value=1 >Subsector</option><option value=2 >Topic</option><option value=3 >subtopic</option><option value=4 selected='selected'>Subject</option>";
+		html="<input type='radio' name ='prac_n' value=0 style='margin-left:10px;' onClick='onClickRadio();'/>Sector" +
+			 "<input type='radio' name ='prac_n' value=1 style='margin-left:34px;' onClick='onClickRadio();'/>Subsector" +
+			 "<input type='radio' name ='prac_n' value=2 style='margin-left:23px;' onClick='onClickRadio();'/>Topic" +
+			 "<input type='radio' name ='prac_n' value=3 style='margin-left:43px;' onClick='onClickRadio();'/>Subtopic" +
+			 "<input type='radio' name ='prac_n' value=4 CHECKED style='margin-left:28px;' onClick='onClickRadio();'/>Subject";
 		$("#practice").html(html);
-		chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
+		chartDraw("Any","Any","Any","Any","Any",radio_value());
 		
-	}
+  }
+  
+  function onClickRadio() {
+	  var sec = document.getElementById('sec').value;
+	  var subsec = document.getElementById('subsec').value;
+	  var top = document.getElementById('top').value;
+	  var subtop = document.getElementById('subtop').value;
+	  var sub = document.getElementById('sub').value;
+	  chartDraw(sec, subsec, top, subtop, sub, radio_value());
+	  
+  }
+  
+  function radio_value()
+  {
+	  var radios = document.getElementsByName('prac_n');
+	  for ( var i = 0; i < radios.length; i++) {
+		    if(radios[i].checked) {
+		        return radios[i].value
+		    }
+		}
+  }
 
 function total_line(json) {
 

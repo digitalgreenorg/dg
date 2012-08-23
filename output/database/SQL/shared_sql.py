@@ -40,25 +40,25 @@ def breadcrumbs_options_sql(geog,id, is_child):
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
 #Returns '' if geography!= country or geography!=state
 
-def practice_options_sql(top, subp, util, type, sub):
+def practice_options_sql(sec, subsec, top, subtop, sub):
     sql_ds =  get_init_sql_ds()
-    sql_ds['select'].extend(["TP.ID","TP.name","SP.ID","SP.name","UTIL.ID","UTIL.name","TYPE.ID","TYPE.name","SUB.ID","SUB.name"])
+    sql_ds['select'].extend(["S.ID","S.name","SS.ID","SS.name","T.ID","T.name","ST.ID","ST.name","SUB.ID","SUB.name"])
     sql_ds['from'].append("PRACTICES P")
-    sql_ds['lojoin'].append(["dashboard_toppractice TP", "TP.id = P.top_practice_id"])
-    sql_ds['lojoin'].append(["dashboard_subpractice SP", "SP.id = P.sub_practice_id"])
-    sql_ds['lojoin'].append(["dashboard_practicetype TYPE", "TYPE.id = P.type_id"])
-    sql_ds['lojoin'].append(["dashboard_practiceutility UTIL", "UTIL.id = P.utility_id"])
-    sql_ds['lojoin'].append(["dashboard_practicesubject SUB", "SUB.id = P.subject_id"])
+    sql_ds['lojoin'].append(["practice_sector S", "S.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector SS", "SS.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
+    if(sec):
+        sql_ds['where'].append('practice_sector_id = %s' % sec)
+    if(subsec):
+        sql_ds['where'].append('practice_subsector_id = %s' % subsec)
     if(top):
-        sql_ds['where'].append('top_practice_id = %s' % top)
-    if(subp):
-        sql_ds['where'].append('sub_practice_id = %s' % subp)
-    if(util):
-        sql_ds['where'].append('utility_id = %s' % util)
-    if(type):
-        sql_ds['where'].append('type_id = %s' % type)
+        sql_ds['where'].append('practice_topic_id = %s' % top)
+    if(subtop):
+        sql_ds['where'].append('practice_subtopic_id = %s' % subtop)
     if(sub):
-        sql_ds['where'].append('subject_id = %s' % sub)
+        sql_ds['where'].append('practice_subject_id = %s' % sub)
         
     return join_sql_ds(sql_ds)
         

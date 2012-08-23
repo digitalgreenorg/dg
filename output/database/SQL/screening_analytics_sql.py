@@ -53,10 +53,15 @@ def screening_month_bar(geog,id, from_date, to_date, partners):
 
 def screening_practice_scatter(geog,id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["practice_name AS name","COUNT(DISTINCT SVS.screening_id) AS count"]);
+    sql_ds['select'].extend(["practice_name AS name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub","COUNT(DISTINCT SVS.screening_id) AS count"]);
     sql_ds['from'].append("SCREENING_videoes_screened SVS")
-    sql_ds['join'].append(["VIDEO_related_agricultural_practices VRP","VRP.video_id = SVS.video_id"])
-    sql_ds['join'].append(["PRACTICES P", "P.id = VRP.practices_id"])
+    sql_ds['join'].append(["VIDEO v","v.id = SVS.video_id"])
+    sql_ds['join'].append(["PRACTICES P", "P.id = v.related_practice_id"])
+    sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_topic top","top.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subtopic subtop","subtop.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_subject sub","sub.id = P.practice_subject_id"])
     if((from_date and to_date) or geog.lower()!='country' or partners):
         sql_ds['join'].append(["SCREENING SC","SVS.screening_id = SC.id"])
     filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date, partners);

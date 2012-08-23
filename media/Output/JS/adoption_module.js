@@ -17,6 +17,8 @@ function remove_loader(div_id){
 
 var geog_pie_chart;
 var geog_pie_chart_data;
+var practice_bubble_chart;
+var practice_bubble_chart_data;
 var exp_geog_pie_chart;
 var exp_monthwise_column_chart;
 var exp_total_line_chart;
@@ -88,33 +90,181 @@ function monthwise_column(json) {
 	});
 }
 function practice_bubble(json) {
+	practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
+	var options = jQuery.extend(true, {}, bubble_options);
+	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
+	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
+	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
+	options['sizeAxis']={maxSize: 20,minSize:10};
+	options['title']='Number of Videos per practices';
 
-	var practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
-	if(json.length>1)
-	{
-		var xrange=practice_bubble_chart_data.getColumnRange(1);
-		var yrange=practice_bubble_chart_data.getColumnRange(2);
-		var options = jQuery.extend(true, {}, bubble_options);
-		options['hAxis']= {title: 'Practices',  maxValue: xrange.max, minValue: xrange.min, gridlines:{count:10},textColor: '#ffffff'};
-		options['vAxis']= {title: 'Number of Adoptions',gridlines:{count:10}, maxValue: yrange.max };
-		options['sizeAxis']={maxSize: 20};
-		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
-	}
-	var practice_bubble_chart = new google.visualization.ChartWrapper({
+	practice_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_practice_type_bubble',
 		'options':options,
-		'dataTable':practice_bubble_chart_data
+		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+		                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+		                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+		                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 	});
+	fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
+	fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
+	init();
+	
 	remove_loader(practice_bubble_chart.getContainerId());
 	practice_bubble_chart.draw();
 	exp_practice_bubble_chart=new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'options':options,
-		'dataTable':practice_bubble_chart_data
-	});
+		'dataTable':google.visualization.data.group(practice_bubble_chart_data,[5],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+	                		                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+	                		                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+	                		                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
+});
 }
+			
 
+  function chartDraw(sec,subsec,top,subtop,sub,number) {
+	  var plot_view=new google.visualization.DataView(practice_bubble_chart_data);
+	  var params=new Array;
+	  if (sec!="Any")
+	  {
+		  params.push({column: 1, value: sec });
+	  }
+	  if (subsec!="Any")
+	  {
+		  params.push({column: 2, value: subsec });
+	  }
+	  if (top!="Any")
+	  {
+		  params.push({column: 3, value: top });
+	  }
+	  if (subtop!="Any")
+	  {
+		  params.push({column: 4, value: subtop });
+	  }
+	  if (sub!="Any")
+	  {
+		  params.push({column: 5, value: sub });
+	  }
+	  if(params.length>0)
+		  {
+		  plot_view.setRows(plot_view.getFilteredRows(params));  
+		  }
+	  
+	  var filtered_data=  google.visualization.data.group(plot_view,[parseInt(number)+1],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
+			                                                                                    {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+			                                                                                    {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+			                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
+	  var null_filtered_data=new google.visualization.DataView(filtered_data);
+	  null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
+	  practice_bubble_chart.setDataTable(null_filtered_data);
+	  document.getElementById("javascript_practice_type_bubble").style.height="300px";
+	  practice_bubble_chart.draw();
+  }
+  
+  function custom_rand(values) {
+	  return values[Math.floor((Math.random()*values.length))];
+	}
+  
+  function fillSelect(values,sel_id,sel) {
+	  var null_ind=values.indexOf(null);
+	  if(null_ind!=-1)
+		  {
+		  	values.splice(null_ind,1);
+		  }
+	  
+	  var html_values="";
+	  i=0;
+	  html_values=html_values+"<option selected='selected'>Any</option>"
+	  for (item in values){
+		  if(values[item]==sel)
+			  {
+			  	html_values=html_values+"<option selected='selected'>"+values[item]+"</option>"
+			  }
+		  else
+			  {
+			  	html_values=html_values+"<option>"+values[item]+"</option>"
+			  }
+	  i=i+1;
+	  }
+	  $("#"+sel_id).html(html_values);
+  }
+  
+  function ValChange(sec,subsec,top,subtop,sub,number) {
+	  var data_view=new google.visualization.DataView(practice_bubble_chart_data);
+	  var params=new Array;
+	  if (sec!="Any")
+	  {
+		  params.push({column: 1, value: sec });
+	  }
+	  if (subsec!="Any")
+	  {
+		  params.push({column: 2, value: subsec });
+	  }
+	  if (top!="Any")
+	  {
+		  params.push({column: 3, value: top });
+	  }
+	  if (subtop!="Any")
+	  {
+		  params.push({column: 4, value: subtop });
+	  }
+	  if (sub!="Any")
+	  {
+		  params.push({column: 5, value: sub });
+	  }
+	  if(params.length>0)
+	  {
+	  	data_view.setRows(data_view.getFilteredRows(params));
+	  }
+	  fillSelect(data_view.getDistinctValues(1),"sec",sec);
+	  fillSelect(data_view.getDistinctValues(2),"subsec",subsec);
+	  fillSelect(data_view.getDistinctValues(3),"top",top);
+	  fillSelect(data_view.getDistinctValues(4),"subtop",subtop);
+	  fillSelect(data_view.getDistinctValues(5),"sub",sub);
+	  chartDraw(sec,subsec,top,subtop,sub,number);
+	  
+  }
+  function init()
+  {
+	  	fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(4),"subtop","Any");
+		fillSelect(practice_bubble_chart_data.getDistinctValues(5),"sub","Any");
+		html="<input type='radio' name ='prac_n' value=0 style='margin-left:10px;' onClick='onClickRadio();'/>Sector" +
+			 "<input type='radio' name ='prac_n' value=1 style='margin-left:34px;' onClick='onClickRadio();'/>Subsector" +
+			 "<input type='radio' name ='prac_n' value=2 style='margin-left:23px;' onClick='onClickRadio();'/>Topic" +
+			 "<input type='radio' name ='prac_n' value=3 style='margin-left:43px;' onClick='onClickRadio();'/>Subtopic" +
+			 "<input type='radio' name ='prac_n' value=4 CHECKED style='margin-left:28px;' onClick='onClickRadio();'/>Subject";
+		$("#practice").html(html);
+		chartDraw("Any","Any","Any","Any","Any",radio_value());
+		
+  }
+  
+  function onClickRadio() {
+	  var sec = document.getElementById('sec').value;
+	  var subsec = document.getElementById('subsec').value;
+	  var top = document.getElementById('top').value;
+	  var subtop = document.getElementById('subtop').value;
+	  var sub = document.getElementById('sub').value;
+	  chartDraw(sec, subsec, top, subtop, sub, radio_value());
+	  
+  }
+  
+  function radio_value()
+  {
+	  var radios = document.getElementsByName('prac_n');
+	  for ( var i = 0; i < radios.length; i++) {
+		    if(radios[i].checked) {
+		        return radios[i].value
+		    }
+		}
+  }
 function gender_pie(json) {
 	var gender_pie_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, pie_options);

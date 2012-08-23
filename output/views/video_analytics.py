@@ -113,7 +113,7 @@ def video_language_wise_scatter_data(request):
 def video_practice_wise_scatter(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    return views.common.scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+    return views.common.practice_scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
                                            geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
@@ -203,10 +203,10 @@ def video_search(request):
     to_date = request.GET.get('to_date')
     sort = request.GET.get('sort')
     sort_order = request.GET.get('sort_order')
-    top_prac=request.GET.get('top_prac')
-    sub_prac=request.GET.get('sub_prac')
-    util=request.GET.get('util')
-    type=request.GET.get('type')
+    sec=request.GET.get('sec')
+    subsec=request.GET.get('subsec')
+    top=request.GET.get('top')
+    subtop=request.GET.get('subtop')
     sub=request.GET.get('sub')
     
     search_box_params = {}
@@ -292,18 +292,18 @@ def video_search(request):
         else:
             vids = vids.order_by('-adoptions', 'id')
         
-    if(top_prac!=None):
-        vids=vids.filter(related_agricultural_practices__top_practice=int(top_prac))
-    if(sub_prac!=None):
-        vids=vids.filter(related_agricultural_practices__sub_practice=int(sub_prac))
-    if(util!=None):
-        vids=vids.filter(related_agricultural_practices__utility=int(util))
-    if(type!=None):
-        vids=vids.filter(related_agricultural_practices__type=int(type))
+    if(sec!=None):
+        vids=vids.filter(related_practice__practice_sector=int(sec))
+    if(subsec!=None):
+        vids=vids.filter(related_practice__practice_subsector=int(subsec))
+    if(top!=None):
+        vids=vids.filter(related_practice__practice_topic=int(top))
+    if(subtop!=None):
+        vids=vids.filter(related_practice__practice_subtopic=int(subtop))
     if(sub!=None):
-        vids=vids.filter(related_agricultural_practices__subject=int(sub))
+        vids=vids.filter(related_practice__practice_subject=int(sub))
                     
-    search_box_params['prac_level'] = views.common.practice_options(top_prac,sub_prac,util,type,sub)
+    search_box_params['prac_level'] = views.common.practice_options(sec,subsec,top,subtop,sub)
     
     
     #for paging

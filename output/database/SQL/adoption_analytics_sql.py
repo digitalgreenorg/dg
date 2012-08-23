@@ -37,10 +37,18 @@ def adoption_malefemale_ratio(geog, id, from_date, to_date, partners):
 
 def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(PAP.id) as count"])
+    sql_ds['select'].extend(["PRACTICE_NAME as name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub", "COUNT(PAP.id) as count"])
+#    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(PAP.id) as count"])
     sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP");
-    sql_ds['join'].append(["PRACTICES PR","PAP.practice_id = PR.id"])
-    sql_ds['join'].append(["PERSON P", "P.id = PAP.person_id"])
+    sql_ds['join'].append(["Video v","PAP.video_id = v.id"])
+    sql_ds['join'].append(["PRACTICES P","v.related_practice_id = P.id"])
+    ##Change
+    sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_topic top","top.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subtopic subtop","subtop.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_subject sub","sub.id = P.practice_subject_id"])
+    sql_ds['join'].append(["PERSON Pe", "Pe.id = PAP.person_id"])
     filter_partner_geog_date(sql_ds,'P','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append("PRACTICE_NAME")
     sql_ds['order by'].append("count")
