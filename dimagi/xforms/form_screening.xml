@@ -1,0 +1,164 @@
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+	<h:head>
+		<h:title>Screening</h:title>
+		<model>
+			<instance>
+				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/14E94611-71B6-439E-9930-F5537CC14FC7" uiVersion="1" version="1" name="Screening">
+					<date />
+					<time />
+					<selected_village/>
+					<selected_group/>
+					<selected_mediator />
+					<attendee_ids />
+					<number_of_attendees_display/>
+					<num_people/>
+					<attendance_record jr:template="">
+						<index />
+						<attendee_name_display/>
+						<attendee_id />
+						<attendee_name />
+						<attended />
+						<interested />
+						<question_asked/>
+					</attendance_record>
+				</data>
+			</instance>
+			
+			<instance id="village" src="jr://fixture/item-list:village"/>
+			<instance id="group" src="jr://fixture/item-list:group"/>
+			<instance id="person" src="jr://fixture/item-list:person"/>
+			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
+			
+			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
+			<!-- Time widget: remove required="true()" because that doesn't work in the preview -->
+			<bind nodeset="/data/time" type="xsd:time" />
+			<bind nodeset="/data/selected_village" />
+			<bind nodeset="/data/selected_group" />
+			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[selected(/data/selected_group,group_id)]/id))"/>
+			<bind nodeset="/data/number_of_attendees_display"/>
+			<bind nodeset="/data/attendance_record"/>
+			<bind nodeset="/data/attendance_record/index" type="xsd:string" calculate="position(..)"/>
+			<bind nodeset="/data/attendance_record/attendee_name_display"/>			
+			<bind nodeset="/data/attendance_record/attendee_id" calculate="selected-at(/data/attendee_ids, current()/../index)"/>
+			<bind nodeset="/data/attendance_record/attendee_name" calculate="instance('person')/person_list/person[selected(/data/selected_group,group_id) and id=current()/../attendee_id]/name"/>
+			<bind nodeset="/data/attendance_record/attended"  required="true()"/>
+			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0"/>
+			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0"/>
+			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('person')/person_list/person[selected(/data/selected_group,group_id)])))"/>
+			<itext>
+				<translation lang="en" default="">
+					<text id="number_of_attendees_display-label">
+						<value>Enter Attendance</value>
+					</text>
+					<text id="attendance_record-label">
+						<value>Attendance Record</value>
+					</text>
+					<text id="index-label">
+						<value>Current Index</value>
+					</text>
+					<!--text id="attendee_name_display-label">
+						<value><output ref="/data/attendance_record/attendee_name" /></value>
+					</text-->
+					<text id="question_asked-label">
+						<value>Question Asked</value>
+					</text>
+					<text id="attended-label">
+						<value><output ref="/data/attendance_record/attendee_name" /></value>
+					</text>
+					<text id="attended_yes-label">
+						<value>Yes</value>
+					</text>
+					<text id="attended_no-label">
+						<value>No</value>
+					</text>
+					<text id="interested-label">
+						<value>Interested</value>
+					</text>
+					<text id="interested_yes-label">
+						<value>Yes</value>
+					</text>
+					<text id="interested_no-label">
+						<value>No</value>
+					</text>
+					<text id="selected_village-label">
+						<value>Village</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>Mediator</value>
+					</text>
+					<text id="selected_group-label">
+						<value>Group</value>
+					</text>
+					<text id="date-label">
+						<value>Date</value>
+					</text>
+					<text id="time-label">
+						<value>Time</value>
+					</text>
+				</translation>
+			</itext>
+		</model>
+	</h:head>
+	<h:body>
+		<input ref="/data/date">
+			<label ref="jr:itext('date-label')"/>
+		</input>
+		<input ref="/data/time">
+			<label ref="jr:itext('time-label')"/>
+		</input>
+		<select1 ref="/data/selected_village">
+			<label ref="jr:itext('selected_village-label')"/>
+			<itemset nodeset="instance('village')/village_list/village">
+				<label ref="name"/>
+				<value ref="id"/>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_mediator">
+			<label ref="jr:itext('selected_mediator-label')"/>
+			<itemset nodeset="instance('mediator')/mediator_list/mediator[village_id=/data/selected_village]">
+				<label ref="name"/>
+				<value ref="id"/>
+			</itemset>
+		</select1>
+		<select ref="/data/selected_group">
+			<label ref="jr:itext('selected_group-label')"/>
+			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
+				<label ref="name"/>
+				<value ref="id"/>
+			</itemset>
+		</select>
+		<trigger ref="/data/number_of_attendees_display">
+			<label ref="jr:itext('number_of_attendees_display-label')"/>
+		</trigger>
+		<group>
+			<label ref="jr:itext('attendance_record-label')"/>
+			<repeat nodeset="/data/attendance_record" jr:count="/data/num_people">
+				<select1 ref="/data/attendance_record/attended">
+					<label ref="jr:itext('attended-label')"/>
+					<item>
+						<label ref="jr:itext('attended_yes-label')"/>
+						<value>1</value>
+					</item>
+					<item>
+						<label ref="jr:itext('attended_no-label')"/>
+						<value>0</value>
+					</item>
+				</select1>
+				<select1 ref="/data/attendance_record/interested">
+					<label ref="jr:itext('interested-label')"/>
+					<item>
+						<label ref="jr:itext('interested_yes-label')"/>
+						<value>1</value>
+					</item>
+					<item>
+						<label ref="jr:itext('interested_no-label')"/>
+						<value>0</value>
+					</item>
+				</select1>
+				<input ref="/data/attendance_record/question_asked">
+					<label ref="jr:itext('question_asked-label')"/>
+				</input>
+			</repeat>
+		</group>
+	</h:body>
+</h:html>

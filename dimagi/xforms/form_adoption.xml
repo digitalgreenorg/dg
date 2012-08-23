@@ -1,0 +1,116 @@
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+	<h:head>
+		<h:title>Adoption</h:title>
+		<model>
+			<instance>
+				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/14E94611-71B6-439E-9930-F5537CC14FC7" uiVersion="1" version="1" name="Adoption">
+					<date />
+					<selected_mediator />
+					<selected_village />
+					<selected_group />
+					<selected_person />
+					<selected_video />
+				</data>
+			</instance>
+			<instance id="villages" >
+				<root>
+					<village id="10000000020274" name="Dharpally">
+						<mediator id="10000000019651" name="Kavali Kalavathi">
+						</mediator>
+						<mediator id="10000000019921" name="Lakshmi">
+						</mediator>
+						<group id="10000000023065" name="Raghavendra">
+							<person id="10000000069124" name="Rajitha(Gopal)">
+								<video id="6000024740" name="Neem cake application for horticulture plants">
+								</video>
+								<video id="10000000019303" name="Goat Selection Criteria">
+								</video>
+							</person>
+							<person id="10000000069125" name="Kavali Chennamma(Anjaneyulu )">
+								<video id="6000024740" name="Neem cake application for horticulture plants">
+								</video>
+								<video id="10000000019303" name="Goat Selection Criteria">
+								</video>
+							</person>
+							<person id="10000000069126" name="Kavali Chennamma(Venkataiah)">
+								<video id="6000024740" name="Neem cake application for horticulture plants">
+								</video>
+								<video id="10000000019303" name="Goat Selection Criteria">
+								</video>
+							</person>
+						</group>
+					</village>
+				</root>
+			</instance>
+			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
+			<!-- Time widget: remove required="true()" because that doesn't work in the preview -->
+			<bind nodeset="/data/selected_village" />
+			<bind nodeset="/data/selected_video" />
+			<bind nodeset="/data/selected_group" />
+			<bind nodeset="/data/selected_person" />
+						
+			<itext>
+				<translation lang="en" default="">
+					<text id="selected_village-label">
+						<value>Village</value>
+					</text>
+					<text id="selected_video-label">
+						<value>Video</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>Mediator</value>
+					</text>
+					<text id="selected_group-label">
+						<value>Group</value>
+					</text>
+					<text id="selected_person-label">
+						<value>Person</value>
+					</text>
+					<text id="date-label">
+						<value>Date</value>
+					</text>
+				</translation>
+			</itext>
+		</model>
+	</h:head>
+	<h:body>
+		<input ref="/data/date">
+			<label ref="jr:itext('date-label')"/>
+		</input>
+		<select1 ref="/data/selected_village">
+			<label ref="jr:itext('selected_village-label')"/>
+			<itemset nodeset="instance('villages')/root/village">
+				<label ref="@name"/>
+				<value ref="@id"/>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_mediator">
+			<label ref="jr:itext('selected_mediator-label')"/>
+			<itemset nodeset="instance('villages')/root/village[@id=/data/selected_village]/mediator">
+				<label ref="@name"/>
+				<value ref="@id"/>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_group">
+			<label ref="jr:itext('selected_group-label')"/>
+			<itemset nodeset="instance('villages')/root/village[@id=/data/selected_village]/group">
+				<label ref="@name"/>
+				<value ref="@id"/>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_person">
+			<label ref="jr:itext('selected_person-label')"/>
+			<itemset nodeset="instance('villages')/root/village[@id=/data/selected_village]/group[@id=/data/selected_group]/person">
+				<label ref="@name"/>
+				<value ref="@id"/>
+			</itemset>
+		</select1>
+		<select1 ref="/data/selected_video">
+			<label ref="jr:itext('selected_video-label')"/>
+			<itemset nodeset="instance('villages')/root/village[@id=/data/selected_village]/group[@id=/data/selected_group]/person[@id=/data/selected_person]/video">
+				<label ref="@name"/>
+				<value ref="@id"/>
+			</itemset>
+		</select1>
+	</h:body>
+</h:html>

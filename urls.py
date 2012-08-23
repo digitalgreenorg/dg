@@ -151,5 +151,6 @@ urlpatterns = patterns('',
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^videotask/', include('video_practice_map.urls')),
+    (r'^dimagi/', include('dimagi.urls')),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )

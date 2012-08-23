@@ -80,6 +80,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'dashboard',
     'debug_toolbar',
+    'dimagi',
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',
