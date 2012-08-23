@@ -84,9 +84,6 @@ class VideoForm(forms.ModelForm):
 	class Meta:
 		model = Video
 
-class VideoAgriculturalPracticesForm(forms.ModelForm):       
-    class Meta:
-        model = VideoAgriculturalPractices
 
 class PersonShownInVideoForm(forms.ModelForm):
     class Meta:

@@ -39,6 +39,31 @@ def breadcrumbs_options_sql(geog,id, is_child):
 
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
 #Returns '' if geography!= country or geography!=state
+
+def practice_options_sql(sec, subsec, top, subtop, sub):
+    sql_ds =  get_init_sql_ds()
+    sql_ds['select'].extend(["S.ID","S.name","SS.ID","SS.name","T.ID","T.name","ST.ID","ST.name","SUB.ID","SUB.name"])
+    sql_ds['from'].append("PRACTICES P")
+    sql_ds['lojoin'].append(["practice_sector S", "S.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector SS", "SS.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
+    if(sec):
+        sql_ds['where'].append('practice_sector_id = %s' % sec)
+    if(subsec):
+        sql_ds['where'].append('practice_subsector_id = %s' % subsec)
+    if(top):
+        sql_ds['where'].append('practice_topic_id = %s' % top)
+    if(subtop):
+        sql_ds['where'].append('practice_subtopic_id = %s' % subtop)
+    if(sub):
+        sql_ds['where'].append('practice_subject_id = %s' % sub)
+        
+    return join_sql_ds(sql_ds)
+        
+        
+
 def get_partners_sql(geog, id):
     if geog not in ["COUNTRY", "STATE"]:
         return ''
@@ -116,9 +141,8 @@ def overview(geog, id, from_date, to_date, partners, type):
         main_tab_abb = "P"
         date_field = "PAP.DATE_OF_ADOPTION"
     elif(type=='practice'):
-        sql_ds['select'].append('COUNT(DISTINCT VRAP.practices_id) as tot_pra')
-        sql_ds['from'].append('VIDEO_related_agricultural_practices VRAP')
-        sql_ds['lojoin'].append(['VIDEO VID','VID.id = VRAP.video_id'])
+        sql_ds['select'].append('COUNT(DISTINCT VID.related_practice_id) as tot_pra')
+        sql_ds['from'].append('VIDEO VID')
         sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         main_tab_abb = 'VID'
         date_field = "VID.VIDEO_PRODUCTION_END_DATE"
@@ -160,12 +184,11 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['select'].extend(["date", "COUNT(*)"])
 
         sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["VRAP.practices_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
+        sql_inn_ds['select'].extend(["VID.related_practice_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
         sql_inn_ds['from'].append("VIDEO VID");
-        sql_inn_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
         sql_inn_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
         filter_partner_geog_date(sql_inn_ds,'VID','dummy',geog,id,None,None,partners)
-        sql_inn_ds['group by'].append("practices_id");
+        sql_inn_ds['group by'].append("related_practice_id");
 
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');

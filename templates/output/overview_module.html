@@ -273,14 +273,14 @@
 					</tr>
 				</table>								
 			</div>
-			<div id='contentchart1'>
+			<div id='contentchart1'  >
 				<div id='zoomicon'> 
 					<div id='zoomiconimg'>
-						<a href='javascript:zoomIn(so2,"Cumulative Line Graph")'>  <img src="/media/Output/Images/zoomicon1.png" alt='temp' title="Zoom In">  </a>
+						<a href='javascript:zoomIn(exp_total_line_chart,"Cumulative Line Graph")'>  <img src="/media/Output/Images/zoomicon1.png" alt='temp' title="Zoom In">  </a>
 					</div>
 				</div>
-				<div id="flashcontent">
-						<strong>You need to upgrade your Flash Player</strong>
+				<div id="javascript_total_line" style="height:400px;background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">										
+				
 				</div>					
 			</div>			
 		</div>
@@ -298,40 +298,7 @@
     </div>
 </div> 
 
-	
-<!-- amline script--> 
-	
-	<script type="text/javascript">
-		var line_data = '';
-		var line_settings = '';
-		$.ajax({ type: "GET", 
-				dataType: 'json',
-				async: false,
-				url: "/analytics/overview_line_graph?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}", 
-				data:{type:['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']},
-				success: function(obj) {
-						line_data = obj.data;
-						line_settings = obj.settings;
-						
-				}
-		});	 
-		var so2 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", eochartwidth, eochartheight, "8", "#FFFFFF");
-		so2.addParam("wmode", "transparent");
-		so2.addVariable("path", "/media/Output/amline/");
-		so2.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so2.addVariable("chart_data",escape(line_data));
-		so2.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
-	 
-		var so1 = new SWFObject("/media/Output/amline/amline.swf", "line_chart_zoom", tchartwidth, tchartheight, "8", "#FFFFFF");
-		so1.addParam("wmode", "transparent");
-		so1.addVariable("path", "/media/Output/amline/");
-		so1.addVariable("settings_file", encodeURIComponent("/media/Output/amline/amline_settings.xml"));
-		so1.addVariable("chart_data",escape(line_data));
-		so1.addVariable("additional_chart_settings", encodeURIComponent(line_settings));
-		so1.write("flashcontent");				
-
-	 </script>
-
-<!-- end of amline script -->
+<script type="text/javascript" src="/media/Output/JS/jsapi.js"></script>	
+<script type="text/javascript" src="/media/Output/JS/overview_module.js"></script>
 		
 {% endblock contentbody %}	

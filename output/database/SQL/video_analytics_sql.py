@@ -92,13 +92,22 @@ def video_type_wise_pie(geog, id, from_date, to_date, partners):
 
 def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(VID.id) as count"])
+    ##Change
+    sql_ds['select'].extend(["PRACTICE_NAME as name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub", "COUNT(VID.id) as count"])
+    #sql_ds['select'].extend(["PRACTICE_NAME as name","COUNT(VID.id) as count"])
+    ##
     sql_ds['from'].append("VIDEO VID");
-    sql_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
-    sql_ds['join'].append(["PRACTICES P","VRAP.practices_id = P.id"])
+    sql_ds['join'].append(["PRACTICES P","VID.related_practice_id = P.id"])
+    ##Change
+    sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_topic top","top.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subtopic subtop","subtop.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_subject sub","sub.id = P.practice_subject_id"])
+    ##
     sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append("PRACTICE_NAME")
+    sql_ds['group by'].append("P.id")
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 

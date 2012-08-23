@@ -12,7 +12,7 @@
 {% block jsfile %}  
     <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
     <script type ='text/javascript'>
-    	
+    var search_params = "geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}";
     	//Function to set the default dates when the page loads
     	window.onload = function(){
 			$("#inlinedatepicker1").html('{{search_box_params.from_date}}');

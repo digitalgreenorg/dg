@@ -604,8 +604,8 @@ def save_practice_offline(request, id):
                 return HttpResponse("0")
 
 def get_practices_seen_for_person(request, person_id):
-    practices = Person.objects.get(pk=person_id).screening_set.values_list('videoes_screened__related_agricultural_practices', 
-                                                    'videoes_screened__related_agricultural_practices__practice_name').distinct()                                                    
+    practices = Person.objects.get(pk=person_id).screening_set.values_list('videoes_screened__related_practice',
+                                                                    'videoes_screened__related_practice__practice_sector__name').distinct()                                                    
     html_template = """
     <option value='' selected='selected'>---------</option>
     {% for row in rows %}<option value="{{row.0}}">{{row.1}}</option>{%endfor%}
@@ -745,7 +745,7 @@ def save_video_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
         form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
-        form.fields['related_agricultural_practices'].queryset = Practices.objects.distinct().order_by('practice_name')
+        form.fields['related_practice'].queryset = Practices.objects.distinct().order_by('practice_sector__name')
         form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         return HttpResponse(form)
@@ -806,61 +806,6 @@ def save_video_offline(request, id):
             else:
                 return HttpResponse("0")
 
-def save_videoagriculturalpractices_online(request,id):
-    if request.method == 'POST':
-        if(id):
-            videoagriculturalpractices = VideoAgriculturalPractices.objects.get(id = id)
-            form = VideoAgriculturalPracticesForm(request.POST, instance = videoagriculturalpractices)
-        else:
-            form = VideoAgriculturalPracticesForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponse('')
-        else:
-            return HttpResponse(form.errors.as_text(), status=201)
-    else:
-        if(id):
-            videoagriculturalpractices = VideoAgriculturalPractices.objects.get(id = id)
-            form = VideoAgriculturalPracticesForm(instance = videoagriculturalpractices)
-        else:
-            form = VideoAgriculturalPracticesForm()
-        villages = get_user_villages(request)
-        form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
-        form.fields['practice'].queryset = Practices.objects.distinct().order_by('practice_name')
-        return HttpResponse(form)
-
-def get_videoagriculturalpractices_online(request, offset, limit):
-    if request.method == 'POST':
-        return redirect('videoagriculturalpractices')
-    else:
-        villages = get_user_villages(request)
-        videos = Video.objects.filter(village__in = villages).distinct().order_by("-id")
-        videoagriculturalpractices = VideoAgriculturalPractices.objects.filter(video__in = videos).distinct().order_by("-id")[offset:limit]
-        if(videoagriculturalpractices):
-            json_subcat = serializers.serialize("json", videoagriculturalpractices)
-        else:
-            json_subcat = 'EOF'
-        return HttpResponse(json_subcat, mimetype="application/javascript")
-
-def save_videoagriculturalpractices_offline(request, id):
-    if request.method == 'POST':
-        if(not id):
-            form = VideoAgriculturalPracticesForm(request.POST)
-            if form.is_valid():
-                new_form  = form.save(commit=False)
-                new_form.id = request.POST['id']
-                new_form.save()
-                return HttpResponse("1")
-            else:
-                return HttpResponse("0")
-        else:
-            videoagriculturalpractice = VideoAgriculturalPractices.objects.get(id=id)
-            form = VideoAgriculturalPracticesForm(request.POST, instance = videoagriculturalpractice)
-            if form.is_valid():
-                form.save()
-                return HttpResponse("1")
-            else:
-                return HttpResponse("0")
 
 def save_personshowninvideo_online(request,id):
     if request.method == 'POST':
@@ -1425,7 +1370,7 @@ def save_animatorassignedvillage_offline(request, id):
             return HttpResponse("0")
 
 def save_persongroup_online(request,id):
-    PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations','adopted_agricultural_practices',), extra=30)
+    PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations',), extra=30)
     if request.method == 'POST':
         if(id):
             persongroup = PersonGroups.objects.get(id = id)
@@ -1751,9 +1696,6 @@ def get_attendance(request, id):
 	practices = Practices.objects.all().order_by('practice_name')
 	for form_person_meeting_attendance in formset.forms:
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
-		form_person_meeting_attendance.fields['expressed_interest_practice'].queryset = practices
-		form_person_meeting_attendance.fields['expressed_adoption_practice'].queryset = practices
-		form_person_meeting_attendance.fields['expressed_question_practice'].queryset = practices
 	return render_to_response('feeds/attendance.html',{'formset':formset})
 
 def get_screenings_online(request, offset, limit):
@@ -2171,7 +2113,6 @@ def save_personmeetingattendance_online(request):
         villages = get_user_villages(request)
         form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
         form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-        form.fields['expressed_interest_practice'].queryset = Practice.objects.all().distinct().order_by('practice_name')
         return HttpResponse(form)
     
 def get_personmeetingattendances_online(request, offset, limit):
@@ -2530,7 +2471,7 @@ def practices_in_videos(request):
             except:
                 # log an error
                 continue
-            practice_ids.extend(video.related_agricultural_practices.values_list('id',flat=True))
+            practice_ids.append(video.related_practice.id)
         practice_ids = list(set(practice_ids))
         return HttpResponse(cjson.encode(practice_ids), mimetype='application/json')
 

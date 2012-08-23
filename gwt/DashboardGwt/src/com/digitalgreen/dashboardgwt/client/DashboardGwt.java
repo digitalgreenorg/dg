@@ -126,13 +126,6 @@ public class DashboardGwt implements EntryPoint {
 		requestContext.getArgs().put("action", "add");
 		hMap.put("", new Persons(requestContext));
 		
-		// Practices
-		hMap.put("", new Practices());
-		// Add Practices
-		requestContext = new RequestContext();
-		requestContext.getArgs().put("action", "add");
-		hMap.put("", new Practices(requestContext));
-		
 		// Regions
 		hMap.put("", new Regions());
 		// Add Regions
