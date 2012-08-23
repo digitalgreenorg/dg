@@ -26,24 +26,47 @@ public class Syncronisation {
 	private int lastSyncedId;
 	private int currentIndex = 0;
 	private String setGlobalKeyURL = "/dashboard/setkey/";
-	private BaseServlet servlet;
 	private int offset = 0;
-	
+		
 	public void syncFromLocalToMain(BaseServlet servlet) {
-		this.servlet = servlet;
 		formQueue = new FormQueueData(new OnlineOfflineCallbacks(servlet) {
+			
+			protected void uploadNextRow() {
+				this.setUploadInterrupted(ApplicationConstants.uploadNotInterrupted);
+				currentIndex++;
+				EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / totalRowsToSync) * 100)));
+				updateSyncStatusOfLastSyncedRowInFormQueueTable();
+				if(!postRowOfFormQueueTable()) {
+					updateGlobalPkIDOnMainServer();
+				}
+			}
+			
+			public void setUploadInterrupted(String value) {
+				LoginData user = new LoginData();
+		    	user.setUploadInterrupted(value, ApplicationConstants.getUsernameCookie());
+			}
+			
+			public String getUploadInterrupted() {
+				LoginData user=new LoginData();
+				String value = user.getUploadInterrupted(ApplicationConstants.getUsernameCookie());
+		        return value;
+		    }
+			
 			public void onlineSuccessCallback(String results) {
 				if(results.equals("1")) {
-					currentIndex++;
-					EventBus.get().fireEvent(new ProgressEvent((int)(((float)currentIndex / totalRowsToSync) * 100)));
-					updateSyncStatusOfLastSyncedRowInFormQueueTable();
-					if(!postRowOfFormQueueTable()) {
-						updateGlobalPkIDOnMainServer();
-					}
+					this.uploadNextRow();
 				} else if(results.equals("0")) {
-					RequestContext requestContext = new RequestContext();
-					requestContext.setErrorMessage("Validation Error.  Please contact support.");
-					getServlet().redirectTo(new Index(requestContext));
+					if (this.getUploadInterrupted().equals(ApplicationConstants.uploadInterrupted)) {
+						/* Nandini Sync Status Error: Sometimes upload is successful but network is interrupted.
+						 * Here, sync status may be 0 but the row has already been uploaded to the server.
+						 */
+						this.uploadNextRow(); // if upload was interrupted 
+					}
+					else {
+						RequestContext requestContext = new RequestContext();
+						requestContext.setErrorMessage("Validation Error.  Please contact support.");
+						getServlet().redirectTo(new Index(requestContext));
+					}
 				} else if(results.equals("synced")) {
 					EventBus.get().fireEvent(new ProgressEvent(100));
 					RequestContext requestContext = new RequestContext();
@@ -57,6 +80,7 @@ public class Syncronisation {
 
 			public void onlineErrorCallback(int errorCode) {
 				RequestContext requestContext = new RequestContext();
+				this.setUploadInterrupted(ApplicationConstants.uploadInterrupted);
 				if (errorCode == BaseData.ERROR_RESPONSE) {
 					requestContext.setErrorMessage("You may be experiencing server/bandwidth problems.  Please try again, or contact support.");
 				} else if (errorCode == BaseData.ERROR_SERVER) {
@@ -87,7 +111,13 @@ public class Syncronisation {
 					JSONObject resultObj = JSONParser.parse(results).isObject();
 					String err_count = resultObj.get("dashboard_error_count").toString();
 					String last_id = resultObj.get("last_id").toString();
-					user.insert(last_id, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), ApplicationConstants.getCurrentOnlineStatus()? "1":"0", "1", "0", ApplicationConstants.getUserRoleCookie(), err_count);
+					user.insert(last_id, ApplicationConstants.getUsernameCookie(), ApplicationConstants.getPasswordCookie(), ApplicationConstants.getCurrentOnlineStatus()? "1":"0", "1", "0", ApplicationConstants.getUserRoleCookie(),ApplicationConstants.uploadNotInterrupted, err_count);
+					/*
+					 * Testing Upload Interrupted Getter and Setter
+					//user.setUploadInterrupted(ApplicationConstants.uploadInterrupted, ApplicationConstants.getUsernameCookie());
+					//String uploadInterrupted = user.getUploadInterrupted(ApplicationConstants.getUsernameCookie());
+					//Window.alert("Upload Interrupted " + uploadInterrupted);
+					 */
 					formQueue.get(RequestContext.SERVER_HOST + ((BaseData)ApplicationConstants.mappingBetweenTableIDAndDataObject.get(ApplicationConstants.tableIDs[currentIndex])).getListingOnlineURL()+ offset+ "/" + ApplicationConstants.PAGESIZE + "/");
 				} else {
 					RequestContext requestContext = new RequestContext();
@@ -171,7 +201,6 @@ public class Syncronisation {
 		});
 		
 		
-		this.servlet = servlet;
 		BaseData instance = new BaseData();
 		ArrayList<Integer> resultSet = new ArrayList<Integer>();
 		

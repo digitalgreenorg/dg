@@ -1,12 +1,13 @@
-from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
-from django.core.mail import send_mail
-from dashboard.fields import *
+from dashboard.fields import BigAutoField, BigForeignKey, PositiveBigIntegerField
 import sys, traceback
 
 # Variables
@@ -104,6 +105,55 @@ EQUIPMENT_PURPOSE = (
 )
 
 
+class OfflineUserManager(models.Manager):
+    def get_offline_pk(self, username, flag_create):
+        """
+        username, flag_create
+        """
+        user = User.objects.get(username=username)
+        if user is None:
+            # Log "Anonymous User Access"
+            return None
+        try:
+            offline_user = OfflineUser.objects.get(user=user)
+        except ObjectDoesNotExist:
+            if flag_create:
+                BILLION_CONSTANT = 1000000000
+                offline_id = (int(user.id) * BILLION_CONSTANT) + 1000
+                offline_user = OfflineUser()
+                offline_user.user = user
+                offline_user.offline_pk_id = offline_id
+                offline_user.save()
+            else:
+                return None
+        return offline_user.offline_pk_id
+    
+    def set_offline_pk(self, offline_pk):
+        user_id = int(offline_pk)/1000000000
+        if user_id < 1:
+            # Log generated id does not correspond to the correct format
+            return False
+        user = User.objects.get(id=user_id)
+        if user is None:
+            # Log "Anonymous User Access"
+            return False
+        try:
+            offline_user = OfflineUser.objects.get(user=user)
+        except DoesNotExist:
+            return False
+        min_auto_increment = 10000000000000
+        if offline_pk > min_auto_increment or offline_user.offline_pk_id > offline_pk:
+            # LOG THIS -> SOME MAJOR GHAPLA HAS OCCURED
+            return False
+        offline_user.offline_pk_id = offline_pk
+        offline_user.save()
+        return True
+
+class OfflineUser(models.Model):
+    user = models.ForeignKey(User)
+    offline_pk_id = PositiveBigIntegerField()
+    objects = OfflineUserManager()
+
 class RegionTest(models.Model):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -176,15 +226,6 @@ class DevelopmentManager(models.Model):
 
     def __unicode__(self):
         return self.name
-
-
-        class Media:
-            js = (
-                settings.ADMIN_MEDIA_PREFIX + "js/SelectBox.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/SelectFilter2.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/jquery.js",
-                settings.ADMIN_MEDIA_PREFIX + "js/ajax_filtered_fields.js",
-            )
 
 class State(models.Model):
     id = BigAutoField(primary_key = True)
@@ -493,12 +534,12 @@ class Person(models.Model):
                         if instance.date_of_joining == None or check_date < instance.date_of_joining:
                             instance.date_of_joining = check_date
                             instance.save()
-        except Exception, e:
+        except Exception:
             #Catching all to avoid bugs from stopping COCO
             #Sending email to rahul@digitalgreen.org
-            type, value, tracebk = sys.exc_info()
+            error_type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            val = send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
         
     def __unicode__(self):
         if (self.father_name is None or self.father_name==''):
@@ -631,7 +672,7 @@ class Video(models.Model):
                     elif kwargs['action'] == "post_add":
                         Video.objects.filter(pk__in = kwargs['pk_set']).update(viewers = F("viewers") + count)
                     elif kwargs['action'] == 'pre_clear':
-                       kwargs['instance'].videoes_screened.update(viewers = F("viewers") - count)
+                        kwargs['instance'].videoes_screened.update(viewers = F("viewers") - count)
                 else:
                     video = Video.objects.get(pk=kwargs['instance'].pk)
                     if kwargs['action'] == "post_remove":
@@ -656,12 +697,12 @@ class Video(models.Model):
                             kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') + 1)
                 elif kwargs['signal'] == pre_delete:
                     kwargs['instance'].screening.videoes_screened.update(viewers = F('viewers') - 1)
-        except Exception, e:
+        except Exception:
             #Catching all to avoid bugs from stopping COCO
             #Sending exception for immediate attention
-            type, value, tracebk = sys.exc_info()
+            error_type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            val = send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
+            send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
     
     class Meta:
         db_table = u'VIDEO'

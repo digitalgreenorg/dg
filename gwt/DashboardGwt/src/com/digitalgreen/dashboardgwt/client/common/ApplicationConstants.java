@@ -40,6 +40,13 @@ public class ApplicationConstants {
 	
 	public static String digitalgreenDatabaseName = "digitalgreendatabase";
 	
+	/*
+	 * Constants to record when an upload is interrupted, 
+	 * stored in the database in the table user in field upload_interrupted.
+	 */
+	public static String uploadInterrupted = "1";
+	public static String uploadNotInterrupted = "0";
+	
 	public static String[] tableIDs = {	"7","8","9","10","11","12","13",
 										"14","15","16", "17","18", "19","20","21",
 										"22","23","37","24", "25","26","27",
