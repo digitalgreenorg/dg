@@ -170,7 +170,7 @@ def video(request):
     
     
     rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('-viewers')
-    rel_vids_prac = rel_vids_all.filter(related_agricultural_practices__in = vid.related_agricultural_practices.all())
+    rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
     else:
@@ -239,14 +239,14 @@ def video_search(request):
         search_box_params['video_uploaded'] = video_uploaded
     
     if(season):
-        vids = vids.filter(related_agricultural_practices__seasonality__in = season);
+        vids = vids.filter(related_practice__seasonality__in = season);
         search_box_params['season'] = season
     if(lang):
         vids = vids.filter(language__id = int(lang))
         search_box_params['sel_lang'] = lang
     search_box_params['langs'] = Language.objects.all().values('id','language_name')
     if(prac_arr):
-        vids = vids.filter(related_agricultural_practices__id__in = map(int,prac_arr))
+        vids = vids.filter(related_practice__id__in = map(int,prac_arr))
         search_box_params['prac'] = prac_arr
     search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
     if(geog):

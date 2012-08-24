@@ -229,44 +229,6 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
 
     return join_sql_ds(sql_ds)
 
-
-#'type' can be prod_tar/screen_tar/adopt_tar
-def target_lines(geog,id, from_date, to_date, partners, type):
-    sql_ds = get_init_sql_ds();
-
-    if(geog == 'STATE'):
-        sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
-        sql_ds['where'].append("D.state_id = "+str(id))
-        if(partners):
-            sql_ds['where'].append("D.partner_id IN ("+','.join(partners)+")")
-    elif(geog == 'DISTRICT'):
-        sql_ds['where'].append("D_T.district_id = "+str(id))
-    elif(geog == "COUNTRY"):
-        if(partners):
-            sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
-            sql_ds['where'].append("D.partner_id IN ("+','.join(partners)+")")
-    else:
-        return '';
-    if(from_date and to_date):
-        sql_ds['where'].append("month_year  BETWEEN '"+from_date+"' AND '"+to_date+"'")
-    sql_ds['select'].append('month_year as date')
-    sql_ds['from'].append("dashboard_target D_T")
-
-    if(type=='screen_tar'):
-        sql_ds['select'].append("disseminations")
-        sql_ds['where'].append("disseminations IS NOT NULL")
-    elif(type=='prod_tar'):
-        sql_ds['select'].append("video_production")
-        sql_ds['where'].append("video_production IS NOT NULL")
-    elif(type=='adopt_tar'):
-        sql_ds['select'].append('disseminations*adoption_per_dissemination')
-        sql_ds['where'].append("disseminations*adoption_per_dissemination IS NOT NULL")
-    else:
-        return ""
-
-    return join_sql_ds(sql_ds);
-
-
 #Query for number of distinct persons who attended a screening in the past 60 days from 'to_date'
 def tot_dist_attendees_adopt_60_days(geog, id, to_date,partners):
     sql_ds = get_init_sql_ds()
