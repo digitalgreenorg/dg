@@ -376,7 +376,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
 		
-		Anchor link = new Anchor("Classify video", true,"#dashboard/classifyvideo"); 
+		Anchor link = new Anchor("Classify Video", true,"#dashboard/classifyvideo"); 
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
