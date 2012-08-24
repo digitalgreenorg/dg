@@ -49,7 +49,7 @@ def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['lojoin'].append(["practice_subtopic subtop","subtop.id = P.practice_subtopic_id"])
     sql_ds['lojoin'].append(["practice_subject sub","sub.id = P.practice_subject_id"])
     sql_ds['join'].append(["PERSON Pe", "Pe.id = PAP.person_id"])
-    filter_partner_geog_date(sql_ds,'P','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
+    filter_partner_geog_date(sql_ds,'Pe','PAP.DATE_OF_ADOPTION',geog,id,from_date,to_date,partners)
     sql_ds['group by'].append("PRACTICE_NAME")
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
