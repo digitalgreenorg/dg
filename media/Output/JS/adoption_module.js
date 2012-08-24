@@ -7,7 +7,7 @@ function drawCharts() {
 	$.getJSON('/analytics/adoption_practice_wise_scatter/?'+search_params, function(json){practice_bubble(json);});
 	$.getJSON('/analytics/adoption_pie_graph_mf_ratio/?'+search_params, function(json){gender_pie(json);});
 	$.getJSON('/analytics/adoption_rate_line/?'+search_params, function(json){percent_line(json)});
-	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['adopt', 'adopt_tar']}, function(json){total_line(json);});
+	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['adopt']}, function(json){total_line(json);});
 
 }
 

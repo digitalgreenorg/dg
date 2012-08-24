@@ -220,7 +220,7 @@ def drop_down_val(request):
 
 
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
-#type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+#type can be ['prod','screen','prac','person','adopt']
 #       Based on the 'type', it generates the data for that set only
 #       If 'type' is not specified, it generates for all.
 def overview_line_graph(request):
@@ -230,7 +230,7 @@ def overview_line_graph(request):
     if('type' in request.GET):
         graph_type = request.GET.getlist('type')
     else:
-        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt']
 
     if('prod' in graph_type):
         vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
@@ -262,21 +262,6 @@ def overview_line_graph(request):
     else:
         village_rs = []
 
-    if('prod_tar' in graph_type):
-        prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        prod_tar_rs = []
-
-    if('adopt_tar' in graph_type):
-        adopt_tar_rs = run_query_dict(shared_sql.target_lines(type='adopt_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        adopt_tar_rs = []
-
-    if('screen_tar' in graph_type):
-        screen_tar_rs = run_query_dict(shared_sql.target_lines(type='screen_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        screen_tar_rs = []
-
     start_date = today = datetime.date.today()
     if vid_prod_rs:
         start_date = min(start_date, *(vid_prod_rs.keys()))
@@ -288,14 +273,7 @@ def overview_line_graph(request):
         start_date = min(start_date,*(prac_rs.keys()))
     if person_rs:
         start_date = min(start_date,*(person_rs.keys()))
-    if screen_tar_rs:
-        start_date = min(start_date,*(screen_tar_rs.keys()))
-    if adopt_tar_rs:
-        start_date = min(start_date,*(adopt_tar_rs.keys()))
-    if prod_tar_rs:
-        start_date = min(start_date,*(prod_tar_rs.keys()))
-        
-    
+
     ###Calculating village operational on each day.
     
     #village_rs -> temp. temp is a dictionary of date vs list of village IDS
@@ -336,7 +314,7 @@ def overview_line_graph(request):
     diff = (today - start_date).days
 
     str_list = []
-    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = sum_vid_tar = sum_sc_tar = sum_adopt_tar = 0
+    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = 0
     for i in range(0,diff+1):
         iter_date = start_date + datetime.timedelta(days=i)
 
@@ -350,12 +328,6 @@ def overview_line_graph(request):
             sum_prac += prac_rs[iter_date][0]
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
-        if iter_date in prod_tar_rs:
-            sum_vid_tar += prod_tar_rs[iter_date][0]
-        if iter_date in screen_tar_rs:
-            sum_sc_tar += screen_tar_rs[iter_date][0]
-        if iter_date in adopt_tar_rs:
-            sum_adopt_tar += adopt_tar_rs[iter_date][0]
 
         append_str = [str(iter_date)]
         if('prod' in graph_type): append_str.append(sum_vid)
@@ -365,10 +337,6 @@ def overview_line_graph(request):
         if('person' in graph_type): append_str.append(sum_person)
         if(geog in ["COUNTRY","STATE","DISTRICT"]):
             if('village' in graph_type): append_str.append(vil_vals[iter_date])
-            if('prod_tar' in graph_type): append_str.append(sum_vid_tar)
-            if('screen_tar' in graph_type): append_str.append(sum_sc_tar)
-            if('adopt_tar' in graph_type): append_str.append(sum_adopt_tar)
-
 
         str_list.append(append_str)
 
@@ -387,12 +355,7 @@ def overview_line_graph(request):
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
         if('village' in graph_type):
             header.append('Village')
-        if('prod_tar' in graph_type):
-            header.append('Video Production Target')
-        if('screen_tar' in graph_type):
-            header.append('Disseminations Target')
-        if('adopt_tar' in graph_type):
-            header.append('Adoptions Target')
+
     str_list.insert(0,header)
     return HttpResponse(json.dumps(str_list))
 

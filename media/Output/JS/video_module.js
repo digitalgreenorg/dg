@@ -33,7 +33,7 @@ function drawCharts() {
 	$.getJSON('/analytics/video_type_wise_pie/?'+search_params, function(json){type_pie(json)});
 	$.getJSON('/analytics/video_language_wise_scatter_data/?'+search_params, function(json){language_bubble(json)});
 	$.getJSON('/analytics/video_practice_wise_scatter/?'+search_params, function(json){practice_bubble(json)});
-	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['prod', 'prod_tar']}, function(json){total_line(json)});
+	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['prod']}, function(json){total_line(json)});
 }
 
 function remove_loader(div_id){
