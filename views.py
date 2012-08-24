@@ -2395,7 +2395,6 @@ def practices_seen_by_farmer(request, person_id):
         try:
             farmer = Person.objects.get(id=person_id)
             video_list = farmer.screening_set.values_list('videoes_screened__id', 'videoes_screened__title')
-            #practice_list = farmer.screening_set.values('videoes_screened__related_agricultural_practices__id', 'videoes_screened__related_agricultural_practices__practice_name')
             video_list = list(set(video_list))
         except:
             video_list = []
