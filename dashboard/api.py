@@ -23,6 +23,7 @@ class CountryResource(ModelResource):
         'country_name': ALL,
         'start_date':ALL,
         }
+        always_return_data = True
         validation = FormValidation(form_class=CountryForm)
     
     def override_urls(self):
