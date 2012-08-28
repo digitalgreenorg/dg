@@ -40,7 +40,7 @@
 	                       <a class='videotitlelinks' href='../video/?id={{vid.id}}'>{{vid.title}}</a>
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
-	                       {% for prac in vid.related_agricultural_practices.all %}{{prac.practice_name}}{% if not forloop.last %}, {%endif%}{%empty%}NA{%endfor%}.
+	                       {{vid.related_practice.practice_name|default:' '}}
 	                    </div>
 	                    <div class='searchresultdivrighttddiv22'>
 	                       {{vid.duration|time:"H:i:s"|default:"Duration:NA"}}
