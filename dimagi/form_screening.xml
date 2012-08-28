@@ -8,6 +8,7 @@
 					<time />
 					<selected_village/>
 					<selected_group/>
+					<selected_video/>
 					<selected_mediator />
 					<attendee_ids />
 					<number_of_attendees_display/>
@@ -28,12 +29,14 @@
 			<instance id="group" src="jr://fixture/item-list:group"/>
 			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
+			<instance id="video" src="jr://fixture/item-list:video"/>
 			
 			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
 			<!-- Time widget: remove required="true()" because that doesn't work in the preview -->
 			<bind nodeset="/data/time" type="xsd:time" />
 			<bind nodeset="/data/selected_village" />
 			<bind nodeset="/data/selected_group" />
+			<bind nodeset="/data/selected_video" />
 			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[selected(/data/selected_group,group_id)]/id))"/>
 			<bind nodeset="/data/number_of_attendees_display"/>
 			<bind nodeset="/data/attendance_record"/>
@@ -89,6 +92,9 @@
 					<text id="selected_group-label">
 						<value>Group</value>
 					</text>
+					<text id="selected_video-label">
+						<value>Video</value>
+					</text>
 					<text id="date-label">
 						<value>Date</value>
 					</text>
@@ -123,6 +129,13 @@
 		<select ref="/data/selected_group">
 			<label ref="jr:itext('selected_group-label')"/>
 			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
+				<label ref="name"/>
+				<value ref="id"/>
+			</itemset>
+		</select>
+		<select ref="/data/selected_video">
+			<label ref="jr:itext('selected_video-label')"/>
+			<itemset nodeset="instance('video')/video_list/video[date(low) &lt;=/data/date and date(high) &gt;=/data/date]">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
