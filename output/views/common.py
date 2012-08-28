@@ -343,15 +343,15 @@ def overview_line_graph(request):
     #For settings
     header=['date']
     if('prod' in graph_type):
-        header.append('Total Videos Produced')
+        header.append('Total videos produced')
     if('screen' in graph_type):
-        header.append('Total Disseminations')
+        header.append('Total disseminations')
     if('adopt' in graph_type):
-        header.append('Total Adoptions')
+        header.append('Total adoptions')
     if('prac' in graph_type):
-        header.append('Total Practices')
+        header.append('Total practices')
     if('person' in graph_type):
-        header.append('Total Farmers')
+        header.append('Total viewers')
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
         if('village' in graph_type):
             header.append('Village')
