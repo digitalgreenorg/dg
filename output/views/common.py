@@ -129,7 +129,7 @@ def practice_change(request):
     {%endfor%}
     """
     html_subtop = """
-    <option value='-1'>Any Suctopic</option>
+    <option value='-1'>Any Subtopic</option>
     {% for key,item in sql_result.3 %}
         <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
     {%endfor%}
@@ -411,7 +411,7 @@ def practice_scatter_chart_data(sqlFunc, **args):
 
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
-    return_val = [['',-1,-1,-1,0]]
+    return_val = [['','','','','Number']]
     if not rs:
         return HttpResponse(json.dumps([[]]));
 
