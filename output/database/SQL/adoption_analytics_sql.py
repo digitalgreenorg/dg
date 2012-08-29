@@ -40,8 +40,8 @@ def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['select'].extend(["PRACTICE_NAME as name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub", "COUNT(PAP.id) as count"])
 #    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(PAP.id) as count"])
     sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP");
-    sql_ds['join'].append(["VIDEO v","PAP.video_id = v.id"])
-    sql_ds['join'].append(["PRACTICES P","v.related_practice_id = P.id"])
+    sql_ds['join'].append(["VIDEO vid","PAP.video_id = vid.id"])
+    sql_ds['join'].append(["PRACTICES P","vid.related_practice_id = P.id"])
     ##Change
     sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
     sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])

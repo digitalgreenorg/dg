@@ -349,6 +349,7 @@ def overview_line_graph(request):
     if('adopt' in graph_type):
         header.append('Total adoptions')
     if('prac' in graph_type):
+
         header.append('Total practices')
     if('person' in graph_type):
         header.append('Total viewers')
