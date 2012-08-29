@@ -349,7 +349,8 @@ def overview_line_graph(request):
     if('adopt' in graph_type):
         header.append('Total adoptions')
     if('prac' in graph_type):
-        header.append('Total Ppractices')
+
+        header.append('Total practices')
     if('person' in graph_type):
         header.append('Total viewers')
     if(geog in ["COUNTRY","STATE","DISTRICT"]):
@@ -410,7 +411,7 @@ def practice_scatter_chart_data(sqlFunc, **args):
 
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
-    return_val = [['',-1,-1,-1,0]]
+    return_val = [['','','','','Number']]
     if not rs:
         return HttpResponse(json.dumps([[]]));
 
