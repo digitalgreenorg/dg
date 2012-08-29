@@ -227,6 +227,11 @@
 			$('#current_page').val(page_num);
 		}
 		
+		//function to get random number upto m
+		function randomNumberInRange(minVal,maxVal,floatVal) {
+		  var randVal = minVal+(Math.random() * (maxVal-minVal));
+		  return typeof floatVal=='undefined'?Math.round(randVal):randVal.toFixed(floatVal);
+		 }
 		
 		function initialize() {
 			$(function(){
@@ -307,10 +312,19 @@
 					//alert('markign');
 					
 				}
-				
-				var mys_vil_ids = new Array(47000001038, 47000001044, 47000001122, 47000051353, 47000052364, 47000056970)
+				var angle=50 * 0.0089833458;
+				var latMin = 12.3024 - angle;
+				var latMax = 12.3024 + angle;
+				var lngMin = 76.6386 - angle;
+				var lngMax = 76.6386 + angle;
+					
+				var mys_vil_ids = new Array(47000001038, 47000001044, 47000001122, 47000051353, 47000052364, 47000056970);
 				for(var i=0; i<mys_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(12.3024 + 0.1 * Math.random(), 76.6386 + 0.1 * Math.random());
+					//get random lat and lngs between these points
+					var latitude = randomNumberInRange(latMin, latMax, 4);
+					var longitude = randomNumberInRange(lngMin, lngMax, 4);
+					alert(latitude+":"+longitude);
+					var latLng = new google.maps.LatLng(latitude, longitude);
 					var marker// = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/blue_markerA.png'});
 					for(var index=0; index<gradeArray.length; index++) {
 						if (gradeArray[index][0] == bel_vil_ids[i]) {
