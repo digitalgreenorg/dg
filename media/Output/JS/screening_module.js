@@ -71,74 +71,83 @@ function geog_pie_click(e) {
 }
 
 function monthwise_column(json) {
+	if(json.length>1)
+	{
+		var monthwise_column_chart_data = google.visualization.arrayToDataTable(json,false);
+		var options = jQuery.extend(true, {}, column_options);
+		options['chartArea']={left:70,top:20,width:"80%",height:"80%"};
+		options['vAxis']= {title: 'Number of Disseminations'};
+		options['legend']= {position: 'bottom'};
 
-	var monthwise_column_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, column_options);
-	options['chartArea']={left:70,top:20,width:"80%",height:"80%"};
-	options['vAxis']= {title: 'Number of Disseminations'};
-	options['legend']= {position: 'bottom'};
-
-	var monthwise_column_chart = new google.visualization.ChartWrapper({
-		'chartType':'ColumnChart',
-		'containerId':'javascript_monthwise_column',
-		'options':options,
-		'dataTable':monthwise_column_chart_data
-	});
-	remove_loader(monthwise_column_chart.getContainerId());
-	monthwise_column_chart.draw();
-	exp_monthwise_column_chart=new google.visualization.ChartWrapper({
-		'chartType':'ColumnChart',
-		'options':options,
-		'dataTable':monthwise_column_chart_data
-	});
+		var monthwise_column_chart = new google.visualization.ChartWrapper({
+			'chartType':'ColumnChart',
+			'containerId':'javascript_monthwise_column',
+			'options':options,
+			'dataTable':monthwise_column_chart_data
+		});
+		remove_loader(monthwise_column_chart.getContainerId());
+		monthwise_column_chart.draw();
+		exp_monthwise_column_chart=new google.visualization.ChartWrapper({
+			'chartType':'ColumnChart',
+			'options':options,
+			'dataTable':monthwise_column_chart_data
+		});
+	}
+	remove_loader('javascript_monthwise_column');
 }
 
 function total_line(json) {
 
 	var total_line_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, line_options);
-	options['vAxis']= {title: 'Number of Persons'};
-	options['legend']= {position: 'top', alignment: 'start', textStyle: {fontSize: 9}};
-	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	if (json.length>1)
+	{
+		var options = jQuery.extend(true, {}, line_options);
+		options['vAxis']= {title: 'Number of Persons'};
+		options['legend']= {position: 'top', alignment: 'start', textStyle: {fontSize: 9}};
+		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 
 
-	var total_line_chart = new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'containerId':'javascript_total_line',
-		'options':options,
-		'dataTable':total_line_chart_data
-	});
-	remove_loader(total_line_chart.getContainerId());
-	total_line_chart.draw();
-	exp_total_line_chart=new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'options':options,
-		'dataTable':total_line_chart_data
-	});
-	$("span").remove();
+		var total_line_chart = new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'containerId':'javascript_total_line',
+			'options':options,
+			'dataTable':total_line_chart_data
+		});
+
+		total_line_chart.draw();
+		exp_total_line_chart=new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'options':options,
+			'dataTable':total_line_chart_data
+		});
+	}
+	remove_loader('javascript_total_line');
 }
 
 function percent_line(json) {
 
 	var percent_line_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, line_options);
-	options['legend']= {position: 'top', alignment: 'start', textStyle: {fontSize: 9}};
-	options['chartArea']={left:60,top:40,width:"85%",height:"70%"};
+	if (json.length>1)
+	{
+		var options = jQuery.extend(true, {}, line_options);
+		options['legend']= {position: 'top', alignment: 'start', textStyle: {fontSize: 9}};
+		options['chartArea']={left:60,top:40,width:"85%",height:"70%"};
 
-	var percent_line_chart = new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'containerId':'javascript_percent_line',
-		'options':options,
-		'dataTable':percent_line_chart_data
-	});
-	remove_loader(percent_line_chart.getContainerId());
-	percent_line_chart.draw();
-	$("span").remove();
-	exp_percent_line_chart=new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'options':options,
-		'dataTable':percent_line_chart_data
-	});
+		var percent_line_chart = new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'containerId':'javascript_percent_line',
+			'options':options,
+			'dataTable':percent_line_chart_data
+		});
+
+		percent_line_chart.draw();
+		exp_percent_line_chart=new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'options':options,
+			'dataTable':percent_line_chart_data
+		});
+	}
+	remove_loader('javascript_percent_line');
 }
 
 function practice_bubble(json) {
@@ -160,7 +169,7 @@ function practice_bubble(json) {
 			                                                                            {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
 			                                                                            {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 		});
-		
+
 		fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
@@ -348,27 +357,29 @@ function gender_pie(json) {
 		'options':options,
 		'dataTable':gender_pie_chart_data
 	});
-	$("span").remove();
 }
 
 function day_line(json) {
 	var day_line_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, line_options);
-	options['legend']={position: 'in'};
-	options['chartArea']={left: 70,top:20,width:"90%",height:"85%"};
-	var day_line_chart = new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'containerId':'javascript_day_line',
-		'options':options,
-		'dataTable':day_line_chart_data
-	});
-	remove_loader(day_line_chart.getContainerId());
-	day_line_chart.draw();
-	exp_day_line_chart=new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'options':options,
-		'dataTable':day_line_chart_data
-	});
-	$("span").remove();
+	if(json.length>1)
+	{
+		var options = jQuery.extend(true, {}, line_options);
+		options['legend']={position: 'in'};
+		options['chartArea']={left: 70,top:20,width:"90%",height:"85%"};
+		var day_line_chart = new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'containerId':'javascript_day_line',
+			'options':options,
+			'dataTable':day_line_chart_data
+		});
+		remove_loader(day_line_chart.getContainerId());
+		day_line_chart.draw();
+		exp_day_line_chart=new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'options':options,
+			'dataTable':day_line_chart_data
+		});
+	}
+	remove_loader('javascript_day_line');
 }
 
