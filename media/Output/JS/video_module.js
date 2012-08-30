@@ -337,7 +337,7 @@ function total_line(json) {
 
 	var total_line_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, line_options);
-	options['vAxis']= {title: 'No. of Persons'};
+	options['vAxis']= {title: 'Number of Persons'};
 	options['legend']= {position: 'top', alignment: 'center', textStyle: {fontSize: 12}};
 	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 
