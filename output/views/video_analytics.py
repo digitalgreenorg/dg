@@ -248,7 +248,6 @@ def video_search(request):
     if(prac_arr):
         vids = vids.filter(related_practice__id__in = map(int,prac_arr))
         search_box_params['prac'] = prac_arr
-    search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
     if(geog):
         geog = geog.upper();
         if(geog=="STATE"):
