@@ -379,7 +379,7 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		Anchor link = new Anchor("Classify Video", true,"#dashboard/classifyvideo"); 
 		link.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
+				Window.open("/videotask/home/", "blank", "");
 			}	
 		});
 		RootPanel.get("cv-1").add(link);
