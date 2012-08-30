@@ -40,25 +40,29 @@ function remove_loader(div_id){
 	document.getElementById(div_id).style.backgroundImage = "none";
 }
 function monthwise_column(json) {
+	if(json.length>1)
+	{
 
-	var monthwise_column_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, column_options);
-	options['chartArea']={left:70,top:20,width:"80%",height:"80%"};
-	options['vAxis']= {title: 'Number of Videos'};
-	options['legend']= {position: 'bottom'};
-	var monthwise_column_chart = new google.visualization.ChartWrapper({
-		'chartType':'ColumnChart',
-		'containerId':'javascript_monthwise_column',
-		'options':options,
-		'dataTable':monthwise_column_chart_data
-	});
-	remove_loader(monthwise_column_chart.getContainerId());
-	monthwise_column_chart.draw();
-	exp_monthwise_column_chart=new google.visualization.ChartWrapper({
-		'chartType':'ColumnChart',
-		'options':options,
-		'dataTable':monthwise_column_chart_data
-	});
+
+		var monthwise_column_chart_data = google.visualization.arrayToDataTable(json,false);
+		var options = jQuery.extend(true, {}, column_options);
+		options['chartArea']={left:70,top:20,width:"80%",height:"80%"};
+		options['vAxis']= {title: 'Number of Videos'};
+		options['legend']= {position: 'bottom'};
+		var monthwise_column_chart = new google.visualization.ChartWrapper({
+			'chartType':'ColumnChart',
+			'containerId':'javascript_monthwise_column',
+			'options':options,
+			'dataTable':monthwise_column_chart_data
+		});
+		monthwise_column_chart.draw();
+		exp_monthwise_column_chart=new google.visualization.ChartWrapper({
+			'chartType':'ColumnChart',
+			'options':options,
+			'dataTable':monthwise_column_chart_data
+		});
+	}
+	remove_loader('javascript_monthwise_column');
 }
 
 function language_bubble(json) {
@@ -73,7 +77,7 @@ function language_bubble(json) {
 		options['vAxis']= {title: 'Number of Videos',gridlines:{count:12}, maxValue: yrange.max };
 		options['sizeAxis']={maxSize: 20};
 		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
-	}
+	
 	var language_bubble_chart = new google.visualization.ChartWrapper({
 		'chartType':'BubbleChart',
 		'containerId':'javascript_language_bubble',
@@ -87,6 +91,8 @@ function language_bubble(json) {
 		'options':options,
 		'dataTable':language_bubble_chart_data
 	});
+	}
+	remove_loader('javascript_language_bubble');
 }
 
 function geog_pie(json) {
@@ -162,7 +168,7 @@ function practice_bubble(json) {
 			                                                                            {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
 			                                                                            {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}])
 		});
-		
+
 		fillSelect(practice_bubble_chart_data.getDistinctValues(1),"sec","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(2),"subsec","Any");
 		fillSelect(practice_bubble_chart_data.getDistinctValues(3),"top","Any");
@@ -336,25 +342,26 @@ function radio_value()
 function total_line(json) {
 
 	var total_line_chart_data = google.visualization.arrayToDataTable(json,false);
-	var options = jQuery.extend(true, {}, line_options);
-	options['vAxis']= {title: 'Number of Persons'};
-	options['legend']= {position: 'top', alignment: 'center', textStyle: {fontSize: 12}};
-	options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
+	
+		var options = jQuery.extend(true, {}, line_options);
+		options['vAxis']= {title: 'Number of Persons'};
+		options['legend']= {position: 'top', alignment: 'center', textStyle: {fontSize: 12}};
+		options['chartArea']={left:60,top:40,width:"85%",height:"75%"};
 
 
-	var total_line_chart = new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'containerId':'javascript_total_line',
-		'options':options,
-		'dataTable':total_line_chart_data
-	});
-	remove_loader(total_line_chart.getContainerId());
-	total_line_chart.draw();
-	exp_total_line_chart=new google.visualization.ChartWrapper({
-		'chartType':'LineChart',
-		'options':options,
-		'dataTable':total_line_chart_data
-	});
+		var total_line_chart = new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'containerId':'javascript_total_line',
+			'options':options,
+			'dataTable':total_line_chart_data
+		});
+		remove_loader(total_line_chart.getContainerId());
+		total_line_chart.draw();
+		exp_total_line_chart=new google.visualization.ChartWrapper({
+			'chartType':'LineChart',
+			'options':options,
+			'dataTable':total_line_chart_data
+		});
 }
 function gender_pie(json) {
 	var gender_pie_chart_data = google.visualization.arrayToDataTable(json,false);

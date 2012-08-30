@@ -231,27 +231,7 @@
 				</div>				
 			</div>				
 		</div>
-		
-				
-		<div class='searchleftdiv'>
-			<div class='searchtitle'>
-				Select Practices
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1'>
-				   		<select class='select' id='practice' multiple='multiple' size='3'>
-					  		<option value='-1' selected="selected">All Practices</option>
-					  		{% for prac in search_box_params.all_pracs %}
-					  		<option value="{{prac.id}}">{{prac.practice_name}}</option>
-  							{% endfor %}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>
-		</div>
-		
-		
+
 		<div class='searchleftdiv'>
 			<div class='searchtitle'>
 				Select Production Date
