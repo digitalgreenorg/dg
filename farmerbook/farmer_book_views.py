@@ -5,6 +5,7 @@ from django.utils import simplejson
 from dashboard.models import *
 from django.db.models import Count
 import datetime
+import random
 from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 import get_id_with_images
@@ -122,10 +123,14 @@ def get_villages_with_images(request):
         vil_details = Village.objects.filter(id = i).values_list('id', 'village_name', 
                                                                  'block__district__id', 'grade')
         district_id = vil_details[0][2]
-        latitude = district_lat_lng[district_id][1]
-        longitude = district_lat_lng[district_id][2]
-        village_details.append({"id":i, "village_name": vil_details[0][1], "latitude":latitude, 
-                                "longitude": longitude, "grade": vil_details[0][3]})
+        district_lat= district_lat_lng[district_id][1]
+        district_lng = district_lat_lng[district_id][2]
+        #vincenty's formula to calculate lats and lngs in range of 50 km
+        angle=50 * 0.0089833458;
+        random_lat = "%.4f" % random.uniform(district_lat - angle, district_lat + angle)
+        random_lng = "%.4f" % random.uniform(district_lng - angle, district_lng + angle)
+        village_details.append({"id":i, "village_name": vil_details[0][1], "latitude":random_lat, 
+                                "longitude": random_lng, "grade": vil_details[0][3]})
     print village_details
     
     return HttpResponse(simplejson.dumps(village_details), mimetype="application/json")
