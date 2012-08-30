@@ -260,7 +260,7 @@
                                             <a class='videotitlelinks' href='../video/?id={{v.id}}'>{{v.title|title}}</a>
                                         </div>                                           
                                         <div id='contentdivrighttddiv22'>
-                                           {%for prac in v.related_agricultural_practices.all%}{{prac.practice_name}}{%if not forloop.last%}, {%endif%}{%endfor%};
+                                           {{v.related_practice.practice_name|default:' '}}
                                         </div>
                                         <div id='contentdivrighttddiv22'>
                                             {{v.viewers}} viewer{{v.viewers|pluralize}}
