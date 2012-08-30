@@ -6,7 +6,7 @@ $(function(){
                                       this.destroy();
                                       },
                                       url : function() {
-                                      return this.id ? '/api/v1/country/' + this.id+"/" : '/api/v1/country/';
+                                      return this.id ? '/api/v1/block/' + this.id+"/" : '/api/v1/block/';
                                       } 
   
   });
@@ -36,21 +36,21 @@ $(function(){
                                                  }
                                             },
 
-                                            template:_.template($('#tpl-country-item').html()),
-                                            
-                                            render: function () {
+                                            template:_.template($('#tpl-block-item').html()),
+                                             render: function () {
                                                 $(this.el).html(this.template(this.model.toJSON()));
                                                 return this;
                                             }
-                                        });
+                                          });
   
   // define the collection of countries
   var CountryCollection = Backbone.Collection.extend({
                                                         model: Country,
-                                                        url: '/api/v1/country/',
+                                                        url: '/api/v1/block/',
                                                         parse: function(data) {
-                                                            return data.objects;
-                                                        }
+                                                        return data.objects;
+                                                     }
+                                                     
                                                       });
   
   // main app
@@ -58,9 +58,9 @@ $(function(){
                                      el: $("body"),
                                      events: {
                                         "click button#add" : "addCountry",
-                                         "click #countryForm :submit": "handleModal",
-                                         "keydown #countryForm": "handleModalOnEnter",
-                                         "hidden #countryModal": "prepareForm"
+                                         "click #blockForm :submit": "handleModal",
+                                         "keydown #blockForm": "handleModalOnEnter",
+                                         "hidden #blockModal": "prepareForm"
                                      },
                                      
                                      initialize: function() {
@@ -83,11 +83,12 @@ $(function(){
                                          event.stopImmediatePropagation();
                                          event.preventDefault();
                                          this.prepareForm(null);
-                                         $('#countryModal').modal('show');
+                                         $('#blockModal').modal('show');
    
                                      },
                                      
                                      addNew: function(country){
+                                     alert(JSON.stringify(country));
                                         this.countries.create(country,{wait: true});
                                      
 
@@ -95,41 +96,42 @@ $(function(){
                                      
                                      editCountry: function(country){
                                          this.prepareForm(country.toJSON());
-                                         $('#countryModal').data('countryId', country.get('id'));
-                                         $('#countryModal').modal('show');
+                                         $('#blockModal').data('countryId', country.get('id'));
+                                         $('#blockModal').modal('show');
                                      },
                                      
                                      prepareForm: function(countryData) {
                                          countryData = countryData || {};
-                                         
                                          var data = {
-                                         'country_name': '',
-                                         'start_date': ''
+                                         'block_name': '',
+                                         'start_date': '',
+                                         
                                          };
                                          
                                          $.extend(data, countryData);
                                          
-                                         var form = $('#countryForm');
-                                         $(form).find('#id_country_name').val(data.country_name);
+                                         var form = $('#blockForm');
+                                         $(form).find('#id_block_name').val(data.block_name);
                                          $(form).find('#id_start_date').val(data.start_date);
                                          // clear any previous references to countryId in case the user
                                          // clicked the cancel button
-                                         $('#countryModal').data('countryId', '');
+                                         $('#blockModal').data('countryId', '');
                                      },
                                      
                                      handleModal: function(event) {
                                          event.preventDefault();
                                          event.stopImmediatePropagation();
-                                         var form = $('#countryForm');
+                                         var form = $('#blockForm');
                                          
                                          var countryData = {
-                                             country_name: $(form).find('#id_country_name').val(),
+                                             block_name: $(form).find('#id_block_name').val(),
                                              start_date: $(form).find('#id_start_date').val(),
+                                             district: "/api/v1/district/"+$(form).find('#id_district').val()+"/",
                                          };
                                          
-                                         if ($('#countryModal').data('countryId'))
+                                         if ($('#blockModal').data('countryId'))
                                          {
-                                             countryData.id = $('#countryModal').data('countryId');
+                                             countryData.id = $('#blockModal').data('countryId');
                                              this.updateCountry(countryData);
                                          }
                                          else
@@ -139,7 +141,7 @@ $(function(){
                                          }
                                          
                                          // hide the modal
-                                         $('#countryModal').modal('hide');
+                                         $('#blockModal').modal('hide');
                                          
                                          return this;
                                      },
