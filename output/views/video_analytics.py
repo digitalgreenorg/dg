@@ -22,6 +22,8 @@ def video_module(request):
     tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
+    if (tot_avg<0):
+        tot_avg=0
     search_box_params = views.common.get_search_box(request, video_analytics_sql.video_min_date)
 
     get_req_url = request.META['QUERY_STRING']
