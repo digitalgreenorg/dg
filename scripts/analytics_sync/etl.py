@@ -47,12 +47,12 @@ class AnalyticsSync():
             #screening_myisam
             self.db_cursor.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
                                         village_id, block_id, district_id, state_id, country_id)
-                                        SELECT sc.id, date, svs.video_id, practices_id, persongroups_id, sc.village_id, block_id,
+                                        SELECT sc.id, date, svs.video_id, vid.related_practice_id, persongroups_id, sc.village_id, block_id,
                                         district_id, state_id, country_id
                                         FROM SCREENING sc
                                         JOIN SCREENING_videoes_screened svs on svs.screening_id = sc.id
                                         JOIN SCREENING_farmer_groups_targeted sfgt on sfgt.screening_id = sc.id
-                                        JOIN VIDEO_related_agricultural_practices vrap on vrap.video_id = svs.video_id
+                                        JOIN VIDEO vid on vid.id = svs.video_id
                                         JOIN VILLAGE v on v.id = sc.village_id
                                         JOIN BLOCK b on b.id = v.block_id
                                         JOIN DISTRICT d on d.id = b.district_id
@@ -62,12 +62,11 @@ class AnalyticsSync():
             self.db_cursor.execute("""INSERT INTO video_myisam (video_id, video_production_end_date, prod_duration, practice_id, video_type,
                                         language_id, actor_id, gender, actor_type, village_id, block_id, district_id, state_id, country_id)
                                         select vid.id, VIDEO_PRODUCTION_END_DATE, datediff(VIDEO_PRODUCTION_END_DATE, VIDEO_PRODUCTION_START_DATE) + 1,
-                                        practices_id, VIDEO_TYPE, language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
+                                        related_practice_id, VIDEO_TYPE, language_id, person_id, gender, actors, vid.village_id, block_id, district_id,
                                         state_id, country_id
                                         FROM VIDEO vid
                                         JOIN VIDEO_farmers_shown vfs on vfs.video_id = vid.id
                                         JOIN PERSON p on p.id = vfs.person_id
-                                        JOIN VIDEO_related_agricultural_practices vrap on vrap.video_id = vid.id
                                         JOIN VILLAGE v on v.id = vid.village_id
                                         JOIN BLOCK b on b.id = v.block_id
                                         JOIN DISTRICT d on d.id = b.district_id
@@ -90,9 +89,9 @@ class AnalyticsSync():
             print "Finished insert into person_meeting_attendance_myisam"
                                         
             #person_adopt_practice_myisam
-            self.db_cursor.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, practice_id, gender, date_of_adoption, 
+            self.db_cursor.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, gender, date_of_adoption, 
                                         village_id, block_id, district_id, state_id, country_id)
-                                        SELECT pap.id, pap.person_id, video_id, practice_id, GENDER, date_of_adoption, p.village_id, block_id,
+                                        SELECT pap.id, pap.person_id, video_id, GENDER, date_of_adoption, p.village_id, block_id,
                                         district_id, state_id, country_id
                                         FROM PERSON_ADOPT_PRACTICE pap 
                                         JOIN PERSON p on p.id = pap.person_id

@@ -89,7 +89,6 @@ CREATE TABLE `person_adopt_practice_myisam` (
   `adoption_id` bigint(20) unsigned NOT NULL,
   `person_id` bigint(20) unsigned DEFAULT NULL,
   `video_id` bigint(20) unsigned DEFAULT NULL,
-  `practice_id` bigint(20) unsigned DEFAULT NULL,
   `gender` varchar(1) NOT NULL,
   `date_of_adoption` date NOT NULL,
   `village_id` bigint(20) unsigned DEFAULT NULL,
@@ -103,7 +102,6 @@ CREATE TABLE `person_adopt_practice_myisam` (
 CREATE INDEX person_adopt_practice_myisam_adoption_id ON person_adopt_practice_myisam(adoption_id);
 CREATE INDEX person_adopt_practice_myisam_person_id ON person_adopt_practice_myisam(person_id);
 CREATE INDEX person_adopt_practice_myisam_video_id ON person_adopt_practice_myisam(video_id);
-CREATE INDEX person_adopt_practice_myisam_practice_id ON person_adopt_practice_myisam(practice_id);
 CREATE INDEX person_adopt_practice_myisam_date ON person_adopt_practice_myisam(date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_village_id ON person_adopt_practice_myisam(village_id, date_of_adoption);
 CREATE INDEX person_adopt_practice_myisam_block_id ON person_adopt_practice_myisam(block_id, date_of_adoption);
