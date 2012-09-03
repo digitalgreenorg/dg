@@ -1,7 +1,6 @@
 from static_site_views import *
 import re
 
-
 #Dictionary for aliasing, all entries have to string-string pair.
 global_dict = dict(
 getScreening = 'get_screening',
@@ -14,8 +13,7 @@ def analytics_route(request, func_name):
     from output.views.video_analytics import *
     from output.views.adoption_analytics import *
     from output.views.targets import *
-    from output.views.common import drop_down_val, overview_line_graph
-    
+    from output.views.common import drop_down_val, overview_line_graph, practice_change, test, test_data    
     return locals()[func_name](request)
 
 #MAIN Route, urls.py routes everything except admin to this function.

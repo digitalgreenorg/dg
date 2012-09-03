@@ -5,7 +5,7 @@ from views import *
 from django.contrib.auth.views import login, logout
 from django.conf import settings
 from static_site_views import home
-
+from farmerbook import farmer_book_views
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -55,9 +55,6 @@ urlpatterns = patterns('',
     (r'^dashboard/getvideosonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_videos_online),
     (r'^dashboard/getvideosseenforperson/((?P<person_id>\d*)/)?$', get_videos_seen_for_person),
     (r'^dashboard/savevideooffline/((?P<id>\d*)/)?$', save_video_offline),
-    (r'^dashboard/getvideorelatedagriculturalpracticesonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_videoagriculturalpractices_online),
-    (r'^dashboard/savevideorelatedagriculturalpracticesonline/$', save_videoagriculturalpractices_online),
-    (r'^dashboard/savevideorelatedagriculturalpracticesoffline/((?P<id>\d*)/)?$', save_videoagriculturalpractices_offline),
     (r'^dashboard/savevideofarmersonline/', save_personshowninvideo_online),
     (r'^dashboard/getvideofarmersonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_personshowninvideo_online),
     (r'^dashboard/savevideofarmersoffline/((?P<id>\d*)/)?$', save_personshowninvideo_offline),
@@ -144,5 +141,15 @@ urlpatterns = patterns('',
     (r'^dashboard/practicesforperson/((?P<person_id>\d*)/)?$', practices_seen_by_farmer),
     (r'^dashboard/practicesinvideos/$', practices_in_videos),
     (r'^$',home),
+     (r'^farmerbook/$', farmer_book_views.get_home_page),
+     (r'^trial/?$', farmer_book_views.get_admin_panel),
+    (r'^getvillagepage/?$', farmer_book_views.get_village_page),
+    (r'^getserviceproviderpage/?$', farmer_book_views.get_csp_page),
+    (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
+    (r'^getpersonpage/?$', farmer_book_views.get_person_page),
+    (r'^getgrouppage/?$', farmer_book_views.get_group_page),
+    (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
+    (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    (r'^videotask/', include('video_practice_map.urls')),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )

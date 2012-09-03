@@ -18,7 +18,6 @@ import com.digitalgreen.dashboardgwt.client.servlets.Partners;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonAdoptPractices;
 import com.digitalgreen.dashboardgwt.client.servlets.PersonGroups;
 import com.digitalgreen.dashboardgwt.client.servlets.Persons;
-import com.digitalgreen.dashboardgwt.client.servlets.Practices;
 import com.digitalgreen.dashboardgwt.client.servlets.Regions;
 import com.digitalgreen.dashboardgwt.client.servlets.Screenings;
 import com.digitalgreen.dashboardgwt.client.servlets.States;
@@ -26,10 +25,12 @@ import com.digitalgreen.dashboardgwt.client.servlets.Targets;
 import com.digitalgreen.dashboardgwt.client.servlets.Trainings;
 import com.digitalgreen.dashboardgwt.client.servlets.Videos;
 import com.digitalgreen.dashboardgwt.client.servlets.Villages;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
@@ -302,14 +303,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pe-2", "<a href='#dashboard/person/add' class='addlink'>Add</a>", "dashboard/person/add", new Persons(requestContext));
-	
-		requestContext = new RequestContext();
-		requestContext.getArgs().put("action", "list");
-		requestContext.getArgs().put("pageNum", "1");
-		addHyperlink("pr-1", "<a href='#dashboard/practices/'>Practices</a>", "dashboard/practices", new Practices(requestContext));
-		requestContext = new RequestContext();
-		requestContext.getArgs().put("action", "add");
-		addHyperlink("pr-2", "<a href='#dashboard/practices/add' class='addlink'>Add</a>", "dashboard/practices/add", new Practices(requestContext));
 
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "list");
@@ -382,6 +375,14 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
 		addHyperlink("pap-2", "<a  href='#dashboard/personadoptpractice/add' class='addlink'>Add</a>", "dashboard/personadoptpractice/add", new PersonAdoptPractices(requestContext));
+		
+		Anchor link = new Anchor("Classify video", true,"#dashboard/classifyvideo"); 
+		link.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Window.open("http://www.digitalgreen.org/videotask/home/", "blank", "");
+			}	
+		});
+		RootPanel.get("cv-1").add(link);
 		
 		requestContext = new RequestContext();
 		requestContext.getArgs().put("action", "add");
@@ -559,12 +560,6 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"					</td>\n" + 
 			"				</tr>\n" + 
 			"				<tr>\n" + 
-			"					<th id='pr-1'scope='row'>\n" + 
-			"					</th>\n" + 
-			"					<td id='pr-2'>\n" + 
-			"					</td>\n" + 
-			"				</tr>\n" + 
-			"				<tr>\n" + 
 			"					<th id='v-1' scope='row'>\n" + 
 			"					</th>\n" + 
 			"					<td id='v-2'>\n" + 
@@ -671,6 +666,10 @@ public class IndexTemplate extends BaseTemplate implements ProgressEvent.Handler
 			"					<td id='der-2'>\n" + 
 			"					</td>\n" + 
 			"				</tr>\n" + 
+			"               <tr>\n" + 
+			"					<th id='cv-1' scope='row'>\n" + 
+			"					</th>\n" +
+			"               </tr>\n"+
 			"			</table>\n" + 
 			"		</div>\n" + 
 			"	</div>\n" + 

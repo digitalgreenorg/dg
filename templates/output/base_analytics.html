@@ -55,8 +55,11 @@
 			$("select").each(function() {
 				if($(this).val()==-1)
 					return false;
-				geog = $(this).attr('name');
-				id = $(this).val();
+				if($(this).attr('name')!="")
+					{
+						geog = $(this).attr('name');
+						id = $(this).val();					
+					}
 			});
 			if(geog != null) {
 				url.push("geog="+geog);

@@ -1,298 +1,528 @@
 <!DOCTYPE html> 
 <html>
-	<head> 
-		<meta charset="utf-8" />
-		<title>COCO faqs</title> 
-		<link rel="stylesheet" href="css/style.css" /> 
-		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-		<script src="js/jquery.scrollTo-1.4.2-min.js"></script>
-		<script src="js/jquery.localscroll-1.2.7-min.js"></script>
-		<!-- Resources Used 
-		--> 
-		<script>
-			$(document).ready(function () {
+<head> 
+	<meta charset="utf-8" />
+	<title>COCO faqs</title> 
+	<link rel="stylesheet" href="css/style.css" /> 
 
-				var sidebar = $('#sidebar_content');
-				var top = sidebar.offset().top - parseFloat(sidebar.css('marginTop'));
-				$("ul.section_menu").each(function(){
-					var section_menu = this;
-					$.each($(section_menu).next('dl.faq').children('dt'),function(index,val){
-						$(section_menu).append('<li><a href="#'+$(this).attr('id')+'">'+$(this).html()+"</a></li>");
-					});
-					//addItem(link->#id <li><a href>innerhtml</a></li>)
-				});
-				
-				$(window).scroll(function (event) {
-					var ypos = $(this).scrollTop();
-					if (ypos >= top) {
-						sidebar.addClass('fixed');
-					}
-					else {
-						sidebar.removeClass('fixed');
-					}
-				});
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script src="js/jquery.scrollTo-1.4.2-min.js"></script>
+	<script src="js/jquery.localscroll-1.2.7-min.js"></script>
+	<!-- Resources Used 
+	--> 
+	<script>
+	$(document).ready(function () {
 
-				$.localScroll();
-				
+		var sidebar = $('#sidebar_content');
+		var top = sidebar.offset().top - parseFloat(sidebar.css('marginTop'));
+		$("ul.section_menu").each(function(){
+			var section_menu = this;
+			$.each($(section_menu).next('dl.faq').children('dt'),function(index,val){
+				$(section_menu).append('<li><a href="#'+$(this).attr('id')+'">'+$(this).html()+"</a></li>");
 			});
-			
-		</script>
-	</head>
-	<body style="background: #ffffff; padding:5px;	font-family: Calibri;">
-		<div id="help" >		
+			//addItem(link->#id <li><a href>innerhtml</a></li>)
+		});
+		$(window).scroll(function (event) {
+			var ypos = $(this).scrollTop();
+			if (ypos >= top) {
+				sidebar.addClass('fixed');
+			}
+			else {
+				sidebar.removeClass('fixed');
+			}
+		});
+		$.localScroll();
+	});
+	</script>
+</head>
+<body style="background: #ffffff; padding:5px;	font-family: Calibri;">
+	<div id="help">
 		<div id="wrapper">
-			<h1 id="title">COCO FAQ</h1>
+			<h1 id="title">
+				COCO FAQ
+			</h1>
 			<hr>
-			<p>When you have any problems with COCO, we recommend that you check this FAQ for any specific suggestions we may have for your particular issue. 
-				If not, please follow the <a href="#2_2">basic troubleshooting steps</a>. If this fails to solve your problem, then 
-				<a href="#2_7">contact Systems team</a>.
+			<p>
+				When you have any problems with COCO, we recommend that you check this FAQ for any specific suggestions we may have for your particular issue. If not, please follow the <a href="#2_2">basic troubleshooting steps</a>. If this fails to solve your problem, then <a href="#2_7">contact Systems team</a>.
 			</p>
 			<div id="primary">
-				<h3 id="1">COCO Setup</h3>
-				<ul class="section_menu">				
-				</ul>
+				<h3 id="1">
+					COCO Setup
+				</h3>
+				<ul class="section_menu"></ul>
 				<dl class="faq">
-				  <dt id="1_1">How do I access COCO?</dt>
-				    <dd>COCO is available at <a href="http://www.digitalgreen.org/coco/home.html" target="_blank">http://www.digitalgreen.org/coco/home.html</a>.</dd>
-				  <dt id="1_2">Which software is required on the system for accessing COCO?</dt>
-				    <dd>
+					<dt id="1_1">
+						How do I access COCO?
+					</dt>
+					<dd>
+						COCO is available at <a href="http://www.digitalgreen.org/coco/home.html" target="_blank">http://www.digitalgreen.org/coco/home.html</a>.
+					</dd>
+					<dt id="1_2">
+						Which software is required on the system for accessing COCO?
+					</dt>
+					<dd>
 						<ol>
-							<li>Browser - Firefox 3.6. As of now, COCO is not supported in any other version of Firefox or in any other browsers. See <a href="#1_3">installation instructions</a>.</li>
-							<li>Google Gears browser plugin. See <a href="#1_4">installation instructions</a>.</li>
+							<li>Browser - Firefox 3.5. As of now, COCO is not supported in any other version of Firefox or in any other browsers. See <a href="#1_3">installation instructions</a>.
+							</li>
+							<li>Google Gears browser plugin. See <a href="#1_3">installation instructions</a>.
+							</li>
 						</ol>
 					</dd>
-				  <dt id="1_3">Where can I download Firefox 3.6 from?</dt>
-				    <dd>Click <a href ="http://download.mozilla.org/?product=firefox-3.6.24&os=win&lang=en-US" target="_blank">here</a> to download firefox 3.6 for Windows.</dd>
-				  <dt id="1_4">Where do I download Google Gears from?</dt>
-				    <dd>Go to the <a href="http://gears.google.com/" target="_blank">Gears website</a> and click on "Install Gears". Please make sure your browser is as per <a href="#1_2">software requirements</a>.</dd>
-				  <dt id="1_5">I need a username and password for a new account. What should I do?</dt>
-				    <dd>Please send a request to system@digitalgreen.org via email. You will also need to send us the following details:
-						<ul>
-							<li>Name of the user requiring the account</li>
-							<li>Designation of that person</li>
-							<li>Organization to which he/she belongs</li>
-							<li>District in which he/she operates</li>
-						<ul>
-					  </dd>
-				 <dt id="1_6">How can I add a desktop icon for COCO similar to Offline Gmail?</dt>
-				    <dd> 
-						<ul>
-							<li>Reduce the size of your Firefox window so that you can see both the Firefox window and your Desktop</li>
-							<li>In Firefox, type www.digitalgreen.org/coco/home.html in the address bar.</li>
-							<li>Once the page loads, you will see a green colored DG icon next to the address in the address bar.</li>
-							<li>Drag this icon onto your Desktop (i.e. click on the DG icon, keep it clicked. Move your cursor over the Desktop. Once your cursor is over the Desktop release your mouse click button). You should see a shortcut to COCO with a DG icon on the Desktop.</li>
-							<li>When you click on this icon the COCO page with load in your default browser.</li>
-							<li>Make sure that Firefox 3.6 is your default browser.</li>
-						<ul>
-					</dd>
-				</dl>
-				<h3 id="2">COCO Troubleshooting</h3>
-				<ul class="section_menu">
-				</ul>
-				<dl class="faq">
-				 <dt id="2_2">What are the basic troubleshooting steps?</dt>
-				    <dd>
+					<dt id="1_3">
+						How do I install software required for COCO Offline?
+					</dt>
+					<dd>
 						<ol>
-							<li>Please make sure your internet is working. Try going to <a href="www.google.com">www.google.com</a>.</li>
-							<li>Make sure that your system satisfies <a href="#1_2">software requirements.</a></li>
-							<li>If you're in 'Offline mode', go to 'Online mode'.</li>
-							<li>Logout of COCO.</li>
-							<li>Please <a href="#2_4">clear browser cache</a>.</li>
-							<li>Please refresh-all (Ctrl + Shift + R) the COCO webpage.</li>
-							<li>Email the Systems team. <a href="#2_7">See how.</a></li>
+							<li>Download and install Firefox 3.5 from <a href="http://www.filehippo.com/download_firefox/8904/">here</a>. Click on "Download This Version" on the top-right side of page.</li>
+							<li>Copy and paste this link (http://www.google.com/url?sa=D&q=http://gkovacs.xvm.mit.edu/google-gears/gears-win32-opt-0.5.25.0.xpi&usg=AFQjCNFCfK6tO9Ox2ZoWcAFnAtYf9YDhhA) in the Firefox URL bar.</li>
+							<li>You will now see a message saying "Firefox prevented this site www.google.com from installing software on your computer". Click on the "Allow" button, which is present on the extreme right of the message.</li>
+							<li>The installation process requires you to restart Firefox. Go ahead and restart the browser.</li>
+							<li>Disable automatic browser updates. The instructions are present <a href="#1_4">here</a>.</li>
+							<li>Now users can access COCO and use offline mode.</li>
 						</ol>
-				  <dt id="2_3">How do I know which version of Firefox I am using?</dt>
-				    <dd>Click on "Help" tab. Click on "About Mozilla Firefox". The version number is given there e.g. 3.6.23.</dd>
-				  <dt id="2_4">How to clear cache in browser?</dt>
-				    <dd>In Firefox, click on "Tools" tab, then click on "Clear Recent History". A window will pop up. Make sure you have selected "Everything" in Time range to clear and you have checked all the options in the small window.Then click "Clear now".</dd>
-				  <dt id="2_5">How to clear Google Gears database?</dt>
-				    <dd>
-						In Firefox,
-						<ol>
-						   <li>Go to "Tools" option in the menu bar.</li>
-						   <li>Click on the "Gears Settings" in the drop down menu. A pop-up will appear.</li>
-						   <li>Click on the "Remove" button next to the website "http://www.digitalgreen.org".</li>
-						   <li>Click on the "Apply" button.</li>
-						</ol>
-						<!-- 
-						2) Chrome Users:</br>
-						   a) Click on the tools icon present in the top-right corner of the address bar.</br>
-						   b) Click on the "Options". A pop-up will appear.</br>
-						   c) Click on the tab "Under the Hood". Scroll down.</br> 
-						   d) You will see an option called "Change Gears settings". Click on this option. A pop-up box will appear.</br>
-						   e) Click on the "Remove" button next to the website "http://www.digitalgreen.org".</br>
-						   f) Click on the "Apply" button.</br-->
 					</dd>
-				  <dt id="2_7">How do I contact Systems team?</dt>
-				    <dd>Please send an email to system@digitalgreen.org. In your email, please explain your problem and the which steps cause that problem in detail. Please try to ensure that these steps are specific enough that we are able to reproduce the problem on our machines, so that we can investigate and fix it. Please make sure you have gone through this FAQ, done the <a href="#2_2">basic troubleshooting steps</a> and any other steps specific to your error.</dd>
-				  <dt id="2_8">Why can't I use COCO in latest browsers or Internet Explorer?</dt>
-				    <dd>COCO Offline mode requires Google Gears. Google has stopped supporting this technology and it is not available in IE or latest browser versions. A new version of COCO will be created that works without Google Gears.</dd>
-				  <dt id="2_9">How do I disable automatic updates in Firefox 3.6?</dt>
-				    <dd>In Firefox,
+					<dt id="1_4">
+						How can I disable automatic browser updates in Mozilla Firefox?
+					</dt>
+					<dd>
 						<ol>
-						   <li>Go to "Tools" option in the menu bar.</li>
-						   <li>Click on the "Options" in the drop down menu. A pop-up will appear.</li>
-						   <li>Click on the "Advanced" panel.</li>
-						   <li>Click the Update tab. The auto-update options are displayed.</li>
-						   <li>To disable automatic checking for updates, deselect all three options.(Firefox, Addons and Search Engine)</li>
-						</ol></dd>
-				</dl>
-				<h3 id="4">Going Offline</h3>
-				<ul class="section_menu">
-				</ul>
-				<dl class="faq">
-				  <dt id="4_1">How can I go offline?</dt>
-				    <dd>
+							<li>Open Mozilla Firefox.</li>
+							<li>Go to "Tools" option in the menu bar.</li>
+							<li>Click on the "Options" in the drop down menu. A pop-up will appear.</li>
+							<li>Click on the "Advanced" panel.</li>
+							<li>Click the Update tab. The auto-update options are displayed.</li>
+							<li>To disable automatic checking for updates, deselect all three options -Firefox, Addons and Search Engine.</li>
+						</ol>
+					</dd>
+					<dt id="1_5">
+						I need a username and password for a new account. What should I do?
+					</dt>
+					<dd>
+						Please send a request to system@digitalgreen.org via email. You will also need to send us the following details:
 						<ul>
-							<li>Download the database by clicking on “Download” button. This process will take sometime. Please wait until the database is 100% download. You might skip this step if you have downloaded the database previously. See <a href="#4_2">this question</a>.</li>
-							<li>Click on “Go Offline”.</li>
+							<li>Name of the user requiring the account
+							</li>
+							<li>Designation of that person
+							</li>
+							<li>Organization to which he/she belongs
+							</li>
+							<li>District in which he/she operates
+							</li>
 						</ul>
 					</dd>
-					<dt id="4_2">Do I need to click on "Download button" everytime I go offline?</dt>
-				    <dd>No, you don't need to click on "Download button" everytime. If you have downloaded the database once, COCO will update this database whenever you enter new data. However, there might be cases when you need to download again. Following are the few cases:
+					<dt id="1_6">
+						How can I add a desktop icon for COCO similar to Offline Gmail?
+					</dt>
+					<dd>
+						<ul>
+							<li>Reduce the size of your Firefox window so that you can see both the Firefox window and your Desktop
+							</li>
+							<li>In Firefox, type www.digitalgreen.org/coco/home.html in the address bar.
+							</li>
+							<li>Once the page loads, you will see a green colored DG icon next to the address in the address bar.
+							</li>
+							<li>Drag this icon onto your Desktop (i.e. click on the DG icon, keep it clicked. Move your cursor over the Desktop. Once your cursor is over the Desktop release your mouse click button). You should see a shortcut to COCO with a DG icon on the Desktop.
+							</li>
+							<li>When you click on this icon the COCO page with load in your default browser.
+							</li>
+							<li>Make sure that Firefox 3.5 is your default browser.
+							</li>
+						</ul>
+					</dd>
+				</dl>
+				<h3 id="2">
+					COCO Troubleshooting
+				</h3>
+				<ul class="section_menu"></ul>
+				<dl class="faq">
+					<dt id="2_2">
+						What are the basic troubleshooting steps?
+					</dt>
+					<dd>
 						<ol>
+							<li>Please make sure your internet is working. Try going to <a href="www.google.com">www.google.com</a>.
+							</li>
+							<li>Make sure that your system satisfies <a href="#1_2">software requirements.</a>
+							</li>
+							<li>If you're in 'Offline mode', go to 'Online mode'.
+							</li>
+							<li>Logout of COCO.
+							</li>
+							<li>Please <a href="#2_4">clear browser cache</a>.
+							</li>
+							<li>Please refresh-all (Ctrl + Shift + R) the COCO webpage.
+							</li>
+							<li>Email the Systems team. <a href="#2_7">See how.</a>
+							</li>
+						</ol>
+					</dd>
+					<dt id="2_3">
+						How do I know which version of Firefox I am using?
+					</dt>
+					<dd>
+						Click on "Help" tab. Click on "About Mozilla Firefox". The version number is given there e.g. 3.5.23.
+					</dd>
+					<dt id="2_4">
+						How to clear cache in browser?
+					</dt>
+					<dd>
+						In Firefox, click on "Tools" tab, then click on "Clear Recent History". A window will pop up. Make sure you have selected "Everything" in Time range to clear and you have checked all the options in the small window.Then click "Clear now".
+					</dd>
+					<dt id="2_5">
+						How to clear Google Gears database?
+					</dt>
+					<dd>
+						In Firefox,
+						<ol>
+							<li>Go to "Tools" option in the menu bar.
+							</li>
+							<li>Click on the "Gears Settings" in the drop down menu. A pop-up will appear.
+							</li>
+							<li>Click on the "Remove" button next to the website "http://www.digitalgreen.org".
+							</li>
+							<li>Click on the "Apply" button.
+							</li>
+						</ol><!-- 
+						2) Chrome Users:</br>
+						a) Click on the tools icon present in the top-right corner of the address bar.</br>
+						b) Click on the "Options". A pop-up will appear.</br>
+						c) Click on the tab "Under the Hood". Scroll down.</br> 
+						d) You will see an option called "Change Gears settings". Click on this option. A pop-up box will appear.</br>
+						e) Click on the "Remove" button next to the website "http://www.digitalgreen.org".</br>
+						f) Click on the "Apply" button.</br-->
+					</dd>
+					<dt id="2_7">
+						How do I contact Systems team?
+					</dt>
+					<dd>
+						Please send an email to system@digitalgreen.org. In your email, please explain your problem and the which steps cause that problem in detail. Please try to ensure that these steps are specific enough that we are able to reproduce the problem on our machines, so that we can investigate and fix it. Please make sure you have gone through this FAQ, done the <a href="#2_2">basic troubleshooting steps</a> and any other steps specific to your error.
+					</dd>
+					<dt id="2_8">
+						Why can't I use COCO in latest browsers or Internet Explorer?
+					</dt>
+					<dd>
+						COCO Offline mode requires Google Gears. Google has stopped supporting this technology and it is not available in IE or latest browser versions. A new version of COCO will be created that works without Google Gears.
+					</dd>
+				</dl>
+				<h3 id="4">
+					Going Offline
+				</h3>
+				<ul class="section_menu"></ul>
+				<dl class="faq">
+					<dt id="4_1">
+						How can I go offline?
+					</dt>
+					<dd>
+						<ul>
+							<li>Download the database by clicking on "Download" button. This process will take sometime. Please wait until the database is 100% downloaded. You might skip this step if you have downloaded the database previously. See <a href="#4_2">this question</a>.
+							</li>
+							<li>Click on "Go Offline".
+							</li>
+						</ul>
+					</dd>
+					<dt id="4_2">
+						Do I need to click on "Download button" every time I go offline?
+					</dt>
+					<dd>
+						No, you don't need to click on "Download button" every time. If you have downloaded the database once, COCO will update this database whenever you enter new data. However, there might be cases when you need to download again. Following are the few cases:
+						<ul>
+							<li>There has been an update in the software used in COCO.</li>
 							<li>If some data has been modified on the server.</li>
 							<li>If your local database file is not complete i.e. you did not download the data completely.</li>
 							<li>Some data like <em>Practices</em> are shared across all users, you should periodically download a fresh database to get the latest data.</li>
-						</ol>
-					</dd>
-				</dl>
-				<h3 id="3">COCO Download </h3>
-				<ul class="section_menu">				
-				</ul>
-				<dl class="faq">
-					<dt id="3_5">How to download a fresh database?</dt>
-					    <dd>
-							<li>Clear your database. <a href="#2_5">See how</a>.</li>
-							<li>Login to COCO.</li>
-							<li>Click on Download.</li>
-						</dd>
-				  <dt id="3_1">My download is stuck at 87%. What should I do?</dt>
-				    <dd>It's not actually stuck. Screening attendance is being downloaded at 87%. Usually, this data takes a long time to finish. Please wait patiently. If there is a problem with the download you would get an error message.</dd>
-				  <dt id="3_2">Why am I getting an error message "This browser does not have the Gears plugin.  Please install Gears and reload the application"?</dt>
-				    <dd>There are 2 possibilities:
-						<ul>
-							<li>You might be accessing COCO from a new version of browser. Please see the requirements of COCO.</li>
-							<li>Google Gears is not installed on your browser. See <a href="#1_4">instructions</a>. If you have already installed it, please uninstall and install again.</li>
-						If you are sure that it is not one of the above, please <a href="#2_7">email the Systems team.</a></dd>
-				  <dt id="3_3">My download stopped in the middle. I got the error message "You may be experiencing server/bandwidth problems.  Please try again, or contact support". What can I do?</dt>
-				    <dd>Please try the <a href="#2_2">basic troubleshooting steps</a> and try download again.</dd>
-				  <dt id="3_4">I am getting an unknown error message. What do I do?</dt>
-				    <dd>Please try the <a href="#2_2">basic troubleshooting steps</a> and try download again.</dd>
-				</dl>
-				<h3 id="5">COCO data entry or data modification</h3>
-				<ul class="section_menu">
-				</ul>
-				<dl class="faq">
-				  <dt id="5_1">How can I add more than 25 farmers in Person groups?</dt>
-				    <dd>You can add up to 25 new farmers when you create a Person group from "Add Person group". If the group has more than 25 farmers, click on "Add person", enter the details of that person, and select the group that you just created.</dd>
-				  <dt id="5_2">A farmer who was in one Person group has changed to a different one. How can I enter this data?</dt>
-				    <dd>
-						<ol>
-							<li>On the COCO dashboard, click on "Persons".</li>
-							<li>Find the person by entering their name in the search box.</li>
-							<li>Click on the person to edit.</li>
-							<li>Change the selection in Group list to the new group which the farmer has joined.</li>
-							<li>Click Save.</li>
-						</ol>
-					</dd>
-				  <dt id="5_3">Some farmers in my region belong to more than one Person groups. How do I add this in COCO?</dt>
-				    <dd>COCO allows only one group per farmer. Ideally, you should select the most dominant group of the farmer. If you feel this is a much needed feature, we would encourage you to send a feature request with a strong case for why this is an important feature to system@digitalgreen.org.</dd>
-				  <dt id="5_4">A farmer has recently joined a Person group, how can I add him or her?</dt>
-				    <dd>If the farmer already exists in the system, see <a href="#5_2">this FAQ</a>. Otherwise, do the following steps.
-						<ol>
-							<li>On the COCO dashboard, click on "Add" next to "Persons".</li>
-							<li>Change the selection in Group list to the new group which the farmer has joined.</li>
-							<li>Click Save.</li>
-						</ol>
-				  <dt id="5_5">A farmer left a group. How can I reflect this in COCO? Will previously entered screening and adoption data be affected?</dt>
-				    <dd>Find the farmer by clicking on "Persons" on Dashboard. Edit this farmer's data and select "None" under group section. The past screening and adoption data for this farmer will remain as it is.</dd>
-				  <dt id="5_6">I selected a Person group in the Screening form, but Persons data is not loaded. What do I do?</dt>
-				    <dd>If you're operating in Offline mode, your database is incomplete. Please <a href="#3_5">download the database</a> again. If it still doesn't work, please try the basic troubleshooting steps. This should fix the problem. If it doesn't please <a href="#2_7">email the Systems team</a>.</dd>
-				  <dt id="5_7">The data that I am seeing in COCO is not complete. Why?</dt>
-				    <dd>Either your internet connectivity is faulty or the Gears database on your computer is outdated. Please try the following.
-						<ul>
-							<li>If you're operating in Online mode, please try the troubleshooting steps.</li>
-							<li>If you're operating in Offline mode, your database is incomplete. Please download the database again by following <a href="#3_5">this link</a>.</li>
-							<li>If you tried above and are still facing the problem, <a href="#2_7">contact systems team</a>.</li>
 						</ul>
 					</dd>
-				  <dt id="5_8">I added some data in COCO, but it's not reflecting in Analytics. Why?</dt>
-				    <dd>If you are entering data in Offline more, please make sure you have uploaded it. Analytics does not count farmers who have not seen a screening. It also considers only those videos that are marked "Suitable for dissemination".</dd>
-				  <dt id="5_9">How can I add or modify a Practice?</dt>
-				    <dd>The current list of practices is very comprehensive and should suffice most of the new video. Please make sure you have searched in the current list for the relevant practice. If you are sure, you need a new practice or edit an existing one, please send an email to systems with details.</dd>
-				  <dt id="5_10">I saw a Practice earlier, it's not there anymore. How did this happen?</dt>
-				    <dd>Yes, this is possible. Agricultural practice is shared by all users. Sometimes based on request, we might modify or delete some practice.</dd>
-				  <dt id="5_11">How can I delete some wrong data in COCO?</dt>
-				    <dd>Deletion is not allowed in COCO. There are 2 alternatives. First, you can always overwrite the data and fill in any new information, rather than using the 'Add new' page. Or, secondly, if there are many such entries, you can mail the system team to delete them for you.</dd>
-				  <dt id="5_12">While editing or adding, why am I getting the error message "You don't have permission"?</dt>
-				    <dd>Based on the designation of user, certain data modification like Partner, State is restricted for some users. You'll have to contact your supervisor for adding data for which you don't have permission.</dd>
-				  <dt id="5_13">I am trying to edit a Screening, but it's "Editing of Screening is not allowed in Offline mode". What's the solution?</dt>
-				    <dd>Editing of screening is only allowed in Online mode. Please click "Go Online" and edit this screening.</dd>
-				  <dt id="5_14">I am trying to add a Screening in which a video from another region was shown, but COCO is not showing this video in the Videos screened list. How can I add this?</dt>
-					<dd>You will see only those videos which are pertaining to your district. If the video is from another district, but from the same state, ask your supervisor to add this data. If the video is from another state, please send an email to Systems team with the name of the Video and Screening details.</dd>
-				  <dt id="5_15">The "Add person page" does not allow me to add more than three adoptions ("Person Adopt Practices"). How can I add more than three adoptions for a person?</dt>
-				    <dd>You can only three adoptions using "Person" page due to system constraints. Please use "Person Adopt Practice" for adding extra adoptions.</dd>
-				  <dt id="5_16">How can I assign more than three villages to a single animator?</dt>
-				    <dd>Please use the "Animator Assigned Village" page for assigning more than three villages to a single animator.</dd>
-				  <dt id="5_17">Two Person groups attended a Screening. How can I add more than one Person group while entering the data for that Screening?</dt>
-				    <dd>Select the first Person group in the list. After the "Loading person" screen has disappeared. Now, keep the CTRL button pressed and select the second group. Please wait for the persons to be loaded for the selected groups.</dd>
-				  <dt id="5_18">How do I add two farmers who have the same name and are in the same Person group?</dt>
-				    <dd>You should enter Father's name, while adding the details of the person. If you have entered this information, you will see father's name in brackets beside the Person name while entering Screening/Adoption data.</dd>		
 				</dl>
-				<h3 id="6">COCO Upload</h3>
-				<ul class="section_menu">
-				</ul>
-				<dl class="faq">
-				  <dt id="6_1">How do I upload data?</dt>
-				  <dd>
-					<ol>
-						<li>Please make sure that you are connected to Internet by typing www.google.com in the address bar.</li>
-						<li>Click "Go Online".</li>
-						<li>Click "Upload"</li>
-					</ol>
-				  </dd>
-				  <dt id="6_2">While uploading data, COCO displayed this error message - "Validation Error. Please contact support". How can I complete my data upload?</dt>
-				  <dd>Validation errors are mainly caused by duplicate data entries. Please send the database file to System team for resolution. If you are on Windows using Firefox 3.6, as you should be, you will find your database file at C:\Users\{username}\AppData\Local\Mozilla\Firefox\Profiles\{profile}.default\Google Gears for Firefox. The {username} placeholder refers to the username used to sign into Windows. The {profile} placeholder is a alphanumeric string. If you need further information, please refer <a href="http://code.google.com/apis/gears/api_database.html#directories">Google Gears Documentation</a>.
-					</dd>
-				</dl>
-				<h3 id="7">Data Inconsistencies</h3>
+				<h3 id="3">
+					COCO Download
+				</h3>
 				<ul class="section_menu"></ul>
 				<dl class="faq">
-				  <dt id="7_1">What are data inconsistencies?</dt>
-				    <dd>In the past, we noticed some errors in the database due to human errors. We are trying to catch these errors and notify user about the errors using Data Inconsistencies. For example, sometimes the Video Production start data maybe after the Video Production end date. This is clearly an error in data entry. Another example is when a video takes more than 12 days to produce. Most of our videos are produced in well under that time and this may well be a data entry error. Therefore, this is flagged for the Field Officer's attention.
+					<dt id="3_5">
+						How to download a fresh database?
+					</dt>
+					<dd>
+						<ul>
+							<li>Clear your database. <a href="#2_5">See how</a>.
+							</li>
+							<li>Login to COCO.
+							</li>
+							<li>Click on Download.
+							</li>
+						</ul>
 					</dd>
-				  <dt id="7_2">How do I resolve them?</dt>
-				    <dd>
-						<li>Review the message in the Error Msg column.</li>
-						<li>Click on the reference objects in the Object 1 and Object 2 columns and edit these appropriately.</li>
-						<li>Return to the Data Inconsistencies page and check the box in the "Not an Error" column.</li>
-						<li>Click "Save" at the bottom of the page.</li>
+					<dt id="3_1">
+						My download is stuck at 87%. What should I do?
+					</dt>
+					<dd>
+						It's not actually stuck. Screening attendance is being downloaded at 87%. Usually, this data takes a long time to finish. Please wait patiently. If there is a problem with the download you would get an error message.
 					</dd>
-				  <dt id="7_3">What is "Not an Error"?</dt>
-				    <dd>The Data Inconsistencies page is a tool for identifying and correcting errors. We identify errors based on simple logic and general trends. For example, most videos are produced in under twelve days and if a video takes more than twelve days to produce it is possible that this data was entered in error and the video actually took a shorter time to produce. However, some videos may as well take more than twelve days to produce. In this case, this data was not entered by mistake and is a valid and correct data entry. In such cases, we recommend that you mark these as "Not an Error" and click "Save".</dd>
-				  <dt id="7_4">I resolved an error, but the number of data inconsistencies is still same. Why?</dt>
-				    <dd>Corrected data inconsistencies are removed every 24 hours. Please check after some time.</dd>
-				  <dt id="7_5">How do I rectify the error if it says "This screening has video from other state, compared to the state of screening. This might be potentially wrong."? I don't understand what it means.</dt>
-				    <dd>Sometime, a user enters creates a screening which has video from other state. Sometimes, this is a valid case but most of times this is an error because videos are usually produced in local languages. Please click on the screening and review the Video selected.</dd>
+					<dt id="3_2">
+						Why am I getting an error message "This browser does not have the Gears plugin. Please install Gears and reload the application"?
+					</dt>
+					<dd>
+						There are 2 possibilities:
+						<ul>
+							<li>You might be accessing COCO from a new version of browser. Please see the requirements of COCO.
+							</li>
+							<li>Google Gears is not installed on your browser. See <a href="#1_3">instructions</a>. If you have already installed it, please uninstall and install again.
+							</li>
+							<li style="list-style: none">If you are sure that it is not one of the above, please <a href="#2_7">email the Systems team.</a>
+							</li>
+						</ul>
+					</dd>
+					<dt id="3_3">
+						My download stopped in the middle. I got the error message "You may be experiencing server/bandwidth problems. Please try again, or contact support". What can I do?
+					</dt>
+					<dd>
+						Please try the <a href="#2_2">basic troubleshooting steps</a> and try download again.
+					</dd>
+					<dt id="3_4">
+						I am getting an unknown error message. What do I do?
+					</dt>
+					<dd>
+						Please try the <a href="#2_2">basic troubleshooting steps</a> and try download again.
+					</dd>
+				</dl>
+				<h3 id="5">
+					COCO data entry or data modification
+				</h3>
+				<ul class="section_menu"></ul>
+				<dl class="faq">
+					<dt id="5_1">
+						How can I add more than 25 farmers in Person groups?
+					</dt>
+					<dd>
+						You can add up to 25 new farmers when you create a Person group from "Add Person group". If the group has more than 25 farmers, click on "Add person", enter the details of that person, and select the group that you just created.
+					</dd>
+					<dt id="5_2">
+						A farmer who was in one Person group has changed to a different one. How can I enter this data?
+					</dt>
+					<dd>
+						<ol>
+							<li>On the COCO dashboard, click on "Persons".
+							</li>
+							<li>Find the person by entering their name in the search box.
+							</li>
+							<li>Click on the person to edit.
+							</li>
+							<li>Change the selection in Group list to the new group which the farmer has joined.
+							</li>
+							<li>Click Save.
+							</li>
+						</ol>
+					</dd>
+					<dt id="5_3">
+						Some farmers in my region belong to more than one Person groups. How do I add this in COCO?
+					</dt>
+					<dd>
+						COCO allows only one group per farmer. Ideally, you should select the most dominant group of the farmer. If you feel this is a much needed feature, we would encourage you to send a feature request with a strong case for why this is an important feature to system@digitalgreen.org.
+					</dd>
+					<dt id="5_4">
+						A farmer has recently joined a Person group, how can I add him or her?
+					</dt>
+					<dd>
+						If the farmer already exists in the system, see <a href="#5_2">this FAQ</a>. Otherwise, do the following steps.
+						<ol>
+							<li>On the COCO dashboard, click on "Add" next to "Persons".
+							</li>
+							<li>Change the selection in Group list to the new group which the farmer has joined.
+							</li>
+							<li>Click Save.
+							</li>
+						</ol>
+					</dd>
+					<dt id="5_5">
+						A farmer left a group. How can I reflect this in COCO? Will previously entered screening and adoption data be affected?
+					</dt>
+					<dd>
+						Find the farmer by clicking on "Persons" on Dashboard. Edit this farmer's data and select "None" under group section. The past screening and adoption data for this farmer will remain as it is.
+					</dd>
+					<dt id="5_6">
+						I selected a Person group in the Screening form, but Persons data is not loaded. What do I do?
+					</dt>
+					<dd>
+						If you're operating in Offline mode, your database is incomplete. Please <a href="#3_5">download the database</a> again. If it still doesn't work, please try the basic troubleshooting steps. This should fix the problem. If it doesn't please <a href="#2_7">email the Systems team</a>.
+					</dd>
+					<dt id="5_7">
+						The data that I am seeing in COCO is not complete. Why?
+					</dt>
+					<dd>
+						Either your internet connectivity is faulty or the Gears database on your computer is outdated. Please try the following.
+						<ul>
+							<li>If you're operating in Online mode, please try the troubleshooting steps.
+							</li>
+							<li>If you're operating in Offline mode, your database is incomplete. Please download the database again by following <a href="#3_5">this link</a>.
+							</li>
+							<li>If you tried above and are still facing the problem, <a href="#2_7">contact systems team</a>.
+							</li>
+						</ul>
+					</dd>
+					<dt id="5_8">
+						I added some data in COCO, but it's not reflecting in Analytics. Why?
+					</dt>
+					<dd>
+						If you are entering data in Offline more, please make sure you have uploaded it. Analytics does not count farmers who have not seen a screening. It also considers only those videos that are marked "Suitable for dissemination".
+					</dd>
+					<dt id="5_9">
+						How can I add or modify a Practice?
+					</dt>
+					<dd>
+						The current list of practices is very comprehensive and should suffice most of the new video. Please make sure you have searched in the current list for the relevant practice. If you are sure, you need a new practice or edit an existing one, please send an email to systems with details.
+					</dd>
+					<dt id="5_10">
+						I saw a Practice earlier, it's not there anymore. How did this happen?
+					</dt>
+					<dd>
+						Yes, this is possible. Agricultural practice is shared by all users. Sometimes based on request, we might modify or delete some practice.
+					</dd>
+					<dt id="5_11">
+						How can I delete some wrong data in COCO?
+					</dt>
+					<dd>
+						Deletion is not allowed in COCO. There are 2 alternatives. First, you can always overwrite the data and fill in any new information, rather than using the 'Add new' page. Or, secondly, if there are many such entries, you can mail the system team to delete them for you.
+					</dd>
+					<dt id="5_12">
+						While editing or adding, why am I getting the error message "You don't have permission"?
+					</dt>
+					<dd>
+						Based on the designation of user, certain data modification like Partner, State is restricted for some users. You'll have to contact your supervisor for adding data for which you don't have permission.
+					</dd>
+					<dt id="5_13">
+						I am trying to edit a Screening, but it's "Editing of Screening is not allowed in Offline mode". What's the solution?
+					</dt>
+					<dd>
+						Editing of screening is only allowed in Online mode. Please click "Go Online" and edit this screening.
+					</dd>
+					<dt id="5_14">
+						I am trying to add a Screening in which a video from another region was shown, but COCO is not showing this video in the Videos screened list. How can I add this?
+					</dt>
+					<dd>
+						You will see only those videos which are pertaining to your district. If the video is from another district, but from the same state, ask your supervisor to add this data. If the video is from another state, please send an email to Systems team with the name of the Video and Screening details.
+					</dd>
+					<dt id="5_15">
+						The "Add person page" does not allow me to add more than three adoptions ("Person Adopt Practices"). How can I add more than three adoptions for a person?
+					</dt>
+					<dd>
+						You can only three adoptions using "Person" page due to system constraints. Please use "Person Adopt Practice" for adding extra adoptions.
+					</dd>
+					<dt id="5_16">
+						How can I assign more than three villages to a single animator?
+					</dt>
+					<dd>
+						Please use the "Animator Assigned Village" page for assigning more than three villages to a single animator.
+					</dd>
+					<dt id="5_17">
+						Two Person groups attended a Screening. How can I add more than one Person group while entering the data for that Screening?
+					</dt>
+					<dd>
+						Select the first Person group in the list. After the "Loading person" screen has disappeared. Now, keep the CTRL button pressed and select the second group. Please wait for the persons to be loaded for the selected groups.
+					</dd>
+					<dt id="5_18">
+						How do I add two farmers who have the same name and are in the same Person group?
+					</dt>
+					<dd>
+						You should enter Father's name, while adding the details of the person. If you have entered this information, you will see father's name in brackets beside the Person name while entering Screening/Adoption data.
+					</dd>
+				</dl>
+				<h3 id="6">
+					COCO Upload
+				</h3>
+				<ul class="section_menu"></ul>
+				<dl class="faq">
+					<dt id="6_1">
+						How do I upload data?
+					</dt>
+					<dd>
+						<ol>
+							<li>Please make sure that you are connected to Internet by typing www.google.com in the address bar.</li>
+							<li>Click "Upload".</li>
+						</ol>
+					</dd>
+					<dt id="6_2">
+						While uploading data, COCO displayed this error message - "Validation Error. Please contact support". How can I complete my data upload?
+					</dt>
+					<dd>
+						Validation errors are mainly caused by duplicate data entries. Please send the database file to System team for resolution. If you are on Windows using Firefox 3.5, as you should be, you will find your database file at C:\Users\{username}\AppData\Local\Mozilla\Firefox\Profiles\{profile}.default\Google Gears for Firefox. The {username} placeholder refers to the username used to sign into Windows. The {profile} placeholder is a alphanumeric string. If you need further information, please refer <a href="http://code.google.com/apis/gears/api_database.html#directories">Google Gears Documentation</a>.
+					</dd>
+				</dl>
+				<h3 id="7">
+					Data Inconsistencies
+				</h3>
+				<ul class="section_menu"></ul>
+				<dl class="faq">
+					<dt id="7_1">
+						What are data inconsistencies?
+					</dt>
+					<dd>
+						In the past, we noticed some errors in the database due to human errors. We are trying to catch these errors and notify user about the errors using Data Inconsistencies. For example, sometimes the Video Production start data maybe after the Video Production end date. This is clearly an error in data entry. Another example is when a video takes more than 12 days to produce. Most of our videos are produced in well under that time and this may well be a data entry error. Therefore, this is flagged for the Field Officer's attention.
+					</dd>
+					<dt id="7_2">
+						How do I resolve them?
+					</dt>
+					<dd>
+						<ul>
+							<li>Review the message in the Error Msg column.
+							</li>
+							<li>Click on the reference objects in the Object 1 and Object 2 columns and edit these appropriately.
+							</li>
+							<li>Return to the Data Inconsistencies page and check the box in the "Not an Error" column.
+							</li>
+							<li>Click "Save" at the bottom of the page.
+							</li>
+						</ul>
+					</dd>
+					<dt id="7_3">
+						What is "Not an Error"?
+					</dt>
+					<dd>
+						The Data Inconsistencies page is a tool for identifying and correcting errors. We identify errors based on simple logic and general trends. For example, most videos are produced in under twelve days and if a video takes more than twelve days to produce it is possible that this data was entered in error and the video actually took a shorter time to produce. However, some videos may as well take more than twelve days to produce. In this case, this data was not entered by mistake and is a valid and correct data entry. In such cases, we recommend that you mark these as "Not an Error" and click "Save".
+					</dd>
+					<dt id="7_4">
+						I resolved an error, but the number of data inconsistencies is still same. Why?
+					</dt>
+					<dd>
+						Corrected data inconsistencies are removed every 24 hours. Please check after some time.
+					</dd>
+					<dt id="7_5">
+						How do I rectify the error if it says "This screening has video from other state, compared to the state of screening. This might be potentially wrong."? I don't understand what it means.
+					</dt>
+					<dd>
+						Sometime, a user enters creates a screening which has video from other state. Sometimes, this is a valid case but most of times this is an error because videos are usually produced in local languages. Please click on the screening and review the Video selected.
+					</dd>
 				</dl>
 			</div>
 			<div id="sidebar">
 				<div id="sidebar_content">
-					<h3>Select Category</h3>
+					<h3>
+						Select Category
+					</h3>
 					<ul class="section_menu">
-						<li><a href="#1">COCO Setup</a></li>
-						<li><a href="#2">COCO Troubleshoot</a></li>
-						<li><a href="#4">Going Offline</a></li>
-						<li><a href="#3">COCO Download</a></li>
-						<li><a href="#5">COCO Data Entry And Modification</a></li>
-						<li><a href="#6">COCO Upload</a></li>
-						<li><a href="#7">Data Inconsistencies</a></li>
+						<li>
+							<a href="#1">COCO Setup</a>
+						</li>
+						<li>
+							<a href="#2">COCO Troubleshoot</a>
+						</li>
+						<li>
+							<a href="#4">Going Offline</a>
+						</li>
+						<li>
+							<a href="#3">COCO Download</a>
+						</li>
+						<li>
+							<a href="#5">COCO Data Entry And Modification</a>
+						</li>
+						<li>
+							<a href="#6">COCO Upload</a>
+						</li>
+						<li>
+							<a href="#7">Data Inconsistencies</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		</div>
-	</body>
+	</div>
+</body>
 </html>

@@ -111,7 +111,7 @@ def adoption_geog_pie_data(request):
 def adoption_practice_wise_scatter(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    return views.common.scatter_chart_data(adoption_analytics_sql.adoption_practice_wise_scatter, \
+    return views.common.practice_scatter_chart_data(adoption_analytics_sql.adoption_practice_wise_scatter, \
                                            geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
     
 def adoption_monthwise_bar_data(request):
@@ -127,12 +127,7 @@ def adoption_rate_line(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     adoption_rate_stats = run_query_raw(adoption_analytics_sql.adoption_rate_line(geog, id, from_date, to_date, partners))
-    return_val = []
-    for date, active, tot in adoption_rate_stats:
-        if tot:
-            return_val.append([str(date), float((active * 100)/tot)])
-        else:
-            return_val.append([str(date), 0])
+    return_val = [[str(date), float((active * 100)/tot)] for date, active, tot in adoption_rate_stats]
     return_val.insert(0,['Date','Adoption Rate'])
     return HttpResponse(json.dumps(return_val))
     

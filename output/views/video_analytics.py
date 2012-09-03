@@ -118,7 +118,7 @@ def video_language_wise_scatter_data(request):
 def video_practice_wise_scatter(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    return views.common.scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+    return views.common.practice_scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
                                            geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 
@@ -175,7 +175,7 @@ def video(request):
     
     
     rel_vids_all = Video.objects.exclude(pk=vid.pk).order_by('-viewers')
-    rel_vids_prac = rel_vids_all.filter(related_agricultural_practices__in = vid.related_agricultural_practices.all())
+    rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
     else:
@@ -209,7 +209,14 @@ def video_search(request):
     to_date = request.GET.get('to_date')
     sort = request.GET.get('sort')
     sort_order = request.GET.get('sort_order')
+    sec=request.GET.get('sec')
+    subsec=request.GET.get('subsec')
+    top=request.GET.get('top')
+    subtop=request.GET.get('subtop')
+    sub=request.GET.get('sub')
+    
     search_box_params = {}
+    
 
     vids = Video.objects.annotate(adoptions=Count('personadoptpractice'))
     
@@ -238,16 +245,15 @@ def video_search(request):
         search_box_params['video_uploaded'] = video_uploaded
     
     if(season):
-        vids = vids.filter(related_agricultural_practices__seasonality__in = season);
+        vids = vids.filter(related_practice__seasonality__in = season);
         search_box_params['season'] = season
     if(lang):
         vids = vids.filter(language__id = int(lang))
         search_box_params['sel_lang'] = lang
     search_box_params['langs'] = Language.objects.all().values('id','language_name')
     if(prac_arr):
-        vids = vids.filter(related_agricultural_practices__id__in = map(int,prac_arr))
+        vids = vids.filter(related_practice__id__in = map(int,prac_arr))
         search_box_params['prac'] = prac_arr
-    search_box_params['all_pracs'] = Practices.objects.all().values('id','practice_name')
     if(geog):
         geog = geog.upper();
         if(geog=="COUNTRY"):
@@ -291,6 +297,19 @@ def video_search(request):
         else:
             vids = vids.order_by('-adoptions', 'id')
         
+    if(sec!=None):
+        vids=vids.filter(related_practice__practice_sector=int(sec))
+    if(subsec!=None):
+        vids=vids.filter(related_practice__practice_subsector=int(subsec))
+    if(top!=None):
+        vids=vids.filter(related_practice__practice_topic=int(top))
+    if(subtop!=None):
+        vids=vids.filter(related_practice__practice_subtopic=int(subtop))
+    if(sub!=None):
+        vids=vids.filter(related_practice__practice_subject=int(sub))
+                    
+    search_box_params['prac_level'] = views.common.practice_options(sec,subsec,top,subtop,sub)
+    
     
     #for paging
     vid_count = vids.count()

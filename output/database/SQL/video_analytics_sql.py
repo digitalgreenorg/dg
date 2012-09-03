@@ -83,34 +83,6 @@ def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
 ###  SQLs for VIDEO profile page ####
 #####################################
 
-#Logic: If a person adopts a practice,
-# shown in the video, in 5-100 days of viewing;
-# it counts as adoption for that video.
-def get_adoption_for_video(id):
-    return """SELECT COUNT(*) as tot_adopt 
-        FROM PERSON_ADOPT_PRACTICE PAP
-        JOIN (SELECT person_id, practices_id, DATE_ADD(DATE, INTERVAL 1 DAY) AS start, DATE_ADD(DATE, INTERVAL 100 DAY) AS end 
-              FROM PERSON_MEETING_ATTENDANCE PMA
-              JOIN SCREENING_videoes_screened SVS on SVS.screening_id = PMA.screening_id
-              JOIN SCREENING SC on SC.id = PMA.screening_id
-              JOIN VIDEO_related_agricultural_practices VRAP on VRAP.video_id = SVS.video_id
-              WHERE SVS.video_id = """+str(id)+""") T 
-    ON T.person_id = PAP.person_id AND T.practices_id = PAP.practice_id AND DATE_OF_ADOPTION BETWEEN start AND end
-    """
-
-#similar to above. ids is list of ids
-def get_adoption_for_multiple_videos(ids):
-    return """SELECT VID.id as id, count(PAP.id) as count
-            FROM VIDEO VID
-            LEFT OUTER JOIN SCREENING_videoes_screened  SVS ON SVS.video_id = VID.id
-            LEFT OUTER JOIN PERSON_MEETING_ATTENDANCE PMA ON PMA.screening_id = SVS.screening_id
-            LEFT OUTER JOIN SCREENING SC ON SC.id = SVS.screening_id
-            LEFT OUTER JOIN VIDEO_related_agricultural_practices VRAP ON VRAP.video_id = SVS.video_id
-            LEFT OUTER JOIN PERSON_ADOPT_PRACTICE PAP ON PAP.person_id = PMA.person_id
-                AND (date_of_adoption BETWEEN DATE_ADD(DATE, INTERVAL 1 DAY)  AND DATE_ADD(DATE, INTERVAL 100 DAY))
-                AND PAP.practice_id = VRAP.practices_id
-            WHERE VID.id IN ("""+','.join(map(str,ids))+""")    
-            GROUP BY VID.id"""
 
 def get_screening_month_bar_for_video(id):
     sql_ds = get_init_sql_ds();

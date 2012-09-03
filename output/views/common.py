@@ -1,18 +1,30 @@
 from dashboard.models import *
 from django.http import Http404, HttpResponse
 from django.shortcuts import *
-from output import views
+from django.template import Template, Context
 from output.database import utility
 from output.database.SQL import shared_sql, overview_analytics_sql, \
     screening_analytics_sql
+from output.database.SQL.shared_sql import practice_options_sql
 from output.database.utility import run_query, run_query_raw, run_query_dict, \
     run_query_dict_list, construct_query, get_dates_partners
 import datetime
-import django
 import json
-import re
 import random
+import re
 
+##DELETE
+from output.database.SQL  import video_analytics_sql, shared_sql
+
+def test(request):
+    return render_to_response('test.html')
+
+def test_data(request):
+    geog="country"
+    id = 1
+    from_date, to_date, partners = None,None,[]
+    return scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 def home_with_analytics():
     tot_scr = Screening.objects.count()
@@ -75,6 +87,81 @@ def get_search_box(request):
 
     return search_box_params
 
+def practice_change(request):
+    
+    sec=request.GET.get('sec')
+    subsec=request.GET.get('subsec')
+    top=request.GET.get('top')
+    subtop=request.GET.get('subtop')
+    sub=request.GET.get('sub')
+    if(sec=="-1"):
+        sec=None
+    if(subsec=="-1"):
+        subsec=None
+    if(top=="-1"):
+        top=None
+    if(subtop=="-1"):
+        subtop=None
+    if(sub=="-1"):
+        sub=None        
+    
+    sql_result = practice_options(sec,subsec,top,subtop,sub)
+    
+    html_sec = """
+    <option value='-1'>Any Sector</option>
+    {% for key,item in sql_result.0 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_subsec = """
+    <option value='-1'>Any Subsector</option>
+    {% for key,item in sql_result.1 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_top = """
+    <option value='-1'>Any Topic</option>
+    {% for key,item in sql_result.2 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_subtop = """
+    <option value='-1'>Any Subtopic</option>
+    {% for key,item in sql_result.3 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_sub = """
+    <option value='-1'>Any Subject</option>
+    {% for key,item in sql_result.4 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    
+    def render_option(option_string, context_dict):
+        html = Template(option_string)
+        return html.render(Context(context_dict))  
+    
+    return HttpResponse(json.dumps(map(render_option, [html_sec, html_subsec, html_top, html_subtop, html_sub], [dict(sql_result=sql_result)] * 5)))
+                                             
+def practice_options(sec, subsec, top, subtop, sub):
+    tuple_val=run_query_raw(practice_options_sql(sec, subsec, top, subtop, sub))
+    list_dict=[{}, {}, {}, {}, {}]
+    for i in range(len(tuple_val)):
+        val=tuple_val[i]
+        for j in range(len(val)/2):
+            if(val[j*2]!=None):
+                list_dict[j][val[j*2]]=[val[(j*2)+1]]
+                
+    args = [sec, subsec, top, subtop, sub]                
+    for i in range(len(args)):
+        if args[i] is not None:
+            list_dict[i][int(args[i])].append('true')
+    
+    list_dict = [sorted(i.iteritems(), key=lambda x: x[1][0]) for i in list_dict]
+
+    return list_dict
+
 #Helper function to return geog, id from request object.
 def get_geog_id(request):
     if "id" in request.GET and 'geog' in request.GET:
@@ -119,22 +206,22 @@ def drop_down_val(request):
         geog_parent = geog_list[geog_list.index(geog)-1]
 
 
-    temp = """
+    html_option = """
     <option value='-1'>Select {{geog|title}}</option>
     {% for row in rs %}
     <option value="{{row.id}}">{{row.name}}</option>
     {%endfor%}
     """
-    t = django.template.Template(temp);
+    t = Template(html_option);
     rs = run_query(shared_sql.search_drop_down_list(geog=geog,geog_parent=geog_parent,id=id));
-    html = t.render(django.template.Context(dict(geog=geog,rs=rs)))
+    html = t.render(Context(dict(geog=geog,rs=rs)))
 
     return HttpResponse(html)
 
 
 
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
-#type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+#type can be ['prod','screen','prac','person','adopt']
 #       Based on the 'type', it generates the data for that set only
 #       If 'type' is not specified, it generates for all.
 def overview_line_graph(request):
@@ -144,7 +231,7 @@ def overview_line_graph(request):
     if('type' in request.GET):
         graph_type = request.GET.getlist('type')
     else:
-        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt']
 
     if('prod' in graph_type):
         vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
@@ -171,20 +258,6 @@ def overview_line_graph(request):
     else:
         person_rs = []
     
-    if('prod_tar' in graph_type):
-        prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        prod_tar_rs = []
-
-    if('adopt_tar' in graph_type):
-        adopt_tar_rs = run_query_dict(shared_sql.target_lines(type='adopt_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        adopt_tar_rs = []
-
-    if('screen_tar' in graph_type):
-        screen_tar_rs = run_query_dict(shared_sql.target_lines(type='screen_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        screen_tar_rs = []
 
     start_date = today = datetime.date.today()
     if vid_prod_rs:
@@ -197,18 +270,10 @@ def overview_line_graph(request):
         start_date = min(start_date,*(prac_rs.keys()))
     if person_rs:
         start_date = min(start_date,*(person_rs.keys()))
-    if screen_tar_rs:
-        start_date = min(start_date,*(screen_tar_rs.keys()))
-    if adopt_tar_rs:
-        start_date = min(start_date,*(adopt_tar_rs.keys()))
-    if prod_tar_rs:
-        start_date = min(start_date,*(prod_tar_rs.keys()))
-        
-    
     diff = (today - start_date).days
 
     str_list = []
-    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = sum_vid_tar = sum_sc_tar = sum_adopt_tar = 0
+    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = 0
     for i in range(0,diff+1):
         iter_date = start_date + datetime.timedelta(days=i)
 
@@ -222,12 +287,6 @@ def overview_line_graph(request):
             sum_prac += prac_rs[iter_date][0]
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
-        if iter_date in prod_tar_rs:
-            sum_vid_tar += prod_tar_rs[iter_date][0]
-        if iter_date in screen_tar_rs:
-            sum_sc_tar += screen_tar_rs[iter_date][0]
-        if iter_date in adopt_tar_rs:
-            sum_adopt_tar += adopt_tar_rs[iter_date][0]
 
         append_str = [str(iter_date)]
         if('prod' in graph_type): append_str.append(float(sum_vid))
@@ -235,32 +294,23 @@ def overview_line_graph(request):
         if('adopt' in graph_type): append_str.append(float(sum_adopt))
         if('prac' in graph_type): append_str.append(float(sum_prac))
         if('person' in graph_type): append_str.append(float(sum_person))
-        if(geog in ["COUNTRY","STATE","DISTRICT"]):
-            if('prod_tar' in graph_type): append_str.append(float(sum_vid_tar))
-            if('screen_tar' in graph_type): append_str.append(float(sum_sc_tar))
-            if('adopt_tar' in graph_type): append_str.append(float(sum_adopt_tar))
 
         str_list.append(append_str)
 
     #For settings
     header=['date']
     if('prod' in graph_type):
-        header.append('Total Videos Produced')
+        header.append('Total videos produced')
     if('screen' in graph_type):
-        header.append('Total Disseminations')
+        header.append('Total disseminations')
     if('adopt' in graph_type):
-        header.append('Total Adoptions')
+        header.append('Total adoptions')
     if('prac' in graph_type):
-        header.append('Total Practices')
+
+        header.append('Total practices')
     if('person' in graph_type):
-        header.append('Total Farmers')
-    if(geog in ["COUNTRY","STATE","DISTRICT"]):
-        if('prod_tar' in graph_type):
-            header.append('Video Production Target')
-        if('screen_tar' in graph_type):
-            header.append('Disseminations Target')
-        if('adopt_tar' in graph_type):
-            header.append('Adoptions Target')
+        header.append('Total viewers')
+
     str_list.insert(0,header)
     return HttpResponse(json.dumps(str_list))
 
@@ -286,9 +336,36 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
 #generic function to render data for Scatter Charts
 #sqlFunc is the function which renders the SQL query.
 #Pre-requisite: SQL function should generate name, count & in that order.(Other variable names would throw error)
+def practice_scatter_chart_data(sqlFunc, **args):
+    rs = run_query(sqlFunc(**args))
+    if not rs:
+        return HttpResponse(json.dumps([[]]));
+
+    count_dict = {}
+    for item in rs:
+        if item['count'] in count_dict:
+            count_dict[item['count']].append([item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']])
+        else:
+            count_dict[item['count']] = [[item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']]]
+    x_axis_len = max([len(x) for x in count_dict.values()]) * 2
+    if(x_axis_len<10): x_axis_len = 10;
+    return_val = [['practice_name','Sector','Sub Sector','Topic','Sub Topic','Subject','','','','Number']]
+    random.seed();
+    for tot, pracs_arr in count_dict.iteritems():
+        for pracs in pracs_arr:
+            flag = [0] * x_axis_len
+            x = random.randrange(1,x_axis_len)
+            while(flag[x] != 0):
+                x = random.randrange(1,x_axis_len)
+            flag[x] = 1
+            return_val.append([pracs[0],pracs[1],pracs[2],pracs[3],pracs[4],pracs[5],x,tot,"",tot])
+
+    return HttpResponse(json.dumps(return_val))
+
+
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
-    return_val = [['',-1,-1,-1,0]]
+    return_val = [['','','','','Number']]
     if not rs:
         return HttpResponse(json.dumps([[]]));
 

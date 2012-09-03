@@ -36,11 +36,12 @@
 					<tr>
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname">	Adoption Rate	</div>
+								<div class="statdescname">	Adoption rate	</div>
 								<div id="statdescimg"> 	
 									<div id="statdescimg1" style="display: none;">	
-										Farmers who have adopted an agricultural practice <br/>
-										divided by 'Active' attendees i.e. farmers who have watched a DG video in last 60 days.					
+
+										Viewers who have adopted a practice divided by 'Active' <br> 
+										attendees i.e. viewers who have watched a DG video in last 60 days.					
 									</div>								
 								</div>
 							</div>
@@ -50,11 +51,11 @@
 						</td>
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname">Avg. adoption per active farmer </div>
+								<div class="statdescname">Average adoption per active viewer </div>
 								<div id="statdescimg"> 
 									<div id="statdescimg1" style="display: none;">	
-										Average number of adoptions per active farmer. Active farmer <br/>
-										is the one still involved with DG system.			
+										Average number of adoptions per active viewer.Viewers are considered<br/>
+										'active' if they have watched a DG video in the last 60 days'			
 									</div>								
 								</div>
 							</div>
@@ -64,7 +65,7 @@
 						</td>
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname">Avg. adoption per screening </div>
+								<div class="statdescname">Average adoption per screening </div>
 								<div id="statdescimg">
 									<div id="statdescimg1" style="display: none;">	
 										Average number of adoptions per screening			
@@ -79,10 +80,10 @@
 					<tr>
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname">	Total number of Adoptions	</div>
+								<div class="statdescname">	Total number of adoptions	</div>
 								<div id="statdescimg"> 	
 									<div id="statdescimg1" style="display: none;">	
-										The total number of Adoptions <br/>
+										 Total number of adoptions <br/>
 										in a chosen geography & time period						
 									</div>								
 								</div>
@@ -98,7 +99,7 @@
 								<div class="statdescname">Ratio of manifested expressed interests</div>
 								<div id="statdescimg"> 
 									<div id="statdescimg1" style="display: none;">	
-										Farmers express interests for adopting a practice during Video screenings. <br\>
+										Viewers express interests for adopting a practice during video screenings. <br\>
 										This statistic indicates the ratio of interests that materialized into actual adoption.				
 									</div>								
 								</div>
@@ -110,7 +111,7 @@
 						{% endcomment %}
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'> Avg. adoption per video</div>
+								<div class='statdescname'> Average adoption per video</div>
 								<div id='statdescimg'> 
 									<div id='statdescimg1'>	
 										Average number of adoptions <br/>
@@ -125,10 +126,10 @@
 						
 						<td class="table1statdesc">
 							<div class="statdesc">
-								<div class="statdescname">Probability of Adoption by a farmer </div>
+								<div class="statdescname">Probability of adoption by a viewer </div>
 								<div id="statdescimg">
 									<div id="statdescimg1" style="display: none;">	
-										Total Adoptions divided by total viewings of Videos					
+										Total adoptions divided by total viewings of videos					
 									</div>									 									
 								</div>																
 							</div>
@@ -142,11 +143,11 @@
 					<tr>						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Total Unique Farmer adopting a Practice</div>
+								<div class='statdescname'>	Total unique viewers adopting a practice</div>
 								<div id='statdescimg'> 	
 									<div id='statdescimg1'>	
-										Number of unique farmers <br/> 
-										adopting any Agricultural Practice	
+										Number of unique viewers <br/> 
+										adopting any practice	
 									</div>								
 								</div>
 							</div>
@@ -157,28 +158,28 @@
 					
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'>	Total Unique Practices Adopted </div>
+								<div class='statdescname'>	Total Videos Adopted </div>
 								<div id='statdescimg'> 
 									<div id='statdescimg1'>	
-										Number of Unique Agricultural<br/>
-										Practices adopted
-									</div>								
+										Number of Videos adopted
+							</div>								
 								</div>
 							</div>
 							<div class='statnumber'>
-								<div class='statdesnumber'>{{tot_prac}} Practice{{tot_prac|pluralize}}</div>
+								<div class='statdesnumber'>{{tot_prac}} Video{{tot_prac|pluralize}}</div>
 							</div>													
 						</td>	
 						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'> Ratio of farmers with Repeat Adoption </div>
+								<div class='statdescname'> Ratio of viewers with repeat adoption </div>
 								<div id='statdescimg'> 	
 									<div id='statdescimg1'>	
-										Ratio of farmers who repeated an adoption to the  
-										number of farmers who made at least one adoption.
-										Repeating an adoption is adopting the same agricultural
-										practice again.
+
+										Ratio of viewers who repeated an adoption to the  
+										number of viewers who made at least one adoption.
+										Repeating an adoption is adopting the same 
+										video again.
 									</div>								
 								</div>
 							</div>
@@ -193,7 +194,7 @@
 						</td>						
 						<td class='table1statdesc'>
 							<div class='statdesc'>
-								<div class='statdescname'> Avg. adoption per video</div>
+								<div class='statdescname'> Average adoption per video</div>
 								<div id='statdescimg'> 
 									<div id='statdescimg1'>	
 										Average number of adoptions <br/>
@@ -229,8 +230,9 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Geographic distribution of Adoptions</div>
+									<div id="subgraphdiv1titledesc1"> Geographic distribution of adoptions</div>
 									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_geog_pie_chart,"Geographic distribution of Adoptions")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+
 								</div>
 							</div>
 							<div class="graphdiv1desc" id="javascript_geogwise_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">								
@@ -240,8 +242,9 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Number of Adoptions per Month </div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_monthwise_column_chart,"Number of Adoptions per Month")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+									<div id="subgraphdiv1titledesc1"> Number of adoptions per month </div>
+									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_monthwise_column_chart,"Number of adoptions per month")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+
 								</div>															
 							</div>
 							<div class="graphdiv1desc" id="javascript_monthwise_column" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">								
@@ -254,9 +257,9 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1">Number of Adoptions over Time</div>
+									<div id="subgraphdiv1titledesc1">Number of adoptions over time</div>
 
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_total_line_chart,"Absolute Attendance & Interest Line Graph")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_total_line_chart,"Number of adoptions over time")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 
 								</div>	
 							</div>
@@ -266,12 +269,42 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title"> 
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Adoptions per Practice </div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_practice_bubble_chart,"Adoptions per Practice")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+									<div id="subgraphdiv1titledesc1"> Adoptions per practice </div>
+									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_practice_bubble_chart,"Adoptions per practice")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 
 								</div>									
 							</div>
-							<div class="graphdiv1desc" id = "javascript_practice_type_bubble" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
+				<div id=practice >				
+				</div>
+				
+				<div style="width:95px;float:left;">
+					<select class='select sec' id='sec' onChange="ValChange( this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
+						<option selected='selected'>Any</option>
+					</select>								
+				</div>
+				<div style="width:95px;float:left;">
+					<select class='select subsec' id='subsec' onChange="ValChange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:95px;float:left;">
+					<select class='select topity' id='top' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:95px;float:left;">
+					<select class='select subtop' id='subtop' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value,radio_value())">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:95px;float:left;">
+					<select class='select subject'  id='sub' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value,radio_value())">
+						<option selected='selected'>Any</option>
+					</select>				
+				</div>
+				<div style="width:80px;margin-left:470px;"> <input id='Reset1' type='reset' onclick="init()"  value="Reset"> </div>
+							
+							<div class="graphdiv1desc" id = "javascript_practice_type_bubble" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;min-height:364px">
 							</div>						
 						</div>					
 					</td>
@@ -281,8 +314,8 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1">Adoption Rate Line Graph</div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_percent_line_chart,"Adoption Rate Line Graph")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+									<div id="subgraphdiv1titledesc1">Adoption rate</div>
+									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_percent_line_chart,"Adoption rate")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "javascript_percent_line" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
@@ -291,8 +324,8 @@
 						<div id="graphdiv1">
 							<div id="graphdiv1title">
 								<div id="graphdiv1titledesc" >									
-									<div id="subgraphdiv1titledesc1"> Gender distribution of Persons adopting Agricultural Practice</div>
-									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_gender_pie_chart,"Gender distribution of Persons adopting Agricultural Practice")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
+									<div id="subgraphdiv1titledesc1"> Gender distribution of viewers adopting practices</div>
+									<div id="subgraphdiv1titledesc2"> <a href='javascript:zoomIn(exp_gender_pie_chart,"Gender distribution of viewers adopting  practices")'> <img src="/media/Output/Images/zoomicon1.png" title='Zoom In'> </a> </div>	
 								</div>								
 							</div>
 							<div class="graphdiv1desc" id = "javascript_gender_pie" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">

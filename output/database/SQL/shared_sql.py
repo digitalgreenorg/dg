@@ -42,6 +42,31 @@ def breadcrumbs_options_sql(geog, id, is_child):
 
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
 #Returns '' if geography!= country or geography!=state
+
+def practice_options_sql(sec, subsec, top, subtop, sub):
+    sql_ds =  get_init_sql_ds()
+    sql_ds['select'].extend(["S.ID","S.name","SS.ID","SS.name","T.ID","T.name","ST.ID","ST.name","SUB.ID","SUB.name"])
+    sql_ds['from'].append("PRACTICES P")
+    sql_ds['lojoin'].append(["practice_sector S", "S.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector SS", "SS.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
+    if(sec):
+        sql_ds['where'].append('practice_sector_id = %s' % sec)
+    if(subsec):
+        sql_ds['where'].append('practice_subsector_id = %s' % subsec)
+    if(top):
+        sql_ds['where'].append('practice_topic_id = %s' % top)
+    if(subtop):
+        sql_ds['where'].append('practice_subtopic_id = %s' % subtop)
+    if(sub):
+        sql_ds['where'].append('practice_subject_id = %s' % sub)
+        
+    return join_sql_ds(sql_ds)
+        
+        
+
 def get_partners_sql(geog, id):
     if geog not in [None, "COUNTRY", "STATE"]:
         return ''
@@ -167,7 +192,6 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_inn_ds['from'].append("video_myisam VIDM");
         filter_partner_geog_date(sql_inn_ds,'VIDM','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("practice_id");
-        
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');
     elif(type=='person'):
@@ -206,47 +230,6 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_ds['having'].append("date between '"+from_date+"' and '"+to_date+"'")
 
     return join_sql_ds(sql_ds)
-
-
-#'type' can be prod_tar/screen_tar/adopt_tar
-def target_lines(geog,id, from_date, to_date, partners, type):
-    sql_ds = get_init_sql_ds();
-
-    if(geog == 'STATE'):
-        sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
-        sql_ds['where'].append("D.state_id = "+str(id))
-        if(partners):
-            sql_ds['where'].append("D.partner_id IN ("+','.join(partners)+")")
-    elif(geog == 'DISTRICT'):
-        sql_ds['where'].append("D_T.district_id = "+str(id))
-    elif(geog == "COUNTRY"):
-        sql_ds['join'].append(["DISTRICT D", "D.id = D_T.district_id"])
-        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
-        sql_ds['where'].append("S.country_id = "+str(id))
-        if(partners):
-            sql_ds['where'].append("D.partner_id IN ("+','.join(partners)+")")
-    elif(geog is not None):
-        return '';
-    
-    if(from_date and to_date):
-        sql_ds['where'].append("month_year  BETWEEN '"+from_date+"' AND '"+to_date+"'")
-    sql_ds['select'].append('month_year as date')
-    sql_ds['from'].append("dashboard_target D_T")
-
-    if(type=='screen_tar'):
-        sql_ds['select'].append("disseminations")
-        sql_ds['where'].append("disseminations IS NOT NULL")
-    elif(type=='prod_tar'):
-        sql_ds['select'].append("video_production")
-        sql_ds['where'].append("video_production IS NOT NULL")
-    elif(type=='adopt_tar'):
-        sql_ds['select'].append('disseminations*adoption_per_dissemination')
-        sql_ds['where'].append("disseminations*adoption_per_dissemination IS NOT NULL")
-    else:
-        return ""
-
-    return join_sql_ds(sql_ds);
-
 
 
 

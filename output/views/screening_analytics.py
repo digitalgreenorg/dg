@@ -124,7 +124,7 @@ def screening_monthwise_bar_data(request):
 def screening_practice_wise_scatter_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    return views.common.scatter_chart_data(screening_analytics_sql.screening_practice_scatter, \
+    return views.common.practice_scatter_chart_data(screening_analytics_sql.screening_practice_scatter, \
                                             geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 

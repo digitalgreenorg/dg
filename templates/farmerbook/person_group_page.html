@@ -1,0 +1,261 @@
+<html>
+<head></head>
+<body>
+
+	<div class="modal-body"
+		style="padding: 3px; border: 5px solid #666666;">
+<div id="content" style="width: 710px;">
+<div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
+<div class="left_panel_top">
+
+<div id="district_label" >{{ left_panel_stats.group_details.0.3 }} | {{ left_panel_stats.group_details.0.4 }}</div>
+			<center><img id="img_container" style="width:150px; height:100px;" src="http://s3.amazonaws.com/dg_farmerbook/group/{{left_panel_stats.group_details.0.9}}.jpg"></center>
+		<div id="name_label" > <center>{{ left_panel_stats.group_details.0.0  }}</center></div>
+	<div class="group_label" > 
+		<center> <a href="javascript:void(0)" onclick="villageClick({{left_panel_stats.group_details.0.1}})">
+		{{ left_panel_stats.group_details.0.2 }}</a></center></div>
+	{% if left_panel_stats.start_date %}
+	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }}</center></div>
+	{% endif %}
+</div>
+
+<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+<div class="progress progress-striped">
+<div class="bar "  style="width: {{left_panel_stats.adoption_rate_width|floatformat:1 }}% ;"><p> {{left_panel_stats.adoption_rate|floatformat:1 }}</p>
+</div>
+</div>
+		
+{% load humanize %}
+{% load customtags%}
+<div class="left_panel_bottom" style="padding-top: 0px;">
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Members</div>
+<div class='statsValue'>{{left_panel_stats.members_count|intcomma }}</div>
+<div class="left_panel_bottom" style="padding-top: 0px;">
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Screenings</div>
+<div class='statsValue'>{{left_panel_stats.screenings|intcomma }}</div>
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Questions</div>
+<div class='statsValue'>{{ left_panel_stats.questions|intcomma }}</div>
+<div class='horizontal_line'></div>
+<div class='statsLabel'>Adoptions</div>
+<div class='statsValue'>{{ left_panel_stats.adoptions|intcomma }}</div>
+<div class='horizontal_line'></div>
+</div>
+</div>
+<div class='service_provider_container'>		
+			<div class = "section_title"><span style="font-size:90%; margin-left:-10px;color:#6D9D30">Service Provider</span></div>
+			<div style='width:100px;float:left;'>
+				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.group_details.0.7}})">
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.group_details.0.7}}.jpg"></a>
+				</div>
+				<div style="width:100px; overflow:hidden;">
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.group_details.0.7}})">{{ left_panel_stats.group_details.0.8 }}</a>
+				</div>				
+			</div>
+			<div style='width:100px;float:right;'>
+				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.group_details.0.5}})">
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.group_details.0.5}}.jpg"></a>
+				</div>
+				<div style="width:100px; overflow:hidden; margin-left:-30px;">
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.group_details.0.5}})">{{ left_panel_stats.group_details.0.6 }}</a>
+				</div>
+			</div>
+</div>
+<div style='clear:both;'></div>	
+</div>
+</div>
+
+
+<div class='content_top' style="margin-left: 255px;">
+<div id="closeButton"
+	style="float: right; margin-top: -5px; margin-left: 5px;">
+	<a class="close" data-dismiss="modal">X</a>
+</div>
+<div id="tabs">
+	<div id='toptabs'>
+		<ul>
+			<li id='tabsli' class='giftsli'>
+			<span>Videos Disseminated ( {{left_panel_stats.videos_disseminated }} )</span></a>
+		</li>
+	</ul>
+</div>
+</div>
+
+<div class='vil_tabcontent' id="top_tabcontent"
+	style="height: 190px;" style='width:100%; margin:0px;'>
+<div class="carousel slide span8" id="myCarousel"
+	style="width: 710px; margin-bottom: 0px;">
+	<div class="carousel-inner">
+		{% for vid in videos_watched_stats %} 
+		{% if forloop.counter0|divisibleby:"5" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
+				{% endif%}
+				<li class="vidsWatchedItem">
+							<div class="thumbnail">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+								<img title="{{ vid.title|lower|capfirst}}" src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								</a>
+							</div>
+							{% if vid.adopters %}							
+							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+							{% endif %}
+
+							{% if vid.interested %}
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
+							{% endif %}
+							{% if vid.questioners %}
+								{% if vid.interested %}
+									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+								{% else %}
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+								{% endif %}
+
+							{% endif %}
+
+							<div class="question" style="margin-top:0px;">
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
+							</div>	
+							
+							
+									{% if vid.screenings %}
+									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
+									{% endif %}
+									{% if vid.farmers_attended %}
+									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
+									{% endif %}
+
+							
+							
+								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
+							
+
+						</li>
+				 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%}
+		 {% endfor %}
+	</div>
+	<a data-slide="prev" href="#myCarousel"
+		class="left carousel-control" style="margin-left: -40px;"><</a>
+	<a data-slide="next" href="#myCarousel" class="carousel-control"
+		style="margin-left: 650px !important">></a>
+	</div>
+</div>
+
+
+<div style="height: 1px;"></div>
+	<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Groups</span> </div>
+			<div style='border-bottom:3px solid #009E0F;'></div>
+			<div style='border: 1px solid #009E0F;height:311px;'>
+<div class="carousel slide span8" id="lbCarousel"
+	style="width: 710px;">
+	<div class="carousel-inner" style="height: 300px;">
+		{% for group in top_related_stats %} {% if forloop.counter0|divisibleby:"3" %}
+		<div class="item{% if forloop.first %} active{%endif%}">
+			<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
+				{% endif%}
+				<li style="margin-left: 2px; margin-top: -9px;">
+					<div class='farmer_details_container'>
+						<center><img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+						<div class='csp_name'>
+							<a href="javascript:void(0);"
+								onclick="groupClick({{ group.id }})">{{ group.name }}</a>
+						</div></center>
+
+
+
+<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+
+							<div class="progress progress-striped">
+							  <div class="bar "  style="width: {{group.ratewidth|floatformat:1 }}% ;"><p> {{ group.rate|floatformat:1 }}</p></div>
+							</div>
+
+
+
+		<table width="200">		
+			<tr>
+				<td align="left">{{ group.start_date|date:"M Y" }}</td>
+				<td align="left"> {{ group.screenings|intcomma}}</td>
+				<td align="left"> {{ group.adoptions|intcomma}}</td>
+			</tr>
+			<tr>
+				<td align="left"><b> Started</b></td>
+				<td align="left"><b> Screenings</b></td>
+				<td align="left"><b>Adoptions</b></td>
+			</tr>
+		</table>	
+						
+						
+						
+						
+
+					</div>
+				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
+		</div>
+		</ul>
+		{% endif%} 
+		{% endfor %}
+	</div>
+	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
+	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+			</div>
+
+		</div>
+</div>
+
+</div>
+<script type="text/javascript">
+var videos_watched_html;
+
+function ajax_tab_click(clicked, village_id) {    
+    if(clicked=="videos_produced") {
+		videos_watched_html = $("div#top_tabcontent").html();
+		//alert(videos_watched_html);
+		$("div#top_tabcontent").html("");
+		//alert('here in ajax tab click');
+		$("div#top_tabcontent").load('/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
+		  if (status == "error") {
+			var msg = "Sorry but there was an error: ";
+			alert(msg + xhr.status + " " + xhr.statusText);
+		  }
+		  //alert('Load was performed.');
+		  //alert($("div#top_tabcontent").html());
+		});
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".giftsli").addClass("tabsliselect");
+		$(".giftsli").removeAttr('href');
+		 mixpanel.track("Videos Produced page Loaded")
+	} else if (clicked=="videos_watched") {
+		$("div#top_tabcontent").html("");
+		$("div#top_tabcontent").html(videos_watched_html);
+		//alert(videos_watched_html);
+		$("li").removeClass("tabsliselect");
+		//$("#tabsli a").css("color","#330000");
+		//$(".produced a").css("color","#ffffff");
+		$(".playli").addClass("tabsliselect");
+		$(".playli").removeAttr('href');
+		
+	}
+	//alert($("div#top_tabcontent").html());
+	//$("li").removeClass("active");	
+	//$("#home").addClass("active");		
+			
+}
+
+	
+</script>
+		</div>
+</body>
+</html>
+
+
+
