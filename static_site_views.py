@@ -197,9 +197,9 @@ def careerpm(request):
     
     return render_to_response('base_career_pm.html')
 
-def careerhr(request):
+def careernm(request):
     
-    return render_to_response('base_career_hr.html')
+    return render_to_response('base_career_nm.html')
 
 def careeres(request):
     
