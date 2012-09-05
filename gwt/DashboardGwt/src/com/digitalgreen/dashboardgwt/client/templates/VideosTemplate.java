@@ -204,6 +204,7 @@ public class VideosTemplate extends BaseTemplate {
     															"<option value='' selected='selected'>---------</option>" +
     															"<option value='1'>Agricultural</option>"+
     															"<option value='2'>Institutional</option>"+
+    															"<option value='3'>Health</option>"+
 
     														"</select>" +
     													"</div>" +
