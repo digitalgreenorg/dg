@@ -7,6 +7,7 @@ import com.google.gwt.http.client.Response;
 public class OnlineOfflineCallbacks {
 	private BaseServlet servlet;
 	private Response response;
+	
 	public OnlineOfflineCallbacks(BaseServlet servlet) {
 		this.servlet = servlet;
 	}
