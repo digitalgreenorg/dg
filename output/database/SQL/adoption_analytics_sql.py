@@ -27,7 +27,7 @@ def adoption_malefemale_ratio(geog, id, from_date, to_date, partners):
 
 def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(PAPM.adoption_id) as count"])
+    sql_ds['select'].extend(["PRACTICE_NAME as name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub", "COUNT(PAPM.adoption_id) as count"])
     sql_ds['from'].append("person_adopt_practice_myisam PAPM")
     sql_ds['join'].append(["VIDEO vid","PAPM.video_id = vid.id"])
     sql_ds['join'].append(["PRACTICES PR","vid.related_practice_id = PR.id"])

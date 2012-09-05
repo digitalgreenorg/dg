@@ -76,6 +76,7 @@ def video_type_wise_pie(request):
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
+    print geog
     from_date, to_date, partners = get_dates_partners(request)
     geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
