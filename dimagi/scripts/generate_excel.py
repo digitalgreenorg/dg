@@ -30,23 +30,23 @@ def write_person_info(cluster_dict, workbook):
     person_info = []
     sheet = workbook.add_sheet('person')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name ")
-    sheet.write(row,2,"field: group_id")
-    sheet.write(row,3,"group 1")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 2, "field: group_id")
+    sheet.write(row, 3, "group 1")
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
             village_person_info = Person.objects.filter(village__village_name = vill).values_list('id','person_name','group')
             person_info.append(village_person_info)
-        for person in village_person_info:
-            person_id = truncate_id(person[0])
-            group_id = truncate_id(person[2])
-            sheet.write(row,0,str(person_id))
-            sheet.write(row,1,person[1])
-            sheet.write(row,2,str(group_id))
-            sheet.write(row,3,cluster['cluster'])
-            row += 1
+            for person in village_person_info:
+                person_id = truncate_id(person[0])
+                group_id = truncate_id(person[2])
+                sheet.write(row, 0, str(person_id))
+                sheet.write(row, 1, person[1])
+                sheet.write(row, 2, str(group_id))
+                sheet.write(row, 3, cluster['cluster'])
+                row += 1
         if len(village_person_info) < 1:
             print " No person found in " + cluster['cluster'] 
     return sheet
@@ -55,32 +55,32 @@ def write_group_info(cluster_dict, workbook):
     group_info = []
     sheet = workbook.add_sheet('group')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name ")
-    sheet.write(row,2,"field: village_id")
-    sheet.write(row,3,"group 1")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 2, "field: village_id")
+    sheet.write(row, 3, "group 1")
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
             village_persongroup_info = PersonGroups.objects.filter(village__village_name = vill).values_list('id','group_name','village')
             group_info.append(village_persongroup_info)
-        for group in village_persongroup_info:
-            group_id = truncate_id(group[0])
-            vill_id = truncate_id(group[2])
-            sheet.write(row,0,str(group_id))
-            sheet.write(row,1,group[1])
-            sheet.write(row,2,str(vill_id))
-            sheet.write(row,3,cluster['cluster'])
-            row += 1
+            for group in village_persongroup_info:
+                group_id = truncate_id(group[0])
+                vill_id = truncate_id(group[2])
+                sheet.write(row, 0, str(group_id))
+                sheet.write(row, 1, group[1])
+                sheet.write(row, 2, str(vill_id))
+                sheet.write(row, 3, cluster['cluster'])
+                row += 1
     return sheet
 
 def write_village_info(cluster_dict, workbook):
     village_info = []
     sheet = workbook.add_sheet('village')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name ")
-    sheet.write(row,2,"group 1")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 2, "group 1")
     row += 1
     village_not_found = 0 
     for cluster in cluster_dict:
@@ -88,9 +88,9 @@ def write_village_info(cluster_dict, workbook):
             village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
             if village_info:
                 village_id = truncate_id(village_info[0][0])
-                sheet.write(row,0,str(village_id))
-                sheet.write(row,1,village_info[0][1])
-                sheet.write(row,2,cluster['cluster'])
+                sheet.write(row, 0, str(village_id))
+                sheet.write(row, 1, village_info[0][1])
+                sheet.write(row, 2, cluster['cluster'])
                 row += 1
             else:
                 village_not_found +=1
@@ -102,10 +102,10 @@ def write_mediator_info(mediator_dict, workbook):
     mediator_info = []
     sheet = workbook.add_sheet('mediator')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name ")
-    sheet.write(row,2,"field: village_id")
-    sheet.write(row,3,"group 1")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 2, "field: village_id")
+    sheet.write(row, 3, "group 1")
     row += 1
     mediator_not_found = 0
     for mediator in mediator_dict:
@@ -116,10 +116,10 @@ def write_mediator_info(mediator_dict, workbook):
         if(mediator_info):
             mediator_id = truncate_id(mediator_info[0][0])
             vill_id = truncate_id(mediator_info[0][2])
-            sheet.write(row,0,str(mediator_id))
-            sheet.write(row,1,mediator_info[0][1])
-            sheet.write(row,2,str(vill_id))
-            sheet.write(row,3,mediator['cluster'])
+            sheet.write(row, 0, str(mediator_id))
+            sheet.write(row, 1, mediator_info[0][1])
+            sheet.write(row, 2, str(vill_id))
+            sheet.write(row, 3, mediator['cluster'])
             row += 1
         else:
             mediator_not_found += 1
@@ -130,11 +130,10 @@ def write_person_watched_video_info(cluster_dict, workbook):
     person_info = []
     sheet = workbook.add_sheet('videoseen')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name ")
-    #sheet.write(row,2,"field: group_id")
-    sheet.write(row,2,"field: video_id")
-    sheet.write(row,3,"group 1")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 2, "field: video_id")
+    sheet.write(row, 3, "group 1")
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
@@ -146,11 +145,10 @@ def write_person_watched_video_info(cluster_dict, workbook):
                 vid_name = Video.objects.filter(id = vid_id).values_list('title')
                 person_id = truncate_id(person[0])
                 group_id = truncate_id(person[2])
-                sheet.write(row,0,str(person_id))
-                sheet.write(row,1,vid_name[0])
-                #sheet.write(row,2,group_id)
-                sheet.write(row,2,str(vid_id))
-                sheet.write(row,3,cluster['cluster'])
+                sheet.write(row, 0, str(person_id))
+                sheet.write(row, 1, vid_name[0])
+                sheet.write(row, 2, str(vid_id))
+                sheet.write(row, 3, cluster['cluster'])
                 row += 1
         if len(village_person_info) < 1:
             print " No person found in " + cluster['cluster'] 
@@ -159,50 +157,45 @@ def write_person_watched_video_info(cluster_dict, workbook):
 def write_video_schedule_info(vid_dict, workbook):
     sheet = workbook.add_sheet('video')
     row = 0
-    sheet.write(row,0,"field: id")
-    sheet.write(row,1,"field: name")
-    sheet.write(row,2,"field: low")
-    sheet.write(row,3,"field: high")
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name")
+    sheet.write(row, 2, "field: low")
+    sheet.write(row, 3, "field: high")
+    sheet.write(row, 4, 'group 1')
     row += 1
     for record in vid_dict:
         vid_name = Video.objects.filter(id = record['id']).values_list('title')
         if vid_name:
-            sheet.write(row,0,str(record['id']))
-            sheet.write(row,1,vid_name[0][0])
-            sheet.write(row,2,str(record['low_val']))
-            sheet.write(row,3,str(record['high_val']))
+            sheet.write(row, 0, str(record['id']))
+            sheet.write(row, 1, vid_name[0][0])
+            sheet.write(row, 2, str(record['low_val']))
+            sheet.write(row, 3, str(record['high_val']))
+            sheet.write(row, 4, 'JADCHERLA')  # for testing 
             row += 1
         else:
             print str(record['id']) + " not found"
     return sheet
         
 
-wb = xlrd.open_workbook(r'C:/Users/yash/Desktop/dimagi work/Performance as on 15052012.xls')
+wb = xlrd.open_workbook('..\mahabubnagar_cluster.xls')
 wb.sheet_names()
 sh = wb.sheet_by_index(0)
-clusters_to_take = [56,81,91,106]
+clusters_to_take = [1,6]
 index=0
-  # starting point, since first line(index=0) had header
+
 permission_group = []
 cluster_village_dict = []
 mediator_village_dict = []
  
 while index < len(clusters_to_take):
     i=clusters_to_take[index]
-    name = sh.cell(rowx=i,colx=0).value.rsplit(' ')
-    find_counter = 1
-    while find_counter <= len(name):
-        if name[find_counter] != '':
-            permission_group.append(name[find_counter])    
-            break
-        else:
-            find_counter += 1 
-    print "Processing values of cluster " + name[find_counter]
-    cluster_village_dict.append({'cluster':name[find_counter] , 'villages': [sh.cell(rowx=i+vill,colx=2).value for vill in range(0,5)]})
+    name = sh.cell(rowx=i,colx=0).value
+    print "Processing values of cluster " + name
+    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,5)]})
     for village in range(0,5):
-        mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=3).value,
-                                      'village': sh.cell(rowx=i+village,colx=2).value,
-                                      'cluster': name[find_counter]})
+        mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=1).value,
+                                      'village': sh.cell(rowx=i+village,colx=1).value,
+                                      'cluster': name})
     
     index += 1 
 
@@ -217,6 +210,7 @@ video_sheet = write_person_watched_video_info(cluster_village_dict, workbook)
 video_schedule_dict = video_schedule.get_video_schedule()
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
 workbook.save('trial-Fixture.xls')
+print "Done"
 
 
 

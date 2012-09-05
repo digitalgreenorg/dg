@@ -34,7 +34,7 @@
 			
 			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
 			
-			<bind nodeset="/data/time" type="xsd:time" required="true()"/>
+			<bind nodeset="/data/time" type="xsd:time" />
 			<bind nodeset="/data/selected_village" required="true()"/>
 			<bind nodeset="/data/selected_mediator" required="true()"/>
 			<bind nodeset="/data/selected_group" required="true()"/>
