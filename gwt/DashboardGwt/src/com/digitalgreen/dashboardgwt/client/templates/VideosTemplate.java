@@ -303,7 +303,7 @@ public class VideosTemplate extends BaseTemplate {
 												    "</div>" +
 											        "<div class='form-row farmers_shown  '>" +
 												    	"<div>" +
-												    		"<label for='id_farmers_shown' class='required'>Farmers shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
+												    		"<label for='id_farmers_shown' class='required'>Persons shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
 												    		"</select>" +
 												    		//"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
 												    		//"<script type='text/javascript'>SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/');</script>"+
