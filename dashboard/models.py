@@ -48,6 +48,7 @@ VIDEO_TYPE = (
 STORYBASE = (
         (1,'Agricultural'),
         (2,'Institutional'),
+	(3,'Health'),
 )
 
 ACTORS = (
