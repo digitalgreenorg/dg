@@ -279,12 +279,12 @@
     	function bar_chart() {
     		$.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
     			var data = google.visualization.arrayToDataTable(json,false);
-
-    			var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],
-    					bar : {groupWidth: '80%'}};
-
-    			var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
-    			chart.draw(data, column_options);
+				if(json.length>1)
+					{
+	    				var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],bar : {groupWidth: '80%'}};
+	    				var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
+	    				chart.draw(data, column_options);					
+					}
     		});
     	}
 
