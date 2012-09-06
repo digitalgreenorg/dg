@@ -36,8 +36,7 @@ function displaynumstat(numstat0, numstat1,numstat2,numstat3,numstat4,numstat5,n
 function displaydesc(temp){			
 			
 			// Adding the background colour to the selected tab            
-			
-			if(temp==1){			
+			if(temp==1){
 				$("div#videodatadiv2divdesc").html(videodesc41 + farmerquant + ": " + farmeractor + videodesc42 +  videodesc43 + practiceshown + videodesc44 + videodesc45 + languagename + videodesc46 + villagename + videodesc47 + distname + videodesc48 + statename + videodesc49 + prodtime + videodesc50 + prodenddate + videodesc51);
 				$("div#videodatadiv2divdesctop").css('margin-left','0px');					
 				//$("table#videoinfotable").slideDown();				
@@ -195,11 +194,6 @@ function go(page) {
             url.push("season="+season[i]);
     }
     
-    var practice = $("#practice").val();
-    for(i=0;i<practice.length;i++) {
-        if(practice[i] != '-1')
-            url.push("prac="+practice[i]);
-    }
     if($("#inlinedatepicker1").html()!="") url.push("from_date="+$("#inlinedatepicker1").html());
     if($("#inlinedatepicker2").html()!="") url.push("to_date="+$("#inlinedatepicker2").html());
     if(page != null) url.push("page="+page);
