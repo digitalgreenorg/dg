@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- Edited by XMLSpy® -->
 <CATALOG>
-	<TEAM>
+    <TEAM>
+		<NAME>Chandra Shekhar</NAME>
+		<PERIOD>May, 2009 - August, 2012</PERIOD>
+	</TEAM>
+    <TEAM>
+        <NAME>Rahul Agrawal</NAME>
+		<PERIOD>December, 2009 - July, 2012</PERIOD>
+	</TEAM>
+    <TEAM>
+        <NAME>Shivaji Choudhary</NAME>
+		<PERIOD>June, 2010 - July, 2012</PERIOD>
+	</TEAM>
+    <TEAM>
+		<NAME>Abhishek Hegde</NAME>
+		<PERIOD>November, 2010 - July, 2012</PERIOD>
+	</TEAM>
+    <TEAM>
 		<NAME>Debika Goswami</NAME>
 		<PERIOD>September, 2010 - April, 2012</PERIOD>
 	</TEAM>	
@@ -40,5 +56,4 @@
 		<NAME>Kevin Gandhi</NAME>
 		<PERIOD>August, 2009 - August, 2010</PERIOD>
 	</TEAM>
-	
 </CATALOG>
