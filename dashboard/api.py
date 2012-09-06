@@ -1,19 +1,17 @@
-from tastypie.resources import ModelResource
-from dashboard.models import Country,State,District,Block,Village,FieldOfficer,Partners
+from django.conf.urls.defaults import patterns, include, url
+from django.core.paginator import Paginator, InvalidPage
+from django.forms.models import ModelChoiceField
+from django.http import Http404
+from tastypie import fields
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from django.conf.urls.defaults import patterns, include, url
+from tastypie.validation import FormValidation
 from tastypie.utils import trailing_slash
 from haystack.query import SearchQuerySet
-from django.core.paginator import Paginator, InvalidPage
-from django.http import Http404
+
+from dashboard.models import Country,State,District,Block,Village,FieldOfficer,Partners
 from forms import  CountryForm,StateForm,DistrictForm,BlockForm,VillageForm,FieldOfficerForm,PartnerForm
-from tastypie import fields
-from tastypie.validation import FormValidation
-from django.forms.models import ModelChoiceField
-
-
 
 class ModelFormValidation(FormValidation):
     """
