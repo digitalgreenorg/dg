@@ -35,11 +35,9 @@ public class PersonMeetingAttendanceData extends BaseData {
 		private ScreeningsData.Data screening;// FK to the Screenings table
 		private PersonsData.Data person;
 		private String interested;
-		private PracticesData.Data expressed_interest_practice;
 		private String expressed_interest;
 		private VideosData.Data expressed_adoption_video;
 		private String expressed_adoption;
-		private PracticesData.Data expressed_question_practice;
 		private String expressed_question;
 		
 		
@@ -49,17 +47,14 @@ public class PersonMeetingAttendanceData extends BaseData {
 		
 		public Data(String id, ScreeningsData.Data screening, PersonsData.Data person, 
 				String interested, String expressed_question, VideosData.Data expressed_adoption_video,
-				PracticesData.Data expressed_interest_practice, String expressed_interest, 
-				String expressed_adoption, PracticesData.Data expressed_question_practice) {
+				String expressed_interest, String expressed_adoption) {
 			this.id = id;
 			this.screening = screening;
 			this.person = person;
 			this.interested = interested;
-			this.expressed_interest_practice =expressed_interest_practice;
 			this.expressed_interest = expressed_interest;
 			this.expressed_adoption_video = expressed_adoption_video;
 			this.expressed_adoption = expressed_adoption;
-			this.expressed_question_practice = expressed_question_practice;
 			this.expressed_question = expressed_question;
 		}
 		
@@ -86,9 +81,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public String getInterested(){
 			return this.interested;
 		}
-		public PracticesData.Data getExpressedInterestPractice(){
-			return this.expressed_interest_practice;
-		}
 		public String getExpressedInterest(){
 			return this.expressed_interest;
 		}
@@ -98,9 +90,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public String getExpressedAdoption(){
 			return this.expressed_adoption;
 		}
-		public PracticesData.Data getExpressedQuestionPractice(){
-			return this.expressed_question_practice;
-		}
 		public String getExpressedQuestion(){
 			return this.expressed_question;
 		}
@@ -108,9 +97,7 @@ public class PersonMeetingAttendanceData extends BaseData {
 		public BaseData.Data clone(){
 			Data obj = new Data();
 			obj.person = (new PersonsData()).new Data();
-			obj.expressed_interest_practice = (new PracticesData()).new Data();
 			obj.expressed_adoption_video = (new VideosData()).new Data();
-			obj.expressed_question_practice = (new PracticesData()).new Data();
 			return obj;
 		}
 		
@@ -133,12 +120,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 				PersonsData person = new PersonsData();
 				this.person = person.getNewData();
 				this.person.id = val;
-				
-			}  else if(key.equals("expressed_interest_practice")) {
-				PracticesData expressed_interest_practice = new PracticesData();
-				this.expressed_interest_practice = expressed_interest_practice.getNewData();
-				this.expressed_interest_practice.id = val;
-				
 			}  else if(key.equals("expressed_interest")) {
 				this.expressed_interest = (String)val;
 			} else if(key.equals("expressed_adoption_video")) {
@@ -148,11 +129,6 @@ public class PersonMeetingAttendanceData extends BaseData {
 				
 			}  else if(key.equals("expressed_adoption")) {
 				this.expressed_adoption= (String)val;
-			} else if(key.equals("expressed_question_practice")) {
-				PracticesData expressed_question_practice = new PracticesData();
-				this.expressed_question_practice = expressed_question_practice.getNewData();
-				this.expressed_question_practice.id = val;
-				
 			}  else if(key.equals("expressed_question")) {
 				this.expressed_question = (String)val;
 			} else if(key.equals("interested")) {
@@ -181,9 +157,8 @@ public class PersonMeetingAttendanceData extends BaseData {
 			this.id = personMeetingAttendancesDataDbApis.autoInsert(this.id,
 						this.screening.getId(),
 						this.person.getId(),
-						interested, this.expressed_question, this.expressed_adoption_video.getId(),
-						this.expressed_interest_practice.getId(), this.expressed_interest,
-						this.expressed_adoption, this.expressed_question_practice.getId());
+						interested, this.expressed_question, this.expressed_adoption_video.getId(), 
+						this.expressed_interest, this.expressed_adoption);
 			this.addNameValueToQueryString("id", this.id);
 		}
 		
@@ -197,8 +172,8 @@ public class PersonMeetingAttendanceData extends BaseData {
 						foreignKey.getId(),
 						this.person.getId(),
 						this.interested, this.expressed_question, this.expressed_adoption_video.getId(),
-						this.expressed_interest_practice.getId(), this.expressed_interest,
-						this.expressed_adoption, this.expressed_question_practice.getId());
+						this.expressed_interest,
+						this.expressed_adoption);
 			this.addNameValueToQueryString("id", this.id);
 			this.addNameValueToQueryString("screening", foreignKey.getId());
 		}
@@ -326,31 +301,21 @@ public class PersonMeetingAttendanceData extends BaseData {
 		List personMeetingAttendances = new ArrayList();
 		ScreeningsData screening = new ScreeningsData();
 		PersonsData person = new PersonsData();
-		PracticesData practice = new PracticesData();
 		VideosData video = new VideosData();
 		
 		for(int i = 0; i < personMeetingAttendanceObjects.length(); i++){
-			PracticesData.Data interest_pr = practice.new Data();
 			VideosData.Data adoption_vid = video.new Data();
-			PracticesData.Data question_pr = practice.new Data();
 			ScreeningsData.Data sc = screening.new Data(personMeetingAttendanceObjects.get(i).getScreening());
 			PersonsData.Data p = person.new Data(personMeetingAttendanceObjects.get(i).getPerson());
-			if(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice()!=null){
-				interest_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedInterestPractice());
-			}
-			
+
 			if(personMeetingAttendanceObjects.get(i).getExpressedAdoptionVideo()!=null){
 				adoption_vid = video.new Data(personMeetingAttendanceObjects.get(i).getExpressedAdoptionVideo());
-			}
-			
-			if(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice()!=null){
-				question_pr = practice.new Data(personMeetingAttendanceObjects.get(i).getExpressedQuestionPractice());
 			}
 						
 			Data personMeetingAttendance = new Data(personMeetingAttendanceObjects.get(i).getPk(),sc,p,
 					personMeetingAttendanceObjects.get(i).getInterested(), personMeetingAttendanceObjects.get(i).getExpressedQuestion(), adoption_vid,
-					interest_pr,personMeetingAttendanceObjects.get(i).getExpressedInterest(),
-					personMeetingAttendanceObjects.get(i).getExpressedAdoption(),question_pr);
+					personMeetingAttendanceObjects.get(i).getExpressedInterest(),
+					personMeetingAttendanceObjects.get(i).getExpressedAdoption());
 			personMeetingAttendances.add(personMeetingAttendance);
 		}
 		

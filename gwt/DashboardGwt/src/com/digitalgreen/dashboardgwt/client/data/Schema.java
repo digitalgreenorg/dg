@@ -35,9 +35,7 @@ public class Schema {
 			BaseData.getDb().execute(AnimatorAssignedVillagesData.createTable);
 			BaseData.getDb().execute(AnimatorSalaryPerMonthData.createTable);
 			BaseData.getDb().execute(LanguagesData.createTable);
-			BaseData.getDb().execute(PracticesData.createTable);
 			BaseData.getDb().execute(VideosData.createTable);
-			BaseData.getDb().execute(VideoRelatedAgriculturalPracticesData.createTable);
 			BaseData.getDb().execute(VideoFarmersShownData.createTable);
 			BaseData.getDb().execute(ScreeningsData.createTable);
 			BaseData.getDb().execute(ScreeningFarmerGroupsTargetedData.createTable);
@@ -81,9 +79,7 @@ public class Schema {
 			Collections.addAll(indexList, AnimatorAssignedVillagesData.createIndexes);
 			Collections.addAll(indexList, AnimatorSalaryPerMonthData.createIndexes);
 			Collections.addAll(indexList, LanguagesData.createIndexes);
-			Collections.addAll(indexList, PracticesData.createIndexes);
 			Collections.addAll(indexList, VideosData.createIndexes);
-			Collections.addAll(indexList, VideoRelatedAgriculturalPracticesData.createIndexes);
 			Collections.addAll(indexList, VideoFarmersShownData.createIndexes);
 			Collections.addAll(indexList, ScreeningsData.createIndexes);
 			Collections.addAll(indexList, ScreeningFarmerGroupsTargetedData.createIndexes);
@@ -130,9 +126,7 @@ public class Schema {
 			BaseData.getDb().execute(AnimatorAssignedVillagesData.dropTable);
 			BaseData.getDb().execute(AnimatorSalaryPerMonthData.dropTable);
 			BaseData.getDb().execute(LanguagesData.dropTable);
-			BaseData.getDb().execute(PracticesData.dropTable);
 			BaseData.getDb().execute(VideosData.dropTable);
-			BaseData.getDb().execute(VideoRelatedAgriculturalPracticesData.dropTable);
 			BaseData.getDb().execute(VideoFarmersShownData.dropTable);
 			BaseData.getDb().execute(ScreeningsData.dropTable);
 			BaseData.getDb().execute(ScreeningFarmerGroupsTargetedData.dropTable);
