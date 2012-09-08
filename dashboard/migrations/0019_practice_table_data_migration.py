@@ -6,112 +6,26 @@ from django.db import models
 
 class Migration(DataMigration):
 
-    def populate_sector(self, orm):
-        initial_unique_names = ['Agriculture','Animal Husbandry','Financial Management',
-                                'Health','Institutional','Miscellaneous','Pisciculture',
-                                'Sericulture','Social Issues']
-        
-        for name in initial_unique_names:
-            orm.PracticeSector.objects.create(name=name)
-    
-    def populate_sub_sector(self, orm):
-        initial_unique_names = ['Adult management','Breed Mangement','Community Participation',
-                                'Crop Intensification','Crop Management',
-                                'Digital Green Concept Video','Education','Environment',
-                                'Feed and Fodder Management','Fish Rearing',
-                                'Health and Disease management','Horticulture',
-                                'Institution Building','Land Management',
-                                'Legal Rights','Maternal','Micro-Finance',
-                                'Moriculture','Nursery Management','Nutrient Management',
-                                'Nutrition','Pest and disease Management','Plant Propogation',
-                                'Post Harvest Management','Reproductive','Seed Management',
-                                'Silkworm Management','Success Stories','Water Management',
-                                'Watershed Management','Women Empowerment','Young Ones management']
-        for name in initial_unique_names:
-            orm.PracticeSubSector.objects.create(name=name)
-            
-    def populate_main_practice(self, orm):
-        initial_unique_names = ['Breeding','Bulls and Bullock Management','Compost and Manure',
-                                'Curative','Cuttings','Disease control','Dry and Pregnant Animal Management',
-                                'Drying','Early Management Practices','Erosion Control','Feed','Feed Supplements',
-                                'Feeding','Fertility Mangement','Fertilizer Application','Fertilizer Preparation',
-                                'Fish Culture Ponds','Floriculture','Fodder','Forest Rights','Grading and packaging',
-                                'Grafting','Harvesting','Heifer Management','Housing System','Integrated Nutrient Management',
-                                'Interculture','Interculture in Nursery','Irrigation Management','Irrigation Methods',
-                                'Land Preparation','Layering','Marketing','Micro-Credit','Micro-Nutrient Mangement',
-                                'Milch Animal Management','Monitoring','National Rural Employment Guarantee Act',
-                                'Nursery Bed Preparation','Orchard Mangement','People\'s Organization','Pest Control','Post Harvest',
-                                'Preventive','Production','Rearing','Rodent Control','Seed Production','Seed Selection','Seed Storage',
-                                'Seed Testing','Seed Treatment','Selection','Self Help Groups','Site Selection','Soil Treatment','Sowing',
-                                'Storage','Stripping','System of Rice Intensification','System of Wheat Intensification','Threshing',
-                                'Water Harvesting','Weeding']
-        for name in initial_unique_names:
-            orm.PracticeMain.objects.create(name=name)
-                
-    def populate_sub_practice(self, orm):
-        initial_unique_names = ['30-40 structure','Accounting','Agronomic (Rouging)','Agronomic Site Selection',
-                                'Air','Artificial Insemination','Banana Graft/Four Flap','Bark','Basket',
-                                'Biological','Book Keeping','Branding','Bridge','Broadcasting','Brushing of catterpillars',
-                                'Bud','Bunding','Business Planning','Certification','Check Dams','Chemical','Cleft','Compound',
-                                'Concept Seeding','Conservation','Cultural','Dehorning','Deworming','Dibbling','Disease control',
-                                'Drip','Earthing up','Embakments','Eye','Farm Pond','Farm Yard Manure','Fish Rearing Pond',
-                                'Fish Stocking Pond','Flat Bed Nursery','Flood','Formation','Fumigation','Genetic','Germination test',
-                                'Governace','Grading','Grass','Green Manure Ex Situ','Green Manure In Situ','Grooming',
-                                'Growth and Diversification','Gully Control','Gypsum Application','Hardening','Hatchery Pond',
-                                'Hoeing','Identification of Symptoms','Inarch','Indore','Integrated Pest Management','Intercropping',
-                                'Leaching','Leaf','Liming','Line Sowing','Line sowing','Liquid Compost','Lopping','Manual',
-                                'Marketing','Mechanical','Mechanical (Ploughing)','Mechanized','Medicine','Membership','Mineral Mixture',
-                                'Mulching','Multiple Ovulation Embryo Transfer','NADEP','Natural','Networking','Nipping','Nursery',
-                                'Nursery Pond','Operations and Management','Organic','Pasture Cropping','Pest and Disease Management',
-                                'Physical','Physical test (Brine)','Pitcher','Pot Manure','Potting and repotting',
-                                'Pre-treatment (Primimg)','Preparation','Pricing','Prunning','Purity Test','Raised Nursery','Reeling',
-                                'Root','Sanitation','Scion','Seed Drill','Seed Selection for fish','Seed Storage Structure','Shelter',
-                                'Simple','Site Selection','Soil Sampling','Soil Testing','Splice','Sprinkler','Stabilization','Staking',
-                                'Stem','Stone Basins','Stool/Mound','Strip Cropping','Structures','Sun','Surge','Terracing','Testing',
-                                'Thinning','Tip','Transplantation','Treatment','Trenching','Urea Molasses Block','Vaccination','Varietal Identification',
-                                'Variety Selection','Veneer','Vermicompost','Vermiwash','Viability Test (TZ test )','Wadi','Watering','Weaning',
-                                'Weaving','Weed test','Weeding','Whip andTongue','Yield comparison']
-        for name in initial_unique_names:
-            orm.PracticeSub.objects.create(name=name)
-                
-    def populate_practice_subject(self, orm):
-        intial_unique_names = ['Adult','Amaranthus (Lal Bhaji)','Amla (Gooseberry)','Bamboo','Banana',
-                               'Basil (Tulsi)','Bengalgram (Chana)','Bitter Gourd (Karela)','Black Gram (Udad)',
-                               'Bottle Gourd (Lauki)','Brinjal (Baingan)','Buffalo','Bullocks','Cabbage (Patta Gobhi)',
-                               'Capsicum (Shimla Mirch)','Carom Seed (Ajwain)','Carrot (Gajar)','Cauliflower (Phool Gobhi)',
-                               'Chicken','Child','Chilli (Mirch)','Cluster Bean (Gawar)','Coconut','Colocasia (Arabi)',
-                               'Coriander (Dhania)','Cotton (Kapas)','Cow','Cow Pea (Lobhia)','Cucumber','Custard Apple (Sharifa/Seetafal)',
-                               'Dhatura','Duck','Elephant Grass','Eucalyptus','Fenugreek (Methi)','Finger Millet (Ragi)','Fish',
-                               'French Bean (Fansi)','Galleria','Garlic (Lehsun)','Gherkins (Thendli)','Ginger (Adrak)','Gliricidia',
-                               'Goat','Grape','Infant','Jack Fruit (Kathal)','Jatropha','Jujube (Ber)','Lady Finger','Lemon',
-                               'Linseed (Alasi)','Maize','Mango','Marigold','Mint (Pudina)','Mulberry','Mushroom','Mustard (Rai)',
-                               'Neem','Onion','Orange','Paddy','Papaya','Pea','Pig','Pointed Gourd (Parval)','Pomegranate',
-                               'Potato','Pumpkin','Radish','Ridge Gourd (Turai)','Sesame','Sheep','Silk','Snake Gourd (Parval)',
-                               'Sorghum (Jowar)','Soybean','Spinach','Sponge Gourd (Gilki/Chikni Turai)','Sugarcane','Sunflower',
-                               'Tomato','Turmeric (Haldi)','Turnip','Watermelon','Wheat','Women','Yam (Sooran)']
-
-        for name in intial_unique_names:
-            orm.PracticeSubject.objects.create(name=name)
-
     def forwards(self, orm):
-        self.populate_sector(orm)
-        self.populate_sub_sector(orm)
-        self.populate_main_practice(orm)
-        self.populate_sub_practice(orm)
-        self.populate_practice_subject(orm)
-        print "Created new levels of practices"
-
+        orm['dashboard.practices'].objects.all().delete()
+        for practicecomb in orm['video_practice_map.practicecombination'].objects.all():
+            practice_name=practicecomb.top_practice.name+", "
+            practice_name += ', ' if practicecomb.sub_practice is None else practicecomb.sub_practice.name+", "
+            practice_name += ', ' if practicecomb.utility is None else practicecomb.utility.name+", "
+            practice_name += ', ' if practicecomb.type is None else practicecomb.type.name+", "
+            practice_name += ', ' if practicecomb.subject is None else practicecomb.subject.name+"."
+            orm['dashboard.practices'].objects.create(id=practicecomb.id,practice_name=practice_name,practice_sector=practicecomb.top_practice,practice_subject=practicecomb.subject,practice_subsector=practicecomb.sub_practice,practice_subtopic=practicecomb.type,practice_topic=practicecomb.utility,seasonality=None,summary='')
+        
+        for vid_prac in orm['video_practice_map.videopractice'].objects.all():
+            if vid_prac.review_approved == 1:
+                vid = orm['dashboard.video'].objects.get(id=vid_prac.video.id)
+                vid.related_practice = orm['dashboard.practices'].objects.get(id=vid_prac.practice.id);
+                vid.save()
+         
+               
     def backwards(self, orm):
-        "Write your backwards methods here."
-        orm.PracticeSector.objects.all().delete()
-        orm.PracticeSubSector.objects.all().delete()
-        orm.PracticeMain.objects.all().delete()
-        orm.PracticeSub.objects.all().delete()
-        orm.PracticeSubject.objects.all().delete()
-        
-        print "Deleted all the pre-filled practice levels"
-        
-
+        for practicecomb in  orm['video_practice_map.practicecombination'].objects.all():
+            orm['dashboard.practices'].objects.get(id=practicecomb.id).delete()
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -162,6 +76,7 @@ class Migration(DataMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'partner': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
+            'total_adoptions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
             'village': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'db_column': "'home_village_id'"})
         },
         'dashboard.animatorassignedvillage': {
@@ -300,7 +215,6 @@ class Migration(DataMigration):
         'dashboard.person': {
             'Meta': {'unique_together': "(('person_name', 'father_name', 'group', 'village'),)", 'object_name': 'Person', 'db_table': "u'PERSON'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
-            'adopted_agricultural_practices': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['dashboard.Practices']", 'null': 'True', 'through': "orm['dashboard.PersonAdoptPractice']", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'date_of_joining': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'father_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'FATHER_NAME'", 'blank': 'True'}),
@@ -319,7 +233,6 @@ class Migration(DataMigration):
             'date_of_adoption': ('django.db.models.fields.DateField', [], {'db_column': "'DATE_OF_ADOPTION'"}),
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']"}),
-            'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),
             'prior_adoption_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'PRIOR_ADOPTION_FLAG'", 'blank': 'True'}),
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'QUALITY'", 'blank': 'True'}),
             'quantity': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'QUANTITY'", 'blank': 'True'}),
@@ -337,16 +250,10 @@ class Migration(DataMigration):
         },
         'dashboard.personmeetingattendance': {
             'Meta': {'object_name': 'PersonMeetingAttendance', 'db_table': "u'PERSON_MEETING_ATTENDANCE'"},
-            'expressed_adoption': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_ADOPTION'", 'blank': 'True'}),
-            'expressed_adoption_practice': ('dashboard.fields.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'expressed_adoption_video': ('dashboard.fields.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'to': "orm['dashboard.Video']"}),
-            'expressed_interest': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_INTEREST'", 'blank': 'True'}),
-            'expressed_interest_practice': ('dashboard.fields.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_interest_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),
-            'expressed_question_practice': ('dashboard.fields.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_question_practice'", 'null': 'True', 'to': "orm['dashboard.Practices']"}),
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_column': "'INTERESTED'", 'db_index': 'True'}),
-            'matched_adoption': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PersonAdoptPractice']", 'null': 'True', 'blank': 'True'}),
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'screening': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Screening']"})
         },
@@ -363,25 +270,20 @@ class Migration(DataMigration):
             'person': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Person']", 'db_column': "'person_id'"}),
             'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
-        'dashboard.practicemain': {
-            'Meta': {'object_name': 'PracticeMain', 'db_table': "u'practice_main'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
         'dashboard.practices': {
-            'Meta': {'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
+            'Meta': {'unique_together': "(('practice_sector', 'practice_subsector', 'practice_topic', 'practice_subtopic', 'practice_subject'),)", 'object_name': 'Practices', 'db_table': "u'PRACTICES'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'practice_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '200', 'db_column': "'PRACTICE_NAME'"}),
-            'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_column': "'SEASONALITY'"}),
+            'practice_name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'unique': "'True'", 'null': 'True', 'db_column': "'PRACTICE_NAME'"}),
+            'practice_sector': ('dashboard.fields.BigForeignKey', [], {'default': '1', 'to': "orm['dashboard.PracticeSector']"}),
+            'practice_subject': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubject']", 'null': 'True'}),
+            'practice_subsector': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubSector']", 'null': 'True'}),
+            'practice_subtopic': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubtopic']", 'null': 'True'}),
+            'practice_topic': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeTopic']", 'null': 'True'}),
+            'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'})
         },
         'dashboard.practicesector': {
             'Meta': {'object_name': 'PracticeSector', 'db_table': "u'practice_sector'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
-        },
-        'dashboard.practicesub': {
-            'Meta': {'object_name': 'PracticeSub', 'db_table': "u'practice_sub'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
@@ -392,6 +294,16 @@ class Migration(DataMigration):
         },
         'dashboard.practicesubsector': {
             'Meta': {'object_name': 'PracticeSubSector', 'db_table': "u'practice_subsector'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicesubtopic': {
+            'Meta': {'object_name': 'PracticeSubtopic', 'db_table': "u'practice_subtopic'"},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
+        },
+        'dashboard.practicetopic': {
+            'Meta': {'object_name': 'PracticeTopic', 'db_table': "u'practice_topic'"},
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
@@ -477,7 +389,7 @@ class Migration(DataMigration):
             'villages_certification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'what_not_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'what_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        },  
+        },
         'dashboard.training': {
             'Meta': {'unique_together': "(('training_start_date', 'training_end_date', 'village'),)", 'object_name': 'Training', 'db_table': "u'TRAINING'"},
             'animators_trained': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.Animator']", 'symmetrical': 'False'}),
@@ -523,7 +435,7 @@ class Migration(DataMigration):
             'movie_maker_project_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'MOVIE_MAKER_PROJECT_FILENAME'", 'blank': 'True'}),
             'picture_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'PICTURE_QUALITY'", 'blank': 'True'}),
             'raw_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'RAW_FILENAME'", 'blank': 'True'}),
-            'related_agricultural_practices': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.Practices']", 'symmetrical': 'False'}),
+            'related_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Practices']"}),
             'remarks': ('django.db.models.fields.TextField', [], {'db_column': "'REMARKS'", 'blank': 'True'}),
             'reviewer': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Reviewer']", 'null': 'True', 'blank': 'True'}),
             'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'db_column': "'STORYBASE'"}),
@@ -539,12 +451,6 @@ class Migration(DataMigration):
             'viewers': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'village': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Village']"}),
             'youtubeid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'db_column': "'YOUTUBEID'", 'blank': 'True'})
-        },
-        'dashboard.videoagriculturalpractices': {
-            'Meta': {'object_name': 'VideoAgriculturalPractices', 'db_table': "u'VIDEO_related_agricultural_practices'"},
-            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'db_column': "'practices_id'"}),
-            'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'db_column': "'video_id'"})
         },
         'dashboard.videosscreenedinscreening': {
             'Meta': {'object_name': 'VideosScreenedInScreening', 'db_table': "u'SCREENING_videoes_screened'"},
@@ -571,7 +477,31 @@ class Migration(DataMigration):
             'total_adopted_attendees': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'total_adoption_by_active': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'village': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
+        },
+        'video_practice_map.practicecombination': {
+            'Meta': {'unique_together': "(('top_practice', 'sub_practice', 'utility', 'type', 'subject'),)", 'object_name': 'PracticeCombination'},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'sub_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubSector']", 'null': 'True'}),
+            'subject': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubject']", 'null': 'True'}),
+            'top_practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSector']"}),
+            'type': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubtopic']", 'null': 'True'}),
+            'utility': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.PracticeTopic']", 'null': 'True'})
+        },
+        'video_practice_map.skippedvideo': {
+            'Meta': {'object_name': 'SkippedVideo'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
+            'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
+        },
+        'video_practice_map.videopractice': {
+            'Meta': {'object_name': 'VideoPractice'},
+            'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'practice': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Practices']"}),
+            'review_approved': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'review_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reviewed_practices'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
+            'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
         }
     }
 
-    complete_apps = ['dashboard']
+    complete_apps = ['video_practice_map', 'dashboard']

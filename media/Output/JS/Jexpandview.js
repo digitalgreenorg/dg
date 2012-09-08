@@ -15,30 +15,29 @@ var eochartwidth = .95*(.9*(iewinWidth));
 var	eochartheight= .85*(.9*(iewinHeight));
 
 // function called when clicked on the zoominbutton link of the video module
-function zoomIn(temp1, temp2)
-{ 		
-		var header    = temp2;             
-                
-        $("div#expandview1").css({
-                    "top": "0px",
-                    "left":"0px",
-                    "width":myWidth,
-                    "height":myHeight,
-                    "opacity":"0.7",                                                              
-        });
-        
-        $("div#expandview3").css({
-                    "top": top3,
-                    "left":left3,
-                    "width":0.9*(iewinWidth)                                                                                 
-        });          
-       	$("div#expandview1").fadeIn();        	   
-        $("div#expandview3").show();       
-     
-        
-        $("div#expandviewtitle").text(header);
-  		$("div#expandview4").html('<div id="alpha1"></div>');
-		temp1.write('alpha1');
+function zoomIn(chart_object,header)
+{
+    $("div#expandview1").css({
+                "top": "0px",
+                "left":"0px",
+                "width":myWidth,
+                "height":myHeight,
+                "opacity":"0.7",                                                              
+    });
+    
+    $("div#expandview3").css({
+                "top": top3,
+                "left":left3,
+                "width":0.9*(iewinWidth)                                                                                 
+    });          
+   	$("div#expandview1").fadeIn();        	   
+    $("div#expandview3").show();       
+ 
+    
+    $("div#expandviewtitle").text(header);
+		$("div#expandview4").html('<div id="alpha1" style="height:'+eochartheight+'px; width:'+eochartwidth+'px;"></div>');
+		chart_object.setContainerId('alpha1');
+    	chart_object.draw();
 }
 
 

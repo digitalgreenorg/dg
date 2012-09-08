@@ -379,7 +379,6 @@ class Person(models.Model):
     village = BigForeignKey(Village)
     group = BigForeignKey(PersonGroups, null=True, blank=True)
     relations = models.ManyToManyField('self', symmetrical=False, through='PersonRelations',related_name ='rel',null=True,blank=True)
-    adopted_agricultural_practices = models.ManyToManyField('Practices',through='PersonAdoptPractice',null=True, blank=True)
     date_of_joining = models.DateField(null=True, blank=True)
     #changes done for farmerbook. one new Boolean field image_exists added
     image_exists = models.BooleanField(default=False)
@@ -656,7 +655,7 @@ class Video(models.Model):
     supplementary_video_produced = BigForeignKey('self',null=True, blank=True)
     video_suitable_for = models.IntegerField(choices=SUITABLE_FOR,db_column='VIDEO_SUITABLE_FOR')
     remarks = models.TextField(blank=True, db_column='REMARKS')
-    related_agricultural_practices = models.ManyToManyField('Practices', blank=True)
+    related_practice = BigForeignKey('Practices',blank=True,null=True)
     farmers_shown = models.ManyToManyField(Person)
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
@@ -737,7 +736,7 @@ class PracticeSubSector(models.Model):
         db_table = u'practice_subsector'
 
 
-class PracticeMain(models.Model):
+class PracticeTopic(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -745,10 +744,10 @@ class PracticeMain(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'practice_main'
+        db_table = u'practice_topic'
 
 
-class PracticeSub(models.Model):
+class PracticeSubtopic(models.Model):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -756,8 +755,7 @@ class PracticeSub(models.Model):
         return self.name
     
     class Meta:
-        db_table = u'practice_sub'
-
+        db_table = u'practice_subtopic'
 
 class PracticeSubject(models.Model):
     id = BigAutoField(primary_key = True)
@@ -771,22 +769,22 @@ class PracticeSubject(models.Model):
 
 class Practices(models.Model):
     id = BigAutoField(primary_key = True)
-    practice_name = models.CharField(max_length=200, unique='True', db_column='PRACTICE_NAME')
-    seasonality = models.CharField(max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
+    practice_name = models.CharField(null=True, max_length=200, unique='True', db_column='PRACTICE_NAME')
+    seasonality = models.CharField(null=True, max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
     summary = models.TextField(db_column='SUMMARY', blank=True)
+    practice_sector = BigForeignKey(PracticeSector,default=1) 
+    practice_subsector = BigForeignKey(PracticeSubSector, null=True)
+    practice_topic = BigForeignKey(PracticeTopic, null=True)
+    practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
+    practice_subject = BigForeignKey(PracticeSubject, null=True)    
     class Meta:
         db_table = u'PRACTICES'
         verbose_name = "Practice"
+        unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
+
 
     def __unicode__(self):
-        return self.practice_name
-
-class VideoAgriculturalPractices(models.Model):
-    id = BigAutoField(primary_key = True)
-    video = BigForeignKey(Video, db_column='video_id')
-    practice = BigForeignKey(Practices, db_column='practices_id')
-    class Meta:
-        db_table = u'VIDEO_related_agricultural_practices'
+        return self.practice_sector.name
 
 class PersonShownInVideo(models.Model):
     id = BigAutoField(primary_key = True)
@@ -837,7 +835,6 @@ class VideosScreenedInScreening(models.Model):
 class PersonAdoptPractice(models.Model):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person)
-    practice = BigForeignKey(Practices, null=True, blank=True)
     video = BigForeignKey(Video)
     prior_adoption_flag = models.NullBooleanField(null=True, db_column='PRIOR_ADOPTION_FLAG', blank=True)
     date_of_adoption = models.DateField(db_column='DATE_OF_ADOPTION')
@@ -845,24 +842,10 @@ class PersonAdoptPractice(models.Model):
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     
-    @staticmethod
-    def udpate_practice(sender, **kwargs):
-        try:
-            instance = kwargs['instance']
-            if kwargs['signal'] == pre_save:
-                instance.practice = instance.video.related_agricultural_practices.all()[0]
-        except Exception:
-            #sending mail to self for immediation attention
-            error_type, value, tracebk = sys.exc_info()
-            mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
-            send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
-    
     class Meta:
         db_table = u'PERSON_ADOPT_PRACTICE'
         unique_together = ("person", "video", "date_of_adoption")
-        
-pre_save.connect(PersonAdoptPractice.udpate_practice, sender = PersonAdoptPractice)
-        
+
 class PersonMeetingAttendance(models.Model):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening)
@@ -870,13 +853,6 @@ class PersonMeetingAttendance(models.Model):
     interested = models.BooleanField(db_column="INTERESTED", db_index=True)
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
-    expressed_adoption_practice = BigForeignKey(Practices,related_name='expressed_adoption_practice',null=True, blank=True)
-    expressed_interest_practice = BigForeignKey(Practices,related_name='expressed_interest_practice',null=True,blank=True, editable=False)
-    expressed_interest = models.CharField(max_length=500,db_column='EXPRESSED_INTEREST', blank=True, editable=False)
-    expressed_adoption = models.CharField(max_length=500,db_column='EXPRESSED_ADOPTION', blank=True, editable=False)
-    expressed_question_practice = BigForeignKey(Practices,related_name='expressed_question_practice', null=True, blank=True, editable=False)
-    matched_adoption = BigForeignKey(PersonAdoptPractice, blank=True, null=True, editable=False)
-    
     class Meta:
         db_table = u'PERSON_MEETING_ATTENDANCE'
     
