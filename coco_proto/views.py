@@ -10,6 +10,12 @@ def country_list(request):
     context.update({'form': form})
     return render_to_response('coco_proto/country.html', context)
 
+def country_list_offline(request):
+    context = RequestContext(request)
+    form = CountryForm()
+    context.update({'form': form})
+    return render_to_response('coco_proto/country_offline.html', context)
+
 def state_list(request):
     context = RequestContext(request)
     form = StateForm()
