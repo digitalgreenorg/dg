@@ -33,7 +33,7 @@
 	  border: 1px solid #E1E1E8;
 	  position:absolute;
 	  top:40px;  /* adjust value accordingly */
-	  margin-left: 1098px;  /* adjust value accordingly */
+	  right:30px;  /* adjust value accordingly */
 	  }
 	  #top_bar{
 		width:100%;
@@ -103,7 +103,22 @@
 		$(document).ready(function() {
 		     $('#myModal').hide();
 			//$('.carousel').carousel({ interval: 200000	});
-			$('.carousel').carousel({ pause: true, interval: false});			
+			$('.carousel').carousel({ pause: true, interval: false});
+			{% if type == "village" %}
+				villageClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'person' %}
+				personClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'csp' %}
+				cspClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'group' %}
+				groupClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'partner' %}
+				partnerClick('{{type_id}}')
+			{%endif %}			
 		});
 		
 		function showLoading() {
@@ -227,12 +242,6 @@
 			$('#current_page').val(page_num);
 		}
 		
-		//function to get random number upto m
-		function randomNumberInRange(minVal,maxVal,floatVal) {
-		  var randVal = minVal+(Math.random() * (maxVal-minVal));
-		  return typeof floatVal=='undefined'?Math.round(randVal):randVal.toFixed(floatVal);
-		 }
-		
 		function initialize() {
 			$(function(){
 			   $("[rel=popover]").popover();
@@ -277,168 +286,27 @@
 				};				
 			 }
 			
-			var gradeArray = [[10000000000538,'A'],[10000000000537,'A'],[10000000020106,'A'],[7000001207,'A'],[10000000000305,'A'],[10000000000536,'A'],[10000000000342,'A'],[10000000019968,'A'],[10000000000309,'A'],[10000000020104,'A'],[10000000000341,'A'],[10000000019988,'A'],[10000000019967,'A'],[10000000000307,'A'],[10000000019865,'B'],[10000000000389,'B'],[10000000020119,'B'],[10000000019860,'B'],[10000000019985,'B'],[10000000019864,'B'],[10000000019873,'B'],[10000000019874,'B'],[10000000000507,'B'],[10000000020105,'B'],[10000000019969,'B'],[10000000020444,'B'],[10000000020572,'B'],[10000000000313,'B'],[10000000019841,'B'],[10000000019835,'B'],[10000000019975,'B'],[10000000020120,'B'],[10000000019978,'B'],[10000000000306,'B'],[10000000020370,'B'],[47000051353,'B'],[10000000000249,'B'],[10000000019922,'B'],[10000000020394,'B'],[10000000000074,'B'],[10000000000504,'B'],[10000000019862,'B'],[10000000000103,'B'],[47000052364,'B'],[10000000019918,'B'],[10000000000102,'B'],[10000000000099,'B'],[10000000020110,'B'],[47000001122,'B'],[47000056970,'B'],[10000000000031,'B'],[10000000019913,'B'],[10000000019842,'B'],[47000001038,'C'],[34000003805,'C'],[10000000000096,'C'],[10000000000406,'C'],[10000000000100,'C'],[10000000000119,'C'],[10000000000514,'C'],[10000000019834,'C'],[10000000019883,'C'],[10000000019854,'C'],[10000000019891,'C'],[10000000019889,'C'],[10000000000217,'C'],[10000000020448,'C'],[10000000000093,'C'],[10000000000122,'C'],[10000000000120,'D'],[10000000000393,'D'],[10000000000230,'D'],[10000000000053,'D'],[47000001044,'D'],[10000000000067,'D'],[10000000000394,'D'],[10000000019880,'D'],[10000000020020,'D'],[10000000000048,'D'],[10000000000052,'D'],[10000000018676,'D'],[10000000019902,'D'],[10000000019901,'D']];
 			$.getJSON("/getvillages",function(json){
 				$.each(json,function(i){
-					vil_id = json[i];			
-					var latLng = new google.maps.LatLng(23.0800 + 0.5 * Math.random(), 85.2800 + 1 * Math.random());
-					markers[i] = new google.maps.Marker({'position': latLng, 'icon': '/media/farmerbook/images/yellowc.png'});			  
-					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+					vil_details = json[i];
+					//console.log(json[i].grade);
+					var latLng = new google.maps.LatLng(vil_details.latitude, vil_details.longitude);
+					if(vil_details.grade == 'A') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/greena.png'});
+					} else if(vil_details.grade == 'B') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					} else if(vil_details.grade == 'C') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/yellowc.png'});
+					} else if(vil_details.grade == 'D') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					}
+					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_details.id));
 				});
-				var bel_vil_ids = new Array(10000000019913, 10000000020394, 10000000000514, 10000000019834, 10000000019835, 10000000019841, 10000000019842)
-				for(var i=0; i<bel_vil_ids.length; i++) {
-					//var vil_id = i;
-					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
-					var marker ;//= new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});; 
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//alert('markign');
-					
-				}
-				var angle=50 * 0.0089833458;
-				var latMin = 12.3024 - angle;
-				var latMax = 12.3024 + angle;
-				var lngMin = 76.6386 - angle;
-				var lngMax = 76.6386 + angle;
-					
-				var mys_vil_ids = new Array(47000001038, 47000001044, 47000001122, 47000051353, 47000052364, 47000056970);
-				for(var i=0; i<mys_vil_ids.length; i++) {
-					//get random lat and lngs between these points
-					var latitude = randomNumberInRange(latMin, latMax, 4);
-					var longitude = randomNumberInRange(lngMin, lngMax, 4);
-					alert(latitude+":"+longitude);
-					var latLng = new google.maps.LatLng(latitude, longitude);
-					var marker// = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/blue_markerA.png'});
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mys_vil_ids[i]));
-				}
-				
-				var dhr_vil_ids = new Array(10000000000048, 10000000000217, 10000000000230, 10000000018676, 10000000019901, 10000000019902)
-				for(var i=0; i<dhr_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
-					var marker = new google.maps.Marker({'position': latLng});
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
-				}
-				
-				var mbnr_vil_ids = new Array(10000000020271, 10000000020439, 10000000020509);
-				for(var i=0; i< mbnr_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(16.42 + 0.2 * Math.random(), 77.58 + 0.1 * Math.random());
-					var marker = new google.maps.Marker({'position': latLng});
-					
-					marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-					markers.push(marker);
-					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mbnr_vil_ids[i]));
-					//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						
-						
-					
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
-				}			
-				
-				var markerCluster = new MarkerClusterer(map, markers);
-				for(var i=0; i<markers.length; i++) {
-					//markers[i].setMap(map);
-				}
+				var markerCluster = new MarkerClusterer(map, markers);				
 					
 			});						
 		}
 		
-		(function($) {
-	        $.fn.ellipsis = function()
-	        {
-	                return this.each(function()
-	                {
-	                        var el = $(this);
-
-	                        if(el.css("overflow") == "hidden")
-	                        {
-	                                var text = el.html();
-	                                var multiline = el.hasClass('multiline');
-	                                var t = $(this.cloneNode(true))
-	                                        .hide()
-	                                        .css('position', 'absolute')
-	                                        .css('overflow', 'visible')
-	                                        .width(multiline ? el.width() : 'auto')
-	                                        .height(multiline ? 'auto' : el.height())
-	                                        ;
-
-	                                el.after(t);
-
-	                                function height() { return t.height() > el.height(); };
-	                                function width() { return t.width() > el.width(); };
-
-	                                var func = multiline ? height : width;
-
-	                                while (text.length > 0 && func())
-	                                {
-	                                        text = text.substr(0, text.length - 1);
-	                                        t.html(text + "...");
-	                                }
-
-	                                el.html(t.html());
-	                                t.remove();
-	                        }
-	                });
-	        };
-	})(jQuery);
-
 		</script>
 
 <!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");

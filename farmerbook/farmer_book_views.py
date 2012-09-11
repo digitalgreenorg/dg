@@ -14,7 +14,11 @@ from django.core.cache import cache
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
     
-def get_home_page(request):
+def get_home_page(request, type=None, id=None):
+    if type:
+        print type
+    if id:
+        print id
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
@@ -67,7 +71,8 @@ def get_home_page(request):
         top_partner_stats [partner[0]][3] = partner[3]
     top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
                           
-    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats))
+    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
+                                                      type=type, type_id = id))
 
 def get_leaderboard_data():
     village_ids = Village.farmerbook_village_objects.all().values_list('id', flat=True)
@@ -119,19 +124,17 @@ def get_villages_with_images(request):
                         10000000000028:["Mysore", "12.3024","76.6386"], 10000000000033:["Mahabubnagar", "16.7300","77.9800"],
                         10000000000035:["Munger", "25.3800", "86.4700"], 10000000000021:["Rajgarh", "22.6800", "74.9500"]}
     for i in village_list:
-        print i
         vil_details = Village.objects.filter(id = i).values_list('id', 'village_name', 
                                                                  'block__district__id', 'grade')
         district_id = vil_details[0][2]
-        district_lat= district_lat_lng[district_id][1]
-        district_lng = district_lat_lng[district_id][2]
+        district_lat= float(district_lat_lng[district_id][1])
+        district_lng = float(district_lat_lng[district_id][2])
         #vincenty's formula to calculate lats and lngs in range of 50 km
-        angle=50 * 0.0089833458;
+        angle = 50 * 0.0089833458;
         random_lat = "%.4f" % random.uniform(district_lat - angle, district_lat + angle)
         random_lng = "%.4f" % random.uniform(district_lng - angle, district_lng + angle)
-        village_details.append({"id":i, "village_name": vil_details[0][1], "latitude":random_lat, 
+        village_details.append({"id":i, "name": vil_details[0][1], "latitude":random_lat, 
                                 "longitude": random_lng, "grade": vil_details[0][3]})
-    print village_details
     
     return HttpResponse(simplejson.dumps(village_details), mimetype="application/json")
 

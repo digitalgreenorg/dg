@@ -14,7 +14,11 @@ def home_with_analytics():
     tot_vid = Video.objects.filter(video_suitable_for = 1).count()
     tot_per = Person.objects.exclude(date_of_joining = None).count()
     analytics_data = dict(tot_scr = tot_scr, tot_vid = tot_vid, tot_per = tot_per)
-    return render_to_response('base_home.html', dict(analytics_data = analytics_data))
+    #Randomly retreiving person ids for home page thumbnails
+    person_data = Person.farmerbook_objects.all().order_by('?')[:18].values_list('id', 'village__village_name', 
+                                    'village__block__block_name', 'village__block__district__district_name')
+    print len(person_data)
+    return render_to_response('base_home.html', dict(analytics_data = analytics_data, person_data = person_data))
 
 def test_output(request,geog,id=None):
 
