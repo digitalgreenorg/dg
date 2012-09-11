@@ -1,15 +1,18 @@
 from collections import defaultdict
-from dashboard.models import PracticeMain, PracticeSub, PracticeSector, \
-    PracticeSubSector, PracticeSubject, Video
+import json
+
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import Template, Context
-from video_practice_map.models import *
-import json
+
+from dashboard.models import Practices, PracticeTopic, PracticeSubtopic, PracticeSector, PracticeSubSector, PracticeSubject, Video
+from video_practice_map.models import VideoPractice,SkippedVideo
+
 
 @login_required(login_url='/videotask/login/')
+@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url='/videotask/login/')
 def home(request):
     can_change_filter = can_reset_skipped = False # For showing message on no video for assign or review. 
                                                   # There can be skipped vidoes or videos in other filter options (language/state) 
@@ -106,11 +109,11 @@ def form_submit(request):
                 return HttpResponseRedirect('/videotask/home/')
         
         if 'yes' in request.POST:  #Submitted a new practice
-            field_arr = ['top_practice', 'sub_practice', 'utility', 'type', 'subject']
+            field_arr = ['practice_sector', 'practice_subsector', 'practice_topic', 'practice_subtopic', 'practice_subject']
             selected_vals = []
             for field in field_arr:
                 selected_vals.append(int(request.POST[field]) if request.POST[field] != "None" else None)
-            pr = PracticeCombination.objects.get(*zip(field_arr, selected_vals))
+            pr = Practices.objects.get(*zip(field_arr, selected_vals))
             vid = Video.objects.get(id=int(request.POST['vid_id']))
             if request.POST['action'] == 'review':
                 vid_pr = VideoPractice.objects.get(video=vid, review_user=None)
@@ -125,18 +128,21 @@ def form_submit(request):
                                         video=Video.objects.get(pk=int(request.POST['vid_id'])))
         
         elif 'accept' in request.POST:  #Accepted for review
-            vid_pr = VideoPractice.objects.get(video=Video.objects.get(id=int(request.POST['vid_id'])), review_user=None)
+            video=Video.objects.get(id=int(request.POST['vid_id']))
+            vid_pr = VideoPractice.objects.get(video=video, review_user=None)
             vid_pr.review_user = request.user
             vid_pr.review_approved = True
             vid_pr.save()
+            video.related_practice = vid_pr.practice
+            video.save()
             
     return HttpResponseRedirect('/videotask/home/')
 
 
 def practice_filter_options(request):
-    pr = PracticeCombination.objects.all()
-    field_arr = ['top_practice', 'sub_practice', 'utility', 'type', 'subject']
-    model_arr = [PracticeSector, PracticeSubSector, PracticeMain, PracticeSub, PracticeSubject]
+    pr = Practices.objects.all()
+    field_arr = ['practice_sector', 'practice_subsector', 'practice_topic', 'practice_subtopic', 'practice_subject']
+    model_arr = [PracticeSector, PracticeSubSector, PracticeTopic, PracticeSubtopic, PracticeSubject]
     output_arr = []
     for model, field in zip(model_arr, field_arr):
         if request.GET[field]:
@@ -168,7 +174,7 @@ def practice_filter_options(request):
     return HttpResponse(json.dumps(output_arr))
 
 def all_practice_options(request=None):
-    model_arr = [PracticeSector, PracticeSubSector, PracticeMain, PracticeSub, PracticeSubject]
+    model_arr = [PracticeSector, PracticeSubSector, PracticeTopic, PracticeSubtopic, PracticeSubject]
     value_arr = [model.objects.values_list('id', 'name').order_by('name') for model in model_arr]
     if request:
         output_arr = ["<option value=''>Select Sector</option>",
@@ -185,9 +191,8 @@ def all_practice_options(request=None):
         return value_arr
     
 @login_required(login_url='/videotask/login/')
+@user_passes_test(lambda u: u.groups.filter(name='Practice Creators').count() > 0, login_url='/videotask/login/')
 def add_new(request):
-    if request.user.username.lower() != 'sreenu':
-        return HttpResponseRedirect('/videotask/home/')
     msg = None
     
     if request.POST:    
@@ -206,9 +211,7 @@ def add_new(request):
                         for main_practice in main_practices:
                             for sub_practice in sub_practices:
                                 for subject in subjects:
-                                    obj, created = PracticeCombination.objects.get_or_create(top_practice_id=sector, sub_practice_id=sub_sector,
-                                                                                             utility_id=main_practice, type_id=sub_practice,
-                                                                                             subject_id=subject)
+                                    obj, created = Practices.objects.get_or_create(practice_sector_id=sector, practice_subsector_id=sub_sector,practice_topic_id=main_practice, practice_subtopic_id=sub_practice,practice_subject_id=subject)
                                     if created:
                                         count = count + 1
                                     
@@ -217,8 +220,8 @@ def add_new(request):
             if not request.POST['name']:
                 msg = "Please enter name for %s" % (request.POST['form_type'].title())
             else:
-                model_class = dict(sector=PracticeSector, subsector=PracticeSubSector, practice=PracticeMain,
-                                   subpractice=PracticeSub, subject=PracticeSubject)
+                model_class = dict(sector=PracticeSector, subsector=PracticeSubSector, practice=PracticeTopic,
+                                   subpractice=PracticeSubtopic, subject=PracticeSubject)
                 obj, created = model_class[request.POST['form_type']].objects.get_or_create(name=request.POST['name'])
                 if created:
                     msg = "%s - %s created." % (request.POST['form_type'].title(), request.POST['name'])
@@ -227,11 +230,11 @@ def add_new(request):
 
     all_sectors = PracticeSector.objects.values_list('id', 'name').order_by('name')
     all_subsectors = PracticeSubSector.objects.values_list('id', 'name').order_by('name')
-    all_main = PracticeMain.objects.values_list('id', 'name').order_by('name')
-    all_subpr = PracticeSub.objects.values_list('id', 'name').order_by('name')
-    sector_subject_tups = PracticeCombination.objects.exclude(subject=None). values_list('top_practice__name', 
-                                                                                 'subject__id', 
-                                                                                 'subject__name').distinct().order_by('subject__name')
+    all_main = PracticeTopic.objects.values_list('id', 'name').order_by('name')
+    all_subpr = PracticeSubtopic.objects.values_list('id', 'name').order_by('name')
+    sector_subject_tups = Practices.objects.exclude(practice_subject=None). values_list('practice_sector__name', 
+                                                                                 'practice_subject__id', 
+                                                                                 'practice_subject__name').distinct().order_by('practice_subject__name')
     all_subjects = defaultdict(list)
     for sector_sub_tup in sector_subject_tups:
         all_subjects[sector_sub_tup[0]].append(list(sector_sub_tup)[1:])

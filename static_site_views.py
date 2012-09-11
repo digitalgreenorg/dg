@@ -201,11 +201,6 @@ def careernm(request):
     
     return render_to_response('base_career_nm.html')
 
-def careeres(request):
-    
-    return render_to_response('base_career_es.html')
-
-
 def careernpc(request):
     
     return render_to_response('base_career_npc.html')

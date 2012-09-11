@@ -40,7 +40,7 @@ def get_quality_check(geog, id, from_date, to_date, partners):
 
 def get_interest_per_dissemination(geog, id, from_date, to_date, partners):
     inner_sql = get_init_sql_ds();
-    inner_sql['select'].append('COUNT(PMA.expressed_interest_practice_id) AS interest')
+    inner_sql['select'].append('SUM(PMA.interested) AS interest')
     inner_sql['from'].append("PERSON_MEETING_ATTENDANCE PMA")
     inner_sql['join'].append(["SCREENING SC", "SC.id = PMA.screening_id"])
     inner_sql['group by'].append("SC.id")

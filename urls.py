@@ -1,11 +1,10 @@
-from django.conf.urls.defaults import *
-from route import route
-from django.conf.urls.defaults import *
-from views import *
-from django.contrib.auth.views import login, logout
 from django.conf import settings
-from static_site_views import home
+
 from farmerbook import farmer_book_views
+from route import route
+from static_site_views import home
+from views import *
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -55,9 +54,6 @@ urlpatterns = patterns('',
     (r'^dashboard/getvideosonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_videos_online),
     (r'^dashboard/getvideosseenforperson/((?P<person_id>\d*)/)?$', get_videos_seen_for_person),
     (r'^dashboard/savevideooffline/((?P<id>\d*)/)?$', save_video_offline),
-    (r'^dashboard/getvideorelatedagriculturalpracticesonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_videoagriculturalpractices_online),
-    (r'^dashboard/savevideorelatedagriculturalpracticesonline/$', save_videoagriculturalpractices_online),
-    (r'^dashboard/savevideorelatedagriculturalpracticesoffline/((?P<id>\d*)/)?$', save_videoagriculturalpractices_offline),
     (r'^dashboard/savevideofarmersonline/', save_personshowninvideo_online),
     (r'^dashboard/getvideofarmersonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_personshowninvideo_online),
     (r'^dashboard/savevideofarmersoffline/((?P<id>\d*)/)?$', save_personshowninvideo_offline),
@@ -97,7 +93,6 @@ urlpatterns = patterns('',
     (r'^dashboard/getscreeningsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_screenings_online),
     (r'^dashboard/savescreeningoffline/((?P<id>\d*)/)?$', save_screening_offline),
     (r'^dashboard/getattendance/((?P<id>\d*)/)?$', get_attendance),
-    (r'^dashboard/savescreeningfarmergroupstargetedsonline/$',save_groupstargetedinscreening_online),
     (r'^dashboard/getscreeningfarmergroupstargetedsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$',get_groupstargetedinscreening_online),
     (r'^dashboard/savescreeningfarmergroupstargetedsoffline/((?P<id>\d*)/)?$',save_groupstargetedinscreening_offline),
     (r'^dashboard/savescreeningvideosscreenedsonline/$', save_videosscreenedinscreening_online),
@@ -118,7 +113,6 @@ urlpatterns = patterns('',
     (r'^dashboard/savepersonrelationonline/$', save_personrelation_online),
     (r'^dashboard/getpersonrelationsonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_personrelations_online),
     (r'^dashboard/savepersonrelationoffline/((?P<id>\d*)/)?$', save_personrelation_offline),
-    (r'^dashboard/savepersonmeetingattendanceonline/$', save_personmeetingattendance_online),
     (r'^dashboard/getpersonmeetingattendancesonline/((?P<offset>\d*)/(?P<limit>\d*)/)?$', get_personmeetingattendances_online),
     (r'^dashboard/savepersonmeetingattendanceoffline/((?P<id>\d*)/)?$', save_personmeetingattendance_offline),
     (r'^dashboard/savepersonadoptpracticeonline/((?P<id>\d*)/)?$', save_personadoptpractice_online),

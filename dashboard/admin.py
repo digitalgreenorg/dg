@@ -171,11 +171,10 @@ class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
                 (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary']}),
                 ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
-                (None,{'fields':['village','facilitator','cameraoperator','related_agricultural_practices','farmers_shown','actors']}),
+                (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
                 ('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks','youtubeid']}),
     ]
-    filter_horizontal = ('related_agricultural_practices','farmers_shown',)
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
     search_fields = ['title', 'village__village_name']
     #raw_id_fields = ('village',)
@@ -322,8 +321,8 @@ class PersonAdoptPracticeInline(admin.StackedInline):
     extra = 3
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
-    list_display = ('person','practice')
-    search_fields = ['person__person_name','person__village__village_name', 'practice__practice_name']
+    list_display = ('person',)
+    search_fields = ['person__person_name','person__village__village_name',]
 
 class PersonForm(forms.ModelForm):
     class DynamicChoiceField(forms.ChoiceField):
@@ -554,6 +553,20 @@ class TargetAdmin(admin.ModelAdmin):
 
     list_display = ('month_year','district')
 
+class PracticeSectorAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+class PracticeSubSectorAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+class PracticeTopicAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+class PracticeSubtopicAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+class PracticeSubjectAdmin(admin.ModelAdmin):
+    search_fields = ['name']
 
 admin.site.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 admin.site.register(Video, VideoAdmin)
@@ -578,6 +591,11 @@ admin.site.register(Target, TargetAdmin)
 admin.site.register(UserPermission, UserPermissionAdmin)
 admin.site.register(EquipmentHolder)
 admin.site.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
+admin.site.register(PracticeSector,PracticeSectorAdmin)
+admin.site.register(PracticeSubSector,PracticeSubSectorAdmin)
+admin.site.register(PracticeTopic,PracticeTopicAdmin)
+admin.site.register(PracticeSubtopic,PracticeSubtopicAdmin)
+admin.site.register(PracticeSubject,PracticeSubjectAdmin)
 #admin.site.register(Reviewer)
 #admin.site.register(Random)
 #admin.site.register(Message, MessageAdmin)

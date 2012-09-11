@@ -89,6 +89,7 @@ class Migration(DataMigration):
                                'Potato','Pumpkin','Radish','Ridge Gourd (Turai)','Sesame','Sheep','Silk','Snake Gourd (Parval)',
                                'Sorghum (Jowar)','Soybean','Spinach','Sponge Gourd (Gilki/Chikni Turai)','Sugarcane','Sunflower',
                                'Tomato','Turmeric (Haldi)','Turnip','Watermelon','Wheat','Women','Yam (Sooran)']
+
         for name in intial_unique_names:
             orm.PracticeSubject.objects.create(name=name)
 
@@ -109,7 +110,7 @@ class Migration(DataMigration):
         orm.PracticeSubject.objects.all().delete()
         
         print "Deleted all the pre-filled practice levels"
-
+        
 
     models = {
         'auth.group': {
@@ -476,7 +477,7 @@ class Migration(DataMigration):
             'villages_certification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'what_not_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'what_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        },
+        },  
         'dashboard.training': {
             'Meta': {'unique_together': "(('training_start_date', 'training_end_date', 'village'),)", 'object_name': 'Training', 'db_table': "u'TRAINING'"},
             'animators_trained': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['dashboard.Animator']", 'symmetrical': 'False'}),

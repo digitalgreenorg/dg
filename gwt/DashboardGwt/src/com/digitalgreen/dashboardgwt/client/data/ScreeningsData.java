@@ -205,7 +205,7 @@ public class ScreeningsData extends BaseData {
 			String targetPersonAttendanceLabel = "Target Person Attendance";
 			String targetAudienceIntereseLabel = "Target Audience Interested";
 			String targetAdoptionsLabel = "Target Adoptions";
-			String farmerGroupsTargetedLabel = "Farmer Groups Targeted";	
+			String farmerGroupsTargetedLabel = "Groups Targeted";	
 			
 			DateValidator dateValidator = new DateValidator(dateLabel, this.date, false, false);
 			TimeValidator startTimeValidator = new TimeValidator(startTimeLabel, this.start_time, false, false);
