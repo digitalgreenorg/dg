@@ -34,3 +34,4 @@ for key in rs:
 		i= i+1
 	else:
 		print 'id does not exist'+str(farmer_id)	
+print str(i) + " images updated in db"

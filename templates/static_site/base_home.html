@@ -5,7 +5,7 @@
 
 {% block cssfile %}
 	{{ block.super }}
-	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/home.css' />       
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/home.css' />
 {% endblock cssfile %}
 
 {% block jsfile %}
@@ -23,119 +23,45 @@
 
 {% block mainbodycontentleft %}
 								
-								<script type="text/javascript">
-									var random_num,i,temp,A_temp,index;
-									var A = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50];
-									var B = new Array();																	
-									var lastindex;
-									var m = 0;								
-									var n;
-									for(i=0; i<20; i++)
-									{
-										random_num = Math.floor( Math.random() * (A.length) ); //generates the randomn number from 38 nodes
-										
-										lastindex = A.length - 1;  // length of the Array A
-								 		
-								 		if(random_num == 0)
-								 		{
-								 			random_num = 2;
-								 		}
-								 		
-								 		index = random_num - 1;	
-								 								 		
-								 		temp = A[index];
-								 		
-								 		//swapping the number to the last position in Array A
-								 		A_temp = A[index];
-										A[index] = A[lastindex];
-										A[lastindex] = A_temp;
-										A.pop();
-																				
-										B.push(temp);  //adding the new element to array B																					
-																													
-									} // i loop ends
-									//alert(B.length);
-									
-									
-									// generating random thumbnails of the youtube video embeds
-									
-									var xmlDoc=null;
-           				 			if (window.XMLHttpRequest){
-             							xhttp=new XMLHttpRequest();
-            						}
-            						else {
-            	 						xhttp=new ActiveXObject("Microsoft.XMLHTTP");
-            						}
-            						xhttp.open("GET","/media/Output/homeimg.xml",false);
-            						xhttp.send();
-            						xmlDoc=xhttp.responseXML;
-									
-									if (xmlDoc!=null) 
-									{
-										var x=xmlDoc.getElementsByTagName("TEAM");
-										document.write("<div id='videoicon'>");										
-											document.write("<table id='table1' cellspacing='0' cellpadding='0' align='center'>");
-												document.write("<tr>");
-													document.write("<td colspan='7' class='contenttd1empty'>");												
-												document.write("</td>");
-											document.write("</tr>");
-										
-											document.write("<tr>");
-												document.write("<td colspan='7' id='overlaytd'>");
-													document.write("<div id='overlaydiv'>");
-														document.write("<div id='overlaydivvideoembed'>");
-														document.write("</div>");
-														
-														document.write("<div id='overlaydivvideodesc'>");	
-															document.write("<div id='overlaydivvideodesc1'>");
-															document.write("</div>");
-															document.write("<div id='overlaydivvideodesc2'>");
-															document.write("</div>");																															
-														document.write("</div>");	
-													document.write("</div>");												
-												document.write("</td>");
-											document.write("</tr>");
-										
-										for (i=0; i<4; i++)
-					 					{ 				
-  											document.write("<tr>");
-  											for (j=0; j<5; j++)
-  												{
-  													n = B[m];  // storing the values of the array B that has the random numbers
-  													  													
-  													document.write("<td class='contendtd1' cellspacing='0px' cellpadding='0'>");
-													document.write("<div class='contendtd1div'>");
-  														document.write("<img  id='toptableimg' src='" + (x[n].getElementsByTagName("IMGLINK")[0].childNodes[0].nodeValue)+"'>");
-  														var link = x[n].getElementsByTagName("REFERENCE")[0].childNodes[0].nodeValue;
-  														var title = x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue;	  																										
-														document.write("<a id='contendtd1divsub1link' href='javascript:displayvideo("+ n + ")'>");
-															document.write(x[n].getElementsByTagName("PLACE")[0].childNodes[0].nodeValue);
-														document.write("</a>");	
-  													document.write("</div>");
-													document.write("</td>");												
-  													m = m+1;
-  													 
-  												}	  													
-  													
-  												document.write("</tr>"); 
-  												document.write("<tr>");
-													document.write("<td colspan='7' class='contenttd1empty'>");												
-													document.write("</td>");
-												document.write("</tr>"); 												
-  										}
-  										 		
-										document.write("</table>");
-										document.write("</div>");
-  									}
-									
-								</script>
-								
-								
-		<div class='contenttd1empty2'>	
-			<a href='/analytics/video_search'> View more videos&nbsp; <img style='float:right;' src='/media/Output/Images/videoicon6.png' alt='View our Videos Library'> </a>
+		<div id="image_container" style="width:622px; padding-top:10px;">
+				{% for person in person_data %}
+				<div style="background:#666;float:left; margin-left:3px; margin-bottom:3px;">
+				<a href="/farmerbook/person/{{person.0}}" target="_blank" style="color:white;opacity:1; filter:alpha(opacity=100);">
+					<img rel="popover" data-original-title="RAGHUNATH LOKEI" data-content="Adoption Rate: 69%" 
+					style="width:100px;height:100px; opacity:1; filter:alpha(opacity=100);" onmouseout="this.style.opacity=1;this.filters.alpha.opacity=100" 
+					onmouseover="this.style.opacity=0.6;this.filters.alpha.opacity=60" src="http://s3.amazonaws.com/dg_farmerbook/2/{{person.0}}.jpg">
+				</a> 
+				</div>
+				{% endfor %}
+				<div style="clear:both;"></div>
+		</div>
+		<div class="contenttd1empty2">	
+			<a href="/farmerbook"> View more farmers&nbsp; <img style="float:right;margin-top:3px;" src="/media/Output/Images/learnmoreicon2.png" alt="View our Videos Library"> </a>
 		</div>
 		
-		<div id='featuredfarmerdiv'>
+		<div id='featuredfarmerdiv' >
+			<div id='featuredfarmertitle'>
+				Video Library
+			</div>
+			<div id='featuredfarmerdesc'>			
+				<div id='featuredfarmerimg' style="margin-bottom:40px;">
+					<img src='/media/Output/Images/videopage_thumbnail.png' alt='Wonder Village Game'>
+				</div>				
+				<div id='featuredfarmerstory'>
+					<div id='featuredfarmername'>
+						Digital Green Videos
+					</div>					
+					<div id='featuredfarmerstorydesc' >
+						Digital Green seeks to disseminate targeted agricultural information to small and marginal farmers in India and Africa through digital video. It has successfully demonstrated that innovative uses of information and communication technology (ICT) in encouraging small and marginal farmers to adopt new and improved farming practices are highly cost effective. Digital Green video library allows to find out different metrics related to videos produced by it's system.
+					</div>					
+					<div class='learnmorediv'>
+						<a class='learnmore' href="/analytics/video_search" target='_blank'> Start Browsing <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>
+					</div>
+				</div>
+			</div>	
+		</div>
+		
+		<div id='featuredfarmerdiv' style="margin-top:10px;">
 			<div id='featuredfarmertitle'>
 				Bridging Real and Virtual
 			</div>
@@ -274,7 +200,45 @@
   								document.write("</td></tr>");
   								
   								document.write("</table>");	
-  							}		
+  							}
+
+						// Load this script once the document is ready
+						$(document).ready(function () {
+							
+							// Get all the thumbnail
+							$('div.thumbnail-item').mouseenter(function(e) {
+
+								// Calculate the position of the image tooltip
+								x = e.pageX - $(this).offset().left;
+								y = e.pageY - $(this).offset().top;
+								//alert(e.pageX+","+e.pageY);
+								//alert(e.pageY +", "+ $(this).offset().top);
+								// Set the z-index of the current item, 
+								// make sure it's greater than the rest of thumbnail items
+								// Set the position and display the image tooltip
+								$(this).css('z-index','15')
+								.children("div.tooltip")
+								.css({'top': 0,'left': 0,'display':'block'});
+								
+							}).mousemove(function(e) {
+								
+								// Calculate the position of the image tooltip			
+								x = e.pageX - $(this).offset().left;
+								y = e.pageY - $(this).offset().top;
+								
+								// This line causes the tooltip will follow the mouse pointer
+								$(this).children("div.tooltip").css({'top':0,'left': 0,'display':'block'});
+								
+							}).mouseleave(function() {
+								
+								// Reset the z-index and hide the image tooltip 
+								$(this).css('z-index','1')
+								.children("div.tooltip")
+								.animate({"opacity": "hide"}, "fast");
+							});
+
+						});
+
 				
 						</script>
 					</div>					
