@@ -64,6 +64,23 @@
 		white-space: normal;
 	}
 	
+	.btn-custom {
+	  background-color: hsl(50, 100%, 30%) !important;
+	  background-repeat: repeat-x;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffd400", endColorstr="#997f00");
+	  background-image: -khtml-gradient(linear, left top, left bottom, from(#ffd400), to(#997f00));
+	  background-image: -moz-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -ms-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffd400), color-stop(100%, #997f00));
+	  background-image: -webkit-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -o-linear-gradient(top, #ffd400, #997f00);
+	  background-image: linear-gradient(#ffd400, #997f00);
+	  border-color: #997f00 #997f00 hsl(50, 100%, 25%);
+	  color: #fff !important;
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+	  -webkit-font-smoothing: antialiased;
+	}
+	
 	.activeSlide {text-decoration:none;color:#999;background-position:0 -26px;cursor:default;}
 	.normalSlide {background-image:url(/media/farmerbook/images/bg_control_nav.png);color:#333;cursor:pointer;display:inline-block;position:relative;font-size:1.7em;height:13px;margin:0px 0 0 4px;outline:none;text-align:left;text-decoration:none;text-indent:-999em;width:13px;}
 
@@ -242,6 +259,9 @@
 			$('#current_page').val(page_num);
 		}
 		
+		function fbconnectClick() {
+		}
+		
 		function initialize() {
 			$(function(){
 			   $("[rel=popover]").popover();
@@ -319,10 +339,9 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
         <div class="container" style="background-color:#6D9D30;width:100%">
           <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
 		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
-		  <div>
-			<input type="text" class="span2" style="float:right; margin-left:10px; margin-top:6px;margin-right:3px;margin-bottom:0px;" placeholder="search coming soon...">
-			
-		  </div>
+		  <a href="javascript:void(0);" onclick="fbconnectClick()" style="width:100px;float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;">
+			<img src='/media/farmerbook/images/facebook-connect.png'>
+		  </a>
         </div>      
     </div>
 	<div id="map_canvas" style=""></div>

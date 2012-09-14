@@ -1,6 +1,11 @@
 import glob, os
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
+import site, sys
+sys.path.append('/home/ubuntu/code/dg_git')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
+
+
 from django.core.management import setup_environ
 import settings
 
@@ -34,3 +39,4 @@ for key in rs:
 		i= i+1
 	else:
 		print 'id does not exist'+str(farmer_id)	
+print str(i) + " images updated in db"
