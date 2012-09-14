@@ -16,7 +16,8 @@
     <script type="text/javascript" src="/media/js/backbone/json2.js"></script>
     <script type="text/javascript" src="/media/js/backbone/underscore-min.js"></script>
     <script type="text/javascript" src="/media/js/backbone/backbone-min.js"></script>
-    
+    <script type="text/javascript" src="/media/coco/js/indexeddb-backbonejs-adapter/backbone-indexeddb.js"></script>
+
 <script type="text/javascript" src="/media/coco/js/dashboard_offline.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
 <meta name="robots" content="NONE,NOARCHIVE">
@@ -47,8 +48,69 @@
             </tr>
             </table>
         </div>
+        
+        <div class="span8" style="margin-left:20px;">
+            <button id="download" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:100px;">Download</button>
+        </div>
+        
     </script>
     
     
+    <script type="text/template" id="tpl-country-item">
+        <td><%= id %></td>
+        <td><%= country_name %></td>
+        <td> <%= start_date %></td>
+        <td>
+        <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+        <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+        </td>
+        
+        </script>
+    
+
+    
+    <script type="text/template" id="countries_table">
+        <table class="table table-striped">
+        <thead>
+        <tr>
+        <th>Id</th>
+        <th>Country name</th>
+        <th>Start Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </script>
+    
+    <script  type="text/template" id="country_list_page">
+        <div class="well">
+        <div style= "float:left;">
+        <input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
+        <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
+        </div>
+        <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
+        </div>
+        <div id="countryModal" class="modal hide fade">
+        <form id="countryForm" method="post">
+        <div class="modal-header"><button class="close" data-dismiss="modal">×</button>
+        <h3>Country Details</h3>
+        </div>
+        <div class="modal-body">
+        <tr>
+        <th><label for="id_country_name">Country name:</label></th>
+        <td><input id="id_country_name" type="text" name="country_name" maxlength="100" /></td>
+        </tr>
+        <tr>
+        <th><label for="id_start_date">Start date:</label></th>
+        <td><input type="text" name="start_date" id="id_start_date" /></td>
+        </tr>
+        </div>
+        <div class="modal-footer"><a class="btn" href="#" data-dismiss="modal">Cancel</a>
+        <input class="btn btn-primary" type="submit" value="Save" /></div>
+        </form>
+        </div>
+    </script>
+
 </body>
 </html>
