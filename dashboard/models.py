@@ -269,7 +269,9 @@ class Village(models.Model):
     road_connectivity = models.CharField(max_length=100, db_column='ROAD_CONNECTIVITY', blank=True)
     control = models.NullBooleanField(null=True, db_column='CONTROL', blank=True)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
-    
+    latitude = models.CharField(max_length=25, null=True, blank=True)
+    longitude = models.CharField(max_length=25, null=True, blank=True)
+    grade = models.CharField(max_length=1, null=True, blank=True)
     objects = models.Manager() #The default manager
     farmerbook_village_objects = VillageFarmerbookManager() #The manager for farmerbook
     

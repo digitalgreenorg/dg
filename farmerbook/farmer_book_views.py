@@ -5,6 +5,7 @@ from django.utils import simplejson
 from dashboard.models import *
 from django.db.models import Count
 import datetime
+import random
 from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 import get_id_with_images
@@ -13,7 +14,11 @@ from django.core.cache import cache
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
     
-def get_home_page(request):
+def get_home_page(request, type=None, id=None):
+    if type:
+        print type
+    if id:
+        print id
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
@@ -66,7 +71,8 @@ def get_home_page(request):
         top_partner_stats [partner[0]][3] = partner[3]
     top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
                           
-    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats))
+    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
+                                                      type=type, type_id = id))
 
 def get_leaderboard_data():
     village_ids = Village.farmerbook_village_objects.all().values_list('id', flat=True)
@@ -108,10 +114,34 @@ def get_leaderboard_data():
     return top_adopters_stats
 
 def get_villages_with_images(request):
-    #if request.is_ajax():
-    village_ids = [10000000019913,10000000020394,10000000000074,7000001207,10000000000067,10000000000048,10000000000230,10000000000093,10000000019918,10000000000031,10000000000102,34000003805,10000000000217,10000000019902,10000000018676,10000000019901,47000001122,47000001044,47000051353,47000052364,47000056970,10000000000053,10000000000052,10000000000096,10000000000097,10000000000099,10000000000100,10000000000103,10000000000119,10000000000393,10000000000122,10000000000112,10000000000249,10000000000077,10000000000124,10000000000305,10000000000307,10000000000306,10000000000341,10000000000309,10000000000313,10000000000394,10000000000389,10000000000406,10000000000504,10000000000342,10000000000536,10000000000538,10000000000537,10000000000507,10000000000120,10000000000514,10000000019860,10000000019862,10000000019864,10000000019874,10000000019834,10000000019880,10000000019882,10000000019883,10000000019889,10000000019835,10000000019842,10000000019891,10000000019922,10000000019854,10000000019929,10000000019942,10000000019945,10000000019954,10000000019967,10000000019873,10000000019975,10000000019968,10000000019969,10000000019978,10000000019985,10000000019988,10000000000092,10000000020079,10000000020104,47000001038,10000000020110,10000000020119,10000000020120,10000000020106,10000000020105,10000000019865,10000000020020,10000000019841,10000000020444,10000000020448,10000000000078,10000000020572,10000000020369,10000000020594,10000000020370,10000000020647,10000000020649,10000000020538]
-    vil_ids = Village.objects.filter(id__in = village_ids).exclude( block__district__state__state_name = 'Karnataka').values_list('id', flat=True)
-    return HttpResponse(simplejson.dumps(list(vil_ids)), mimetype="application/json")
+    #if request.is_ajax()-with:
+    village_list = get_id_with_images.get_village_list()
+    village_details = []
+    district_lat_lng = {10000000000030:["Hassan", "13.0000", "76.1000"], 10000000000005:["Khunti", "23.0800", "85.2800"], 10000000000004:["West Singhbum", "22.5700", "85.8200"], 10000000000008:["Dharwad","15.4649","75.0030"], 
+                        10000000000014:["Mayurbhanj","21.7800","85.9700"], 10000000000017:["Belgaum","15.8700","74.5000"],
+                        10000000000023: ["Koraput", "19.0000", "83.0000"], 10000000000024: ["Keonjhar", "21.6300","85.5800"],
+                        10000000000025: ["Barwani", "22.0300","74.9000"], 10000000000027:[ "Ujjain", "23.1828","75.7772"],
+                        10000000000028:["Mysore", "12.3024","76.6386"], 10000000000033:["Mahabubnagar", "16.7300","77.9800"],
+                        10000000000035:["Munger", "25.3800", "86.4700"], 10000000000021:["Rajgarh", "22.6800", "74.9500"]}
+    for i in village_list:
+        vil_details = Village.objects.filter(id = i).values_list('id', 'village_name', 
+                                                                 'block__district__id', 'grade')
+        district_id = vil_details[0][2]
+        try:
+            if district_lat_lng[district_id]:
+                district_lat= float(district_lat_lng[district_id][1])
+                district_lng = float(district_lat_lng[district_id][2])
+        except:
+            district_lat = float(22.5700)
+            district_lng = float(85.8200)
+        #vincenty's formula to calculate lats and lngs in range of 50 km
+        angle = 50 * 0.0089833458;
+        random_lat = "%.4f" % random.uniform(district_lat - angle, district_lat + angle)
+        random_lng = "%.4f" % random.uniform(district_lng - angle, district_lng + angle)
+        village_details.append({"id":i, "name": vil_details[0][1], "latitude":random_lat, 
+                                "longitude": random_lng, "grade": vil_details[0][3]})
+    
+    return HttpResponse(simplejson.dumps(village_details), mimetype="application/json")
 
 def get_videos_produced(request):
     village_id = int(request.GET['village_id'])
