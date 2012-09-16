@@ -86,6 +86,7 @@
 
     </style>
 	
+	<script type="text/javascript" src=""></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/markerclusterer.js"></script>
@@ -260,6 +261,8 @@
 		}
 		
 		function fbconnectClick() {
+			alert('hi');
+			
 		}
 		
 		function initialize() {
@@ -339,7 +342,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
         <div class="container" style="background-color:#6D9D30;width:100%">
           <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
 		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
-		  <a href="javascript:void(0);" onclick="fbconnectClick()" style="width:100px;float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;">
+		  <a id='fb-auth' style="width:100px;float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;">
 			<img src='/media/farmerbook/images/facebook-connect.png'>
 		  </a>
         </div>      
@@ -529,5 +532,42 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 <script type="text/javascript">
     mixpanel.track("Landing Page Loaded");
 </script>
+
+	<div id="fb-root"></div>
+      <script>
+		function loggedIn(response) {
+			console.log(response);
+			alert(response);
+		}
+		
+		window.fbAsyncInit = function() {
+		alert('hi');
+          FB.init({
+            appId      : '416481021745150', // App ID
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+          });
+		  
+		   FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {	
+				loggedIn(response);				
+		  } else {
+				alert('hi');//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{app_id}}&redirect_uri={{app_uri}}&response_type=token");
+		  });
+        };
+        // Load the SDK Asynchronously
+        (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+         }(document));
+      </script>
+
+      <div class="fb-login-button" scope="email,user_checkins">
+        Login with Facebook
+      </div>
   </body>
 </html>
