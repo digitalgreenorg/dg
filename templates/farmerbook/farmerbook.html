@@ -540,6 +540,10 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			//alert(response);
 		}
 		
+		function fbConnectClick() {
+			top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
+		}
+		
 		window.fbAsyncInit = function() {
 		  FB.init({
             appId      : '416481021745150', // App ID
@@ -552,7 +556,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			if (response.status === 'connected') {
 				loggedIn(response);				
 		  } else {
-				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
 		  }
 		  });
         };
