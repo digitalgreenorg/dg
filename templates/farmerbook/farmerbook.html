@@ -541,8 +541,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		}
 		
 		window.fbAsyncInit = function() {
-		alert('hi');
-          FB.init({
+		  FB.init({
             appId      : '416481021745150', // App ID
             status     : true, // check login status
             cookie     : true, // enable cookies to allow the server to access the session
@@ -554,6 +553,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				loggedIn(response);				
 		  } else {
 				alert('hi');//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{app_id}}&redirect_uri={{app_uri}}&response_type=token");
+		  }
 		  });
         };
         // Load the SDK Asynchronously
