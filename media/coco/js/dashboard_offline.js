@@ -1,5 +1,11 @@
 $(function(){
-
+    var Connectivity = Backbone.Model.extend({
+                                             defaults: function() {
+                                             return{connected:true};
+                                             }
+                                      });
+  
+  conn_state=new Connectivity();
     var databasev1 = {
     id: "coco-database",
     description: "The offline database for COCO",
@@ -36,15 +42,21 @@ $(function(){
                                              });
   var CountryCollection_Online = Backbone.Collection.extend({
                                                      model: Country_Online,
-                                                     database: databasev1,
-                                                     storeName: "countries",
                                                      url: '/api/v1/country/',
                                                      sync: Backbone.ajaxSync,
                                                      parse: function(data) {
                                                          return data.objects;
-                                                    }
+                                                        }
                                                      
                                                      });
+
+  // define the collection of countries
+  var CountryCollection = Backbone.Collection.extend({
+                                                     model: Country,
+                                                     database: databasev1,
+                                                     storeName: "countries",
+                                                     });
+  
 
     
     // set up the view for a country
@@ -81,20 +93,22 @@ $(function(){
                                            });
     
     
-    // define the collection of countries
-    var CountryCollection = Backbone.Collection.extend({
-                                                       model: Country,
-                                                       database: databasev1,
-                                                       storeName: "countries",
-                                                       
-                                                       });
-    
     
     var CountriesView =  Backbone.View.extend({
                                               //tagName:'tr',
                                               initialize: function() {
                                               // instantiate a country collection
-                                              this.countries = new CountryCollection();
+                                              //console.log(conn_state);
+                                              if(conn_state.get("connected"))
+                                              {
+                                                console.log("We are online");
+                                                this.countries = new CountryCollection_Online();
+                                              }
+                                              else
+                                              {
+                                                console.log("We are offline");
+                                                this.countries = new CountryCollection();
+                                              }
                                               this.countries.bind('all', this.render, this);
                                               this.countries.fetch();
                                               },
@@ -140,8 +154,8 @@ $(function(){
                                                  
                                                  },
                                                  addNew: function(country){
-                                                 alert(country);
-                                                 alert(JSON.stringify(country));
+                                                 //alert(country);
+                                                 //alert(JSON.stringify(country));
                                                      this.countries_view.countries.create(country,{wait: true});
                                                  
                                                  },
@@ -259,7 +273,10 @@ $(function(){
 
   var DashboardView = Backbone.View.extend({
                                         //tagName:'tr',
-                                            events: {
+                                           //this.model = conn_state,
+                                           //this.model.bind('all', this.render, this);
+                                           events: {
+                                                "click button#connectivity" : "ToggleConnectivity",
                                                 "click button#download" : "Download",
                                                "click a.country" : "ListCountry",
                                                "click a.state" : "ListState",
@@ -268,6 +285,13 @@ $(function(){
                                                 "click a.village" : "ListVillage"
                                            
                                             },
+                                           ToggleConnectivity:function(){
+                                           conn_state.set("connected",!conn_state.get("connected"));
+                                           //Connected =!Connected;
+                                           console.log("toggled connectivity");
+                                           this.render();
+                                                
+                                           },
                                            Download: function(){
                                                 var data="s";
                                                console.log("starting download");
@@ -334,7 +358,13 @@ $(function(){
                                            template:_.template($('#dashboard').html()),
                                             
                                             render: function () {
-                                                $(this.el).html(this.template());
+                                                var toggle_connectivity;
+                                                
+                                                if(conn_state.get("connected"))
+                                                    toggle_connectivity="Offline";
+                                                else
+                                                    toggle_connectivity="Online";
+                                                $(this.el).html(this.template({toggle_connectivity:toggle_connectivity}));
                                                 return this;
                                             }
                                         });
