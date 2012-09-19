@@ -260,11 +260,6 @@
 			$('#current_page').val(page_num);
 		}
 		
-		function fbconnectClick() {
-			alert('hi');
-			
-		}
-		
 		function initialize() {
 			$(function(){
 			   $("[rel=popover]").popover();
@@ -342,7 +337,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
         <div class="container" style="background-color:#6D9D30;width:100%">
           <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
 		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
-		  <div class='btn btn-primary' id='fbconnect' style="float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;"> Connect With facebook</div>
+		  <div href="javascript:void(0);" onclick="fbConnectClick()" class='btn btn-primary' id='fbconnect' style="float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;"> Connect With facebook</div>
         </div>      
     </div>
 	<div id="map_canvas" style=""></div>
@@ -537,11 +532,20 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			button = document.getElementById('fbconnect');
 			button.innerHTML = 'Connected With Facebook';
 			console.log(response);
+			
 			//alert(response);
 		}
 		
 		function fbConnectClick() {
-			top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
+			console.log('in fbconnect click');
+			FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				loggedIn(response);				
+			} else {
+				console.log('redirecting');
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions&response_type=token");
+			}
+			});
 		}
 		
 		window.fbAsyncInit = function() {
@@ -553,7 +557,9 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
           });
 		  
 		   FB.getLoginStatus(function(response) {
+		   console.log('in fb getlogin status 1');
 			if (response.status === 'connected') {
+				console.log('in connected');
 				loggedIn(response);				
 		  } else {
 				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
@@ -569,9 +575,6 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
            ref.parentNode.insertBefore(js, ref);
          }(document));
       </script>
-
-      <div class="fb-login-button" scope="email,user_checkins">
-        Login with Facebook
-      </div>
+      
   </body>
 </html>
