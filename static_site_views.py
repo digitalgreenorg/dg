@@ -221,6 +221,14 @@ def careeradm(request):
     
     return render_to_response('base_career_adm.html')
 
+def careerpca(request):
+    
+    return render_to_response('base_career_pca.html')
+
+def careerpma(request):
+    
+    return render_to_response('base_career_pma.html')
+
 def donate(request):
     
     return render_to_response('base_donate.html')
