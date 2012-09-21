@@ -70,6 +70,9 @@ a.exploredescmainlink1 img			{ float:left; display:block; border:none; margin-ri
 .exploredescmainlink:active			{ text-decoration:underline; color:Gray; }
 .exploredescmainlink img			{ float:left; display:block; border:none; margin-right:10px; }	
 
+.exploredescmainlink2				{ margin-left:10px; margin-top:10px;  clear:both; line-height:15px; display:block; text-decoration:none; font-size:13px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
+.exploredescmainlink2 img			{ float:left; display:block; border:none; margin-right:10px; }
+
 .exploredescdivgap					{ margin:10px; margin-top:20px; width:238px; height:1px; border-top:1px solid #e1cf53  }
 
 

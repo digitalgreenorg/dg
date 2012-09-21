@@ -544,10 +544,12 @@ class Person(models.Model):
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
             send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
         
-    def __unicode__(self):
+    def get_string(self):
         if (self.father_name is None or self.father_name==''):
-            return self.person_name
-        return  u'%s (%s)' % (self.person_name, self.father_name)
+            name =  self.person_name
+        else:
+            name =  (u'%s (%s)' % (self.person_name, self.father_name))
+        return name
 
 class PersonRelations(models.Model):
     id = BigAutoField(primary_key = True)

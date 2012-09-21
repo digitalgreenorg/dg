@@ -52,10 +52,22 @@ public class StringValidator extends BaseValidator {
 		}		
 		
 		if(this.getValue() != null && this.isNotEmpty() && this.strictCharSet && 
-				!((String)this.getValue()).matches(StringValidator.strictChars)) {
+				!validateUniCodeChars((String)this.getValue())) {
 			errorString += specialCharactersErrorMessage;
 			return false;
 		}
 		return true;
+	}
+	
+	private boolean validateUniCodeChars(String value) {
+		String strictUniCodeChars = ".*[^\\x20-\\x7E].*";
+		if(value.matches(StringValidator.strictChars)) {
+			return true;
+		} 
+		if(value.matches(strictUniCodeChars)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

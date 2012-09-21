@@ -34,14 +34,7 @@
 		<MAILID>avinash@digitalgreen.org</MAILID>
 		<NAME>Avinash Upadhyay</NAME>		
 	</TEAM>	
-	<TEAM>
-		<TITLE>Regional Program Coordinator</TITLE>
-		<ARTIST>/media/Output/Images/shivaji1.png</ARTIST>    
-    	<DESC>Shivaji completed his Masters program in Social Work.  Initially very unsure, he decided to work in the domain of rural development after two years of his association with the FICCI Foundation. He later moved to work with PRADAN where he found many opportunities to learn while implementing huge livelihood programs. He looks at Digital Green  as an opportunity to help communities take charge of their own lives. Apart from work, he has been as avid sports person since schooldays representing State level athletics and cricket. </DESC>
-    	<COMPANY>Digital Green</COMPANY>
-		<MAILID>shivaji@digitalgreen.org</MAILID>
-		<NAME>Shivaji Choudhary</NAME>		
-	</TEAM>
+	
 	<TEAM>
 		<TITLE>Regional Program Coordinator</TITLE>
 		<ARTIST>/media/Output/Images/gulzar1.png</ARTIST>    
@@ -50,6 +43,16 @@
 		<MAILID>gulzar@digitalgreen.org</MAILID>
 		<NAME>Akbar Gulzar</NAME>		
 	</TEAM>
+    
+    <TEAM>
+		<TITLE> Deputy Director - Projects</TITLE>
+		<ARTIST>/media/Output/Images/navin.png</ARTIST>
+    	<DESC>He comes to us with over 12 years' experience in the development sector that includes livelihoods program development, management, execution and monitoring. He was the Associate Vice President at ACCESS Development Services before joining us. He has been a Livelihoods consultant to organisations like GIZ, OXFAM, IDE and helped them design livelihoods programs, conduct impact assessment studies as well as developed capacities for enterprise development. Starting his career with Seva Mandir, grass root organization, and having worked with organisations like CARE and ACCESS; Navin blends field level experience with HQ work that balances program management with stakeholder involvement. I believe that Navin will be real asset to Digital Green. Navin has an MBA in Forestry Management from the National Institute of Forest Management, Bhopal and completed his masters in natural resource management from Cranfield University, UK. Navin's motivation to join Digital Green is the belief that small, innovative and focused solutions can help reach out to a large number of rural communities and thus impact the society at scale.</DESC>
+		<COMPANY>Digital Green</COMPANY>
+		<MAILID>navin@digitalgreen.org</MAILID>
+		<NAME>Navin Horo</NAME>
+	</TEAM>
+
 	<TEAM>
 		<TITLE>Manager Administration and Finance</TITLE>
 		<ARTIST>/media/Output/Images/anand.png</ARTIST>    
@@ -102,16 +105,14 @@
 		<MAILID>ronali@digitalgreen.org</MAILID>
 		<NAME>Ronali Pradhan</NAME>
 	</TEAM>
-	
-	<TEAM>
-		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/abhishekh1.png</ARTIST>
-		<DESC>Abhishek is a graduate from the London School of Economics, UK with specialization in use of ICT for socioeconomic development and holds a bachelor's in mechanical engineering from PESIT, Bangalore. He has over five years experience in product development and research. He has filed four patents in the field of computer science and has worked as part of engineering teams at Adobe Systems and Infosys Technologies. He is also a Fellow for Sustainable Business at the Piramal Foundation. Abhishek has strong commitment to bringing about social change by harnessing innovations in the technology space. Abhishek likes to strategize and work towards sustainable rural development, especially for the empowerment of the farmers in rural India. He wants to avail this opportunity to gain invaluable hands-on experience as well as contribute to the vision and commitment nurtured by the passionate Digital Green team. He likes to travel, read and follow emerging technologies in mobile and web applications space.</DESC>
+    <TEAM>
+		<TITLE>Manager - Human Resources</TITLE>
+		<ARTIST>/media/Output/Images/supriya.png</ARTIST>
+    	<DESC>Supriya is a Human Resource Professional with an experience of 8 years. She has graduated in Statistics from Delhi University and has completed her Masters in Human Resource from Symbiosis CDL, Pune. Throughout, she has been into a generalist role and carries varied industry experience like BPO, consultancy, media and advertising. She is born and brought up in Delhi. In her spare time, she would like to spend quality time with family, loves to travel, do adventure sports and shopping.She would like to be in a strategic role in DigitalGreen by implementing best practices in the company. She plans to contribute in the growth of DigitalGreen. She loved the approach of DigitalGreen to provide assistance to farmers, by sharing the learnings and experiences. She hopes for a fruitful association with DigitalGreen. </DESC>
 		<COMPANY>Digital Green</COMPANY>
-		<MAILID>hegde@digitalgreen.org</MAILID>
-		<NAME>Abhishek Hegde</NAME>
+		<MAILID>supriya@digitalgreen.org</MAILID>
+		<NAME>Supriya Sharma</NAME>
 	</TEAM>
-	
 	<TEAM>
 		<TITLE>Program Manager</TITLE>
 		<ARTIST>/media/Output/Images/shreyaaggarwal.png</ARTIST>
@@ -131,15 +132,15 @@
 		<NAME>Aruna Katragadda Gali</NAME>
 	</TEAM>		
 	
-	<TEAM>
+    <TEAM>
 		<TITLE>Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/shekhar.png</ARTIST>    
-    	<DESC>Chandra Shekhar is a native of Jharkhand. He pursued Masters in Information and Communication Technology in Agriculture and Rural Development from Dhirubhai Ambani Institute of Information and Communication Technology, Gandhinagar. His career interest is working for rural development through which small and marginal farmers can improve their livelihood opportunities in a manner that is socially, economically and environmentally sustainable. Joining Digital Green has enabled him to develop a strategic thinking process which assists him to work with the rural community and he has also learnt a new methodology to address the rural concern through efficient extension system. </DESC>
+		<ARTIST>/media/Output/Images/kerry.png</ARTIST>
+    	<DESC>Kerry Harwin has obtained a master's degree in development studies from the Tata Insitute of Social Science, Mumbai and a bachelor's degree from Amherst College, Massachusetts. His previous professional experience includes grantmaking at the Shakti Sustainable Energy Foundation, Delhi, environmental consulting at Except, Rotterdam, and environmental and agriculture policy in the United States Senate. He has also worked as a pizza maker, nanny, dishwasher, theatre set builder, tour guide, freelance journalist, deejay, voice actor, and child model.Kerry believes that expanding rural livelihoods, especially for those who face a wide range of depravations, is a crucial and under-appreciated facet of contemporary Indian development. He is eager to bring his diverse set of experience to bear on these challenges at Digital Green. </DESC>
 		<COMPANY>Digital Green</COMPANY>
-		<MAILID>shekhar@digitalgreen.org</MAILID>
-		<NAME>Chandra Shekhar</NAME>		
-	</TEAM>	
-	
+		<MAILID>kerry@digitalgreen.org</MAILID>
+		<NAME>Kerry Harwin</NAME>
+	</TEAM>
+
 	<TEAM>
 		<TITLE>Assistant Development Manager</TITLE>
 		<ARTIST>/media/Output/Images/salil1.png</ARTIST>    
@@ -191,14 +192,6 @@
 		<NAME>Zakir Hussain</NAME>		
 	</TEAM>
 	
-	<TEAM>
-		<TITLE>Assistant Program Manager</TITLE>
-		<ARTIST>/media/Output/Images/abhinav.png</ARTIST>    
-    	<DESC>Abhinav did his Postgraduate Diploma in Rural Management (PGDRM) from of Rural Management Anand (IRMA). Prior to joining IRMA he worked with Accenture Services Pvt. Ltd. He pursued B. Tech in Information Technology from Cochin University of Science and Technology. He also worked in the villages of Bihar, Andhra Pradesh, and  Gujarat while studying at IRMA. He also worked with Agha Khan Rural Support Programme (AKRSP), Society for Elimination of Rural Poverty (SERP), and AMUL during his fieldwork and internships. His areas of interest are financial and technological inclusion for rural sector, overall integrated development, and policy making. Abhinav's hobbies include playing badminton, cricket and listening gazhals and rock. He likes travelling to new places, interacting with people. </DESC>    	
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>abhinav@digitalgreen.org</MAILID>
-		<NAME>Abhinav Kumar</NAME>		
-	</TEAM>
 	
 	<TEAM>
 		<TITLE>Assistant Program Manager</TITLE>
@@ -282,14 +275,6 @@
 	</TEAM>
 	
 	
-	<TEAM>
-		<TITLE>Apprentice</TITLE>
-		<ARTIST>/media/Output/Images/pawan_c.png</ARTIST>    
-    	<DESC>Pawan Chaturvedi  is a native of Pauri Garhwal, Uttarakhand. He completed his  B tech in Bio-Chemical Engineering from Kumaon Engineering College Dwarahat, Uttarakhand and then also completed a Diploma in Electronics Engineering from Government Polytechnic  Dehradun, Uttarakhand. Prior to joining Digital green he has worked with Paper Product Ltd  for 1 year and  Lupin Ltd for another year. Despite working for corporates and having a qualitfying degree which is not exactly meant for development work he was always drawn towards the development sector.He has been impressed by  Digital Green as  it tries to promote a participatory communication technology in agriculture extension which is leading to continuous social change,He likes the fact that Digital Green combines digital devices with human process to to hasten social progress.He loves to play Cricket and Volley ball. </DESC>
-		<COMPANY>Digital Green</COMPANY>
-		<MAILID>chaturvedi@digitalgreen.org</MAILID>
-		<NAME>Pavan Chaturvedi</NAME>
-	</TEAM>	
 			
 	<TEAM>
 		<TITLE>Administrative Executive</TITLE>
@@ -307,14 +292,15 @@
 		<MAILID>aswini@digitalgreen.org</MAILID>
 		<NAME>Aswini Karanam</NAME>		
 	</TEAM>
-	<TEAM>
-		<TITLE>Systems Engineer</TITLE>
-		<ARTIST>/media/Output/Images/rahul1.png</ARTIST>    
-    	<DESC>Rahul has completed a dual-degree program (M.Sc. (Hons.) Economics and B.E. (Hons.) Computer Science) from BITS, Pilani. Prior to Digital Green, he was an intern at Microsoft Research, India and worked, for a brief time, at D. E Shaw India Software Pvt Ltd. Since college days, he has found writing good programs and solving problems through programming very enjoyable, which he hopes to pursue throughout his career. Digital Green has proven to be effective and he believes Digital Green, when applied on a larger scale, will show significant result in improving the livelihood of innumerable small farmers. As a part of its Systems team, he hopes to contribute to the technology and help Digital Green achieve this noble cause. </DESC>
+    <TEAM>
+		<TITLE> Management Secretary</TITLE>
+		<ARTIST>/media/Output/Images/suruchi.png</ARTIST>
+    	<DESC>Suruchi, a professional with extensive background in Business Administration, Secretarial, HR role. She was a commerce graduate and had done Secretarial course from YMCA and Advance Diploma in Computers Application from Baba Saheb Ambedkar Polytechnic. She was associated with Hero Exports while pursuing her Masters in HR. Prior to Hero Exports, she had worked with Ericsson and Frontier Trading. Her hobbies were dancing and interacting with people. She strongly believed that farmers needed respect and gratitude. She appreciated the work carried out by Digital Green for all round development of farmers. She was keen to contribute directly or indirectly towards farmer's well being. She felt that It would be an honor to be associated with DG and to deliver her best for strengthening the team in achieving the organisational goal. </DESC>
 		<COMPANY>Digital Green</COMPANY>
-		<MAILID>rahul@digitalgreen.org</MAILID>
-		<NAME>Rahul Agrawal</NAME>		
+		<MAILID>suruchi@digitalgreen.org</MAILID>
+		<NAME>Suruchi Malik</NAME>
 	</TEAM>
+
 	<TEAM>
 		<TITLE>Systems Engineer</TITLE>
 		<ARTIST>/media/Output/Images/nandini.png</ARTIST>    
