@@ -22,6 +22,15 @@ from dashboard.models import *
 from output.database.utility import run_query, run_query_dict
 from forms import *
 from filter_utils import filter_objects_for_date
+# #########
+# REVERT WHEN MOVING TO DJANGO 1.4
+# The fix converts all bound fields inside a form object to str. This is so that HttpResponse.get_content does not throw the exception "sequence item 0: expected string, BoundField found".According to the Django 1.3 docs, content can be an iterator or a string. If it's an iterator, it should return strings, and those strings will be joined together to form the content of the response.
+# This must be reverted so that there is no duplicate processing in Django 1.4 since Django 1.4 handles this scenario.
+# Steps: 
+# Remove str_form = [str(item) for item in form]
+#                    return HttpResponse(str_form)
+# Uncomment return HttpResponse(form)
+# #########
 
 def search(request):
     """
@@ -321,7 +330,10 @@ def save_country_online(request,id):
             form = CountryForm(instance = country)
         else:
             form  = CountryForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_countries_online(request, offset, limit):
     if request.method == 'POST':
@@ -376,7 +388,10 @@ def save_region_online(request,id):
             form = RegionForm(instance = region)
         else:
             form  = RegionForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_regions_online(request, offset, limit):
     if request.method == 'POST':
@@ -432,7 +447,10 @@ def save_state_online(request,id):
             form = StateForm(instance = state)
         else:
             form  = StateForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_states_online(request, offset, limit):
     if request.method == 'POST':
@@ -488,7 +506,10 @@ def save_fieldofficer_online(request,id):
             form = FieldOfficerForm(instance = fieldofficer)
         else:
             form  = FieldOfficerForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_fieldofficers_online(request, offset, limit ):
@@ -545,7 +566,10 @@ def save_practice_online(request,id):
             form = PracticeForm(instance = practice)
         else:
             form  = PracticeForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_practices_online(request, offset, limit):
     if request.method == 'POST':
@@ -617,7 +641,10 @@ def save_language_online(request,id):
             form = LanguageForm(instance = language)
         else:
             form  = LanguageForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_languages_online(request, offset, limit):
     if request.method == 'POST':
@@ -672,7 +699,10 @@ def save_partner_online(request,id):
             form = PartnerForm(instance = partner)
         else:
             form  = PartnerForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_partners_online(request, offset, limit):
     if request.method == 'POST':
@@ -734,7 +764,10 @@ def save_video_online(request,id):
         form.fields['related_practice'].queryset = Practices.objects.distinct().order_by('practice_sector__name')
         form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_videos_online(request, offset, limit):
     if request.method == 'POST':
@@ -814,7 +847,10 @@ def save_personshowninvideo_online(request,id):
         villages = get_user_villages(request)
         form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         form.fields['person'].queryset = Person.objects.distinct().order_by('person_name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_personshowninvideo_online(request, offset, limit):
     if request.method == 'POST':
@@ -869,7 +905,10 @@ def save_district_online(request,id):
             form = DistrictForm(instance = district)
         else:
             form  = DistrictForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_districts_online(request, offset, limit):
     if request.method == 'POST':
@@ -928,7 +967,10 @@ def save_block_online(request,id):
             form = BlockForm()
         districts = get_user_districts(request)
         form.fields['district'].queryset = districts.order_by('district_name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_blocks_online(request, offset, limit):
     if request.method == 'POST':
@@ -1004,7 +1046,10 @@ def save_developmentmanager_online(request,id):
             form = DevelopmentManagerForm(instance = developmentmanager)
         else:
             form  = DevelopmentManagerForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_developmentmanagers_online(request, offset, limit):
     if request.method == 'POST':
@@ -1063,7 +1108,10 @@ def save_equipment_online(request,id):
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_equipments_online(request, offset, limit):
@@ -1317,7 +1365,10 @@ def save_animatorassignedvillage_online(request,id):
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_animatorassignedvillages_online(request, offset, limit):
     if request.method == 'POST':
@@ -1790,7 +1841,10 @@ def save_videosscreenedinscreening_online(request):
         villages = get_user_villages(request)
         form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
         form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_videosscreenedinscreening_online(request, offset, limit):
@@ -1849,7 +1903,10 @@ def save_training_online(request,id):
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_trainings_online(request, offset, limit):
     if request.method == 'POST':
@@ -1901,7 +1958,10 @@ def save_traininganimatorstrained_online(request):
         form = TrainingAnimatorsTrainedForm()
         villages = get_user_villages(request)
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_traininganimatorstrained_online(request, offset, limit):
@@ -1951,7 +2011,10 @@ def save_monthlycostpervillage_online(request):
         form = MonthlyCostPerVillageForm()
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_monthlycostpervillages_online(request, offset, limit):
     if request.method == 'POST':
@@ -2000,7 +2063,10 @@ def save_personrelation_online(request):
         villages = get_user_villages(request)
         form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['relative'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_personrelations_online(request, offset, limit):
@@ -2049,7 +2115,10 @@ def save_animatorsalarypermonth_online(request):
         form = AnimatorSalaryPerMonthForm()
         villages = get_user_villages(request)
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 
 def get_animatorsalarypermonths_online(request, offset, limit):
@@ -2129,7 +2198,10 @@ def save_equipmentholder_online(request):
             return HttpResponse(form.errors.as_text(), status=201)
     else:
         form = EquipmentHolderForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_equipmentholders_online(request, offset, limit):
     if request.method == 'POST':
@@ -2174,7 +2246,10 @@ def save_reviewer_online(request):
             return HttpResponse(form.errors.as_text(), status=201)
     else:
         form = ReviewerForm()
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_reviewers_online(request, offset, limit):
     if request.method == 'POST':
@@ -2234,7 +2309,10 @@ def save_target_online(request,id):
             form = TargetForm()
         districts = get_user_districts(request)
         form.fields['district'].queryset = districts.order_by('district_name')
-        return HttpResponse(form)
+        # REVERT WHEN MOVING TO DJANGO 1.4
+        str_form = [str(item) for item in form]
+        return HttpResponse(str_form)
+        #return HttpResponse(form)
 
 def get_targets_online(request, offset, limit):
     if request.method == 'POST':
