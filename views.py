@@ -331,8 +331,8 @@ def save_country_online(request,id):
         else:
             form  = CountryForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_countries_online(request, offset, limit):
@@ -389,8 +389,8 @@ def save_region_online(request,id):
         else:
             form  = RegionForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_regions_online(request, offset, limit):
@@ -448,8 +448,8 @@ def save_state_online(request,id):
         else:
             form  = StateForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_states_online(request, offset, limit):
@@ -507,8 +507,8 @@ def save_fieldofficer_online(request,id):
         else:
             form  = FieldOfficerForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -567,8 +567,8 @@ def save_practice_online(request,id):
         else:
             form  = PracticeForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_practices_online(request, offset, limit):
@@ -642,8 +642,8 @@ def save_language_online(request,id):
         else:
             form  = LanguageForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_languages_online(request, offset, limit):
@@ -700,8 +700,8 @@ def save_partner_online(request,id):
         else:
             form  = PartnerForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_partners_online(request, offset, limit):
@@ -765,8 +765,8 @@ def save_video_online(request,id):
         form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_videos_online(request, offset, limit):
@@ -848,8 +848,8 @@ def save_personshowninvideo_online(request,id):
         form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         form.fields['person'].queryset = Person.objects.distinct().order_by('person_name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_personshowninvideo_online(request, offset, limit):
@@ -906,8 +906,8 @@ def save_district_online(request,id):
         else:
             form  = DistrictForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_districts_online(request, offset, limit):
@@ -968,8 +968,8 @@ def save_block_online(request,id):
         districts = get_user_districts(request)
         form.fields['district'].queryset = districts.order_by('district_name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_blocks_online(request, offset, limit):
@@ -1047,8 +1047,8 @@ def save_developmentmanager_online(request,id):
         else:
             form  = DevelopmentManagerForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_developmentmanagers_online(request, offset, limit):
@@ -1109,8 +1109,8 @@ def save_equipment_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -1366,8 +1366,8 @@ def save_animatorassignedvillage_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_animatorassignedvillages_online(request, offset, limit):
@@ -1622,7 +1622,10 @@ def save_personadoptpractice_online(request,id):
             villages = get_user_villages(request)
             form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
             form.fields['video'].queryset = Video.objects.filter(id__in = Person.objects.get(pk=personadoptpractice.person_id).screening_set.values_list('videoes_screened'))
-            return HttpResponse(form)
+            # REVERT WHEN MOVING TO DJANGO 1.4
+            uni_form = [unicode(item) for item in form]
+            return HttpResponse(uni_form)
+            #return HttpResponse(form)
         else:
             districts = get_user_districts(request)
             template = """<select name="district" id="id_district"><option value='' selected='selected'>---------</option>
@@ -1842,8 +1845,8 @@ def save_videosscreenedinscreening_online(request):
         form.fields['screening'].queryset = Screening.objects.filter(village__in = villages).distinct().order_by('date')
         form.fields['video'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -1904,8 +1907,8 @@ def save_training_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['animators_trained'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_trainings_online(request, offset, limit):
@@ -1959,8 +1962,8 @@ def save_traininganimatorstrained_online(request):
         villages = get_user_villages(request)
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -2012,8 +2015,8 @@ def save_monthlycostpervillage_online(request):
         villages = get_user_villages(request)
         form.fields['village'].queryset = villages.order_by('village_name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_monthlycostpervillages_online(request, offset, limit):
@@ -2064,8 +2067,8 @@ def save_personrelation_online(request):
         form.fields['person'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['relative'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -2116,8 +2119,8 @@ def save_animatorsalarypermonth_online(request):
         villages = get_user_villages(request)
         form.fields['animator'].queryset = Animator.objects.filter(village__in = villages).distinct().order_by('name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 
@@ -2199,8 +2202,8 @@ def save_equipmentholder_online(request):
     else:
         form = EquipmentHolderForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_equipmentholders_online(request, offset, limit):
@@ -2247,8 +2250,8 @@ def save_reviewer_online(request):
     else:
         form = ReviewerForm()
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_reviewers_online(request, offset, limit):
@@ -2310,8 +2313,8 @@ def save_target_online(request,id):
         districts = get_user_districts(request)
         form.fields['district'].queryset = districts.order_by('district_name')
         # REVERT WHEN MOVING TO DJANGO 1.4
-        str_form = [str(item) for item in form]
-        return HttpResponse(str_form)
+        uni_form = [unicode(item) for item in form]
+        return HttpResponse(uni_form)
         #return HttpResponse(form)
 
 def get_targets_online(request, offset, limit):
