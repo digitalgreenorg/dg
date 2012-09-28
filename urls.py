@@ -10,6 +10,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^s/', send_formlist_xml),	
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^feeds/persons/$', feed_person_html_on_person_group),

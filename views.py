@@ -23,6 +23,97 @@ from output.database.utility import run_query, run_query_dict
 from forms import *
 from filter_utils import filter_objects_for_date
 
+def send_formlist_xml(request):
+    formId = request.GET.get('formId',None)
+    if (formId):
+        xml = '''<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+          <h:head><!-- ODK Aggregate upload time: 2012-07-23T18:21:47.653+0000 on http://opendatakit.appspot.com -->
+            <!-- XForm for Waylon -->
+
+            <h:title>Cascading Select Form</h:title> 
+            <model>
+              <itext>
+                <translation lang="english">
+                  <text id="king">
+                    <value>King County</value>
+                  </text>
+                  <text id="pierce">
+                    <value>Pierce County</value>
+                  </text>
+                </translation>
+                <translation lang="italian">
+                  <text id="king">
+                    <value>County King</value>
+                  </text>
+                  <text id="pierce">
+                    <value>County Pierce</value>
+                  </text>
+                </translation>
+              </itext>
+              <instance>
+                <form id="CascadingSelect" version="2012072302">
+                    <county/>
+                    <city/>
+                </form>
+              </instance>
+              <instance id="choices">
+                <counties>
+                    <county>
+                      <value>king</value>
+                      <cities>
+                        <city>
+                          <name>Seattle</name>
+                          <value>sea</value>
+                        </city>
+                        <city>
+                          <name>Redmond</name>
+                          <value>red</value>
+                        </city>
+                        <city>
+                          <name>Bellevue</name>
+                          <value>bel</value>
+                        </city>
+                      </cities>
+                    </county>
+                    <county>
+                      <value>pierce</value>
+                      <cities>
+                        <city>
+                          <name>Tacoma</name>
+                          <value>tac</value>
+                        </city>
+                        <city>
+                          <name>Puyallup</name>
+                          <value>puy</value>
+                        </city>
+                      </cities>
+                    </county>
+                </counties>
+              </instance>
+              <bind nodeset="/form/county" type="select1"/>
+              <bind nodeset="/form/city" type="select1"/>
+            </model>
+          </h:head>
+          <h:body>
+            <select1 ref="/form/county">
+              <itemset nodeset="instance('choices')/counties/county">
+                <label ref="jr:itext(value)"/>
+                <value ref="value"/>
+              </itemset>
+            </select1>
+            <select1 ref="/form/city">
+              <itemset nodeset="instance('choices')/counties/county[value=/form/county]/cities/city">
+                <label ref="name"/>
+                <value ref="value"/>
+              </itemset>
+            </select1>
+          </h:body>
+        </h:html>'''
+    else:
+        xml = '<forms><form url="http://test.digitalgreen.org/s?formId=screening">Screening Form</form></forms>'
+    return HttpResponse(xml, content_type="text/xml")
+
+
 def search(request):
     """
     Searches in the fields of the given related model and returns the
