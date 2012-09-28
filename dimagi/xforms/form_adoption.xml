@@ -1,4 +1,4 @@
-<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+﻿<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
 	<h:head>
 		<h:title>Adoption</h:title>
 		<model>
@@ -30,7 +30,7 @@
 			<bind nodeset="/data/form_done"/>
 			
 			<itext>
-				<translation lang="en" default="">
+				<translation lang="en" >
 					<text id="form_done-label">
 						<value>Your form has been completed. Press Done to continue</value>
 					</text>
@@ -51,6 +51,29 @@
 					</text>
 					<text id="date-label">
 						<value>Date</value>
+					</text>
+				</translation>
+				<translation lang="tel" default="">
+					<text id="form_done-label">
+						<value>మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
+					</text>
+					<text id="selected_village-label">
+						<value>గ్రామము</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>కార్యకర్త</value>
+					</text>
+					<text id="selected_group-label">
+						<value>గ్రూప్ పేరు</value>
+					</text>
+					<text id="selected_video-label">
+						<value>చిత్రం పేరు</value>
+					</text>
+					<text id="selected_person-label">
+						<value>రైతు</value>
+					</text>
+					<text id="date-label">
+						<value>తేది</value>
 					</text>
 				</translation>
 			</itext>
@@ -83,7 +106,7 @@
 		</select1>
 		<select1 ref="/data/selected_person">
 			<label ref="jr:itext('selected_person-label')"/>
-			<itemset nodeset="instance('person')/person_list/person[group_id=/data/selected_group]">
+			<itemset nodeset="instance('person')/person_list/person[group_id=/data/selected_group and seen='1']">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
