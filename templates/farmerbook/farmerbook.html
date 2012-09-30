@@ -529,31 +529,38 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 	<div id="fb-root"></div>
       <script>
 	  
-		function followClick(person_id, video_title, date_of_adoption) {
+		function followClick(person_id, video_title, date_of_adoption, person_name) {
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
 					var data = { 'fuid' : fuid, 'person_id' : person_id};
+					link_url = 'http://test.digitalgreen.org/farmerbook/person/'+person_id;
 					//$.post("/fbconnect/savefollower/", data, function(data) { console.log(data);});
 					picture_url = "https://s3.amazonaws.com/dg_farmerbook/2/"+person_id+".jpg";
-					desc = "Adopted "+video_title+" on "+date_of_adoption;
+					desc = "Adopted "+video_title+" on "+date_of_adoption+".";
+								
 					var obj = {
 					  method: 'feed',
 					  link: 'http://test.digitalgreen.org/farmerbook/person/'+person_id,
 					  picture: picture_url,
 					  name: 'Farmerbook',
-					  caption: 'Reference Documentation',
+					  caption: person_name,
 					  description: desc
 					};
 					console.log(obj);
-					function callback(response) {
-					  console.log( "Post ID: " + response['post_id']);
-					}
-					FB.ui(obj, callback);
+					FB.api('/me/feed', 'post', obj, function(response) {
+					  if (!response || response.error) {
+						console.log('Error occured in fb api post feed');
+					  } else {
+						console.log('Post ID: ' + response.id);
+					  }
+					});
+					console.log(obj);
+					//FB.ui(obj, callback);
 				} else {
 					console.log('redirecting');
-					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions&response_type=token");
-				}			
+					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+				}	
 			});
 		}
 		function postToFeed(person_id) {
@@ -585,7 +592,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				loggedIn(response);				
 			} else {
 				console.log('redirecting');
-				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions&response_type=token");
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 			}
 			});
 		}
