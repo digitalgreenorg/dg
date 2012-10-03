@@ -1,12 +1,15 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse
-from django.db.models import Count
 from dashboard.models import *
-import datetime, math,json
-from output.database.SQL  import video_analytics_sql, shared_sql
+from django.db.models import Count
+from django.http import Http404, HttpResponse
+from django.shortcuts import *
 from output import views
+from output.database.SQL import video_analytics_sql, shared_sql
+from output.database.utility import run_query, run_query_dict, \
+    run_query_dict_list, run_query_raw, construct_query, get_dates_partners
 from output.views.common import get_geog_id
-from output.database.utility import run_query, run_query_dict, run_query_dict_list, run_query_raw, construct_query, get_dates_partners
+import datetime
+import json
+import math
 
 
 #Main view for the video module. Render's the main HTML page.
@@ -15,16 +18,16 @@ def video_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
 
-    tot_vid = run_query(video_analytics_sql.video_tot_video(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    tot_vid = run_query_raw(shared_sql.get_totals(geog, id, from_date, to_date, partners, "tot_vid"))[0][0];
+    tot_vid = 0 if tot_vid is None else tot_vid 
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
-    tot_avg = run_query(video_analytics_sql.video_avg_time(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['avg']
-    if (tot_avg<0):
-        tot_avg=0
-    search_box_params = views.common.get_search_box(request, video_analytics_sql.video_min_date)
+    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
+    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
@@ -73,8 +76,9 @@ def video_type_wise_pie(request):
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
+    print geog
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -91,12 +95,12 @@ def video_geog_pie_data(request):
     return_val = []
     return_val.append(["title","val",'url'])
     for item in vid_prod:
-        if(geog.upper()!= "VILLAGE"):
+        if(geog is None or geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
-            return_val.append([geog_name[item['id']][0],item['tot_pro'],url+'&'.join(temp_get_req_url)])
+            return_val.append([geog_name[item['id']][0], float(item['tot_pro']), url+'&'.join(temp_get_req_url)])
         else:
-            return_val.append([geog_name[item['id']][0],item['tot_pro'],''])
+            return_val.append([geog_name[item['id']][0], float(item['tot_pro']), ''])
 
     return HttpResponse(json.dumps(return_val))
 
@@ -176,12 +180,13 @@ def video(request):
     if(rel_vids_prac.count()>= 9):
         rel_vids = rel_vids_prac[:9]
     else:
-        rel_vids = list(rel_vids_prac)
+        rel_vids = set(rel_vids_prac)
         rel_vids_lang = rel_vids_all.exclude(pk__in=rel_vids_prac.values_list('pk',flat=True)).filter(language = vid.language)
-        rel_vids.extend(list(rel_vids_lang[:9-len(rel_vids)]))
+        rel_vids.update(list(rel_vids_lang[:9-len(rel_vids)]))
         if(len(rel_vids)< 9):
-            rel_vids.extend(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
-        
+            rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
+
+    rel_vids = sorted(list(rel_vids), key=lambda x: x.viewers, reverse=True)        
     return render_to_response('videopage.html',dict(vid = vid, \
                                                      tot_vid_scr = tot_vid_scr, \
                                                      tot_vid_adopt = tot_vid_adopt, \
@@ -252,6 +257,8 @@ def video_search(request):
         search_box_params['prac'] = prac_arr
     if(geog):
         geog = geog.upper();
+        if(geog=="COUNTRY"):
+            vids = vids.filter(village__block__district__state__country__id = int(id))
         if(geog=="STATE"):
             vids = vids.filter(village__block__district__state__id = int(id))
         elif(geog=="DISTRICT"):
@@ -260,9 +267,7 @@ def video_search(request):
             vids = vids.filter(village__block__id = int(id))
         elif(geog=="VILLAGE"):
             vids = vids.filter(village__id = int(id))
-        search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
-    else:
-        search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
+    search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
     
     if(partners):
         vids = vids.filter(village__block__district__partner__id__in = map(int,partners))
