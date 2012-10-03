@@ -230,7 +230,6 @@ function chartDraw(sec,subsec,top,subtop,sub,number) {
 	null_filtered_data.hideRows(null_filtered_data.getFilteredRows([{column: 0, value: null}]));
 	practice_bubble_chart.setDataTable(null_filtered_data);
 	exp_practice_bubble_chart.setDataTable(null_filtered_data);
-	document.getElementById("javascript_practice_bubble").style.height="300px";
 	practice_bubble_chart.draw();
 }
 

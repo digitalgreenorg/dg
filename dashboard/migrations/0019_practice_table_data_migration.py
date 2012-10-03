@@ -9,11 +9,11 @@ class Migration(DataMigration):
     def forwards(self, orm):
         orm['dashboard.practices'].objects.all().delete()
         for practicecomb in orm['video_practice_map.practicecombination'].objects.all():
-            practice_name=practicecomb.top_practice.name+";"
-            practice_name += ';' if practicecomb.sub_practice is None else practicecomb.sub_practice.name+";"
-            practice_name += ';' if practicecomb.utility is None else practicecomb.utility.name+";"
-            practice_name += ';' if practicecomb.type is None else practicecomb.type.name+";"
-            practice_name += ';' if practicecomb.subject is None else practicecomb.subject.name+";"
+            practice_name=practicecomb.top_practice.name+", "
+            practice_name += ', ' if practicecomb.sub_practice is None else practicecomb.sub_practice.name+", "
+            practice_name += ', ' if practicecomb.utility is None else practicecomb.utility.name+", "
+            practice_name += ', ' if practicecomb.type is None else practicecomb.type.name+", "
+            practice_name += ', ' if practicecomb.subject is None else practicecomb.subject.name+"."
             orm['dashboard.practices'].objects.create(id=practicecomb.id,practice_name=practice_name,practice_sector=practicecomb.top_practice,practice_subject=practicecomb.subject,practice_subsector=practicecomb.sub_practice,practice_subtopic=practicecomb.type,practice_topic=practicecomb.utility,seasonality=None,summary='')
         
         for vid_prac in orm['video_practice_map.videopractice'].objects.all():

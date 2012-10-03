@@ -117,7 +117,7 @@
 							<div id='videodatadiv2divdesc'>
 								<script type="text/javascript">	
 									
-									window.onload = function(){										
+									window.onload = function(){
 										var languagename = "{{vid.language.language_name}}";
 										var villagename = "{{vid.village.village_name}}";
 										var distname = "{{vid.village.block.district.district_name}}";
@@ -126,10 +126,8 @@
 										var prodenddate = "{{ vid.video_production_end_date|date:"d M Y" }}";
 										var farmerquant = "Farmer" + "{{actors.tot_actors|pluralize}}";
 										var farmeractor = "{% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}";	
-										var practiceshown = "{%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name}}{%if not forloop.last%}, {%endif%}{%endfor%}.";
-										practiceshown = practiceshown.toUpperCase(practiceshown);
+										var practiceshown = "{{vid.related_practice.practice_name|default:'NA'}}";
 										var summary = "{{vid.summary|escapejs}}"; 	
-										summary = summary.toUpperCase(summary);								
 										displaynumstat(farmerquant,languagename,villagename,distname,statename,prodtime,prodenddate,farmeractor,practiceshown,summary);	
 																																					
 									}								
@@ -141,7 +139,7 @@
 										<td class='videoinfotd1span' colspan='2'> Farmer{{actors.tot_actors|pluralize}}: {% for actor in actors.actors %}{{actor.person_name.upper}} {% endfor %}      </td>										
 									</tr>
 									<tr>
-										<td class='videoinfotd1span' colspan='2'> Practices Shown: {%for prac in vid.related_agricultural_practices.all%}{{prac.practice_name.upper}}{%if not forloop.last%}, {%endif%}{%endfor%} </td>
+										<td class='videoinfotd1span' colspan='2'> Practices Shown: {{vid.related_practice.practice_name|default:'NA'}}</td>
 									</tr>
 									<tr>
 										<td class='videoinfotd1'> Language: {{vid.language.language_name}} </td>
@@ -260,7 +258,7 @@
                                             <a class='videotitlelinks' href='../video/?id={{v.id}}'>{{v.title|title}}</a>
                                         </div>                                           
                                         <div id='contentdivrighttddiv22'>
-                                           {{v.related_practice.practice_name|default:' '}}
+                                           {{v.related_practice.practice_name|default:''}}
                                         </div>
                                         <div id='contentdivrighttddiv22'>
                                             {{v.viewers}} viewer{{v.viewers|pluralize}}
@@ -281,12 +279,12 @@
     	function bar_chart() {
     		$.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
     			var data = google.visualization.arrayToDataTable(json,false);
-
-    			var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],
-    					bar : {groupWidth: '80%'}};
-
-    			var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
-    			chart.draw(data, column_options);
+				if(json.length>1)
+					{
+	    				var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],bar : {groupWidth: '80%'}};
+	    				var chart = new google.visualization.ColumnChart(document.getElementById('bar_graph'));
+	    				chart.draw(data, column_options);					
+					}
     		});
     	}
 
