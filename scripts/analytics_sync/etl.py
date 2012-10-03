@@ -7,8 +7,8 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 from django.core.management import setup_environ
-sys.path.append('/home/ubuntu/code/dg_git')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
+sys.path.append('/home/ubuntu/code/dg_test')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_testbed/lib/python2.7/site-packages/')
 
 import settings
 setup_environ(settings)
