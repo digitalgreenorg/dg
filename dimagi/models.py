@@ -1,10 +1,10 @@
 from django.db import models
-Error_list = {}
-Error_list [-1] = 'SCREEENING_SAVE_ERROR'
-Error_list [-2] = 'SCREEENING_REAS_ERROR'                                # Leave blank if you want the error string to be the Exception that was caught
-Error_list [-3] = 'ADOPTION_SAVE_ERROR'
-Error_list [-4] = 'ADOPTION_READ_ERROR'
-Error_list [-5] = 'PMA_SAVE_ERROR'
+Error_list = dict({'SCREENING_SAVE_ERROR'  : -1 ,
+                   'SCREENING_READ_ERROR'  : -2 ,                                # Leave blank if you want the error string to be the Exception that was caught
+                   'ADOPTION_SAVE_ERROR'   : -3 ,
+                   'ADOPTION_READ_ERROR'   : -4 ,
+                   'PMA_SAVE_ERROR'        : -5    })
+
 
 class XMLSubmission(models.Model):
     submission_time = models.DateTimeField(auto_now=True)

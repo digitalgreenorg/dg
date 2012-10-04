@@ -59,8 +59,9 @@ def save_screening_data(xml_tree):
                 status['screening'] = screening.id
                 screening.farmer_groups_targeted = [screening_data['selected_group']] 
                 screening.save()
-            except Exception as Ex:
-                status['screening'] = -1
+            except Exception as ex:
+                status['screening'] = Error_list['SCREENING_SAVE_ERROR'] 
+                error_msg = unicode(ex)
                 
         
             # save person meeting attendance records 
@@ -73,13 +74,13 @@ def save_screening_data(xml_tree):
                                                     expressed_question = person['question'] )
                     pma.save()
                     status['pma'] += 1
-            except Exception as Ex:
-                status['pma'] = -5
-                error_msg = Error_list[status['pma']] + str(Ex)
+            except Exception as ex:
+                status['pma'] = Error_list['PMA_SAVE_ERROR'] 
+                error_msg = unicode(ex)
         
-        except Exception as Ex:
-            status['screening'] = -2
-            error_msg = Error_list[status['screening']] + str(Ex)
+        except Exception as ex:
+            status['screening'] = Error_list['SCREENING_READ_ERROR'] 
+            error_msg = unicode(ex)
             
     return status,error_msg
 
@@ -93,10 +94,10 @@ def save_adoption_data(xml_tree):
             screening_data['date'] = record.getElementsByTagName('date')[0].firstChild.data
             screening_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
             screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
-            error_msg = 'Successful'
-        except Exception as Ex:
-            status = -4
-            error_msg = Error_list[status['screening']] + str(Ex)
+            
+        except Exception as ex:
+            status = Error_list['ADOPTION_READ_ERROR'] 
+            error_msg = unicode(ex)
         
     
     # saving the person_adopt_practice record    
@@ -106,19 +107,20 @@ def save_adoption_data(xml_tree):
     try:
         pap.save()
         status = pap.id
-    except Exception as exception:
-        status = -3                             # -1 correspoding to error
-        
-    return status,error_msg
+        error_msg = 'Successful'
+    except Exception as ex:
+        status = Error_list['ADOPTION_SAVE_ERROR']                             # -1 correspoding to error
+        error_msg = unicode(ex)        
+    return status, error_msg
 
-if __name__ == "__main__":
-    xml_file = 'C:\Users\Yash\Documents\GitHub\dg\dimagi\submitted\sample1.xml'
-    xml_parse = minidom.parse(xml_file)
-    data = xml_parse.getElementsByTagName('data')
-    if data[0].attributes["name"].value.lower() == 'screening' :
-        status = save_screening_data(xml_parse)
-    elif data[0].attributes["name"].value.lower() == 'adoption' :
-        status = save_adoption_data(xml_parse)
-    else :
-        status = -1
-    print status
+#if __name__ == "__main__":
+#    xml_file = r'C:\Users\Yash\Documents\GitHub\dg\dimagi\submitted\sample1.xml'
+#    xml_parse = minidom.parse(xml_file)
+#    data = xml_parse.getElementsByTagName('data')
+#    if data[0].attributes["name"].value.lower() == 'screening' :
+#        status = save_screening_data(xml_parse)
+#    elif data[0].attributes["name"].value.lower() == 'adoption' :
+#        status = save_adoption_data(xml_parse)
+#    else :
+#        status = -1
+#    print status
