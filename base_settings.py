@@ -56,7 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -86,7 +86,7 @@ INSTALLED_APPS = (
     'south',
     'farmerbook',
     'video_practice_map',
-   )
+)
 
 LOGGING = {
     'version': 1,

@@ -288,7 +288,7 @@ public class ScreeningsTemplate extends BaseTemplate {
 									"</div>" +
 									"<div class='form-row farmer_groups_targeted  '>" +
 										"<div>" +
-											"<label for='id_farmer_groups_targeted' class='required'>Farmer groups targeted:</label>" +
+											"<label for='id_farmer_groups_targeted' class='required'>Groups targeted:</label>" +
 											//"<select multiple='multiple' onchange='filter_person();' name='farmer_groups_targeted' id='id_farmer_groups_targeted'>" +
 											"<select id='id_farmer_groups_targeted' name='farmer_groups_targeted' multiple='multiple'>" +
 											"</select>" +

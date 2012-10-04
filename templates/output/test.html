@@ -1,6 +1,243 @@
 <html>
-<head/>
-<body>
-hi {{id}}
-</body>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="/media/Output/JS/jsapi.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+>>>>>>> javascript_chart_migration
+
+	  function drawChart7() {
+	  	  $.getJSON('/analytics/test_data/?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url|safe}}', function(json){
+		            data = google.visualization.arrayToDataTable(json,false);
+		            /*data.addColumn({type:'string',role:'tooltip'});
+		            for(i=0;i<data.getNumberOfRows();i++)
+		            	{
+		            		data.setValue(i,10,"YO");
+		            	}*/
+		            var new_data=google.visualization.data.group(data,[1],[{'column': 6, 'aggregation': google.visualization.data.min, 'type': 'number'},
+   				                                                        {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+				                                                        {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+				                                                        {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
+
+// 		            	new_data.addColumn({type:'string',role:'tooltip'});
+// 			            for(i=0;i<new_data.getNumberOfRows();i++)
+// 			            	{
+// 			            		new_data.setValue(i,5,"YO");
+// 			            	}
+			            
+					pieChart = new google.visualization.ChartWrapper({
+    				'chartType': 'BubbleChart',
+    				'containerId': 'chart_div',
+    				'options': {
+      					'width': 600,
+      					'height': 600,
+      					'title': 'Number of Disseminations per practices',
+		                'hAxis': {title: 'Practices'},
+		                'vAxis': {title: 'Number of Dissemenations'},
+		                'bubble': {textStyle: {color: 'none'}},
+		                 'legend': {position:'none'}
+    				},
+    				'dataTable' : new_data 
+					});	
+					
+  					fillSelect(data.getDistinctValues(1),"top_prac","Any");
+  					fillSelect(data.getDistinctValues(2),"sub_prac","Any");
+  					fillSelect(data.getDistinctValues(3),"util","Any");
+  					fillSelect(data.getDistinctValues(4),"type","Any");
+  					fillSelect(data.getDistinctValues(5),"sub","Any");
+		            init();
+		  });
+	    }
+
+	  
+	  function chartDraw(top_prac,sub_prac,util,type,sub,number) {
+		  var plot_view=new google.visualization.DataView(data);
+		  var params=new Array;
+		  if (top_prac!="Any")
+		  {
+			  params.push({column: 1, value: top_prac });
+		  }
+		  if (sub_prac!="Any")
+		  {
+			  params.push({column: 2, value: sub_prac });
+		  }
+		  if (util!="Any")
+		  {
+			  params.push({column: 3, value: util });
+		  }
+		  if (type!="Any")
+		  {
+			  params.push({column: 4, value: type });
+		  }
+		  if (sub!="Any")
+		  {
+			  params.push({column: 5, value: sub });
+		  }
+		  if(params.length>0)
+			  {
+			  plot_view.setRows(plot_view.getFilteredRows(params));  
+			  }
+		  
+		  var new_data= google.visualization.data.group(plot_view,[parseInt(number)+1],[{'column': 6, 'aggregation': custom_rand, 'type': 'number'},
+		                                                                                    {'column': 7, 'aggregation': google.visualization.data.sum, 'type': 'number'},
+		                                                                                    {'column': 8, 'aggregation': google.visualization.data.min, 'type': 'string'},
+		  
+		                                                                                    {'column': 9, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
+		  var new_data1= new google.visualization.DataView(new_data);
+		  new_data1.hideRows(new_data1.getFilteredRows([{column: 0, value: null}]));
+		  
+		  
+		  pieChart.setDataTable(new_data1);
+		  
+				  pieChart.draw();
+		
+	  }
+	  
+	  function custom_rand(values) {
+		  return values[Math.floor((Math.random()*values.length)+1)];
+		}
+	  
+	  function fillSelect(values,sel_id,sel) {
+		  var null_ind=values.indexOf(null);
+		  if(null_ind!=-1)
+			  {
+			  	values.splice(null_ind,1);
+			  }
+		  
+		  var html_values="";
+		  i=0;
+		  html_values=html_values+"<option selected='selected'>Any</option>"
+		  for (item in values){
+			  if(values[item]==sel)
+				  {
+				  	html_values=html_values+"<option selected='selected'>"+values[item]+"</option>"
+				  }
+			  else
+				  {
+				  	html_values=html_values+"<option>"+values[item]+"</option>"
+				  }
+		  i=i+1;
+		  }
+		  $("#"+sel_id).html(html_values);
+	  }
+	  
+	  function ValChange(top_prac,sub_prac,util,type,sub,number) {
+		  //alert(top_prac+";"+sub_prac+";"+util+";"+type+sub)
+		  var data_view=new google.visualization.DataView(data);
+		  var params=new Array;
+		  if (top_prac!="Any")
+		  {
+			  params.push({column: 1, value: top_prac });
+		  }
+		  if (sub_prac!="Any")
+		  {
+			  params.push({column: 2, value: sub_prac });
+		  }
+		  if (util!="Any")
+		  {
+			  params.push({column: 3, value: util });
+		  }
+		  if (type!="Any")
+		  {
+			  params.push({column: 4, value: type });
+		  }
+		  if (sub!="Any")
+		  {
+			  params.push({column: 5, value: sub });
+		  }
+		  data_view.setRows(data_view.getFilteredRows(params));
+		  fillSelect(data_view.getDistinctValues(1),"top_prac",top_prac);
+		  fillSelect(data_view.getDistinctValues(2),"sub_prac",sub_prac);
+		  fillSelect(data_view.getDistinctValues(3),"util",util);
+		  fillSelect(data_view.getDistinctValues(4),"type",type);
+		  fillSelect(data_view.getDistinctValues(5),"sub",sub);
+		  chartDraw(top_prac,sub_prac,util,type,sub,number);
+		  
+	  }
+	  function init()
+	  {
+		  	fillSelect(data.getDistinctValues(1),"top_prac","Any");
+			fillSelect(data.getDistinctValues(2),"sub_prac","Any");
+			fillSelect(data.getDistinctValues(3),"util","Any");
+			fillSelect(data.getDistinctValues(4),"type","Any");
+			fillSelect(data.getDistinctValues(5),"sub","Any");
+			html="<option value=0 >Top Practice</option><option value=1 >Sub Practice</option><option value=2 >Utility</option><option value=3 >  Type</option><option value=4 selected='selected'>Subject</option>";
+			$("#practice").html(html);
+			chartDraw("Any","Any","Any","Any","Any",$("#practice").val());
+			
+		}
+</script>
+ </head>
+  <body>
+ 	<div class='searchtitle'>
+				Select Practice Level
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select prac' name='prac_n' id='practice' onChange="chartDraw(getElementById('top_prac').value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,this.value)">
+					<option value=0 >Top Practice</option>
+					<option value=1 >Sub Practice</option>
+					<option value=2 >Utility</option>
+					<option value=3 >  Type</option>
+					<option value=4 selected='selected'>Subject</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select top_prac' name='top_prac_n' id='top_prac' onChange="ValChange( this.value,document.getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+					<option selected='selected'>Any</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select sub_prac' name='sub_prac_n' id='sub_prac' onChange="ValChange(document.getElementById('top_prac').value,this.value,getElementById('util').value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+					<option selected='selected'>Any</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select utility' name='util_n' id='util' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,this.value,getElementById('type').value,getElementById('sub').value,getElementById('practice').value)">
+					<option selected='selected'>Any</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select type' name='type_n' id='type' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,this.value,getElementById('sub').value,getElementById('practice').value)">
+					<option selected='selected'>Any</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='searchbody'>
+		<div id='selectbody'>				
+			<div class='searchbody1' id='searchbody1_4'>
+				<select class='select subject' name='sub_n' id='sub' onChange="ValChange(document.getElementById('top_prac').value,getElementById('sub_prac').value,getElementById('util').value,getElementById('type').value,this.value,getElementById('practice').value)">
+					<option selected='selected'>Any</option>
+				</select>				
+			</div>							
+		</div>				
+	</div>
+	<div class='resetbtn'> <input id='Reset1' type='reset' onclick="init()"  value="Reset"> </div>
+				
+    <!--Div that will hold the dashboard-->
+    <div id="dashboard_div">
+      <!--Divs that will hold each control and chart-->
+      <div id="filter_div"></div>
+      <div id="chart_div"></div>
+    </div>
+    
+  </body>
 </html>

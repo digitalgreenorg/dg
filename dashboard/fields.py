@@ -1,5 +1,6 @@
-from south.modelsinspector import add_introspection_rules
+from django.core.exceptions import ValidationError
 from django.db.models import fields
+from south.modelsinspector import add_introspection_rules
 
 class PositiveBigIntegerField(fields.BigIntegerField):
     description = "Unsigned auto-increment Big integer"
@@ -34,7 +35,7 @@ class BigAutoField(fields.AutoField):
         try:
             return long(value)
         except (TypeError, ValueError):
-            raise exceptions.ValidationError(
+            raise ValidationError(
                 _("This value must be a long integer."))
 
 class BigForeignKey(fields.related.ForeignKey):
@@ -44,7 +45,7 @@ class BigForeignKey(fields.related.ForeignKey):
         # next lines are the "bad tooth" in the original code:
         if (isinstance(rel_field, BigAutoField) or
                 (not connection.features.related_fields_match_type and
-                isinstance(rel_field, BigIntegerField))):
+                isinstance(rel_field, PositiveBigIntegerField))):
             # because it continues here in the django code:
             # return PositiveBigIntegerField().db_type()
             # thereby fixing any BigAutoField as PositiveBigIntegerField

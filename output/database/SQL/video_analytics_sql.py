@@ -92,13 +92,22 @@ def video_type_wise_pie(geog, id, from_date, to_date, partners):
 
 def video_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PRACTICE_NAME as name", "COUNT(VID.id) as count"])
+    ##Change
+    sql_ds['select'].extend(["PRACTICE_NAME as name","sec.name as sec","subsec.name as subsec","top.name as top","subtop.name as subtop","sub.name as sub", "COUNT(VID.id) as count"])
+    #sql_ds['select'].extend(["PRACTICE_NAME as name","COUNT(VID.id) as count"])
+    ##
     sql_ds['from'].append("VIDEO VID");
-    sql_ds['join'].append(["VIDEO_related_agricultural_practices VRAP","VRAP.video_id = VID.id"])
-    sql_ds['join'].append(["PRACTICES P","VRAP.practices_id = P.id"])
+    sql_ds['join'].append(["PRACTICES P","VID.related_practice_id = P.id"])
+    ##Change
+    sql_ds['lojoin'].append(["practice_sector sec","sec.id = P.practice_sector_id"])
+    sql_ds['lojoin'].append(["practice_subsector subsec","subsec.id = P.practice_subsector_id"])
+    sql_ds['lojoin'].append(["practice_topic top","top.id = P.practice_topic_id"])
+    sql_ds['lojoin'].append(["practice_subtopic subtop","subtop.id = P.practice_subtopic_id"])
+    sql_ds['lojoin'].append(["practice_subject sub","sub.id = P.practice_subject_id"])
+    ##
     sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
     filter_partner_geog_date(sql_ds,'VID','VID.VIDEO_PRODUCTION_END_DATE',geog,id,from_date,to_date,partners)
-    sql_ds['group by'].append("PRACTICE_NAME")
+    sql_ds['group by'].append("P.id")
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 
@@ -115,34 +124,6 @@ def video_min_date(geog, id, from_date, to_date, partners):
 ###  SQLs for VIDEO profile page ####
 #####################################
 
-#Logic: If a person adopts a practice,
-# shown in the video, in 5-100 days of viewing;
-# it counts as adoption for that video.
-def get_adoption_for_video(id):
-    return """SELECT COUNT(*) as tot_adopt 
-        FROM PERSON_ADOPT_PRACTICE PAP
-        JOIN (SELECT person_id, practices_id, DATE_ADD(DATE, INTERVAL 1 DAY) AS start, DATE_ADD(DATE, INTERVAL 100 DAY) AS end 
-              FROM PERSON_MEETING_ATTENDANCE PMA
-              JOIN SCREENING_videoes_screened SVS on SVS.screening_id = PMA.screening_id
-              JOIN SCREENING SC on SC.id = PMA.screening_id
-              JOIN VIDEO_related_agricultural_practices VRAP on VRAP.video_id = SVS.video_id
-              WHERE SVS.video_id = """+str(id)+""") T 
-    ON T.person_id = PAP.person_id AND T.practices_id = PAP.practice_id AND DATE_OF_ADOPTION BETWEEN start AND end
-    """
-
-#similar to above. ids is list of ids
-def get_adoption_for_multiple_videos(ids):
-    return """SELECT VID.id as id, count(PAP.id) as count
-            FROM VIDEO VID
-            LEFT OUTER JOIN SCREENING_videoes_screened  SVS ON SVS.video_id = VID.id
-            LEFT OUTER JOIN PERSON_MEETING_ATTENDANCE PMA ON PMA.screening_id = SVS.screening_id
-            LEFT OUTER JOIN SCREENING SC ON SC.id = SVS.screening_id
-            LEFT OUTER JOIN VIDEO_related_agricultural_practices VRAP ON VRAP.video_id = SVS.video_id
-            LEFT OUTER JOIN PERSON_ADOPT_PRACTICE PAP ON PAP.person_id = PMA.person_id
-                AND (date_of_adoption BETWEEN DATE_ADD(DATE, INTERVAL 1 DAY)  AND DATE_ADD(DATE, INTERVAL 100 DAY))
-                AND PAP.practice_id = VRAP.practices_id
-            WHERE VID.id IN ("""+','.join(map(str,ids))+""")    
-            GROUP BY VID.id"""
 
 def get_screening_month_bar_for_video(id):
     sql_ds = get_init_sql_ds();
