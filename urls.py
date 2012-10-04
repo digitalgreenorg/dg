@@ -1,10 +1,10 @@
 from django.conf import settings
 
 from farmerbook import farmer_book_views
-from route import route
 from static_site_views import home
 from views import *
-
+from output.views import overview_analytics, screening_analytics, video_analytics, adoption_analytics, targets
+from output.views.common import drop_down_val, overview_line_graph, practice_change
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -139,7 +139,6 @@ urlpatterns = patterns('',
     (r'^dashboard/practicesforperson/((?P<person_id>\d*)/)?$', practices_seen_by_farmer),
     (r'^dashboard/practicesinvideos/$', practices_in_videos),
     (r'^$',home),
-    (r'^farmerbook/$', farmer_book_views.get_home_page),
     (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
     (r'^trial/?$', farmer_book_views.get_admin_panel),
     (r'^getvillagepage/?$', farmer_book_views.get_village_page),
@@ -152,5 +151,36 @@ urlpatterns = patterns('',
     (r'^videotask/', include('video_practice_map.urls')),
     (r'^dimagi/', include('dimagi.urls')),
     (r'^fbconnect/', include('fbconnect.urls')),
-    (r'^(?P<func_name>.*)/$',route),  #Routing call
+    (r'^analytics/overview_module/?$',overview_analytics.overview_module),
+    (r'^analytics/get_parent_geog_id/?$',overview_analytics.get_parent_geog_id),
+    (r'^analytics/screening_module/?$',screening_analytics.screening_module),
+    (r'^analytics/screening_tot_lines/?$',screening_analytics.screening_tot_lines),
+    (r'^analytics/screening_percent_lines/?$',screening_analytics.screening_percent_lines),
+    (r'^analytics/screening_per_day_line/?$',screening_analytics.screening_per_day_line),
+    (r'^analytics/screening_monthwise_bar_data/?$',screening_analytics.screening_monthwise_bar_data),
+    (r'^analytics/screening_practice_wise_scatter_data/?$',screening_analytics.screening_practice_wise_scatter_data),
+    (r'^analytics/screening_mf_ratio/?$',screening_analytics.screening_mf_ratio),
+    (r'^analytics/screening_geog_pie_data/?$',screening_analytics.screening_geog_pie_data),
+    (r'^analytics/get_dist_attendees_avg_att_avg_sc/?$',screening_analytics.get_dist_attendees_avg_att_avg_sc),
+    (r'^analytics/video_module/?$',video_analytics.video_module),
+    (r'^analytics/video_pie_graph_mf_ratio/?$',video_analytics.video_pie_graph_mf_ratio),
+    (r'^analytics/video_actor_wise_pie/?$',video_analytics.video_actor_wise_pie),
+    (r'^analytics/video_type_wise_pie/?$',video_analytics.video_type_wise_pie),
+    (r'^analytics/video_geog_pie_data/?$',video_analytics.video_geog_pie_data),
+    (r'^analytics/video_language_wise_scatter_data/?$',video_analytics.video_language_wise_scatter_data),
+    (r'^analytics/video_practice_wise_scatter/?$',video_analytics.video_practice_wise_scatter),
+    (r'^analytics/video_monthwise_bar_data/?$',video_analytics.video_monthwise_bar_data),
+    (r'^analytics/video/?$',video_analytics.video),
+    (r'^analytics/video_search/?$',video_analytics.video_search),
+    (r'^analytics/video_screening_month_bar_data/?$',video_analytics.video_screening_month_bar_data),
+    (r'^analytics/adoption_module/?$',adoption_analytics.adoption_module),
+    (r'^analytics/adoption_pie_graph_mf_ratio/?$',adoption_analytics.adoption_pie_graph_mf_ratio),
+    (r'^analytics/adoption_geog_pie_data/?$',adoption_analytics.adoption_geog_pie_data),
+    (r'^analytics/adoption_practice_wise_scatter/?$',adoption_analytics.adoption_practice_wise_scatter),
+    (r'^analytics/adoption_monthwise_bar_data/?$',adoption_analytics.adoption_monthwise_bar_data),
+    (r'^analytics/adoption_rate_line/?$',adoption_analytics.adoption_rate_line),
+    (r'^analytics/target_table/?$',targets.target_table),
+    (r'^analytics/drop_down_val/?$',drop_down_val),
+    (r'^analytics/overview_line_graph/?$',overview_line_graph),
+    (r'^analytics/practice_change/?$',practice_change),
 )
