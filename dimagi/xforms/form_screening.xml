@@ -1,4 +1,4 @@
-<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+﻿<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
 	<h:head>
 		<h:title>Screening</h:title>
 		<model>
@@ -26,7 +26,7 @@
 				</data>
 			</instance>
 			
-			<instance id="village" src="jr://fixture/item-list:village"/>
+			<instance id="village" src="C:/Users/Yash/Documents/GitHub/dg/dimagi/xforms/commcare_ota_backup.xml/fixture/item-list:village"/>
 			<instance id="group" src="jr://fixture/item-list:group"/>
 			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
@@ -34,7 +34,7 @@
 			
 			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
 			
-			<bind nodeset="/data/time" type="xsd:time" />
+			<bind nodeset="/data/time" type="xsd:time" required="true()"/>
 			<bind nodeset="/data/selected_village" required="true()"/>
 			<bind nodeset="/data/selected_mediator" required="true()"/>
 			<bind nodeset="/data/selected_group" required="true()"/>
@@ -51,7 +51,7 @@
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0"/>
 			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('person')/person_list/person[selected(/data/selected_group,group_id)])))"/>
 			<itext>
-				<translation lang="en" default="">
+				<translation lang="en">
 					<text id="form_done-label">
 						<value>Your form has been completed. Press Done to continue</value>
 					</text>
@@ -103,6 +103,60 @@
 					</text>
 					<text id="time-label">
 						<value>Time</value>
+					</text>
+				</translation>
+				<translation lang="tel" default="">
+					<text id="form_done-label">
+						<value> మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
+					</text>
+					<text id="number_of_attendees_display-label">
+						<value>హాజారు పట్టి</value>
+					</text>
+					<text id="attendance_record-label">
+						<value>హాజారు నమోదు</value>
+					</text>
+					<text id="index-label">
+						<value>క్రమ సంఖ్యా</value>
+					</text>
+					
+					<text id="question_asked-label">
+						<value>అడిగిన ప్రశ్న</value>
+					</text>
+					<text id="attended-label">
+						<value><output ref="/data/attendance_record/attendee_name"/></value>
+					</text>
+					<text id="attended_yes-label">
+						<value>వచ్చారు</value>
+					</text>
+					<text id="attended_no-label">
+						<value>రాలేదు</value>
+					</text>
+					<text id="interested-label">
+						<value>ఆసక్తి</value>
+					</text>
+					<text id="interested_yes-label">
+						<value>అవును</value>
+					</text>
+					<text id="interested_no-label">
+						<value>కాదు</value>
+					</text>
+					<text id="selected_village-label">
+						<value>గ్రామము</value>
+					</text>
+					<text id="selected_mediator-label">
+						<value>కార్యకర్త</value>
+					</text>
+					<text id="selected_group-label">
+						<value>గ్రూప్ పేరు</value>
+					</text>
+					<text id="selected_video-label">
+						<value>చిత్రం పేరు</value>
+					</text>
+					<text id="date-label">
+						<value>తేది</value>
+					</text>
+					<text id="time-label">
+						<value>సమయం</value>
 					</text>
 				</translation>
 			</itext>
