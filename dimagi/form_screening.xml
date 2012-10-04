@@ -1,44 +1,42 @@
-﻿<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:orx="http://openrosa.org/jr/xforms" xmlns="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
 	<h:head>
 		<h:title>Screening</h:title>
 		<model>
 			<instance>
 				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/14E94611-71B6-439E-9930-F5537CC14FC7" uiVersion="1" version="1" name="Screening">
-					<date/>
-					<time/>
+					<date />
+					<time />
 					<selected_village/>
 					<selected_group/>
 					<selected_video/>
-					<selected_mediator/>
-					<attendee_ids/>
+					<selected_mediator />
+					<attendee_ids />
 					<number_of_attendees_display/>
 					<num_people/>
-					<form_done/>
 					<attendance_record jr:template="">
-						<index/>
+						<index />
 						<attendee_name_display/>
-						<attendee_id/>
-						<attendee_name/>
-						<attended/>
-						<interested/>
+						<attendee_id />
+						<attendee_name />
+						<attended />
+						<interested />
 						<question_asked/>
 					</attendance_record>
 				</data>
 			</instance>
 			
-			<instance id="village" src="C:/Users/Yash/Documents/GitHub/dg/dimagi/xforms/commcare_ota_backup.xml/fixture/item-list:village"/>
+			<instance id="village" src="jr://fixture/item-list:village"/>
 			<instance id="group" src="jr://fixture/item-list:group"/>
 			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
 			<instance id="video" src="jr://fixture/item-list:video"/>
 			
 			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
-			
-			<bind nodeset="/data/time" type="xsd:time" required="true()"/>
-			<bind nodeset="/data/selected_village" required="true()"/>
-			<bind nodeset="/data/selected_mediator" required="true()"/>
-			<bind nodeset="/data/selected_group" required="true()"/>
-			<bind nodeset="/data/selected_video" required="true()"/>
+			<!-- Time widget: remove required="true()" because that doesn't work in the preview -->
+			<bind nodeset="/data/time" type="xsd:time" />
+			<bind nodeset="/data/selected_village" />
+			<bind nodeset="/data/selected_group" />
+			<bind nodeset="/data/selected_video" />
 			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[selected(/data/selected_group,group_id)]/id))"/>
 			<bind nodeset="/data/number_of_attendees_display"/>
 			<bind nodeset="/data/attendance_record"/>
@@ -46,15 +44,12 @@
 			<bind nodeset="/data/attendance_record/attendee_name_display"/>			
 			<bind nodeset="/data/attendance_record/attendee_id" calculate="selected-at(/data/attendee_ids, current()/../index)"/>
 			<bind nodeset="/data/attendance_record/attendee_name" calculate="instance('person')/person_list/person[selected(/data/selected_group,group_id) and id=current()/../attendee_id]/name"/>
-			<bind nodeset="/data/attendance_record/attended" required="true()"/>
+			<bind nodeset="/data/attendance_record/attended"  required="true()"/>
 			<bind nodeset="/data/attendance_record/interested" relevant="/data/attendance_record/attended &gt; 0"/>
 			<bind nodeset="/data/attendance_record/question_asked" type="xsd:string" relevant="/data/attendance_record/attended &gt; 0"/>
 			<bind nodeset="/data/num_people" calculate="if(/data/selected_group = '',0, int(count(instance('person')/person_list/person[selected(/data/selected_group,group_id)])))"/>
 			<itext>
-				<translation lang="en">
-					<text id="form_done-label">
-						<value>Your form has been completed. Press Done to continue</value>
-					</text>
+				<translation lang="en" default="">
 					<text id="number_of_attendees_display-label">
 						<value>Enter Attendance</value>
 					</text>
@@ -64,12 +59,14 @@
 					<text id="index-label">
 						<value>Current Index</value>
 					</text>
-					
+					<!--text id="attendee_name_display-label">
+						<value><output ref="/data/attendance_record/attendee_name" /></value>
+					</text-->
 					<text id="question_asked-label">
 						<value>Question Asked</value>
 					</text>
 					<text id="attended-label">
-						<value><output ref="/data/attendance_record/attendee_name"/></value>
+						<value><output ref="/data/attendance_record/attendee_name" /></value>
 					</text>
 					<text id="attended_yes-label">
 						<value>Yes</value>
@@ -103,60 +100,6 @@
 					</text>
 					<text id="time-label">
 						<value>Time</value>
-					</text>
-				</translation>
-				<translation lang="tel" default="">
-					<text id="form_done-label">
-						<value> మీ ఫోరం ఫిల్ అయ్యింది. ప్రెస్ డన్</value>
-					</text>
-					<text id="number_of_attendees_display-label">
-						<value>హాజారు పట్టి</value>
-					</text>
-					<text id="attendance_record-label">
-						<value>హాజారు నమోదు</value>
-					</text>
-					<text id="index-label">
-						<value>క్రమ సంఖ్యా</value>
-					</text>
-					
-					<text id="question_asked-label">
-						<value>అడిగిన ప్రశ్న</value>
-					</text>
-					<text id="attended-label">
-						<value><output ref="/data/attendance_record/attendee_name"/></value>
-					</text>
-					<text id="attended_yes-label">
-						<value>వచ్చారు</value>
-					</text>
-					<text id="attended_no-label">
-						<value>రాలేదు</value>
-					</text>
-					<text id="interested-label">
-						<value>ఆసక్తి</value>
-					</text>
-					<text id="interested_yes-label">
-						<value>అవును</value>
-					</text>
-					<text id="interested_no-label">
-						<value>కాదు</value>
-					</text>
-					<text id="selected_village-label">
-						<value>గ్రామము</value>
-					</text>
-					<text id="selected_mediator-label">
-						<value>కార్యకర్త</value>
-					</text>
-					<text id="selected_group-label">
-						<value>గ్రూప్ పేరు</value>
-					</text>
-					<text id="selected_video-label">
-						<value>చిత్రం పేరు</value>
-					</text>
-					<text id="date-label">
-						<value>తేది</value>
-					</text>
-					<text id="time-label">
-						<value>సమయం</value>
 					</text>
 				</translation>
 			</itext>
@@ -197,7 +140,9 @@
 				<value ref="id"/>
 			</itemset>
 		</select>
-		
+		<trigger ref="/data/number_of_attendees_display">
+			<label ref="jr:itext('number_of_attendees_display-label')"/>
+		</trigger>
 		<group>
 			<label ref="jr:itext('attendance_record-label')"/>
 			<repeat nodeset="/data/attendance_record" jr:count="/data/num_people">
@@ -228,8 +173,5 @@
 				</input>
 			</repeat>
 		</group>
-		<trigger ref="/data/form_done">
-			<label ref="jr:itext('form_done-label')"/>
-		</trigger>
 	</h:body>
 </h:html>
