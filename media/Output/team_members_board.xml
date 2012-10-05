@@ -29,6 +29,20 @@
 		<COMPANY>University of California, Berkeley School of Information</COMPANY>
 		<PAGELINK>http://www.kentarotoyama.org/</PAGELINK>
 	</TEAM>
+    <TEAM>
+		<NAME> Soumen Biswas</NAME>
+		<POSITION>Programme Director</POSITION>
+    	<COUNTRY> USA </COUNTRY>
+		<COMPANY> PRADAN</COMPANY>
+		<PAGELINK>http://in.linkedin.com/in/soumenbiswas</PAGELINK>
+	</TEAM>
+    <TEAM>
+		<NAME>Eric Walker</NAME>
+		<POSITION>Vice President, Corporate Services</POSITION>
+    	<COUNTRY> USA </COUNTRY>
+		<COMPANY>PATH</COMPANY>
+		<PAGELINK>http://www.path.org/about/executive-leadership.php#walker</PAGELINK>
+	</TEAM>
 	<TEAM>
 		<NAME>G.N.S Reddy</NAME>
 		<POSITION>Vice President</POSITION>    
@@ -52,13 +66,7 @@
 		<COMPANY>Microsoft Research India</COMPANY>
 		<PAGELINK>http://research.microsoft.com/en-us/people/indranim/default.aspx</PAGELINK>
 	</TEAM>
-	<TEAM>
-		<NAME>Vanaja Ramprasad</NAME>
-		<POSITION>Founder and Director</POSITION>    
-    	<COUNTRY>India</COUNTRY>
-		<COMPANY>GREEN Foundation</COMPANY>
-		<PAGELINK>http://www.greenconserve.com/team.html/</PAGELINK>
-	</TEAM>
+	
 	<TEAM>
 		<NAME>Tejesh Shah</NAME>
 		<POSITION>Director</POSITION>    

@@ -33,7 +33,7 @@
 	  border: 1px solid #E1E1E8;
 	  position:absolute;
 	  top:40px;  /* adjust value accordingly */
-	  margin-left: 1098px;  /* adjust value accordingly */
+	  right:30px;  /* adjust value accordingly */
 	  }
 	  #top_bar{
 		width:100%;
@@ -64,6 +64,23 @@
 		white-space: normal;
 	}
 	
+	.btn-custom {
+	  background-color: hsl(50, 100%, 30%) !important;
+	  background-repeat: repeat-x;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffd400", endColorstr="#997f00");
+	  background-image: -khtml-gradient(linear, left top, left bottom, from(#ffd400), to(#997f00));
+	  background-image: -moz-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -ms-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffd400), color-stop(100%, #997f00));
+	  background-image: -webkit-linear-gradient(top, #ffd400, #997f00);
+	  background-image: -o-linear-gradient(top, #ffd400, #997f00);
+	  background-image: linear-gradient(#ffd400, #997f00);
+	  border-color: #997f00 #997f00 hsl(50, 100%, 25%);
+	  color: #fff !important;
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+	  -webkit-font-smoothing: antialiased;
+	}
+	
 	.activeSlide {text-decoration:none;color:#999;background-position:0 -26px;cursor:default;}
 	.normalSlide {background-image:url(/media/farmerbook/images/bg_control_nav.png);color:#333;cursor:pointer;display:inline-block;position:relative;font-size:1.7em;height:13px;margin:0px 0 0 4px;outline:none;text-align:left;text-decoration:none;text-indent:-999em;width:13px;}
 
@@ -77,6 +94,7 @@
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-modal.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>
+	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-custompopover.js"></script>
 	
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -102,7 +120,22 @@
 		$(document).ready(function() {
 		     $('#myModal').hide();
 			//$('.carousel').carousel({ interval: 200000	});
-			$('.carousel').carousel({ pause: true, interval: false});			
+			$('.carousel').carousel({ pause: true, interval: false});
+			{% if type == "village" %}
+				villageClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'person' %}
+				personClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'csp' %}
+				cspClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'group' %}
+				groupClick('{{type_id}}')
+			{% endif %}
+			{% if type == 'partner' %}
+				partnerClick('{{type_id}}')
+			{%endif %}			
 		});
 		
 		function showLoading() {
@@ -226,6 +259,8 @@
 			$('#current_page').val(page_num);
 		}
 		
+		function fbconnectClick() {
+		}
 		
 		function initialize() {
 			$(function(){
@@ -271,159 +306,27 @@
 				};				
 			 }
 			
-			var gradeArray = [[10000000000538,'A'],[10000000000537,'A'],[10000000020106,'A'],[7000001207,'A'],[10000000000305,'A'],[10000000000536,'A'],[10000000000342,'A'],[10000000019968,'A'],[10000000000309,'A'],[10000000020104,'A'],[10000000000341,'A'],[10000000019988,'A'],[10000000019967,'A'],[10000000000307,'A'],[10000000019865,'B'],[10000000000389,'B'],[10000000020119,'B'],[10000000019860,'B'],[10000000019985,'B'],[10000000019864,'B'],[10000000019873,'B'],[10000000019874,'B'],[10000000000507,'B'],[10000000020105,'B'],[10000000019969,'B'],[10000000020444,'B'],[10000000020572,'B'],[10000000000313,'B'],[10000000019841,'B'],[10000000019835,'B'],[10000000019975,'B'],[10000000020120,'B'],[10000000019978,'B'],[10000000000306,'B'],[10000000020370,'B'],[47000051353,'B'],[10000000000249,'B'],[10000000019922,'B'],[10000000020394,'B'],[10000000000074,'B'],[10000000000504,'B'],[10000000019862,'B'],[10000000000103,'B'],[47000052364,'B'],[10000000019918,'B'],[10000000000102,'B'],[10000000000099,'B'],[10000000020110,'B'],[47000001122,'B'],[47000056970,'B'],[10000000000031,'B'],[10000000019913,'B'],[10000000019842,'B'],[47000001038,'C'],[34000003805,'C'],[10000000000096,'C'],[10000000000406,'C'],[10000000000100,'C'],[10000000000119,'C'],[10000000000514,'C'],[10000000019834,'C'],[10000000019883,'C'],[10000000019854,'C'],[10000000019891,'C'],[10000000019889,'C'],[10000000000217,'C'],[10000000020448,'C'],[10000000000093,'C'],[10000000000122,'C'],[10000000000120,'D'],[10000000000393,'D'],[10000000000230,'D'],[10000000000053,'D'],[47000001044,'D'],[10000000000067,'D'],[10000000000394,'D'],[10000000019880,'D'],[10000000020020,'D'],[10000000000048,'D'],[10000000000052,'D'],[10000000018676,'D'],[10000000019902,'D'],[10000000019901,'D']];
 			$.getJSON("/getvillages",function(json){
 				$.each(json,function(i){
-					vil_id = json[i];			
-					var latLng = new google.maps.LatLng(23.0800 + 0.5 * Math.random(), 85.2800 + 1 * Math.random());
-					markers[i] = new google.maps.Marker({'position': latLng, 'icon': '/media/farmerbook/images/yellowc.png'});			  
-					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
+					vil_details = json[i];
+					//console.log(json[i].grade);
+					var latLng = new google.maps.LatLng(vil_details.latitude, vil_details.longitude);
+					if(vil_details.grade == 'A') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/greena.png'});
+					} else if(vil_details.grade == 'B') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					} else if(vil_details.grade == 'C') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/yellowc.png'});
+					} else if(vil_details.grade == 'D') {
+						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+					}
+					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_details.id));
 				});
-				var bel_vil_ids = new Array(10000000019913, 10000000020394, 10000000000514, 10000000019834, 10000000019835, 10000000019841, 10000000019842)
-				for(var i=0; i<bel_vil_ids.length; i++) {
-					//var vil_id = i;
-					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
-					var marker ;//= new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});; 
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//alert('markign');
-					
-				}
-				
-				var mys_vil_ids = new Array(47000001038, 47000001044, 47000001122, 47000051353, 47000052364, 47000056970)
-				for(var i=0; i<mys_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(12.3024 + 0.1 * Math.random(), 76.6386 + 0.1 * Math.random());
-					var marker// = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/blue_markerA.png'});
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mys_vil_ids[i]));
-				}
-				
-				var dhr_vil_ids = new Array(10000000000048, 10000000000217, 10000000000230, 10000000018676, 10000000019901, 10000000019902)
-				for(var i=0; i<dhr_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(15.52 + 0.1 * Math.random(), 74.34 + 0.1 * Math.random());
-					var marker = new google.maps.Marker({'position': latLng});
-					for(var index=0; index<gradeArray.length; index++) {
-						if (gradeArray[index][0] == bel_vil_ids[i]) {
-							if(gradeArray[index][1] == 'A') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/greena.png'});	
-							} else if(gradeArray[index][1] == 'B') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-							} else if(gradeArray[index][1] == 'C') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							} else if(gradeArray[index][1] == 'D') {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/redd.png'});	
-							} else {
-								marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/yellowc.png'});	
-							}
-							markers.push(marker);
-							google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], bel_vil_ids[i]));
-							//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						}
-						
-					}
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
-				}
-				
-				var mbnr_vil_ids = new Array(10000000020271, 10000000020439, 10000000020509);
-				for(var i=0; i< mbnr_vil_ids.length; i++) {
-					var latLng = new google.maps.LatLng(16.42 + 0.2 * Math.random(), 77.58 + 0.1 * Math.random());
-					var marker = new google.maps.Marker({'position': latLng});
-					
-					marker = new google.maps.Marker({'position': latLng, icon: '/media/farmerbook/images/orangeb.png'});	
-					markers.push(marker);
-					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], mbnr_vil_ids[i]));
-					//google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_id));
-						
-						
-					
-					//markers.push(marker);
-					//google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], dhr_vil_ids[i]));
-				}			
-				
-				var markerCluster = new MarkerClusterer(map, markers);
-				for(var i=0; i<markers.length; i++) {
-					//markers[i].setMap(map);
-				}
+				var markerCluster = new MarkerClusterer(map, markers);				
 					
 			});						
 		}
 		
-		(function($) {
-	        $.fn.ellipsis = function()
-	        {
-	                return this.each(function()
-	                {
-	                        var el = $(this);
-
-	                        if(el.css("overflow") == "hidden")
-	                        {
-	                                var text = el.html();
-	                                var multiline = el.hasClass('multiline');
-	                                var t = $(this.cloneNode(true))
-	                                        .hide()
-	                                        .css('position', 'absolute')
-	                                        .css('overflow', 'visible')
-	                                        .width(multiline ? el.width() : 'auto')
-	                                        .height(multiline ? 'auto' : el.height())
-	                                        ;
-
-	                                el.after(t);
-
-	                                function height() { return t.height() > el.height(); };
-	                                function width() { return t.width() > el.width(); };
-
-	                                var func = multiline ? height : width;
-
-	                                while (text.length > 0 && func())
-	                                {
-	                                        text = text.substr(0, text.length - 1);
-	                                        t.html(text + "...");
-	                                }
-
-	                                el.html(t.html());
-	                                t.remove();
-	                        }
-	                });
-	        };
-	})(jQuery);
-
 		</script>
 
 <!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
@@ -436,10 +339,9 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
         <div class="container" style="background-color:#6D9D30;width:100%">
           <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
 		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
-		  <div>
-			<input type="text" class="span2" style="float:right; margin-left:10px; margin-top:6px;margin-right:3px;margin-bottom:0px;" placeholder="search coming soon...">
-			
-		  </div>
+		  <a href="javascript:void(0);" onclick="fbconnectClick()" style="width:100px;float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;">
+			<img src='/media/farmerbook/images/facebook-connect.png'>
+		  </a>
         </div>      
     </div>
 	<div id="map_canvas" style=""></div>
@@ -562,6 +464,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				</a>			
 	</div>
 	{% load humanize %}
+	{% load customtags%}
 	<div id="map_right_panel">
 			<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:80%; margin-left:-5px;color:#6D9D30">Service Providers</span> </div>
@@ -575,7 +478,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					
 					<div class="sp_details"> 
 					<a href="javascript:void(0);" onclick="cspClick({{csp.id}})" style="color: #524D4D;font-weight: bold;">
-					{{csp.name}}</a> <span>facilitated {{csp.screenings|intcomma}} screenings and {{csp.adoptions|intcomma}} adoptions.</span>
+					{{csp.name|truncchar:18}}</a> <span>facilitated {{csp.screenings|intcomma}} screenings and {{csp.adoptions|intcomma}} adoptions.</span>
 					</div>
 					
 				</div>
@@ -596,7 +499,9 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			
 				<div style=" margin-top:3px;"><a href='javascript:void(0);' onclick="partnerClick({{partner.1.0}})" style="color: #524D4D;font-weight: bold;">
 					<img src="http://s3.amazonaws.com/dg_farmerbook/partner/{{partner.1.0}}.jpg"" style="margin-right:5px;width:45px; height:30px;float:left;"></a> 
-					<div><a href='http://www.asaindia.org/' target='_blank'><span style="color: #524D4D;font-weight: bold;">{{partner.1.1}} </a></span>serves {{partner.1.2|intcomma}} villages reaching {{partner.1.3|intcomma}} farmers</div>
+					<div><a href='javascript:void(0);' onclick="partnerClick({{partner.1.0}})" style="color: #524D4D;font-weight: bold;">
+					<span style="color: #524D4D;font-weight: bold;">{{partner.1.1}} </a>
+					</span>serves {{partner.1.2|intcomma}} villages reaching {{partner.1.3|intcomma}} farmers</div>
 				</div>
 				{% endfor %}
 						

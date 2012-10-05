@@ -3,20 +3,17 @@
 <div class='vil_left_panel' style="margin-left: 0px; height: 550px;">
 <div class="left_panel_top">
 
-<div id="district_label" >{{ left_panel_stats.vil_details.0.2 }} | {{ left_panel_stats.vil_details.0.3 }}</div>
+<div id="district_label" >{{ left_panel_stats.vil_details.0 }} | {{ left_panel_stats.vil_details.1 }}</div>
 			<center><img id="img_container" style="width:100px; height:100px; border: 1px solid #6D9D30;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.csp_details.0.0}}.jpg"></center>
 		<div id="name_label" > <center>{{ left_panel_stats.csp_details.0.1  }}</center></div>
 		<div id="district_label" ><center>
-		{% for v in left_panel_stats.vil_details %}
+		{% for v in left_panel_stats.vil_info %}
 			<a href="javascript:void(0)" onclick='villageClick({{v.0}})'>
 			{{v.1|lower|capfirst}}</a>
 			{% if not forloop.last %}|  {% endif%}
 		{% endfor %}
 			</center>
 		</div>
-	{% if left_panel_stats.start_date %}
-	<div class="group_label" > <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }}</center></div>
-	{% endif %}
 </div>
 
 <div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
@@ -24,24 +21,40 @@
 <div class="bar "  style="width: {{left_panel_stats.adoption_rate_width|floatformat:1 }}% ;"><p> {{left_panel_stats.adoption_rate|floatformat:1 }}</p>
 </div>
 </div>
-		
 {% load humanize %}
 {% load customtags%}
+	<table style="width:250px;">	
+				<tr>
+					<td align="center">{{ left_panel_stats.start_date|date:"M Y" }}</td>
+					<td align="center">{{left_panel_stats.screenings_disseminated|intcomma }}</td>
+					<td align="center">{{ left_panel_stats.total_adoptions|intcomma }}</td>
+				</tr>
+				<tr>
+					<td align="left"><b>Joined</b></td>
+					<td align="center"><b>Screenings</b></td>
+					<td align="center"><b>Adoptions</b></td>
+				</tr>
+	</table>
+		
+
 <div class="left_panel_bottom" style="padding-top: 0px;">
 <div class='horizontal_line'></div>
+<!--
 <div class='statsLabel'>Screenings</div>
 <div class='statsValue'>{{left_panel_stats.screenings_disseminated|intcomma }}</div>
 <div class='horizontal_line'></div>
 <div class='statsLabel'>Adoptions</div>
 <div class='statsValue'>{{ left_panel_stats.total_adoptions|intcomma }}</div>
 <div class='horizontal_line'></div>
+-->
 
 	
-
+{% if left_panel_stats.alloted_groups%}
 <div class='group_members'>
 	<div class="section_title">
 		<span style="font-size: 90%; margin-left: -5px; color: #6D9D30">Groups ( {{left_panel_stats.nalloted_groups }} )</span>
 </div>
+
 <input type='hidden' id='current_page' /> <input type='hidden' id='show_per_page' />
 
 <div id="pag_content">
@@ -56,15 +69,17 @@
 	</div>
 	{% endfor %}
 </div>
-<div id='page_navigation' style='clear:both;margin-bottom: 5px;'></div>
+<center><div id='page_navigation' style='clear:both;margin-bottom: 5px;'></div></center>
+{% endif %}
 </div>
+<div class='horizontal_line'> </div>
 		<div class = "imgContainerLabel">Partner</div>
 		<div style= "width:100px; height:70px; margin-right:10px;margin-left:5px; border: 1px solid green;"src=''>
 			<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})">
 			<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.partner_details.0.0}}.jpg"></a>
 		</div>
 		<div style="width:100px; margin-left:5px; overflow:hidden;">
-			<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})">{{ left_panel_stats.partner_details.0.1 }}</a>
+			<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner_details.0.0}})"><center>{{ left_panel_stats.partner_details.0.1 }}</center></a>
 		</div>
 </div>
 </div>
@@ -97,11 +112,11 @@
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-								<img title="{{ vid.title|lower|capfirst}}" src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
-							{% if vid.adopters %}							
-							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+							<!-- {% if vid.adopters %}							
+							<div style='margin-top:-20px; margin-left:0px;position:relative;right:-40px'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
 							{% if vid.interested %}
@@ -114,23 +129,23 @@
 									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% endif %}
 
-							{% endif %}
+							{% endif %} -->
 
 							<div class="question" style="margin-top:0px;">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}"  target='_blank' >{{ vid.title|truncchar:30|lower|capfirst }}</a> 
 							</div>	
 							
-							
+							<!-- 
 									{% if vid.screenings %}
 									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
 									{% endif %}
 									{% if vid.farmers_attended %}
 									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
-									{% endif %}
+									{% endif %} -->
 
 							
 							
-								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
+								<div class="question" style="margin-top:0px;">Last screened on {{ vid.last_seen_date|date:"M d, Y" }} </div>
 							
 
 						</li>
@@ -161,15 +176,18 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-						<center><img src={{person.photo_link}}>
+						<center><a href="javascript:void(0);" onclick="cspClick({{ person.id }})">
+						<img src={{person.photo_link}}>
+						</a>
 						<div class='csp_name'>
-							<a href="javascript:void(0);"
-								onclick="cspClick({{ person.id }})">{{ person.name }}</a>
+							<a href="javascript:void(0);" onclick="cspClick({{ person.id }})">{{ person.name }}</a>
 						</div></center>
+						<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last screened 
+								{{ person.last_video|lower|capfirst|truncchar:35}} on ({{ person.last_screened|date:"M d,Y" }})</div>
 
 
 
-<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+<div id="progress_bar_label" style="margin-right:5px;">Adoptions per Screening</div>
 
 							<div class="progress progress-striped">
 							  <div class="bar "  style="width: {{person.ratewidth|floatformat:1 }}% ;"><p> {{ person.rate|floatformat:1 }}</p></div>
@@ -180,13 +198,13 @@
 		<table width="200">		
 			<tr>
 				<td align="left">{{ person.start|date:"M Y" }}</td>
-				<td align="left"> {{ person.screenings|intcomma}}</td>
-				<td align="left"> {{ person.adoptions|intcomma}}</td>
+				<td align="center"> {{ person.screenings|intcomma}}</td>
+				<td align="center"> {{ person.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
-				<td align="left"><b> Started</b></td>
-				<td align="left"><b> Screenings</b></td>
-				<td align="left"><b>Adoptions</b></td>
+				<td align="left"><b>Joined</b></td>
+				<td align="center"><b>Screenings</b></td>
+				<td align="center"><b>Adoptions</b></td>
 			</tr>
 		</table>	
 						
@@ -218,56 +236,10 @@
 
 
 <script type="text/javascript">
+			$(function(){
+			   $("[rel=custompopover]").custompopover();
+			});
 var videos_watched_html;
-function person_click(person_id) {
-	$("#myModal").html("");
-	$("#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		 // alert($("div#content").html());
-		  mixpanel.track("Person Page Loaded")
-		  });
-}
-
-function groupClick(group_id) {
-	$("#myModal").html("");
-	$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		 // alert($("div#content").html());
-		  mixpanel.track("Group Page Loaded")
-		  });
-}
-
-
-
-
-
-function partnerClick(partner_id) {
-	
-	$("div#myModal").load('/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
-		  if (status == "error") {
-			var msg = "Sorry but there was an error: ";
-			alert(msg + xhr.status + " " + xhr.statusText);
-		  }
-		  //alert('Load was performed.');
-		  $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
-					 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
-		  $('#myModal').show();
-		
-		  $('#myModal').modal();
-		 
-		 mixpanel.track("Person Page Loaded");
-		  
-		});	
-}
-
 function ajax_tab_click(clicked, village_id) {
     if(clicked=="videos_produced") {
 		videos_watched_html = $("div#top_tabcontent").html();

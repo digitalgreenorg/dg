@@ -1,25 +1,41 @@
-from django.shortcuts import *
-from django.http import Http404, HttpResponse
 from dashboard.models import *
-from output.database  import utility
-from output.database.SQL import shared_sql, overview_analytics_sql
-from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
+from django.http import Http404, HttpResponse
+from django.shortcuts import *
+from django.template import Template, Context
+from output.database import utility
+from output.database.SQL import shared_sql, overview_analytics_sql, \
+    screening_analytics_sql
+from output.database.SQL.shared_sql import practice_options_sql
+from output.database.utility import run_query, run_query_raw, run_query_dict, \
+    run_query_dict_list, construct_query, get_dates_partners
 import datetime
-import django
-import re, random, cjson
+import json
+import random
+import re
 
+##DELETE
+from output.database.SQL  import video_analytics_sql, shared_sql
+
+def test(request):
+    return render_to_response('test.html')
+
+def test_data(request):
+    geog="country"
+    id = 1
+    from_date, to_date, partners = None,None,[]
+    return scatter_chart_data(video_analytics_sql.video_practice_wise_scatter, \
+                                           geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
 def home_with_analytics():
     tot_scr = Screening.objects.count()
     tot_vid = Video.objects.filter(video_suitable_for = 1).count()
     tot_per = Person.objects.exclude(date_of_joining = None).count()
     analytics_data = dict(tot_scr = tot_scr, tot_vid = tot_vid, tot_per = tot_per)
-    return render_to_response('base_home.html', dict(analytics_data = analytics_data))
-
-def test_output(request,geog,id=None):
-
-    #return render_to_response('amcolumn.html')
-    return render_to_response('test.html',{'flash_geog':geog,'id':id})
+    #Randomly retreiving person ids for home page thumbnails
+    person_data = Person.farmerbook_objects.all().order_by('?')[:18].values_list('id', 'village__village_name', 
+                                    'village__block__block_name', 'village__block__district__district_name')
+    #print len(person_data)
+    return render_to_response('base_home.html', dict(analytics_data = analytics_data, person_data = person_data))
 
 
 #function for breadcrumbs
@@ -78,6 +94,81 @@ def get_search_box(request, min_date_func=None):
 
     return search_box_params
 
+def practice_change(request):
+    
+    sec=request.GET.get('sec')
+    subsec=request.GET.get('subsec')
+    top=request.GET.get('top')
+    subtop=request.GET.get('subtop')
+    sub=request.GET.get('sub')
+    if(sec=="-1"):
+        sec=None
+    if(subsec=="-1"):
+        subsec=None
+    if(top=="-1"):
+        top=None
+    if(subtop=="-1"):
+        subtop=None
+    if(sub=="-1"):
+        sub=None        
+    
+    sql_result = practice_options(sec,subsec,top,subtop,sub)
+    
+    html_sec = """
+    <option value='-1'>Any Sector</option>
+    {% for key,item in sql_result.0 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_subsec = """
+    <option value='-1'>Any Subsector</option>
+    {% for key,item in sql_result.1 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_top = """
+    <option value='-1'>Any Topic</option>
+    {% for key,item in sql_result.2 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_subtop = """
+    <option value='-1'>Any Subtopic</option>
+    {% for key,item in sql_result.3 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    html_sub = """
+    <option value='-1'>Any Subject</option>
+    {% for key,item in sql_result.4 %}
+        <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+    {%endfor%}
+    """
+    
+    def render_option(option_string, context_dict):
+        html = Template(option_string)
+        return html.render(Context(context_dict))  
+    
+    return HttpResponse(json.dumps(map(render_option, [html_sec, html_subsec, html_top, html_subtop, html_sub], [dict(sql_result=sql_result)] * 5)))
+                                             
+def practice_options(sec, subsec, top, subtop, sub):
+    tuple_val=run_query_raw(practice_options_sql(sec, subsec, top, subtop, sub))
+    list_dict=[{}, {}, {}, {}, {}]
+    for i in range(len(tuple_val)):
+        val=tuple_val[i]
+        for j in range(len(val)/2):
+            if(val[j*2]!=None):
+                list_dict[j][val[j*2]]=[val[(j*2)+1]]
+                
+    args = [sec, subsec, top, subtop, sub]                
+    for i in range(len(args)):
+        if args[i] is not None:
+            list_dict[i][int(args[i])].append('true')
+    
+    list_dict = [sorted(i.iteritems(), key=lambda x: x[1][0]) for i in list_dict]
+
+    return list_dict
+
 #Helper function to return geog, id from request object.
 def get_geog_id(request):
     return request.GET['geog'].upper(),int(request.GET['id'])
@@ -119,21 +210,21 @@ def drop_down_val(request):
         geog_parent = geog_list[geog_list.index(geog)-1]
 
 
-    temp = """
+    html_option = """
     <option value='-1'>Select {{geog|title}}</option>
     {% for row in rs %}
     <option value="{{row.id}}">{{row.name}}</option>
     {%endfor%}
     """
-    t = django.template.Template(temp);
+    t = Template(html_option);
     rs = run_query(shared_sql.search_drop_down_list(geog=geog,geog_parent=geog_parent,id=id));
-    html = t.render(django.template.Context(dict(geog=geog,rs=rs)))
+    html = t.render(Context(dict(geog=geog,rs=rs)))
 
     return HttpResponse(html)
 
 
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
-#type can be ['prod','screen','prac','person','adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+#type can be ['prod','screen','prac','person','adopt']
 #       Based on the 'type', it generates the data for that set only
 #       If 'type' is not specified, it generates for all.
 def overview_line_graph(request):
@@ -141,55 +232,39 @@ def overview_line_graph(request):
     from_date, to_date, partners = get_dates_partners(request)
 
     if('type' in request.GET):
-        type = request.GET.getlist('type')
+        graph_type = request.GET.getlist('type')
     else:
-        type = ['prod', 'screen', 'prac', 'person', 'adopt', 'prod_tar', 'screen_tar', 'adopt_tar']
+        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt']
 
-    if('prod' in type):
+    if('prod' in graph_type):
         vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         vid_prod_rs = []
 
-    if('screen' in type):
+    if('screen' in graph_type):
         sc_rs = run_query_dict(shared_sql.overview_line_chart(type='screening',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         sc_rs = []
 
-    if('adopt' in type):
+    if('adopt' in graph_type):
         adopt_rs = run_query_dict(shared_sql.overview_line_chart(type='adoption',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         adopt_rs = []
 
-    if('prac' in type):
+    if('prac' in graph_type):
         prac_rs = run_query_dict(shared_sql.overview_line_chart(type='practice',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         prac_rs = []
 
-    if('person' in type):
+    if('person' in graph_type):
         person_rs = run_query_dict(shared_sql.overview_line_chart(type='person',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
     else:
         person_rs = []
     
-    if('village' in type):
+    if('village' in graph_type):
         village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id,from_date=from_date, to_date=to_date, partners=partners));
     else:
         village_rs = []
-
-    if('prod_tar' in type):
-        prod_tar_rs = run_query_dict(shared_sql.target_lines(type='prod_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        prod_tar_rs = []
-
-    if('adopt_tar' in type):
-        adopt_tar_rs = run_query_dict(shared_sql.target_lines(type='adopt_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        adopt_tar_rs = []
-
-    if('screen_tar' in type):
-        screen_tar_rs = run_query_dict(shared_sql.target_lines(type='screen_tar',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date')
-    else:
-        screen_tar_rs = []
-
 
     start_date = today = datetime.date.today()
     if vid_prod_rs:
@@ -202,15 +277,8 @@ def overview_line_graph(request):
         start_date = min(start_date,*(prac_rs.keys()))
     if person_rs:
         start_date = min(start_date,*(person_rs.keys()))
-    if screen_tar_rs:
-        start_date = min(start_date,*(screen_tar_rs.keys()))
-    if adopt_tar_rs:
-        start_date = min(start_date,*(adopt_tar_rs.keys()))
-    if prod_tar_rs:
-        start_date = min(start_date,*(prod_tar_rs.keys()))
-        
-    
-   ###Calculating village operational on each day.
+
+    ###Calculating village operational on each day.
     
     #village_rs -> temp. temp is a dictionary of date vs list of village IDS
     temp = {}
@@ -220,37 +288,37 @@ def overview_line_graph(request):
         else:
             temp[i[0]] = [i[1]]
           
-   #vil_vals is cumulatively added list of villages for every date.
-   #i.e. vil_vals is a dictionary of date to list of villages that had screening on any date before that.  
+    #vil_vals is cumulatively added list of villages for every date.
+    #i.e. vil_vals is a dictionary of date to list of villages that had screening on any date before that.  
     vil_vals = {}
     min_date = start_date;
     max_date = today
     if(min_date in temp):
-    	vil_vals[min_date] = temp[min_date]
+        vil_vals[min_date] = temp[min_date]
     else:
-    	vil_vals[min_date] = []
+        vil_vals[min_date] = []
     min_date = min_date + datetime.timedelta(days=1)
     while min_date <= max_date:
-    	vil_vals[min_date] = vil_vals[min_date - datetime.timedelta(days=1)][:]
-    	if min_date in temp:
-    		vil_vals[min_date].extend(temp[min_date])
-    	min_date = min_date + datetime.timedelta(days=1)
-    	
+        vil_vals[min_date] = vil_vals[min_date - datetime.timedelta(days=1)][:]
+        if min_date in temp:
+            vil_vals[min_date].extend(temp[min_date])
+        min_date = min_date + datetime.timedelta(days=1)
+        
     min_date =  start_date + datetime.timedelta(days=61)
     
     while min_date <= max_date:
-    	vil_vals[max_date] = len(set(vil_vals[max_date][len(vil_vals[(max_date - datetime.timedelta(days=61))]):]))
-    	max_date = max_date - datetime.timedelta(days=1)	
+        vil_vals[max_date] = len(set(vil_vals[max_date][len(vil_vals[(max_date - datetime.timedelta(days=61))]):]))
+        max_date = max_date - datetime.timedelta(days=1)	
     while start_date <= max_date:
-    	vil_vals[max_date]  = len(set(vil_vals[max_date]))
-    	max_date = max_date - datetime.timedelta(days=1)
-		
+        vil_vals[max_date]  = len(set(vil_vals[max_date]))
+        max_date = max_date - datetime.timedelta(days=1)
+
     #End of Village Operational calculation
 
     diff = (today - start_date).days
 
     str_list = []
-    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = sum_vid_tar = sum_sc_tar = sum_adopt_tar = 0
+    sum_vid = sum_sc = sum_adopt =sum_prac = sum_person = 0
     for i in range(0,diff+1):
         iter_date = start_date + datetime.timedelta(days=i)
 
@@ -264,69 +332,37 @@ def overview_line_graph(request):
             sum_prac += prac_rs[iter_date][0]
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
-        if iter_date in prod_tar_rs:
-            sum_vid_tar += prod_tar_rs[iter_date][0]
-        if iter_date in screen_tar_rs:
-            sum_sc_tar += screen_tar_rs[iter_date][0]
-        if iter_date in adopt_tar_rs:
-            sum_adopt_tar += adopt_tar_rs[iter_date][0]
 
-        append_str = str(iter_date) +';'
-        if('prod' in type): append_str += str(sum_vid)+';'
-        if('screen' in type): append_str += str(sum_sc)+';'
-        if('adopt' in type): append_str += str(sum_adopt)+';'
-        if('prac' in type): append_str +=  str(sum_prac)+';'
-        if('person' in type): append_str += str(sum_person)+';'
+        append_str = [str(iter_date)]
+        if('prod' in graph_type): append_str.append(sum_vid)
+        if('screen' in graph_type): append_str.append(sum_sc)
+        if('adopt' in graph_type): append_str.append(sum_adopt)
+        if('prac' in graph_type): append_str.append(sum_prac)
+        if('person' in graph_type): append_str.append(sum_person)
         if(geog in ["COUNTRY","STATE","DISTRICT"]):
-        	if('village' in type): append_str += str(vil_vals[iter_date])+';'
-        	if('prod_tar' in type): append_str += str(sum_vid_tar)+';'
-        	if('screen_tar' in type): append_str += str(sum_sc_tar)+';'
-        	if('adopt_tar' in type): append_str += str(sum_adopt_tar)+';'
+            if('village' in graph_type): append_str.append(vil_vals[iter_date])
 
-
-        str_list.append(append_str[:-1])
-
-	#If no data, changing the values so that Flash Charts show proper Errro Msg
-    if(len(str_list)==1):
-        m = re.search("^\d\d\d\d-\d\d-\d\d((;0)*)$",str_list[0]);
-        if(m!=None): data = re.sub(r'0','',m.group(1));
-    else:
-        data = '\n'.join(str_list)
+        str_list.append(append_str)
 
     #For settings
-    i=1;
-    settings = ["<settings><graphs>"]
-    if('prod' in type):
-        settings.append("<graph gid='"+str(i)+"'><title>Total Videos Produced</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-        i= i+1
-    if('screen' in type):
-        settings.append("<graph gid='"+str(i)+"'><title>Total Disseminations</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-        i= i+1
-    if('adopt' in type):
-        settings.append("<graph gid='"+str(i)+"'><title>Total Adoptions</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-        i= i+1
-    if('prac' in type):
-        settings.append("<graph gid='"+str(i)+"'><title>Total Practices</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-        i= i+1
-    if('person' in type):
-        settings.append("<graph gid='"+str(i)+"'><title>Total Farmers</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-        i= i+1
-    if(geog in ["COUNTRY","STATE","DISTRICT"]):
-    	if('village' in type):
-			settings.append("<graph gid='"+str(i)+"'><title>Operational Villages</title><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-			i= i+1
-        if('prod_tar' in type):
-            settings.append("<graph gid='"+str(i)+"'><title>Video Production Target</title><hidden>true</hidden><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-            i= i+1
-        if('screen_tar' in type):
-            settings.append("<graph gid='"+str(i)+"'><title>Disseminations Target</title><hidden>true</hidden><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-            i= i+1
-        if('adopt_tar' in type):
-            settings.append("<graph gid='"+str(i)+"'><title>Adoptions Target</title><hidden>true</hidden><balloon_text><![CDATA[{value}]]></balloon_text></graph>")
-            i= i+1
-    settings.append("</graphs></settings>")
+    header=['date']
+    if('prod' in graph_type):
+        header.append('Total videos produced')
+    if('screen' in graph_type):
+        header.append('Total disseminations')
+    if('adopt' in graph_type):
+        header.append('Total adoptions')
+    if('prac' in graph_type):
 
-    return HttpResponse(cjson.encode(dict(settings='\n'.join(settings),data=data)))
+        header.append('Total practices')
+    if('person' in graph_type):
+        header.append('Total viewers')
+    if(geog in ["COUNTRY","STATE","DISTRICT"]):
+        if('village' in graph_type):
+            header.append('Village')
+
+    str_list.insert(0,header)
+    return HttpResponse(json.dumps(str_list))
 
 #generic functin to render Pie Chart data
 #sqlFunc is the function to generate SQL query, should generate first select column as 'pie_key'
@@ -335,26 +371,53 @@ def overview_line_graph(request):
 #desc is the description string for the pie, can use variables  - {{key}}, {{value}} within it
 def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
     rs = run_query_dict(sqlFunc(**args),'pie_key')
-    str_list = []
-    str_list.append('[title];[value];[pull_out];[color];[url];[description];[alpha];[label_radius]')
+    str_list = [['Gender','value']]
     if not rs:
-        return HttpResponse(';')
-    else:
-        for key, value in pieNameDict.iteritems():
-            if(key in rs):
-                str_list.append(value+';'+str(rs[key][0])+';;;;'+re.sub('{{key}}',str(key),re.sub('{{value}}',str(value),desc)))
-            else:
-                str_list.append(value+';0;;;;'+re.sub('{{key}}',str(key),re.sub('{{value}}',str(value),desc)))
-
-    return HttpResponse('\n'.join(str_list))
+        return HttpResponse(json.dumps(str_list))
+    
+    for key, value in pieNameDict.iteritems():
+        if(key in rs):
+            str_list.append([value,rs[key][0]])
+        else:
+            str_list.append([value,0])
+            
+    return HttpResponse(json.dumps(str_list))
 
 #generic function to render data for Scatter Charts
 #sqlFunc is the function which renders the SQL query.
 #Pre-requisite: SQL function should generate name, count & in that order.(Other variable names would throw error)
-def scatter_chart_data(sqlFunc, **args):
+def practice_scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
     if not rs:
-        return HttpResponse(' ');
+        return HttpResponse(json.dumps([[]]));
+
+    count_dict = {}
+    for item in rs:
+        if item['count'] in count_dict:
+            count_dict[item['count']].append([item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']])
+        else:
+            count_dict[item['count']] = [[item['name'],item['sec'],item['subsec'],item['top'],item['subtop'],item['sub']]]
+    x_axis_len = max([len(x) for x in count_dict.values()]) * 2
+    if(x_axis_len<10): x_axis_len = 10;
+    return_val = [['practice_name','Sector','Sub Sector','Topic','Sub Topic','Subject','','','','Number']]
+    random.seed();
+    for tot, pracs_arr in count_dict.iteritems():
+        for pracs in pracs_arr:
+            flag = [0] * x_axis_len
+            x = random.randrange(1,x_axis_len)
+            while(flag[x] != 0):
+                x = random.randrange(1,x_axis_len)
+            flag[x] = 1
+            return_val.append([pracs[0],pracs[1],pracs[2],pracs[3],pracs[4],pracs[5],x,tot,"",tot])
+
+    return HttpResponse(json.dumps(return_val))
+
+
+def scatter_chart_data(sqlFunc, **args):
+    rs = run_query(sqlFunc(**args))
+    return_val = [['','','','','Number']]
+    if not rs:
+        return HttpResponse(json.dumps([[]]));
 
     count_dict = {}
     for item in rs:
@@ -365,20 +428,18 @@ def scatter_chart_data(sqlFunc, **args):
 
     x_axis_len = max([len(x) for x in count_dict.values()]) * 2
     if(x_axis_len<10): x_axis_len = 10;
-    return_val = []
-    return_val.append('[x];[y];[value];[bullet_color];[bullet_size];[url];[description]')
 
     random.seed();
     for tot,pracs in count_dict.iteritems():
-        flag = [ 0 for i in range(0,x_axis_len+1)]
+        flag = [0] * x_axis_len
         for prac in pracs:
             x = random.randrange(1,x_axis_len)
             while(flag[x] != 0):
                 x = random.randrange(1,x_axis_len)
             flag[x] = 1
-            return_val.append(str(x)+';'+str(tot)+';'+str(tot)+';;;;'+prac)
+            return_val.append([prac,x,tot,"",tot])
 
-    return HttpResponse('\n'.join(return_val))
+    return HttpResponse(json.dumps(return_val))
 
 
 #MyDate class, a 'type' with attrib month, m and year, y.(Used in view of Monthwise bar graph)
@@ -406,7 +467,7 @@ class MyDate:
         if(self.m==0): self.m = 12
 
 
-    def compare(self,date1):
+    def __cmp__(self,date1):
         if(self.y < date1.y):
             return -1
         elif(self.y > date1.y):
@@ -421,11 +482,11 @@ class MyDate:
 
 #Private function used in month-wise bar data.
 def make_dict(dic):
-    min = int(dic[0]['YEAR'])
-    max = int(dic[-1]['YEAR'])+1
+    min_year = int(dic[0]['YEAR'])
+    max_year = int(dic[-1]['YEAR'])+1
 
     return_val = {}
-    for y in range(min,max):
+    for y in range(min_year, max_year):
         return_val[y] = {}
         for item in dic:
             if int(item['YEAR'])>y:
@@ -442,7 +503,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     if rs:
         dic = make_dict(rs)
     else:
-        return HttpResponse(' ');
+        return HttpResponse(json.dumps([['Name','Value']]));
 
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
@@ -459,45 +520,17 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     else:
         loop_from = setting_from_date;
         loop_to = setting_to_date;
-    while(loop_from.compare(loop_to)!=1):
-        if(loop_from.compare(setting_from_date)==-1 or loop_from.compare(setting_to_date)==1):
-            data[loop_from.m - 1][-1] += ';'
+    while(loop_from <= loop_to):
+        if(loop_from < setting_from_date or loop_from > setting_to_date):
+            data[loop_from.m - 1].append(0)
             loop_from.addMonth(1)
             continue
         if(loop_from.y in dic and loop_from.m in dic[loop_from.y]):
-            data[loop_from.m - 1].append(str(dic[loop_from.y][loop_from.m]))
+            data[loop_from.m - 1].append(dic[loop_from.y][loop_from.m])
         else:
-            data[loop_from.m - 1].append(str(0))
+            data[loop_from.m - 1].append(0)
 
         loop_from.addMonth(1)
-
-    return HttpResponse('\n'.join([';'.join(x) for x in data if len(x) > 1]))
-
-#used to render data for month bar settings in modules
-#sqlFunc is the func for the SQL query generator
-#ballon_string is the string shown in ballon text on graph hover.
-def month_bar_settings(sqlFunc,ballon_string, **args):
-    rs = run_query(sqlFunc(**args));
-    year_list = []
-    for i in range(len(rs)):
-        if rs [i]['YEAR'] not in year_list:
-            year_list.append(rs[i]['YEAR'])
-
-    if year_list:
-        from_year = int(min(year_list))
-        to_year = int(max(year_list))
-        year_list = range(from_year,to_year+1)
-
-        #Making Settings file
-        settings = []
-        settings.append(r'<graphs>')
-
-        for year in year_list:
-            settings.append(r'<graph><type/><title>'+str(year)+'</title><balloon_text>{series},{title}: '+ballon_string+' = {value}</balloon_text></graph>')
-
-
-        settings.append(r'</graphs>')
-        return HttpResponse(''.join(settings))
-
-    else:
-        return HttpResponse('')
+        
+    header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
+    return HttpResponse(json.dumps([header] + filter(lambda x: len(x) > 1, data)))

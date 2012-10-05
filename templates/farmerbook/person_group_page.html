@@ -98,10 +98,10 @@
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-								<img title="{{ vid.title|lower|capfirst}}" src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
-							{% if vid.adopters %}							
+							<!-- {% if vid.adopters %}							
 							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
@@ -115,20 +115,20 @@
 									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% endif %}
 
-							{% endif %}
+							{% endif %} -->
 
 							<div class="question" style="margin-top:0px;">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
 							</div>	
 							
 							
-									{% if vid.screenings %}
+									<!-- {% if vid.screenings %}
 									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
 									{% endif %}
 									{% if vid.farmers_attended %}
 									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
 									{% endif %}
-
+ -->
 							
 							
 								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
@@ -163,10 +163,12 @@
 				{% endif%}
 				<li style="margin-left: 2px; margin-top: -9px;">
 					<div class='farmer_details_container'>
-						<center><img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+						<center>
+						<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
+						<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+						</a>
 						<div class='csp_name'>
-							<a href="javascript:void(0);"
-								onclick="groupClick({{ group.id }})">{{ group.name }}</a>
+							<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
 						</div></center>
 
 
@@ -182,13 +184,13 @@
 		<table width="200">		
 			<tr>
 				<td align="left">{{ group.start_date|date:"M Y" }}</td>
-				<td align="left"> {{ group.screenings|intcomma}}</td>
-				<td align="left"> {{ group.adoptions|intcomma}}</td>
+				<td align="center"> {{ group.screenings|intcomma}}</td>
+				<td align="center"> {{ group.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
-				<td align="left"><b> Started</b></td>
-				<td align="left"><b> Screenings</b></td>
-				<td align="left"><b>Adoptions</b></td>
+				<td align="left"><b> Joined</b></td>
+				<td align="center"><b> Screenings</b></td>
+				<td align="center"><b>Adoptions</b></td>
 			</tr>
 		</table>	
 						
@@ -213,6 +215,9 @@
 </div>
 <script type="text/javascript">
 var videos_watched_html;
+$(function(){
+			   $("[rel=custompopover]").custompopover();
+			});
 
 function ajax_tab_click(clicked, village_id) {    
     if(clicked=="videos_produced") {

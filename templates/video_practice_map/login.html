@@ -64,7 +64,11 @@
 	<div class='row-fluid'>
 		<input type="submit" value="Login" class="btn btn-large btn-primary" />
 	</div>
-	<input type="hidden" name="next" value="/videotask/home/" />
+	{% if next %}
+		<input type="hidden" name="next" value="{{next}}" />
+	{% else %}
+		<input type="hidden" name="next" value="/videotask/home/" />
+	{% endif %}
 	</form>
   
   </div></div></div>

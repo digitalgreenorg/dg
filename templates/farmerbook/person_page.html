@@ -24,13 +24,13 @@
 			<table style="width:250px;">	
 				<tr>
 					<td align="left">{{left_panel_stats.farmer_details.0.7|date:"M Y" }}</td>
-					<td align="left"> {{left_panel_stats.views_adoptions.0}}</td>
-					<td align="left"> {{left_panel_stats.views_adoptions.1}}</td>
+					<td align="center"> {{left_panel_stats.views_adoptions.0}}</td>
+					<td align="center"> {{left_panel_stats.views_adoptions.1}}</td>
 				</tr>
 				<tr>
 					<td align="left"><b> Joined</b></td>
-					<td align="left"><b> Views</b></td>
-					<td align="left"><b>Adopted</b></td>
+					<td align="center"><b> Views</b></td>
+					<td align="center"><b>Adopted</b></td>
 				</tr>
 			</table>		
 		</div>
@@ -42,29 +42,29 @@
 			<div class = 'statsValue'> {{ left_panel_stats.questions_asked }} </div>
 			<div class='horizontal_line'> </div>
 		{% endif %}
-		<div class='service_provider_container'>		
-			<div class = "section_title"><span style="font-size:90%; margin-left:-10px;color:#6D9D30">Service Provider</span></div>
-			{% if left_panel_stats.service_provider.0.1 %}
-				<div style='width:100px;float:left;'>
-					<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
-						<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
-						<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
-					</div>
-					<div style="width:100px; overflow:hidden;">
-						<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">{{ left_panel_stats.service_provider.0.1 }}</a>
-					</div>				
+		<div class='service_provider_container'>
+		<div class = "section_title" style="width:100px;float:left"><span style="font-size:75%; margin-left:-7px;color:#6D9D30">Service Provider </span></div>
+		<div class = "section_title" style="width:100px;float:right"><span style="font-size:75%; margin-left:-7px;color:#6D9D30">Partner</span></div>
+		
+			<div style='width:100px;float:left;'>
+				<div  style= "width:100px; height:70px; margin-left: 2px;border: 1px solid green;"src=''>
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})">
+					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/csp/{{left_panel_stats.service_provider.0.0}}.jpg"></a>
 				</div>
-			{% endif %}
+				<div style="width:100px; overflow:hidden;">
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.service_provider.0.0}})"><center>{{ left_panel_stats.service_provider.0.1 }}</center></a>
+				</div>				
+			</div>
 			<div style='width:100px;float:right;'>
 				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
-					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})">
+					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.partner.0.0}})">
 					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.partner.0.0}}.jpg"></a>
 				</div>
 				<div style="width:100px; overflow:hidden; margin-left:-30px;">
-					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})">{{ left_panel_stats.partner.0.1 }}</a>
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})"><center>{{ left_panel_stats.partner.0.1 }}</center></a>
 				</div>
 			</div>
-		</div>		
+		</div>	
 		<div style='clear:both;'></div>
 	</div>
 </div>
@@ -88,32 +88,34 @@
 				<div class="carousel-inner" style='height:180px;'>				
 				{% for vid in videos_watched_stats %}
 						{% if forloop.counter0|divisibleby:"5" %}				    
-								<div class="item{% if forloop.first %} active{%endif%}">							
-								<ul class="thumbnails" style="margin-left:28px; margin-top:5px;">										
+							<div class="item{% if forloop.first %} active{%endif%}">							
+							<ul class="thumbnails" style="margin-left:28px; margin-top:5px;">										
 						{% endif%}
 						<li class="vidsWatchedItem">
-							{% if vid.interested %}
-								{% if vid.adopted %}
-							    <div class="thumbnail" style="border: 1px solid green;">
+							<div class="thumbnail" style="border: 1px solid green;">
 								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
 									<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
-								</a>
-								</div>
-								<div style="margin-top:-20px;"><span class='label label-success' title='adopted'><i class='icon-ok-sign icon-white'></i></span></div>
-								{% else %}
-								<div class="thumbnail" style="border: 1px solid yellow;">
-									<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-									<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
-									</a>
-								</div>
-								<div style="margin-top:-20px;"><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i></span></div>
-								{% endif %}
-							{% else %}
-							<div class="thumbnail">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-								<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
+							{% if vid.adopted %}
+									<div style="margin-top:-20px;margin-left:100px"><span class='label label-success' title='adopted'><i class='icon-ok-sign icon-white'></i></span></div>
+							{% endif %}
+							{% if vid.interested %}
+							    <div style="margin-top:-20px;position:absolute;"><span class='label label-warning' title='interested'>
+								<i class='icon-exclamation-sign icon-white'></i></span>
+								</div>
+							{% endif %}
+							{% if vid.question %}
+								{% if vid.interested %}
+									<div style="margin-top:-45px;"><span class='label label-important' title='{{vid.question}}'>
+										<i class='icon-question-sign icon-white'></i></span>
+									</div>
+									<div style="height:25px;"></div>
+								{% else %}
+									<div style="margin-top:-20px;"><span class='label label-important' title='{{vid.question}}'>
+										<i class='icon-question-sign icon-white'></i></span>
+									</div>
+								{% endif %}
 							{% endif %}
 							<div class="video_title" style="margin-top:0px;" >
 								<a title="{{vid.title}}" href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
@@ -121,15 +123,10 @@
 							{% if vid.last_seen_date %}
 								<div class="question" style="margin-top:0px;">Last seen on <br>{{ vid.last_seen_date|date:"M d, Y" }} </div>
 							{% endif %}					
-							{% if vid.question %}
-							    <div style="margin-top:-20px;margin-left:100px;"><span class='label label-important' title='{{vid.question}}'>
-									<i class='icon-question-sign icon-white'></i></span>
-								</div>
-							{% endif %}
 						</li>
 						{% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}						    
 							</div>							
-							</ul>										
+						</ul>										
 						{% endif%}
 				{% endfor %}					
 				</div>
@@ -158,7 +155,7 @@
 								<a href="javascript:void(0);" onclick="personClick({{ person.id }})">
 									<center>{{ person.name }}</center></a> 
 							</div>
-							<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last adopted({{ person.date_of_adoption|date:"M d,Y" }}) : {{ person.title }} on  </div>
+							<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}</div>
 							<div id="progress_bar_label" style="margin-right:5px;"> Adoption Rate </div>
 							<div class="progress progress-striped"  style="margin-bottom:5px;">
 							  <div class="bar "  style="width: {{ person.adoption_rate|floatformat:0 }}%; "><p> {{ person.adoption_rate|floatformat:0 }}%</p></div>
@@ -167,13 +164,13 @@
 								<table width="200">		
 									<tr>
 										<td align="left">{{ person.date_of_joining|date:"M Y" }}</td>
-										<td align="left"> {{ person.views|intcomma}}</td>
-										<td align="left"> {{ person.adoptions|intcomma}}</td>
+										<td align="center"> {{ person.views|intcomma}}</td>
+										<td align="center"> {{ person.adoptions|intcomma}}</td>
 									</tr>
 									<tr>
-										<td align="left"><b> Started</b></td>
-										<td align="left"><b> Screenings</b></td>
-										<td align="left"><b>Adoptions</b></td>
+										<td align="left"><b>Joined</b></td>
+										<td align="center"><b>Screenings</b></td>
+										<td align="center"><b>Adoptions</b></td>
 									</tr>
 								</table>								
 							</div>

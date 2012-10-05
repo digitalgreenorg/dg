@@ -90,7 +90,7 @@ public class VideosTemplate extends BaseTemplate {
 	public static native void displayCalendar() /*-{
 		$wnd.DateTimeShortcuts.init();		
 	}-*/;
-	final private String addDataToElementID[] = {"id_language", "id_village", "id_facilitator", "id_cameraoperator","id_related_agricultural_practices", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
+	final private String addDataToElementID[] = {"id_language", "id_village", "id_facilitator", "id_cameraoperator", "id_farmers_shown", "id_reviewer", "id_supplementary_video_produced"};
 	
 	private String videosListFormHtml = "<div class = 'toolbar'><label for='searchbar'>" +
 									"<img alt='Search' src='/media/img/admin/icon_searchbox.png'></label>" +
@@ -204,6 +204,7 @@ public class VideosTemplate extends BaseTemplate {
     															"<option value='' selected='selected'>---------</option>" +
     															"<option value='1'>Agricultural</option>"+
     															"<option value='2'>Institutional</option>"+
+    															"<option value='3'>Health</option>"+
 
     														"</select>" +
     													"</div>" +
@@ -300,18 +301,9 @@ public class VideosTemplate extends BaseTemplate {
 												    		"</select>" +
 												    	"</div>" +
 												    "</div>" +
-												    "<div class='form-row related_agricultural_practices  '>" +
+											        "<div class='form-row farmers_shown  '>" +
 												    	"<div>" +
-												    		"<label for='id_related_agricultural_practices' class='required'>Related agricultural practices:</label><select multiple='multiple' name='related_agricultural_practices' id='id_related_agricultural_practices'>" +
-												    		"</select>" +
-															//"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
-															//"<script type='text/javascript'>SelectFilter.init('id_related_agricultural_practices', 'related agricultural practices', 0, '/media/');</script>"+
-												    		"<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p>" +
-												    	"</div>" +
-												    "</div>" +
-												    "<div class='form-row farmers_shown  '>" +
-												    	"<div>" +
-												    		"<label for='id_farmers_shown' class='required'>Farmers shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
+												    		"<label for='id_farmers_shown' class='required'>Persons shown:</label><select multiple='multiple' name='farmers_shown' id='id_farmers_shown'>" +
 												    		"</select>" +
 												    		//"<script type='text/javascript' src='/media/js/SelectFilter2.js'></script>"+
 												    		//"<script type='text/javascript'>SelectFilter.init('id_farmers_shown', 'farmers shown', 0, '/media/');</script>"+
