@@ -852,7 +852,6 @@ def save_video_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
         form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
-        form.fields['related_practice'].queryset = Practices.objects.distinct().order_by('practice_sector__name')
         form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         # REVERT WHEN MOVING TO DJANGO 1.4
