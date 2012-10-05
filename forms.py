@@ -83,7 +83,7 @@ class VillageForm(forms.ModelForm):
 class VideoForm(forms.ModelForm):       
 	class Meta:
 		model = Video
-
+        exclude = ('related_practice',)
 
 class PersonShownInVideoForm(forms.ModelForm):
     class Meta:
