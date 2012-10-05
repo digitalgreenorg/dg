@@ -8,8 +8,8 @@ def save_submission(request):
     submission.xml_data = request.raw_post_data
     submission.save() 
     status, msg = save_in_db(submission)
-    submission = submission(error_code = status,
-                            error_msg = msg)
+    submission.error_code = status
+    submission.error_msg = msg
     try:
         submission.save
     except Exception as ex:
