@@ -10,5 +10,5 @@ class XMLSubmission(models.Model):
     submission_time = models.DateTimeField(auto_now=True)
     modification_time = models.DateTimeField(auto_now_add=True)
     xml_data = models.TextField()
-    error_code = models.IntegerField()
-    error_message = models.TextField()
+    error_code = models.IntegerField(null=True)
+    error_message = models.TextField(null=True)
