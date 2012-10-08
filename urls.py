@@ -254,4 +254,6 @@ urlpatterns = patterns('',
     (r'^analytics/drop_down_val/?$',drop_down_val),
     (r'^analytics/overview_line_graph/?$',overview_line_graph),
     (r'^analytics/practice_change/?$',practice_change),
+    #Remove once Farmerbook video url's are fixed 
+    (r'^analytics/video/?$',video_analytics.video),
 )
