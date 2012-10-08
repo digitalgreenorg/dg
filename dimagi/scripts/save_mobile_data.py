@@ -6,7 +6,7 @@ import time
 from datetime import datetime,timedelta
 from dashboard.models import Screening, PersonMeetingAttendance, PersonAdoptPractice
 from dimagi.models import XMLSubmission
-from dimagi.models import Error_list
+from dimagi.models import error_list
 
 
 def save_screening_data(xml_tree):
@@ -60,7 +60,7 @@ def save_screening_data(xml_tree):
                 screening.farmer_groups_targeted = [screening_data['selected_group']] 
                 screening.save()
             except Exception as ex:
-                status['screening'] = Error_list['SCREENING_SAVE_ERROR'] 
+                status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
                 
         
@@ -75,11 +75,11 @@ def save_screening_data(xml_tree):
                     pma.save()
                     status['pma'] += 1
             except Exception as ex:
-                status['pma'] = Error_list['PMA_SAVE_ERROR'] 
+                status['pma'] = error_list['PMA_SAVE_ERROR'] 
                 error_msg = unicode(ex)
         
         except Exception as ex:
-            status['screening'] = Error_list['SCREENING_READ_ERROR'] 
+            status['screening'] = error_list['SCREENING_READ_ERROR'] 
             error_msg = unicode(ex)
             
     return status,error_msg
@@ -96,7 +96,7 @@ def save_adoption_data(xml_tree):
             screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
             
         except Exception as ex:
-            status = Error_list['ADOPTION_READ_ERROR'] 
+            status = error_list['ADOPTION_READ_ERROR'] 
             error_msg = unicode(ex)
         
     
@@ -109,18 +109,8 @@ def save_adoption_data(xml_tree):
         status = pap.id
         error_msg = 'Successful'
     except Exception as ex:
-        status = Error_list['ADOPTION_SAVE_ERROR']                             # -1 correspoding to error
+        status = error_list['ADOPTION_SAVE_ERROR']                            
         error_msg = unicode(ex)        
     return status, error_msg
 
-#if __name__ == "__main__":
-#    xml_file = r'C:\Users\Yash\Documents\GitHub\dg\dimagi\submitted\sample1.xml'
-#    xml_parse = minidom.parse(xml_file)
-#    data = xml_parse.getElementsByTagName('data')
-#    if data[0].attributes["name"].value.lower() == 'screening' :
-#        status = save_screening_data(xml_parse)
-#    elif data[0].attributes["name"].value.lower() == 'adoption' :
-#        status = save_adoption_data(xml_parse)
-#    else :
-#        status = -1
-#    print status
+
