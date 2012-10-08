@@ -5,16 +5,20 @@ from scripts import save_mobile_data
 
 def save_submission(request):
     submission = XMLSubmission()
+    log_file = open('MobileLogfile','w')
+    
     submission.xml_data = request.raw_post_data
     submission.save() 
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_msg = msg
     try:
-        submission.save
+        submission.save()
+        log_file.write('Submission completed with status: ' + str(status))
     except Exception as ex:
-        error = ex
+        log_file.write(unicode(ex))
     return HttpResponse(status=201)
+
 
 def save_in_db(submission):
     xml_string = submission.xml_data
