@@ -548,7 +548,7 @@ class Person(models.Model):
         if (self.father_name is None or self.father_name==''):
             return self.person_name
         return  u'%s (%s)' % (self.person_name, self.father_name)
-
+    
 class PersonRelations(models.Model):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person,related_name='person')

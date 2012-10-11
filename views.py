@@ -2457,7 +2457,7 @@ def practices_seen_by_farmer(request, person_id):
         for vid in video_list:
             video_data.append({'value':vid[0],'string':vid[1]})    
         data['video_list'] = video_data
-        data['person_list'] = [{'value':farmer.id, 'string':str(farmer)}]
+        data['person_list'] = [{'value':farmer.id, 'string':unicode(farmer)}]
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
 def filters_for_village (request, village_id):
@@ -2495,7 +2495,7 @@ def person_meeting_attendance_data(request, person_id, screening_id):
                 video_data.append({'value':video[0],'string':video[1]})
             data = {
                 'pma' : {'id':pma.id,'screening':pma.screening_id},
-                'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
+                'person_list' : [{'value':farmer.id, 'string':unicode(farmer)}],
                 'video_list': video_data,
                 'expressed_question_comment': pma.expressed_question,
                 'interested' : pma.interested,
