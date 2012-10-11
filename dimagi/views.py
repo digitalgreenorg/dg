@@ -9,7 +9,7 @@ def save_submission(request):
     submission.save() 
     status, msg = save_in_db(submission)
     submission.error_code = status
-    submission.error_msg = msg
+    submission.error_message = msg
     try:
         submission.save()
     except Exception as ex:

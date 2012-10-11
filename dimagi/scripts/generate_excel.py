@@ -1,26 +1,29 @@
-import settings
+# -*- coding: utf-8 -*-
+from dg import settings
 from django.core.management import setup_environ
 setup_environ(settings)
 from dashboard.models import *
 import video_schedule
 import xlrd
 import xlwt
+import sys
 
 
 def truncate_id(id):
     return id
 
 def find_exact_villages(cluster_dict):
-    village_info = []
+    
     village_not_found = 0 
     for cluster in cluster_dict:
         for counter,vill in enumerate(cluster['villages']):
+            village_info = []
             village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
             if village_info:
-                cluster["villages"][counter] = village_info[0][1]
+                cluster['villages'][counter] = village_info[0][1]
             else:
                 village_info = Village.objects.filter(village_name__icontains = vill).values_list('id','village_name')
-                cluster["villages"][counter] = village_info[0][1]
+                cluster['villages'][counter] = village_info[0][1]
             if not village_info:
                 village_not_found +=1
     return cluster_dict
@@ -42,9 +45,9 @@ def write_person_info(cluster_dict, workbook):
             for person in village_person_info:
                 person_id = truncate_id(person[0])
                 group_id = truncate_id(person[2])
-                sheet.write(row, 0, str(person_id))
+                sheet.write(row, 0, unicode(person_id))
                 sheet.write(row, 1, person[1])
-                sheet.write(row, 2, str(group_id))
+                sheet.write(row, 2, unicode(group_id))
                 watched = PersonMeetingAttendance.objects.filter(person = person[0]).count()
                 if(watched > 0 ):
                     sheet.write(row, 3, '1')
@@ -147,14 +150,15 @@ def write_person_watched_video_info(cluster_dict, workbook):
             for person in village_person_info:
                 vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0]).values_list('screening__videoes_screened', flat = True).distinct()
                 for vid_id in vid_id_list:
-                    vid_name = Video.objects.filter(id = vid_id).values_list('title')
-                    person_id = truncate_id(person[0])
-                    group_id = truncate_id(person[2])
-                    sheet.write(row, 0, str(person_id))
-                    sheet.write(row, 1, vid_name[0])
-                    sheet.write(row, 2, str(vid_id))
-                    sheet.write(row, 3, cluster['cluster'])
-                    row += 1
+                    if (vid_id):
+                        vid_name = Video.objects.filter(id = vid_id).values_list('title')
+                        person_id = truncate_id(person[0])
+                        group_id = truncate_id(person[2])
+                        sheet.write(row, 0, str(person_id))
+                        sheet.write(row, 1, vid_name[0])
+                        sheet.write(row, 2, str(vid_id))
+                        sheet.write(row, 3, cluster['cluster'])
+                        row += 1
         if len(village_person_info) < 1:
             print " No person found in " + cluster['cluster'] 
     return sheet
@@ -187,7 +191,8 @@ wb.sheet_names()
 sh = wb.sheet_by_index(0)
 clusters_to_take = [1]
 index=0
-
+reload(sys)
+print sys.getdefaultencoding()
 permission_group = []
 cluster_village_dict = []
 mediator_village_dict = []
@@ -204,7 +209,8 @@ while index < len(clusters_to_take):
     
     index += 1 
 
-workbook = xlwt.Workbook()
+workbook = xlwt.Workbook(encoding = 'utf-8')
+
 cluster_village_dict = find_exact_villages(cluster_village_dict)
 
 person_sheet = write_person_info(cluster_village_dict, workbook)
