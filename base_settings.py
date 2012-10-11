@@ -92,7 +92,6 @@ INSTALLED_APPS = (
     'video_practice_map',
     'tastypie'
    )
-)
 
 LOGGING = {
     'version': 1,
