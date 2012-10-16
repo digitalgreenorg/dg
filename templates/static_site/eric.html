@@ -1,0 +1,78 @@
+
+{% extends "base_all.html" %}
+
+{% block title %} DigitalGreen - Board members - Eric Walker{% endblock %}
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team.css' />  
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/team_board.css' />       
+{% endblock cssfile %}
+
+{% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+{% endblock jsfile %}
+
+
+{% block pagetitle %} {{ block.super }}Eric Walker {% endblock pagetitle %}
+
+{% block breadcrums %}  
+
+	{{ block.super }}
+	 {% block breadcrumsmore %}  
+	 	<a href='/team'> Team </a> / 
+	 	<a href='/teamboard'>Board members</a> /
+	 	<span style='font-size:0.9em; font-weight:bold;'> Eric Walker </span> 
+	 {% endblock breadcrumsmore %} 
+	 
+{% endblock breadcrums %}
+
+{% block mainbodycontentleft %}
+		
+	<div class='pagetitle'>
+		Eric Walker
+	</div>
+	
+	<div class='teamcontent'>
+		As vice president of corporate services, Eric Walker is responsible for the implementation of the
+organization's financial and administrative operations. He provides leadership for the finance, human
+resources, information systems, facilities, agreements, and risk management functions of PATH's
+headquarters, branch, and field offices. Mr. Walker has over 30 years experience in financial and
+administrative management, institutional capability building, and systems development. He has
+comprehensive expertise in financial training topics and methodologies and has provided training to
+international field offices, and local non-government organizations (NGOs) in developing countries in
+audit, United States Agency for International Development (USAID) compliance, accounting, software,
+financial management, and other topics. Mr. Walker has worked extensively in developing systems to
+facilitate the financial and overall management of USAID-funded contracts, grants, and cooperative
+agreements. He has broad-based knowledge of the applicable rules and regulations of each type of funding
+arrangement. He has created several 501(c)(3) tax-exempt organizations based in the United States and
+assisted in establishing NGOs in developing countries. Previously, Mr. Walker was director of finance and
+administration for the Overseas Education Fund, Inc., and controller at International Voluntary Services in
+Washington, DC. His experience also includes a position at the Development Group for Alternative Policies,
+including training activities in Asia and Latin America and accounting software development and support.
+He is a founder and past chairman of InsideNGO, a United States organization working in international
+development. Mr. Walker has an MA in Latin American studies from Georgetown University.
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+		<br/><br/>
+	</div>
+{% endblock mainbodycontentleft %}	
+
+
+{% block mainbodycontentright %}
+		
+	<div id='explorediv1' style='margin-top:3px'>		
+		<div class='exploredescdiv'>			
+			<div class='exploredescmain'> 
+				<a class="exploredescmainlink" href="/teamboard"><img src="/media/Output/Images/searchimg2.png" alt="">EXPLORE<br/>Learn about other Board Members</a>						
+			</div> 
+			<br/>
+		</div>			
+	</div>
+	
+	
+{% endblock mainbodycontentright %}	

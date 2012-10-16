@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="/media/Output/JS/jsapi.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    function update()
+    {
+    	alert("hi");
+    	jQuery.ajax("/path/update");
+    }
+    </script>
+    
+ </head>
+  <body>    
+  <a href="https://docs.google.com/a/digitalgreen.org/spreadsheet/ccc?key=0AsotIQD30kd_dGZXZEZiVE9nYlhvNURPSXNSdFM2RGc#gid=0" target="_blank"> Spreadsheet</a>
+  
+  <button type="button" onclick="update()">Update</button>
+  </body>
+</html>
