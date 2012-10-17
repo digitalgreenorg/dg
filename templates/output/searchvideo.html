@@ -79,6 +79,69 @@
 				</tr>		
 			</table>				
 			<div class='advancedsearchdiv'>
+			<div class='advancedsearchtitle'>
+				Select Practice
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='searchbody1_1'>
+				   		<select class='select prac' name='sec_n 'id='sec' onChange="doPracchange(this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Sector</option>
+								{% for key, item in search_box_params.prac_level.0 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='searchbody1_2'>
+				   		<select class='select prac' name='subsec_n' id='subsec' onChange="doPracchange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Subsector</option>
+								{% for key, item in search_box_params.prac_level.1 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='searchbody1_3'>
+				   		<select class='select prac' name='sec_n' id='top' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value)">
+					  		<option value='-1'>Any Topic</option>
+								{% for key, item in search_box_params.prac_level.2 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='searchbody1_4'>
+				   		<select class='select prac' name='sec_n' id='subtop' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value)">
+					  		<option value='-1'>Any Subtopic</option>
+								{% for key, item in search_box_params.prac_level.3 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
+			<div class='searchbody'>
+				<div id='selectbody'>				
+					<div class='searchbody1' id='searchbody1_5'>
+				   		<select class='select prac' name='sec_n' id='sub' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value)">
+					  		<option value='-1'>Any Subject</option>
+								{% for key, item in search_box_params.prac_level.4 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+								{%endfor%}
+				    	</select>				
+					</div>							
+				</div>				
+			</div>
 				<div class='advancedsearchtitle'>
 					Video Suitable for:
 				</div>
@@ -243,70 +306,7 @@
 			<div class='searchbody'>
 				<div class='datepickcalendertext'>To: </div>
 				<div id='inlinedatepicker2' class='datepickcalender'>{{search_box_params.to_date}}</div>				
-			</div>				
-			<div class='searchtitle'>
-				Select Practice
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1' id='searchbody1_1'>
-				   		<select class='select prac' name='sec_n 'id='sec' onChange="doPracchange(this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Sector</option>
-								{% for key, item in search_box_params.prac_level.0 %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-								{%endfor%}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1' id='searchbody1_2'>
-				   		<select class='select prac' name='subsec_n' id='subsec' onChange="doPracchange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Subsector</option>
-								{% for key, item in search_box_params.prac_level.1 %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-								{%endfor%}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1' id='searchbody1_3'>
-				   		<select class='select prac' name='sec_n' id='top' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value)">
-					  		<option value='-1'>Any Topic</option>
-								{% for key, item in search_box_params.prac_level.2 %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-								{%endfor%}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1' id='searchbody1_4'>
-				   		<select class='select prac' name='sec_n' id='subtop' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value)">
-					  		<option value='-1'>Any Subtopic</option>
-								{% for key, item in search_box_params.prac_level.3 %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-								{%endfor%}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>
-			<div class='searchbody'>
-				<div id='selectbody'>				
-					<div class='searchbody1' id='searchbody1_5'>
-				   		<select class='select prac' name='sec_n' id='sub' onChange="doPracchange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value)">
-					  		<option value='-1'>Any Subject</option>
-								{% for key, item in search_box_params.prac_level.4 %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-								{%endfor%}
-				    	</select>				
-					</div>							
-				</div>				
-			</div>			
+			</div>							
 		</div>		
 		
 		<div id='submitdiv'>										
