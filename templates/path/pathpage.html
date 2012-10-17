@@ -6,14 +6,22 @@
     <script type="text/javascript">
     function update()
     {
-    	jQuery.ajax("/path/update");
+    	jQuery.ajax({ 
+    		url: "/path/update",
+    		dataType: "json",
+    		success: function(data){
+    				$("#message").html(data.message);
+    			}
+    	});
     }
     </script>
     
  </head>
-  <body>    
-  <a href="https://docs.google.com/a/digitalgreen.org/spreadsheet/ccc?key=0AsotIQD30kd_dGZXZEZiVE9nYlhvNURPSXNSdFM2RGc#gid=0" target="_blank"> Spreadsheet</a>
+	<body>
+		<p id="message" style="font-weight: bold; font-size:12px;"></p>
+  	
+  		<a href="https://docs.google.com/a/digitalgreen.org/spreadsheet/ccc?key=0AsotIQD30kd_dGZXZEZiVE9nYlhvNURPSXNSdFM2RGc#gid=0" target="_blank"> Spreadsheet</a>
   
-  <button type="button" onclick="update()">Update</button>
+  		<button type="button" onclick="update()">Update</button>
   </body>
 </html>
