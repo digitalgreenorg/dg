@@ -4,14 +4,15 @@
 
 {% block cssfile %}
 	{{ block.super }}
-	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/searchvideo.css'/>       
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/searchvideo.css'/>
+	<link href="/media/css/jquery.loadmask.css" rel="stylesheet" type="text/css" />       
 {% endblock cssfile %}
 
 {% block videobreadcrums %}	 
 {% endblock videobreadcrums %}	  
 
-
 {% block jsfile %}
+	<script type="text/javascript" src="/media/js/jquery.loadmask.min.js"></script>
     <script>
     function init_box_params() {
     var video_suitable_for = {%if search_box_params.video_suitable_for %}{{search_box_params.video_suitable_for}}{%else%} null{%endif%};
@@ -40,6 +41,7 @@
     }   
 
     function doPracchange(sec,subsec,top,subtop,sub) {
+    	$("#searchcontentleft").mask("Loading...");
         $.ajax({ type: "GET", 
                 url: "/analytics/practice_change/",
                 data: {"sec":sec,"subsec":subsec,"top":top,"subtop":subtop,"sub":sub},
@@ -50,6 +52,7 @@
                $("#"+"top").html(arr[2]);
                $("#"+"subtop").html(arr[3]);
                $("#"+"sub").html(arr[4]);
+               $("#searchcontentleft").unmask();
                 
           }
      });
