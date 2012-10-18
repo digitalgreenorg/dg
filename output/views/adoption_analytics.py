@@ -130,9 +130,10 @@ def adoption_rate_line(request):
     return_val = []
     for date, active, tot in adoption_rate_stats:
         if tot:
-            return_val.append([str(date), float((active * 100)/tot)])
+            return_val.append([str(date), round(float((active * 100)/tot),1)])
         else:
             return_val.append([str(date), 0])
+
     return_val.insert(0,['Date','Adoption Rate'])
     return HttpResponse(json.dumps(return_val))
     
