@@ -6,6 +6,7 @@ from views import *
 from output.views import overview_analytics, screening_analytics, video_analytics, adoption_analytics, targets
 from output.views.common import drop_down_val, overview_line_graph, practice_change
 from static_site_views import *
+from path.views import page, update
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -256,4 +257,6 @@ urlpatterns = patterns('',
     (r'^analytics/practice_change/?$',practice_change),
     #Remove once Farmerbook video url's are fixed 
     (r'^analytics/video/?$',video_analytics.video),
+    (r'^path/page/?$',page),
+    (r'^path/update/?$',update),
 )
