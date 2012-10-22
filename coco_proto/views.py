@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from forms import CountryForm,StateForm,DistrictForm,BlockForm,VillageForm
+from forms import CountryForm, StateForm, DistrictForm, BlockForm, VillageForm
 
 def country_list(request):
     context = RequestContext(request)
