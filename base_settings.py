@@ -79,7 +79,7 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-    'debug_toolbar',
+    #'debug_toolbar',
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',
