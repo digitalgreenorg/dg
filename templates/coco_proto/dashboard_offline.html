@@ -18,110 +18,292 @@
 <script type="text/javascript" src="/media/js/backbone/underscore-min.js"></script>
 <script type="text/javascript" src="/media/js/backbone/backbone-min.js"></script>
 <script type="text/javascript" src="/media/coco/js/indexeddb-backbonejs-adapter/backbone-indexeddb.js"></script>
-<script type="text/javascript" src="/media/coco/js/dashboard_offline.js"></script>
+<!-- <script type="text/javascript" src="/media/coco/js/dashboard_offline.js"></script> -->
+<script type="text/javascript" src="/media/coco/js/backbone_views.js"></script>
 <script type="text/javascript" src="/media/coco/js/backbone_models.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
 
 <meta name="robots" content="NONE,NOARCHIVE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/template" id="header">
+    <h1 class="page-header"><%= header_name %></h1>
+</script>
+    
+<script type="text/template" id="dashboard">
+    <div class="span4 well" style="margin-left:20px;">
+        <table class="table table-bordered" style="background:white;">
+        <tr>
+        <td><a href="#village" class="village">Village</a></td>
+        </tr>
+        <tr>
+        <td><a href="#video" class="video">Video</a></td>
+        </tr>
+        <tr>
+        <td><a href="#group" class="persongroup">Group</a></td>
+        </tr>
+        <tr>
+        <td><a href="#screening" class="screening">Screening</a></td>
+        </tr>
+        <tr>
+        <td><a href="#person" class="person">Person</a></td>
+        </tr>
+		<tr>
+        <td><a href="#personadoptvideo" class="personadoptvideo">Person Adopt Video</a></td>
+        </tr>
+		<tr>
+        <td><a href="#animator" class="animator">Animator</a></td>
+        </tr>
+        </table>
+   </div>
+            
+    <div class="span8" style="margin-left:20px;">
+        <button id="connectivity" class="btn btn-large btn-block" style="margin-left:200px;margin-top:80px;width:400px;">Go <%= toggle_connectivity %></button>
+            
+        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;">Upload</button>
+        
+        <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
+    </div>
+        
+</script>
+    
+    
+<script type="text/template" id="tpl-country-item">
+    <td><%= id %></td>
+    <td><%= country_name %></td>
+    <td> <%= start_date %></td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+    
+
+    
+<script type="text/template" id="countries_table">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Country name</th>
+       <th>Start Date</th>
+       </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+
+<script type="text/template" id="village_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Village name</th>
+       <th>Block</th>
+	   <th>District</th>
+	   <th>State</th>
+	   <th>Country</th>
+       </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="village_list_item_template">
+    <td><%= id %></td>
+    <td><%= village_name %></td>
+    <td><%= block_name %></td>
+    <td><%= district_name %></td>
+    <td> <%= state_name %></td>
+    <td><%= country_name %></td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="video_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Title</th>
+	   <th>Village</th>
+       <th>Youtube ID</th>
+	   <th>Prod. Start Date </th>
+	   <th>Prod. End Date</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="video_list_item_template">
+    <td><%= id %></td>
+    <td> <%= title %></td>
+	<td><%= village.village_name %></td>
+    <td> <%= youtubeid %></td>
+    <td> <%= video_production_start_date %></td>
+    <td> <%= video_production_end_date %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="persongroup_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Name</th>
+       <th>Village</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="persongroup_list_item_template">
+    <td><%= id %></td>
+    <td><%= group_name %></td>
+    <td> <%= village.village_name %></td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="screening_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Village</th>
+       <th>Groups</th>
+	   <th>Videos</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="screening_list_item_template">
+    <td><%= id %></td>
+    <td><%= village.village_name %></td>
+    <% 	var vids_screened=""; 
+		for (var i = 0; i < videos_screened.length; i++) 
+		{
+		    vids_screened = (i==(videos_screened.length-1))?vids_screened.concat(videos_screened[i].title):vids_screened.concat(videos_screened[i].title+", ");
+			
+		}
+		
+		var groups="";
+		for (var i = 0; i < person_groups.length; i++) 
+		{
+		    groups = (i==(person_groups.length-1))?groups.concat(person_groups[i].group_name):groups.concat(person_groups[i].group_name+", ");
+			
+		} 
+	%>
+	<td> <%= groups %></td>
+	<td><%= vids_screened %> </td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="person_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Father Name</th>
+       <th>Village</th>
+       <th>Group</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="person_list_item_template">
+    <td><%= id %></td>
+    <td><%= person_name %></td>
+    <td> <%= father_name %></td>
+    <td> <%= village.village_name %></td>
+    <td> <%= person_group.group_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="personadoptvideo_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Village</th>
+       <th>Groups</th>
+	   <th>Videos</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="personadoptvideo_list_item_template">
+    <td><%= id %></td>
+    <td><%= country_name %></td>
+    <td> <%= start_date %></td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="animator_table_template">
+       <table class="table table-striped">
+       <thead>
+       <tr>
+       <th>Id</th>
+       <th>Village</th>
+       <th>Groups</th>
+	   <th>Videos</th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</script>
+<script type="text/template" id="animator_list_item_template">
+    <td><%= id %></td>
+    <td><%= country_name %></td>
+    <td> <%= start_date %></td>
+    <td>
+    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script  type="text/template" id="list_view_template">
+    <div class="well">
+    <div style= "float:left;">
+    <input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
+    <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
+    </div>
+    <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
+    </div>
+</script>
+
+<script type="text/template" id="screening_add_edit_template">
+    
+</script>
+
 </head>
 <body id ="app">
-    <script type="text/template" id="header">
-        <h1 class="page-header"><%= header_name %></h1>
-    </script>
-    
-    <script type="text/template" id="dashboard">
-        <div class="span4 well" style="margin-left:20px;">
-            <table class="table table-bordered" style="background:white;">
-            <tr>
-            <td><a href="#village" class="village">Village</a></td>
-            </tr>
-            <tr>
-            <td><a href="#video" class="video">Video</a></td>
-            </tr>
-            <tr>
-            <td><a href="#group" class="group">Group</a></td>
-            </tr>
-            <tr>
-            <td><a href="#screening" class="screening">Screening</a></td>
-            </tr>
-            <tr>
-            <td><a href="#person" class="person">Person</a></td>
-            </tr>
-			<tr>
-            <td><a href="#personadoptvideo" class="personadoptvideo">Person Adopt Video</a></td>
-            </tr>
-			<tr>
-            <td><a href="#animator" class="animator">Animator</a></td>
-            </tr>
-            </table>
-       </div>
-            
-        <div class="span8" style="margin-left:20px;">
-            <button id="connectivity" class="btn btn-large btn-block" style="margin-left:200px;margin-top:80px;width:400px;">Go <%= toggle_connectivity %></button>
-            
-            <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;">Upload</button>
-        
-            <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
-        </div>
-        
-    </script>
-    
-    
-    <script type="text/template" id="tpl-country-item">
-        <td><%= id %></td>
-        <td><%= country_name %></td>
-        <td> <%= start_date %></td>
-        <td>
-        <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-        <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-        </td>
-    </script>
-    
-
-    
-    <script type="text/template" id="countries_table">
-        <table class="table table-striped">
-        <thead>
-        <tr>
-        <th>Id</th>
-        <th>Country name</th>
-        <th>Start Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        
-        </tbody>
-    </script>
-    
-    <script  type="text/template" id="country_list_page">
-        <div class="well">
-        <div style= "float:left;">
-        <input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
-        <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
-        </div>
-        <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
-        </div>
-        <div id="countryModal" class="modal hide fade">
-        <form id="countryForm" method="post">
-        <div class="modal-header"><button class="close" data-dismiss="modal">×</button>
-        <h3>Country Details</h3>
-        </div>
-        <div class="modal-body">
-        <tr>
-        <th><label for="id_country_name">Country name:</label></th>
-        <td><input id="id_country_name" type="text" name="country_name" maxlength="100" /></td>
-        </tr>
-        <tr>
-        <th><label for="id_start_date">Start date:</label></th>
-        <td><input type="text" name="start_date" id="id_start_date" /></td>
-        </tr>
-        </div>
-        <div class="modal-footer"><a class="btn" href="#" data-dismiss="modal">Cancel</a>
-        <input class="btn btn-primary" type="submit" value="Save" /></div>
-        </form>
-        </div>
-    </script>
-
+   
 </body>
 </html>

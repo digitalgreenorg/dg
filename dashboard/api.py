@@ -18,8 +18,11 @@ def many_to_many_to_subfield(bundle, field_name, sub_field_names):
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
-        return
-    dict = model_to_dict(field, fields=sub_field_names, exclude=[])
+        dict = {}
+        for sub_field in sub_field_names:
+            dict[sub_field] = None 
+    else:
+    	dict = model_to_dict(field, fields=sub_field_names, exclude=[])
     return dict
 
 def get_user_villages(request):

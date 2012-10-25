@@ -37,7 +37,7 @@ var databasev1 = {
             transaction.db.createObjectStore("animator", {
                 autoIncrement: true
             });
-            console.log("created")
+            console.log("indexeddb database created")
             //store.createIndex("nameIndex", "country_name", { unique: false })
             next();
         }
