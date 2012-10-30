@@ -15,10 +15,6 @@ def get_admin_panel(request):
     return render_to_response('admin_panel.html')
     
 def get_home_page(request, type=None, id=None):
-    if type:
-        print type
-    if id:
-        print id
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
