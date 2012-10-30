@@ -96,6 +96,7 @@
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-custompopover.js"></script>
+	<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/sha256.js"></script>
 	
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -533,9 +534,17 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
-					var data = { 'fuid' : fuid, 'person_id' : person_id};
+					fuid = '12345';
+					var message = fuid+person_id+"dg_farmerbook";
+					var hash = CryptoJS.SHA256(message);
+					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
 					link_url = 'http://test.digitalgreen.org/farmerbook/person/'+person_id;
-					//$.post("/fbconnect/savefollower/", data, function(data) { console.log(data);});
+					$.post("/fbconnect/savefollower/", data, function(data) { 
+						console.log(data);
+						console.log($(this));
+						$('#follow').text("Following");
+			
+					});
 					picture_url = "https://s3.amazonaws.com/dg_farmerbook/2/"+person_id+".jpg";
 					desc = "Adopted "+video_title+" on "+date_of_adoption+".";
 								
@@ -557,7 +566,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					  }
 					});
 					console.log(obj);
-					//FB.ui(obj, callback);
+					FB.ui(obj, callback);
 				} else {
 					console.log('redirecting');
 					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions,publish_stream&response_type=token");
