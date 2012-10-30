@@ -311,6 +311,7 @@ def get_person_page(request):
     #videos_watched_stats contain list of dictionaries containing stats of video titles
     videos_watched_stats = []
     for obj in vids_details:
+        stat_text = make_text_from_person_stats(obj,vids_stats_dict)
         videos_watched_stats.append({'id':obj[0], 
                                     'title':obj[1],
                                     'youtubeid':obj[2],
@@ -319,7 +320,8 @@ def get_person_page(request):
                                     'last_seen_date':vids_stats_dict[obj[0]][5], 
                                     'question': vids_stats_dict[obj[0]][1],
                                     'farmers_attended': vids_stats_dict[obj[0]][3],
-                                    'screenings':vids_stats_dict[obj[0]][4]})
+                                    'screenings':vids_stats_dict[obj[0]][4],
+                                    'fulltext':stat_text})
 
     newlist = sorted(videos_watched_stats, key=lambda k: k['last_seen_date'], reverse=True)
     village_id = Person.objects.filter(id=person_id).values_list('village__id', flat=True)
@@ -713,3 +715,12 @@ def make_text_from_stats(obj,vids_stats_dict):
         text_to_return = text_to_return + "<b>" + str(vids_stats_dict[obj[0]][2])+ "</b>"  + " Adopters <br />"
     return text_to_return
     
+def make_text_from_person_stats(obj,vids_stats_dict):
+    text_to_return = ""
+    if(vids_stats_dict[obj[0]][0]):
+        text_to_return = text_to_return + " Interested <br />"
+    if(vids_stats_dict[obj[0]][1]):
+        text_to_return = text_to_return + " Question asked <br />"
+    if(vids_stats_dict[obj[0]][2]):
+        text_to_return = text_to_return + " Adopted <br />"
+    return text_to_return

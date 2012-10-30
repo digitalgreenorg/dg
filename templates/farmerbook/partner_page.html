@@ -90,6 +90,13 @@
 								<img rel="custompopover" data-content="Screenings :  <b>{{village.2}}</b>"  src="http://s3.amazonaws.com/dg_farmerbook/village/{{village.0}}.jpg" alt="">
 								</a>
 							</div>
+							{% if village.2 %}
+									<div style=' margin-top:-20px;position:absolute;'>
+										<span class='label label-info' >
+											<i class='icon-facetime-video icon-white'></i> {{ village.2 }}  
+										</span> 
+									</div>
+							{% endif %}
 							<div class='csp_name'>
 							<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})"><center>{{ village.1}}</center></a>
 							</div></center>
