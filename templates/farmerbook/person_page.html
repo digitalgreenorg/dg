@@ -156,7 +156,11 @@
 								<a href="javascript:void(0);" onclick="personClick({{ person.id }})">
 									<center>{{ person.name }}</center></a> 
 							</div>
-							<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}</div>
+							{% if person.title %}
+							<div class='last_adopted' style="height: 36px; overflow:hidden;"> 
+								Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}
+							</div>
+							{% endif %}
 							<div id="progress_bar_label" style="margin-right:5px;"> Adoption Rate </div>
 							<div class="progress progress-striped"  style="margin-bottom:5px;">
 							  <div class="bar "  style="width: {{ person.adoption_rate|floatformat:0 }}%; "><p> {{ person.adoption_rate|floatformat:0 }}%</p></div>
