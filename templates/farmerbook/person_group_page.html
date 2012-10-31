@@ -152,62 +152,59 @@
 	<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Groups</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
-			<div style='border: 1px solid #009E0F;height:311px;'>
-<div class="carousel slide span8" id="lbCarousel"
-	style="width: 710px;">
-	<div class="carousel-inner" style="height: 300px;">
-		{% for group in top_related_stats %} {% if forloop.counter0|divisibleby:"3" %}
-		<div class="item{% if forloop.first %} active{%endif%}">
-			<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
-				{% endif%}
-				<li style="margin-left: 2px; margin-top: -9px;">
-					<div class='farmer_details_container'>
-						<center>
-						<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
-						<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
-						</a>
-						<div class='csp_name'>
-							<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
-						</div></center>
+			<div style='border: 1px solid #009E0F;height:305px;'>
+			{% if top_related_stats%}
+			<div class="carousel slide span8" id="lbCarousel" style="width: 710px;">
+			<div class="carousel-inner" style="height: 300px;">
+				{% for group in top_related_stats %} {% if forloop.counter0|divisibleby:"3" %}
+				<div class="item{% if forloop.first %} active{%endif%}">
+					<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
+						{% endif%}
+						<li style="margin-left: 2px; margin-top: -9px;">
+							<div class='farmer_details_container'>
+								<center>
+								<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
+								<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+								</a>
+								<div class='csp_name'>
+									<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
+								</div></center>
 
 
 
-<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+		<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
 
-							<div class="progress progress-striped">
-							  <div class="bar "  style="width: {{group.ratewidth|floatformat:1 }}% ;"><p> {{ group.rate|floatformat:1 }}</p></div>
-							</div>
+									<div class="progress progress-striped">
+									  <div class="bar "  style="width: {{group.ratewidth|floatformat:1 }}% ;"><p> {{ group.rate|floatformat:1 }}</p></div>
+									</div>
 
 
 
-		<table width="200">		
-			<tr>
-				<td align="left">{{ group.start_date|date:"M Y" }}</td>
-				<td align="center"> {{ group.screenings|intcomma}}</td>
-				<td align="center"> {{ group.adoptions|intcomma}}</td>
-			</tr>
-			<tr>
-				<td align="left"><b> Joined</b></td>
-				<td align="center"><b> Screenings</b></td>
-				<td align="center"><b>Adoptions</b></td>
-			</tr>
-		</table>	
-						
-						
-						
-						
-
-					</div>
-				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
-		</div>
-		</ul>
-		{% endif%} 
-		{% endfor %}
-	</div>
-	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
-	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+				<table width="200">		
+					<tr>
+						<td align="left">{{ group.start_date|date:"M Y" }}</td>
+						<td align="center"> {{ group.screenings|intcomma}}</td>
+						<td align="center"> {{ group.adoptions|intcomma}}</td>
+					</tr>
+					<tr>
+						<td align="left"><b> Joined</b></td>
+						<td align="center"><b> Screenings</b></td>
+						<td align="center"><b>Adoptions</b></td>
+					</tr>
+				</table>
+				</div>
+						</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
+				</div>
+				</ul>
+				{% endif%} 
+				{% endfor %}
 			</div>
-
+			<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
+			<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+					</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any related groups.</center></div>
+			{% endif %}
 		</div>
 </div>
 

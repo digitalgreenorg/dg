@@ -157,6 +157,7 @@
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Villages</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
 			<div style='border: 1px solid #009E0F;height:311px;'>
+			{% if top_related_list %}
 				<div class="carousel slide span8" id="lbCarousel" style="width: 710px;">
 				<div class="carousel-inner" style="height: 300px;">
 					{% for village in top_related_list %} 
@@ -203,6 +204,9 @@
 					<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
 					<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
 				</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any related villages.</center></div>
+			{% endif %}
 			</div>
 		</div>
 	</div>		
