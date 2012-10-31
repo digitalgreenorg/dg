@@ -41,7 +41,24 @@ var databasev1 = {
             //store.createIndex("nameIndex", "country_name", { unique: false })
             next();
         }
-    }]
+    },
+    {
+        version: "1.1",
+        migrate: function(db, versionRequest, next) {
+            var store = versionRequest.transaction.objectStore("persongroup")
+            store.createIndex("villageIndex", "village.village_name", { unique: false});  
+            next();
+        }
+    },
+    {
+        version: "1.2",
+        migrate: function(db, versionRequest, next) {
+            var store = versionRequest.transaction.objectStore("persongroup")
+            store.createIndex("villageIDIndex", "village.id", { unique: false});  
+            next();
+        }
+    }
+    ]
 };
 
 
@@ -126,8 +143,8 @@ var persongroup_offline_model = Backbone.Model.extend({
 		this.destroy();
 	},
 	database: databasev1,
-	storeName: "persongroup",
-
+	storeName: "persongroup"
+    
 });
 
 var persongroup_online_model = Backbone.Model.extend({
@@ -154,6 +171,12 @@ var persongroup_offline_collection = Backbone.Collection.extend({
 	model: persongroup_offline_model,
 	database: databasev1,
 	storeName: "persongroup",
+    
+    
+    by_village: function(vill_id) {
+        return this.filter(function(pg) {
+          return pg.get("village").id == vill_id;
+          });}
 });
 
 var screening_offline_model = Backbone.Model.extend({

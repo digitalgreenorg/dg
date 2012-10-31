@@ -80,7 +80,7 @@ class VillageResource(ModelResource):
     state_name = fields.CharField('block__district__state__state_name')
     country_name = fields.CharField('block__district__state__country__country_name')
     animators = fields.ToManyField(AnimatorResource, 'animators')
-    dehydrate_animators = partial(many_to_many_to_subfield, field_name='animators',sub_field_names=['id'])
+    dehydrate_animators = partial(many_to_many_to_subfield, field_name='animators',sub_field_names=['id','name'])
     
     class Meta:
         queryset = Village.objects.select_related('block__district__state__country').all()

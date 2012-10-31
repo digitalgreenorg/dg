@@ -1,10 +1,11 @@
 $(document).ready(function() {
     
-    var village_list_view_configs = {'page_header':'Villages','backbone_collection': village_offline_collection,'table_template_name':'village_table_template', 'list_item_template_name':'village_list_item_template'};
+    var village_list_view_configs = {'page_header':'Villages','backbone_collection': village_offline_collection,'table_template_name':'village_table_template', 'list_item_template_name':'village_list_item_template','add_edit_template_name':'screening_add_edit_template'};
+    //var village_add_edit_view_configs = {'page_header':'Add Village','add_edit_template_name':'screening_add_edit_template'};
     var video_list_view_configs = {'page_header':'Videos','backbone_collection': video_offline_collection,'table_template_name':'video_table_template', 'list_item_template_name':'video_list_item_template'};
     var persongroup_list_view_configs = {'page_header':'Groups','backbone_collection': persongroup_offline_collection,'table_template_name':'persongroup_table_template', 'list_item_template_name':'persongroup_list_item_template'};
-    var screening_list_view_configs = {'page_header':'Screenings','backbone_collection': screening_offline_collection,'table_template_name':'screening_table_template', 'list_item_template_name':'screening_list_item_template'};
-    var person_list_view_configs = {'page_header':'Persons','backbone_collection': person_offline_collection,'table_template_name':'person_table_template', 'list_item_template_name':'person_list_item_template'};       
+    var screening_list_view_configs = {'page_header':'Screenings','backbone_collection': screening_offline_collection,'table_template_name':'screening_table_template', 'list_item_template_name':'screening_list_item_template','add_edit_template_name':'screening_add_edit_template'};
+    var person_list_view_configs = {'page_header':'Persons','backbone_collection': person_offline_collection,'table_template_name':'person_table_template', 'list_item_template_name':'person_list_item_template','add_edit_template_name':'person_add_edit_template'};       
     var personadoptvideo_list_view_configs = {'page_header':'Adoptions','backbone_collection': personadoptvideo_offline_collection,'table_template_name':'personadoptvideo_table_template' ,'list_item_template_name':'personadoptvideo_list_item_template'};        
     var animator_list_view_configs = {'page_header':'Animator','backbone_collection': animator_offline_collection,'table_template_name':'animator_table_template', 'list_item_template_name':'animator_list_item_template'};
 
@@ -25,7 +26,7 @@ $(document).ready(function() {
     var list_item_view = Backbone.View.extend({
         tagName: 'tr',
         events: {
-            "click a.edit": "editCountry",
+            "click a.edit": "edit",
             "click a.destroy": "remove"
         },
         
@@ -34,12 +35,12 @@ $(document).ready(function() {
                 .html());
         },
         
-        editCountry: function(event) {
+        edit: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
             // call back up to the main app passing the current model for it
             // to allow a user to update the details
-            list_view.editCountry(this.model);
+            list_view.edit(this.model);
         },
 
         remove: function(event) {
@@ -61,12 +62,10 @@ $(document).ready(function() {
     var list_view = Backbone.View.extend({
 
         events: {
-            "click button#add": "addCountry",
-            "click button#search_button": "searchCountry",
-            "click #countryForm :submit": "handleModal",
-            "keydown #countryForm": "handleModalOnEnter",
-            "hidden #countryModal": "prepareForm"
+            "click button#add": "addNew",
+            "click button#search_button": "search",
         },
+        
         initialize: function(view_configs) {
             this.view_configs = view_configs;
             this.collection = new view_configs.backbone_collection();
@@ -76,150 +75,206 @@ $(document).ready(function() {
             this.table_template =  _.template($('#'+this.table_template_name).html());
             this.collection.bind('all', this.render, this);
             this.collection.fetch();
-            
         },
     
         render: function() {
-                      
             $(this.el)
                 .html(this.template());
-
             $(this.el).append(this.table_template());
-            console.log("before : "+this.view_configs.list_item_template_name);
-                this.collection.each(function(model) {
-                    $(this.el)
-                        .find('tbody')
-                        .append(new list_item_view({
-                        model: model,view_configs: this.view_configs
-                    })
-                        .render()
-                        .el);
-                         }, this);
-            return this;
-            
-        },
-        addCountry: function(event) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            this.prepareForm(null);
-            $('#countryModal')
-                .modal('show');
-
-        },
-        addNew: function(country) {
-            this.countries_view.countries.create(country, {
-                wait: true
-            });
-
-        },
-        editCountry: function(country) {
-            //alert("edit "+JSON.stringify(country));
-            this.prepareForm(country.toJSON());
-            $('#countryModal')
-                .data('countryId', country.get('id'));
-            $('#countryModal')
-                .modal('show');
-        },
-        prepareForm: function(countryData) {
-            countryData = countryData || {};
-
-            var data = {
-                'country_name': '',
-                'start_date': ''
-            };
-
-            $.extend(data, countryData);
-
-            var form = $('#countryForm');
-            $(form)
-                .find('#id_country_name')
-                .val(data.country_name);
-            $(form)
-                .find('#id_start_date')
-                .val(data.start_date);
-            // clear any previous references to countryId in case the user
-            // clicked the cancel button
-            $('#countryModal')
-                .data('countryId', '');
-        },
-
-        handleModal: function(event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            var form = $('#countryForm');
-
-            var countryData = {
-                country_name: $(form)
-                    .find('#id_country_name')
-                    .val(),
-                start_date: $(form)
-                    .find('#id_start_date')
-                    .val(),
-            };
-
-            if ($('#countryModal')
-                .data('countryId')) {
-                countryData.id = $('#countryModal')
-                    .data('countryId');
-                this.updateCountry(countryData);
-            } else {
-                // add or update the country
-                this.addNew(countryData);
-            }
-
-            // hide the modal
-            $('#countryModal')
-                .modal('hide');
-
+            $tbody = this.$("tbody");
+            this.collection.each(function(model) {
+                $tbody.append(new list_item_view({
+                    model: model,view_configs: this.view_configs
+                })
+                    .render()
+                    .el);
+                     }, this);
             return this;
         },
-
-        handleModalOnEnter: function(event) {
-            // process the modal if the user pressed the ENTER key
-            if (event.keyCode == 13) {
-                return this.handleModal(event);
-            }
+        
+        addNew: function() {
+            console.log("add new");
+            app.render_add_edit_view(this.view_configs);
         },
-
-        updateCountry: function(countryData) {
-            var country = this.countries_view.countries.get(countryData.id)
-            if (_.isObject(country)) {
-                // iterate through all the data in countryData, setting it
-                // to the country model
-                for (var key in countryData) {
-                    // ignore the ID attribute
-                    if (key != 'id') {
-                        country.set(key, countryData[key]);
-                    }
-                }
-
-                // persist the change
-                country.save({
-                    wait: true
-                });
-            }
-
-
+        edit: function(country) {
+            console.log("edit: "+JSON.stringify(country.toJSON()));            
         },
+        search: function() {
 
-        searchCountry: function() {
-
-            //alert($('#search_box').val());
-            this.countries_view.countries.fetch({
-                conditions: {
-                    country_name: $('#search_box')
-                        .val()
-                },
-                success: function() {
-                    
-                }
-            });
         }
-
-
 
     });
 
+    var screening_add_edit_view = Backbone.View.extend({
+
+        events: {
+            'change #id_village': 'village_selection_changed'
+            
+        },
+        
+        initialize: function(view_configs) {
+            
+            this.view_configs = view_configs;
+            console.log("temp name="+view_configs.add_edit_template_name)
+            this.add_edit_template_name = view_configs.add_edit_template_name;
+            this.add_edit_template =  _.template($('#'+this.add_edit_template_name).html());
+            options_inner_template = _.template($('#options_template').html());
+            this.villages = new village_offline_collection();
+            this.videos = new video_offline_collection();
+            this.persongroups = new persongroup_offline_collection();
+            curr_village = null;
+            _(this).bindAll('render_villages');
+            _(this).bindAll('render_videos');
+            _(this).bindAll('render_persongroups');
+            
+            this.villages.bind('all',this.render_villages);
+            this.villages.fetch({success: function() {
+                console.log("villages coll fetched");
+
+            }});
+            
+            this.videos.bind('all',this.render_videos);
+            this.videos.fetch({success: function() {
+            console.log("videos coll fetched");
+
+            }});    
+            
+            this.persongroups.bind('all',this.render_persongroups);
+             // this.persongroups.fetch({success: function() {
+             //            console.log("persongroups coll fetched");
+             // 
+             //            }});
+        },
+    
+    
+        village_selection_changed: function (e) {
+            var value = $(e.currentTarget).val();
+            curr_village=value;
+            this.persongroups.fetch({
+                    success: function() {
+                    console.log("persongroups coll fetched");
+                       }});
+                       
+            this.render_animators();
+            console.log("village selected", value);
+                
+        },
+            
+        render: function() {
+            $(this.el)
+                .html(this.add_edit_template({villages:this.villages, options_inner_template: this.options_inner_template}));
+            return this;
+        },
+        render_villages: function(){
+            $village_list =this.$('#id_village');
+            this.villages.each(function(village) {
+                       $village_list.append(options_inner_template({id:village.get("id"),name:village.get("village_name")}));
+                   });
+        },
+        render_animators: function(){
+            $animator_list =this.$('#id_animator');
+            vill = this.villages.where({id:curr_village})[0];
+            console.log(vill);
+            var animators = vill.get("animators");
+            console.log(animators);
+            console.log(typeof(animators));
+            $.each(animators,function(index,animator) {
+                       $animator_list.append(options_inner_template({id:animator.id,name:animator.name}));
+                   });
+        },
+        render_videos: function(){
+            $video_list =this.$('#id_videoes_screened');
+            $video_list.html('');
+            this.videos.each(function(video) {
+                       $video_list.append(options_inner_template({id:video.get("id"),name:video.get("title")}));
+                   });
+        },
+        render_persongroups: function(){
+            // persongroups_for_village = this.persongroups.where({village['id']:curr_village});
+            persongroups_for_village = this.persongroups.by_village(curr_village);
+            console.log("filtered pg length= "+persongroups_for_village.length);
+            $persongroup_list = this.$('#id_farmer_groups_targeted');
+            $persongroup_list.html('');
+            
+            $.each(persongroups_for_village,function(index,persongroup) {
+                       $persongroup_list.append(options_inner_template({id:persongroup.get("id"),name:persongroup.get("group_name")}));
+                   });
+        }
+       
+    });
+    
+    var person_add_edit_view = Backbone.View.extend({
+
+        events: {
+            'change #id_village': 'village_selection_changed'
+            
+        },
+        
+        initialize: function(view_configs) {
+            
+            this.view_configs = view_configs;
+            this.add_edit_template_name = view_configs.add_edit_template_name;
+            this.add_edit_template =  _.template($('#'+this.add_edit_template_name).html());
+            options_inner_template = _.template($('#options_template').html());
+            this.villages = new village_offline_collection();
+            this.persongroups = new persongroup_offline_collection();
+            curr_village = null;
+            _(this).bindAll('render_villages');
+            _(this).bindAll('render_persongroups');
+            
+            this.villages.bind('all',this.render_villages);
+            this.villages.fetch({success: function() {
+                console.log("villages coll fetched");
+
+            }});
+            
+            
+            this.persongroups.bind('all',this.render_persongroups);
+             // this.persongroups.fetch({success: function() {
+             //            console.log("persongroups coll fetched");
+             // 
+             //            }});
+        },
+    
+    
+        village_selection_changed: function (e) {
+            var value = $(e.currentTarget).val();
+            curr_village=value;
+            this.persongroups.fetch({
+                    success: function() {
+                    console.log("persongroups coll fetched");
+                       }});
+                       
+            console.log("village selected", value);
+                
+        },
+            
+        render: function() {
+            $(this.el)
+                .html(this.add_edit_template());
+            return this;
+        },
+        render_villages: function(){
+            $village_list =this.$('#id_village');
+            this.villages.each(function(village) {
+                       $village_list.append(options_inner_template({id:village.get("id"),name:village.get("village_name")}));
+                   });
+        },
+        render_persongroups: function(){
+            // persongroups_for_village = this.persongroups.where({village['id']:curr_village});
+            persongroups_for_village = this.persongroups.by_village(curr_village);
+            console.log("filtered pg length= "+persongroups_for_village.length);
+            $persongroup_list = this.$('#id_group');
+            $persongroup_list.html("<option value='' selected='selected'>---------</option> ");
+            
+            $.each(persongroups_for_village,function(index,persongroup) {
+                       $persongroup_list.append(options_inner_template({id:persongroup.get("id"),name:persongroup.get("group_name")}));
+                   });
+        }
+       
+    });
+    
+    
     var HeaderView = Backbone.View.extend({
         //tagName:'tr',
         events: {
@@ -431,6 +486,31 @@ $(document).ready(function() {
                 .el);
             return this;
         },
+        render_add_edit_view: function(view_configs) {
+            $(this.el)
+                .html('');
+            $(this.el)
+                .append(header.render("Add "+view_configs.page_header)
+                .el);
+            if(view_configs.page_header=="Screenings")
+            {
+                current_add_edit_view = screening_add_edit_view
+            }
+            else if(view_configs.page_header=="Persons")
+            {
+                current_add_edit_view = person_add_edit_view
+            }
+            else
+            {
+                console.log("not screening");
+                return this;
+            }
+            $(this.el)
+                .append(new current_add_edit_view(view_configs)
+                .render()
+                .el);
+            return this;
+        }
         
     });
 
