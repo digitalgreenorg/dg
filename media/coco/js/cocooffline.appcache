@@ -1,0 +1,18 @@
+CACHE MANIFEST
+# 2012-11-1 v1.0.0
+CACHE:
+/media/coco/bootstrap/docs/assets/css/bootstrap.css
+/media/coco/bootstrap/docs/assets/css/bootstrap-responsive.css
+/media/coco/bootstrap/docs/assets/js/jquery.js
+/media/js/backbone/json2.js
+/media/js/backbone/underscore-min.js
+/media/js/backbone/backbone-min.js
+/media/coco/js/indexeddb-backbonejs-adapter/backbone-indexeddb.js
+/media/coco/js/backbone_views.js
+/media/coco/js/backbone_models.js
+/media/coco/js/backbone.syphon.js
+/media/coco/bootstrap/docs/assets/js/bootstrap.min.js
+/media/coco/bootstrap/docs/assets/img/glyphicons-halflings.png 
+/media/css/forms.css
+/media/css/widgets.css  
+/media/img/admin/nav-bg.gif  
