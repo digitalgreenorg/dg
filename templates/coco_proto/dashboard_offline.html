@@ -21,8 +21,8 @@
 <!-- <script type="text/javascript" src="/media/coco/js/dashboard_offline.js"></script> -->
 <script type="text/javascript" src="/media/coco/js/backbone_views.js"></script>
 <script type="text/javascript" src="/media/coco/js/backbone_models.js"></script>
+<script type="text/javascript" src="/media/coco/js/backbone.syphon.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
-
 <meta name="robots" content="NONE,NOARCHIVE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/template" id="header">
@@ -304,7 +304,7 @@
 </script>
 
 <script type="text/template" id="person_add_edit_template">
-
+<form id ="person_add_form">
 <link rel='stylesheet' type='text/css' href='/media/css/forms.css' />  
 								<div id='content' class='colM'> 
 									<div id='content-main'> 
@@ -359,7 +359,7 @@
     											    </div> 
     													<div class='form-row group  '> 
     														<div> 
-    															<label for='id_group'>Group:</label><select name='group' id='id_group'> 
+    															<label for='id_group'>Group:</label><select name='person_group' id='id_group'> 
     																<option value='' selected='selected'>---------</option> 
     															</select> 
     														</div> 
@@ -374,11 +374,11 @@
     									<br class='clear' /> 
     								</div>
                                                     
-                                                        </script>
+</form>                                                        </script>
                                                         
                                                         
 <script type="text/template" id="screening_add_edit_template">
-    
+<form>
  <link rel='stylesheet' type='text/css' href='/media/css/forms.css' /> 
  <link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' /> 
 							<div id='content' class='colM'> 
@@ -483,7 +483,7 @@
 							</div> 
 							<br class='clear' /> 
 						</div>
-    
+                        </form>
     
 </script>
 
