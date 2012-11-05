@@ -367,14 +367,14 @@ def get_group_page(request):
     
     left_panel_stats = {}
     left_panel_stats['group_details'] = PersonGroups.objects.filter(id = group_id).values_list('group_name',
-                                                                                              'person__village__id',
-                                                                                              'person__village__village_name',
-                                                                                              'person__village__block__district__district_name',
-                                                                                              'person__village__block__district__state__state_name',
-                                                                                              'person__village__block__district__partner__id',
-                                                                                              'person__village__block__district__partner__partner_name',
-                                                                                              'person__village__animator__id',
-                                                                                              'person__village__animator__name',
+                                                                                              'village__id',
+                                                                                              'village__village_name',
+                                                                                              'village__block__district__district_name',
+                                                                                              'village__block__district__state__state_name',
+                                                                                              'village__block__district__partner__id',
+                                                                                              'village__block__district__partner__partner_name',
+                                                                                              'village__animatorassignedvillage__animator__id',
+                                                                                              'village__animatorassignedvillage__animator__name',
                                                                                               'id')
     
     left_panel_stats['members_count'] = Person.objects.filter(group = group_id).count()
