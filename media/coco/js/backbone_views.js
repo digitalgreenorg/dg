@@ -431,11 +431,15 @@ $(document)
             "click a.video": "list_video",
             "click a.persongroup": "list_persongroup",
             "click a.screening": "list_screening",
-            "click a.person": "list_person",
+            // "click a.person": "list_person",
             "click a.personadoptvideo": "list_personadoptvideo",
             "click a.animator": "list_animator"
         },
-
+        
+        initialize: function() {
+            					appRouter.on('route:listPerson', this.list_person);
+        					},
+                            
         toggle_connectivity: function() {
             conn_state.set("connected", !conn_state.get("connected"));
             console.log("toggled connectivity");
@@ -585,11 +589,19 @@ $(document)
                 app: this
             });
             curr_list_view = null;
+            _(this).bindAll('renderDashboard');
+            appRouter.on('route:showDashboard', this.renderDashboard);
             this.render();
+            
         },
         render: function() {
+            //console.log("showing dashboard");
+            $(this.el)
+                .html('');
             $(this.el)
                 .append(header.render('Dashboard')
+                .el);
+                console.log(dashboard.render()
                 .el);
             $(this.el)
                 .append(dashboard.render()
@@ -597,7 +609,24 @@ $(document)
             return this;
 
         },
+        renderDashboard: function() {
+            console.log("showing dashboard");
+            console.log(this);
+            $(this.el)
+                .html('');
+            $(this.el)
+                                        .append(header.render('Dashboard')
+                                        .el);
+                                        console.log(dashboard.render()
+                                        .el);
+                                    $(this.el)
+                                        .append(dashboard.render()
+                                        .el);
+            return this;
+
+        },
         render_list_view: function(view_configs) {
+            console.log(this);
             $(this.el)
                 .html('');
             $(this.el)
@@ -622,9 +651,10 @@ $(document)
                 .append(header.render("Add " + view_configs.page_header)
                 .el);
             if (view_configs.page_header == "Screenings") {
-                current_add_edit_view = screening_add_edit_view
+                current_add_edit_view = screening_add_edit_view;
             } else if (view_configs.page_header == "Persons") {
-                current_add_edit_view = person_add_edit_view
+                appRouter.navigate('addedit/person', true);
+                current_add_edit_view = person_add_edit_view;
             } else {
                 console.log("not screening or person");
                 return this;
@@ -638,10 +668,24 @@ $(document)
                 .el);
             return this;
         }
+        
+        
+        
+        
 
     });
 
+    
+
+    var AppRouter = Backbone.Router.extend({
+    					routes: {
+                            "": "showDashboard",
+    						"person": "listPerson"
+    					}
+    				});
+ 
+    var appRouter = new AppRouter();
+    Backbone.history.start();
+
     var app = new AppView;
-
-
 });
