@@ -143,21 +143,25 @@ def overview(geog, id, from_date, to_date, partners, type):
     if(type == 'production'):
         sql_ds['select'].append('SUM(total_videos_produced) as tot_pro')
         sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
         main_tab_abb = "VPC"
         date_field = "VPC.date"
     elif(type=='screening'):
         sql_ds['select'].append('SUM(total_screening) as tot_scr')
         sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
         main_tab_abb = "VPC"
         date_field = "VPC.date"
     elif(type=='village'):
         sql_ds['select'].append('COUNT(DISTINCT SCM.village_id) as tot_vil')
         sql_ds['from'].append('screening_myisam SCM')
+        sql_ds['force index'].append('(screening_myisam_village_id)')
         main_tab_abb = "SCM"
         date_field = "SCM.date"
     elif(type=='adoption'):
         sql_ds['select'].append('SUM(total_adoption) as tot_ado')
         sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
         main_tab_abb = "VPC"
         date_field = "VPC.date"
     elif(type=='practice'):
@@ -168,6 +172,7 @@ def overview(geog, id, from_date, to_date, partners, type):
     elif(type=='person'):
         sql_ds['select'].append('COUNT(DISTINCT PMAM.person_id) as tot_per')
         sql_ds['from'].append('person_meeting_attendance_myisam PMAM')
+        sql_ds['force index'].append('(person_meeting_attendance_myisam_village_id)')
         main_tab_abb = "PMAM"
         date_field = "PMAM.date"
  
@@ -200,6 +205,7 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
         sql_inn_ds = get_init_sql_ds();
         sql_inn_ds['select'].extend(["PMAM.person_id" , "MIN(date) AS date"])
         sql_inn_ds['from'].append("person_meeting_attendance_myisam PMAM");
+        sql_inn_ds['force index'].append("(person_meeting_attendance_myisam_village_id)");
         filter_partner_geog_date(sql_inn_ds,'PMAM','dummy',geog,id,None,None,partners)
         sql_inn_ds['group by'].append("person_id");
 
@@ -213,16 +219,19 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
     elif(type=='production'):
         sql_ds['select'].extend(["date", "SUM(total_videos_produced)"])
         sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
         filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("date");
     elif(type=='screening'):
         sql_ds['select'].extend(["date", "SUM(total_screening)"])
         sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
         filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("date");
     elif(type=='adoption'):
         sql_ds['select'].extend(["date", "SUM(total_adoption)"])
         sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
         filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
         sql_ds['group by'].append("date");
 
@@ -263,6 +272,7 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
         sql_ds['select'].append("SUM(VPC.total_questions_asked) as tot_que");
         
     sql_ds['from'].append("village_precalculation_copy VPC")
+    sql_ds['force index'].append('(village_precalculation_copy_village_id)')
     filter_partner_geog_date(sql_ds,"VPC","VPC.date",geog,id,from_date,to_date,partners)
         
     return join_sql_ds(sql_ds)
@@ -274,6 +284,7 @@ def adoption_rate_totals(geog, id, to_date,partners):
                              'SUM(total_active_attendees) AS tot_per', 
                              'SUM(total_adoption_by_active) AS tot_active_adop'])
     sql_ds['from'].append("village_precalculation_copy VPC")
+    sql_ds['force index'].append('(village_precalculation_copy_village_id)')
     sql_ds['where'].append("date = '%s'" % str(to_date))
     filter_partner_geog_date(sql_ds, "VPC", "DUMMY", geog, id, None, None, partners)
     

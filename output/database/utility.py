@@ -67,7 +67,7 @@ def run_query_dict_list(query_string, dict_key, *query_args):
 
 def get_init_sql_ds():
     sql = {}
-    sql['select'] = []; sql['from'] = []; sql['where'] = []; sql['join'] = [];
+    sql['select'] = []; sql['from'] = []; sql['force index']=[];sql['where'] = []; sql['join'] = [];
     sql['lojoin'] = []; sql['group by'] = []; sql['order by'] = []; sql['having'] = [];
     return sql
 
@@ -127,6 +127,8 @@ def join_sql_ds(sql_ds):
     return_val = [];
     return_val.append("SELECT " + ', '.join(sql_ds['select']) \
                +"\nFROM " + ', '.join(sql_ds['from']))
+    if(sql_ds['force index']):
+        return_val.append("force index "+", ".join(sql_ds['force index']))
     if(sql_ds['join']):
         return_val.append("JOIN "+"\nJOIN ".join([' ON '.join(x) for x in sql_ds['join']]))
     if(sql_ds['lojoin']):

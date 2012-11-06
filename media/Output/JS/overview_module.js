@@ -9,7 +9,7 @@ var line_options={colors: ['#FFCC00','#999999','#3366FF','#FF0000','#996633','#F
 
 function drawCharts() {
 
-	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['prod', 'screen', 'prac', 'person', 'adopt']}, function(json){overview_line(json);});
+	$.getJSON('/analytics/overview_line_graph/'+search_params,{type:['prod', 'screen', 'prac', 'person', 'adopt']}, function(json){overview_line(json);});
 }
 function overview_line(json){
 	var total_line_chart_data = google.visualization.arrayToDataTable(json,false);
