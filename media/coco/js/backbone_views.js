@@ -24,7 +24,6 @@ $(document)
         'backbone_collection': screening_offline_collection,
         'table_template_name': 'screening_table_template',
         'list_item_template_name': 'screening_list_item_template',
-        'add_edit_template_name': 'screening_add_edit_template'
     };
     var person_list_view_configs = {
         'page_header': 'Persons',
@@ -228,6 +227,7 @@ $(document)
             var persongroup = this.persongroups.where({
                 id: data['person_group']
             })[0];
+            
             if(village)
             {
                 data['village'] = {
@@ -252,18 +252,18 @@ $(document)
                     'id':null,
                     'group_name': null
                 };
+                
             if (model) {
                 model.set(data);
                 console.log("editing person to:");
                 console.log(JSON.stringify(model));
                 model.save();
 
-            } else {
+            } 
+            else {
                 this.person_offline_model.set(data);
-
                 console.log("adding new person:");
                 console.log(JSON.stringify(this.person_offline_model));
-
                 this.person_offline_model.save();
             }
 
