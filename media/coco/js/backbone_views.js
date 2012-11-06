@@ -221,21 +221,37 @@ $(document)
             if (data.hasOwnProperty('')) {
                 delete data[''];
             }
-
+            
             var village = this.villages.where({
                 id: data['village']
             })[0];
             var persongroup = this.persongroups.where({
                 id: data['person_group']
             })[0];
-            data['village'] = {
-                'id': village.get('id'),
-                'village_name': village.get('village_name')
-            };
-            data['person_group'] = {
-                'id': persongroup.get('id'),
-                'group_name': persongroup.get('group_name')
-            };
+            if(village)
+            {
+                data['village'] = {
+                    'id': village.get('id'),
+                    'village_name': village.get('village_name')
+                };
+            }
+            else
+                data['village']= {
+                    'id': null,
+                    'village_name': null
+                };
+            if(persongroup)
+            {
+                data['person_group'] = {
+                    'id': persongroup.get('id'),
+                    'group_name': persongroup.get('group_name')
+                };
+            }
+            else
+                data['person_group'] = {
+                    'id':null,
+                    'group_name': null
+                };
             if (model) {
                 model.set(data);
                 console.log("editing person to:");
