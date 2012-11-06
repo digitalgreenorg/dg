@@ -75,10 +75,8 @@ $(document)
         edit: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            // call back up to the main app passing the current model for it
-            // to allow a user to update the details
-            // list_view.edit(this.model);
-            app.render_add_edit_view(this.options.view_configs, this.model);
+            appRouter.navigate('person/edit/' + this.model.id, true);
+
         },
 
         remove: function(event) {
@@ -135,9 +133,7 @@ $(document)
         },
 
         addNew: function() {
-            console.log("adding new");
-            this.collection.off();
-            app.render_add_edit_view(this.view_configs, null);
+            appRouter.navigate('person/add', true);
         },
 
         search: function() {
@@ -146,155 +142,45 @@ $(document)
 
     });
 
-    var screening_add_edit_view = Backbone.View.extend({
-
-        events: {
-            'change #id_village': 'village_selection_changed',
-            'click #save': 'save'
-
-        },
-
-        initialize: function(view_configs) {
-
-            this.view_configs = view_configs;
-            console.log("temp name=" + view_configs.add_edit_template_name)
-            this.add_edit_template_name = view_configs.add_edit_template_name;
-            this.add_edit_template = _.template($('#' + this.add_edit_template_name)
-                .html());
-            options_inner_template = _.template($('#options_template')
-                .html());
-            this.villages = new village_offline_collection();
-            this.videos = new video_offline_collection();
-            this.persongroups = new persongroup_offline_collection();
-            curr_village = null;
-            _(this)
-                .bindAll('render_villages');
-            _(this)
-                .bindAll('render_videos');
-            _(this)
-                .bindAll('render_persongroups');
-
-            this.villages.bind('all', this.render_villages);
-            this.villages.fetch({
-                success: function() {
-                    console.log("villages coll fetched");
-
-                }
-            });
-
-            this.videos.bind('all', this.render_videos);
-            this.videos.fetch({
-                success: function() {
-                    console.log("videos coll fetched");
-
-                }
-            });
-
-            this.persongroups.bind('all', this.render_persongroups);
-
-        },
-        save: function() {
-            console.log("save person");
-            // read data from form
-            // check internet conn
-            //if internect conn create on online coll/model(?) then create on offline coll/model        (server log ?)
-            //else create on offline coll/model, add to local log
-            console.log(this);
-            var data = Backbone.Syphon.serialize(this);
-            console.log(data);
-
-
-        },
-
-        village_selection_changed: function(e) {
-            var value = $(e.currentTarget)
-                .val();
-            curr_village = value;
-            this.persongroups.fetch({
-                success: function() {
-                    console.log("persongroups coll fetched");
-                }
-            });
-            this.render_animators();
-            console.log("village selected", value);
-
-        },
-
-        render: function() {
-            $(this.el)
-                .html(this.add_edit_template({
-                villages: this.villages,
-                options_inner_template: this.options_inner_template
-            }));
-            return this;
-        },
-        render_villages: function() {
-            $village_list = this.$('#id_village');
-            this.villages.each(function(village) {
-                $village_list.append(options_inner_template({
-                    id: village.get("id"),
-                    name: village.get("village_name")
-                }));
-            });
-        },
-        render_animators: function() {
-            $animator_list = this.$('#id_animator');
-            vill = this.villages.where({
-                id: curr_village
-            })[0];
-            var animators = vill.get("animators");
-            $.each(animators, function(index, animator) {
-                $animator_list.append(options_inner_template({
-                    id: animator.id,
-                    name: animator.name
-                }));
-            });
-        },
-        render_videos: function() {
-            $video_list = this.$('#id_videoes_screened');
-            $video_list.html('');
-            this.videos.each(function(video) {
-                $video_list.append(options_inner_template({
-                    id: video.get("id"),
-                    name: video.get("title")
-                }));
-            });
-        },
-        render_persongroups: function() {
-            persongroups_for_village = this.persongroups.by_village(curr_village);
-            $persongroup_list = this.$('#id_farmer_groups_targeted');
-            $persongroup_list.html('');
-            $.each(persongroups_for_village, function(index, persongroup) {
-                $persongroup_list.append(options_inner_template({
-                    id: persongroup.get("id"),
-                    name: persongroup.get("group_name")
-                }));
-            });
-        }
-
-    });
 
     var person_add_edit_view = Backbone.View.extend({
 
         events: {
             'click #save': 'save'
-
         },
 
         initialize: function(params) {
             this.person_offline_model = new person_offline_model();
-            this.person_online_coll = new person_online_collection();
             console.log("params to add/edit view:");
             console.log(params);
             this.view_configs = params.view_configs;
+            model = null;
+            json = null;
+            if (params.model_id) {
+                model = new person_offline_model({
+                    id: params.model_id
+                })
+                _(this)
+                    .bindAll('fill_form');
+
+                model.bind('change', this.fill_form);
+                model.fetch({
+                success: function() {
+                    console.log(" edit model fetched");
+
+                }
+                //ToDO: error handling
+                });
+                
+            }
             this.add_edit_template_name = this.view_configs.add_edit_template_name;
             this.add_edit_template = _.template($('#' + this.add_edit_template_name)
                 .html());
             options_inner_template = _.template($('#options_template')
                 .html());
+           
             this.villages = new village_offline_collection();
             this.persongroups = new persongroup_offline_collection();
-            curr_village = null;
             _(this)
                 .bindAll('render_villages');
             _(this)
@@ -308,7 +194,6 @@ $(document)
                 }
                 //ToDO: error handling
             });
-            this.json = null;
             this.persongroups.bind('all', this.render_persongroups);
             this.persongroups.fetch({
                 success: function() {
@@ -318,7 +203,15 @@ $(document)
                 //ToDO: error handling
             });
         },
-
+        fill_form: function() {
+            //render should have been called before this func
+            console.log("its edit case, model for edit:");
+            console.log(model);
+            json = model.toJSON();
+            json.village = json.village.id;
+            json.person_group = json.person_group.id;
+            Backbone.Syphon.deserialize(this, json);
+        },
         save: function() {
             // read data from form
             // check internet conn
@@ -343,11 +236,11 @@ $(document)
                 'id': persongroup.get('id'),
                 'group_name': persongroup.get('group_name')
             };
-            if (this.model) {
-                this.model.set(data);
+            if (model) {
+                model.set(data);
                 console.log("editing person to:");
-                console.log(JSON.stringify(this.model));
-                this.model.save();
+                console.log(JSON.stringify(model));
+                model.save();
 
             } else {
                 this.person_offline_model.set(data);
@@ -357,21 +250,15 @@ $(document)
 
                 this.person_offline_model.save();
             }
-            app.render_list_view(this.options.view_configs);
+
+            appRouter.navigate('person', true);
 
         },
 
         render: function() {
             $(this.el)
                 .html(this.add_edit_template());
-            if (this.model) {
-                console.log("its edit case, model for edit:");
-                this.json = this.model.toJSON();
-                this.json.village = this.json.village.id;
-                this.json.person_group = this.json.person_group.id;
-                console.log(this.json);
-                Backbone.Syphon.deserialize(this, this.json);
-            }
+
             return this;
         },
         render_villages: function() {
@@ -382,8 +269,8 @@ $(document)
                     name: village.get("village_name")
                 }));
             });
-            if (this.json) {
-                Backbone.Syphon.deserialize(this, this.json);
+            if (json) {
+                Backbone.Syphon.deserialize(this, json);
             }
 
         },
@@ -397,16 +284,15 @@ $(document)
                 }));
             });
 
-            if (this.json) {
-                Backbone.Syphon.deserialize(this, this.json);
+            if (json) {
+                Backbone.Syphon.deserialize(this, json);
             }
         }
 
     });
 
-
+    
     var HeaderView = Backbone.View.extend({
-        //tagName:'tr',
         events: {
 
         },
@@ -423,37 +309,17 @@ $(document)
         }
     });
 
+    // Dashboard View - contains upload, download buttons, the list of models
     var DashboardView = Backbone.View.extend({
         events: {
-            "click button#connectivity": "toggle_connectivity",
             "click button#download": "Download",
-            "click a.village": "list_village",
-            "click a.video": "list_video",
-            "click a.persongroup": "list_persongroup",
-            "click a.screening": "list_screening",
-            // "click a.person": "list_person",
-            "click a.personadoptvideo": "list_personadoptvideo",
-            "click a.animator": "list_animator"
         },
-        
-        initialize: function() {
-            					appRouter.on('route:listPerson', this.list_person);
-        					},
-                            
-        toggle_connectivity: function() {
-            conn_state.set("connected", !conn_state.get("connected"));
-            console.log("toggled connectivity");
-            this.render();
-
-        },
-
         fetch_save: function(collection_online, collection_offline, storeName) {
             var prevTime, curTime;
             curTime = (new Date())
                 .getTime();
             prevTime = curTime;
             console.log("downloading  " + storeName);
-
             collection_online.fetch({
                 success: function() {
                     data = (collection_online.toJSON());
@@ -495,18 +361,11 @@ $(document)
                     }
                 }
             });
-
-
-
         },
-
         Download: function() {
             console.log("starting download");
             //Download:fetch each model from server and save it to the indexeddb
-            // countries_online = new CountryCollection_Online();
-            // countries_offline = new CountryCollection();
-            // this.fetch_save(countries_online, countries_offline, "country");
-
+            
             villages_online = new village_online_collection();
             villages_offline = new village_offline_collection();
             this.fetch_save(villages_online, villages_offline, "village");
@@ -535,47 +394,11 @@ $(document)
             animators_offline = new animator_offline_collection();
             this.fetch_save(animators_online, animators_offline, "animator");
         },
-
-        list_village: function() {
-            console.log("list village clicked");
-            app.render_list_view(village_list_view_configs);
-        },
-        list_video: function() {
-            console.log("list video clicked");
-            app.render_list_view(video_list_view_configs);
-        },
-        list_persongroup: function() {
-            console.log("list persongroup clicked");
-            app.render_list_view(persongroup_list_view_configs);
-        },
-        list_screening: function() {
-            console.log("list screening clicked");
-            app.render_list_view(screening_list_view_configs);
-        },
-        list_person: function() {
-            console.log("list person clicked");
-            app.render_list_view(person_list_view_configs);
-        },
-        list_personadoptvideo: function() {
-            console.log("list personadoptvideo clicked");
-            app.render_list_view(personadoptvideo_list_view_configs);
-        },
-        list_animator: function() {
-            console.log("list animator clicked");
-            app.render_list_view(animator_list_view_configs);
-        },
-
         template: _.template($('#dashboard')
             .html()),
-
         render: function() {
-            var toggle_connectivity;
-
-            if (conn_state.get("connected")) toggle_connectivity = "Offline";
-            else toggle_connectivity = "Online";
             $(this.el)
                 .html(this.template({
-                toggle_connectivity: toggle_connectivity
             }));
             return this;
         }
@@ -589,19 +412,13 @@ $(document)
                 app: this
             });
             curr_list_view = null;
-            _(this).bindAll('renderDashboard');
-            appRouter.on('route:showDashboard', this.renderDashboard);
-            this.render();
             
         },
-        render: function() {
-            //console.log("showing dashboard");
+        render_dashboard: function() {
             $(this.el)
                 .html('');
             $(this.el)
                 .append(header.render('Dashboard')
-                .el);
-                console.log(dashboard.render()
                 .el);
             $(this.el)
                 .append(dashboard.render()
@@ -609,24 +426,7 @@ $(document)
             return this;
 
         },
-        renderDashboard: function() {
-            console.log("showing dashboard");
-            console.log(this);
-            $(this.el)
-                .html('');
-            $(this.el)
-                                        .append(header.render('Dashboard')
-                                        .el);
-                                        console.log(dashboard.render()
-                                        .el);
-                                    $(this.el)
-                                        .append(dashboard.render()
-                                        .el);
-            return this;
-
-        },
         render_list_view: function(view_configs) {
-            console.log(this);
             $(this.el)
                 .html('');
             $(this.el)
@@ -648,44 +448,62 @@ $(document)
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render("Add " + view_configs.page_header)
+                .append(header.render("Add/Edit " + view_configs.page_header)
                 .el);
-            if (view_configs.page_header == "Screenings") {
-                current_add_edit_view = screening_add_edit_view;
-            } else if (view_configs.page_header == "Persons") {
-                appRouter.navigate('addedit/person', true);
+            if (view_configs.page_header == "Persons") {
                 current_add_edit_view = person_add_edit_view;
             } else {
-                console.log("not screening or person");
+                console.log("not person");
                 return this;
             }
             $(this.el)
                 .append(new current_add_edit_view({
                 view_configs: view_configs,
-                model: data
+                model_id: data
             })
                 .render()
                 .el);
             return this;
         }
-        
-        
-        
-        
+
+
+
+
 
     });
 
-    
+
+    var app = new AppView;
 
     var AppRouter = Backbone.Router.extend({
-    					routes: {
-                            "": "showDashboard",
-    						"person": "listPerson"
-    					}
-    				});
- 
+        routes: {
+            "": "showDashboard",
+            "person": "listPerson",
+            "person/add": "addPerson",
+            "person/edit/:id": "editPerson"
+        },
+        showDashboard: function() {
+            console.log("showdashboard url caught");
+            app.render_dashboard();
+        },
+        listPerson: function() {
+            console.log("list person url caught");
+            app.render_list_view(person_list_view_configs);
+        },
+        addPerson: function() {
+            console.log("add person url caught");
+            app.render_add_edit_view(person_list_view_configs, null);
+        },
+        editPerson: function(id) {
+            console.log("edit person url caught, id = " + id);
+            app.render_add_edit_view(person_list_view_configs, id);
+        },
+
+    });
+
     var appRouter = new AppRouter();
     Backbone.history.start();
 
-    var app = new AppView;
+
+
 });
