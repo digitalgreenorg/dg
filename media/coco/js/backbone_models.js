@@ -1,12 +1,3 @@
-var Connectivity = Backbone.Model.extend({
-    defaults: function() {
-        return {
-            connected: false
-        };
-    }
-});
-
-conn_state = new Connectivity();
 var databasev1 = {
     id: "coco-database",
     description: "The offline database for COCO",
@@ -39,22 +30,6 @@ var databasev1 = {
             });
             console.log("indexeddb database created")
             //store.createIndex("nameIndex", "country_name", { unique: false })
-            next();
-        }
-    },
-    {
-        version: "1.1",
-        migrate: function(db, versionRequest, next) {
-            var store = versionRequest.transaction.objectStore("persongroup")
-            store.createIndex("villageIndex", "village.village_name", { unique: false});  
-            next();
-        }
-    },
-    {
-        version: "1.2",
-        migrate: function(db, versionRequest, next) {
-            var store = versionRequest.transaction.objectStore("persongroup")
-            store.createIndex("villageIDIndex", "village.id", { unique: false});  
             next();
         }
     }
