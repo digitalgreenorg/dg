@@ -82,6 +82,7 @@ INSTALLED_APPS = (
     'output',
     'debug_toolbar',
     'dimagi',
+    #'debug_toolbar',
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',

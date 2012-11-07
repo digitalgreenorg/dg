@@ -101,7 +101,6 @@ def get_dates_partners(request):
         from_date = str(datetime.date.today() - datetime.timedelta(365));
         to_date = str(datetime.date.today());
 
-
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
 
