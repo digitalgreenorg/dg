@@ -215,7 +215,10 @@
 <script type="text/javascript">
 var videos_watched_html;
 $(function(){
-	$("[rel=custompopover]").custompopover();
+	$("[rel=custompopover]").custompopover().click(function(e) {
+        $(this).custompopover('toggle');
+        e.preventDefault();
+    });
 });
 
 function ajax_tab_click(clicked, village_id) {
