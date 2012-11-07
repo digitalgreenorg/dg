@@ -23,7 +23,7 @@ def save_screening_data(xml_tree):
             screening_data['selected_mediator'] = record.getElementsByTagName('selected_mediator')[0].firstChild.data
             #screening_data['num_people'] = record.getElementsByTagName('num_people')[0].firstChild.data
             screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
-            
+            print screening_data['date'] 
             pma_record = []
             for person in screening_data['attendance_record']:
                 if int(person.getElementsByTagName('attended')[0].firstChild.data) == 1:
@@ -106,11 +106,12 @@ def save_adoption_data(xml_tree):
                                  video_id = screening_data['selected_video'])
     try:
         pap.save()
-        status = pap.id
+        status = 1   # pap.id
         error_msg = 'Successful'
     except Exception as ex:
         status = error_list['ADOPTION_SAVE_ERROR']                            
         error_msg = unicode(ex)        
     return status, error_msg
+
 
 
