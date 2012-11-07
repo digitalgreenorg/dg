@@ -66,153 +66,6 @@
         
 </script>
     
-    
-<script type="text/template" id="tpl-country-item">
-    <td><%= id %></td>
-    <td><%= country_name %></td>
-    <td> <%= start_date %></td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-    
-
-    
-<script type="text/template" id="countries_table">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Country name</th>
-       <th>Start Date</th>
-       </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-
-<script type="text/template" id="village_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Village name</th>
-       <th>Block</th>
-	   <th>District</th>
-	   <th>State</th>
-	   <th>Country</th>
-       </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="village_list_item_template">
-    <td><%= id %></td>
-    <td><%= village_name %></td>
-    <td><%= block_name %></td>
-    <td><%= district_name %></td>
-    <td> <%= state_name %></td>
-    <td><%= country_name %></td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-
-<script type="text/template" id="video_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Title</th>
-	   <th>Village</th>
-       <th>Youtube ID</th>
-	   <th>Prod. Start Date </th>
-	   <th>Prod. End Date</th>
-	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="video_list_item_template">
-    <td><%= id %></td>
-    <td> <%= title %></td>
-	<td><%= village.village_name %></td>
-    <td> <%= youtubeid %></td>
-    <td> <%= video_production_start_date %></td>
-    <td> <%= video_production_end_date %></td>
-    <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-
-<script type="text/template" id="persongroup_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Name</th>
-       <th>Village</th>
-	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="persongroup_list_item_template">
-    <td><%= id %></td>
-    <td><%= group_name %></td>
-    <td> <%= village.village_name %></td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-
-<script type="text/template" id="screening_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Village</th>
-       <th>Groups</th>
-	   <th>Videos</th>
-	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="screening_list_item_template">
-    <td><%= id %></td>
-    <td><%= village.village_name %></td>
-    <% 	var vids_screened=""; 
-		for (var i = 0; i < videos_screened.length; i++) 
-		{
-		    vids_screened = (i==(videos_screened.length-1))?vids_screened.concat(videos_screened[i].title):vids_screened.concat(videos_screened[i].title+", ");
-			
-		}
-		
-		var groups="";
-		for (var i = 0; i < person_groups.length; i++) 
-		{
-		    groups = (i==(person_groups.length-1))?groups.concat(person_groups[i].group_name):groups.concat(person_groups[i].group_name+", ");
-			
-		} 
-	%>
-	<td> <%= groups %></td>
-	<td><%= vids_screened %> </td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-
 <script type="text/template" id="person_table_template">
        <table class="table table-striped">
        <thead>
@@ -240,53 +93,6 @@
     </td>
 </script>
 
-<script type="text/template" id="personadoptvideo_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Village</th>
-       <th>Groups</th>
-	   <th>Videos</th>
-	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="personadoptvideo_list_item_template">
-    <td><%= id %></td>
-    <td><%= country_name %></td>
-    <td> <%= start_date %></td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
-
-<script type="text/template" id="animator_table_template">
-       <table class="table table-striped">
-       <thead>
-       <tr>
-       <th>Id</th>
-       <th>Village</th>
-       <th>Groups</th>
-	   <th>Videos</th>
-	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</script>
-<script type="text/template" id="animator_list_item_template">
-    <td><%= id %></td>
-    <td><%= country_name %></td>
-    <td> <%= start_date %></td>
-    <td>
-    <a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
-    </td>
-</script>
 
 <script  type="text/template" id="list_view_template">
     <div class="well">
@@ -304,188 +110,84 @@
 </script>
 
 <script type="text/template" id="person_add_edit_template">
-<form id ="person_add_form">
-<link rel='stylesheet' type='text/css' href='/media/css/forms.css' />  
-								<div id='content' class='colM'> 
-									<div id='content-main'> 
+<form id ="person_add_form" class="form-horizontal">
+								<div> 
+									<div > 
 										
-												<fieldset class='module aligned '> 
-													<div class='form-row person_name  '> 
-														<div> 
-															<label for='id_person_name' class='required'>Person name:</label><input id='id_person_name' type='text' class='vTextField' name='person_name' maxlength='100' /> 
+												<fieldset > 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_person_name' >Person name:</label>
+                                                            <div class="controls">
+                                                            <input id='id_person_name' type='text'  name='person_name' maxlength='100' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row father_name  '> 
-														<div> 
-															<label for='id_father_name'>Father name:</label><input id='id_father_name' type='text' class='vTextField' name='father_name' maxlength='100' /> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_father_name'>Father name:</label>
+                                                            <div class="controls">
+                                                            <input id='id_father_name' type='text' name='father_name' maxlength='100' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row age  '> 
-														<div> 
-															<label for='id_age'>Age:</label><input id='id_age' type='text' class='vIntegerField' name='age' /> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_age'>Age:</label>
+                                                            <div class="controls">
+                                                            <input id='id_age' type='text' name='age' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row gender  '> 
-														<div> 
-															<label for='id_gender' class='required'>Gender:</label><select name='gender' id='id_gender'> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_gender' >Gender:</label>
+                                                            <div class="controls">
+                                                            <select name='gender' id='id_gender'> 
 																<option value='' selected='selected'>---------</option> 
 																<option value='M'>Male</option> 
 																<option value='F'>Female</option> 
 															</select> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row phone_no  '> 
-														<div> 
-															<label for='id_phone_no'>Phone no:</label><input id='id_phone_no' type='text' class='vTextField' name='phone_no' maxlength='100' /> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_phone_no'>Phone no:</label>
+                                                            <div class="controls">
+                                                            <input id='id_phone_no' type='text' name='phone_no' maxlength='100' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row address  '> 
-														<div> 
-															<label for='id_address'>Address:</label><input id='id_address' type='text' class='vTextField' name='address' maxlength='500' /> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_address'>Address:</label>
+                                                            <div class="controls">
+                                                            <input id='id_address' type='text' name='address' maxlength='500' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row land_holdings  '> 
-														<div> 
-															<label for='id_land_holdings'>Land holdings(in acres):</label><input id='id_land_holdings' type='text' class='vIntegerField' name='land_holdings' /> 
+														<div class="control-group"> 
+															<label class="control-label" for='id_land_holdings'>Land holdings(in acres):</label>
+                                                            <div class="controls">
+                                                            <input id='id_land_holdings' type='text' name='land_holdings' /> 
+                                                            </div>
 														</div> 
-													</div> 
-													<div class='form-row village  '> 
-													<div> 
-														<label for='id_village' class='required'>Village:</label> 
-														<select name='village' id='id_village'>
-														<option value='' selected='selected'>---------</option>
-														</select>  
+													    <div class="control-group"> 
+    														<label class="control-label" for='id_village' >Village:</label> 
+    														<div class="controls">
+                                                            <select name='village' id='id_village'>
+    														<option value='' selected='selected'>---------</option>
+    														</select>  
+                                                            </div>
     												    </div> 
-    											    </div> 
-    													<div class='form-row group  '> 
-    														<div> 
-    															<label for='id_group'>Group:</label><select name='person_group' id='id_group'> 
-    																<option value='' selected='selected'>---------</option> 
-    															</select> 
-    														</div> 
-    													</div> 
+											    		<div class="control-group"> 
+															<label class="control-label" for='id_group'>Group:</label>
+                                                            <div class="controls">
+                                                            <select name='person_group' id='id_group'> 
+															<option value='' selected='selected'>---------</option> 
+															</select> 
+                                                            </div>
+														</div> 
     												</fieldset> 
-    												<div class='submit-row' > 
-    												<input id='save' type='button' value='Save' class='default' name='_save' /> 
-    												</div> 
-    												
-    												
+    												<div class="form-actions">
+                                                      <button id='save' type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
     									</div> 
-    									<br class='clear' /> 
+    								
     								</div>
                                                     
 </form>                                                        </script>
                                                         
                                                         
-<script type="text/template" id="screening_add_edit_template">
-<form>
- <link rel='stylesheet' type='text/css' href='/media/css/forms.css' /> 
- <link href='/media/css/screening_page.css' type='text/css' media='all' rel='stylesheet' /> 
-							<div id='content' class='colM'> 
-							<div id='content-main'> 
-								<fieldset class='module aligned '> 
-									<div class='form-row date  '> 
-										<div> 
-											<label for='id_date' class='required'>Date:</label> 
-											<input id='id_date' type='text' class='vDateField' name='date' size='10' /> 
-										</div> 
-									</div> 
-									<div class='form-row start_time  '> 
-										<div> 
-											<label for='id_start_time' class='required'>Start time:</label> 
-											<input id='id_start_time' type='text' class='vTimeField' name='start_time' size='8' /> 
-										</div> 
-									</div> 
-									<div class='form-row end_time  '> 
-										<div> 
-											<label for='id_end_time' class='required'>End time:</label> 
-											<input id='id_end_time' type='text' class='vTimeField' name='end_time' size='8' /> 
-										</div> 
-									</div> 
-									<div class='form-row location  '> 
-										<div> 
-											<label for='id_location'>Location:</label> 
-											<input id='id_location' type='text' class='vTextField' name='location' maxlength='200' /> 
-										</div> 
-									</div> 
-									<div class='form-row village  '> 
-										<div> 
-											<label for='id_village' class='required'>Village:</label>
-											<select name='village' id='id_village'> 
-												<option value='' selected='selected'>---------</option> 
-
-											</select> 
-				
-										</div> 
-									</div> 
-									<div class='form-row animator  '> 
-										<div> 
-											<label for='id_animator' class='required'>Animator:</label> 
-											<select name='animator' id='id_animator'> 
-												<option value='' selected='selected'>---------</option> 
-                                               
-											</select> 
-										</div> 
-									</div> 
-									<div class='form-row videoes_screened  '> 
-										<div> 
-											<label for='id_videoes_screened' class='required'>Videoes screened:</label> 
-											<select multiple='multiple' name='videoes_screened' id='id_videoes_screened'> 
-											</select> 
-										
-											</a> 
-											<p class='help'> Hold down 'Control', or 'Command' on a Mac, to select more than one.</p> 
-										</div> 
-									</div> 
-									<div class='form-row fieldofficer  '> 
-										<div> 
-											<label for='id_fieldofficer'>Fieldofficer:</label> 
-											<select name='fieldofficer' id='id_fieldofficer'> 
-												<option value='' selected='selected'>---------</option> 
-											</select> 
-											</a> 
-										</div> 
-									</div> 
-									<div class='form-row farmer_groups_targeted  '> 
-										<div> 
-											<label for='id_farmer_groups_targeted' class='required'>Groups targeted:</label> 
-											
-											<select id='id_farmer_groups_targeted' name='farmer_groups_targeted' multiple='multiple'> 
-											</select> 
-										</div> 
-									</div> 
-								</fieldset> 
-								<div class='inline-group'> 
-									<div class='tabular inline-related last-related'> 
-										<input type='hidden' name='personmeetingattendance_set-TOTAL_FORMS' value='0' id='id_personmeetingattendance_set-TOTAL_FORMS' /> 
-										<input type='hidden' name='personmeetingattendance_set-INITIAL_FORMS' value='0' id='id_personmeetingattendance_set-INITIAL_FORMS' /> 
-										<fieldset class='module'> 
-											<h2>Person meeting attendances</h2> 
-											<table> 
-												<thead> 
-													<tr> 
-														<th>Delete?</th> 
-														<th>Sr No.</th> 
-														<th >Person</th> 
-														<th >Expressed Adopted Video</th> 
-														<th >Question Asked</th> 
-														<th >Interested?</th> 
-													</tr> 
-												</thead> 
-											</table> 
-										</fieldset> 
-									</div> 
-								</div> 
-								<div class='submit-row' > 
-									<input id='save' type='button' value='Save' class='default' name='_save' /> 
-								</div> 
-                              
-							</div> 
-							<br class='clear' /> 
-						</div>
-                        </form>
-    
-</script>
 
 </head>
 <body id ="app">
