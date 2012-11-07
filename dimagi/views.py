@@ -9,11 +9,12 @@ def save_submission(request):
     submission.save() 
     status, msg = save_in_db(submission)
     submission.error_code = status
-    submission.error_msg = msg
-    try:
-        submission.save()
-    except Exception as ex:
-        error = ex
+    submission.error_message = msg
+    submission.save()
+#    try:
+#        submission.save()
+#    except Exception as ex:
+#        error = ex
     return HttpResponse(status=201)
 
 
@@ -28,4 +29,5 @@ def save_in_db(submission):
         status, msg = save_mobile_data.save_adoption_data(xml_parse)
     else :
         status = -1
+        msg = 'error in form'
     return status, msg

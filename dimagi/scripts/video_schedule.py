@@ -1,4 +1,4 @@
-import settings
+from dg import settings
 from django.core.management import setup_environ
 setup_environ(settings)
 from dashboard.models import *
@@ -13,11 +13,13 @@ def get_video_schedule():
     
     row = 2
     vid_dict = []
+    vid_list = []
     while( row < sheet.nrows):
         col = 0    
         vid_id = Video.objects.filter(title = sheet.cell(row, col).value).values_list('id', flat = True)
         col += 1
         if len(vid_id) == 1 :
+            vid_list.append(vid_id[0])
             while( col < sheet.ncols ):
                 format_info = sheet.cell_xf_index(row, col)
                 format_info = book.xf_list[format_info]
@@ -39,4 +41,4 @@ def get_video_schedule():
                 col += 1 
         row += 1
     
-    return vid_dict 
+    return vid_dict, vid_list

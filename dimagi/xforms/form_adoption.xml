@@ -4,13 +4,15 @@
 		<model>
 			<instance>
 				<data xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/58d4e7979e6c8b8b2bddce6845b02fd51d89acc8" uiVersion="1" version="1" name="Adoption">
-					<date/>
+					<selected_date/>
 					<selected_village/>
 					<selected_group/>
 					<selected_mediator/>
 					<selected_person/>
 					<selected_video/>
+					<listofvideos/>
 					<form_done/>
+					<person_count/>
 				</data></instance>
 			
 			<instance id="village" src="jr://fixture/item-list:village"/>
@@ -18,16 +20,18 @@
 			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
 			<instance id="video" src="jr://fixture/item-list:video"/>
-			<instance id="videoseen" src="jr://fixture/item-list:videoseen"/>
+			<instance id="unique_video" src="jr://fixture/item-list:unique_video"/>
 			
-			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
+			<bind nodeset="/data/selected_date" type="xsd:date" required="true()"/>
 			
 			<bind nodeset="/data/selected_village" required="true()"/>
 			<bind nodeset="/data/selected_group" required="true()"/>
-			<bind nodeset="/data/selected_person" required="true()"/>
-			<bind nodeset="/data/selected_video" required="true()"/>
+			<bind nodeset="/data/selected_person" required="true()" />
+			<bind nodeset="/data/selected_video" required="true()" />
 			<bind nodeset="/data/selected_mediator" required="true()"/>
+			<bind nodeset="/data/listofvideos"  calculate="if(/data/selected_person = '','', instance('person')/person_list/person[id =/data/selected_person]/seen)" /> 
 			<bind nodeset="/data/form_done"/>
+			
 			
 			<itext>
 				<translation lang="en" >
@@ -80,12 +84,12 @@
 		</model>
 	</h:head>
 	<h:body>
-		<input ref="/data/date">
+		<input ref="/data/selected_date">
 			<label ref="jr:itext('date-label')"/>
 		</input>
 		<select1 ref="/data/selected_village">
 			<label ref="jr:itext('selected_village-label')"/>
-			<itemset nodeset="instance('village')/village_list/village">
+			<itemset nodeset="instance('village')/village_list/village[seen = '1']">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
@@ -99,23 +103,24 @@
 		</select1>
 		<select1 ref="/data/selected_group">
 			<label ref="jr:itext('selected_group-label')"/>
-			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village]">
+			<itemset nodeset="instance('group')/group_list/group[village_id=/data/selected_village and seen = '1']">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
 		</select1>
+		
 		<select1 ref="/data/selected_person">
 			<label ref="jr:itext('selected_person-label')"/>
-			<itemset nodeset="instance('person')/person_list/person[group_id=/data/selected_group and seen='1']">
+			<itemset nodeset=" instance('person')/person_list/person[group_id=/data/selected_group and seen != '0'] " >
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
 		</select1>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')"/>
-			<itemset nodeset="instance('videoseen')/videoseen_list/videoseen[id=/data/selected_person]">
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
 				<label ref="name"/>
-				<value ref="video_id"/>
+				<value ref="id"/>
 			</itemset>
 		</select1>
 		<trigger ref="/data/form_done">
