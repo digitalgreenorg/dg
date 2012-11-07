@@ -23,6 +23,7 @@
 <script type="text/javascript" src="/media/coco/js/backbone_models.js"></script>
 <script type="text/javascript" src="/media/coco/js/backbone.syphon.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 <meta name="robots" content="NONE,NOARCHIVE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/template" id="header">
@@ -118,7 +119,7 @@
 														<div class="control-group"> 
 															<label class="control-label"  for='id_person_name' >Person name:</label>
                                                             <div class="controls">
-                                                            <input id='id_person_name' type='text'  name='person_name' maxlength='100' /> 
+                                                            <input id='id_person_name' type='text'  name='person_name' class="required" maxlength='100' /> 
                                                             </div>
 														</div> 
 														<div class="control-group"> 
@@ -136,7 +137,7 @@
 														<div class="control-group"> 
 															<label class="control-label"  for='id_gender' >Gender:</label>
                                                             <div class="controls">
-                                                            <select name='gender' id='id_gender'> 
+                                                            <select name='gender' id='id_gender' class="required"> 
 																<option value='' selected='selected'>---------</option> 
 																<option value='M'>Male</option> 
 																<option value='F'>Female</option> 
@@ -164,7 +165,7 @@
 													    <div class="control-group"> 
     														<label class="control-label" for='id_village' >Village:</label> 
     														<div class="controls">
-                                                            <select name='village' id='id_village'>
+                                                            <select name='village' id='id_village' class="required">
     														<option value='' selected='selected'>---------</option>
     														</select>  
                                                             </div>

@@ -145,7 +145,7 @@ $(document)
     var person_add_edit_view = Backbone.View.extend({
 
         events: {
-            'click #save': 'save'
+           // 'click #save': 'save'
         },
 
         initialize: function(params) {
@@ -184,7 +184,9 @@ $(document)
                 .bindAll('render_villages');
             _(this)
                 .bindAll('render_persongroups');
-
+            _(this)
+                    .bindAll('save');
+            
             this.villages.bind('all', this.render_villages);
             this.villages.fetch({
                 success: function() {
@@ -274,7 +276,11 @@ $(document)
         render: function() {
             $(this.el)
                 .html(this.add_edit_template());
-
+            var curobj = this;    
+            this.$('form').validate({submitHandler: function() { 
+            curobj.save();
+        }});
+            
             return this;
         },
         render_villages: function() {
@@ -428,6 +434,7 @@ $(document)
                 app: this
             });
             curr_list_view = null;
+            current_add_edit_view = null;
             
         },
         render_dashboard: function() {
