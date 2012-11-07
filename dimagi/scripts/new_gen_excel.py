@@ -52,9 +52,12 @@ def write_person_info(cluster_dict, workbook):
                 sheet.write(row, 0, unicode(person_id))
                 sheet.write(row, 1, person[1])
                 sheet.write(row, 2, unicode(group_id))
-                watched = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = three_months).values_list('screening__videoes_screened').distinct().count()
-                if watched > 0:
-                    sheet.write(row, 3, '1')
+                vid_id_list = PersonMeetingAttendance.objects.filter(person = person[0], screening__date__gt = three_months).values_list('screening__videoes_screened', flat = True)
+                if len(vid_id_list) > 0:
+                    arr = ''
+                    for vid in vid_id_list:
+                        arr = arr + str(vid) + ' '
+                    sheet.write(row, 3, arr)
                 else:
                     sheet.write(row, 3, '0')
                 sheet.write(row, 4, cluster['cluster'])
@@ -175,14 +178,31 @@ def write_mediator_info(mediator_dict, workbook):
     print str(mediator_not_found) + " mediators not found"
     return sheet
 
+def write_distinct(vid_list, workbook):
+    sheet = workbook.add_sheet('unique_video')
+    row = 0
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name")
+    sheet.write(row, 2, 'group 1')
+    row += 1
+    for id in vid_list:
+        vid_name = Video.objects.filter(id = id).values_list('title')
+        if vid_name:
+            sheet.write(row, 0, str(id))
+            sheet.write(row, 1, unicode(vid_name[0][0]))
+            sheet.write(row, 2, 'JADCHERLA')  # for testing 
+            row += 1
+    return sheet
+    
+
 def write_person_watched_video_info(cluster_dict, workbook):
     person_info = []
     sheet = workbook.add_sheet('videoseen')
     row = 0
     sheet.write(row, 0, "field: id")
-    sheet.write(row, 1, "field: name ")
-    sheet.write(row, 2, "field: video_id")
-    sheet.write(row, 3, "group 1")
+#    sheet.write(row, 1, "field: name ")
+    sheet.write(row, 1, "field: video_id")
+    sheet.write(row, 2, "group 1")
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
@@ -196,9 +216,9 @@ def write_person_watched_video_info(cluster_dict, workbook):
                         person_id = truncate_id(person[0])
                         group_id = truncate_id(person[2])
                         sheet.write(row, 0, str(person_id))
-                        sheet.write(row, 1, vid_name[0])
-                        sheet.write(row, 2, str(vid_id))
-                        sheet.write(row, 3, cluster['cluster'])
+#                        sheet.write(row, 1, vid_name[0])
+                        sheet.write(row, 1, str(vid_id))
+                        sheet.write(row, 2, cluster['cluster'])
                         row += 1
                     else:
                         print "not found"
@@ -211,19 +231,19 @@ def write_video_schedule_info(vid_dict, workbook):
     sheet = workbook.add_sheet('video')
     row = 0
     sheet.write(row, 0, "field: id")
-    sheet.write(row, 1, "field: name")
-    sheet.write(row, 2, "field: low")
-    sheet.write(row, 3, "field: high")
-    sheet.write(row, 4, 'group 1')
+#    sheet.write(row, 1, "field: name")
+    sheet.write(row, 1, "field: low")
+    sheet.write(row, 2, "field: high")
+    sheet.write(row, 3, 'group 1')
     row += 1
     for record in vid_dict:
         vid_name = Video.objects.filter(id = record['id']).values_list('title')
         if vid_name:
             sheet.write(row, 0, str(record['id']))
-            sheet.write(row, 1, vid_name[0][0])
-            sheet.write(row, 2, record['low_val'])
-            sheet.write(row, 3, record['high_val'])
-            sheet.write(row, 4, 'JADCHERLA')  # for testing 
+#            sheet.write(row, 1, vid_name[0][0])
+            sheet.write(row, 1, record['low_val'])
+            sheet.write(row, 2, record['high_val'])
+            sheet.write(row, 3, 'JADCHERLA')  # for testing 
             row += 1
         else:
             print str(record['id']) + " not found"
@@ -245,7 +265,7 @@ while index < len(clusters_to_take):
     i=clusters_to_take[index]
     name = sh.cell(rowx=i,colx=0).value
     print "Processing values of cluster " + name
-    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,5)]})
+    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,2)]})
     for village in range(0,5):
         mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=1).value,
                                       'village': sh.cell(rowx=i+village,colx=1).value,
@@ -261,8 +281,10 @@ person_sheet = write_person_info(cluster_village_dict, workbook)
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_village_dict, workbook)
-video_sheet = write_person_watched_video_info(cluster_village_dict, workbook)
-video_schedule_dict = video_schedule.get_video_schedule()
+#video_sheet = write_person_watched_video_info(cluster_village_dict, workbook)
+video_schedule_dict, video_list = video_schedule.get_video_schedule()
+video_distinct_sheet = write_distinct(video_list,workbook)
+print video_list
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
 workbook.save('trial-2-Fixture.xls')
 print "Done"

@@ -10,6 +10,7 @@
 					<selected_group/>
 					<selected_video/>
 					<additional_selected_video/>
+					<listofvideos/>
 					<selected_mediator/>
 					<attendee_ids/>
 					<number_of_attendees_display/>
@@ -32,6 +33,7 @@
 			<instance id="person" src="jr://fixture/item-list:person"/>
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
 			<instance id="video" src="jr://fixture/item-list:video"/>
+			<instance id="unique_video" src="jr://fixture/item-list:unique_video"/>
 			
 			<bind nodeset="/data/date" type="xsd:date" required="true()"/>
 			
@@ -40,7 +42,8 @@
 			<bind nodeset="/data/selected_mediator" required="true()"/>
 			<bind nodeset="/data/selected_group" required="true()"/>
 			<bind nodeset="/data/selected_video" required="true()"/>
-			<bind nodeset="/data/additional_selected_video" relevant="/data/selected_video = 'zzz'"/>
+			<bind nodeset="/data/additional_selected_video" relevant="/data/selected_video = 0"/>
+			<bind nodeset="/data/listofvideos"  calculate="if(/data/selected_video = 0, join(' ', instance('video')/video_list/video[id != 0]/id), join(' ', instance('video')/video_list/video[date(low) &lt;=/data/date and date(high) &gt;=/data/date]/id))"/>
 			<bind nodeset="/data/attendee_ids" calculate="if(/data/selected_group = '', '', join(' ', instance('person')/person_list/person[selected(/data/selected_group,group_id)]/id))"/>
 			<bind nodeset="/data/number_of_attendees_display"/>
 			<bind nodeset="/data/attendance_record"/>
@@ -194,14 +197,14 @@
 		</select>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')"/>
-			<itemset nodeset="instance('video')/video_list/video[date(low) &lt;=/data/date and date(high) &gt;=/data/date]">
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
 		</select1>
 		<select1 ref="/data/additional_selected_video">
 			<label ref="jr:itext('selected_video-label')"/>
-			<itemset nodeset="instance('video')/video_list/video[id != 'zzz'] ">
+			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ] ">
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>
