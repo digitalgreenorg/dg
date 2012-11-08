@@ -1,6 +1,7 @@
 from django.db import connection
 from django.template import Template, Context
 import types
+import datetime
 
 def construct_query(var, context_dict):
     return Template(var).render(Context(context_dict))
@@ -97,8 +98,8 @@ def get_dates_partners(request):
         from_date = request.GET['from_date']
         to_date = request.GET['to_date']
     else:
-        from_date = None;
-        to_date = None;
+        from_date = str(datetime.date.today() - datetime.timedelta(365));
+        to_date = str(datetime.date.today());
 
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;

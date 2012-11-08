@@ -104,9 +104,8 @@ def overview_module(request):
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
+    print get_req_url
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
-    if(get_req_url): get_req_url = '&'+get_req_url
-
     if(geog_child != "NULL"):
         header_geog = geog_child
     else:

@@ -31,7 +31,6 @@ def video_module(request):
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
-    if(get_req_url): get_req_url = '&'+get_req_url
 
     return render_to_response('video_module.html',dict(search_box_params = search_box_params,\
                                                           tot_video=tot_vid,\
@@ -76,7 +75,6 @@ def video_type_wise_pie(request):
 #Data generator to generate Geography Wise Pie.
 def video_geog_pie_data(request):
     geog, id = get_geog_id(request)
-    print geog
     from_date, to_date, partners = get_dates_partners(request)
     geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
