@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2012-11-1 v1.0.1
+# 2012-11-1 v1.0.2
 CACHE:
 /media/coco/bootstrap/docs/assets/css/bootstrap.css
 /media/coco/bootstrap/docs/assets/css/bootstrap-responsive.css
@@ -13,6 +13,9 @@ CACHE:
 /media/coco/js/backbone.syphon.js
 /media/coco/bootstrap/docs/assets/js/bootstrap.min.js
 /media/coco/bootstrap/docs/assets/img/glyphicons-halflings.png 
-/media/css/widgets.css  
 /media/img/admin/nav-bg.gif  
 http://jzaefferer.github.com/jquery-validation/jquery.validate.js
+
+
+NETWORK:
+/api/v1/
