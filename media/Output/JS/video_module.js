@@ -157,7 +157,7 @@ function practice_bubble(json) {
 	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
 	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
-	options['title']='Number of Videos per practices';
+	options['title']='Number of Videos per practice';
 	if(json.length>1)
 	{
 		practice_bubble_chart = new google.visualization.ChartWrapper({
