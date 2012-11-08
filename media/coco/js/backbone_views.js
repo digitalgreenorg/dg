@@ -125,15 +125,20 @@ $(document)
                 .html());
             this.table_template = _.template($('#' + this.table_template_name)
                 .html());
-            this.collection.bind('all', this.render, this);
+            this.collection.bind('all', this.render_data, this);
             this.collection.fetch();
         },
 
-        render: function() {
+        render: function(show_heading) {
             $(this.el)
-                .html(this.template());
+                .html(this.template({header_name: show_heading}));
             $(this.el)
                 .append(this.table_template());
+            
+            
+            return this;
+        },
+        render_data: function(){
             $tbody = this.$("tbody");
             console.log("rendering list view");
             this.collection.each(function(model) {
@@ -144,9 +149,8 @@ $(document)
                     .render()
                     .el);
             }, this);
-            return this;
+            this.$('table').dataTable();
         },
-
         addNew: function() {
             appRouter.navigate('person/add', true);
         },
@@ -338,11 +342,10 @@ $(document)
         template: _.template($('#header')
             .html()),
 
-        render: function(show_heading) {
+        render: function() {
             $(this.el)
                 .html(this.template({
-                header_name: show_heading
-            }));
+                }));
             return this;
         }
     });
@@ -469,11 +472,11 @@ $(document)
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render(view_configs.page_header)
+                .append(header.render()
                 .el);
             curr_list_view = new list_view(view_configs);
             $(this.el)
-                .append(curr_list_view.render()
+                .append(curr_list_view.render(view_configs.page_header)
                 .el);
             return this;
         },

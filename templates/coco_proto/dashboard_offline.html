@@ -21,13 +21,19 @@
 <script type="text/javascript" src="/media/coco/js/backbone_views.js"></script>
 <script type="text/javascript" src="/media/coco/js/backbone_models.js"></script>
 <script type="text/javascript" src="/media/coco/js/backbone.syphon.js"></script>
+<script type="text/javascript" src="/media/coco/datatablejs_media/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+<style type="text/css" title="currentStyle">
+    @import "/media/coco/datatablejs_media/css/demo_table.css";
+</style>
 <meta name="robots" content="NONE,NOARCHIVE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!-- <h3><%= header_name %></h3> -->
 <script type="text/template" id="header">
+<div class="page-header" style="margin-bottom:0px;">
     <h1 ><a href="#">COCO</a></h1>
-    <h3><%= header_name %></h3>
+</div>
 </script>
     
 <script type="text/template" id="dashboard">
@@ -67,7 +73,7 @@
 </script>
     
 <script type="text/template" id="person_table_template">
-       <table class="table table-striped">
+       <table class="table table-striped display">
        <thead>
        <tr>
        <th>Id</th>
@@ -75,6 +81,7 @@
 	   <th>Father Name</th>
        <th>Village</th>
        <th>Group</th>
+       <th></th>
 	   </tr>
        </thead>
        <tbody>
@@ -93,13 +100,13 @@
     </td>
 </script>
 
-
+<!-- <div style= "float:left;">
+<input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
+<button id="search_button" class="btn" style="margin-left:10px;">Search</button>
+</div> -->
 <script  type="text/template" id="list_view_template">
     <div class="well">
-    <div style= "float:left;">
-    <input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
-    <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
-    </div>
+    <span style= "font-size:20px;"><b><%= header_name %></b></span>
     <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
     </div>
 </script>
@@ -115,6 +122,7 @@
 									<div > 
 										
 												<fieldset > 
+                                                        <legend>Add/Edit Person</legend>
 														<div class="control-group"> 
 															<label class="control-label"  for='id_person_name' >Person name:</label>
                                                             <div class="controls">
