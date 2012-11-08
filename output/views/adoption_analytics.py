@@ -62,7 +62,6 @@ def adoption_module(request):
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
-    if(get_req_url): get_req_url = '&'+get_req_url
 
     return render_to_response('adoption_module.html', dict(search_box_params = search_box_params,
                                                           get_req_url = get_req_url,

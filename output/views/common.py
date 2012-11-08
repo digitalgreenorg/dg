@@ -73,15 +73,11 @@ def get_search_box(request):
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
     
-    if(from_date and to_date):
-        search_box_params['is_date_selected'] = 1
-    else:
+    if(from_date == str(datetime.date.today() - datetime.timedelta(365)) and to_date == str(datetime.date.today())):
         search_box_params['is_date_selected'] = 0
-        from_date =  (run_query(shared_sql.get_start_date(geog, id)))[0]['date']
-        if(not from_date):
-            from_date = datetime.date.today()
-        to_date = datetime.date.today()
-
+    else:
+        search_box_params['is_date_selected'] = 1
+        
     search_box_params['from_date'] = str(from_date)
     search_box_params['to_date'] = str(to_date)
     search_box_params['geog_val'] = breadcrumbs_options(geog,id)
