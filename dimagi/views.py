@@ -6,15 +6,13 @@ from scripts import save_mobile_data
 def save_submission(request):
     submission = XMLSubmission()
     submission.xml_data = request.raw_post_data
-    submission.save() 
     status, msg = save_in_db(submission)
     submission.error_code = status
     submission.error_message = msg
-    submission.save()
-#    try:
-#        submission.save()
-#    except Exception as ex:
-#        error = ex
+    try:
+        submission.save()
+    except Exception as ex:
+        error = ex
     return HttpResponse(status=201)
 
 

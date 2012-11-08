@@ -1,3 +1,6 @@
+import site, sys
+sys.path.append('/home/ubuntu/code/dg_test')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
@@ -87,31 +90,31 @@ def save_screening_data(xml_tree):
 
 def save_adoption_data(xml_tree):
     xml_data=xml_tree.getElementsByTagName('data')
+    print str(xml_data)
     error_msg = ''
     for record in xml_data:
         try:
             screening_data = {}
-            screening_data['date'] = record.getElementsByTagName('date')[0].firstChild.data
+            screening_data['date'] = record.getElementsByTagName('selected_date')[0].firstChild.data
             screening_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
             screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
+            
+            pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
+                                 date_of_adoption = screening_data['date'],
+                                 video_id = screening_data['selected_video'])
+            try:
+                pap.save()
+                status = 1   # pap.id
+                error_msg = 'Successful'
+            except Exception as ex:
+                status = error_list['ADOPTION_SAVE_ERROR']                            
+                error_msg = unicode(ex)   
             
         except Exception as ex:
             status = error_list['ADOPTION_READ_ERROR'] 
             error_msg = unicode(ex)
-        
-    
-    # saving the person_adopt_practice record    
-    pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
-                                 date_of_adoption = screening_data['date'],
-                                 video_id = screening_data['selected_video'])
-    try:
-        pap.save()
-        status = 1   # pap.id
-        error_msg = 'Successful'
-    except Exception as ex:
-        status = error_list['ADOPTION_SAVE_ERROR']                            
-        error_msg = unicode(ex)        
+        print screening_data
+
     return status, error_msg
 
-
-
+ 
