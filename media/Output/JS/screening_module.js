@@ -154,10 +154,10 @@ function practice_bubble(json) {
 	practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, bubble_options);
 	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
+	options['vAxis']= {title: 'Number of disseminations',gridlines:{count:10},logScale:true};
 	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
-	options['title']='Number of Videos per practices';
+	options['title']='Number of disseminations per practices';
 	if(json.length>1)
 	{
 		practice_bubble_chart = new google.visualization.ChartWrapper({
