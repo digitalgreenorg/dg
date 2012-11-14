@@ -87,10 +87,11 @@
 
 <div class='vil_tabcontent' id="top_tabcontent"
 	style="height: 190px;" style='width:100%; margin:0px;'>
+{% if videos_watched_stats %}
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
 	<div class="carousel-inner">
-		{% for vid in videos_watched_stats %} 
+		{% for vid in videos_watched_stats %}
 		{% if forloop.counter0|divisibleby:"5" %}
 		<div class="item{% if forloop.first %} active{%endif%}">
 			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
@@ -143,6 +144,9 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+     {% endif %}
 </div>
 
 
