@@ -101,6 +101,7 @@
 
 <div class='vil_tabcontent' id="top_tabcontent"
 	style="height: 190px;" style='width:100%; margin:0px;'>
+	{% if videos_watched_stats %}
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
 	<div class="carousel-inner">
@@ -160,6 +161,9 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+     {% endif %}
 </div>
 
 <div style="height: 1px;"></div>
@@ -167,6 +171,7 @@
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Service Providers</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
 			<div style='border: 1px solid #009E0F;height:311px;'>
+			{% if top_related_stats %}
 <div class="carousel slide span8" id="lbCarousel"
 	style="width: 710px;">
 	<div class="carousel-inner" style="height: 300px;">
@@ -182,9 +187,12 @@
 						<div class='csp_name'>
 							<a href="javascript:void(0);" onclick="cspClick({{ person.id }})">{{ person.name }}</a>
 						</div></center>
+						{% if person.last_screened %}
 						<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last screened 
-								{{ person.last_video|lower|capfirst|truncchar:35}} on ({{ person.last_screened|date:"M d,Y" }})</div>
-
+							{{ person.last_video|lower|capfirst|truncchar:35}} on {{ person.last_screened|date:"M d,Y" }}
+						</div>
+						{% endif %}
+							
 
 
 <div id="progress_bar_label" style="margin-right:5px;">Adoptions per Screening</div>
@@ -206,13 +214,8 @@
 				<td align="center"><b>Screenings</b></td>
 				<td align="center"><b>Adoptions</b></td>
 			</tr>
-		</table>	
-						
-						
-						
-						
-
-					</div>
+		</table>
+	</div>
 				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
 		</div>
 		</ul>
@@ -222,6 +225,9 @@
 	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
 	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
 			</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any related Service Providers.</center></div>
+     {% endif %}
 
 		</div>
 </div>
