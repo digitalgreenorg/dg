@@ -21,11 +21,11 @@
      var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange ; // No prefix in moz
 
      /* Horrible Hack to prevent ' Expected an identifier and instead saw 'continue' (a reserved word).'*/
-     if (window.indexedDB) {
-         indexedDB.prototype._continue =  indexedDB.prototype.continue;
-     } else if (window.webkitIDBRequest) {
+     // if (window.indexedDB) {
+     //          indexedDB.prototype._continue =  indexedDB.prototype.continue;
+     //      } else if (window.webkitIDBRequest) {
          webkitIDBRequest.prototype._continue = webkitIDBRequest.prototype.continue;
-     }
+     // }
 
      window.indexedDB = indexedDB;
      window.IDBCursor = window.IDBCursor || window.webkitIDBCursor ||  window.mozIDBCursor ||  window.msIDBCursor ;
@@ -60,10 +60,12 @@
         };
 
         this.dbRequest.onblocked = function(event){
+            console.log("blocked");
             if (!this.nolog) debugLog("blocked");
         }
 
         this.dbRequest.onsuccess = function (e) {
+            console.log("success: open database");
             this.db = e.target.result; // Attach the connection ot the queue.
             if(!this.supportOnUpgradeNeeded)
             {
@@ -88,17 +90,20 @@
 
         this.dbRequest.onerror = function (e) {
             // Failed to open the database
+            console.log("indexed db cant be opened");
             this.error = "Couldn't not connect to the database"
         }.bind(this);
 
         this.dbRequest.onabort = function (e) {
             // Failed to open the database
+            console.log("indexed db cant be opened");
             this.error = "Connection to the database aborted"
         }.bind(this);
 
 
 
         this.dbRequest.onupgradeneeded = function(iDBVersionChangeEvent){
+            console.log("indexed db update needed");
             this.db =iDBVersionChangeEvent.target.transaction.db;
 
             this.supportOnUpgradeNeeded = true;
