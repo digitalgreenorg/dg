@@ -35,7 +35,7 @@
 				<td align="center"> {{ left_panel_stats.total_adoptions|intcomma}}</td>
 			</tr>
 			<tr>
-				<td align="left"><b>Joined</b></td>
+				<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
 				<td align="center"><b>Screenings</b></td>
 				<td align="center"><b>Adoptions</b></td>
 			</tr>
@@ -78,6 +78,7 @@
 	style="height: 190px;" style='width:100%; margin:0px;'>
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
+	{% if top_vill %}
 	<div class="carousel-inner">
 		{% for village in top_vill %} 
 		{% if forloop.counter0|divisibleby:"5" %}
@@ -90,6 +91,13 @@
 								<img rel="custompopover" data-content="Screenings :  <b>{{village.2}}</b>"  src="http://s3.amazonaws.com/dg_farmerbook/village/{{village.0}}.jpg" alt="">
 								</a>
 							</div>
+							{% if village.2 %}
+									<div style=' margin-top:-20px;position:absolute;'>
+										<span class='label label-info' >
+											<i class='icon-facetime-video icon-white'></i> {{ village.2 }}  
+										</span> 
+									</div>
+							{% endif %}
 							<div class='csp_name'>
 							<a href="javascript:void(0);" onclick="villageClick({{ village.0 }})"><center>{{ village.1}}</center></a>
 							</div></center>
@@ -106,6 +114,9 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}
+		<div style="margin-top:20px;font-size:23px;"><center>We did not find any villages.</center></div>
+	{% endif %}
 </div>
 <div style="height: 1px;"></div>
 	<div class='related_farmer'>
@@ -140,7 +151,7 @@
 							<td align="center"> {{ partner.adoptions|intcomma}}</td>
 						</tr>
 						<tr>
-							<td align="left"><b>Joined</b></td>
+							<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
 							<td align="center"><b>Screenings</b></td>
 							<td align="center"><b>Adoptions</b></td>
 						</tr>
