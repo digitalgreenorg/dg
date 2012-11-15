@@ -11,7 +11,7 @@
 			<center><img id="img_container" rel="custompopover" data-content="Grade is calculated based on community interests, questions, comments, adoptions, attendance and targets achieved. " style="width:100px; height:100px;" src='http://s3.amazonaws.com/dg_farmerbook/village/{{left_panel_stats.vil_details.0.0}}.jpg'></center>
 		<div id="name_label" > <center>{{ left_panel_stats.vil_details.0.1  }} </center></div>
 		{% if left_panel_stats.start_date %}
-		<div class="group_label"> <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }} | Grade: {{ left_panel_stats.vil_details.0.5|default:"Not updated"}}</center></div>
+		<div class="group_label"> <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }} | Grade: {{ left_panel_stats.vil_details.0.5|default:"Not Avialable"}}</center></div>
 		{% endif %}
 		
 		<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>

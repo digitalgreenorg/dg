@@ -78,6 +78,7 @@
 	style="height: 190px;" style='width:100%; margin:0px;'>
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
+	{% if top_vill %}
 	<div class="carousel-inner">
 		{% for village in top_vill %} 
 		{% if forloop.counter0|divisibleby:"5" %}
@@ -113,6 +114,9 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}
+		<div style="margin-top:20px;font-size:23px;"><center>We did not find any villages.</center></div>
+	{% endif %}
 </div>
 <div style="height: 1px;"></div>
 	<div class='related_farmer'>
