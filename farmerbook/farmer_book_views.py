@@ -273,11 +273,11 @@ def get_person_page(request):
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
     #For FBConnect to check if user already subscribed to the farmer
-    left_panel_stats['subscribed'] = 0
+    left_panel_stats['subscribed'] = False
     if fuid:
         follower = FBFollowers.objects.filter(fuid = fuid, person = person_id)
         if follower:
-            left_panel_stats['subscribed'] = 1
+            left_panel_stats['subscribed'] = True
     
     #rightpanel top contents
     #some problem in retrieving screening__date from Video Objects
