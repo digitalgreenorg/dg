@@ -154,7 +154,13 @@
 		
 		function personClick(person_id) {
 			showLoading();
-			$("div#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
+			fuid = getFuid();
+			if(fuid == 0) {
+				server_url = '/getpersonpage?person_id='+person_id
+			} else {
+				server_url = server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid
+			}
+			$("div#myModal").load(server_url, function(response, status, xhr) {
 					  if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						alert(msg + xhr.status + " " + xhr.statusText);
@@ -529,12 +535,20 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 
 	<div id="fb-root"></div>
       <script>
-	  
+		function getFuid() {
+			fuid = 0
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;					
+				}
+			});
+			return fuid;
+		}
+		
 		function followClick(person_id, video_title, date_of_adoption, person_name) {
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
-					fuid = '12345';
 					var message = fuid+person_id+"dg_farmerbook";
 					var hash = CryptoJS.SHA256(message);
 					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
@@ -562,7 +576,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 						console.log('Error occured in fb api post feed');
 					  } else {
 						console.log('Post ID: ' + response.id);
-						alert("You are successfully following "+person_name+".");
+						alert("You are successfully subscribed to "+person_name+".");
 					  }
 					});
 					console.log(obj);
