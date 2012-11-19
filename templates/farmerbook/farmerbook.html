@@ -558,10 +558,16 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 						console.log(data);
 						console.log($(this));
 						$('#follow').text("Subscribed");
+						$('#follow').addClass("disabled");
 			
 					});
 					picture_url = "https://s3.amazonaws.com/dg_farmerbook/2/"+person_id+".jpg";
-					desc = "Adopted "+video_title+" on "+date_of_adoption+".";
+					if(video_title) {
+						desc = "Adopted "+video_title+" on "+date_of_adoption+".";
+					}
+					else {
+						desc = "No Adoptions."
+					}
 								
 					var obj = {
 					  method: 'feed',
