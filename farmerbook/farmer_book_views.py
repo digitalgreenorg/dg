@@ -356,9 +356,10 @@ def get_person_page(request):
     for i in top_adopters_list:
         top_adopters_id_list.append(i[0])
     #get last adopted video for facebook feed
-    last_adopted_details = PersonAdoptPractice.objects.filter(person__id = person_id).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption')
-    if last_adopted_details:
-        last_adopted_details = last_adopted_details[0]
+    person_last_adopted_details = PersonAdoptPractice.objects.filter(person__id = person_id).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption')
+    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
+    if person_last_adopted_details:
+        person_last_adopted_details = person_last_adopted_details[0]
     #remove duplicates and append recent date
     d = defaultdict(list)
     for item in last_adopted_details:
@@ -369,7 +370,7 @@ def get_person_page(request):
         if obj[0] in d:
             top_adopters_stats.append({'id': obj[0], 'name': d[obj[0]][0][0], 'title': d[obj[0]][0][1], 'date_of_adoption': d[obj[0]][0][2], 'date_of_joining': d[obj[0]][0][3], 'views': obj[1][0], 'adoptions': obj[1][1], 'adoption_rate': obj[1][2]})
     
-    return render_to_response('person_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = newlist, top_adopters_stats=top_adopters_stats, last_adopted_details = last_adopted_details))
+    return render_to_response('person_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = newlist, top_adopters_stats=top_adopters_stats, last_adopted_details = person_last_adopted_details))
 
 def get_group_page(request):
     group_id = int(request.GET['group_id'])
