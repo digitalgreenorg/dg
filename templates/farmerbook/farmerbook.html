@@ -546,6 +546,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		}
 		
 		function followClick(person_id, video_title, date_of_adoption, person_name) {
+			console.log(person_id, video_title, date_of_adoption, person_name);
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
