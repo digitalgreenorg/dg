@@ -352,9 +352,10 @@ def get_person_page(request):
     top_adopters_id_list = []
     for i in top_adopters_list:
         top_adopters_id_list.append(i[0])
-    #get last adopted video
-    #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
-    last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
+    #get last adopted video for facebook feed
+    last_adopted_details = PersonAdoptPractice.objects.filter(person__id = person_id).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption')
+    if last_adopted_details:
+        last_adopted_details = last_adopted_details[0]
     #remove duplicates and append recent date
     d = defaultdict(list)
     for item in last_adopted_details:
