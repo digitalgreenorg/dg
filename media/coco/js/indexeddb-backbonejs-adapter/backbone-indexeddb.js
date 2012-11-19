@@ -66,13 +66,14 @@
 
         this.dbRequest.onsuccess = function (e) {
             console.log("Indexeddb: success: open database");
+            this.db = e.target.result; // Attach the connection ot the queue.
+            var currentIntDBVersion = (parseInt(this.db.version) ||  0); // we need convert beacuse chrome store in integer and ie10 DP4+ in int;
             console.log("Indexeddb: current db version = "+currentIntDBVersion);
                 
-            this.db = e.target.result; // Attach the connection ot the queue.
             if(!this.supportOnUpgradeNeeded)
             {
                 console.log("Indexeddb: onupgradeneeded not supported");
-                var currentIntDBVersion = (parseInt(this.db.version) ||  0); // we need convert beacuse chrome store in integer and ie10 DP4+ in int;
+                
                 var lastMigrationInt = (parseInt(lastMigrationPathVersion) || 0);  // And make sure we compare numbers with numbers.
 
                 if (currentIntDBVersion === lastMigrationInt) { //if support new event onupgradeneeded will trigger the ready function
