@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 import get_id_with_images
 from django.core.cache import cache
+from fbconnect.models import *
 
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
@@ -254,7 +255,7 @@ def get_village_page(request):
 
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
-    #person_id = 6000002570
+    fuid = request.POST.get('fuid', None)
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
     left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
@@ -271,6 +272,13 @@ def get_person_page(request):
     left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__person__id = person_id).distinct().count()
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
+    #For FBConnect to check if user already subscribed to the farmer
+    left_panel_stats['subscribed'] = 0
+    if fuid:
+        follower = FBFollowers.objects.filter(fuid = fuid, person = person_id)
+        if follower:
+            left_panel_stats['subscribed'] = 1
+    
     #rightpanel top contents
     #some problem in retrieving screening__date from Video Objects
     #vids_watched = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'screening__date')[0:5]
