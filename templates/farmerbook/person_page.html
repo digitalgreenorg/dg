@@ -17,14 +17,14 @@
 		</div>
 		<center>
 		{% if left_panel_stats.subscribed %}
+			<a id='follow' href="javascript:void(0)" class='btn btn-primary disabled'>Subscribed</a>
+		{% else %}			
 			<a id='follow' href="javascript:void(0)" 
 				onclick='followClick("{{left_panel_stats.farmer_details.0.0}}",
 								 "{{last_adopted_details.0.2}}", 
 								 "{{last_adopted_details.0.3|date:"M Y"}}", 
 								 "{{ left_panel_stats.farmer_details.0.1 }}")' 
 			 		class='btn btn-primary'>Subscribe</a>
-		{% else %}
-			<a id='follow' href="javascript:void(0)" class='btn btn-primary disabled'>Subscribed</a>
 		{% endif %}
 		</center>
 		<div id="progress_bar_label" > Adoption Rate </div>
