@@ -126,9 +126,9 @@
 			{% if type == "village" %}
 				villageClick('{{type_id}}')
 			{% endif %}
-			{% if type == 'person' %}
+			/*{% if type == 'person' %}
 				personClick('{{type_id}}')
-			{% endif %}
+			{% endif %}*/
 			{% if type == 'csp' %}
 				cspClick('{{type_id}}')
 			{% endif %}
@@ -633,6 +633,9 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		   console.log('in fb getlogin status 1');
 			if (response.status === 'connected') {
 				console.log('in connected');
+				{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
 				loggedIn(response);				
 		  } else {
 				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
