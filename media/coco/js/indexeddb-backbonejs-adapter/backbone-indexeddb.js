@@ -44,7 +44,7 @@
         this.nolog          = nolog;
         this.supportOnUpgradeNeeded = false;
         var lastMigrationPathVersion = _.last(this.schema.migrations).version;
-        if (!this.nolog) debugLog("opening database " + this.schema.id + " in version #" + lastMigrationPathVersion);
+        if (!this.nolog) debugLog("Indexeddb: opening database " + this.schema.id + " in version #" + lastMigrationPathVersion);
         this.dbRequest      = indexedDB.open(this.schema.id,lastMigrationPathVersion); //schema version need to be an unsigned long
 
         this.launchMigrationPath = function(dbVersion) {
@@ -60,24 +60,29 @@
         };
 
         this.dbRequest.onblocked = function(event){
-            console.log("blocked");
+            console.log("Indexeddb: blocked: open database");
             if (!this.nolog) debugLog("blocked");
         }
 
         this.dbRequest.onsuccess = function (e) {
-            console.log("success: open database");
+            console.log("Indexeddb: success: open database");
+            console.log("Indexeddb: current db version = "+currentIntDBVersion);
+                
             this.db = e.target.result; // Attach the connection ot the queue.
             if(!this.supportOnUpgradeNeeded)
             {
+                console.log("Indexeddb: onupgradeneeded not supported");
                 var currentIntDBVersion = (parseInt(this.db.version) ||  0); // we need convert beacuse chrome store in integer and ie10 DP4+ in int;
                 var lastMigrationInt = (parseInt(lastMigrationPathVersion) || 0);  // And make sure we compare numbers with numbers.
 
                 if (currentIntDBVersion === lastMigrationInt) { //if support new event onupgradeneeded will trigger the ready function
                     // No migration to perform!
-
+                    console.log("Indexeddb: No upgrade needed: open database ");
+                    
                     this.ready();
                 } else if (currentIntDBVersion < lastMigrationInt ) {
                     // We need to migrate up to the current migration defined in the database
+                    console.log("Indexeddb: upgrade needed: open database ");
                     this.launchMigrationPath(currentIntDBVersion);
                 } else {
                     // Looks like the IndexedDB is at a higher version than the current driver schema.
@@ -90,20 +95,20 @@
 
         this.dbRequest.onerror = function (e) {
             // Failed to open the database
-            console.log("indexed db cant be opened");
-            this.error = "Couldn't not connect to the database"
+            console.log("Indexeddb: error:open database");
+            this.error = "Couldn't connect to the database"
         }.bind(this);
 
         this.dbRequest.onabort = function (e) {
             // Failed to open the database
-            console.log("indexed db cant be opened");
+            console.log("Indexeddb: abort: open database");
             this.error = "Connection to the database aborted"
         }.bind(this);
 
 
 
         this.dbRequest.onupgradeneeded = function(iDBVersionChangeEvent){
-            console.log("indexed db update needed");
+            console.log("Indexeddb: upgradeneeded: open database");
             this.db =iDBVersionChangeEvent.target.transaction.db;
 
             this.supportOnUpgradeNeeded = true;
