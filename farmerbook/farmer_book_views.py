@@ -255,7 +255,7 @@ def get_village_page(request):
 
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
-    fuid = request.POST.get('fuid', None)
+    fuid = request.GET.get('fuid', None)
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
     left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
@@ -275,7 +275,7 @@ def get_person_page(request):
     #For FBConnect to check if user already subscribed to the farmer
     left_panel_stats['subscribed'] = False
     if fuid:
-        follower = FBFollowers.objects.filter(fuid = fuid, person = person_id)
+        follower = FBFollowers.objects.filter(fbuser = fuid, person = person_id)
         if follower:
             left_panel_stats['subscribed'] = True
     
