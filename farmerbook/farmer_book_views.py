@@ -16,10 +16,16 @@ def get_admin_panel(request):
     return render_to_response('admin_panel.html')
     
 def get_home_page(request, type=None, id=None):
-    if type:
-        print type
-    if id:
-        print id
+    if request.get_host() == "test.digitalgreen.org":
+        facebook_app_id = 416481021745150
+        server_url = "http://test.digitalgreen.org"
+    elif request.get_host() == "digitalgreen.org":
+        facebook_app_id = 373660286051965
+        server_url = "http://www.digitalgreen.org"
+    else:
+        #for local testing
+        facebook_app_id = 422365627816558
+        server_url = "http://127.0.0.1:8000"
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
@@ -73,7 +79,7 @@ def get_home_page(request, type=None, id=None):
     top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
                           
     return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
-                                                      type=type, type_id = id))
+                                                      type=type, type_id = id, facebook_app_id = facebook_app_id, server_url = server_url))
 
 def get_leaderboard_data():
     village_ids = Village.farmerbook_village_objects.all().values_list('id', flat=True)
