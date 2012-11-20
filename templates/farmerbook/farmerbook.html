@@ -553,7 +553,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					var message = fuid+person_id+"dg_farmerbook";
 					var hash = CryptoJS.SHA256(message);
 					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
-					link_url = 'http://test.digitalgreen.org/farmerbook/person/'+person_id;
+					link_url = '{{server_url}}/farmerbook/person/'+person_id;
 					$.post("/fbconnect/savefollower/", data, function(data) { 
 						console.log(data);
 						console.log($(this));
@@ -571,7 +571,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 								
 					var obj = {
 					  method: 'feed',
-					  link: 'http://test.digitalgreen.org/farmerbook/person/'+person_id,
+					  link: '{{server_url}}/farmerbook/person/'+person_id,
 					  picture: picture_url,
 					  name: 'Farmerbook',
 					  caption: person_name,
@@ -590,7 +590,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					FB.ui(obj, callback);
 				} else {
 					console.log('redirecting');
-					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 				}	
 			});
 		}
@@ -623,14 +623,14 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				loggedIn(response);				
 			} else {
 				console.log('redirecting');
-				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 			}
 			});
 		}
 		
 		window.fbAsyncInit = function() {
 		  FB.init({
-            appId      : '416481021745150', // App ID
+            appId      : '{{facebook_app_id}}', // App ID
             status     : true, // check login status
             cookie     : true, // enable cookies to allow the server to access the session
             xfbml      : true  // parse XFBML
@@ -645,7 +645,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				{% endif %}
 				loggedIn(response);				
 		  } else {
-				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=416481021745150&redirect_uri=http://test.digitalgreen.org/farmerbook&response_type=token");
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
 		  }
 		  });
         };
