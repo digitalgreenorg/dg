@@ -1,17 +1,17 @@
 window.addEventListener('load', function(e) {
 
-  window.applicationCache.addEventListener('updateready', function(e) {
-    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-      // Browser downloaded a new app cache.
-      // Swap it in and reload the page to get the new hotness.
-      window.applicationCache.swapCache();
-      if (confirm('A new version of this site is available. Load it?')) {
-        window.location.reload();
-      }
-    } else {
-      // Manifest didn't changed. Nothing new to server.
-    }
-  }, false);
+    window.applicationCache.addEventListener('updateready', function(e) {
+        if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+            // Browser downloaded a new app cache.
+            // Swap it in and reload the page to get the new hotness.
+            window.applicationCache.swapCache();
+            if (confirm('A new version of this site is available. Load it?')) {
+                window.location.reload();
+            }
+        } else {
+            // Manifest didn't changed. Nothing new to server.
+        }
+    }, false);
 
 }, false);
 
@@ -131,14 +131,16 @@ $(document)
 
         render: function(show_heading) {
             $(this.el)
-                .html(this.template({header_name: show_heading}));
+                .html(this.template({
+                header_name: show_heading
+            }));
             $(this.el)
                 .append(this.table_template());
-            
-            
+
+
             return this;
         },
-        render_data: function(){
+        render_data: function() {
             $tbody = this.$("tbody");
             console.log("rendering list view");
             this.collection.each(function(model) {
@@ -149,7 +151,8 @@ $(document)
                     .render()
                     .el);
             }, this);
-            this.$('table').dataTable();
+            this.$('table')
+                .dataTable();
         },
         addNew: function() {
             appRouter.navigate('person/add', true);
@@ -165,7 +168,7 @@ $(document)
     var person_add_edit_view = Backbone.View.extend({
 
         events: {
-           // 'click #save': 'save'
+            // 'click #save': 'save'
         },
 
         initialize: function(params) {
@@ -184,20 +187,20 @@ $(document)
 
                 model.bind('change', this.fill_form);
                 model.fetch({
-                success: function() {
-                    console.log(" edit model fetched");
+                    success: function() {
+                        console.log(" edit model fetched");
 
-                }
-                //ToDO: error handling
+                    }
+                    //ToDO: error handling
                 });
-                
+
             }
             this.add_edit_template_name = this.view_configs.add_edit_template_name;
             this.add_edit_template = _.template($('#' + this.add_edit_template_name)
                 .html());
             options_inner_template = _.template($('#options_template')
                 .html());
-           
+
             this.villages = new village_offline_collection();
             this.persongroups = new persongroup_offline_collection();
             _(this)
@@ -205,8 +208,8 @@ $(document)
             _(this)
                 .bindAll('render_persongroups');
             _(this)
-                    .bindAll('save');
-            
+                .bindAll('save');
+
             this.villages.bind('all', this.render_villages);
             this.villages.fetch({
                 success: function() {
@@ -242,47 +245,40 @@ $(document)
             if (data.hasOwnProperty('')) {
                 delete data[''];
             }
-            
+
             var village = this.villages.where({
                 id: data['village']
             })[0];
             var persongroup = this.persongroups.where({
                 id: data['person_group']
             })[0];
-            
-            if(village)
-            {
+
+            if (village) {
                 data['village'] = {
                     'id': village.get('id'),
                     'village_name': village.get('village_name')
                 };
-            }
-            else
-                data['village']= {
-                    'id': null,
-                    'village_name': null
-                };
-            if(persongroup)
-            {
+            } else data['village'] = {
+                'id': null,
+                'village_name': null
+            };
+            if (persongroup) {
                 data['person_group'] = {
                     'id': persongroup.get('id'),
                     'group_name': persongroup.get('group_name')
                 };
-            }
-            else
-                data['person_group'] = {
-                    'id':null,
-                    'group_name': null
-                };
-                
+            } else data['person_group'] = {
+                'id': null,
+                'group_name': null
+            };
+
             if (model) {
                 model.set(data);
                 console.log("editing person to:");
                 console.log(JSON.stringify(model));
                 model.save();
 
-            } 
-            else {
+            } else {
                 this.person_offline_model.set(data);
                 console.log("adding new person:");
                 console.log(JSON.stringify(this.person_offline_model));
@@ -296,11 +292,30 @@ $(document)
         render: function() {
             $(this.el)
                 .html(this.add_edit_template());
-            var curobj = this;    
-            this.$('form').validate({submitHandler: function() { 
-            curobj.save();
-        }});
-            
+            var curobj = this;
+            this.$('form')
+                .validate({
+                submitHandler: function() {
+                    curobj.save();
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element)
+                        .parent('div')
+                        .parent('div')
+                        .addClass("error");
+                        
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element)
+                        .parent('div')
+                        .parent('div')
+                        .removeClass("error");
+                    
+                },
+                errorElement: "span",
+                errorClass: "help-inline"
+            });
+
             return this;
         },
         render_villages: function() {
@@ -333,7 +348,7 @@ $(document)
 
     });
 
-    
+
     var HeaderView = Backbone.View.extend({
         events: {
 
@@ -344,8 +359,7 @@ $(document)
 
         render: function() {
             $(this.el)
-                .html(this.template({
-                }));
+                .html(this.template({}));
             return this;
         }
     });
@@ -406,7 +420,7 @@ $(document)
         Download: function() {
             console.log("starting download");
             //Download:fetch each model from server and save it to the indexeddb
-            
+
             villages_online = new village_online_collection();
             villages_offline = new village_offline_collection();
             this.fetch_save(villages_online, villages_offline, "village");
@@ -439,8 +453,7 @@ $(document)
             .html()),
         render: function() {
             $(this.el)
-                .html(this.template({
-            }));
+                .html(this.template({}));
             return this;
         }
     });
@@ -454,7 +467,7 @@ $(document)
             });
             curr_list_view = null;
             current_add_edit_view = null;
-            
+
         },
         render_dashboard: function() {
             $(this.el)
