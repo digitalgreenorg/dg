@@ -24,7 +24,10 @@ def save_screening_data(xml_tree):
             screening_data['selected_village'] = record.getElementsByTagName('selected_village')[0].firstChild.data
             screening_data['selected_group'] = record.getElementsByTagName('selected_group')[0].firstChild.data
             screening_data['selected_mediator'] = record.getElementsByTagName('selected_mediator')[0].firstChild.data
-            #screening_data['num_people'] = record.getElementsByTagName('num_people')[0].firstChild.data
+            screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
+            if  screening_data['selected_video'] == 0 :
+                screening_data['selected_video'] = record.getElementsByTagName('additional_selected_video')[0].firstChild.data
+                 
             screening_data['attendance_record'] = record.getElementsByTagName('attendance_record')
             print screening_data['date'] 
             pma_record = []
@@ -61,6 +64,7 @@ def save_screening_data(xml_tree):
                 screening.save()
                 status['screening'] = screening.id
                 screening.farmer_groups_targeted = [screening_data['selected_group']] 
+                screening.videoes_screened = screening_data['selected_video']
                 screening.save()
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
