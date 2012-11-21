@@ -168,9 +168,19 @@ $(document)
     var person_add_edit_view = Backbone.View.extend({
 
         events: {
-            // 'click #save': 'save'
+            'click #save': 'setjustsave',
+            'click #save_add_another': 'set_save_add_another'
         },
-
+        setjustsave: function() {
+            console.log("only save");
+            this.just_save = true;
+            this.save_and_add_another = false;
+        },
+        set_save_add_another: function() {
+            console.log("save and add another");
+            this.save_and_add_another = true;
+            this.just_save = false;
+        },
         initialize: function(params) {
             this.person_offline_model = new person_offline_model();
             console.log("params to add/edit view:");
@@ -193,7 +203,7 @@ $(document)
                     }
                     //ToDO: error handling
                 });
-
+                this.edit_case = true;
             }
             this.add_edit_template_name = this.view_configs.add_edit_template_name;
             this.add_edit_template = _.template($('#' + this.add_edit_template_name)
@@ -226,6 +236,8 @@ $(document)
                 }
                 //ToDO: error handling
             });
+            this.just_save = false;
+            this.save_and_add_another = false;
         },
         fill_form: function() {
             //render should have been called before this func
@@ -284,8 +296,12 @@ $(document)
                 console.log(JSON.stringify(this.person_offline_model));
                 this.person_offline_model.save();
             }
+            if (this.just_save) appRouter.navigate('person', true);
+            else if (this.save_and_add_another) {
+                appRouter.navigate('person/add');
+                appRouter.addPerson();
+            } else console.log("Bug: after save option not set!");
 
-            appRouter.navigate('person', true);
 
         },
 
