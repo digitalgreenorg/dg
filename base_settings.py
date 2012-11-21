@@ -71,6 +71,11 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth'
+)
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
