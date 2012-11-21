@@ -18,38 +18,38 @@ window.addEventListener('load', function(e) {
 $(document)
     .ready(function() {
     var village_list_view_configs = {
-        'page_header': 'Villages',
+        'page_header': 'Village',
         'backbone_collection': village_offline_collection,
         'table_template_name': 'village_table_template',
         'list_item_template_name': 'village_list_item_template',
     };
     var video_list_view_configs = {
-        'page_header': 'Videos',
+        'page_header': 'Video',
         'backbone_collection': video_offline_collection,
         'table_template_name': 'video_table_template',
         'list_item_template_name': 'video_list_item_template'
     };
     var persongroup_list_view_configs = {
-        'page_header': 'Groups',
+        'page_header': 'Group',
         'backbone_collection': persongroup_offline_collection,
         'table_template_name': 'persongroup_table_template',
         'list_item_template_name': 'persongroup_list_item_template'
     };
     var screening_list_view_configs = {
-        'page_header': 'Screenings',
+        'page_header': 'Screening',
         'backbone_collection': screening_offline_collection,
         'table_template_name': 'screening_table_template',
         'list_item_template_name': 'screening_list_item_template',
     };
     var person_list_view_configs = {
-        'page_header': 'Persons',
+        'page_header': 'Person',
         'backbone_collection': person_offline_collection,
         'table_template_name': 'person_table_template',
         'list_item_template_name': 'person_list_item_template',
         'add_edit_template_name': 'person_add_edit_template'
     };
     var personadoptvideo_list_view_configs = {
-        'page_header': 'Adoptions',
+        'page_header': 'Adoption',
         'backbone_collection': personadoptvideo_offline_collection,
         'table_template_name': 'personadoptvideo_table_template',
         'list_item_template_name': 'personadoptvideo_list_item_template'
@@ -303,14 +303,14 @@ $(document)
                         .parent('div')
                         .parent('div')
                         .addClass("error");
-                        
+
                 },
                 unhighlight: function(element, errorClass, validClass) {
                     $(element)
                         .parent('div')
                         .parent('div')
                         .removeClass("error");
-                    
+
                 },
                 errorElement: "span",
                 errorClass: "help-inline"
@@ -357,9 +357,11 @@ $(document)
         template: _.template($('#header')
             .html()),
 
-        render: function() {
+        render: function(breadcrumb) {
             $(this.el)
-                .html(this.template({}));
+                .html(this.template({
+                breadcrumb: breadcrumb
+            }));
             return this;
         }
     });
@@ -473,8 +475,9 @@ $(document)
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render('Dashboard')
+                .append(header.render("<li class='active' >Dashboard</li>")
                 .el);
+
             $(this.el)
                 .append(dashboard.render()
                 .el);
@@ -485,7 +488,7 @@ $(document)
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render()
+                .append(header.render("<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'>" + view_configs.page_header + "</li>")
                 .el);
             curr_list_view = new list_view(view_configs);
             $(this.el)
@@ -500,12 +503,16 @@ $(document)
                 // ToDO: destroy this view, right now just turning off events for its collection 
                 curr_list_view.collection.off();
             }
+            var edit_case = false;
+            if (data) edit_case = true;
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render("Add/Edit " + view_configs.page_header)
+                .append(header.render('<li><a href="#">Dashboard</a> <span class="divider">/</span></li>\
+<li><a href="#' + view_configs.page_header.toLowerCase() + '">' + view_configs.page_header + '</a> <span class="divider">/</span></li>\
+<li class="active">' + (edit_case ? 'Edit' : 'Add') + '</li>')
                 .el);
-            if (view_configs.page_header == "Persons") {
+            if (view_configs.page_header == "Person") {
                 current_add_edit_view = person_add_edit_view;
             } else {
                 console.log("not person");
@@ -520,10 +527,6 @@ $(document)
                 .el);
             return this;
         }
-
-
-
-
 
     });
 
