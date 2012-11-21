@@ -12,7 +12,7 @@ from video_practice_map.models import VideoPractice,SkippedVideo
 
 
 @login_required(login_url='/videotask/login/')
-@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url='/videotask/login/')
+@user_passes_test(lambda u: u.groups.filter(name='Video Classifiers').count() > 0, login_url='/videotask/login/?failed=true')
 def home(request):
     can_change_filter = can_reset_skipped = False # For showing message on no video for assign or review. 
                                                   # There can be skipped vidoes or videos in other filter options (language/state) 
