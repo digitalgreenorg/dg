@@ -64,7 +64,7 @@ def save_screening_data(xml_tree):
                 screening.save()
                 status['screening'] = screening.id
                 screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                screening.videoes_screened = screening_data['selected_video']
+                screening.videoes_screened = [screening_data['selected_video']]
                 screening.save()
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
