@@ -10,11 +10,23 @@ from django.template.loader import render_to_string
 from django.db.models import Sum,Max,Count
 import get_id_with_images
 from django.core.cache import cache
+from fbconnect.models import *
 
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
     
 def get_home_page(request, type=None, id=None):
+    ##For facebook connect purpose
+    if request.get_host() == "test.digitalgreen.org":
+        facebook_app_id = 416481021745150
+        server_url = "http://test.digitalgreen.org"
+    elif request.get_host() == "digitalgreen.org":
+        facebook_app_id = 373660286051965
+        server_url = "http://www.digitalgreen.org"
+    else:
+        #for local testing
+        facebook_app_id = 422365627816558
+        server_url = "http://127.0.0.1:8000"
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
@@ -68,7 +80,7 @@ def get_home_page(request, type=None, id=None):
     top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
                           
     return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
-                                                      type=type, type_id = id))
+                                                      type=type, type_id = id, facebook_app_id = facebook_app_id, server_url = server_url))
 
 def get_leaderboard_data():
     village_ids = Village.farmerbook_village_objects.all().values_list('id', flat=True)
@@ -255,7 +267,7 @@ def get_village_page(request):
 
 def get_person_page(request):
     person_id = int(request.GET['person_id'])
-    #person_id = 6000002570
+    fuid = request.GET.get('fuid', None)
     #left panel stats dictionary hold values related to left panel of village page
     left_panel_stats = {}
     left_panel_stats['farmer_details'] = Person.objects.filter(id = person_id).values_list('id', 'person_name', 'father_name', 'group__group_name', 'village__village_name', 'village__block__district__district_name', 'village__block__district__state__state_name','date_of_joining', 'village__id', 'group__id')
@@ -272,6 +284,12 @@ def get_person_page(request):
     left_panel_stats['videos_featured'] = Video.objects.filter(farmers_shown__person__id = person_id).distinct().count()
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__person__id = person_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__person__id = person_id).order_by('-id').values_list('id', 'name')[:1]
+    #For FBConnect to check if user already subscribed to the farmer
+    left_panel_stats['subscribed'] = False
+    if fuid:
+        follower = FBFollowers.objects.filter(fbuser = fuid, person = person_id)
+        if follower:
+            left_panel_stats['subscribed'] = True
     #rightpanel top contents
     #some problem in retrieving screening__date from Video Objects
     #vids_watched = Video.objects.filter(screening__village__id = village_id).distinct().values_list('id', 'title', 'youtubeid', 'screening__date')[0:5]
@@ -347,9 +365,11 @@ def get_person_page(request):
     top_adopters_id_list = []
     for i in top_adopters_list:
         top_adopters_id_list.append(i[0])
-    #get last adopted video
-    #last_adopted_details = PersonAdoptPractice.objects.filter(person__id__in = top_adopters_id_list).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption', 'person__date_of_joining')
+    #get last adopted video for facebook feed
+    person_last_adopted_details = PersonAdoptPractice.objects.filter(person__id = person_id).order_by('-date_of_adoption').values_list('person_id', 'person__person_name', 'video__title', 'date_of_adoption')
     last_adopted_details = Person.objects.filter(id__in = top_adopters_id_list).values_list('id', 'person_name', 'personadoptpractice__video__title', 'personadoptpractice__date_of_adoption', 'date_of_joining')
+    if person_last_adopted_details:
+        person_last_adopted_details = person_last_adopted_details[0]
     #remove duplicates and append recent date
     d = defaultdict(list)
     for item in last_adopted_details:
@@ -360,7 +380,10 @@ def get_person_page(request):
         if obj[0] in d:
             top_adopters_stats.append({'id': obj[0], 'name': d[obj[0]][0][0], 'title': d[obj[0]][0][1], 'date_of_adoption': d[obj[0]][0][2], 'date_of_joining': d[obj[0]][0][3], 'views': obj[1][0], 'adoptions': obj[1][1], 'adoption_rate': obj[1][2]})
     
-    return render_to_response('person_page.html', dict(left_panel_stats = left_panel_stats, videos_watched_stats = newlist, top_adopters_stats=top_adopters_stats))
+    return render_to_response('person_page.html', dict(left_panel_stats = left_panel_stats, 
+                                                       videos_watched_stats = newlist, 
+                                                       top_adopters_stats=top_adopters_stats, 
+                                                       person_last_adopted_details = person_last_adopted_details))
 
 def get_group_page(request):
     group_id = int(request.GET['group_id'])

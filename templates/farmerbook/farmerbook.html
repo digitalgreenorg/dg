@@ -95,6 +95,7 @@
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-tooltip.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-popover.js"></script>
 	<script type="text/javascript" src="/media/farmerbook/js/bootstrap-custompopover.js"></script>
+	<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/sha256.js"></script>
 	
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -124,9 +125,9 @@
 			{% if type == "village" %}
 				villageClick('{{type_id}}')
 			{% endif %}
-			{% if type == 'person' %}
+			/*{% if type == 'person' %}
 				personClick('{{type_id}}')
-			{% endif %}
+			{% endif %}*/
 			{% if type == 'csp' %}
 				cspClick('{{type_id}}')
 			{% endif %}
@@ -152,7 +153,13 @@
 		
 		function personClick(person_id) {
 			showLoading();
-			$("div#myModal").load('/getpersonpage?person_id='+person_id, function(response, status, xhr) {
+			fuid = getFuid();
+			if(fuid == 0) {
+				server_url = '/getpersonpage?person_id='+person_id
+			} else {
+				server_url = server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid
+			}
+			$("div#myModal").load(server_url, function(response, status, xhr) {
 					  if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						alert(msg + xhr.status + " " + xhr.statusText);
@@ -339,9 +346,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
         <div class="container" style="background-color:#6D9D30;width:100%">
           <div><img src="/media/Output/Images/dgfavicon1.png" style="margin-left:10px;margin-top:4px;float:left;"></div>
 		  <div><a class="brand" style="margin-left:1px;font-weight:bold;float:left;">farmerbook</a></div>
-		  <a href="javascript:void(0);" onclick="fbconnectClick()" style="width:100px;float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;">
-			<img src='/media/farmerbook/images/facebook-connect.png'>
-		  </a>
+		  <div href="javascript:void(0);" onclick="fbConnectClick()" class='btn btn-primary' id='fbconnect' style="float:right; margin-left:10px; margin-top:6px;margin-right:10px;margin-bottom:0px;cursor: hand; cursor: pointer;"> Connect With facebook</div>
         </div>      
     </div>
 	<div id="map_canvas" style=""></div>
@@ -529,5 +534,130 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 <script type="text/javascript">
     mixpanel.track("Landing Page Loaded");
 </script>
+<div id="fb-root"></div>
+      <script>
+		function getFuid() {
+			fuid = 0
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;					
+				}
+			});
+			return fuid;
+		}
+		
+		function followClick(person_id, video_title, date_of_adoption, person_name) {
+			console.log(person_id, video_title, date_of_adoption, person_name);
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;
+					var message = fuid+person_id+"dg_farmerbook";
+					var hash = CryptoJS.SHA256(message);
+					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
+					link_url = '{{server_url}}/farmerbook/person/'+person_id;
+					$.post("/fbconnect/savefollower/", data, function(data) { 
+						console.log(data);
+						console.log($(this));
+						$('#follow').text("Subscribed");
+						$('#follow').addClass("disabled");
+			
+					});
+					picture_url = "https://s3.amazonaws.com/dg_farmerbook/2/"+person_id+".jpg";
+					if(video_title) {
+						desc = "Adopted "+video_title+" on "+date_of_adoption+".";
+					}
+					else {
+						desc = "No Adoptions."
+					}
+								
+					var obj = {
+					  method: 'feed',
+					  link: '{{server_url}}/farmerbook/person/'+person_id,
+					  picture: picture_url,
+					  name: 'Farmerbook',
+					  caption: person_name,
+					  description: desc
+					};
+					console.log(obj);
+					FB.api('/me/feed', 'post', obj, function(response) {
+					  if (!response || response.error) {
+						console.log('Error occured in fb api post feed');
+					  } else {
+						console.log('Post ID: ' + response.id);
+						alert("You are successfully subscribed to "+person_name+".");
+					  }
+					});
+					console.log(obj);
+					FB.ui(obj, callback);
+				} else {
+					console.log('redirecting');
+					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+				}	
+			});
+		}
+		function postToFeed(person_id) {
+			// create a method to post feed here
+			
+		}
+		
+		function loggedIn(response) {
+			button = document.getElementById('fbconnect');
+			button.innerHTML = 'Connected With Facebook';
+			console.log(response);
+			//send ajax request to save user
+			fuid = response.authResponse.userID;
+			FB.api('/me', {"fields": ["name", "first_name", "last_name"]}, function(response) {
+					console.log('in fb api call success call b');
+					console.log(response);
+					name = response.name;
+					first_name = response.first_name;
+					last_name = response.last_name;
+					var data = { 'fuid' : fuid, 'name' : name, 'first_name' : first_name, 'last_name' : last_name};
+					$.post("/fbconnect/savefbuser/", data, function(data) { console.log(data);});	
+			});		
+		}
+		
+		function fbConnectClick() {
+			console.log('in fbconnect click');
+			FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				loggedIn(response);				
+			} else {
+				console.log('redirecting');
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+			}
+			});
+		}
+		
+		window.fbAsyncInit = function() {
+		  FB.init({
+            appId      : '{{facebook_app_id}}', // App ID
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+          });
+		  
+		   FB.getLoginStatus(function(response) {
+		   console.log('in fb getlogin status 1');
+			if (response.status === 'connected') {
+				console.log('in connected');
+				{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
+				loggedIn(response);				
+		  } else {
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
+		  }
+		  });
+        };
+        // Load the SDK Asynchronously
+        (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+         }(document));
+      </script>
   </body>
 </html>
