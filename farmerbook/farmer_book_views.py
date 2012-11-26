@@ -119,6 +119,9 @@ def get_villages_with_images(request):
                         10000000000025: ["Barwani", "22.0300","74.9000"], 10000000000027:[ "Ujjain", "23.1828","75.7772"],
                         10000000000028:["Mysore", "12.3024","76.6386"], 10000000000033:["Mahabubnagar", "16.7300","77.9800"],
                         10000000000035:["Munger", "25.3800", "86.4700"], 10000000000021:["Rajgarh", "22.6800", "74.9500"]}
+    village_lat_lng = {47000040575:["12.2475", "76.249722", "Kudluru lakshmipura"], 
+                       47000062452:["12.37", "76.337778", "Thondalu"], 
+                       47000001044:["12.310833", "76.252778", "Yashodharapura"]}
     for i in village_list:
         vil_details = Village.objects.filter(id = i).values_list('id', 'village_name', 
                                                                  'block__district__id', 'grade')
@@ -134,6 +137,12 @@ def get_villages_with_images(request):
         angle = 50 * 0.0089833458;
         random_lat = "%.4f" % random.uniform(district_lat - angle, district_lat + angle)
         random_lng = "%.4f" % random.uniform(district_lng - angle, district_lng + angle)
+        try:
+            if village_lat_lng[i]:
+                random_lat = village_lat_lng[i][0]
+                random_lng = village_lat_lng[i][1]
+        except:
+            pass
         village_details.append({"id":i, "name": vil_details[0][1], "latitude":random_lat, 
                                 "longitude": random_lng, "grade": vil_details[0][3]})
     
@@ -164,8 +173,8 @@ def get_village_page(request):
     left_panel_stats['videos_produced'] = Video.objects.filter(village__id = village_id).distinct().count()
 
     left_panel_stats['num_of_groups'] = PersonGroups.objects.filter(village__id = village_id).count()
-    group_id_list = get_id_with_images.get_group_list()
-    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id, id__in = group_id_list).distinct().values_list('id', 'group_name')
+    #group_id_list = get_id_with_images.get_group_list()
+    left_panel_stats['vil_groups'] = PersonGroups.objects.filter(village__id = village_id, person__image_exists=1).distinct().values_list('id', 'group_name')
     left_panel_stats['partner'] = Partners.objects.filter(district__block__village__id = village_id).values_list('id', 'partner_name')
     left_panel_stats['service_provider'] = Animator.objects.filter(animatorassignedvillage__village__id = village_id).order_by('-id').values_list('id', 'name')[:1]
     left_panel_stats['vil_details'] = Village.objects.filter(id = village_id).values_list('id', 'village_name', 'block__district__district_name', 'block__district__state__state_name', 'start_date', 'grade')
