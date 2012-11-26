@@ -19,7 +19,6 @@
     var uploaded = {%if search_box_params.video_uploaded %}{{search_box_params.video_uploaded}}{%else%} null{%endif%};
     var partners = {%if search_box_params.sel_partners %}["{{search_box_params.sel_partners|join:'", "'}}"]{%else%} null{%endif%};
     var lang = {%if search_box_params.sel_lang %}{{search_box_params.sel_lang}}{%else%} null{%endif%};
-    var season = {%if search_box_params.season %}["{{search_box_params.season|join:'", "'}}"]{%else%} null{%endif%};
     var pracs = {%if search_box_params.prac %}["{{search_box_params.prac|join:'", "'}}"]{%else%} null{%endif%};
     var sort = {%if search_box_params.sort %}"{{search_box_params.sort}}"{%else%} null{%endif%};
     var sort_order = {%if search_box_params.sort_order %}"{{search_box_params.sort_order}}"{%else%} null{%endif%};
