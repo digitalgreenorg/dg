@@ -188,11 +188,6 @@ function go(page) {
     }
     
     if($("#lang").val()!='-1')  url.push("lang="+$("#lang").val());
-    var season = $("#season").val();
-    for(i=0;i<season.length;i++) {
-        if(season[i] != '-1')
-            url.push("season="+season[i]);
-    }
     
     if($("#inlinedatepicker1").html()!="") url.push("from_date="+$("#inlinedatepicker1").html());
     if($("#inlinedatepicker2").html()!="") url.push("to_date="+$("#inlinedatepicker2").html());
