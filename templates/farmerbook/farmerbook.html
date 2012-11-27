@@ -165,7 +165,7 @@
 		}
 		
 		function checkLoginFB(person_id) {
-			server_url = '/getpersonpage?person_id='+person_id
+			server_url = '/getpersonpage?person_id='+person_id;
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
@@ -629,11 +629,16 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		   console.log('in fb getlogin status 1');
 			if (response.status === 'connected') {
 				console.log('in connected');
-			}
-			{% if type == 'person' %}
-				personClick('{{type_id}}')
-			{% endif %}
-			loggedIn(response);		  
+				{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
+				loggedIn(response);				
+		  } else {
+		  		{% if type == 'person' %}
+					personClick('{{type_id}}')
+				{% endif %}
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
+		  }
 		  });
         };
         // Load the SDK Asynchronously
