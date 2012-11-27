@@ -11,22 +11,16 @@ from django.db.models import Sum,Max,Count
 import get_id_with_images
 from django.core.cache import cache
 from fbconnect.models import *
+from fbconnect.views import *
 
 def get_admin_panel(request):    
     return render_to_response('admin_panel.html')
     
 def get_home_page(request, type=None, id=None):
     ##For facebook connect purpose
-    if request.get_host() == "test.digitalgreen.org":
-        facebook_app_id = 416481021745150
-        server_url = "http://test.digitalgreen.org"
-    elif request.get_host() == "digitalgreen.org":
-        facebook_app_id = 373660286051965
-        server_url = "http://www.digitalgreen.org"
-    else:
-        #for local testing
-        facebook_app_id = 422365627816558
-        server_url = "http://127.0.0.1:8000"
+    fbappid_server_url = get_fbappid_server_url(request)
+    facebook_app_id = fbappid_server_url['facebook_app_id']
+    server_url = fbappid_server_url['server_url']
     top_csp_stats = defaultdict(lambda:[0, 0, 0, 0, 0])
     id_list = get_id_with_images.get_csp_list()
     csp_stats = Screening.objects.filter(animator__id__in = id_list).values('animator__id').annotate(screenings = Count('id')).values_list('animator', 
