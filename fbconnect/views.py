@@ -32,7 +32,7 @@ def get_fbappid_server_url(request):
     if request.get_host() == "test.digitalgreen.org":
         facebook_app_id = 416481021745150
         server_url = "http://test.digitalgreen.org"
-    elif request.get_host() == "digitalgreen.org":
+    elif request.get_host() == "www.digitalgreen.org":
         facebook_app_id = 373660286051965
         server_url = "http://www.digitalgreen.org"
     else:
