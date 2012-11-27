@@ -90,7 +90,8 @@ INSTALLED_APPS = (
     'south',
     'farmerbook',
     'video_practice_map',
-    'path'
+    'path',
+    'fbconnect'
 )
 
 LOGGING = {
