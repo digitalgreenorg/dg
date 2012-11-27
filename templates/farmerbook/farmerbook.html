@@ -119,15 +119,11 @@
 	
 	
 		$(document).ready(function() {
-		     $('#myModal').hide();
-			//$('.carousel').carousel({ interval: 200000	});
+		    $('#myModal').hide();
 			$('.carousel').carousel({ pause: true, interval: false});
 			{% if type == "village" %}
 				villageClick('{{type_id}}')
 			{% endif %}
-			/*{% if type == 'person' %}
-				personClick('{{type_id}}')
-			{% endif %}*/
 			{% if type == 'csp' %}
 				cspClick('{{type_id}}')
 			{% endif %}
@@ -153,22 +149,30 @@
 		
 		function personClick(person_id) {
 			showLoading();
-			fuid = getFuid();
-			if(fuid == 0) {
-				server_url = '/getpersonpage?person_id='+person_id
-			} else {
-				server_url = server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid
-			}
+			checkLoginFB(person_id);			
+		}
+		
+		function personPageLoad(server_url) {
 			$("div#myModal").load(server_url, function(response, status, xhr) {
 					  if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						alert(msg + xhr.status + " " + xhr.statusText);
 					  }
-					  //alert('Load was performed.');
 					  removeLoading();
 					  $('#myModal').modal();					 
 					  mixpanel.track("Person Page Loaded");					  
 					});
+		}
+		
+		function checkLoginFB(person_id) {
+			server_url = '/getpersonpage?person_id='+person_id
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					fuid = response.authResponse.userID;
+					server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid				
+				}
+				personPageLoad(server_url);
+			});
 		}
 		
 		function groupClick(group_id) {
@@ -536,16 +540,6 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 </script>
 <div id="fb-root"></div>
       <script>
-		function getFuid() {
-			fuid = 0
-			FB.getLoginStatus(function(response) {
-				if (response.status === 'connected') {
-					fuid = response.authResponse.userID;					
-				}
-			});
-			return fuid;
-		}
-		
 		function followClick(person_id, video_title, date_of_adoption, person_name) {
 			console.log(person_id, video_title, date_of_adoption, person_name);
 			FB.getLoginStatus(function(response) {
@@ -562,7 +556,6 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 						$('#follow').addClass("disabled");
 			
 					});
-					picture_url = "https://s3.amazonaws.com/dg_farmerbook/2/"+person_id+".jpg";
 					if(video_title) {
 						desc = "Adopted "+video_title+" on "+date_of_adoption+".";
 					}
@@ -573,7 +566,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					var obj = {
 					  method: 'feed',
 					  link: '{{server_url}}/farmerbook/person/'+person_id,
-					  picture: picture_url,
+					  picture: 'https://s3.amazonaws.com/dg_farmerbook/2/'+person_id+'.jpg',
 					  name: 'Farmerbook',
 					  caption: person_name,
 					  description: desc
@@ -587,18 +580,13 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 						alert("You are successfully subscribed to "+person_name+".");
 					  }
 					});
-					console.log(obj);
-					FB.ui(obj, callback);
+					console.log(obj);					
 				} else {
 					console.log('redirecting');
 					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 				}	
 			});
-		}
-		function postToFeed(person_id) {
-			// create a method to post feed here
-			
-		}
+		}		
 		
 		function loggedIn(response) {
 			button = document.getElementById('fbconnect');
@@ -641,13 +629,11 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		   console.log('in fb getlogin status 1');
 			if (response.status === 'connected') {
 				console.log('in connected');
-				{% if type == 'person' %}
-					personClick('{{type_id}}')
-				{% endif %}
-				loggedIn(response);				
-		  } else {
-				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
-		  }
+			}
+			{% if type == 'person' %}
+				personClick('{{type_id}}')
+			{% endif %}
+			loggedIn(response);		  
 		  });
         };
         // Load the SDK Asynchronously
