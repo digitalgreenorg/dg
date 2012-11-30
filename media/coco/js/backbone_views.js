@@ -153,6 +153,8 @@ $(document)
                 .html());
             this.collection.bind('all', this.render_data, this);
             this.collection.fetch();
+            this.datatable = null;
+            
         },
 
         render: function(show_heading) {
@@ -166,9 +168,15 @@ $(document)
 
             return this;
         },
-        render_data: function() {
+        render_data: function(){
+            if(this.datatable)
+            {
+                this.datatable.fnDestroy();
+            }
             $tbody = this.$("tbody");
+            $tbody.html('');
             console.log("rendering list view");
+            
             this.collection.each(function(model) {
                 $tbody.append(new list_item_view({
                     model: model,
@@ -177,8 +185,7 @@ $(document)
                     .render()
                     .el);
             }, this);
-            this.$('table')
-                .dataTable();
+            this.datatable = this.$('table').dataTable({"bDestroy": true});
         },
         addNew: function() {
             appRouter.navigate('person/add', true);
