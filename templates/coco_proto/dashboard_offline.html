@@ -23,6 +23,7 @@
 <script type="text/javascript" src="/media/coco/js/backbone.syphon.js"></script>
 <script type="text/javascript" src="/media/coco/datatablejs_media/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/media/coco/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
 <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 <style type="text/css" title="currentStyle">
     @import "/media/coco/datatablejs_media/css/demo_table.css";
@@ -37,6 +38,24 @@
     <%=breadcrumb%>
     </ul>
 </div>
+</script>
+<script type="text/template" id="error_notifcation_template" >
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Error! </strong><%= msg%>
+    </div>
+</script>
+<script type="text/template" id="success_notifcation_template" >
+    <div class="alert alert-success">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Success! </strong><%= msg%>
+    </div>
+</script>
+<script type="text/template" id="info_notifcation_template" >
+    <div class="alert alert-info">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Info! </strong><%= msg%>
+    </div>
 </script>
 
 <script type="text/template" id="dashboard">
@@ -202,7 +221,11 @@
                                                         
 
 </head>
-<body id ="app">
-   
+<body>
+    <div id = "notifications">
+        
+    </div>
+    <div id="app">
+    </div>
 </body>
 </html>

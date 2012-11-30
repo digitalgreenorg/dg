@@ -85,6 +85,11 @@ $(document)
         initialize: function(params) {
             this.template = _.template($('#' + params.view_configs.list_item_template_name)
                 .html());
+            this.error_notif_template = _.template($('#' + 'error_notifcation_template')
+                .html());
+            this.success_notif_template = _.template($('#' + 'success_notifcation_template')
+                .html());
+            
         },
 
         edit: function(event) {
@@ -97,9 +102,30 @@ $(document)
         remove: function(event) {
             event.stopImmediatePropagation();
             event.preventDefault();
+            var context = this;
             if (confirm("Are you sure you want to delete this entry?")) {
-                this.model.remove();
+                this.model.destroy({
+                    error: function() {
+                        console.log("error deleting a model");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Delete the "+context.options.view_configs.page_header
+                        }));
+
+
+                    },
+                    success: function() {
+                        console.log("deleted a model");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Deleted the "+context.options.view_configs.page_header
+                        }));
+
+                    }
+                });
             }
+            
+            
         },
 
         render: function() {
@@ -185,6 +211,11 @@ $(document)
             this.person_offline_model = new person_offline_model();
             console.log("params to add/edit view:");
             console.log(params);
+            this.error_notif_template = _.template($('#' + 'error_notifcation_template')
+                .html());
+            this.success_notif_template = _.template($('#' + 'success_notifcation_template')
+                .html());
+
             this.view_configs = params.view_configs;
             model = null;
             json = null;
@@ -283,18 +314,55 @@ $(document)
                 'id': null,
                 'group_name': null
             };
-
+            
+            var context = this;
             if (model) {
                 model.set(data);
                 console.log("editing person to:");
                 console.log(JSON.stringify(model));
-                model.save();
+                model.save(null, {
+                    error: function() {
+                        console.log("error while saving edit of person in local db");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Edit the person"
+                        }));
+
+
+                    },
+                    success: function() {
+                        console.log("successfully edited a person in local db");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Successfully Edited the person"
+                        }));
+
+                    }
+                });
 
             } else {
                 this.person_offline_model.set(data);
                 console.log("adding new person:");
                 console.log(JSON.stringify(this.person_offline_model));
-                this.person_offline_model.save();
+                this.person_offline_model.save(null, {
+                    error: function() {
+                        console.log("error");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Add the person"
+                        }));
+
+
+                    },
+                    success: function() {
+                        console.log("successfully added a person");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Successfully Added the person"
+                        }));
+
+                    }
+                });
             }
             if (this.just_save) appRouter.navigate('person', true);
             else if (this.save_and_add_another) {
