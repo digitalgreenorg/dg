@@ -8,6 +8,7 @@ from output.database.SQL import shared_sql, overview_analytics_sql, \
 from output.database.SQL.shared_sql import practice_options_sql
 from output.database.utility import run_query, run_query_raw, run_query_dict, \
     run_query_dict_list, construct_query, get_dates_partners
+from copy import deepcopy
 import datetime
 import json
 import random
@@ -508,18 +509,16 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
         setting_to_date = str(datetime.date.today());
-
     setting_from_date = MyDate(* [int(x) for x in reversed(setting_from_date.split('-')[:2])])
     setting_to_date = MyDate(* [int(x) for x in reversed(setting_to_date.split('-')[:2])])
-
     data = [['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']]
 
     if(setting_from_date.y != setting_to_date.y):
         loop_from = MyDate(1,setting_from_date.y)
         loop_to = MyDate(12, setting_to_date.y)
     else:
-        loop_from = setting_from_date;
-        loop_to = setting_to_date;
+        loop_from = deepcopy(setting_from_date);
+        loop_to = deepcopy(setting_to_date);
     while(loop_from <= loop_to):
         if(loop_from < setting_from_date or loop_from > setting_to_date):
             data[loop_from.m - 1].append(0)
@@ -531,6 +530,6 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
             data[loop_from.m - 1].append(0)
 
         loop_from.addMonth(1)
-        
     header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
     return HttpResponse(json.dumps([header] + filter(lambda x: len(x) > 1, data)))
+    
