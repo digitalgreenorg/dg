@@ -10,7 +10,7 @@ import sys
 import time
 from datetime import datetime,timedelta
 
-three_months = datetime.now() - timedelta(days = 300)
+three_months = datetime.now() - timedelta(days = 365)
 
 def truncate_id(id):
     return id
@@ -18,18 +18,31 @@ def truncate_id(id):
 def find_exact_villages(cluster_dict):
     
     village_not_found = 0 
+    mediator_dict= []
     for cluster in cluster_dict:
-        for counter,vill in enumerate(cluster['villages']):
-            village_info = []
-            village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
-            if village_info:
-                cluster['villages'][counter] = village_info[0][1]
+        counter = 0
+        for vill in cluster['villages']:
+            if vill == '':
+                print "blank"
             else:
-                village_info = Village.objects.filter(village_name__icontains = vill).values_list('id','village_name')
-                cluster['villages'][counter] = village_info[0][1]
-            if not village_info:
-                village_not_found +=1
-    return cluster_dict
+                village_info = []
+                village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
+                if village_info:
+                    cluster['villages'][counter] = village_info[0][1]
+                    counter += 1
+                    mediator_dict.append(({'mediator': '',
+                                      'village': village_info[0][1],
+                                      'cluster': cluster['cluster']}))
+                else:
+                    village_info = Village.objects.filter(village_name__icontains = vill).values_list('id','village_name')
+                    cluster['villages'][counter] = village_info[0][1]
+                    counter += 1
+                    mediator_dict.append(({'mediator': '',
+                                      'village': village_info[0][1],
+                                      'cluster': cluster['cluster']}))
+                if not village_info:
+                    village_not_found +=1
+    return cluster_dict, mediator_dict
     
     
 def write_person_info(cluster_dict, workbook):
@@ -90,6 +103,7 @@ def write_group_info(cluster_dict, workbook):
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
+            print vill
             village_persongroup_info = PersonGroups.objects.filter(village__village_name = vill).values_list('id','group_name','village')
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:
@@ -105,7 +119,7 @@ def write_group_info(cluster_dict, workbook):
                     sheet.write(row, 3, '0')
                 sheet.write(row, 4, cluster['cluster'])
                 row += 1
-            if Person.objects.filter(village  = vill_id, group = None).count() > 0:
+            if Person.objects.filter(village__village_name = vill, group = None).count() > 0:
                 sheet.write(row, 0, str(vill_id))
                 sheet.write(row, 1, 'Without Group')
                 sheet.write(row, 2, str(vill_id))
@@ -161,10 +175,9 @@ def write_mediator_info(mediator_dict, workbook):
     row += 1
     mediator_not_found = 0
     for mediator in mediator_dict:
-        mediator_info = Animator.objects.filter(assigned_villages__village_name = mediator['village']).values_list('id','name','village__id')
+        mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name = mediator['village']).values_list('animator_id','animator__name','village_id')
         if len(mediator_info)<1:
-            mediator_info = Animator.objects.filter(village__village_name__icontains = mediator['village']).values_list('id','name',
-                                                                                                                        'village__id')
+            mediator_info = AnimatorAssignedVillage.objects.filter(village__village_name__icontains = mediator['village']).values_list('animator__id','animator__name','village_id')
         if(mediator_info):
             mediator_id = truncate_id(mediator_info[0][0])
             vill_id = truncate_id(mediator_info[0][2])
@@ -175,6 +188,7 @@ def write_mediator_info(mediator_dict, workbook):
             row += 1
         else:
             mediator_not_found += 1
+            print "no mediator for "  + mediator['village']
     print str(mediator_not_found) + " mediators not found"
     return sheet
 
@@ -190,7 +204,7 @@ def write_distinct(vid_list, workbook):
         if vid_name:
             sheet.write(row, 0, str(id))
             sheet.write(row, 1, unicode(vid_name[0][0]))
-            sheet.write(row, 2, 'JADCHERLA')  # for testing 
+            sheet.write(row, 2, 'KURNOOL')  # for testing 
             row += 1
     return sheet
     
@@ -243,17 +257,17 @@ def write_video_schedule_info(vid_dict, workbook):
 #            sheet.write(row, 1, vid_name[0][0])
             sheet.write(row, 1, record['low_val'])
             sheet.write(row, 2, record['high_val'])
-            sheet.write(row, 3, 'JADCHERLA')  # for testing 
+            sheet.write(row, 3, 'KURNOOL')  # for testing 
             row += 1
         else:
             print str(record['id']) + " not found"
     return sheet
         
 
-wb = xlrd.open_workbook('..\mahabubnagar_cluster.xls')
+wb = xlrd.open_workbook('..\Pilot_Cluster_Data.xls')
 wb.sheet_names()
 sh = wb.sheet_by_index(0)
-clusters_to_take = [1]
+clusters_to_take = [1, 6, 11, 16, 21, 26]
 index=0
 reload(sys)
 print sys.getdefaultencoding()
@@ -265,28 +279,29 @@ while index < len(clusters_to_take):
     i=clusters_to_take[index]
     name = sh.cell(rowx=i,colx=0).value
     print "Processing values of cluster " + name
-    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,2)]})
-    for village in range(0,5):
-        mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=1).value,
-                                      'village': sh.cell(rowx=i+village,colx=1).value,
-                                      'cluster': name})
+    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,5) if sh.cell(rowx=i+vill,colx=1).value !='']})
+#    for village in range(0,5):
+#        mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=1).value,
+#                                      'village': sh.cell(rowx=i+village,colx=1).value,
+#                                      'cluster': name})
     
     index += 1 
 
 workbook = xlwt.Workbook(encoding = 'utf-8')
 
-cluster_village_dict = find_exact_villages(cluster_village_dict)
+cluster_village_dict, mediator_dict= find_exact_villages(cluster_village_dict)
 
 person_sheet = write_person_info(cluster_village_dict, workbook)
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
-mediator_sheet = write_mediator_info(mediator_village_dict, workbook)
+mediator_sheet = write_mediator_info(mediator_dict, workbook)
 #video_sheet = write_person_watched_video_info(cluster_village_dict, workbook)
 video_schedule_dict, video_list = video_schedule.get_video_schedule()
 video_distinct_sheet = write_distinct(video_list,workbook)
 print video_list
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
 workbook.save('trial-2-Fixture.xls')
+
 print "Done"
 
 
