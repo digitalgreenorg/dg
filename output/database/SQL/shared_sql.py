@@ -52,6 +52,7 @@ def practice_options_sql(sec, subsec, top, subtop, sub):
     sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
     sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
     sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
+    sql_ds['join'].append(["VIDEO vid", "vid.related_practice_id = P.id"])
     if(sec):
         sql_ds['where'].append('practice_sector_id = %s' % sec)
     if(subsec):
