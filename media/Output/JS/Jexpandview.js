@@ -38,6 +38,7 @@ function zoomIn(chart_object,header)
 		$("div#expandview4").html('<div id="alpha1" style="height:'+eochartheight+'px; width:'+eochartwidth+'px;"></div>');
 		chart_object.setContainerId('alpha1');
     	chart_object.draw();
+    	$('#alpha1').css("float","left");
 }
 
 
