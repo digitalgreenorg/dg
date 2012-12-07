@@ -62,23 +62,22 @@ def save_screening_data(xml_tree):
                                         animator_id = screening_data['selected_mediator'] )
                 try:
                     screening.full_clean()
+                    screening.save()
+                    status['screening'] = 1
+                    screening.farmer_groups_targeted = [screening_data['selected_group']] 
+                    screening.videoes_screened = [screening_data['selected_video']]
+                    screening.save()
                 except ValidationError as e:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                     error_msg = unicode(e)
-                screening.save()
-                status['screening'] = 1
                 
-                screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                screening.videoes_screened = [screening_data['selected_video']]
-                screening.save()
-                    
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
                 
         
             # save person meeting attendance records 
-            status['pma'] = 0
+            status['pma'] = 1
             try :
                 for person in pma_record:
                     pma = PersonMeetingAttendance ( screening_id = screening.id, 
@@ -87,6 +86,7 @@ def save_screening_data(xml_tree):
                                                     expressed_question = person['question'] )
                     try:
                         pma.full_clean()
+                        pma.save()
                     except ValidationError as e:
                         status['pma'] = error_list['PMA_SAVE_ERROR'] 
                         error_msg = unicode(e)
@@ -116,13 +116,13 @@ def save_adoption_data(xml_tree):
                                  video_id = screening_data['selected_video'])
             try:
                 pap.full_clean()
+                pap.save()
+                status = 1
+                error_msg = 'Sucessful'
             except ValidationError as e:
                 status = error_list['ADOPTION_SAVE_ERROR'] 
                 error_msg = unicode(e)
-            pap.save()
-            status = 1
-            error_msg = 'Sucessful'
-             
+            
         except Exception as ex:
             status = error_list['ADOPTION_READ_ERROR'] 
             error_msg = unicode(ex)
