@@ -60,12 +60,15 @@ def save_screening_data(xml_tree):
                                         location = 'Mobile',
                                         village_id = screening_data['selected_village'],
                                         animator_id = screening_data['selected_mediator'] )
-            
-                screening.save()
-                status['screening'] = screening.id
-                screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                screening.videoes_screened = [screening_data['selected_video']]
-                screening.save()
+                if screening.is_valid():
+                    screening.save()
+                    status['screening'] = screening.id
+                    screening.farmer_groups_targeted = [screening_data['selected_group']] 
+                    screening.videoes_screened = [screening_data['selected_video']]
+                    screening.save()
+                else :
+                    status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
+                    error_msg = 'Not Valid'
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
@@ -79,8 +82,12 @@ def save_screening_data(xml_tree):
                                                     person_id = person['person_id'],
                                                     interested = person['interested'],
                                                     expressed_question = person['question'] )
-                    pma.save()
-                    status['pma'] += 1
+                    if pma.is_valid() :
+                        pma.save()
+                        status['pma'] += 1
+                    else:
+                        status['pma'] = error_list['PMA_SAVE_ERROR']
+                        error_msg = 'Not Valid' 
             except Exception as ex:
                 status['pma'] = error_list['PMA_SAVE_ERROR'] 
                 error_msg = unicode(ex)
@@ -107,9 +114,13 @@ def save_adoption_data(xml_tree):
                                  date_of_adoption = screening_data['date'],
                                  video_id = screening_data['selected_video'])
             try:
-                pap.save()
-                status = 1   # pap.id
-                error_msg = 'Successful'
+                if pap.is_valid():
+                    pap.save()
+                    status = 1   # pap.id
+                    error_msg = 'Successful'
+                else:
+                    status = error_list['ADOPTION_SAVE_ERROR']                            
+                    error_msg = 'Not Valid'
             except Exception as ex:
                 status = error_list['ADOPTION_SAVE_ERROR']                            
                 error_msg = unicode(ex)   
