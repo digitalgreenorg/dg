@@ -51,7 +51,6 @@ def save_screening_data(xml_tree):
             screening_data['start_time'] = temp_time.time()
             screening_data['end_time'] = temp_time + timedelta(minutes = 45)
             screening_data['end_time'] = screening_data['end_time'].time() 
-            
             # save screening record
             try:
                 screening = Screening ( date = screening_data['date'],
@@ -60,13 +59,30 @@ def save_screening_data(xml_tree):
                                         location = 'Mobile',
                                         village_id = screening_data['selected_village'],
                                         animator_id = screening_data['selected_mediator'] )
+              
                 try:
-                    screening.full_clean()
-                    screening.save()
-                    status['screening'] = 1
-                    screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                    screening.videoes_screened = [screening_data['selected_video']]
-                    screening.save()
+                    if screening.validate_unique() == None:
+                        screening.save()
+                        status['screening'] = 1
+                        screening.farmer_groups_targeted = [screening_data['selected_group']] 
+                        screening.videoes_screened = [screening_data['selected_video']]
+                        screening.save()
+                        status['pma'] = 1
+                        try :
+                            for person in pma_record:
+                                pma = PersonMeetingAttendance ( screening_id = screening.id, 
+                                                                person_id = person['person_id'],
+                                                                interested = person['interested'],
+                                                                expressed_question = person['question'] )
+                                try:
+                                    if pma.full_clean() == None:
+                                        pma.save()
+                                except ValidationError as e:
+                                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                                    error_msg = unicode(e)
+                        except Exception as ex:
+                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                            error_msg = unicode(ex)
                 except ValidationError as e:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                     error_msg = unicode(e)
@@ -74,26 +90,7 @@ def save_screening_data(xml_tree):
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
-                
-        
-            # save person meeting attendance records 
-            status['pma'] = 1
-            try :
-                for person in pma_record:
-                    pma = PersonMeetingAttendance ( screening_id = screening.id, 
-                                                    person_id = person['person_id'],
-                                                    interested = person['interested'],
-                                                    expressed_question = person['question'] )
-                    try:
-                        pma.full_clean()
-                        pma.save()
-                    except ValidationError as e:
-                        status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                        error_msg = unicode(e)
-            except Exception as ex:
-                status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                error_msg = unicode(ex)
-        
+           
         except Exception as ex:
             status['screening'] = error_list['SCREENING_READ_ERROR'] 
             error_msg = unicode(ex)
@@ -115,10 +112,10 @@ def save_adoption_data(xml_tree):
                                  date_of_adoption = screening_data['date'],
                                  video_id = screening_data['selected_video'])
             try:
-                pap.full_clean()
-                pap.save()
-                status = 1
-                error_msg = 'Sucessful'
+                if pap.full_clean() == None:
+                    pap.save()
+                    status = 1
+                    error_msg = 'Sucessful'
             except ValidationError as e:
                 status = error_list['ADOPTION_SAVE_ERROR'] 
                 error_msg = unicode(e)
@@ -128,4 +125,3 @@ def save_adoption_data(xml_tree):
             error_msg = unicode(ex)
 
     return status, error_msg
-
