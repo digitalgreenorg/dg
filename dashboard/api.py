@@ -7,9 +7,69 @@ from tastypie.validation import FormValidation
 from functools import partial
 from dashboard.models import Country, State, District, Block, Village, FieldOfficer,Partners, \
                 Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission
-from forms import  CountryForm, StateForm, DistrictForm, BlockForm, VillageForm, FieldOfficerForm, PartnerForm
+from forms import  PersonForm
 from django.forms.models import model_to_dict
 from django.db import models
+from django.forms.models import ModelChoiceField
+
+class ModelFormValidation(FormValidation):
+    """
+        Override tastypie's standard ``FormValidation`` since this does not care
+        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
+        """
+    
+    def uri_to_pk(self, uri):
+        """
+            Returns the integer PK part of a URI.
+            
+            Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+            returns the URI unmodified.
+            
+            Also handles lists of URIs
+            """
+        
+        if uri is None:
+            return None
+        
+        # convert everything to lists
+        multiple = not isinstance(uri, basestring)
+        uris = uri if multiple else [uri]
+        
+        # handle all passed URIs
+        converted = []
+        for one_uri in uris:
+            try:
+                # hopefully /api/v1/<resource_name>/<pk>/
+                converted.append(int(one_uri.split('/')[-2]))
+            except (IndexError, ValueError):
+                raise ValueError(
+                                 "URI %s could not be converted to PK integer." % one_uri)
+        
+        # convert back to original format
+        return converted if multiple else converted[0]
+    
+    def is_valid(self, bundle, request=None):
+        data = bundle.data
+        # Ensure we get a bound Form, regardless of the state of the bundle.
+        if data is None:
+            data = {}
+        # copy data, so we don't modify the bundle
+        data = data.copy()
+        
+        # convert URIs to PK integers for all relation fields
+        relation_fields = [name for name, field in
+                           self.form_class.base_fields.items()
+                           if issubclass(field.__class__, ModelChoiceField)]
+        
+        for field in relation_fields:
+            if field in data:
+                data[field] = self.uri_to_pk(data[field])
+        
+        # validate and return messages on error
+        form = self.form_class(data)
+        if form.is_valid():
+            return {}
+        return form.errors
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -144,17 +204,20 @@ class PersonResource(ModelResource):
     person_group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
     #person_group_name = fields.CharField('group__group_name')
     #person_group_id = fields.CharField('group__id')
-    screenings_attended = fields.ToManyField(ScreeningResource, 'screenings_attended', related_name='person')
+    screenings_attended = fields.ToManyField(ScreeningResource, 'screenings_attended', related_name='person', null=True)
     
     class Meta:
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
+        validation = ModelFormValidation(form_class = PersonForm)
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_person_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     dehydrate_screenings_attended = partial(many_to_many_to_subfield, field_name='screenings_attended',sub_field_names=['id'])
-
+    def save_m2m(self, bundle):
+        return
+        
 class PersonAdoptVideoResource(ModelResource):
     person = fields.ForeignKey(PersonResource, 'person')
 #    person_name = fields.CharField('person__person_name')
