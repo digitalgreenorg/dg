@@ -12,22 +12,29 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, ru
 def screening_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
     
-    search_box_params = views.common.get_search_box(request, screening_analytics_sql.screening_min_date)
+    adjusted_to_date = to_date if to_date else datetime.date.today()
+    tot_active_vid_data = run_query(screening_analytics_sql.average_video_by_active_data(geog, id, from_date, adjusted_to_date, partners))[0]
+    if tot_active_vid_data['tot_active_per']:
+        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_active_per']
+    else:
+        avg_vid_by_active = 0
+    
+    search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
-    if(get_req_url): get_req_url = '&'+get_req_url
 
-    return render_to_response('screening_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_scr=tot_val['tot_scr'],\
-                                                          tot_att=tot_val['dist_att'], \
-                                                          avg_scr=tot_val['avg_sc_per_day'], \
-                                                          avg_att=tot_val['avg_att_per_sc'], \
+    return render_to_response('screening_module.html',dict(search_box_params = search_box_params,
+                                                          tot_scr=tot_val['tot_scr'],
+                                                          tot_att=tot_val['dist_att'],
+                                                          avg_scr=tot_val['avg_sc_per_day'],
+                                                          avg_att=tot_val['avg_att_per_sc'],
+                                                          avg_vid_by_active = avg_vid_by_active,
                                                           get_req_url = get_req_url
                                                           ))
 
@@ -41,7 +48,10 @@ def screening_tot_lines(request):
     rows = run_query_raw(screening_analytics_sql.screening_raw_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append([str(row[0])] + map(float, list(row)[1:]))
+        if row[-1] == 0:
+            return_val.append([str(row[0])] + [0.0, 0.0, 0.0, 0.0]) #when total screening = 0. Division by zero will raise exception
+        else:
+            return_val.append([str(row[0])] + map(lambda x: round(x/row[-1], 2), list(row)[1:-1])) #dividing by tot_screening to average out
 
     return_val.insert(0,["Date","Total Attendance","Total Expressed Interest","Total Expressed Adoption","Total Expressed Question"])
     if(return_val):
@@ -53,15 +63,24 @@ def screening_percent_lines(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partners = get_dates_partners(request);
     
-    rows = run_query_raw(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
+    rows = run_query(screening_analytics_sql.screening_percent_attendance(geog, id, from_date, to_date, partners))
     return_val = []
     for row in rows:
-        return_val.append([str(row[0])]+[float(x) for x in list(row)[1:]])
-    return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
-    if(return_val):
-        return HttpResponse(json.dumps(return_val)  )
+        if row['tot_exp_att'] == 0:
+            rel_att = rel_exp_ado = 0
+        else:
+            rel_att = (row['tot_per'] * 100)/row['tot_exp_att']
+            rel_exp_ado = (row['tot_ado'] * 100)/row['tot_exp_att']
+        if row['tot_per'] == 0:
+            rel_exp_int = rel_exp_ques = 0
+        else:
+            rel_exp_int = (row['tot_int'] * 100)/row['tot_per']
+            rel_exp_ques = (row['tot_que'] * 100)/row['tot_per']
+        return_val.append([str(row['date'])]+ map(lambda x: round(x, 2) ,[rel_att, rel_exp_int, rel_exp_ado, rel_exp_ques]))
 
-    return HttpResponse(json.dumps(return_val)  )
+    return_val.insert(0,["Date","Relative Attendance","Relative Expressed Interest","Relative Expressed Adoption","Relative Expressed Question"])
+    
+    return HttpResponse(json.dumps(return_val))
 
 def screening_per_day_line(request):
     geog, id = get_geog_id(request);
@@ -123,7 +142,7 @@ def screening_mf_ratio(request):
 def screening_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
     
@@ -139,14 +158,13 @@ def screening_geog_pie_data(request):
     return_val = []
     return_val.append(['title','value','url'])
     for item in scr_geog:
-        if(geog.upper()!= "VILLAGE"):
+        if(geog is None or geog.upper()!= "VILLAGE"):
             temp_get_req_url = get_req_url[:]
             temp_get_req_url.append("id="+str(item['id']))
-            return_val.append([geog_name[item['id']][0],item['tot_scr'],url+'&'.join(temp_get_req_url)])
+            return_val.append([geog_name[item['id']][0], float(item['tot_scr']), url+'&'.join(temp_get_req_url)])
         else:
-            return_val.append([geog_name[item['id']][0],item['tot_scr'],''])       
+            return_val.append([geog_name[item['id']][0], float(item['tot_scr']), ''])       
     return HttpResponse(json.dumps(return_val))
-
 
 #Returns total distinct attendees, average attendance per screening, average screening per day
 #        during the given period and for the given geography/partners
@@ -155,71 +173,35 @@ def screening_geog_pie_data(request):
 #        values_to_fetch can be None, which will fetch all
 def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, values_to_fetch=None):
     return_dict = {}
-    if geog == 'COUNTRY' and not(from_date or to_date or partners):
-        if values_to_fetch == None or ('dist_att' in values_to_fetch and 'avg_att_per_sc' in values_to_fetch):
-            pma_data = PersonMeetingAttendance.objects.aggregate(tot_dist_per=Count('person', distinct=True), tot_per=Count('id'))
-        elif 'dist_att' in values_to_fetch:
-            pma_data = PersonMeetingAttendance.objects.aggregate(tot_dist_per=Count('person', distinct=True))
-        elif 'avg_att_per_sc' in values_to_fetch:
-            pma_data = dict(tot_per=PersonMeetingAttendance.objects.count())
-
-        if values_to_fetch == None or 'avg_sc_per_day' in values_to_fetch:
-            sc_data = Screening.objects.aggregate(tot_scr=Count("id"), max_date=Max('date'), min_date=Min('date'))
-        elif 'avg_att_per_sc' in values_to_fetch or 'tot_scr' in values_to_fetch:
-            sc_data = Screening.objects.aggregate(tot_scr=Count("id"))
-        
-        if(values_to_fetch==None or 'dist_att' in values_to_fetch):
-            return_dict['dist_att'] = pma_data['tot_dist_per']
-        if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
-            return_dict['tot_scr'] = sc_data['tot_scr']
-        if(values_to_fetch==None or 'avg_att_per_sc' in values_to_fetch):
-            if sc_data['tot_scr'] != 0:
-                return_dict['avg_att_per_sc'] = float(pma_data['tot_per'])/sc_data['tot_scr']
-            else:
-                return_dict['avg_att_per_sc'] = 0
-        if(values_to_fetch==None or 'avg_sc_per_day' in values_to_fetch):
-            if(sc_data['max_date'] and sc_data['min_date']):
-                tot_days = (sc_data['max_date'] - sc_data['min_date']).days + 1
-            else:
-                tot_days = 0
-            if(tot_days):
-                return_dict['avg_sc_per_day'] = sc_data['tot_scr']/tot_days
-            else:
-                return_dict['avg_sc_per_day'] = 0
-    else:
-        if values_to_fetch == None:
-            sql_values_to_fetch = None
+    sql_values_to_fetch = set()
+    if values_to_fetch is None or 'avg_att_per_sc' in values_to_fetch:
+        sql_values_to_fetch.update(["tot_scr", "tot_att"])
+    if values_to_fetch is None or 'avg_sc_per_day' in values_to_fetch:
+        sql_values_to_fetch.add("tot_scr")
+    if values_to_fetch is None or 'tot_scr' in values_to_fetch:
+        sql_values_to_fetch.add('tot_scr')
+    
+    tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
+    if tot_val['tot_scr'] is None:
+        tot_val['tot_scr'] = 0 
+    
+    if(values_to_fetch==None or 'dist_att' in values_to_fetch):
+        query_result = run_query_raw(screening_analytics_sql.distinct_attendees(geog, id, from_date, to_date, partners))[0];
+        return_dict['dist_att'] = query_result[0] if query_result else 0
+    if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
+        return_dict['tot_scr'] = tot_val['tot_scr']
+    if(values_to_fetch==None or 'avg_att_per_sc' in values_to_fetch):
+            return_dict['avg_att_per_sc'] = float(tot_val['tot_att'])/float(tot_val['tot_scr']) if tot_val['tot_scr'] else 0
+    if(values_to_fetch==None or 'avg_sc_per_day' in values_to_fetch):
+        if from_date and to_date:
+            tot_days = (datetime.date(*[int(i) for i in to_date.split('-')]) - datetime.date(*[int(i) for i in from_date.split('-')])).days + 1;
         else:
-            sql_values_to_fetch = []
-            if 'dist_att' in values_to_fetch:
-                sql_values_to_fetch.append("tot_dist_per")
-            if 'avg_att_per_sc' in values_to_fetch:
-                sql_values_to_fetch.extend(["tot_scr", "tot_per"])
-            if 'avg_sc_per_day' in values_to_fetch:
-                sql_values_to_fetch.append("tot_scr")
-                if not(from_date and to_date):
-                    sql_values_to_fetch.append('dates')
-            if 'tot_scr' in values_to_fetch and 'tot_scr' in sql_values_to_fetch:
-                sql_values_to_fetch.append('tot_scr')
-        tot_val = run_query(screening_analytics_sql.totAttendees_totScreening_datediff(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
-        
-        if(values_to_fetch==None or 'dist_att' in values_to_fetch):
-            return_dict['dist_att'] = tot_val['tot_dist_per']
-        if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
-            return_dict['tot_scr'] = tot_val['tot_scr']
-        if(values_to_fetch==None or 'avg_att_per_sc' in values_to_fetch):
-            if tot_val['tot_scr'] != 0:
-                return_dict['avg_att_per_sc'] = float(tot_val['tot_per'])/tot_val['tot_scr']
-            else:
-                return_dict['avg_att_per_sc'] = 0
-        if(values_to_fetch==None or 'avg_sc_per_day' in values_to_fetch):
-            if from_date and to_date:
-                tot_days = (datetime.date(*[int(i) for i in to_date.split('-')]) - datetime.date(*[int(i) for i in from_date.split('-')])).days + 1;
-            else:
-                tot_days = tot_val['tot_days']
-            if(tot_days):
-                return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days
-            else:
-                return_dict['avg_sc_per_day'] = 0
+            from_date = run_query_raw(shared_sql.get_start_date(geog, id))[0][0]
+            if not from_date:
+                from_date = run_query_raw(shared_sql.caculate_start_date(geog, id))[0][0]
+            if not from_date:
+                from_date = datetime.date.today()
+            tot_days = (datetime.date.today() - from_date).days + 1
+        return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days and tot_val['tot_scr'] else 0
     
     return return_dict

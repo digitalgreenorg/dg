@@ -40,26 +40,26 @@ def home_with_analytics():
 
 
 #function for breadcrumbs
-#returns a list of geog upto state
+#returns a list of geog upto country
 #Datastructure returned is [{state_id:((state_name),true if this should be marked as selected else it's not nested tuple),..},
 #                                                  {district_id: ---do---  ,district_id:.........}]
 def breadcrumbs_options(geog,id):
+    if(geog is None):
+        return breadcrumbs_options('COUNTRY',-1);
+    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE','COUNTRY'];
     id = int(id)
-    if(geog=='COUNTRY'):
-        return breadcrumbs_options('STATE',-1);
-    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE'];
     return_val = []
 
     if(geog!='VILLAGE'):
         return_val.append(run_query_dict_list(shared_sql.breadcrumbs_options_sql(geog_list[geog_list.index(geog)-1],id,1),'id'))
     #Starting from the passed geog, we'll calculate 'options' and append to return_val,
-    #and end up at top most geog 'state'.
+    #and end up at top most geog 'country'.
     for i in range(geog_list.index(geog),len(geog_list)):
         geog = geog_list[i]
         query_return = run_query_dict_list(shared_sql.breadcrumbs_options_sql(geog,id,0),'id')
         if(id!=-1):
             query_return[id].append('true')
-        if(geog!='STATE'):
+        if(geog!='COUNTRY'):
             id  = query_return[id][1]
 
         return_val.append(query_return);
@@ -68,28 +68,21 @@ def breadcrumbs_options(geog,id):
     return return_val
 
 #Returns a dictionary containing parameters for the search box on the right hand side of the page.
-def get_search_box(request, min_date_func=None):
+def get_search_box(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partner = utility.get_dates_partners(request);
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
     
-    if(from_date and to_date):
-        search_box_params['is_date_selected'] = 1
-    else:
+    if(from_date == str(datetime.date.today() - datetime.timedelta(365)) and to_date == str(datetime.date.today())):
         search_box_params['is_date_selected'] = 0
-        if(min_date_func):
-            from_date =  (run_query(min_date_func(geog, id, from_date, to_date, partner)))[0]['date']
-        else:
-            from_date = None
-        if(not from_date):
-            from_date = datetime.date.today()
-        to_date = datetime.date.today()
-
+    else:
+        search_box_params['is_date_selected'] = 1
+        
     search_box_params['from_date'] = str(from_date)
     search_box_params['to_date'] = str(to_date)
     search_box_params['geog_val'] = breadcrumbs_options(geog,id)
-    search_box_params['cur_geog'] = geog.lower()
+    search_box_params['cur_geog'] = geog.lower() if geog != None else None
     search_box_params['cur_id'] = id
     search_box_params['base_url'] = request.path
 
@@ -172,7 +165,10 @@ def practice_options(sec, subsec, top, subtop, sub):
 
 #Helper function to return geog, id from request object.
 def get_geog_id(request):
-    return request.GET['geog'].upper(),int(request.GET['id'])
+    if "id" in request.GET and 'geog' in request.GET:
+        return request.GET['geog'].upper(),int(request.GET['id'])
+    else:
+        return None, None
 
 
 #Returns a dictionary of list of PARTNER_NAME, id
@@ -204,9 +200,9 @@ def drop_down_val(request):
         id = int(id)
     else:
         raise Http404()
-    geog_list = ['state','district','block','village']
-    if geog=='state':
-        geog_parent = 'state'
+    geog_list = ['country','state','district','block','village']
+    if geog=='country':
+        geog_parent = 'country'
     else:
         geog_parent = geog_list[geog_list.index(geog)-1]
 
@@ -222,6 +218,7 @@ def drop_down_val(request):
     html = t.render(Context(dict(geog=geog,rs=rs)))
 
     return HttpResponse(html)
+
 
 
 #This is the method to generate Data for line graph for # vs time. (eg Overview module)
@@ -262,10 +259,6 @@ def overview_line_graph(request):
     else:
         person_rs = []
     
-    if('village' in graph_type):
-        village_rs = run_query_raw(shared_sql.overview_line_chart(type='village',geog=geog,id=id,from_date=from_date, to_date=to_date, partners=partners));
-    else:
-        village_rs = []
 
     start_date = today = datetime.date.today()
     if vid_prod_rs:
@@ -278,44 +271,6 @@ def overview_line_graph(request):
         start_date = min(start_date,*(prac_rs.keys()))
     if person_rs:
         start_date = min(start_date,*(person_rs.keys()))
-
-    ###Calculating village operational on each day.
-    
-    #village_rs -> temp. temp is a dictionary of date vs list of village IDS
-    temp = {}
-    for i in village_rs:
-        if i[0] in temp:
-            temp[i[0]].append(i[1])
-        else:
-            temp[i[0]] = [i[1]]
-          
-    #vil_vals is cumulatively added list of villages for every date.
-    #i.e. vil_vals is a dictionary of date to list of villages that had screening on any date before that.  
-    vil_vals = {}
-    min_date = start_date;
-    max_date = today
-    if(min_date in temp):
-        vil_vals[min_date] = temp[min_date]
-    else:
-        vil_vals[min_date] = []
-    min_date = min_date + datetime.timedelta(days=1)
-    while min_date <= max_date:
-        vil_vals[min_date] = vil_vals[min_date - datetime.timedelta(days=1)][:]
-        if min_date in temp:
-            vil_vals[min_date].extend(temp[min_date])
-        min_date = min_date + datetime.timedelta(days=1)
-        
-    min_date =  start_date + datetime.timedelta(days=61)
-    
-    while min_date <= max_date:
-        vil_vals[max_date] = len(set(vil_vals[max_date][len(vil_vals[(max_date - datetime.timedelta(days=61))]):]))
-        max_date = max_date - datetime.timedelta(days=1)	
-    while start_date <= max_date:
-        vil_vals[max_date]  = len(set(vil_vals[max_date]))
-        max_date = max_date - datetime.timedelta(days=1)
-
-    #End of Village Operational calculation
-
     diff = (today - start_date).days
 
     str_list = []
@@ -335,13 +290,11 @@ def overview_line_graph(request):
             sum_person += person_rs[iter_date][0]
 
         append_str = [str(iter_date)]
-        if('prod' in graph_type): append_str.append(sum_vid)
-        if('screen' in graph_type): append_str.append(sum_sc)
-        if('adopt' in graph_type): append_str.append(sum_adopt)
-        if('prac' in graph_type): append_str.append(sum_prac)
-        if('person' in graph_type): append_str.append(sum_person)
-        if(geog in ["COUNTRY","STATE","DISTRICT"]):
-            if('village' in graph_type): append_str.append(vil_vals[iter_date])
+        if('prod' in graph_type): append_str.append(float(sum_vid))
+        if('screen' in graph_type): append_str.append(float(sum_sc))
+        if('adopt' in graph_type): append_str.append(float(sum_adopt))
+        if('prac' in graph_type): append_str.append(float(sum_prac))
+        if('person' in graph_type): append_str.append(float(sum_person))
 
         str_list.append(append_str)
 
@@ -358,9 +311,6 @@ def overview_line_graph(request):
         header.append('Total practices')
     if('person' in graph_type):
         header.append('Total viewers')
-    if(geog in ["COUNTRY","STATE","DISTRICT"]):
-        if('village' in graph_type):
-            header.append('Village')
 
     str_list.insert(0,header)
     return HttpResponse(json.dumps(str_list))
@@ -480,29 +430,22 @@ class MyDate:
         else:
             return 0
 
-
-#Private function used in month-wise bar data.
-def make_dict(dic):
-    min_year = int(dic[0]['YEAR'])
-    max_year = int(dic[-1]['YEAR'])+1
-
-    return_val = {}
-    for y in range(min_year, max_year):
-        return_val[y] = {}
-        for item in dic:
-            if int(item['YEAR'])>y:
-                break
-            if int(item['YEAR'])==y:
-                return_val[y][int(item['MONTH'])] = item['count']
-
-
-    return return_val
 #used to render data for month bar data in modules
 #sqlFunc is the func for the SQL query generator
 def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     rs = run_query(sqlFunc(**args));
     if rs:
-        dic = make_dict(rs)
+        min = int(rs[0]['YEAR'])
+        max = int(rs[-1]['YEAR'])+1
+    
+        dic = {}
+        for y in range(min,max):
+            dic[y] = {}
+            for item in rs:
+                if int(item['YEAR'])>y:
+                    break
+                if int(item['YEAR'])==y:
+                    dic[y][int(item['MONTH'])] = item['count']
     else:
         return HttpResponse(json.dumps([['Name','Value']]));
 
@@ -525,7 +468,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
             loop_from.addMonth(1)
             continue
         if(loop_from.y in dic and loop_from.m in dic[loop_from.y]):
-            data[loop_from.m - 1].append(dic[loop_from.y][loop_from.m])
+            data[loop_from.m - 1].append(float(dic[loop_from.y][loop_from.m]))
         else:
             data[loop_from.m - 1].append(0)
 
