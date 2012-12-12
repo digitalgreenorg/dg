@@ -15,10 +15,6 @@
     var search_params = "{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}";
     	//Function to set the default dates when the page loads
     	window.onload = function(){
-			$("#inlinedatepicker1").html('{{search_box_params.from_date}}');
-			$("#inlinedatepicker2").html('{{search_box_params.to_date}}');
-				
-				
 			//Calling code for tablesorter
 			$('#table2').tablesorter({textExtraction: function(node) {  
 				if($(node).find("a").length)
@@ -148,7 +144,7 @@
 				<div id='calendertitle' class='customtitle'>										
 					<table id='calendertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
 						<tr>
-							<td class='customtitlename'> Calender </td>
+							<td class='customtitlename'> Calendar </td>
 							<td class='customtitleimg'>  </td>
 						</tr>
 					</table>
@@ -161,11 +157,11 @@
 						</tr>
 						<tr>
 							<td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> from: </div> 	 </td>
-							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker1' class='inputdiv'> </div> </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker1' class='inputdiv'>{{search_box_params.from_date}}</div> </td>
 						</tr>
 						<tr>
 							<td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> to: </div>  </td>
-							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker2' class='inputdiv'> </div> </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker2' class='inputdiv'>{{search_box_params.to_date}}</div> </td>
 						</tr>
 					</table>				
 				</div>
@@ -281,8 +277,8 @@
 			<div id='contentheader'>
 				<table id='contentheadertable'>						
 					<tr>
-						<td class='contentheadertitle'> {% block datepick1 %} {% endblock datepick1 %} </td>
-						<td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>					
+						<td class='contentheadertitle' > {% block datepick1 %} {% endblock datepick1 %} </td>
+						<td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>				
 					</tr>
 				</table>					
 			</div>
