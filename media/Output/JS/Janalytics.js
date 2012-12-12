@@ -38,14 +38,12 @@ $(document).ready(function(){
      });            
             
       $("#arrowdown").click(function() {             	          	
-        	$(this).hide();
-           	//alert("hi");
+        	$(this).hide();        	
            	$("#arrowup").show();
            	$("div#calenderbody").show();            	            	           	
       });         
 			
 	 $("div#content2tdtitle1").find("div#content2tdtitleimg").click(function() {     	
-      	//alert("hi");
       	$("div#content2tdtitle1").find("table#content2desc1").show(); 
       	$(this).hide();     	         	            	
      });
