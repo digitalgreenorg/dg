@@ -212,6 +212,7 @@ class PersonResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
+        always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_person_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     dehydrate_screenings_attended = partial(many_to_many_to_subfield, field_name='screenings_attended',sub_field_names=['id'])

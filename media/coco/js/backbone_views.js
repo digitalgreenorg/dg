@@ -61,12 +61,6 @@ $(document)
         'list_item_template_name': 'animator_list_item_template'
     };
 
-    var HeaderView = Backbone.View.extend({
-        // How many things to upload, button to go to the upload page
-        // How many things to download, button to download
-        // Name of the Current Page/View or maybe a breadcrumb
-    })
-
     // UploadDownloadView
     // DashboardView
     // ListView -> search, add, table, sort
@@ -74,7 +68,6 @@ $(document)
     // AddEditView / AddView and EditView 
 
 
-    // set up the view for a country
     var list_item_view = Backbone.View.extend({
         tagName: 'tr',
         events: {
@@ -175,7 +168,7 @@ $(document)
             }
             $tbody = this.$("tbody");
             $tbody.html('');
-            console.log("rendering list view");
+            console.log("in render_data...change in collection...rendering list view");
             
             this.collection.each(function(model) {
                 $tbody.append(new list_item_view({
@@ -216,6 +209,7 @@ $(document)
         },
         initialize: function(params) {
             this.person_offline_model = new person_offline_model();
+            this.person_online_model = new person_online_model();
             console.log("params to add/edit view:");
             console.log(params);
             this.error_notif_template = _.template($('#' + 'error_notifcation_template')
@@ -229,7 +223,7 @@ $(document)
             if (params.model_id) {
                 model = new person_offline_model({
                     id: params.model_id
-                })
+                });
                 _(this)
                     .bindAll('fill_form');
 
@@ -262,7 +256,6 @@ $(document)
             this.villages.fetch({
                 success: function() {
                     console.log("villages coll fetched");
-
                 }
                 //ToDO: error handling
             });
@@ -277,109 +270,6 @@ $(document)
             this.just_save = false;
             this.save_and_add_another = false;
         },
-        fill_form: function() {
-            //render should have been called before this func
-            console.log("its edit case, model for edit:");
-            console.log(model);
-            json = model.toJSON();
-            json.village = json.village.id;
-            json.person_group = json.person_group.id;
-            Backbone.Syphon.deserialize(this, json);
-        },
-        save: function() {
-            // read data from form
-            // check internet conn
-            //if internect conn create on online coll/model(?) then create on offline coll/model        (server log ?)
-            //else create on offline coll/model, add to local log
-            var data = Backbone.Syphon.serialize(this);
-            if (data.hasOwnProperty('')) {
-                delete data[''];
-            }
-
-            var village = this.villages.where({
-                id: data['village']
-            })[0];
-            var persongroup = this.persongroups.where({
-                id: data['person_group']
-            })[0];
-
-            if (village) {
-                data['village'] = {
-                    'id': village.get('id'),
-                    'village_name': village.get('village_name')
-                };
-            } else data['village'] = {
-                'id': null,
-                'village_name': null
-            };
-            if (persongroup) {
-                data['person_group'] = {
-                    'id': persongroup.get('id'),
-                    'group_name': persongroup.get('group_name')
-                };
-            } else data['person_group'] = {
-                'id': null,
-                'group_name': null
-            };
-            
-            var context = this;
-            if (model) {
-                model.set(data);
-                console.log("editing person to:");
-                console.log(JSON.stringify(model));
-                model.save(null, {
-                    error: function() {
-                        console.log("error while saving edit of person in local db");
-                        $('#notifications')
-                            .append(context.error_notif_template({
-                            msg: "Failed to Edit the person"
-                        }));
-
-
-                    },
-                    success: function() {
-                        console.log("successfully edited a person in local db");
-                        $('#notifications')
-                            .append(context.success_notif_template({
-                            msg: "Successfully Edited the person"
-                        }));
-
-                    }
-                });
-
-            } else {
-                this.person_offline_model.set(data);
-                console.log("adding new person:");
-                console.log(JSON.stringify(this.person_offline_model));
-                this.person_offline_model.save(null, {
-                    error: function() {
-                        console.log("error");
-                        $('#notifications')
-                            .append(context.error_notif_template({
-                            msg: "Failed to Add the person"
-                        }));
-
-
-                    },
-                    success: function() {
-                        console.log("successfully added a person");
-                        $('#notifications')
-                            .append(context.success_notif_template({
-                            msg: "Successfully Added the person"
-                        }));
-
-                    }
-                });
-            }
-            if (this.just_save) appRouter.navigate('person', true);
-            else if (this.save_and_add_another) {
-                appRouter.navigate('person/add');
-                appRouter.addPerson();
-            } else console.log("Bug: after save option not set!");
-
-
-        },
-
         render: function() {
             $(this.el)
                 .html(this.add_edit_template());
@@ -409,6 +299,146 @@ $(document)
 
             return this;
         },
+        
+        fill_form: function() {
+            //render should have been called before this func
+            console.log("its edit case, model for edit:");
+            console.log(model);
+            json = model.toJSON();
+            json.village = json.village.id;
+            json.person_group = json.person_group.id;
+            Backbone.Syphon.deserialize(this, json);
+        },
+        save: function() {
+            // read data from form
+            // check internet conn
+            //if internect conn create on online coll/model(?) then create on offline coll/model        (server log ?)
+            //else create on offline coll/model, add to local log
+            var data = Backbone.Syphon.serialize(this);
+            if (data.hasOwnProperty('')) {
+                delete data[''];
+            }
+            
+            var village = this.villages.where({
+                id: data['village']
+            })[0];
+            var persongroup = this.persongroups.where({
+                id: data['person_group']
+            })[0];
+            // var offline_data = new Object();
+            var offline_data = jQuery.extend(true, {}, data);
+            var online_data = data;
+            console.log(JSON.stringify(data));
+            if (village) {
+                offline_data['village'] = {
+                    'id': village.get('id'),
+                    'village_name': village.get('village_name')
+                };
+            } else offline_data['village'] = {
+                'id': null,
+                'village_name': null
+            };
+            if (persongroup) {
+                offline_data['person_group'] = {
+                    'id': persongroup.get('id'),
+                    'group_name': persongroup.get('group_name')
+                };
+            } else offline_data['person_group'] = {
+                'id': null,
+                'group_name': null
+            };
+            
+            var context = this;
+            if (model) {
+                model.set(offline_data);
+                console.log("editing person to:");
+                console.log(JSON.stringify(model));
+                model.save(null, {
+                    error: function() {
+                        console.log("error while saving edit of person in local db");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Edit the person"
+                        }));
+
+
+                    },
+                    success: function() {
+                        console.log("successfully edited a person in local db");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Successfully Edited the person"
+                        }));
+
+                    }
+                });
+
+            } else {
+                this.person_offline_model.set(offline_data);
+                
+                console.log(JSON.stringify(online_data));
+                
+                // if (village) 
+                //                     online_data['village'] = village.get('id');
+                //                 else online_data['village'] = null;
+                //                 if (persongroup) 
+                //                     online_data['person_group'] = persongroup.get('id')
+                // else online_data['person_group'] = null;
+                this.person_online_model.set(online_data);
+                console.log("adding new person:");
+                console.log(JSON.stringify(this.person_offline_model));
+                console.log(JSON.stringify(this.person_online_model));
+                this.person_offline_model.save(null, {
+                    error: function() {
+                        console.log("error");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Add the person locally"
+                        }));
+
+
+                    },
+                    success: function(model) {
+                        console.log("successfully added a person");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Successfully Added the person locally"
+                        }));
+                        console.log(model);
+
+                    }
+                });
+                
+                this.person_online_model.save(null, {
+                    error: function() {
+                        console.log("error");
+                        $('#notifications')
+                            .append(context.error_notif_template({
+                            msg: "Failed to Add the person on server"
+                        }));
+
+
+                    },
+                    success: function(model) {
+                        console.log("successfully added a person");
+                        $('#notifications')
+                            .append(context.success_notif_template({
+                            msg: "Successfully Added the person server"
+                        }));
+                        console.log(model);
+                    }
+                });
+                
+            }
+            if (this.just_save) appRouter.navigate('person', true);
+            else if (this.save_and_add_another) {
+                appRouter.navigate('person/add');
+                appRouter.addPerson();
+            } else console.log("Bug: after save option not set!");
+
+
+        },
+
         render_villages: function() {
             $village_list = this.$('#id_village');
             this.villages.each(function(village) {
@@ -441,6 +471,10 @@ $(document)
 
 
     var HeaderView = Backbone.View.extend({
+        // How many things to upload, button to go to the upload page
+        // How many things to download, button to download
+        // Name of the Current Page/View or maybe a breadcrumb
+   
         events: {
 
         },
@@ -457,7 +491,6 @@ $(document)
         }
     });
 
-    // Dashboard View - contains upload, download buttons, the list of models
     var DashboardView = Backbone.View.extend({
         events: {
             "click button#download": "Download",
@@ -581,7 +614,7 @@ $(document)
             $(this.el)
                 .append(header.render("<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'>" + view_configs.page_header + "</li>")
                 .el);
-            curr_list_view = new list_view(view_configs);
+            curr_list_view = new list_view(view_configs); // delete the previous curr_list_view ??
             $(this.el)
                 .append(curr_list_view.render(view_configs.page_header)
                 .el);
@@ -592,7 +625,7 @@ $(document)
             console.log(curr_list_view);
             if (curr_list_view) {
                 // ToDO: destroy this view, right now just turning off events for its collection 
-                curr_list_view.collection.off();
+                // curr_list_view.collection.off();
             }
             var edit_case = false;
             if (data) edit_case = true;
