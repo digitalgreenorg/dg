@@ -198,47 +198,56 @@ $(document)
             'click #save_add_another': 'set_save_add_another'
         },
         setjustsave: function() {
-            console.log("only save");
+            console.log("ADD/EDIT: only save");
             this.just_save = true;
             this.save_and_add_another = false;
         },
         set_save_add_another: function() {
-            console.log("save and add another");
+            console.log("ADD/EDIT: save and add another");
             this.save_and_add_another = true;
             this.just_save = false;
         },
+        error_notif_template : _.template($('#' + 'error_notifcation_template')
+            .html()),
+        success_notif_template : _.template($('#' + 'success_notifcation_template')
+            .html()),
+        
         initialize: function(params) {
+            console.log("ADD/EDIT: params to add/edit view:");
+            console.log(params);
+            
             this.person_offline_model = new person_offline_model();
             this.person_online_model = new person_online_model();
-            console.log("params to add/edit view:");
-            console.log(params);
-            this.error_notif_template = _.template($('#' + 'error_notifcation_template')
-                .html());
-            this.success_notif_template = _.template($('#' + 'success_notifcation_template')
-                .html());
-
             this.view_configs = params.view_configs;
-            model = null;
+            
+            // model = null;
             json = null;
             if (params.model_id) {
-                model = new person_offline_model({
-                    id: params.model_id
-                });
+
+                // model = new person_offline_model({
+                //                 id: params.model_id
+                //             });
+                this.person_offline_model.set({id: params.model_id});
                 _(this)
                     .bindAll('fill_form');
-
-                model.bind('change', this.fill_form);
-                model.fetch({
+                this.person_offline_model.bind('change', this.fill_form);
+                this.person_offline_model.fetch({
                     success: function() {
-                        console.log(" edit model fetched");
-
+                        console.log("EDIT: edit model fetched");
+                    },
+                    error: function() {
+                        //ToDO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
                     }
                     //ToDO: error handling
                 });
                 this.edit_case = true;
+
             }
-            this.add_edit_template_name = this.view_configs.add_edit_template_name;
-            this.add_edit_template = _.template($('#' + this.add_edit_template_name)
+            else this.edit_case = false;
+            
+            this.add_edit_template = _.template($('#' + this.view_configs.add_edit_template_name)
                 .html());
             options_inner_template = _.template($('#options_template')
                 .html());
@@ -249,35 +258,47 @@ $(document)
                 .bindAll('render_villages');
             _(this)
                 .bindAll('render_persongroups');
-            _(this)
-                .bindAll('save');
-
+            
             this.villages.bind('all', this.render_villages);
             this.villages.fetch({
                 success: function() {
-                    console.log("villages coll fetched");
+                    console.log("ADD/EDIT: Village coll fetched");
+                },
+                error: function() {
+                    //ToDO: error handling
+                    console.log("ERROR: ADD/EDIT: Village collection could not be fetched!");
+                    alert("ERROR: ADD/EDIT: Village collection could not be fetched!");
                 }
-                //ToDO: error handling
             });
+            
             this.persongroups.bind('all', this.render_persongroups);
             this.persongroups.fetch({
                 success: function() {
-                    console.log("persongroups coll fetched");
-
+                    console.log("ADD/EDIT: PersonGroup coll fetched");
+                },
+                error: function() {
+                    //ToDO: error handling
+                    console.log("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
+                    alert("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
                 }
-                //ToDO: error handling
             });
+            
             this.just_save = false;
             this.save_and_add_another = false;
+            _(this)
+                .bindAll('save');
+            
         },
         render: function() {
+        // put the add_edit template in dom and call validate plugin on the form
+            
             $(this.el)
                 .html(this.add_edit_template());
-            var curobj = this;
+            var context = this;
             this.$('form')
                 .validate({
                 submitHandler: function() {
-                    curobj.save();
+                    context.save();
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element)
@@ -301,10 +322,10 @@ $(document)
         },
         
         fill_form: function() {
-            //render should have been called before this func
-            console.log("its edit case, model for edit:");
-            console.log(model);
-            json = model.toJSON();
+            //render must be finished before this func
+            console.log("EDIT: its edit case, model for edit:");
+            console.log(this.person_offline_model);
+            json = this.person_offline_model.toJSON();
             json.village = json.village.id;
             json.person_group = json.person_group.id;
             Backbone.Syphon.deserialize(this, json);
@@ -314,21 +335,22 @@ $(document)
             // check internet conn
             //if internect conn create on online coll/model(?) then create on offline coll/model        (server log ?)
             //else create on offline coll/model, add to local log
-            var data = Backbone.Syphon.serialize(this);
-            if (data.hasOwnProperty('')) {
-                delete data[''];
+            var form_data = Backbone.Syphon.serialize(this);
+            if (form_data.hasOwnProperty('')) {
+                delete form_data[''];
             }
             
             var village = this.villages.where({
-                id: data['village']
+                id: form_data['village']
             })[0];
             var persongroup = this.persongroups.where({
-                id: data['person_group']
+                id: form_data['person_group']
             })[0];
             // var offline_data = new Object();
-            var offline_data = jQuery.extend(true, {}, data);
-            var online_data = data;
-            console.log(JSON.stringify(data));
+            var offline_data = jQuery.extend(true, {}, form_data);
+            var online_data = form_data;
+            console.log(JSON.stringify(form_data));
+            
             if (village) {
                 offline_data['village'] = {
                     'id': village.get('id'),
@@ -338,6 +360,7 @@ $(document)
                 'id': null,
                 'village_name': null
             };
+            
             if (persongroup) {
                 offline_data['person_group'] = {
                     'id': persongroup.get('id'),
@@ -349,13 +372,13 @@ $(document)
             };
             
             var context = this;
-            if (model) {
-                model.set(offline_data);
+            if (this.edit_case) {
+                this.person_offline_model.set(offline_data);
                 console.log("editing person to:");
-                console.log(JSON.stringify(model));
-                model.save(null, {
+                console.log(JSON.stringify(this.person_offline_model));
+                this.person_offline_model.save(null, {
                     error: function() {
-                        console.log("error while saving edit of person in local db");
+                        console.log("EDIT: error while saving edit of person in local db");
                         $('#notifications')
                             .append(context.error_notif_template({
                             msg: "Failed to Edit the person"
@@ -364,7 +387,7 @@ $(document)
 
                     },
                     success: function() {
-                        console.log("successfully edited a person in local db");
+                        console.log("EDIT: successfully edited a person in local db");
                         $('#notifications')
                             .append(context.success_notif_template({
                             msg: "Successfully Edited the person"
@@ -373,24 +396,16 @@ $(document)
                     }
                 });
 
-            } else {
+            } 
+            else {
                 this.person_offline_model.set(offline_data);
-                
-                console.log(JSON.stringify(online_data));
-                
-                // if (village) 
-                //                     online_data['village'] = village.get('id');
-                //                 else online_data['village'] = null;
-                //                 if (persongroup) 
-                //                     online_data['person_group'] = persongroup.get('id')
-                // else online_data['person_group'] = null;
                 this.person_online_model.set(online_data);
-                console.log("adding new person:");
-                console.log(JSON.stringify(this.person_offline_model));
-                console.log(JSON.stringify(this.person_online_model));
+                console.log("ADD: adding new person:");
+                console.log("ADD: saving this locally" + JSON.stringify(this.person_offline_model));
+                
                 this.person_offline_model.save(null, {
                     error: function() {
-                        console.log("error");
+                        console.log("ADD: error adding person locally");
                         $('#notifications')
                             .append(context.error_notif_template({
                             msg: "Failed to Add the person locally"
@@ -399,19 +414,18 @@ $(document)
 
                     },
                     success: function(model) {
-                        console.log("successfully added a person");
+                        console.log("ADD: successfully added a person locally");
                         $('#notifications')
                             .append(context.success_notif_template({
                             msg: "Successfully Added the person locally"
                         }));
-                        console.log(model);
-
+                        
                     }
                 });
                 
                 this.person_online_model.save(null, {
                     error: function() {
-                        console.log("error");
+                        console.log("ADD: error adding person online");
                         $('#notifications')
                             .append(context.error_notif_template({
                             msg: "Failed to Add the person on server"
@@ -420,21 +434,22 @@ $(document)
 
                     },
                     success: function(model) {
-                        console.log("successfully added a person");
+                        console.log("ADD: successfully added a person on server");
                         $('#notifications')
                             .append(context.success_notif_template({
-                            msg: "Successfully Added the person server"
+                            msg: "Successfully Added the person on server"
                         }));
                         console.log(model);
                     }
                 });
                 
             }
+            
             if (this.just_save) appRouter.navigate('person', true);
             else if (this.save_and_add_another) {
                 appRouter.navigate('person/add');
-                appRouter.addPerson();
-            } else console.log("Bug: after save option not set!");
+                appRouter.addPerson(); //since may be already on the add page, therefore have to call this explicitly
+            } else console.log("Bug: ADD/Edit after save option not set!");
 
 
         },
@@ -461,7 +476,6 @@ $(document)
                     name: pg.get("group_name")
                 }));
             });
-
             if (json) {
                 Backbone.Syphon.deserialize(this, json);
             }
@@ -548,32 +562,32 @@ $(document)
             //Download:fetch each model from server and save it to the indexeddb
 
             villages_online = new village_online_collection();
-            villages_offline = new village_offline_collection();
-            this.fetch_save(villages_online, villages_offline, "village");
-
-            videos_online = new video_online_collection();
-            videos_offline = new video_offline_collection();
-            this.fetch_save(videos_online, videos_offline, "video");
-
-            persongroups_online = new persongroup_online_collection();
-            persongroups_offline = new persongroup_offline_collection();
-            this.fetch_save(persongroups_online, persongroups_offline, "persongroup");
-
-            screenings_online = new screening_online_collection();
-            screenings_offline = new screening_offline_collection();
-            this.fetch_save(screenings_online, screenings_offline, "screening");
-
+           villages_offline = new village_offline_collection();
+           this.fetch_save(villages_online, villages_offline, "village");
+                       
+           videos_online = new video_online_collection();
+           videos_offline = new video_offline_collection();
+           this.fetch_save(videos_online, videos_offline, "video");
+                       
+           persongroups_online = new persongroup_online_collection();
+           persongroups_offline = new persongroup_offline_collection();
+           this.fetch_save(persongroups_online, persongroups_offline, "persongroup");
+                       
+           screenings_online = new screening_online_collection();
+           screenings_offline = new screening_offline_collection();
+           this.fetch_save(screenings_online, screenings_offline, "screening");
+           
             persons_online = new person_online_collection();
             persons_offline = new person_offline_collection();
             this.fetch_save(persons_online, persons_offline, "person");
 
             personadoptvideos_online = new personadoptvideo_online_collection();
-            personadoptvideos_offline = new personadoptvideo_offline_collection();
-            this.fetch_save(personadoptvideos_online, personadoptvideos_offline, "personadoptvideo");
-
-            animators_online = new animator_online_collection();
-            animators_offline = new animator_offline_collection();
-            this.fetch_save(animators_online, animators_offline, "animator");
+             personadoptvideos_offline = new personadoptvideo_offline_collection();
+             this.fetch_save(personadoptvideos_online, personadoptvideos_offline, "personadoptvideo");
+             
+             animators_online = new animator_online_collection();
+             animators_offline = new animator_offline_collection();
+             this.fetch_save(animators_online, animators_offline, "animator");
         },
         template: _.template($('#dashboard')
             .html()),

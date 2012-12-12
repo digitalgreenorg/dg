@@ -206,27 +206,32 @@ var person_online_model = Backbone.Model.extend({
     },
     sync: Backbone.ajaxSync,
     url: function() {
-        return this.id ? '/api/v1/person/' + this.id + "/" : '/api/v1/person/?limit=0';
+        return this.id ? '/api/v1/person/' + this.id + "/" : '/api/v1/person/';
     },
-    set: function(attributes, options) {
-        if (attributes) {
-            if (attributes["age"] == "") attributes["age"] = null;
-
-            if (attributes["land_holdings"] == "") attributes["land_holdings"] = null;
-
-            if (attributes["village"]) attributes["village"] = "/api/v1/village/" + attributes["village"] + "/"
-            else attributes["village"] = null
-
-            if (attributes["person_group"]) attributes["group"] = "/api/v1/group/" + attributes["person_group"] + "/"
-            else attributes["group"] = null
-            delete attributes["person_group"]
-        }
-        return Backbone.Model.prototype.set.call(this, attributes, options);
+    save: function(attributes, options) {
+        console.log("SAVE OVERRIDE: cleaning data");
+        if(this.get("age")=="")
+        this.set("age",null);
+        
+        if(this.get("land_holdings")=="")
+        this.set("land_holdings",null);
+        
+        if(this.get("village"))
+        this.set("village","/api/v1/village/" + this.get("village") + "/");
+        else this.set("village",null);
+        
+        if(this.get("person_group"))
+        this.set("group","/api/v1/village/" + this.get("person_group") + "/");
+        else this.set("group",null);
+        
+        this.unset("person_group");
+        console.log("ADD/EDIT: saving this on server" +JSON.stringify(this));
+        return Backbone.Model.prototype.save.call(this, attributes, options);
     }
 });
 var person_online_collection = Backbone.Collection.extend({
     model: person_online_model,
-    url: '/api/v1/person/?limit=0',
+    url: '/api/v1/person/',
     sync: Backbone.ajaxSync,
     parse: function(data) {
         return data.objects;
