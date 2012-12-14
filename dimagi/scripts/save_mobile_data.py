@@ -60,33 +60,31 @@ def save_screening_data(xml_tree):
                                         village_id = screening_data['selected_village'],
                                         animator_id = screening_data['selected_mediator'] )
               
-                try:
-                    if screening.validate_unique() == None:
-                        screening.save()
-                        status['screening'] = 1
-                        screening.farmer_groups_targeted = [screening_data['selected_group']] 
-                        screening.videoes_screened = [screening_data['selected_video']]
-                        screening.save()
-                        status['pma'] = 1
-                        try :
-                            for person in pma_record:
-                                pma = PersonMeetingAttendance ( screening_id = screening.id, 
-                                                                person_id = person['person_id'],
-                                                                interested = person['interested'],
-                                                                expressed_question = person['question'] )
-                                try:
-                                    if pma.full_clean() == None:
-                                        pma.save()
-                                except ValidationError as e:
-                                    status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                                    error_msg = unicode(e)
-                        except Exception as ex:
-                            status['pma'] = error_list['PMA_SAVE_ERROR'] 
-                            error_msg = unicode(ex)
-                except ValidationError as e:
+                if screening.full_clean() == None: # change to full_clean() 
+                    screening.save()
+                    status['screening'] = 1
+                    screening.farmer_groups_targeted = [screening_data['selected_group']] 
+                    screening.videoes_screened = [screening_data['selected_video']]
+                    screening.save()
+                    status['pma'] = 1
+                    try :
+                        for person in pma_record:
+                            pma = PersonMeetingAttendance ( screening_id = screening.id, 
+                                                            person_id = person['person_id'],
+                                                            interested = person['interested'],
+                                                            expressed_question = person['question'] )
+                            if pma.full_clean() == None:
+                                pma.save()
+                            else:
+                                status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                                error_msg = 'Not valid' 
+                    except ValidationError, e:
+                        status['pma'] = error_list['PMA_SAVE_ERROR'] 
+                        error_msg = unicode(e)
+                else:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
-                    error_msg = unicode(e)
-                
+                    error_msg = 'Not valid' 
+                        
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
@@ -108,15 +106,16 @@ def save_adoption_data(xml_tree):
             screening_data['selected_person'] = record.getElementsByTagName('selected_person')[0].firstChild.data
             screening_data['selected_video'] = record.getElementsByTagName('selected_video')[0].firstChild.data
             
-            pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
-                                 date_of_adoption = screening_data['date'],
-                                 video_id = screening_data['selected_video'])
             try:
+                pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
+                                     date_of_adoption = screening_data['date'],
+                                     video_id = screening_data['selected_video'])
+            
                 if pap.full_clean() == None:
                     pap.save()
                     status = 1
                     error_msg = 'Sucessful'
-            except ValidationError as e:
+            except ValidationError ,e:
                 status = error_list['ADOPTION_SAVE_ERROR'] 
                 error_msg = unicode(e)
             
@@ -125,3 +124,18 @@ def save_adoption_data(xml_tree):
             error_msg = unicode(ex)
 
     return status, error_msg
+
+
+
+if __name__ == "__main__":
+    xml_file = r'C:\Users\Yash\Desktop\trial.xml'
+    xml_parse = minidom.parse(xml_file)
+    data = xml_parse.getElementsByTagName('data')
+    if data[0].attributes["name"].value.lower() == 'screening' :
+        status,msg = save_screening_data(xml_parse)
+    elif data[0].attributes["name"].value.lower() == 'adoption' :
+        status,msg = save_adoption_data(xml_parse)
+    else :
+        status = -1
+    print status 
+    print msg
