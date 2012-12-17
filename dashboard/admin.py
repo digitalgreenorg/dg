@@ -15,7 +15,7 @@ from ajax_filtered_fields.forms import FilteredSelect
 # autocomplete widget
 import operator
 from django.db import models
-from django.contrib.auth.models import Message
+#from django.contrib.auth.models import Message
 from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str

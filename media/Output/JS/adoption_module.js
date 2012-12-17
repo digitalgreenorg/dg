@@ -2,7 +2,6 @@ google.load("visualization", "1", {packages:["controls"]});
 google.setOnLoadCallback(drawCharts);
 
 function drawCharts() {
-
 	$.getJSON('/analytics/adoption_geog_pie_data/'+search_params, function(json){geog_pie(json);});
 	$.getJSON('/analytics/adoption_monthwise_bar_data/'+search_params, function(json){monthwise_column(json);});
 	$.getJSON('/analytics/adoption_practice_wise_scatter/'+search_params, function(json){practice_bubble(json);});

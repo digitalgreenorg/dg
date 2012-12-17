@@ -49,7 +49,14 @@ ADMIN_MEDIA_PREFIX = '/media/'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    'django.template.loaders.eggs.Loader',
+)
+
+STATIC_URL = '/media/'
+STATICFILES_DIRS = (
+   # Put strings here, like "/home/html/static" or "C:/www/django/static".
+   # Always use forward slashes, even on Windows.
+   # Don't forget to use absolute paths, not relative paths.
+   os.path.join(PROJECT_PATH, 'media'),                 
 )
 
 MIDDLEWARE_CLASSES = (
@@ -65,10 +72,15 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	os.path.join(PROJECT_PATH, 'templates'),
-	os.path.join(PROJECT_PATH, 'templates/output'),
-	os.path.join(PROJECT_PATH, 'templates/static_site'),
+    os.path.join(PROJECT_PATH, 'templates'),
+    os.path.join(PROJECT_PATH, 'templates/output'),
+    os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth'
 )
 
 INSTALLED_APPS = (
@@ -76,6 +88,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.staticfiles',
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
@@ -83,13 +96,14 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'dimagi',
     #'debug_toolbar',
+    #'debug_toolbar',
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',
     'farmerbook',
     'video_practice_map',
-    'fbconnect',
-    'path'
+    'path',
+    'fbconnect'
 )
 
 LOGGING = {

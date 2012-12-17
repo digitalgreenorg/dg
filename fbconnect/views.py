@@ -27,3 +27,16 @@ def save_follower(request):
     else:
         return HttpResponse('ERROR')
     return HttpResponse('SUCCESS')
+
+def get_fbappid_server_url(request):
+    if request.get_host() == "test.digitalgreen.org":
+        facebook_app_id = 416481021745150
+        server_url = "http://test.digitalgreen.org"
+    elif request.get_host() == "www.digitalgreen.org":
+        facebook_app_id = 373660286051965
+        server_url = "http://www.digitalgreen.org"
+    else:
+        #for local testing
+        facebook_app_id = 422365627816558
+        server_url = "http://127.0.0.1:8000"
+    return {'facebook_app_id': facebook_app_id, 'server_url': server_url}
