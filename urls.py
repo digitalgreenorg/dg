@@ -1,4 +1,7 @@
 from django.conf import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.static import serve
+from django.views.decorators.cache import cache_control
 
 from farmerbook import farmer_book_views
 from static_site_views import home
@@ -263,3 +266,7 @@ urlpatterns = patterns('',
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls'))
 )
+
+# Static files serving locally
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()
