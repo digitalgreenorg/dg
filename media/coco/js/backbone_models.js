@@ -220,11 +220,9 @@ var person_online_model = Backbone.Model.extend({
         this.set("village","/api/v1/village/" + this.get("village") + "/");
         else this.set("village",null);
         
-        if(this.get("person_group"))
-        this.set("group","/api/v1/group/" + this.get("person_group") + "/");
+        if(this.get("group"))
+        this.set("group","/api/v1/group/" + this.get("group") + "/");
         else this.set("group",null);
-        
-        this.unset("person_group");
         console.log("ADD/EDIT: saving this on server" +JSON.stringify(this));
         return Backbone.Model.prototype.save.call(this, attributes, options);
     }

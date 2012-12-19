@@ -172,7 +172,7 @@ class PersonGroupsResource(ModelResource):
 #    village_id = fields.CharField('village__id')
     class Meta:
         queryset = PersonGroups.objects.select_related('village').all()
-        resource_name = 'persongroup'
+        resource_name = 'group'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
@@ -183,7 +183,7 @@ class ScreeningResource(ModelResource):
 #    village_name = fields.CharField('village__village_name')
 #    village_id = fields.CharField('village__id')
     videos_screened = fields.ToManyField(VideoResource, 'videoes_screened', related_name='screening')
-    person_groups = fields.ToManyField(VideoResource, 'farmer_groups_targeted', related_name='screening')
+    person_groups = fields.ToManyField(PersonGroupsResource, 'farmer_groups_targeted', related_name='screening')
     person_attendance = fields.ToManyField('dashboard.api.PersonResource', 'farmers_attendance', related_name='screening')
     #field_officer = fields.CharField('fieldofficer__name')
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
@@ -201,7 +201,7 @@ class PersonResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
 #    village_name = fields.CharField('village__village_name')
 #    village_id = fields.CharField('village__id')
-    person_group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
+    group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
     #person_group_name = fields.CharField('group__group_name')
     #person_group_id = fields.CharField('group__id')
     screenings_attended = fields.ToManyField(ScreeningResource, 'screenings_attended', related_name='person', null=True)
@@ -214,7 +214,7 @@ class PersonResource(ModelResource):
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
-    dehydrate_person_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
+    dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     dehydrate_screenings_attended = partial(many_to_many_to_subfield, field_name='screenings_attended',sub_field_names=['id'])
     def save_m2m(self, bundle):
         return

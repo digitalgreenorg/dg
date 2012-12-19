@@ -329,7 +329,7 @@ $(document)
             console.log(this.person_offline_model);
             json = this.person_offline_model.toJSON();
             json.village = json.village.id;
-            json.person_group = json.person_group.id;
+            json.group = json.group.id;
             Backbone.Syphon.deserialize(this, json);
         },
         save: function() {
@@ -346,7 +346,7 @@ $(document)
                 id: form_data['village']
             })[0];
             var persongroup = this.persongroups.where({
-                id: form_data['person_group']
+                id: form_data['group']
             })[0];
             // var offline_data = new Object();
             var offline_data = jQuery.extend(true, {}, form_data);
@@ -364,11 +364,11 @@ $(document)
             };
 
             if (persongroup) {
-                offline_data['person_group'] = {
+                offline_data['group'] = {
                     'id': persongroup.get('id'),
                     'group_name': persongroup.get('group_name')
                 };
-            } else offline_data['person_group'] = {
+            } else offline_data['group'] = {
                 'id': null,
                 'group_name': null
             };
