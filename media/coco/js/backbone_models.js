@@ -221,7 +221,7 @@ var person_online_model = Backbone.Model.extend({
         else this.set("village",null);
         
         if(this.get("person_group"))
-        this.set("group","/api/v1/village/" + this.get("person_group") + "/");
+        this.set("group","/api/v1/group/" + this.get("person_group") + "/");
         else this.set("group",null);
         
         this.unset("person_group");
