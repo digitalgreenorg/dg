@@ -2,7 +2,7 @@ var databasev1 = {
     id: "coco-database",
     description: "The offline database for COCO",
     migrations: [{
-        version: 1,
+        version: 2,
         migrate: function(transaction, next) {
             transaction.db.createObjectStore("country", {
                 autoIncrement: true
