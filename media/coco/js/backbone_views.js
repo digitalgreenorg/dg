@@ -125,7 +125,7 @@ $(document)
 
         events: {
             "click button#add": "addNew",
-            "click button#search_button": "search",
+
         },
 
         initialize: function(view_configs) {
@@ -138,7 +138,6 @@ $(document)
             this.table_template = _.template($('#' + this.table_template_name)
                 .html());
             this.collection.bind('all', this.render_data, this);
-            this.collection.fetch();
             this.datatable = null;
 
         },
@@ -150,6 +149,7 @@ $(document)
             }));
             $(this.el)
                 .append(this.table_template());
+            this.collection.fetch();
 
 
             return this;
@@ -179,9 +179,7 @@ $(document)
             appRouter.navigate('person/add', true);
         },
 
-        search: function() {
 
-        }
 
     });
 
@@ -227,17 +225,6 @@ $(document)
                 _(this)
                     .bindAll('fill_form');
                 this.person_offline_model.bind('change', this.fill_form);
-                this.person_offline_model.fetch({
-                    success: function() {
-                        console.log("EDIT: edit model fetched");
-                    },
-                    error: function() {
-                        //ToDO: error handling
-                        console.log("ERROR: EDIT: Edit model could not be fetched!");
-                        alert("ERROR: EDIT: Edit model could not be fetched!");
-                    }
-                    //ToDO: error handling
-                });
                 this.edit_case = true;
 
             } else this.edit_case = false;
@@ -255,28 +242,8 @@ $(document)
                 .bindAll('render_persongroups');
 
             this.villages.bind('all', this.render_villages);
-            this.villages.fetch({
-                success: function() {
-                    console.log("ADD/EDIT: Village coll fetched");
-                },
-                error: function() {
-                    //ToDO: error handling
-                    console.log("ERROR: ADD/EDIT: Village collection could not be fetched!");
-                    alert("ERROR: ADD/EDIT: Village collection could not be fetched!");
-                }
-            });
 
             this.persongroups.bind('all', this.render_persongroups);
-            this.persongroups.fetch({
-                success: function() {
-                    console.log("ADD/EDIT: PersonGroup coll fetched");
-                },
-                error: function() {
-                    //ToDO: error handling
-                    console.log("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
-                    alert("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
-                }
-            });
 
             this.just_save = false;
             this.save_and_add_another = false;
@@ -289,6 +256,43 @@ $(document)
 
             $(this.el)
                 .html(this.add_edit_template());
+            this.villages.fetch({
+                success: function() {
+                    console.log("ADD/EDIT: Village coll fetched");
+                },
+                error: function() {
+                    //ToDO: error handling
+                    console.log("ERROR: ADD/EDIT: Village collection could not be fetched!");
+                    alert("ERROR: ADD/EDIT: Village collection could not be fetched!");
+                }
+            });
+
+            this.persongroups.fetch({
+                success: function() {
+                    console.log("ADD/EDIT: PersonGroup coll fetched");
+                },
+                error: function() {
+                    //ToDO: error handling
+                    console.log("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
+                    alert("ERROR: ADD/EDIT: PersonGroup collection could not be fetched!");
+                }
+            });
+
+            if (this.edit_case == true) {
+
+                this.person_offline_model.fetch({
+                    success: function() {
+                        console.log("EDIT: edit model fetched");
+                    },
+                    error: function() {
+                        //ToDO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    }
+                    //ToDO: error handling
+                });
+            }
+
             var context = this;
             this.$('form')
                 .validate({
