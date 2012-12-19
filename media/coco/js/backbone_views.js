@@ -61,6 +61,9 @@ $(document)
         'list_item_template_name': 'animator_list_item_template'
     };
 
+    var notifications_view = Backbone.View.extend({
+        el: '#notifications'
+    });
     var list_item_view = Backbone.View.extend({
         tagName: 'tr',
         events: {
@@ -93,7 +96,7 @@ $(document)
                 this.model.destroy({
                     error: function() {
                         console.log("error deleting a model");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.error_notif_template({
                             msg: "Failed to Delete the " + context.options.view_configs.page_header
                         }));
@@ -102,7 +105,7 @@ $(document)
                     },
                     success: function() {
                         console.log("deleted a model");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.success_notif_template({
                             msg: "Deleted the " + context.options.view_configs.page_header
                         }));
@@ -378,7 +381,7 @@ $(document)
                 this.person_offline_model.save(null, {
                     error: function() {
                         console.log("EDIT: error while saving edit of person in local db");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.error_notif_template({
                             msg: "Failed to Edit the person"
                         }));
@@ -387,7 +390,7 @@ $(document)
                     },
                     success: function() {
                         console.log("EDIT: successfully edited a person in local db");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.success_notif_template({
                             msg: "Successfully Edited the person"
                         }));
@@ -404,7 +407,7 @@ $(document)
                 this.person_online_model.save(null, {
                     error: function() {
                         console.log("ADD: error adding person online");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.error_notif_template({
                             msg: "Failed to Add the person on server"
                         }));
@@ -413,7 +416,7 @@ $(document)
                     },
                     success: function(model) {
                         console.log("ADD: successfully added a person on server");
-                        $('#notifications')
+                        $(notifs_view.el)
                             .append(context.success_notif_template({
                             msg: "Successfully Added the person on server"
                         }));
@@ -429,7 +432,7 @@ $(document)
                         context.person_offline_model.save(null, {
                             error: function() {
                                 console.log("ADD: error adding person locally");
-                                $('#notifications')
+                                $(notifs_view.el)
                                     .append(context.error_notif_template({
                                     msg: "Failed to Add the person locally"
                                 }));
@@ -438,7 +441,7 @@ $(document)
                             },
                             success: function(model) {
                                 console.log("ADD: successfully added a person locally");
-                                $('#notifications')
+                                $(notifs_view.el)
                                     .append(context.success_notif_template({
                                     msg: "Successfully Added the person locally"
                                 }));
@@ -678,7 +681,7 @@ $(document)
     });
 
     var app = new AppView;
-
+    var notifs_view = new notifications_view;
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "showDashboard",
