@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.views.generic.simple import direct_to_template
 
 from farmerbook import farmer_book_views
 from route import route
@@ -10,6 +11,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'coco/offline/$', direct_to_template, {'template': 'dashboard_offline.html'}), 
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^api/', include('dashboard.urls')),
@@ -151,6 +153,5 @@ urlpatterns = patterns('',
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^videotask/', include('video_practice_map.urls')),
-    (r'^cocoproto/', include('coco_proto.urls') ),
     (r'^(?P<func_name>.*)/$',route),  #Routing call
 )
