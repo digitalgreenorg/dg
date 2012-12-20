@@ -127,13 +127,13 @@ var persongroup_online_model = Backbone.Model.extend({
     },
     sync: Backbone.ajaxSync,
     url: function() {
-        return this.id ? '/api/v1/persongroup/' + this.id + "/" : '/api/v1/persongroup/?limit=0';
+        return this.id ? '/api/v1/group/' + this.id + "/" : '/api/v1/group/?limit=0';
     }
 
 });
 var persongroup_online_collection = Backbone.Collection.extend({
     model: persongroup_online_model,
-    url: '/api/v1/persongroup/?limit=0',
+    url: '/api/v1/group/?limit=0',
     sync: Backbone.ajaxSync,
     parse: function(data) {
         return data.objects;
