@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/cocooffline.appcache">
+<!-- manifest="/media/coco/cocooffline.appcache" -->
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" >
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
@@ -10,7 +11,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 
 	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
-	// importing libraries
+    <!-- // importing libraries -->
 	<script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/docs/assets/js/jquery.js"></script>
 	<script type="text/javascript" src="/media/coco/app/scripts/libs/backbone/json2.js"></script>
 	<script type="text/javascript" src="/media/coco/app/scripts/libs/backbone/underscore-min.js"></script>
@@ -22,10 +23,8 @@
 	<script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
 	<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 
-	// application js
-	<script type="text/javascript" src="/media/coco/app/scripts/backbone_views.js"></script>
-	<script type="text/javascript" src="/media/coco/app/scripts/backbone_models.js"></script>
-
+    <!-- // application js -->
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
  <!-- <h3><%= header_name %></h3> -->
