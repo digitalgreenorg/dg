@@ -69,7 +69,10 @@ TEMPLATE_DIRS = (
 	os.path.join(PROJECT_PATH, 'templates/output'),
 	os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
-    os.path.join(PROJECT_PATH, 'media/coco/html'),
+    os.path.join(PROJECT_PATH, 'media/coco_proto/html'),
+    os.path.join(PROJECT_PATH, 'media/coco/app'),
+	
+	
 )
 
 HAYSTACK_SITECONF = 'search_sites'
