@@ -3,14 +3,14 @@ define([
   'indexeddb_backbone_config'
   
 ], function(_){
-  var person_offline_model = Backbone.Model.extend({
+    var animator_offline_model = Backbone.Model.extend({
         remove: function() {
             this.destroy();
         },
         database: databasev1,
-        storeName: "person",
+        storeName: "animator",
 
     });
   // Return the model for the module
-  return person_offline_model;
+  return animator_offline_model;
 });
