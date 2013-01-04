@@ -12,6 +12,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'coco/offline/$', direct_to_template, {'template': 'dashboard.html'}), 
+    (r'cocoproto/offline/$', direct_to_template, {'template': 'dashboard_offline.html'}), 
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^api/', include('dashboard.urls')),

@@ -1,3 +1,29 @@
+/**
+ * @summary     IndexedDB Backbone adpater
+ 
+ 
+ * @description Paginate, search and sort HTML tables
+ * @version     1.9.4
+ * @file        jquery.dataTables.js
+ * @author      Allan Jardine (www.sprymedia.co.uk)
+ * @contact     www.sprymedia.co.uk/contact
+ *
+ * @copyright Copyright 2008-2012 Allan Jardine, all rights reserved.
+ *
+ * This source file is free software, under either the GPL v2 license or a
+ * BSD style license, available at:
+ *   http://datatables.net/license_gpl2
+ *   http://datatables.net/license_bsd
+ * 
+ * This source file is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
+ * 
+ * For details please refer to: http://www.datatables.net
+ */
+
+
+
 (function () { /*global _: false, Backbone: false */
     // Generate four random hex digits.
     function S4() {

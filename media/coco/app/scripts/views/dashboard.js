@@ -2,11 +2,11 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'indexeddb_backbone_config'
+  'collections/person_collection'
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($){
+], function($,pass, pass,person_collection){
     var DashboardView = Backbone.View.extend({
         events: {
             "click button#download": "Download",
@@ -80,8 +80,8 @@ define([
             //          screenings_offline = new screening_offline_collection();
             //          this.fetch_save(screenings_online, screenings_offline, "screening");
             //          
-            persons_online = new person_online_collection();
-            persons_offline = new person_offline_collection();
+            persons_online = new person_collection.person_online_collection();
+            persons_offline = new person_collection.person_offline_collection();
             this.fetch_save(persons_online, persons_offline, "person");
 
             // personadoptvideos_online = new personadoptvideo_online_collection();

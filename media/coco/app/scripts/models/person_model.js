@@ -1,5 +1,6 @@
 define([
   'backbone',
+  'indexeddb-backbone',
   'indexeddb_backbone_config'
   
 ], function(_){

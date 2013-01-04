@@ -3,15 +3,17 @@ define([
   'underscore',
   'backbone',
   'views/header',
-  'views/dashboard'
+  'views/dashboard',
+  'views/list',
+  'views/person_add_edit'
+  
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($, _, Session, HeaderView, DashboardView){
+], function($, _, Session, HeaderView, DashboardView, ListView, PersonAddEditView){
     var AppView = Backbone.View.extend({
         el: '#app',
         initialize: function() {
-            console.log(HeaderView);
             header = new HeaderView();
             dashboard = new DashboardView({
                                        app: this
@@ -33,15 +35,17 @@ define([
             return this;
 
         },
-        render_list_view: function(view_configs) {
+        render_list_view: function(params) {
+            console.log("in render list view");
+            console.log(params.router);
             $(this.el)
                 .html('');
             $(this.el)
-                .append(header.render("<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'>" + view_configs.page_header + "</li>")
+                .append(header.render("<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'>" + params.view_configs.page_header + "</li>")
                 .el);
-            curr_list_view = new list_view(view_configs); // delete the previous curr_list_view ??
+            curr_list_view = new ListView(params); // delete the previous curr_list_view ??
             $(this.el)
-                .append(curr_list_view.render(view_configs.page_header)
+                .append(curr_list_view.render(params.view_configs.page_header)
                 .el);
             return this;
         },
@@ -62,7 +66,7 @@ define([
 <li class="active">' + (edit_case ? 'Edit' : 'Add') + '</li>')
                 .el);
             if (view_configs.page_header == "Person") {
-                current_add_edit_view = person_add_edit_view;
+                current_add_edit_view = PersonAddEditView;
             } else {
                 console.log("not person");
                 return this;

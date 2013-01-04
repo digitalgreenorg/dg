@@ -152,6 +152,7 @@ $(document)
             }));
             $(this.el)
                 .append(this.table_template());
+                console.log("fetching collection for list");
             this.collection.fetch();
 
 

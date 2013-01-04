@@ -5,6 +5,7 @@ module.exports = function( grunt ) {
   //
   // https://github.com/cowboy/grunt/blob/master/docs/getting_started.md
   //
+  
   grunt.initConfig({
 
     // Project configuration
@@ -176,17 +177,100 @@ module.exports = function( grunt ) {
     // While Yeoman handles concat/min when using
     // usemin blocks, you can still use them manually
     concat: {
-          'app/scripts/combined.js': ['app/scripts/backbone_models.js','app/scripts/backbone_views.js']
+          'app/scripts/combined.js': ['app/scripts/main.js','app/scripts/app.js','app/scripts/router.js',
+          // 'app/scripts/app.js'
+          ]
           
     },
 
     min: {
         'app/scripts/backbone_models1.min.js':['app/scripts/backbone_models.js']
-    }
+    },
+    
+    
+    requirejs: {
+        compile: {
+          options: {
+            appDir: "app/",
+            baseUrl: "scripts",
+            // mainConfigFile: "app/scripts/main.js",
+            // out: "../dist",
+            dir: "dist",
+            paths: {
+                    "jquery": "empty:",
+                    "underscore": 'empty:',
+                    'backbone': 'empty:',
+                    // 'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
+                    'indexeddb-backbone': 'empty:',
+                    'datatable':'libs/datatablejs_media/js/jquery.dataTables.min',
+                    'form_field_validator': 'empty:'
+                },
+            // name: "main"
+            // out: ""
+            // findNestedDependencies: true,
+            modules: [
+                           //Just specifying a module name means that module will be converted into
+                           //a built file that contains all of its dependencies. If that module or any
+                           //of its dependencies includes i18n bundles, they may not be included in the
+                           //built file unless the locale: section is set above.
+                                           {
+                                               name: "main",
+                                               include: ["router"]
+                           //For build profiles that contain more than one modules entry,
+                           //allow overrides for the properties that set for the whole build,
+                           //for example a different set of pragmas for this module.
+                           //The override's value is an object that can
+                           //contain any of the other build options in this file.
+                           // override: {
+                           //                            pragmas: {
+                           //                                fooExclude: true
+                           //                            }
+                           //                        }
+                                           
+                                              }
+                     ]
+            //                    // {
+                   //                        name: "foo/bar/bop",
+                   // 
+                   //                        //For build profiles that contain more than one modules entry,
+                   //                        //allow overrides for the properties that set for the whole build,
+                   //                        //for example a different set of pragmas for this module.
+                   //                        //The override's value is an object that can
+                   //                        //contain any of the other build options in this file.
+                   //                        override: {
+                   //                            pragmas: {
+                   //                                fooExclude: true
+                   //                            }
+                   //                        }
+                   //                    },
+                   //                    {
+                   //                        name: "foo/bar/bop",
+                   // 
+                   //                        //For build profiles that contain more than one modules entry,
+                   //                        //allow overrides for the properties that set for the whole build,
+                   //                        //for example a different set of pragmas for this module.
+                   //                        //The override's value is an object that can
+                   //                        //contain any of the other build options in this file.
+                   //                        override: {
+                   //                            pragmas: {
+                   //                                fooExclude: true
+                   //                            }
+                   //                        }
+                   //                    },
+                   
+          }
+        }
+      }
+  
   });
-
+  
+  
+  grunt.loadNpmTasks('grunt-requirejs');
+   
+  
   // Alias the `test` task to run the `mocha` task instead
-  grunt.registerTask('test', 'server:phantom mocha');
-  grunt.registerTask('default', 'concat min');
+  // grunt.registerTask('test', 'server:phantom mocha');
+  // grunt.registerTask('default', 'concat min');
+  grunt.registerTask('roptimize', ['requirejs']);
 
 };
