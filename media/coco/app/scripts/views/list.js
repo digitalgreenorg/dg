@@ -2,12 +2,13 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'datatable'
+  'datatable',
+  'views/list_item'
 
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($){
+], function($,pass,pass,pass,ListItemView){
     
     var ListView = Backbone.View.extend({
 
@@ -53,7 +54,7 @@ define([
             console.log("in render_data...change in collection...rendering list view");
 
             this.collection.each(function(model) {
-                $tbody.append(new list_item_view({
+                $tbody.append(new ListItemView({
                     model: model,
                     view_configs: this.view_configs
                 })
