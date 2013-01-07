@@ -15,6 +15,18 @@
 		<div class="group_label" > 
 			<a href="javascript:void(0)" onclick="villageClick({{ left_panel_stats.farmer_details.0.8 }})">{{ left_panel_stats.farmer_details.0.4 }}</a>
 		</div>
+		<center>
+		{% if left_panel_stats.subscribed %}
+			<a id='follow' href="javascript:void(0)" class='btn btn-primary disabled'>Subscribed</a>
+		{% else %}			
+			<a id='follow' href="javascript:void(0)" 
+				onclick='followClick("{{left_panel_stats.farmer_details.0.0}}",
+								 "{{person_last_adopted_details.2}}", 
+								 "{{person_last_adopted_details.3|date:"M Y"}}", 
+								 "{{ left_panel_stats.farmer_details.0.1 }}")' 
+			 		class='btn btn-primary'>Subscribe</a>
+		{% endif %}
+		</center>
 		<div id="progress_bar_label" > Adoption Rate </div>
 		<div class="progress progress-striped">
 			<div class="bar "  style="width: {{ left_panel_stats.views_adoptions.2 }}%; "><p> 
@@ -28,7 +40,7 @@
 					<td align="center"> {{left_panel_stats.views_adoptions.1}}</td>
 				</tr>
 				<tr>
-					<td align="left"><b> Joined</b></td>
+					<td align="left"><b> <div style="margin-left:8px;">Joined</div></b></td>
 					<td align="center"><b> Views</b></td>
 					<td align="center"><b>Adopted</b></td>
 				</tr>
@@ -57,7 +69,7 @@
 			</div>
 			<div style='width:100px;float:right;'>
 				<div style= "width:100px; height:70px; margin-right: 10px; margin-left:-30px; border: 1px solid green;"src=''>
-					<a href='javascript:void(0);' onclick="cspClick({{left_panel_stats.partner.0.0}})">
+					<a href='javascript:void(0);' onclick="partnerClick({{left_panel_stats.partner.0.0}})">
 					<img  style= "float:left; width:100px; height:70px;" src="http://s3.amazonaws.com/dg_farmerbook/partner/{{left_panel_stats.partner.0.0}}.jpg"></a>
 				</div>
 				<div style="width:100px; overflow:hidden; margin-left:-30px;">
@@ -84,6 +96,7 @@
 			</ul>
 		</div>
 		<div class='vil_tabcontent' id="top_tabcontent" style="height:180px;" style='width:100%; margin:0px;'>
+			{% if videos_watched_stats %}
 			<div class="carousel slide span8" id="myCarousel" style="width:710px;margin-bottom:10px;">
 				<div class="carousel-inner" style='height:180px;'>				
 				{% for vid in videos_watched_stats %}
@@ -93,32 +106,32 @@
 						{% endif%}
 						<li class="vidsWatchedItem">
 							<div class="thumbnail" style="border: 1px solid green;">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
-									<img src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
+								<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank'>
+									<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
 							{% if vid.adopted %}
-									<div style="margin-top:-20px;margin-left:100px"><span class='label label-success' title='adopted'><i class='icon-ok-sign icon-white'></i></span></div>
+									<div style="margin-top:-20px;margin-left:100px"><span class='label label-success' ><i class='icon-ok-sign icon-white'></i></span></div>
 							{% endif %}
 							{% if vid.interested %}
-							    <div style="margin-top:-20px;position:absolute;"><span class='label label-warning' title='interested'>
+							    <div style="margin-top:-20px;position:absolute;"><span class='label label-warning' >
 								<i class='icon-exclamation-sign icon-white'></i></span>
 								</div>
 							{% endif %}
 							{% if vid.question %}
 								{% if vid.interested %}
-									<div style="margin-top:-45px;"><span class='label label-important' title='{{vid.question}}'>
+									<div style="margin-top:-45px;"><span class='label label-important' rel="custompopover" data-content="{{vid.question}}">
 										<i class='icon-question-sign icon-white'></i></span>
 									</div>
 									<div style="height:25px;"></div>
 								{% else %}
-									<div style="margin-top:-20px;"><span class='label label-important' title='{{vid.question}}'>
+									<div style="margin-top:-20px;"><span class='label label-important' rel="custompopover" data-content="{{vid.question}}">
 										<i class='icon-question-sign icon-white'></i></span>
 									</div>
 								{% endif %}
 							{% endif %}
 							<div class="video_title" style="margin-top:0px;" >
-								<a title="{{vid.title}}" href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
+								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
 							</div>
 							{% if vid.last_seen_date %}
 								<div class="question" style="margin-top:0px;">Last seen on <br>{{ vid.last_seen_date|date:"M d, Y" }} </div>
@@ -133,13 +146,17 @@
 				<a data-slide="prev" href="#myCarousel" class="left carousel-control" style="margin-left:-40px;"><</a>
 				<a data-slide="next" href="#myCarousel" class="carousel-control" style="margin-left:650px !important">></a>
 			</div>
+			{% else %}	
+			   <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+			{% endif %}
     	</div>
 		<div style="height:1px;"> </div>		
 		
 		<div class='related_farmer'>
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;color:#6D9D30">Related Farmers</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
-			<div style='border: 1px solid #009E0F;height:311px;'>
+			<div style='border: 1px solid #009E0F;height:304px;'>
+			{% if top_adopters_stats %}								
 			<div class="carousel slide span8" id="lbCarousel" style="width:710px;">
 				<div class="carousel-inner" style="height:300px;">				
 				{% for person in top_adopters_stats %}
@@ -155,7 +172,11 @@
 								<a href="javascript:void(0);" onclick="personClick({{ person.id }})">
 									<center>{{ person.name }}</center></a> 
 							</div>
-							<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}</div>
+							{% if person.title %}
+							<div class='last_adopted' style="height: 36px; overflow:hidden;"> 
+								Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}
+							</div>
+							{% endif %}
 							<div id="progress_bar_label" style="margin-right:5px;"> Adoption Rate </div>
 							<div class="progress progress-striped"  style="margin-bottom:5px;">
 							  <div class="bar "  style="width: {{ person.adoption_rate|floatformat:0 }}%; "><p> {{ person.adoption_rate|floatformat:0 }}%</p></div>
@@ -163,12 +184,12 @@
 							<div id = 'progress_bar_content'>
 								<table width="200">		
 									<tr>
-										<td align="left">{{ person.date_of_joining|date:"M Y" }}</td>
+										<td align="left">{{ person.date_of_joining|date:"M Y"|default:"Not started"}}</td>
 										<td align="center"> {{ person.views|intcomma}}</td>
 										<td align="center"> {{ person.adoptions|intcomma}}</td>
 									</tr>
 									<tr>
-										<td align="left"><b>Joined</b></td>
+										<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
 										<td align="center"><b>Screenings</b></td>
 										<td align="center"><b>Adoptions</b></td>
 									</tr>
@@ -185,6 +206,9 @@
 				<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left:-34px;"><</a>
 				<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left:650px !important">></a>
 			</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any related farmers.</center></div>
+			{% endif %}
 			</div>
 		</div>			
     </div>		
@@ -193,5 +217,11 @@
 
 </div>
 </div>
+<script type='text/javascript'>
+$(function(){
+	$("[rel=custompopover]").custompopover();
+});
+
+</script>
 </body>
 </html>

@@ -761,7 +761,6 @@ def save_video_online(request,id):
         form.fields['village'].queryset = villages.order_by('village_name')
         form.fields['facilitator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
         form.fields['cameraoperator'].queryset = Animator.objects.filter(assigned_villages__in = villages).distinct().order_by('name')
-        form.fields['related_practice'].queryset = Practices.objects.distinct().order_by('practice_sector__name')
         form.fields['farmers_shown'].queryset = Person.objects.filter(village__in = villages).distinct().order_by('person_name')
         form.fields['supplementary_video_produced'].queryset = Video.objects.filter(village__in = villages).distinct().order_by('title')
         # REVERT WHEN MOVING TO DJANGO 1.4
@@ -2458,7 +2457,7 @@ def practices_seen_by_farmer(request, person_id):
         for vid in video_list:
             video_data.append({'value':vid[0],'string':vid[1]})    
         data['video_list'] = video_data
-        data['person_list'] = [{'value':farmer.id, 'string':str(farmer)}]
+        data['person_list'] = [{'value':farmer.id, 'string':unicode(farmer)}]
         return HttpResponse(cjson.encode(data), mimetype='application/json')
 
 def filters_for_village (request, village_id):
@@ -2496,7 +2495,7 @@ def person_meeting_attendance_data(request, person_id, screening_id):
                 video_data.append({'value':video[0],'string':video[1]})
             data = {
                 'pma' : {'id':pma.id,'screening':pma.screening_id},
-                'person_list' : [{'value':farmer.id, 'string':str(farmer)}],
+                'person_list' : [{'value':farmer.id, 'string':unicode(farmer)}],
                 'video_list': video_data,
                 'expressed_question_comment': pma.expressed_question,
                 'interested' : pma.interested,

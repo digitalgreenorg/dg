@@ -25,12 +25,12 @@
 {% load customtags%}
 	<table style="width:250px;">	
 				<tr>
-					<td align="center">{{ left_panel_stats.start_date|date:"M Y" }}</td>
+					<td align="left">{{ left_panel_stats.start_date|date:"M Y" }}</td>
 					<td align="center">{{left_panel_stats.screenings_disseminated|intcomma }}</td>
 					<td align="center">{{ left_panel_stats.total_adoptions|intcomma }}</td>
 				</tr>
 				<tr>
-					<td align="left"><b>Joined</b></td>
+					<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
 					<td align="center"><b>Screenings</b></td>
 					<td align="center"><b>Adoptions</b></td>
 				</tr>
@@ -62,8 +62,8 @@
 	<div
 		style="width: 100px; height: 70px; float: left; margin-bottom: 10px; margin-left: 2px;">
 		<a href='javascript:void(0);'
-			onclick="groupClick({{ group.0 }})"><img
-			title='{{ group.1 }}' class="group_image"
+			onclick="groupClick({{ group.0 }})">
+			<img rel="custompopover" data-content="{{ group.1 }}" class="group_image"
 			src=" http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg"
 			id="nap257" style=""></a>
 	</div>
@@ -101,6 +101,7 @@
 
 <div class='vil_tabcontent' id="top_tabcontent"
 	style="height: 190px;" style='width:100%; margin:0px;'>
+	{% if videos_watched_stats %}
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
 	<div class="carousel-inner">
@@ -111,37 +112,37 @@
 				{% endif%}
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+								<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank'>
 								<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
-							<!-- {% if vid.adopters %}							
-							<div style='margin-top:-20px; margin-left:0px;position:relative;right:-40px'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+							{% if vid.adopters %}							
+							<div style='margin-top:-20px; margin-left:85px;align:left;position:absolute'><span class='label label-success' ><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
 							{% if vid.interested %}
-							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' ><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
 							{% endif %}
 							{% if vid.questioners %}
 								{% if vid.interested %}
-									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% else %}
-									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% endif %}
 
-							{% endif %} -->
+							{% endif %}
 
 							<div class="question" style="margin-top:0px;">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}"  target='_blank' >{{ vid.title|truncchar:30|lower|capfirst }}</a> 
+								<a href="http://digitalgreen.org/video/?id={{ vid.id }}"  target='_blank' >{{ vid.title|truncchar:30|lower|capfirst }}</a> 
 							</div>	
 							
-							<!-- 
+							
 									{% if vid.screenings %}
-									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
+									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' ><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
 									{% endif %}
 									{% if vid.farmers_attended %}
-									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
-									{% endif %} -->
+									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' ><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
+									{% endif %}
 
 							
 							
@@ -160,6 +161,9 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+     {% endif %}
 </div>
 
 <div style="height: 1px;"></div>
@@ -167,6 +171,7 @@
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Service Providers</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
 			<div style='border: 1px solid #009E0F;height:311px;'>
+			{% if top_related_stats %}
 <div class="carousel slide span8" id="lbCarousel"
 	style="width: 710px;">
 	<div class="carousel-inner" style="height: 300px;">
@@ -182,9 +187,12 @@
 						<div class='csp_name'>
 							<a href="javascript:void(0);" onclick="cspClick({{ person.id }})">{{ person.name }}</a>
 						</div></center>
+						{% if person.last_screened %}
 						<div class='last_adopted' style="height: 36px; overflow:hidden;"> Last screened 
-								{{ person.last_video|lower|capfirst|truncchar:35}} on ({{ person.last_screened|date:"M d,Y" }})</div>
-
+							{{ person.last_video|lower|capfirst|truncchar:35}} on {{ person.last_screened|date:"M d,Y" }}
+						</div>
+						{% endif %}
+							
 
 
 <div id="progress_bar_label" style="margin-right:5px;">Adoptions per Screening</div>
@@ -202,17 +210,12 @@
 				<td align="center"> {{ person.adoptions|intcomma}}</td>
 			</tr>
 			<tr>
-				<td align="left"><b>Joined</b></td>
+				<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
 				<td align="center"><b>Screenings</b></td>
 				<td align="center"><b>Adoptions</b></td>
 			</tr>
-		</table>	
-						
-						
-						
-						
-
-					</div>
+		</table>
+	</div>
 				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
 		</div>
 		</ul>
@@ -222,6 +225,9 @@
 	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
 	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
 			</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any related Service Providers.</center></div>
+     {% endif %}
 
 		</div>
 </div>

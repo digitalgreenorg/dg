@@ -87,48 +87,48 @@
 
 <div class='vil_tabcontent' id="top_tabcontent"
 	style="height: 190px;" style='width:100%; margin:0px;'>
+{% if videos_watched_stats %}
 <div class="carousel slide span8" id="myCarousel"
 	style="width: 710px; margin-bottom: 0px;">
 	<div class="carousel-inner">
-		{% for vid in videos_watched_stats %} 
+		{% for vid in videos_watched_stats %}
 		{% if forloop.counter0|divisibleby:"5" %}
 		<div class="item{% if forloop.first %} active{%endif%}">
 			<ul class="thumbnails" style="margin-left: 28px; margin-top: 5px;">
 				{% endif%}
 				<li class="vidsWatchedItem">
 							<div class="thumbnail">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+								<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank'>
 								<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 								</a>
 							</div>
-							<!-- {% if vid.adopters %}							
-							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+							{% if vid.adopters %}							
+							<div style='margin-top:-20px; margin-left:85px;align:right'><span class='label label-success' ><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 							{% endif %}
 
 							{% if vid.interested %}
-							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
+							    <div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' ><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
 							{% endif %}
 							{% if vid.questioners %}
 								{% if vid.interested %}
-									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+									<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% else %}
-									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+									<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 								{% endif %}
 
-							{% endif %} -->
+							{% endif %}
 
 							<div class="question" style="margin-top:0px;">
-								<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
+								<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank' >{{ vid.title|lower|capfirst|truncchar:30 }}</a> 
 							</div>	
 							
 							
-									<!-- {% if vid.screenings %}
-									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' title='disseminations'><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
+									{% if vid.screenings %}
+									<div style=' margin-top:-95px;position:absolute;'><span class='label label-info' ><i class='icon-facetime-video icon-white'></i>{{ vid.screenings}}  </span> </div>
 									{% endif %}
 									{% if vid.farmers_attended %}
-									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse' title='farmers attended'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
+									<div style=' margin-top:-70px;position:absolute;'><span class='label label-inverse'><i class='icon-user icon-white'></i>{{ vid.farmers_attended }}  </span> </div>
 									{% endif %}
- -->
 							
 							
 								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
@@ -146,71 +146,131 @@
 	<a data-slide="next" href="#myCarousel" class="carousel-control"
 		style="margin-left: 650px !important">></a>
 	</div>
+	{% else %}	
+       <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+     {% endif %}
 </div>
 
 
 <div style="height: 1px;"></div>
-	<div class='related_farmer'>
-			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Groups</span> </div>
+<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;color:#6D9D30">Members</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
-			<div style='border: 1px solid #009E0F;height:311px;'>
-<div class="carousel slide span8" id="lbCarousel"
-	style="width: 710px;">
-	<div class="carousel-inner" style="height: 300px;">
-		{% for group in top_related_stats %} {% if forloop.counter0|divisibleby:"3" %}
-		<div class="item{% if forloop.first %} active{%endif%}">
-			<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
-				{% endif%}
-				<li style="margin-left: 2px; margin-top: -9px;">
-					<div class='farmer_details_container'>
-						<center>
-						<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
-						<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
-						</a>
-						<div class='csp_name'>
-							<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
-						</div></center>
-
-
-
-<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
-
-							<div class="progress progress-striped">
-							  <div class="bar "  style="width: {{group.ratewidth|floatformat:1 }}% ;"><p> {{ group.rate|floatformat:1 }}</p></div>
+			<div style='border: 1px solid #009E0F;height:304px;'>
+			{% if top_adopters_stats %}								
+			<div class="carousel slide span8" id="lbCarousel" style="width:710px;">
+				<div class="carousel-inner" style="height:300px;">				
+				{% for person in top_adopters_stats %}
+						{% if forloop.counter0|divisibleby:"3" %}				    
+								<div class="item{% if forloop.first %} active{%endif%}">							
+								<ul class="thumbnails" style="margin-left:24px; margin-top:1px;height:310px;">										
+						{% endif%}
+						<li style="margin-left:2px;margin-top:-9px;">
+							<div  class= 'farmer_details_container'>
+							<center><a href="javascript:void(0);" onclick="personClick({{ person.id }})">
+								<img  src="https://s3.amazonaws.com/dg_farmerbook/2/{{ person.id }}.jpg"></center>	</a>					
+							<div class='farmer_name'> 
+								<a href="javascript:void(0);" onclick="personClick({{ person.id }})">
+									<center>{{ person.name }}</center></a> 
 							</div>
-
-
-
-		<table width="200">		
-			<tr>
-				<td align="left">{{ group.start_date|date:"M Y" }}</td>
-				<td align="center"> {{ group.screenings|intcomma}}</td>
-				<td align="center"> {{ group.adoptions|intcomma}}</td>
-			</tr>
-			<tr>
-				<td align="left"><b> Joined</b></td>
-				<td align="center"><b> Screenings</b></td>
-				<td align="center"><b>Adoptions</b></td>
-			</tr>
-		</table>	
-						
-						
-						
-						
-
-					</div>
-				</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
-		</div>
-		</ul>
-		{% endif%} 
-		{% endfor %}
-	</div>
-	<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
-	<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+							{% if person.title %}
+							<div class='last_adopted' style="height: 36px; overflow:hidden;"> 
+								Last adopted {{ person.title|lower|capfirst|truncchar:28 }} on {{ person.date_of_adoption|date:"M d,Y" }}
+							</div>
+							{% endif %}
+							<div id="progress_bar_label" style="margin-right:5px;"> Adoption Rate </div>
+							<div class="progress progress-striped"  style="margin-bottom:5px;">
+							  <div class="bar "  style="width: {{ person.adoption_rate|floatformat:0 }}%; "><p> {{ person.adoption_rate|floatformat:0 }}%</p></div>
+							</div>
+							<div id = 'progress_bar_content'>
+								<table width="200">		
+									<tr>
+										<td align="left">{{ person.date_of_joining|date:"M Y" }}</td>
+										<td align="center"> {{ person.views|intcomma}}</td>
+										<td align="center"> {{ person.adoptions|intcomma}}</td>
+									</tr>
+									<tr>
+										<td align="left"><b><div style="margin-left:8px;">Joined</div></b></td>
+										<td align="center"><b>Screenings</b></td>
+										<td align="center"><b>Adoptions</b></td>
+									</tr>
+								</table>								
+							</div>
+							</div>
+						</li>
+						{% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}						    
+							</div>							
+							</ul>										
+						{% endif%}
+				{% endfor %}					
+				</div>
+				<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left:-34px;"><</a>
+				<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left:650px !important">></a>
 			</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any members.</center></div>
+			{% endif %}
+			</div>
+		</div>			
+    <!--  For related groups if necessary in the future-->
+	<!--<div class='related_farmer'>
+			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Members</span> </div>
+			<div style='border-bottom:3px solid #009E0F;'></div>
+			<div style='border: 1px solid #009E0F;height:305px;'>
+			{% if top_adopters_stats%}
+			<div class="carousel slide span8" id="lbCarousel" style="width: 710px;">
+			<div class="carousel-inner" style="height: 300px;">
+				{% for group in top_adopters_stats %} {% if forloop.counter0|divisibleby:"3" %}
+				<div class="item{% if forloop.first %} active{%endif%}">
+					<ul class="thumbnails" style="margin-left: 24px; margin-top: 1px; height: 310px;">
+						{% endif%}
+						<li style="margin-left: 2px; margin-top: -9px;">
+							<div class='farmer_details_container'>
+								<center>
+								<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">
+								<img id="img_container" style="width:150px; height:100px;" src={{group.photo_link}}>
+								</a>
+								<div class='csp_name'>
+									<a href="javascript:void(0);" onclick="groupClick({{ group.id }})">{{ group.name }}</a>
+								</div></center>
 
+
+
+		<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
+
+									<div class="progress progress-striped">
+									  <div class="bar "  style="width: {{group.ratewidth|floatformat:1 }}% ;"><p> {{ group.rate|floatformat:1 }}</p></div>
+									</div>
+
+
+
+				<table width="200">		
+					<tr>
+						<td align="left">{{ group.start_date|date:"M Y" }}</td>
+						<td align="center"> {{ group.screenings|intcomma}}</td>
+						<td align="center"> {{ group.adoptions|intcomma}}</td>
+					</tr>
+					<tr>
+						<td align="left"><b> Joined</b></td>
+						<td align="center"><b> Screenings</b></td>
+						<td align="center"><b>Adoptions</b></td>
+					</tr>
+				</table>
+				</div>
+						</li> {% if forloop.counter|divisibleby:"3" and not forloop.first or forloop.last %}
+				</div>
+				</ul>
+				{% endif%} 
+				{% endfor %}
+			</div>
+			<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
+			<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
+					</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any related groups.</center></div>
+			{% endif %}
 		</div>
-</div>
+</div>-->
 
 </div>
 <script type="text/javascript">

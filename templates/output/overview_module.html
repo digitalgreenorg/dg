@@ -1,4 +1,5 @@
 {% extends "base_analytics.html" %}
+{% load analytics_extra_tags %}
 
 {% block title %} Digital Green - Overall Statistics  {% endblock %}
 
@@ -159,13 +160,9 @@
 				 			{% for item in table_data %}
 				 			<tr>
 								<td class='table2statdesc2'>
-									{% ifnotequal item.id None %}
-										{% ifnotequal item.geog None %}
-											<a href='/analytics/overview_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
-											{{ item.name }} </a>
-										{% else %}
-											{{ item.name }}
-										{% endifnotequal  %}
+									{% ifnotequal item.geog "NULL" %}
+										<a href='/analytics/overview_module/{% analytics_get_request item.geog item.id get_req_url %}'>
+										{{ item.name }} </a>
 									{% else %}
 										{{ item.name }}
 									{% endifnotequal  %}
@@ -176,25 +173,25 @@
 								<td class='table2statdesc2'>
                                     {{ item.tot_vil }}
                                 </td>
-								<td class='table2statdesc2'> 
-										{% ifnotequal item.geog None %}
-											<a href='/analytics/video_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
+								<td class='table2statdesc2'>
+										{% ifnotequal item.geog "NULL" %}
+											<a href='/analytics/video_module/{% analytics_get_request item.geog item.id get_req_url %}'>
 											{{ item.tot_pro }} </a>
 										{% else %}
 											{{ item.tot_pro }}
 										{% endifnotequal  %}
 								</td>
 								<td class='table2statdesc2'> 
-									{% ifnotequal item.geog None %}
-										<a href='/analytics/screening_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
+									{% ifnotequal item.geog "NULL" %}
+											<a href='/analytics/screening_module/{% analytics_get_request item.geog item.id get_req_url %}'>
 										{{ item.tot_scr }} </a>
 									{% else %}
 										{{ item.tot_scr }}
 									{% endifnotequal  %}
 								</td>
 								<td class='table2statdesc2'> 
-									{% ifnotequal item.geog None %}
-										<a href='/analytics/adoption_module?geog={{item.geog|lower}}&id={{item.id}}{{get_req_url}}'>
+									{% ifnotequal item.geog "NULL" %}
+										<a href='/analytics/adoption_module/{% analytics_get_request item.geog item.id get_req_url %}'>
 										{{ item.tot_ado }} </a>
 									{% else %}
 										{{ item.tot_ado }}
@@ -211,13 +208,12 @@
 					<table id='table2' cellpadding="0" cellspacing="0">
 			        <tr>			            
 					    <td class='table2statdesc2'>
-					    	{% if par_geog_data.geog %}
-					    		<a href='/analytics/overview_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
-								{{ par_geog_data.name }} </a>
+					    	{% ifnotequal par_geog_data.geog "NULL" %}
+					    		<a href='/analytics/overview_module/{% analytics_get_request par_geog_data.geog par_geog_data.id get_req_url %}'>
+					    		{{ par_geog_data.name }} </a>
 							{% else %}
-								{{par_geog_data.name}}
-							{% endif %}
-					       	        
+								{{ par_geog_data.name }}
+							{% endifnotequal %}
 					    </td>
 						<td class='table2statdesc2'>
                             {{ par_geog_data.tot_per }} 
@@ -226,30 +222,18 @@
                             {{ par_geog_data.tot_vil }} 
                         </td> 
 					    <td class='table2statdesc2'>
-					    	{% if par_geog_data.geog %}
-					    		<a href='/analytics/video_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
+					    	<a href='/analytics/video_module/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}'>
 							    {{par_geog_data.tot_vid}}</a>
-							{% else %}
-								{{par_geog_data.tot_vid}}
-							{% endif %}
 					    </td>
 					    
 					    <td class='table2statdesc2'>
-					    	{% if par_geog_data.geog %}
-                                <a href='/analytics/screening_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
-                                {{ par_geog_data.tot_scr }}</a>
-                            {% else %}
-                                {{ par_geog_data.tot_scr }}
-                            {% endif %} 
+                           <a href='/analytics/screening_module/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}'>
+                           {{ par_geog_data.tot_scr }}</a>
 					    </td>
 					    
 					    <td class='table2statdesc2'> 
-						    {% if par_geog_data.geog %}
-                                <a href='/analytics/adoption_module?geog={{par_geog_data.geog|lower}}&id={{par_geog_data.id}}{{get_req_url}}'>
-                                {{ par_geog_data.tot_ado }}</a>
-                            {% else %}
-                                {{ par_geog_data.tot_ado }}
-                            {% endif %}
+                           <a href='/analytics/adoption_module/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}'>
+                           {{ par_geog_data.tot_ado }}</a>
 					    </td>
 					    
 					    <td class='table2statdesc21'>

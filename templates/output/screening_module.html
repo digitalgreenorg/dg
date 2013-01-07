@@ -1,4 +1,5 @@
 {% extends "base_analytics.html" %}
+{% load analytics_extra_tags %}
 
 {% block title %} Digital Green - Screening Statistics  {% endblock %}
 
@@ -92,6 +93,28 @@
 							<div class='statnumber'>
 								<div class='statdesnumber'>	{{avg_att|floatformat:2}} viewers/dissemination </div>
 							</div>													
+						</td>						
+					</tr>
+					<tr>
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+								<div class='statdescname'>Average number of videos seen by Active Attendees</div>
+								<div id='statdescimg'> 	
+									<div id='statdescimg1'>	
+										Active attendees are farmers who have attended<br> 
+										a screening in last 60 days. This statistic shows <br>
+										average number of videos per active attendee.<br>
+									</div>								
+								</div>
+							</div>
+							<div class='statnumber'>
+								<div class='statdesnumber'>	{{avg_vid_by_active|floatformat:2}} videos</div>
+							</div>																				
+						</td>
+						
+						<td class='table1statdesc'>
+							<div class='statdesc'>
+							</div>
 						</td>						
 					</tr>					
 				</table>				

@@ -26,13 +26,13 @@ var bubble_options={colors: ['00CC33','#7edc32','#26d52f','#909504','#f9c423','#
 		bubble: {textStyle: {color: 'none'}}
 };
 function drawCharts() {
-	$.getJSON('/analytics/screening_geog_pie_data/?'+search_params, function(json){geog_pie(json);});
-	$.getJSON('/analytics/screening_monthwise_bar_data/?'+search_params, function(json){monthwise_column(json);});
-	$.getJSON('/analytics/screening_practice_wise_scatter_data/?'+search_params, function(json){practice_bubble(json);});
-	$.getJSON('/analytics/screening_mf_ratio/?'+search_params, function(json){gender_pie(json);});
-	$.getJSON('/analytics/screening_per_day_line/?'+search_params, function(json){day_line(json);});
-	$.getJSON('/analytics/screening_tot_lines/?'+search_params, function(json){total_line(json);});
-	$.getJSON('/analytics/screening_percent_lines/?'+search_params, function(json){percent_line(json);});
+	$.getJSON('/analytics/screening_geog_pie_data/'+search_params, function(json){geog_pie(json);});
+	$.getJSON('/analytics/screening_monthwise_bar_data/'+search_params, function(json){monthwise_column(json);});
+	$.getJSON('/analytics/screening_practice_wise_scatter_data/'+search_params, function(json){practice_bubble(json);});
+	$.getJSON('/analytics/screening_mf_ratio/'+search_params, function(json){gender_pie(json);});
+	$.getJSON('/analytics/screening_per_day_line/'+search_params, function(json){day_line(json);});
+	$.getJSON('/analytics/screening_tot_lines/'+search_params, function(json){total_line(json);});
+	$.getJSON('/analytics/screening_percent_lines/'+search_params, function(json){percent_line(json);});
 }
 
 function remove_loader(div_id){
@@ -154,10 +154,10 @@ function practice_bubble(json) {
 	practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, bubble_options);
 	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
+	options['vAxis']= {title: 'Number of disseminations',gridlines:{count:10},logScale:true};
 	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
-	options['title']='Number of Videos per practices';
+	options['title']='Number of disseminations per practice';
 	if(json.length>1)
 	{
 		practice_bubble_chart = new google.visualization.ChartWrapper({

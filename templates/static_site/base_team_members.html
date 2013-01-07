@@ -1,87 +1,1672 @@
+ {% extends "base_team.html" %}
+  {% block title %}Digital Green - Team - Team Members {% endblock %} {% block breadcrumsmore %}
+  {% block jsfile %}
+       <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+       <script type="text/javascript" src="https://raw.github.com/balupton/jquery-scrollto/master/scripts/jquery.scrollto.min.js"></script>
+  {% endblock jsfile %}
+<a href='/team'> Team </a>/
 
-{% extends "base_team.html" %}
-
-{% block title %}Digital Green - Team - Team Members {% endblock %}
-
-{% block breadcrumsmore %} 	
-	<a href='/team'> Team </a>/ 
-	<span style='font-size:0.9em; font-weight:bold;'> Team Members </span>	
-{% endblock breadcrumsmore %} 
-	 
-
-{% block mainbodycontentleft %}
-	<div class='pagetitle'>
-		Team Members
-	</div>
-	<div id='contentdiv1'>
-		
-		<script type="text/javascript">
-			var xmlDoc=null;
-            if (window.XMLHttpRequest){
-             xhttp=new XMLHttpRequest();
-            }
-            else {
-             xhttp=new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xhttp.open("GET","/media/Output/team_members.xml",false);
-            xhttp.send();
-            xmlDoc=xhttp.responseXML;
-			/*
-			if (window.ActiveXObject)
-			{// code for IE
-    			xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-			}
-			else if (document.implementation.createDocument)
-			{// code for Mozilla, Firefox, Opera, etc.
-    			xmlDoc=document.implementation.createDocument("","",null);
-			}
-			else
-			{
-				alert('Your browser cannot handle this script');
-			}
-			*/
-			if (xmlDoc!=null) 
-			{
-				//xmlDoc.async=false;
-				//xmlDoc.load("/media/Output/team_members.xml");
-				//alert("hello");
-				var x=xmlDoc.getElementsByTagName("TEAM");
-
-				//alert(x.length);				
-				document.write("<table id='table1' cellspacing='0px' cellpadding='0'>");				
-				for (i=0;i<x.length;i++)
- 					{
-  						document.write("<tr><td class='contenttd1' cellspacing='0px' cellpadding='0'>");  					
-  						document.write("<div class='contenttd1div1'>");
-  							document.write("<img src='" + (x[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue)+"'>");
-  							document.write("<div class='contenttd1div1name'>");
-  								document.write(x[i].getElementsByTagName("NAME")[0].childNodes[0].nodeValue);  								
-  							document.write("</div>");	
-  						document.write("</div>");
-  					
-  						document.write("<div class='contenttd1div2'>");
-  							document.write("<div class='contenttd1div2title'>");
-  								document.write("<ul class='contenttd1div2titleul'>");
-  									document.write("<li style='color:Gray; font-weight:bold;'>"); 
-  										document.write(x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue);	
-  									document.write("</li>");
-  									document.write("<li>"); 
-  										document.write("<a class='maillinks' href=mailto:" + (x[i].getElementsByTagName("MAILID")[0].childNodes[0].nodeValue) + ">" + (x[i].getElementsByTagName("MAILID")[0].childNodes[0].nodeValue) + "</a>" );	
-  									document.write("</li>");  									
-  								document.write("</ul>");
-  								  								
-  							document.write("</div>");
-  							document.write("<div class='contenttd1div2desc'>");
-  								document.write("<p>");
-  									document.write(x[i].getElementsByTagName("DESC")[0].childNodes[0].nodeValue);
-  								document.write("</p>");
-  							document.write("</div>");
-  						document.write("</div>");
-  						document.write("</td></tr>");
-  					}
-  				document.write("</table>");	
-  			}		
+<span style='font-size: 0.9em; font-weight: bold;'> Team Members
+</span>
+{% endblock breadcrumsmore %} {% block mainbodycontentleft %}
+<div class='pagetitle'>Team Members</div>
+<div>
+	<a class="regionname" href="javascript:void(0);" id="delhiteam"> Headquarters-Delhi</a>
+	<a class="regionname" href="javascript:void(0);" id="bangaloreteam"> Bangalore</a>
+	<a class="regionname" href="javascript:void(0);" id="bhopalteam"> Bhopal</a>
+	<a class="regionname" href="javascript:void(0);" id="bhubaneswarteam"> Bhubaneswar</a>
+	<a class="regionname" href="javascript:void(0);" id="hyderabadteam"> Hyderabad</a>
+	<a class="regionname" href="javascript:void(0);" id="patnateam"> Patna</a>
+</div>
+<div style="clear:both;"></div>
+<div id="contentdiv1">
+	<script type='text/javascript'>
+	$("#delhiteam").click ( function() {
+		$('#delhi').ScrollTo();
+	});
+	$("#bangaloreteam").click ( function() {
+		$('#bangalore').ScrollTo();
+	});
+	$("#bhopalteam").click ( function() {
+		$('#bhopal').ScrollTo();
+	});
+	$("#bhubaneswarteam").click ( function() {
+		$('#bhubaneswar').ScrollTo();
+	});
+	$("#hyderabadteam").click ( function() {
+		$('#hyderabad').ScrollTo();
+	});
+	$("#patnateam").click ( function() {
+		$('#patna').ScrollTo();
+	});
+	</script>
+	<table id="table1" cellspacing="0px" cellpadding="0">
+		<tbody>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+					<div class="pagetitle">
+	                    Headquarters
+					</div>
+					<div id='delhi' class="pagetitle">
+	                    Executive Leadership Team
+	                </div>
+					<div style="border:solid 1px #ECECEC"></div>
+					<div class="contenttd1div1">
+						<img src="/media/Output/Images/rikin4.png">
+						<div class="contenttd1div1name">Rikin Gandhi</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Chief Executive
+									Officer</li>
+								<li><a class="maillinks"
+									href="mailto:rikin@digitalgreen.org">rikin@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>His interests include sustainable agriculture and
+								technology for socioeconomic development. Gandhi received a
+								master's in aeronautical and astronautical engineering from the
+								Massachusetts Institute of Technology and a bachelor's in
+								computer science from Carnegie Mellon University. Prior to his
+								days in rural India, Gandhi was a software engineer at Oracle
+								and a pilot with ambitions for joining the astronaut program.
+								Born and raised in the U.S., Gandhi "reverse-migrated" to India
+								to help start a biodiesel venture on the wastelands of
+								Maharashtra.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/vinay4.png">
+						<div class="contenttd1div1name">Vinay Kumar</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Chief Operating
+									Officer</li>
+								<li><a class="maillinks"
+									href="mailto:vinay@digitalgreen.org">vinay@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Vinay Kumar brings several years of senior management
+								experience in public, private and non profit sectors. His
+								expertise lies in assuring and managing exponential growth in
+								organizations. He just completed over eight years with PATH as
+								its India Operations Director where he was responsible for
+								transforming it from a four person organization to nearly
+								hundred persons and establishing it as a prominent international
+								organization in India. He managed the Asia/Near East operations
+								of IntraHealth International Inc. an affiliate of University of
+								North Carolina at Chapel Hill, USA in eight countries. Vinay
+								ensured a ten-fold growth in JPS Associates during his tenure as
+								Vice President. He served as Manager at Reserve Bank of India
+								and was a journalist with United News of India and Editor of
+								Indian Management. He was honored by Mrs. Indira Gandhi as the
+								best youngest journalist.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/neeta.png">
+						<div class="contenttd1div1name" style = "margin-top:127px;">Neeta Vinay</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Chief
+									Financial Officer</li>
+								<li><a class="maillinks"
+									href="mailto:neeta@digitalgreen.org">neeta@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Neeta brings nearly 25 years of experience of which 15 years has been in the non-profit space. 
+She led Program Operations at International Aids Vaccine Initiative (IAVI) as Director Program Operations, 
+focusing on financial, administration and human resource management, advocacy, communications and program support. 
+Before IAVI, she worked for IntraHealth International as its Regional Manager for Administration and Finance for 
+Asia and the Near East region working in several countries in the region. She worked for PATH as Program Administrator 
+and helped establish its offices and programs.
+ 
+Neeta has consulted with Ministry of Health and Family Welfare, and a number of non-profits - Save the Children, PATH, PSI, 
+IntraHealth International, One World Health, Bill & Melinda Gates Foundation, Mott McDonald and PA Consulting in the areas 
+of donor stewardship, proposal development, strategy formulation, institutional strengthening, partnership management and disaster 
+relief operations.
+ 
+She completed her management education from Indian Institute of Management, Ahmedabad and has a graduate degrees in Foods and Nutrition, 
+and Education from Lady Irwin College, Delhi University.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/saureen3.png">
+						<div class="contenttd1div1name">Saureen Shah</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Chief
+									Technology Officer</li>
+								<li><a class="maillinks"
+									href="mailto:saureen@digitalgreen.org">saureen@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Saureen Shah comes to Digital Green in the capacity of
+								Chief Technology Officer. His interests include operations and
+								technology in sustainable development. He received a bachelor's
+								in business administration and computer science from Carnegie
+								Mellon University in 2003. Prior to DigitalGreen, Saureen was
+								part of the early software engineering team at YouTube, where he
+								worked on numerous projects, both pre and post acquisition,
+								contributing to YouTube's unprecedented growth on the upwards of
+								one billion video views a day. Before his work at YouTube,
+								Saureen worked at Oracle Corporation, where he helped support
+								and re-architect a key component of the database kernel. In his
+								spare time, Saureen enjoys consulting for fledgling technology
+								startups; brainstorming technology use cases for sustainable
+								development; and building partnerships with complementary
+								organizations. He is also an avid reader and follower of
+								politics pertaining primarily to the South Asian littoral.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+						
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle">
+	                    Technology Team
+	            </div>
+				<div style="border:solid 1px #ECECEC"></div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/nandini.png">
+						<div class="contenttd1div1name">Nandini Bhardwaj</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Software
+									Manager</li>
+								<li><a class="maillinks"
+									href="mailto:nandini@digitalgreen.org">nandini@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Nandini brings experience that comes from working as
+								software engineer with Microsoft in Redmond and Adobe in India,
+								and as a Graduate Research Assistant at Center for Computational
+								Learning Systems, Columbia University, New York. She received
+								her Masters degree in Computer Science from Columbia and her BE
+								in Computer Engineering from Netaji Subhas Institute of
+								Technology, Delhi. She has always had a strong inclination
+								towards volunteering with non-profits and has been a foot
+								soldier most recently with Association for India's Development.
+								In her free time, she loves reading non-fiction - science,
+								sociology and history - and singing; she is especially fond of
+								music derived from the classical traditions of India.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/sreenu1.png">
+						<div class="contenttd1div1name">G S Reddy</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Software
+									Engineer</li>
+								<li><a class="maillinks"
+									href="mailto:sreenivasula@digitalgreen.org">sreenivasula@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>G.Sreenivasula Reddy hails from a town called Kadapa in
+								Andhra Pradesh. He joined Digital Green as an intern in Systems
+								Department and later joined as an Assistant Research Software
+								Development Engineer. He pursued his graduation in ICT at
+								Dhirubhai Ambani Institute of Information and Communication
+								Technology (DA-IICT) Gandhinagar, Gujarat. He firmly believes
+								that ICT has a key role to play in developing the disadvantaged
+								sections of the society.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/yash.png">
+						<div class="contenttd1div1name">Yash Seth</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Software Engineer</li>
+								<li><a class="maillinks"
+									href="mailto:yash@digitalgreen.org">yash@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Yash has completed his BTech from IIIT-Delhi in the field
+								of computer science in 2012. During his bachelors, he has done
+								various internships in the Image Analysis and Biometrics Group
+								at IIIT-Delhi
+								(http://research.iiitd.edu.in/groups/iab/index.html) . He has
+								also interned under Dr Devi Parikh at Toyota Technological
+								Institute at Chicago (http://www.ttic.edu/) in 2011 on the field
+								of computer vision. Yash is highly motivated to work with
+								Digital Green and support its motive. As a member of the systems
+								team, he aims to contribute to the technical aspect of Digital
+								Green and help Digital Green reach new heights.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/tanmay.png">
+						<div class="contenttd1div1name">Tanmay Verma</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Software Engineer</li>
+								<li><a class="maillinks"
+									href="mailto:tanmay@digitalgreen.org">tanmay@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Tanmay has graduated from IIIT-Delhi with BTech (Honors)
+								in Computer Science Engineering. His academic experiences
+								include Internship at Toyota Technological Institute at Chicago,
+								Undergraduate Research Assistant at IAB Lab, IIIT-Delhi and
+								Teaching Assistant for Introduction to Programming at
+								IIIT-Delhi. In the past, he has volunteered for Diabetic
+								Selfcare Foundation on several occasions. He is an avid Chess
+								player and also enjoys Cricket and Football. Tanmay is very
+								excited to be a part of Digital Green and hopes to contributes
+								towards this wonderful concept.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/shrey.png">
+						<div class="contenttd1div1name">Shrey Jairath</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Software Engineer</li>
+								<li><a class="maillinks"
+									href="mailto:shrey@digitalgreen.org">shrey@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Shrey Jairath did B-Tech with Honours in Computer Science
+								from IIIT-Delhi. Besides some internship with research groups at
+								IIIT- Delhi, he did a summer internship at Citrix, Bangalore. He
+								is keen to work on projects which can in any possible way
+								enhance the quality of life. Apart from this, his aim is to
+								excel in the field of Computer Science. He believes the best
+								thing about this field is that it is far easier to "create
+								something" in this field than in any other field. For him
+								Digital Green is an opportunity to positively affect a large
+								population of India involved in agriculture. Also, he feels the
+								start-up like nature of Digital Green would provide him a steep
+								learning curve.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle">
+	                    Program Team
+	            </div>				
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/gulzar1.png">
+						<div class="contenttd1div1name">Akbar Gulzar</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy Director-Training</li>
+								<li><a class="maillinks"
+									href="mailto:gulzar@digitalgreen.org">gulzar@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Gulzar has twenty years of experience in RD, ICT business
+								and social development. He had the opportunity to serve people
+								in post conflict Afghanistan through the Aga Khan Development
+								Network which led to his commitment to development sector. His
+								personal vision of equitable society connects to the vision of
+								Digital Green which aims to bring cost-effectiveness to the
+								agricultural extension services and thus improve the
+								agricultural practices that can improve the socio-economic
+								status of the marginalized and small landholder farmers.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
 				
-		</script>					
-	</div>
-{% endblock mainbodycontentleft %}	
+				<div style="border:solid 1px #ECECEC"></div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/navin_1.png">
+						<div class="contenttd1div1name">Navin Horo</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy Director-Projects</li>
+								<li><a class="maillinks"
+									href="mailto:navin@digitalgreen.org">navin@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>He comes to us with over 12 years' experience in the
+								development sector that includes livelihoods program
+								development, management, execution and monitoring. He was the
+								Associate Vice President at ACCESS Development Services before
+								joining us. He has been a Livelihoods consultant to
+								organisations like GIZ, OXFAM, IDE and helped them design
+								livelihoods programs, conduct impact assessment studies as well
+								as developed capacities for enterprise development. Starting his
+								career with Seva Mandir, grass root organization, and having
+								worked with organisations like CARE and ACCESS; Navin blends
+								field level experience with HQ work that balances program
+								management with stakeholder involvement. I believe that Navin
+								will be real asset to Digital Green. Navin has an MBA in
+								Forestry Management from the National Institute of Forest
+								Management, Bhopal and completed his masters in natural resource
+								management from Cranfield University, UK. Navin's motivation to
+								join Digital Green is the belief that small, innovative and
+								focused solutions can help reach out to a large number of rural
+								communities and thus impact the society at scale.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div style="border:solid 1px #ECECEC"></div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/lakshmi.png">
+						<div class="contenttd1div1name" style='margin-top:125px;'>Lakshmi Iyer</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy Director-Strategy & Innovation</li>
+								<li><a class="maillinks"
+									href="mailto:lakshmi@digitalgreen.org">lakshmi@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Lakshmi became passionate about innovative practices that provide extension services 
+							for small scale farmers after working for the US Dept of Agriculture and the India-based organization, 
+							Indicorps. She obtained her master's degree in international agriculture and rural development from
+							Cornell University, during which time she created marketing and business development training materials 
+							for farmer groups in Kenya. Most recently, she worked for an agricultural development NGO in Washington, 
+							DC where she managed a value-chain, technical-assistance driven program portfolio that was based in the 
+							countries Georgia and Kosovo. She strongly believes that farmers are the backbone of  society and that 
+							enhancing their productivity is vastly important; Digital Green is an important contributor in this 
+							realm - combining technology and knowledge for the improvement of food security.
+							Although born and raised in the States, Lakshmi is happy to be living in Delhi; 
+							it grounds her and brings her perspective. She enjoys long runs and hopes to build up enough stamina to 
+							run another marathon soon.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/shreyaaggarwal.png">
+						<div class="contenttd1div1name">Shreya Agarwal</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager-Quality Assurance</li>
+								<li><a class="maillinks"
+									href="mailto:shreya@digitalgreen.org">shreya@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Shreya joined Digital Green to bridge at least some of the
+								gap that exists in bringing good quality information to farmers.
+								She has worked in the development sector on issues such as
+								education, health and livelihoods. After completing a MA
+								Development Studies from the Institute of Development Studies
+								(IDS), University of Sussex, she worked in the United Kingdom as
+								a research consultant with IDS on participatory learning
+								initiatives and as a volunteer with PLAN UK on its Because I am
+								a Girl Project. She then decided to come back to India to be
+								closer to the hot bed of path breaking and high impact
+								development work. For a few months she worked as a
+								communications consultant with BAIRD's CMC and as a researcher
+								with PRADAN. She then joined a public policy think tank, Centre
+								for Civil Society, as a research associate. Besides research,
+								she was able to get diverse experience in fund-raising,
+								organizational strategy planning, program management and
+								advocacy. She now hopes to use this knowledge and experience in
+								contributing to achieving the Digital Green vision of
+								sustainable rural development. In her spare time Shreya likes to
+								travel, read and paint.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/kerry.png">
+						<div class="contenttd1div1name">Kerry Harwin</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager-Monitoring 
+								& Evaluation</li>
+								<li><a class="maillinks"
+									href="mailto:kerry@digitalgreen.org">kerry@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Kerry Harwin has obtained a master's degree in development
+								studies from the Tata Insitute of Social Science, Mumbai and a
+								bachelor's degree from Amherst College, Massachusetts. His
+								previous professional experience includes grantmaking at the
+								Shakti Sustainable Energy Foundation, Delhi, environmental
+								consulting at Except, Rotterdam, and environmental and
+								agriculture policy in the United States Senate. He has also
+								worked as a pizza maker, nanny, dishwasher, theatre set builder,
+								tour guide, freelance journalist, deejay, voice actor, and child
+								model.Kerry believes that expanding rural livelihoods,
+								especially for those who face a wide range of depravations, is a
+								crucial and under-appreciated facet of contemporary Indian
+								development. He is eager to bring his diverse set of experience
+								to bear on these challenges at Digital Green.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/pallavi1.png">
+						<div class="contenttd1div1name">Pallavi Lal</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:pallavi@digitalgreen.org">pallavi@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Pallavi, a postgraduate in Social Work from the Tata
+								Institute of Social Sciences, Mumbai has specialized in
+								Community Organization and Development Practice. The association
+								that she developed and work that she carried out with the World
+								Wide Fund for Nature, Make-A-Wish Foundation and Sarojini Naidu
+								Centre for Women's Studies, Jamia Millia Islamia during her
+								graduation has honed her social sector understanding and skills.
+								During her post graduation, she interned with the Pratham
+								Education Foundation and carried out fieldwork with different
+								organizations such as World Welfare Children's Trust, National
+								Alliance of People's Movements and Kislay which enabled her to
+								acquire knowledge on gamut of issues like education,
+								rehabilitation and labour rights. At digital Green she intends
+								to dwell upon and practically understand the different problems
+								being faced by the farmers and work on the same to improve their
+								socio-economic status She plans to build upon the inherent
+								traditional knowledge base of the farmers and promote the
+								requisite innovative practices. She also further intends to
+								amplify her experience and knowledge in the process of
+								contributing to the best of her ability towards the goals of the
+								organization.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/ambalika.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Ambalika Smiti</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:ambika@digitalgreen.org">ambalika@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Ambalika Smiti belongs to the smallest district of Bihar named Sheohar. She did her graduation in Agricultural and Food Engineering from IIT Kharagpur and also has a minor degree in Mathematics. She did her internship at Cornell University, NY, USA. She had also worked for a software company viz. Sabre Travel technologies Pvt. Ltd. as an Associate Software Developer. She likes trying out utility software and applications. She also likes collecting and using popular electronic gazettes. Her other interests include cooking, shopping, watching movies and solving Sudoku puzzles.  She thinks Digital Green is doing a wonderful work in the field of rural development and is very excited to be a part of the team.being a part of DigitalGreen. One day, she dreams of seeing every people in India living a comfortable life.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle">
+	                    Support Team
+	            </div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/anand.png">
+						<div class="contenttd1div1name">Anand Kumar</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Manager-
+									Administration</li>
+								<li><a class="maillinks"
+									href="mailto:anand@digitalgreen.org">anand@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Anand Kumar has around 23 years of experience with range
+								of Private Corporate and National and International Development
+								agencies in the area of office administration and operations.
+								Before joining Digital Green he was Sr.
+								Consultant-Administration and Programme, with the Institute for
+								Human Development.He is graduate in economics (hons), PG Diploma
+								in Personnel Management and Industrial Relation, MA in Economics
+								and MBA in HR. He loves interacting with people to learn from
+								their experience. He loves long driving to the interior of the
+								villages to understand the people better. With his experience in
+								operations, he wishes to contribute effectively in Digital
+								Green's dedication for socio economicand environmental
+								sustainability of small farmer livelihoods.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+						
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/supriya.png">
+						<div class="contenttd1div1name">Supriya Sharma</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Manager-Human
+									Resources</li>
+								<li><a class="maillinks"
+									href="mailto:supriya@digitalgreen.org">supriya@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Supriya is a Human Resource Professional with an
+								experience of 8 years. She has graduated in Statistics from
+								Delhi University and has completed her Masters in Human Resource
+								from Symbiosis CDL, Pune. Throughout, she has been into a
+								generalist role and carries varied industry experience like BPO,
+								consultancy, media and advertising. She is born and brought up
+								in Delhi. In her spare time, she would like to spend quality
+								time with family, loves to travel, do adventure sports and
+								shopping.She would like to be in a strategic role in
+								DigitalGreen by implementing best practices in the company. She
+								plans to contribute in the growth of DigitalGreen. She loved the
+								approach of DigitalGreen to provide assistance to farmers, by
+								sharing the learnings and experiences. She hopes for a fruitful
+								association with DigitalGreen.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/neetika.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Neetika Madan</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Manager-Finance</li>
+								<li><a class="maillinks"
+									href="mailto:ambika@digitalgreen.org">neetika@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Neetika Madan is a seasoned finance professional and has to her credit over nineteen years of experience in managing finance and administration. She started her career with IntraHealth where she contributed in developing and implementating F&A systems and procedures. After eight years at IntraHealth, she moved to take up higher responsibilities as F&A Manager at Abt Associates where her key performance areas were preparation and submission of proposals with coordinated budgets, contract management, financial reporting, and compliances, designing MIS; Logistic and IT administration. Neetika is a postgraduate in commerce and has completed her MBA from Symbiosis, Pune. She was born and brought up in Delhi and is fond of good housekeeping, gardening and traveling. She now desires to use her experience, knowledge and ability in maintaining high standards of financial management to achieve the Digital Green vision.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/suruchi.png">
+						<div class="contenttd1div1name">Suruchi Malik</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Management
+									Secretary</li>
+								<li><a class="maillinks"
+									href="mailto:suruchi@digitalgreen.org">suruchi@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Suruchi, a professional with extensive background in
+								Business Administration, Secretarial, HR role. She was a
+								commerce graduate and had done Secretarial course from YMCA and
+								Advance Diploma in Computers Application from Baba Saheb
+								Ambedkar Polytechnic. She was associated with Hero Exports while
+								pursuing her Masters in HR. Prior to Hero Exports, she had
+								worked with Ericsson and Frontier Trading. Her hobbies were
+								dancing and interacting with people. She strongly believed that
+								farmers needed respect and gratitude. She appreciated the work
+								carried out by Digital Green for all round development of
+								farmers. She was keen to contribute directly or indirectly
+								towards farmer's well being. She felt that It would be an honor
+								to be associated with DG and to deliver her best for
+								strengthening the team in achieving the organisational goal.</p>
+						</div>
+					</div>
+				</td>
+			</tr>			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/shiny.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Shiny Sunil</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Executive Assistant</li>
+								<li><a class="maillinks"
+									href="mailto:shiny@digitalgreen.org">shiny@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Shiny received her Bachelors Degree from Karunya University, Coimbatore. Before coming to Digital Green, she worked with IAVI (International Aids Vaccine Initiative) for few months where she assisted in the finance and administration functions of an international symposiums and a few science meetings. She also coordinated as a scientific research analyst. Her interests include traveling, photography, reading books and especially dancing (classical, western freestyle and salsa) in which she has been training since childhood. She believes that she would be an asset to the organization through her endeavors.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle" id="bangalore">
+	                    Bangalore
+	            </div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/nadagouda1.png">
+						<div class="contenttd1div1name">S.B. Nadagouda</div>
+				</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy
+									Regional Manager</li>
+								<li><a class="maillinks"
+									href="mailto:nadagouda@digitalgreen.org">nadagouda@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Dr. Nadagouda is a development professional with over two
+								decades of experience of working with farmers. He is a
+								veterinarian by profession with a post-graduate diploma in rural
+								management from IRMA. He has worked in cooperative,
+								developmental and business sectors at various management levels.
+							</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/archana1.png">
+						<div class="contenttd1div1name">K Archana</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:archana@digitalgreen.org">archana@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Archana graduated from Dhirubhai Ambani Institute of
+								Information and Communication Technology, Gujarat majoring in
+								Information and Communication Technology in Agriculture and
+								Rural Development. She is a native of Andhra Pradesh who later
+								settled in Bangalore. Being passionate to work with Digital
+								green, she rejoined Digial Green after a leave of 6 months. In
+								the meantime, she was associated with AMEF, Bangalore as an ICT
+								Consultant. She quotes her experience with DG as "I am happy to
+								work with DG again - an Organization with its own uniqueness in
+								working towards livelihood improvement of grassroots. In the
+								effort of connecting grassroots with technology, every day is
+								good learning experience, being ICT graduate I aspire to put in
+								my best to this splendid process"</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/rashmi1.png">
+						<div class="contenttd1div1name">Rashmi Kanthi</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:rashmi@digitalgreen.org">rashmi@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Rashmi Kanthi received her bachelor's in Agriculture from
+								University of Agricultural Sciences, Dharwad and Master's in
+								Information and Communication Technology, in Agriculture and
+								Rural development, from Dhirubhai Ambani Institute of
+								Information and Communication Technology, Gandhinagar. Earlier
+								she was an intern with Digital Green and in May 2010, she joined
+								as a full time employee. From the days of her internship to this
+								date, Digital Green has helped her learn and understand
+								different facets of development. It has also given her an
+								opportunity to explore her potentials, as well as challenge her
+								limitations and overcome them. She finds each day at Digital
+								Green, both challenging and exciting, which keeps her constantly
+								motivated. On a personal front, Digital Green has helped her
+								believe in herself, more than ever.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle" id="bhopal">
+	                    Bhopal
+	            </div>
+				<div class="contenttd1div1">
+					<img src="/media/Output/Images/gulrez1.png">
+					<div class="contenttd1div1name">Mohammad Gulrez</div>
+				</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy Regional
+									Manager</li>
+								<li><a class="maillinks"
+									href="mailto:gulrez@digitalgreen.org">gulrez@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Mohammad Gulrez is a Social Development Professional with
+								more than six years of work experience. Coming from a small town
+								background he was first exposed to the exciting world of social
+								development while volunteering for different NGOs and CBOs in
+								his college days in Calcutta. Unsure of whether to pursue
+								mainstream career path in finance or to take off beat tracks of
+								social development, he joined SATHII, an NGO working on sexual
+								health. What started as a confused decision made him commit to
+								the sector and motivated him to pursue MA in Social Work from
+								TISS. Fresh out of the college, he started his three and half
+								years of engagement with PRADAN and from there moved to the CSR
+								and Sustainability Practice at Grant Thornton India. He is
+								motivated to join DG for the opportunity of growth and learning
+								it provides by exposing to innovations at grassroots. He looks
+								forward to contribute in our effort to achieve sustainable
+								growth.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/sudha2.png">
+						<div class="contenttd1div1name">Sudha Jha</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:sudha@digitalgreen.org">sudha@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Sudha Jha is from Dehradun, Uttarakhand. She graduated
+								from G.B pant University of Agriculture and Technology. She has
+								worked with Udyogini, which helps poor women in remote areas of
+								India to build micro enterprises and become entrepreneurs. She
+								also worked with Sassakawa leprosy foundation for developing
+								enterprise activity with leprosy affected people. Further, she
+								has worked for RBH (Rural Business Hub in Uttarakhand) which is
+								working in honey production and links rural producers especially
+								women with markets through professional market partners. She
+								also imparts TEST (Training for Enterprise Support Team) program
+								on micro-enterprise development and management. Her objective is
+								to enrich her knowledge, skills and aptitude thereby, giving the
+								best to the development sector. She loves to dance and travel.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/ashish.png">
+						<div class="contenttd1div1name">Ashish Gupta</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:ashish@digitalgreen.org">ashish@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Ashish has received a master's in Social Work with
+								Community Organization and Development Practice as Field of
+								Practice from Tata Institute of Social Sciences, Mumbai and a
+								bachelor's in Information Technology engineering, Uttar Pradesh
+								Technical University. Prior joining TISS he worked with Infosys
+								Technologies Limited as a Software Engineer. He has got field
+								experience of both rural and urban India through Rural
+								Practicum, Fieldwork, Block field work and Internship. During
+								his master's he worked with Slum Rehabilitation Society in
+								Mumbai. In the same year he was placed with Shramjeevi
+								Sangathana in Thane district of Maharashtra for rural practicum.
+								He completed his summer internship with Tata Power Limited,
+								Mumbai. In second year he was placed with Kudumbashree, Kerala
+								State Poverty Eradication Mission in Kerala. In the same year he
+								was placed with TISS M East ward project. His interests include
+								rights based approach strategy for empowering marginalized
+								groups and use of technology in developmental sector for
+								sustainable growth. He loves traveling and singing. The
+								intervention of Digital Green in agriculture sector while
+								working with marginalized and small land holder farmers excites
+								him.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/akhilesh1.png">
+						<div class="contenttd1div1name">Akhilesh Soni</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Administration & Finance
+									Executive</li>
+								<li><a class="maillinks"
+									href="mailto:akhilesh@digitalgreen.org">akhilesh@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Akhilesh has a Bachelors degree from Barkatullah
+								University Bhopal majoring in Sociology and is a Post Graduate
+								in Economics. His tryst with Development sector began with his
+								stint with Narmada Mahila Sangh a federation of SHGs promoted by
+								PRADAN in Betul and Hoshangabad. He has also worked with the
+								IFAD-funded Tejaswini Project as a Location Coordinator where he
+								was responsible for the overall programmatic and administrative
+								functioning of the project in Balaghat District of Madhya
+								Pradesh. He has also worked for the Moser Baer Trust before
+								joining Digital Green as an Administrative Executive. Apart from
+								work, his loves include reading books, listening to old Hindi
+								songs and travelling.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+						
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle" id="bhubaneswar">
+	                    Bhubaneswar
+	            </div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/avinash3.png">
+						<div class="contenttd1div1name">Avinash Upadhyay</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Regional
+									Manager</li>
+								<li><a class="maillinks"
+									href="mailto:avinash@digitalgreen.org">avinash@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Avinash has more than 12 years of involvement in the
+								development sector, with an emphasis on natural resource
+								management and agriculture. His experience includes project
+								management, research, advocacy, campaigning, trade development
+								and linkage and monitoring and evaluation. Prior to Digital
+								Green Avinash has worked with 2 leading Indian organizations
+								SRIJAN and RCDC- Centre for forestry and Governance apart from
+								short stints at PRAXIS and Admax in the middle level management
+								positions across various states in India.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/ronali.png">
+						<div class="contenttd1div1name">Ronali Pradhan</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Senior Program
+									Manager</li>
+								<li><a class="maillinks"
+									href="mailto:ronali@digitalgreen.org">ronali@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>With specialization in Agriculture Extension Education and
+								Agribusiness Management, I have been deeply involved in working
+								with the marginalized rural communities for bringing positive
+								change in the qualities of their life and livelihoods since last
+								9 years. I have worked with state level organizations like SVA
+								and national level entity like CWS has enabled me to work
+								closely with small and marginal farmers in the state of Odisha.
+								Over the years I have realized that there is a gap in
+								transferring technology in usable and adoptable mode and both
+								the innovators and the end users are drawn from different levels
+								of knowledge, understanding and attitude. I have joined Digital
+								Green because Digital Green is playing a crucial role in
+								bridging these gaps and focusing on dissemination of sustainable
+								technologies for bringing sustainable upliftment in the
+								livelihoods of the farming communities.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/saumit.png">
+						<div class="contenttd1div1name">Saumit Das</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:saumit@digitalgreen.org">saumit@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Saumit has just completed MBA in Rural Management from
+								KIIT School of Rural Management, Bhubaneswar. Prior to this he
+								had completed Bachelor in Computer Application. Having
+								qualification in Rural Management combined with Computer
+								Application, he has a great aspiration to work for Digital
+								Green. His passion and interest to work in development sector
+								and specifically for the small and marginal farmers livelihood
+								security has prompted him to think about joining Digital Green.
+								He strongly believes that ICT based extension system, on which
+								Digital Green works, can make the changes he has envisaged. He
+								strongly believes that he will contribute to the organization in
+								achieving its goal as part of the team by using the knowledge
+								that he has acquired during his professional course and gain
+								quality experience out of that.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle" id="hyderabad">
+	                    Hyderabad
+	            </div>
+				<div class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/arokiam.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Arokiam K</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Regional Director, South India</li>
+								<li><a class="maillinks"
+									href="mailto:arokiam@digitalgreen.org">arokiam@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Arokiam received a Masters in Exploration Geophysics from Osmania University, Hyderabad and Diploma in Management and Human Resource Management from Indira Gandhi Open University. He has been involved in the development of demand responsive policies and strategies, institutional building, knowledge management, capacity building of key agencies, Government and The World Bank in different capacities. He has several years of experience in WASH, NRM, livelihoods, micro-finance, human rights and emergencies. In addition, he has led several multidisciplinary teams. Prior to joining Digital Green, he was working with The World Bank in the Water and Sanitation Program as consultant for about 5 years. His role was to support state governments to strengthen rural water and sanitation systems through community based social networks. Arokiam's interest is to create sustainable people's institutions to overcome poverty.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/pritam.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Pritam K Nanda</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Deputy Regional Manager</li>
+								<li><a class="maillinks"
+									href="mailto:pritam@digitalgreen.org">pritam@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Pritam has over a decade of experience in the development sector. He has worked in domains as diverse as forestry, maternal & child health, nutrition and livelihoods for HIV affected households. He completed his Masters in Environmental Resource Management at the University of Portsmouth, UK. He believes that the first step towards improving the quality of life of people is enhancing their ability to access and use relevant information and resources. A self confessed foodie, cooking is one of Pritam's interests; he also likes collecting stamps and music from around the world.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/sriram1.png">
+						<div class="contenttd1div1name">Praveen Sriramshetty</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Senior Program
+									Manager</li>
+								<li><a class="maillinks"
+									href="mailto:shetty@digitalgreen.org">shetty@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>In the last 12 years of his work, Praveen has been engaged
+								in implementation of the projects to the monitoring and taking
+								up community based advocacy issues influencing the poor and
+								marginalized. The major contributions among them are taking up
+								state level campaign on voter participation in panchayat
+								elections as part of strengthening of PRIs in Andhra Pradesh.
+								Also involved in mapping of migrant families in and out of
+								Andhra Pradesh based on which SSA AP has come up with a plan to
+								make education accessible to migrant children. The fast changing
+								socio economic environment has had its influence on the
+								livelihoods of the rural poor and margnisalized whose primary
+								source of income is agriculture. He believes that, it is at most
+								important to strengthen their traditional livelihoods. The goal
+								of the DG is to strengthen the capacities using the technology
+								which fascinates him to get associated with. He likes to travel
+								and interact with people.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/aruna.png">
+						<div class="contenttd1div1name">Aruna Katragadda Gali</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:aruna@digitalgreen.org">aruna@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Aruna Katragadda Gali has eighteen years of experience in
+								Social Development sector,Volunteering and Media. She has worked
+								with National Green Corps (NGC)-Andhra Pradesh and National and
+								International repute NGOs like PRIA, CARE- STEP and Satyam
+								Foundation. In Satyam Foundation, she has promoted eco-friendly,
+								sustainable, solid waste management project at KPHB- GHMC and
+								Community Ganesha at different places in Hyderabad. Also
+								facilitated rainwater harvesting structures in Hyderabad City
+								Police stations, AP. She authored, translated, published 10
+								books on environment education, Panchayat Raj Institutions and
+								Government Welfare Schemes. As a trainer, she has developed
+								modules and trained different stakeholders on gender,
+								Environment Education and Panchayat Raj Institutes. Writes for
+								media on developmental issues on regular basis and participates
+								in TV talk shows on Developmental Issues. She blogs at
+								blog.vikasadhatri.org on developmental issues. She received Best
+								Project Officer Award from Chief Minister in 2001 on the eve of
+								World Ozone Day. She loves traveling and photography, she is
+								always motivated by interaction with people, fond of exploring
+								the traditional knowledge systems, especially interested in
+								Tribal and Rural practices.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/venkat.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">G Venkat Goud</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:venkat@digitalgreen.org">venkat@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Venkat Goud has nineteen years of experience working in the development sector on issues ranging from women empowerment, children, education, HIV/AIDS, migration, and livelihoods. While working with organisations like Integrated Rural Development Services, Society for Elimination of Rural Poverty (SERP), GoAP and Aide-et-Action International (AeAI), Venkat has demonstrated a breadth of experience in addressing development issues. He has been a successful team leader working with one hundred and sixty NGOs across Andhra Pradesh to conduct a massive mapping exerise involving migrant families and children. Venkat also provided his expertise as a consultant to Insight International Trust, Save the Children, TB Alert and Plan India on education, health and community-based initiatives. Venkat has joined Digital Green to support marginalised farmers and improve their knowledge towards the goal of socio-economic and environmental sustainability.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/surender_1.JPG">
+						<div class="contenttd1div1name">Taduri Surender</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:surender@digitalgreen.org">surender@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Surender has received master degree in Social work from
+								Osmania University, Hyderabad. He has two years of experience in
+								development sector. Before Digital Green, he was associated with
+								disability movement in Andhra Pradesh. While implementing the
+								project, he travelled across the state which was a wonderful
+								experience for him and in turn motivated him to explore other
+								parts of the country as well. Later, he joined Action Aid's
+								Development Traineeship programme under which he was engaged in
+								extensive fieldwork. The Development Traineeship enabled him to
+								work towards and understand the Rural India and its old-age
+								agricultural practices. His interest in rural development and
+								specifically development of small holder agricultural
+								practitioners has drawn him towards Digital Green as it is
+								finding solutions for farming communities by using low cost
+								technology that is effective in letting farmers adopt affordable
+								agricultural practices.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/krishna.png">
+						<div class="contenttd1div1name">Krishna Raj</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:krishna@digitalgreen.org">krishna@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Krishna Raj holds a Post Graduate Diploma in Rural
+								Management from the Institute of Rural Management, Anand (IRMA)
+								and a Bachelor's degree in Electrical and Electronics
+								Engineering from Vasavi College of Engineering, Osmania
+								University, and Hyderabad. The very mention of adventure
+								fascinates him and he has indulged in adventure sports like
+								paragliding, white water rafting, cliff jumping, river crossing
+								and a lot of trekking in the Himalayas. He is also an avid movie
+								buff and a keen listener of classic rock. He has done three
+								internships while at IRMA, which for most part were based in
+								rural areas, the internships have gone a long way in building a
+								strong rural perspective which he believes would be
+								indispensable to him while at Digital Green given the area of
+								work the organization is involved in. He is excited to be a part
+								of a young and dynamic organization like Digital Green and looks
+								forward to an enriching association.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/rachana.png">
+						<div class="contenttd1div1name">Rachana Iyer</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:rachana1@digitalgreen.org">rachana1@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Rachana Iyer has completed her Masters of Arts in Social
+								Work from the Tata Institute of Social Sciences, Mumbai. She has
+								completed her undergraduate study from the University of
+								Wollongong (Dubai) in Bachelors in Business Administration with
+								a specialization in Marketing. During her two years of study,
+								she has done fieldwork with the Young Women's Christian
+								Association, working for women empowerment in an urban slum
+								setting and at a Community Based Rehabilitation of persons with
+								disabilities initiative of TISS - Edelgive Fellowship working in
+								rural Maharashtra. She has also done her block field work at
+								Disha Kendra; rights based organization working in Karjat, where
+								she worked towards building a proposal and initiating their work
+								in the field of disability. Rachana has also completed her MA
+								dissertation titled 'Voices of Strength: Violence experienced by
+								women with disabilities' (A study in M Ward, Mumbai). She wants
+								to integrate her field work experience in the field of
+								disability along with working in rural areas and aims to
+								contribute to Digital Green with it. Rachana interests are:
+								writing poetry, dance movement therapy, reading and photography.
+								She is looking forward to growing and learning from everyone at
+								DG during her work here.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/aswini.png">
+						<div class="contenttd1div1name">Aswini Karanam</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Administration & Finance
+									Executive</li>
+								<li><a class="maillinks"
+									href="mailto:aswini@digitalgreen.org">aswini@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Aswini holds a Master's degree in Business Administration
+								with specialization in Finance from St. Ann's College, Osmania
+								University, and Hyderabad. She has two years of corporate work
+								experience. She started her career with Intern at SBH, Hyderabad
+								and gradually moved onto take the responsibility of Admin and
+								Operations for MEDHA POWER and INFRATECH INDIA PVT Ltd,
+								Hyderabad. Though she hails from Agriculture and Rural
+								background but never had an opportunity to have a closer look of
+								it. She is very impressed by the work carried out by Digital
+								Green to educate the farmers by using information and
+								communication technology which is admirable and is leading to
+								continual social change. She is happy to be a part of the young
+								and spirited team, as Digital Green team will keep on stepping
+								forward towards and fulfil organisational expectations. Her
+								hobbies are singing and cooking.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0">
+				<div class="pagetitle" id="patna">
+	                    Patna
+	            </div>
+				<div class="contenttd1div1">
+						<img src="/media/Output/Images/pawan_o.png">
+						<div class="contenttd1div1name">Pawan Ojha</div>
+				</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Regional Manager</li>
+								<li><a class="maillinks"
+									href="mailto:pawan@digitalgreen.org">pawan@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Pawan Ojha studied agriculture sciences and rural
+								development from School of Agriculture Sciences and Rural
+								Development (SASRD), Nagaland University and has more than 14
+								years of experience in development sector with comprehensive
+								grassroots engagements as well as leadership positions. He has
+								worked in PRADAN with a deep believe in the ability of rural
+								people to take charge of their lives and livelihoods and was
+								engaged with community to develop and manage watershed projects,
+								micro-lift irrigation schemes, women self-help groups and
+								microenterprises in the remote villages of Jharkhand. He has
+								deep interest in promoting sustainable livelihoods for small and
+								marginal farmers, specifically by developing their skills for
+								enhancing productivity and collectivizing them to have better
+								bargaining power in the market. Working with Digital Green would
+								help him in developing his knowledge in ICT, and use it for the
+								purpose of capturing the positive experiences and utilizing them
+								for replication for reaching large number of families by
+								adopting the good practices for improving their lives.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/ambika.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Ambika P Tripathy</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:ambika@digitalgreen.org">ambika@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Ambika is a professional with nine years of experience in the development sector.  Ambika joined PRADAN after completing his Masters in Environmental Chemistry from NIT, Rourkela. At PRADAN, found he was deeply influenced by the rural development sector - it's dynamics, joys and challenges. After more than six years at PRADAN, he joined AKRSPI where, apart from livelihoods, he managed teams of professionals working in various thematic areas such as education, health, water and sanitation, alternative energy and IT. At Digital Green, he hopes to achieve much greater reach in bringing innovations and disseminating knowledge of successful models, livelihood prototypes and best practices in order to directly and indirectly bring social and economical change.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/shams.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Shams Tarique</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:shams@digitalgreen.org">shams@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Shams Tarique received his Master in Social Work degree with a specialization in social development from Jamia Millia Islamia, New Delhi. During his professional career spanning seven years, he has had extensive field exposure to the developmental needs of the people living in area of Madhya Pradesh and Bihar.  He has been associated with SRIJAN (Self Reliant Initiatives through Joint Action) Madhya Pradesh and BASIX's Indian Grameen Services. At Digital Green, he is working towards minimising gaps and disseminating learnings for enhancing livelihood-related practices. He loves interacting with people and learning from their experiences.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img style="width:118px; height:124px;" src="/media/Output/Images/joshin.png">
+						<div class="contenttd1div1name" style="margin-top:130px;">Joshin K Jose</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:joshin@digitalgreen.org">joshin@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Joshin K Jose is a development practitioner with three years of experience. He is a Post Graduate in Rural Development (PGDRD) from XISS, Ranchi and has worked with premier development agencies like PRADAN and FES. Joshin brings in with a plethora of grassroots experience. His first exposure was working as a rural entrepreneur for automation of financial systems over five hundred SHGs in Khunti district of Jharkhand state, promoted by PRADAN. At FES, he was mainly engaged in watershed development activities using NREGS funds in Kolar district of Karnataka. Later in PRADAN, Joshin was associated with a network project called Vikas Bazar Dot Net and managed fairly large projects with sixteen partner civil society organizations. Joshin is passionate about computer application and media technology. He believes that his experience in rural development and zeal for ICT will help contribute in improving lives of marginalized communities greatly. </p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/zakir.png">
+						<div class="contenttd1div1name">Zakir Hussain</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:zakir@digitalgreen.org">zakir@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Syed Zakir Hussain did his Masters in Social Work (MSW)
+								from Jamia Millia Islamia, New Delhi. During the course he
+								worked with HIV AIDS and psychiatric patients and on education
+								as well. He did his internship with PRADAN working on "Value
+								chain Analysis" of Chick Pea which gave him an opportunity to
+								understand rural India. After MSW he joined Chronic Care
+								Foundation, which works on Non Communicable Chronic Diseases in
+								partnership with different NGOs/Govt. agencies across India.
+								There he learnt partnership development, organisational
+								management and enhanced his skills in project planning,
+								budgeting, implementation and financial management etc. He plays
+								cricket.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/disha.png">
+						<div class="contenttd1div1name">Disha Batra</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager-Training</li>
+								<li><a class="maillinks"
+									href="mailto:disha@digitalgreen.org">disha@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Disha Batra, has graduated from Tata Institute of Social
+								Sciences specializing in Dalit and Tribal Social Work. She has
+								worked with several Police stations dealing with cases of
+								violence. She has also worked with certain rights based
+								organizations like Manava Haq Abhiyaan dealing with the cases of
+								Dalit atrocities and human rights. Also, she has been a part of
+								the team of Centre for Social Equity and Inclusion, working in
+								Bihar for the inclusion of Dalit Children and Youth at the
+								school level. Lately, she worked with an organization working on
+								human rights and civil liberties, called People's Union for
+								Civil Liberties. It gave her an exposure to the high degree of
+								insensitivity of the state towards the marginalized. Disha's
+								sole reason for taking up Digital Green was the organization's
+								bottom's up approach. Apart from this, she has a great interest
+								in theatre. She have also been a part of her college theatre
+								team and anchored for a community radio for two years. She likes
+								travelling, is fond of music and meeting up new people. She
+								believes that the reason which keeps her going for the
+								profession is that every day is a new day and a new challenge.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/aprajita.png">
+						<div class="contenttd1div1name">Aprajita Pandey</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:aprajita@digitalgreen.org">aprajita@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Aprajita holds post graduate degree in Social Work from
+								Tata Institute of Social Sciences, Mumbai. She has specialized
+								in Women Centered Social Work and hence believes in identifying
+								and locating gender in each and every sphere of work. She has
+								done her internships in issues of psychosocial impact of Cancer,
+								Reproductive and Sexual Health, Political participation of women
+								and Violence against women. Prior to this, she did her
+								graduation in B.Tech Biotechnology from Vellore Institute of
+								Technology, Vellore. Having qualifications of science and
+								technology along with social sciences perspective inspired
+								Aprajita to work for Digital Green. She strongly feels that
+								technology is the creation of society, which should be used for
+								the upliftment and betterment of the society at large. It is
+								highly important to use the knowledge and technology in a more
+								constructive way so that the information is disseminated and
+								knowledge is gained from everyone and especially the people who
+								are at the margins of the community. The entire approach of
+								Digital Green made her think that, this could be one of the ways
+								where technology can used to re-organise the agricultural sector
+								and in a way make the entire process more participatory and
+								empowering. She likes travelling around different places,
+								reading books, listening music and cooking.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="contenttd1" cellspacing="0px" cellpadding="0"><div
+						class="contenttd1div1">
+						<img src="/media/Output/Images/rama.png">
+						<div class="contenttd1div1name">Rama Tiwari</div>
+					</div>
+					<div class="contenttd1div2">
+						<div class="contenttd1div2title">
+							<ul class="contenttd1div2titleul">
+								<li style="color: Gray; font-weight: bold;">Assistant
+									Program Manager</li>
+								<li><a class="maillinks"
+									href="mailto:rama@digitalgreen.org">rama@digitalgreen.org</a>
+								</li>
+							</ul>
+						</div>
+						<div class="contenttd1div2desc">
+							<p>Rama Tiwari pursued Masters of Business Administration in
+								Agribusiness from Rajendar Agricultural University, PUSA
+								(Bihar). She has completed her B.Sc. Biotechnology from Osmania
+								University and Intermediate from St. Ann's Junior College.
+								Hyderabad. She has undergone training on "Monitoring and
+								Evaluation of System of Rice Intensification (SRI)" from KVK,
+								Sairaya Muzaffarpur and "Buyers behaviour of channel partners
+								for pesticides in Muzzaffarpur district of Bihar" from Crystal
+								Crop Phosphate Pvt. Ltd.(Patna). She is happy to be a part of
+								Digital Green as Digital Green helps in improving the livelihood
+								and cropping system of rural India. Further, being a student of
+								Masters in Agribusiness, her ambition is to serve rural people
+								and develop innovative ideas to overcome the challenges facing
+								farmers in agricultural. Her interests include listening to
+								music, dancing, traveling and interacting with new people across
+								India.</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			</tbody>
+	</table>
+</div>
+{% endblock mainbodycontentleft %}

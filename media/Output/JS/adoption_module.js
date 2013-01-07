@@ -2,12 +2,12 @@ google.load("visualization", "1", {packages:["controls"]});
 google.setOnLoadCallback(drawCharts);
 
 function drawCharts() {
-	$.getJSON('/analytics/adoption_geog_pie_data/?'+search_params, function(json){geog_pie(json);});
-	$.getJSON('/analytics/adoption_monthwise_bar_data/?'+search_params, function(json){monthwise_column(json);});
-	$.getJSON('/analytics/adoption_practice_wise_scatter/?'+search_params, function(json){practice_bubble(json);});
-	$.getJSON('/analytics/adoption_pie_graph_mf_ratio/?'+search_params, function(json){gender_pie(json);});
-	$.getJSON('/analytics/adoption_rate_line/?'+search_params, function(json){percent_line(json)});
-	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['adopt']}, function(json){total_line(json);});
+	$.getJSON('/analytics/adoption_geog_pie_data/'+search_params, function(json){geog_pie(json);});
+	$.getJSON('/analytics/adoption_monthwise_bar_data/'+search_params, function(json){monthwise_column(json);});
+	$.getJSON('/analytics/adoption_practice_wise_scatter/'+search_params, function(json){practice_bubble(json);});
+	$.getJSON('/analytics/adoption_pie_graph_mf_ratio/'+search_params, function(json){gender_pie(json);});
+	$.getJSON('/analytics/adoption_rate_line/'+search_params, function(json){percent_line(json)});
+	$.getJSON('/analytics/overview_line_graph/'+search_params,{type:['adopt']}, function(json){total_line(json);});
 
 }
 
@@ -98,10 +98,10 @@ function practice_bubble(json) {
 	practice_bubble_chart_data = google.visualization.arrayToDataTable(json,false);
 	var options = jQuery.extend(true, {}, bubble_options);
 	options['hAxis']= {title: 'Practice level', gridlines:{count:12},textColor: '#ffffff',logScale:true};
-	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
+	options['vAxis']= {title: 'Number of adoptions',gridlines:{count:10},logScale:true};
 	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
-	options['title']='Number of Videos per practices';
+	options['title']='Number of adoptions per practice';
 	if(json.length>1)
 	{
 		practice_bubble_chart = new google.visualization.ChartWrapper({

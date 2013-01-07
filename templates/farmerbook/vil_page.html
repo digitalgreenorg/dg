@@ -8,11 +8,12 @@
 <div class='vil_left_panel' style="margin-left:0px;height:550px;">
 	<div class="left_panel_top" >
 		<div id="district_label" >{{ left_panel_stats.vil_details.0.2 }} | {{ left_panel_stats.vil_details.0.3 }}</div>
-			<center><img id="img_container" style="width:100px; height:100px;" src='http://s3.amazonaws.com/dg_farmerbook/village/{{left_panel_stats.vil_details.0.0}}.jpg'></center>
-		<div id="name_label" > <center>{{ left_panel_stats.vil_details.0.1  }}</center></div>
+			<center><img id="img_container" rel="custompopover" data-content="Grade is calculated based on community interests, questions, comments, adoptions, attendance and targets achieved. " style="width:100px; height:100px;" src='http://s3.amazonaws.com/dg_farmerbook/village/{{left_panel_stats.vil_details.0.0}}.jpg'></center>
+		<div id="name_label" > <center>{{ left_panel_stats.vil_details.0.1  }} </center></div>
 		{% if left_panel_stats.start_date %}
-		<div class="group_label" > <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }}</center></div>
+		<div class="group_label"> <center> Started: {{ left_panel_stats.start_date|date:"M d, Y" }} | Grade: {{ left_panel_stats.vil_details.0.5|default:"Not Avialable"}}</center></div>
 		{% endif %}
+		
 		<div id="progress_bar_label" style="margin-right:5px;"><center>Adoptions per Screening</center></div>
 		<div class="progress progress-striped" style='margin-bottom:5px;'>
 		<div class="bar "  style="width: {{left_panel_stats.adoption_rate_width|floatformat:1 }}% ;">
@@ -41,7 +42,7 @@
 			<div id="pag_content">
 			{% for group in left_panel_stats.vil_groups %}
 				<div style="width:100px; height:70px;float:left; margin-bottom:10px;margin-left:2px;">
-					<a href='javascript:void(0);' onclick="groupClick({{ group.0 }})"><img title='{{ group.1 }}' class="group_image" 
+					<a href='javascript:void(0);' onclick="groupClick({{ group.0 }})"><img rel="custompopover" data-content="{{group.1}}" class="group_image" 
 					src="http://s3.amazonaws.com/dg_farmerbook/group/{{group.0}}.jpg" ></a>
 				</div>
 			{% endfor %}
@@ -94,6 +95,7 @@
 			</ul>
 		</div>
 		<div class='vil_tabcontent' id="top_tabcontent" style="height:190px;" style='width:100%; margin:0px;'>
+			{% if videos_watched_stats %}
 			<div class="carousel slide span8" id="myCarousel" style="width:710px; margin-bottom:0px;">
 				<div class="carousel-inner">				
 				{% for vid in videos_watched_stats %} 
@@ -103,42 +105,42 @@
 					{% endif%}
 							<li class="vidsWatchedItem">
 								<div class="thumbnail">
-									<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank'>
+									<a href="http://digitalgreen.org/video/?id={{ vid.id }}" target='_blank'>
 									<img rel="custompopover" data-content="{{vid.fulltext}}"  src="http://img.youtube.com/vi/{{ vid.youtubeid }}/2.jpg" alt="">
 									</a>
 								</div>
-								<!-- {% if vid.adopters %}							
-								<div style='margin-top:-20px; margin-left:85px;align:left;position:absolute'><span class='label label-success' title='adopters'><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
+								{% if vid.adopters %}							
+								<div style='margin-top:-20px; margin-left:85px;align:left;position:absolute'><span class='label label-success' ><i class='icon-ok-sign icon-white'></i>{{ vid.adopters}}</span></div>
 								{% endif %}
 								{% if vid.interested %}
-									<div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' title='interested'><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
+									<div style=' margin-right:5px; margin-top:-20px;position:absolute;'><span class='label label-warning' ><i class='icon-exclamation-sign icon-white'></i>{{ vid.interested }}</span> </div>
 								{% endif %}
 								{% if vid.questioners %}
 									{% if vid.interested %}
-										<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+										<div style=' margin-top:-45px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 									{% else %}
-										<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' title='questioners'><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
+										<div style=' margin-top:-20px;position:absolute;'><span class='label label-important' ><i class='icon-question-sign icon-white'></i>{{ vid.questioners }}</span> </div>
 									{% endif %}
-								{% endif %} -->
+								{% endif %} 
 								<div class="question" style="margin-top:0px;">
-									<a title="{{vid.title}}" href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >
+									<a href="http://digitalgreen.org/analytics/video/?id={{ vid.id }}" target='_blank' >
 										{{ vid.title|lower|capfirst|truncchar:30 }}
 									</a> 
 								</div>
-								<!-- {% if vid.disseminations %}
+								{% if vid.disseminations %}
 									<div style=' margin-top:-95px;position:absolute;'>
-										<span class='label label-info' title='disseminations'>
+										<span class='label label-info' >
 											<i class='icon-facetime-video icon-white'></i> {{ vid.disseminations}}  
 										</span> 
 									</div>
 								{% endif %}
 								{% if vid.atten %}
 									<div style=' margin-top:-70px;position:absolute;'>
-										<span class='label label-inverse' title='farmers attended'>
+										<span class='label label-inverse' >
 										<i class='icon-user icon-white'></i>{{ vid.atten }}  
 										</span> 
 									</div>
-								{% endif %} -->
+								{% endif %}
 								<div class="question" style="margin-top:0px;">Last seen on {{ vid.last_seen_date|date:"M d, Y" }} </div>
 							</li>
 							 {% if forloop.counter|divisibleby:"5" and not forloop.first or forloop.last %}
@@ -150,6 +152,9 @@
 				<a data-slide="prev" href="#myCarousel" class="left carousel-control" style="margin-left:-40px;"><</a>
 				<a data-slide="next" href="#myCarousel" class="carousel-control" style="margin-left:650px !important">></a>
 			</div>
+			{% else %}
+			   <div style="margin-top:20px;font-size:23px;"><center>We did not find any Videos.</center></div>
+			{% endif %}
     	</div>
 		
 		<div style="height: 1px;"></div>
@@ -157,6 +162,7 @@
 			<div class="section_title"> <span style="font-size:90%; margin-left:-5px;margin-top:-20px; color:#6D9D30">Related Villages</span> </div>
 			<div style='border-bottom:3px solid #009E0F;'></div>
 			<div style='border: 1px solid #009E0F;height:311px;'>
+			{% if top_related_list %}
 				<div class="carousel slide span8" id="lbCarousel" style="width: 710px;">
 				<div class="carousel-inner" style="height: 300px;">
 					{% for village in top_related_list %} 
@@ -187,7 +193,7 @@
 										<td align="center"> {{ village.1.3|intcomma}}</td>
 									</tr>
 									<tr>
-										<td align="left"><b> Started</b></td>
+										<td align="left"><b> <div style="margin-left:5px;">Started</div></b></td>
 										<td align="center"><b> Screenings</b></td>
 										<td align="center"><b>Adoptions</b></td>
 									</tr>
@@ -203,6 +209,9 @@
 					<a data-slide="prev" href="#lbCarousel" class="left carousel-control" style="margin-left: -34px;"><</a>
 					<a data-slide="next" href="#lbCarousel" class="carousel-control" style="margin-left: 650px !important">></a>
 				</div>
+			{% else %}
+				<div style="margin-top:20px;font-size:23px;"><center>We did not find any related villages.</center></div>
+			{% endif %}
 			</div>
 		</div>
 	</div>		
@@ -211,7 +220,10 @@
 <script type="text/javascript">
 var videos_watched_html;
 $(function(){
-	$("[rel=custompopover]").custompopover();
+	$("[rel=custompopover]").custompopover().click(function(e) {
+        $(this).custompopover('toggle');
+        e.preventDefault();
+    });
 });
 
 function ajax_tab_click(clicked, village_id) {

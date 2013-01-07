@@ -25,11 +25,10 @@
 								
 		<div id="image_container" style="width:622px; padding-top:10px;">
 				{% for person in person_data %}
-				<div style="background:#666;float:left; margin-left:3px; margin-bottom:3px;">
+				<div style="background:#666;float:left; margin-left:3px; margin-bottom:3px; height:100px;">
 				<a href="/farmerbook/person/{{person.0}}" target="_blank" style="color:white;opacity:1; filter:alpha(opacity=100);">
-					<img rel="popover" data-original-title="RAGHUNATH LOKEI" data-content="Adoption Rate: 69%" 
-					style="width:100px;height:100px; opacity:1; filter:alpha(opacity=100);" onmouseout="this.style.opacity=1;this.filters.alpha.opacity=100" 
-					onmouseover="this.style.opacity=0.6;this.filters.alpha.opacity=60" src="http://s3.amazonaws.com/dg_farmerbook/2/{{person.0}}.jpg">
+					<img style="width:100px;height:100px; opacity:1; " onmouseout="this.style.opacity=1;" 
+					onmouseover="this.style.opacity=0.6;" src="http://s3.amazonaws.com/dg_farmerbook/2/{{person.0}}.jpg">
 				</a> 
 				</div>
 				{% endfor %}
@@ -55,7 +54,7 @@
 						Digital Green's videos are produced by farmers, for farmers, and of farmers.  All of the videos produced by the partners and communities that Digital Green works with are available for free on our online video library.  Search and browse through them based on language, geography, subject, viewership, usage, and more!
 					</div>					
 					<div class='learnmorediv'>
-						<a class='learnmore' href="/analytics/video_search" target='_blank'> Start Browsing <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>
+						<a class='learnmore' href="/analytics/video_search/" target='_blank'> Start Browsing <img src='/media/Output/Images/learnmoreicon2.png' alt='Updates' float='right'></a>
 					</div>
 				</div>
 			</div>	

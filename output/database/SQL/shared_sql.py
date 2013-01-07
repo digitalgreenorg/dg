@@ -6,7 +6,7 @@ def search_drop_down_list(geog, geog_parent, id):
     sql_ds = get_init_sql_ds();
     sql_ds['select'].extend(['id', geog.upper()+'_NAME as name'])
     sql_ds['from'].append(geog.upper())
-    if(geog.upper() != "STATE"):
+    if(geog.upper() != "COUNTRY"):
         sql_ds['where'].append(geog_parent.lower()+'_id = '+str(id))
     sql_ds['order by'].append('name')
     
@@ -17,24 +17,27 @@ def search_drop_down_list(geog, geog_parent, id):
 #               id - id of 'geog' if is_child = false else it's parent geog's id
 #               is_child: flag(0/1) if the options are one level below then selected
 #                               e.g for district 'x', option for x's blocks must be presented with nothing pre-selected.
-def breadcrumbs_options_sql(geog,id, is_child):
-    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE'];
+def breadcrumbs_options_sql(geog, id, is_child):
+    geog_list = ['VILLAGE','BLOCK','DISTRICT','STATE','COUNTRY'];
 
-    if(geog=='STATE'):
-        return 'SELECT id, STATE_NAME as name FROM STATE'
+    if(geog=='COUNTRY'):
+        return 'SELECT id, COUNTRY_NAME as name FROM COUNTRY'
 
     par_geog = geog_list[geog_list.index(geog)+1];
 
+    sql_ds = get_init_sql_ds()
     if(is_child == 1):
-        return construct_query(""" SELECT id, {{geog}}_NAME
-                FROM {{geog}}
-                WHERE {{par_geog|lower}}_id = {{id}}
-        """,dict(geog=geog,id=id,par_geog=par_geog))
+        sql_ds['select'].extend(['id', geog+'_NAME'])
+        sql_ds['from'].append(geog)
+        sql_ds['where'].append(par_geog.lower()+'_id = '+str(id))
+    else:
+        #SQL for filtering all geography below the parent geog. For e.g. - Will filter all India states, if Bihar is passed in geog, id
+        sql_ds['select'].extend([geog[0] + '1.id' ,"%s1.%s_NAME" %(geog[0], geog.upper()), "%s1.%s_id" % (geog[0], par_geog)])
+        sql_ds['from'].append("%s %s1" % (geog, geog[0]))
+        sql_ds['join'].append(["%s %s2" % (geog, geog[0]),'%s1.%s_id = %s2.%s_id' %(geog[0], par_geog, geog[0], par_geog)])
+        sql_ds['where'].append("%s2.id = %s" % (geog[0], str(id)))
 
-    return construct_query("""SELECT {{geog|first}}1.id ,{{geog|first}}1.{{geog|upper}}_NAME, {{geog|first}}1.{{par_geog}}_id
-    FROM {{geog}} {{geog|first}}1, {{geog}} {{geog|first}}2
-    WHERE {{geog|first}}1.{{par_geog|lower}}_id = {{geog|first}}2.{{par_geog|lower}}_id
-            and {{geog|first}}2.id = {{id}}""",dict(geog=geog,par_geog=par_geog,id=id))
+    return join_sql_ds(sql_ds)
 
 
 #Generates SQL for getting Partner_ID, Partner_name given Geog, id.
@@ -49,6 +52,7 @@ def practice_options_sql(sec, subsec, top, subtop, sub):
     sql_ds['lojoin'].append(["practice_subtopic ST", "ST.id = P.practice_subtopic_id"])
     sql_ds['lojoin'].append(["practice_topic T", "T.id = P.practice_topic_id"])
     sql_ds['lojoin'].append(["practice_subject SUB", "SUB.id = P.practice_subject_id"])
+    sql_ds['join'].append(["VIDEO vid", "vid.related_practice_id = P.id"])
     if(sec):
         sql_ds['where'].append('practice_sector_id = %s' % sec)
     if(subsec):
@@ -65,7 +69,7 @@ def practice_options_sql(sec, subsec, top, subtop, sub):
         
 
 def get_partners_sql(geog, id):
-    if geog not in ["COUNTRY", "STATE"]:
+    if geog not in [None, "COUNTRY", "STATE"]:
         return ''
 
     sql_ds = get_init_sql_ds()
@@ -74,38 +78,60 @@ def get_partners_sql(geog, id):
     sql_ds['join'].append(["PARTNERS P", "P.id = D.partner_id"])
     if (geog=="STATE"):
         sql_ds['where'].append("D.state_id = "+str(id))
+    elif(geog=="COUNTRY"):
+        sql_ds['join'].append(["STATE S", "S.id = D.state_id"])
+        sql_ds['where'].append("S.country_id = " + str(id))
 
     return join_sql_ds(sql_ds);
 
 def child_geog_list(geog, id, from_date, to_date, partners):
-    if(geog == "COUNTRY"):
-        sql = "SELECT DISTINCT S.id, STATE_NAME AS name from STATE S"
+    sql_ds = get_init_sql_ds()
+    if(geog == None):
+        sql_ds['select'].extend(['DISTINCT C.id', 'COUNTRY_NAME AS name'])
+        sql_ds['from'].append("COUNTRY C")
         if(partners):
-            sql+=  """ JOIN DISTRICT D ON (D.state_id = S.id)
-                      WHERE D.partner_id in ("""+','.join(partners)+")"
+            sql_ds['join'].append(['STATE S', 'S.country_id = C.id'])
+            sql_ds['join'].append(['DISTRICT D', 'D.state_id = S.id'])
+            sql_ds['where'].append("D.partner_id in ("+','.join(partners)+")")
+    elif(geog == "COUNTRY"):
+        sql_ds['select'].extend(['DISTINCT S.id', 'STATE_NAME AS name'])
+        sql_ds['from'].append("STATE S")
+        sql_ds['where'].append("S.country_id = " + str(id))
+        if(partners):
+            dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT D JOIN STATE S ON S.id = D.state_id WHERE country_id = "+str(id))
+            filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
+            if(filtered_partner_list):
+                sql_ds['join'].append(["DISTRICT D", "S.id = D.state_id"])
+                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == "STATE"):
-        sql = """SELECT DISTINCT D.id, DISTRICT_NAME AS name from DISTRICT D
-                          WHERE state_id = """+str(id)
+        sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
+        sql_ds['from'].append("DISTRICT D")
+        sql_ds['where'].append("state_id = " + str(id))
         if(partners):
             dist_part = run_query_raw("SELECT DISTINCT partner_id FROM DISTRICT WHERE state_id = "+str(id))
             filtered_partner_list = [str(x[0]) for x in dist_part if str(x[0]) in partners]
             if(filtered_partner_list):
-                sql += " AND D.partner_id in ("+','.join(filtered_partner_list)+")"
+                sql_ds['where'].append("D.partner_id in ("+','.join(filtered_partner_list)+")")
     elif(geog == 'DISTRICT'):
-        sql="SELECT id, BLOCK_NAME as name FROM BLOCK where district_id = "+str(id)
+        sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
+        sql_ds['from'].append('BLOCK B')
+        sql_ds['where'].append("district_id = " + str(id))
     elif(geog == "BLOCK"):
-        sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE block_id = "+str(id)
+        sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
+        sql_ds['from'].append("VILLAGE V")
+        sql_ds['where'].append("block_id = " + str(id))
     elif(geog == "VILLAGE"):
+        sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
+        sql_ds['from'].append("VILLAGE V")
+        sql_ds['where'].append("id = " + str(id))
         sql="SELECT id, VILLAGE_NAME AS name FROM VILLAGE WHERE id = "+str(id);
-    else:
-        sql = ''
 
-    return sql;
+    return join_sql_ds(sql_ds);
 
 #Query for the table in overview module and pie graphs.
 #Parameter Required:'type' can be (production/screening/adoption/practice/person/village)
 def overview(geog, id, from_date, to_date, partners, type):
-    geog_list = ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
 
     if(geog == 'VILLAGE'):
         geog_child = 'VILLAGE'
@@ -114,60 +140,44 @@ def overview(geog, id, from_date, to_date, partners, type):
 
     date_field = main_tab_abb = ''
     sql_ds = get_init_sql_ds();
-    if(geog=="VILLAGE"):
-        sql_ds['select'].append("village_id as id")
-    else:
-        sql_ds['select'].append(geog_child[0]+".id as id")
+    sql_ds['select'].append(geog_child.lower()+"_id as id")
     if(type == 'production'):
-        sql_ds['select'].append('COUNT(DISTINCT VID.id) as tot_pro')
-        sql_ds['from'].append('VIDEO VID')
-        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
-        main_tab_abb = "VID"
-        date_field = "VID.VIDEO_PRODUCTION_END_DATE"
+        sql_ds['select'].append('SUM(total_videos_produced) as tot_pro')
+        sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
+        main_tab_abb = "VPC"
+        date_field = "VPC.date"
     elif(type=='screening'):
-        sql_ds['select'].append('COUNT(DISTINCT SC.id) as tot_scr')
-        sql_ds['from'].append('SCREENING SC')
-        main_tab_abb = "SC"
-        date_field = "SC.DATE"
+        sql_ds['select'].append('SUM(total_screening) as tot_scr')
+        sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
+        main_tab_abb = "VPC"
+        date_field = "VPC.date"
     elif(type=='village'):
-        sql_ds['select'].append('COUNT(DISTINCT SC.village_id) as tot_vil')
-        sql_ds['from'].append('SCREENING SC')
-        main_tab_abb = "SC"
-        date_field = "SC.DATE"
+        sql_ds['select'].append('COUNT(DISTINCT SCM.village_id) as tot_vil')
+        sql_ds['from'].append('screening_myisam SCM')
+        sql_ds['force index'].append('(screening_myisam_village_id)')
+        main_tab_abb = "SCM"
+        date_field = "SCM.date"
     elif(type=='adoption'):
-        sql_ds['select'].append('COUNT(DISTINCT PAP.id) as tot_ado')
-        sql_ds['from'].append('PERSON_ADOPT_PRACTICE PAP')
-        sql_ds['lojoin'].append(['PERSON P','P.id = PAP.person_id'])
-        main_tab_abb = "P"
-        date_field = "PAP.DATE_OF_ADOPTION"
+        sql_ds['select'].append('SUM(total_adoption) as tot_ado')
+        sql_ds['from'].append('village_precalculation_copy VPC')
+        sql_ds['force index'].append('(village_precalculation_copy_village_id)')
+        main_tab_abb = "VPC"
+        date_field = "VPC.date"
     elif(type=='practice'):
-        sql_ds['select'].append('COUNT(DISTINCT VID.related_practice_id) as tot_pra')
-        sql_ds['from'].append('VIDEO VID')
-        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
-        main_tab_abb = 'VID'
-        date_field = "VID.VIDEO_PRODUCTION_END_DATE"
+        sql_ds['select'].append('COUNT(DISTINCT VIDM.practice_id) as tot_pra')
+        sql_ds['from'].append('video_myisam VIDM')
+        main_tab_abb = 'VIDM'
+        date_field = "VIDM.video_production_end_date"
     elif(type=='person'):
-        if(from_date and to_date):
-            sql_ds['select'].append('COUNT(DISTINCT PMA.person_id) as tot_per')
-            sql_ds['from'].append('PERSON_MEETING_ATTENDANCE PMA')
-            sql_ds['join'].append(['SCREENING SC', 'SC.id = PMA.screening_id'])
-            main_tab_abb = "SC"
-            date_field = "SC.DATE"
-        else:
-            sql_ds['select'].append('COUNT(P.id) as tot_per')
-            sql_ds['from'].append("PERSON P")
-            sql_ds['where'].append("P.date_of_joining is not NULL")
-            main_tab_abb = 'P'
-            date_field = "P.date_of_joining"
-    if(geog=="COUNTRY"):
-        #Hacking attach_geog_date for attaching geography till state in country case.
-        attach_geog_date(sql_ds,main_tab_abb,date_field,'STATE',0, from_date,to_date)
-        sql_ds['where'].pop();
-        if(partners):
-            sql_ds['where'].append("D.id in (SELECT id FROM DISTRICT WHERE partner_id in ("+','.join(partners)+"))")
-        sql_ds['lojoin'].append(['STATE S','S.id = D.state_id']);
-    else:
-        filter_partner_geog_date(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)
+        sql_ds['select'].append('COUNT(DISTINCT PMAM.person_id) as tot_per')
+        sql_ds['from'].append('person_meeting_attendance_myisam PMAM')
+        sql_ds['force index'].append('(person_meeting_attendance_myisam_village_id)')
+        main_tab_abb = "PMAM"
+        date_field = "PMAM.date"
+ 
+    filter_partner_geog_date(sql_ds,main_tab_abb,date_field,geog,id,from_date,to_date,partners)
 
     sql_ds['group by'].append(geog_child.lower()+"_id")
     sql_ds['order by'].append(geog_child.lower()+"_id")
@@ -182,81 +192,125 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
 
     if(type=='practice'):
         sql_ds['select'].extend(["date", "COUNT(*)"])
-
+        
         sql_inn_ds = get_init_sql_ds();
-        sql_inn_ds['select'].extend(["VID.related_practice_id" , "MIN(VIDEO_PRODUCTION_END_DATE) AS date"])
-        sql_inn_ds['from'].append("VIDEO VID");
-        sql_inn_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
-        filter_partner_geog_date(sql_inn_ds,'VID','dummy',geog,id,None,None,partners)
-        sql_inn_ds['group by'].append("related_practice_id");
-
+        sql_inn_ds['select'].extend(["VIDM.practice_id" , "MIN(video_production_end_date) AS date"])
+        sql_inn_ds['from'].append("video_myisam VIDM");
+        filter_partner_geog_date(sql_inn_ds,'VIDM','dummy',geog,id,None,None,partners)
+        sql_inn_ds['group by'].append("practice_id");
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');
     elif(type=='person'):
-        sql_ds['select'].extend(["date_of_joining as date", "COUNT(*)"])
-        sql_ds['from'].append("PERSON P")
-        sql_ds['where'].append("P.date_of_joining is not NULL")
-        filter_partner_geog_date(sql_ds,"P",'dummy',geog,id,None,None,partners)
-        sql_ds['group by'].append('date');
-    elif(type=='production'):
-        sql_ds['select'].extend(["VIDEO_PRODUCTION_END_DATE as date", "count(*)"])
-        sql_ds['from'].append("VIDEO VID");
-        sql_ds['where'].append('VID.VIDEO_SUITABLE_FOR = 1')
-        filter_partner_geog_date(sql_ds,'VID','dummy',geog,id,None,None,partners)
-        sql_ds['group by'].append("VIDEO_PRODUCTION_END_DATE");
-    elif(type=='screening'):
-        sql_ds['select'].extend(["DATE AS date", "count(*)"])
-        sql_ds['from'].append("SCREENING SC");
-        filter_partner_geog_date(sql_ds,'SC','dummy',geog,id,None,None,partners)
-        sql_ds['group by'].append("DATE");
-    elif(type=='adoption'):
-        sql_ds['select'].extend(["DATE_OF_ADOPTION AS date", "count(*)"])
-        sql_ds['from'].append("PERSON_ADOPT_PRACTICE PAP");
-        if(geog!="COUNTRY" or partners):
-            sql_ds['join'].append(["PERSON P","P.id = PAP.person_id"])
-            filter_partner_geog_date(sql_ds,'P','dummy',geog,id,None,None,partners)
-        sql_ds['group by'].append("DATE_OF_ADOPTION");
-    elif(type=='village'):
-        if(geog not in ["COUNTRY", "STATE", "DISTRICT"]):
-            return ""
-        sql_ds['select'].extend(["DISTINCT DATE as date, village_id"])
-        sql_ds['from'].append("SCREENING SC")
-        filter_partner_geog_date(sql_ds,'SC','dummy',geog,id,None,None,partners)
+        sql_ds['select'].extend(["date", "COUNT(*)"])
         
+        sql_inn_ds = get_init_sql_ds();
+        sql_inn_ds['select'].extend(["PMAM.person_id" , "MIN(date) AS date"])
+        sql_inn_ds['from'].append("person_meeting_attendance_myisam PMAM");
+        sql_inn_ds['force index'].append("(person_meeting_attendance_myisam_village_id)");
+        filter_partner_geog_date(sql_inn_ds,'PMAM','dummy',geog,id,None,None,partners)
+        sql_inn_ds['group by'].append("person_id");
+
+        sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
+        sql_ds['group by'].append('date');
+#        sql_ds['select'].extend(["date_of_joining as date", "COUNT(*)"])
+#        sql_ds['from'].append("PERSON P")
+#        sql_ds['where'].append("P.date_of_joining is not NULL")
+#        filter_partner_geog_date(sql_ds,"P",'dummy',geog,id,None,None,partners)
+#        sql_ds['group by'].append('date');
+    elif(type=='production'):
+        sql_ds['select'].extend(["date", "SUM(total_videos_produced)"])
+        sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
+        filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("date");
+    elif(type=='screening'):
+        sql_ds['select'].extend(["date", "SUM(total_screening)"])
+        sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
+        filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("date");
+    elif(type=='adoption'):
+        sql_ds['select'].extend(["date", "SUM(total_adoption)"])
+        sql_ds['from'].append("village_precalculation_copy VPC");
+        sql_ds['force index'].append("(village_precalculation_copy_village_id)");
+        filter_partner_geog_date(sql_ds,'VPC','dummy',geog,id,None,None,partners)
+        sql_ds['group by'].append("date");
 
     if(from_date is not None and to_date is not None):
         sql_ds['having'].append("date between '"+from_date+"' and '"+to_date+"'")
 
     return join_sql_ds(sql_ds)
 
-#Query for number of distinct persons who attended a screening in the past 60 days from 'to_date'
-def tot_dist_attendees_adopt_60_days(geog, id, to_date,partners):
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(["COUNT(DISTINCT PMA.person_id) as tot_per", "COUNT(DISTINCT PAP.person_id) as tot_adop_per", "COUNT(DISTINCT PAP.id) as tot_active_adop"])
-    sql_ds['from'].append("SCREENING SC")
-    sql_ds['lojoin'].append(["PERSON_MEETING_ATTENDANCE PMA", "PMA.screening_id = SC.id"])
-    sql_ds['lojoin'].append(["PERSON_ADOPT_PRACTICE PAP", "PAP.person_id = PMA.person_id"])
-    sql_ds['where'].append("DATE BETWEEN SUBDATE('"+to_date+"',INTERVAL 60 DAY) AND '"+to_date+"'")
-    filter_partner_geog_date(sql_ds,"SC","DUMMY",geog,id,None,None,partners)
-    
-    return join_sql_ds(sql_ds);
 
-def tot_attendance(geog, id, from_date, to_date, partners):
+
+def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(PMA.id) as count")
-    sql_ds['from'].append("PERSON_MEETING_ATTENDANCE PMA")
-    if geog != "COUNTRY" or partners or (from_date and to_date):
-        sql_ds['lojoin'].append(["SCREENING SC", "SC.id = PMA.screening_id"])
-        filter_partner_geog_date(sql_ds,"SC","SC.DATE",geog,id,from_date,to_date,partners)
+    if(values_to_fetch==None or 'tot_scr' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_screening) as tot_scr");
+    if(values_to_fetch==None or 'tot_vid' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_videos_produced) as tot_vid");
+    if(values_to_fetch==None or 'tot_male_act' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_male_actors) as tot_male_act");
+    if(values_to_fetch==None or 'tot_fem_act' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_female_actors) as tot_fem_act");
+    if(values_to_fetch==None or 'tot_ado' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_adoption) as tot_ado");
+    if(values_to_fetch==None or 'tot_male_ado' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_male_adoptions) as tot_male_ado");
+    if(values_to_fetch==None or 'tot_fem_ado' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_female_adoptions) as tot_fem_ado");
+    if(values_to_fetch==None or 'tot_att' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_attendance) as tot_att");
+    if(values_to_fetch==None or 'tot_male_att' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_male_attendance) as tot_male_att");
+    if(values_to_fetch==None or 'tot_fem_att' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_female_attendance) as tot_fem_att");
+    if(values_to_fetch==None or 'tot_exp_ado' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_expressed_adoption) as tot_exp_ado");
+    if(values_to_fetch==None or 'tot_int' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_interested) as tot_int");
+    if(values_to_fetch==None or 'tot_que' in values_to_fetch):
+        sql_ds['select'].append("SUM(VPC.total_questions_asked) as tot_que");
+        
+    sql_ds['from'].append("village_precalculation_copy VPC")
+    sql_ds['force index'].append('(village_precalculation_copy_village_id)')
+    filter_partner_geog_date(sql_ds,"VPC","VPC.date",geog,id,from_date,to_date,partners)
         
     return join_sql_ds(sql_ds)
 
-def adoption_rate(geog, id, to_date,partners):
+
+def adoption_rate_totals(geog, id, to_date,partners):
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(['SUM(total_adopted_attendees) AS tot_adopt_per ', 'SUM(total_active_attendees) AS tot_per', 'SUM(total_adoption_by_active) AS tot_active_adop'])
-    sql_ds['from'].append("village_precalculation VP")
+    sql_ds['select'].extend(['SUM(total_adopted_attendees) AS tot_adopt_per ', 
+                             'SUM(total_active_attendees) AS tot_per', 
+                             'SUM(total_adoption_by_active) AS tot_active_adop'])
+    sql_ds['from'].append("village_precalculation_copy VPC")
+    sql_ds['force index'].append('(village_precalculation_copy_village_id)')
     sql_ds['where'].append("date = '%s'" % str(to_date))
-    filter_partner_geog_date(sql_ds, "VP", "DUMMY", geog, id, None, None, partners)
+    filter_partner_geog_date(sql_ds, "VPC", "DUMMY", geog, id, None, None, partners)
     
     return join_sql_ds(sql_ds);
+
+def get_start_date(geog, id):
+    geog = geog.upper() if geog is not None else None
+    sql_ds = get_init_sql_ds()
+    if geog is None:
+        sql_ds['select'].append("MIN(START_DATE) AS date")
+        sql_ds['from'].append("COUNTRY C")
+    elif geog in ['COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']:
+        sql_ds['select'].append("START_DATE AS date")
+        sql_ds['from'].append(geog + " " + geog[0])
+        sql_ds['where'].append("id = " + str(id))
+    else:
+        raise Exception("Invalid Geography " + geog)
+        
+    return join_sql_ds(sql_ds)
     
+def caculate_start_date(geog, id):
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append("MIN(date) AS date")
+    sql_ds['from'].append("village_precalculation_copy VPC")
+    if geog is not None:
+        sql_ds['where'].append("%s_id = %s" % (geog.lower(), str(id)))
+
+    return join_sql_ds(sql_ds)

@@ -26,14 +26,15 @@ var bubble_options={colors: ['00CC33','#7edc32','#26d52f','#909504','#f9c423','#
 		bubble: {textStyle: {color: 'none'}}
 };
 function drawCharts() {
-	$.getJSON('/analytics/video_geog_pie_data/?'+search_params, function(json){geog_pie(json)});
-	$.getJSON('/analytics/video_actor_wise_pie/?'+search_params, function(json){actor_pie(json)});
-	$.getJSON('/analytics/video_pie_graph_mf_ratio/?'+search_params, function(json){gender_pie(json)});
-	$.getJSON('/analytics/video_monthwise_bar_data/?'+search_params, function(json){monthwise_column(json);});
-	$.getJSON('/analytics/video_type_wise_pie/?'+search_params, function(json){type_pie(json)});
-	$.getJSON('/analytics/video_language_wise_scatter_data/?'+search_params, function(json){language_bubble(json)});
-	$.getJSON('/analytics/video_practice_wise_scatter/?'+search_params, function(json){practice_bubble(json)});
-	$.getJSON('/analytics/overview_line_graph/?'+search_params,{type:['prod']}, function(json){total_line(json)});
+
+	$.getJSON('/analytics/video_geog_pie_data/'+search_params, function(json){geog_pie(json)});
+	$.getJSON('/analytics/video_actor_wise_pie/'+search_params, function(json){actor_pie(json)});
+	$.getJSON('/analytics/video_pie_graph_mf_ratio/'+search_params, function(json){gender_pie(json)});
+	$.getJSON('/analytics/video_monthwise_bar_data/'+search_params, function(json){monthwise_column(json);});
+	$.getJSON('/analytics/video_type_wise_pie/'+search_params, function(json){type_pie(json)});
+	$.getJSON('/analytics/video_language_wise_scatter_data/'+search_params, function(json){language_bubble(json)});
+	$.getJSON('/analytics/video_practice_wise_scatter/'+search_params, function(json){practice_bubble(json)});
+	$.getJSON('/analytics/overview_line_graph/'+search_params,{type:['prod']}, function(json){total_line(json)});
 }
 
 function remove_loader(div_id){
@@ -156,7 +157,7 @@ function practice_bubble(json) {
 	options['vAxis']= {title: 'Number of Videos',gridlines:{count:10},logScale:true};
 	options['chartArea']={left:60,top:50,width:"85%",height:"75%"};
 	options['sizeAxis']={maxSize: 20,minSize:10};
-	options['title']='Number of Videos per practices';
+	options['title']='Number of Videos per practice';
 	if(json.length>1)
 	{
 		practice_bubble_chart = new google.visualization.ChartWrapper({

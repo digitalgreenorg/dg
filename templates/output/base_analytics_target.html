@@ -1,5 +1,5 @@
-
 {% extends "base_all_analytics.html" %}
+{% load analytics_extra_tags %}
 
 {% block title %} DigitalGreen - Progress Dashboard{% endblock %}
 
@@ -17,13 +17,12 @@
         window.onload = function(){
             var from_date = '{{search_box_params.from_date}}';
             var to_date = '{{search_box_params.to_date}}';
+            
             from_date = from_date.split('-');
-            if(from_date[1][0]=='0') from_date[1] = from_date[1][1];
             $("select[name='from_month']").val(from_date[1]);
             $("select[name='from_year']").val(from_date[0]);
            
             to_date = to_date.split('-');
-            if(to_date[1][0]=='0') to_date[1] = to_date[1][1];
             $("select[name='to_month']").val(to_date[1]);
             $("select[name='to_year']").val(to_date[0]);            
                
@@ -53,7 +52,7 @@
             var cur_to_year = parseInt($("select[name='to_year']").val(),10);
             var cur_to_date = new Date(cur_to_year+parseInt((cur_to_month+1)/12), parseInt((cur_to_month+1)%12)-1,1);
             cur_to_date.setDate(cur_to_date.getDate() - 1);
-            cur_to_date = cur_to_date.getFullYear()+'-'+(cur_to_date.getMonth()+1)+'-'+cur_to_date.getDate();
+            cur_to_date = cur_to_date.getFullYear() + '-'+(cur_to_date.getMonth() < 10 ? '0': '') + (cur_to_date.getMonth()+1) + '-' + cur_to_date.getDate();
            
             if(is_date_selected || orig_from_date!=cur_from_date || orig_to_date!=cur_to_date) {
                 url.push('from_date='+cur_from_date);
@@ -66,16 +65,23 @@
                 });
             }
            
-            var geog = 'country', id = '1';
+            var geog = null, id = '1';
             $(".geog_select").each(function() {
                 if($(this).val()==-1)
                     return false;
                 geog = $(this).attr('name');
                 id = $(this).val();
             });
-            url.push("geog="+geog);
-            url.push("id="+id);
-            window.location.href = base_url+'?'+url.join('&');
+            if(geog != null) {
+				url.push("geog="+geog);
+				url.push("id="+id)
+			};
+            if(url.length > 0) {
+				window.location.href = base_url+'?'+url.join('&');
+			}
+			else {
+				window.location.href = base_url;
+			};
            
         }
            
@@ -118,9 +124,11 @@
 			<a id='analyticsnavlink' href="#">Select Dashboard &nbsp; <img src="/media/Output/Images/navbtn1.png" alt=""></a>
 			<div id='analyticsnav1'>
 				<ul>
-					<li> <a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
-					<li> <a href="{% if search_box_params %}/analytics/video_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
-					<li> <a href="{% if search_box_params %}/analytics/screening_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/analytics/target_table{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/target_table?geog=country&id=1{%endif%}" title='Targets Dashboard'>Targets Statistics</a></li>
 				</ul>
 			</div>
 		</div>
@@ -135,7 +143,7 @@
 	&nbsp; 
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
-		<a href="{% if search_box_params %}/analytics/overview_module?geog={{search_box_params.cur_geog}}&id={{search_box_params.cur_id}}{{get_req_url}}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
+		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
 	{% endblock analyticsbreadcrums %}
 
 </div>
@@ -165,15 +173,15 @@
                             <td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> from: </div>      </td>
                             <td id='calenderbodytd2' class='custombodytd2'> <div>
                             <select name="from_month">
-                                <option value='1'>Jan</option>
-                                <option value='2'>Feb</option>
-                                <option value='3'>Mar</option>
-                                <option value='4'>Apr</option>
-                                <option value='5'>May</option>
-                                <option value='6'>Jun</option>
-                                <option value='7'>Jul</option>
-                                <option value='8'>Aug</option>
-                                <option value='9'>Sep</option>
+                                <option value='01'>Jan</option>
+                                <option value='02'>Feb</option>
+                                <option value='03'>Mar</option>
+                                <option value='04'>Apr</option>
+                                <option value='05'>May</option>
+                                <option value='06'>Jun</option>
+                                <option value='07'>Jul</option>
+                                <option value='08'>Aug</option>
+                                <option value='09'>Sep</option>
                                 <option value='10'>Oct</option>
                                 <option value='11'>Nov</option>
                                 <option value='12'>Dec</option>
@@ -193,15 +201,15 @@
                             <td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> to: </div>  </td>
                             <td id='calenderbodytd2' class='custombodytd2'> <div>
                                 <select name="to_month">
-                                    <option value='1'>Jan</option>
-                                    <option value='2'>Feb</option>
-                                    <option value='3'>Mar</option>
-                                    <option value='4'>Apr</option>
-                                    <option value='5'>May</option>
-                                    <option value='6'>Jun</option>
-                                    <option value='7'>Jul</option>
-                                    <option value='8'>Aug</option>
-                                    <option value='9'>Sep</option>
+                                    <option value='01'>Jan</option>
+                                    <option value='02'>Feb</option>
+                                    <option value='03'>Mar</option>
+                                    <option value='04'>Apr</option>
+                                    <option value='05'>May</option>
+                                    <option value='06'>Jun</option>
+                                    <option value='07'>Jul</option>
+                                    <option value='08'>Aug</option>
+                                    <option value='09'>Sep</option>
                                     <option value='10'>Oct</option>
                                     <option value='11'>Nov</option>
                                     <option value='12'>Dec</option>
@@ -229,26 +237,35 @@
                         </tr>
                     </table>
                 </div>
-                <div id='selectbody'>              
+                <div id='selectbody'>       
+                			<div class='searchbody1' id='country'>
+				   				<select class='select geog_select' name='country' id = 'countryId' onChange="dochange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
+										{% for key,item in search_box_params.geog_val.0.items %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+				    			</select>				
+							</div>       
                             <div class='searchbody1' id='state'>
-                                <select class='select geog_select' name='state' id = 'stateId' onChange="dochange('district', this.value)">
+                                <select class='select geog_select' name='state' id = 'stateId' onChange="dochange('district', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
                                     <option value='-1'>Select State</option>
-                                        {% for key,item in search_box_params.geog_val.0.items %}
-                                            <option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+                                     {%if search_box_params.geog_val.1 %}
+                                        {% for key,item in search_box_params.geog_val.1.items %}
+                                            <option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
                                         {%endfor%}
+                                     {%endif%}
                                 </select>              
                             </div>
                             <div class='searchbody1' id='district'>
-                                <select class='select geog_select' name='district' id = 'districtId' {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+                                <select class='select geog_select' name='district' id = 'districtId' {% if not search_box_params.geog_val.2 %}disabled='disabled' {% endif %}>
                                     <option value='-1'>Select District</option>
-                                    {%if search_box_params.geog_val.1 %}
-                                        {% for key,item in search_box_params.geog_val.1.items %}
+                                    {%if search_box_params.geog_val.2 %}
+                                        {% for key,item in search_box_params.geog_val.2.items %}
                                             <option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
                                         {%endfor%}
                                     {%endif%}                      
                                 </select>  
                             </div>
-                          
                 </div>                         
             </div>
                
