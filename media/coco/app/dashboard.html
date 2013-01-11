@@ -21,12 +21,13 @@
 	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.js"></script> -->
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
+	<!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/layoutmanager/backbone.layoutmanager.js"></script> -->
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script>
+	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script>
 	
     <!-- // application js -->
-      <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
- 	  <!-- // <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
+      <!-- // <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
+ 	   <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/combined.js"></script> -->
 	
 	
@@ -93,13 +94,9 @@
         
         <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
     </div>
-        
 </script>
     
 <script type="text/template" id="person_table_template">
-<div style= "margin: 30px 30px 30px 30px;">
-       <table class="table table-striped display">
-       <thead>
        <tr>
        <th>Id</th>
 	   <th>Name</th>
@@ -108,12 +105,8 @@
        <th>Group</th>
        <th></th>
 	   </tr>
-       </thead>
-       <tbody>
-           
-       </tbody>
-</div>
 </script>
+
 <script type="text/template" id="person_list_item_template">
     <td><%= id %></td>
     <td><%= person_name %></td>
@@ -126,6 +119,17 @@
     </td>
 </script>
 
+<script type="text/template" id="dashboard_breadcrumb">
+	<li class='active' >Dashboard</li>
+</script>
+<script type="text/template" id="list_breadcrumb">
+	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
+</script>
+<script type="text/template" id="add_edit_breadcrumb">
+<li><a href="#">Dashboard</a> <span class="divider">/</span></li>
+<li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>
+<li class="active"><%=add_or_edit%></li>
+</script>
 <!-- <div style= "float:left;">
 <input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
 <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
@@ -135,6 +139,15 @@
     <span style= "font-size:20px;"><b><%= header_name %></b></span>
     <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
     </div>
+	<div style= "margin: 30px 30px 30px 30px;">
+	       <table id= "list_table" class="table table-striped display">
+	       <thead>
+	       <%= table_header%>
+	       </thead>
+	       <tbody>
+		   </tbody>
+	</div>
+	
 </script>
 
 	
@@ -221,15 +234,27 @@
     								</div>
                                                     
 </form>                                                        </script>
-                                                        
-                                                        
-
+   
+   <script type="text/template" id="page_layout">
+   <div id = "header"></div>
+   
+   <div id = "content"></div>
+   		
+   </script>
+   
+   
 </head>
+
 <body>
+	
+	
     <div id = "notifications">
         
     </div>
     <div id="app">
     </div>
+	
+	
 </body>
+
 </html>

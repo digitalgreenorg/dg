@@ -6,14 +6,15 @@ define([
   'collections/person_collection',
   'collections/persongroup_collection',
   'collections/village_collection',
-  'form_field_validator'
+  'form_field_validator',
+  'syphon'
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
 ], function($,pas,pass, person_model, person_collection, persongroup_collection, village_collection){
     
 
-    var PersonAddEditView = Backbone.View.extend({
+    var PersonAddEditView = Backbone.LayoutView.extend({
 
         events: {
             'click #save': 'setjustsave',
@@ -33,7 +34,7 @@ define([
             .html()),
         success_notif_template: _.template($('#' + 'success_notifcation_template')
             .html()),
-
+        
         initialize: function(params) {
             console.log("ADD/EDIT: params to add/edit view:");
             console.log(params);
@@ -59,8 +60,7 @@ define([
 
             } else this.edit_case = false;
 
-            this.add_edit_template = _.template($('#' + this.view_configs.add_edit_template_name)
-                .html());
+            this.template = '#' + this.view_configs.add_edit_template_name;
             options_inner_template = _.template($('#options_template')
                 .html());
 
@@ -81,11 +81,9 @@ define([
                 .bindAll('save');
 
         },
-        render: function() {
-            // put the add_edit template in dom and call validate plugin on the form
-
-            $(this.el)
-                .html(this.add_edit_template());
+        
+        afterRender: function() {
+            /* Work with the View after render. */
             this.villages.fetch({
                 success: function() {
                     console.log("ADD/EDIT: Village coll fetched");
@@ -149,7 +147,8 @@ define([
 
             return this;
         },
-
+        
+       
         fill_form: function() {
             //render must be finished before this func
             console.log("EDIT: its edit case, model for edit:");

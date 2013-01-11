@@ -203,7 +203,8 @@ module.exports = function( grunt ) {
                     // 'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
                     'indexeddb-backbone': 'empty:',
                     'datatable':'libs/datatablejs_media/js/jquery.dataTables.min',
-                    'form_field_validator': 'empty:'
+                    'form_field_validator': 'empty:',
+                    'layoutmanager': 'empty:'
                 },
             // name: "main"
             // out: ""

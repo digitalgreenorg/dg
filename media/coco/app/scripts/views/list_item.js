@@ -27,13 +27,14 @@ define([
                 .html());
             this.success_notif_template = _.template($('#' + 'success_notifcation_template')
                 .html());
+            this.appRouter = params.appRouter;    
 
         },
 
         edit: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            appRouter.navigate('person/edit/' + this.model.id, true);
+            this.appRouter.navigate('person/edit/' + this.model.id, true);
 
         },
 

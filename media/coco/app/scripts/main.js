@@ -11,7 +11,9 @@ require.config({
     'backbone': 'libs/backbone/backbone-min',
     'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
     'datatable': 'libs/datatablejs_media/js/jquery.dataTables.min',
-    'form_field_validator': 'libs/jquery.validate'
+    'form_field_validator': 'libs/jquery.validate',
+    'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
+    'syphon':'libs/backbone.syphon'
   }
 });
  

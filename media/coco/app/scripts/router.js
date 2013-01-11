@@ -3,9 +3,11 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'views/app_view',
-  'configs'
-], function($, _, Session, AppView,configs){
+  'views/app_layout',
+  'configs',
+  'layoutmanager'
+  
+], function($, _, Session, AppLayout,configs){
   
     var AppRouter = Backbone.Router.extend({
         routes: {
@@ -40,8 +42,12 @@ define([
   
   var initialize = function(){
     
-    var app_v = new AppView();
-    var app_router = new AppRouter(app_v,configs);
+    // var app_v = new AppView();
+    $("body").empty().append(AppLayout.el);
+
+    // Render the Layout.
+    AppLayout.render();
+    var app_router = new AppRouter(AppLayout,configs);
     
     Backbone.history.start();
   };
