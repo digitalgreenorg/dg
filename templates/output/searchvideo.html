@@ -65,22 +65,9 @@
 			
 	<div id='searchcontentleft'>	
 		
-		<div class='searchleftdiv'>
-			<table class='advancedsearchtable' cellspacing='0' cellpadding='0'>
-				<tr>
-					<td class='advancedsearchtext'>
-						Advanced Search
-					</td>
-					<td id='advancedsearchopenbtn'>
-						<img src='/media/Output/Images/arrowdown3.png' alt=''>
-					</td>
-					<td id='advancedsearchclosebtn'>
-						<img src='/media/Output/Images/arrowhead3.png' alt=''>
-					</td>
-				</tr>		
-			</table>				
-			<div class='advancedsearchdiv'>
-			<div class='advancedsearchtitle'>
+						
+			<div class='searchleftdiv'>
+			<div class='searchtitle'>
 				Select Practice
 			</div>
 			<div class='searchbody'>
@@ -143,54 +130,8 @@
 					</div>							
 				</div>				
 			</div>
-				<div class='advancedsearchtitle'>
-					Video Suitable for:
-				</div>
-				<div class='advancedsearchbody'>
-					<div id='selectbody'>				
-						<div class='searchbody2' id='language'>
-							<select class='select' id='videosuitable'>
-								<option value="1">Disseminations</option>
-								<option value="-1">Any</option>
-  								<option value="2">Video Production Training</option>
-  								<option value="3">Dissemination Training</option>
-  								<option value="5">Pending for Approval</option>
-  								<option value="4">None</option>
-							</select>				
-						</div>							
-					</div>
-				</div>
-				<div class='advancedsearchtitle'>
-					Video has been:
-				</div>
-				<div class='advancedsearchbody'>
-					<div id='selectbody'>				
-						<div class='searchbody2'>
-							<select class='select' id='uploads'>
-								<option value="-1">All Videos</option>
-								<option value="0">Not Uploaded</option>
-								<option value="1">Uploaded</option>
-							</select>				
-						</div>							
-					</div>
-				</div>
-				<div class='advancedsearchtitle'>
-					Partners:
-				</div>
-				<div class='advancedsearchbody'>
-					<div id='selectbody'>				
-						<div class='searchbody2' id='Partners'>
-							<select class='select' id='partners' multiple='multiple' size='3'>
-							<option value='-1' selected="selected">All Partners</option>
-							{% for partner in search_box_params.all_partners %}						
-								<option value='{{partner.id}}'>{{partner.partner_name}}</option>
-							{% endfor %}
-							</select>				
-						</div>							
-					</div>
-				</div>
 			</div>
-		</div>
+		
 		
 		<div id='regionsearchdiv' class='searchleftdiv'>
 			<div class='searchtitle'>
@@ -268,27 +209,92 @@
 				</div>				
 			</div>				
 		</div>
-				<div class='searchleftdiv'>
+		<div class='searchleftdiv' style='background-color:white;'>
 			<div class='searchtitle'>
 				Select Production Date
 			</div>
 			<div class='searchbody'>
-				<div class='datepickcalendertext'>From: </div>
-				<div id='inlinedatepicker1' class='datepickcalender'>{{search_box_params.from_date}}</div>				
+				<div class='datepickcalendertext' style='background-color:white;'>From: </div>
+				<div id='inlinedatepicker1' class='datepickcalender' style='background-color:white;'>{{search_box_params.from_date}}</div>				
 			</div>
 			<div class='searchbody'>
-				<div class='datepickcalendertext'>To: </div>
-				<div id='inlinedatepicker2' class='datepickcalender'>{{search_box_params.to_date}}</div>				
-			</div>							
-		</div>		
+				<div class='datepickcalendertext' style='background-color:white;'>To: </div>
+				<div id='inlinedatepicker2' class='datepickcalender' style='background-color:white;'>{{search_box_params.to_date}}</div>				
+			</div>
+		</div>			
+		<br><br><br>			
+		<div class='advancedsearchdiv' >
+			<table class='advancedsearchtable' cellspacing='0' cellpadding='0'>
+				<tr>
+					<td class='advancedsearchtext'>
+						Advanced Search
+					</td>
+					<td id='advancedsearchopenbtn'>
+						<img src='/media/Output/Images/arrowdown3.png' alt=''>
+					</td>
+					<td id='advancedsearchclosebtn'>
+						<img src='/media/Output/Images/arrowhead3.png' alt=''>
+					</td>
+				</tr>		
+			</table>
+			
+			<div class='advancedsearchtitle'>
+					Video Suitable for:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2' id='language'>
+							<select class='select' id='videosuitable'>
+								<option value="1">Disseminations</option>
+								<option value="-1">Any</option>
+  								<option value="2">Video Production Training</option>
+  								<option value="3">Dissemination Training</option>
+  								<option value="5">Pending for Approval</option>
+  								<option value="4">None</option>
+							</select>				
+						</div>							
+					</div>
+				</div>
+				<div class='advancedsearchtitle'>
+					Video has been:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2'>
+							<select class='select' id='uploads'>
+								<option value="-1">All Videos</option>
+								<option value="0">Not Uploaded</option>
+								<option value="1">Uploaded</option>
+							</select>				
+						</div>							
+					</div>
+				</div>
+				<div class='advancedsearchtitle'>
+					Partners:
+				</div>
+				<div class='advancedsearchbody'>
+					<div id='selectbody'>				
+						<div class='searchbody2' id='Partners'>
+							<select class='select' id='partners' multiple='multiple' size='3'>
+							<option value='-1' selected="selected">All Partners</option>
+							{% for partner in search_box_params.all_partners %}						
+								<option value='{{partner.id}}'>{{partner.partner_name}}</option>
+							{% endfor %}
+							</select>				
+						</div>							
+					</div>
+				</div>
+				</div>
+					
 		
 		<div id='submitdiv'>										
-			<table id='submittable' cellspacing='0' cellpadding='0'>						
+			<table id='submittable' cellspacing='0' cellpadding='0' style='background-color:white;'>						
 				<tr>
 					<td class='resetbtn'> <input id='Reset1' type='reset' onclick="window.location.href = './'"  value="Reset"> </td>
 					<td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go(null)" value="Go"> </td>
 				</tr>
 			</table>
+
 		</div>	
 		<br/><br/><br/><br/>			
 	</div>
