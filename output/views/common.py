@@ -465,7 +465,7 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     
     while(loop_from <= loop_to):
         value = dic[loop_from.y][loop_from.m] if loop_from.y in dic and loop_from.m in dic[loop_from.y] else 0
-        data[loop_from.m - 1].append(value)
+        data[loop_from.m - 1].append(float(value))
         loop_from.addMonth(1)
         header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
     return HttpResponse(json.dumps([header] + filter(lambda x: len(x) > 1, data)))
