@@ -460,18 +460,12 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
         loop_from = MyDate(1,setting_from_date.y)
         loop_to = MyDate(12, setting_to_date.y)
     else:
-        loop_from = deepcopy(setting_from_date);
-        loop_to = deepcopy(setting_to_date);
+        loop_from = MyDate(setting_from_date.m, setting_from_date.y);
+        loop_to = MyDate(setting_to_date.m, setting_to_date.y);
+    
     while(loop_from <= loop_to):
-        if(loop_from < setting_from_date or loop_from > setting_to_date):
-            data[loop_from.m - 1].append(0)
-            loop_from.addMonth(1)
-            continue
-        if(loop_from.y in dic and loop_from.m in dic[loop_from.y]):
-            data[loop_from.m - 1].append(float(dic[loop_from.y][loop_from.m]))
-        else:
-            data[loop_from.m - 1].append(0)
-
+        value = dic[loop_from.y][loop_from.m] if loop_from.y in dic and loop_from.m in dic[loop_from.y] else 0
+        data[loop_from.m - 1].append(float(value))
         loop_from.addMonth(1)
     header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
     return HttpResponse(json.dumps([header] + filter(lambda x: len(x) > 1, data)))
