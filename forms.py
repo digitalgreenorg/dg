@@ -3,14 +3,23 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 
+class UserInfoForm(ModelForm):
+    def save(self, commit=True, request=None, *args, **kwargs):
+        print request.session.get('user_id')
+        instance = super(UserInfoForm, self).save(commit=False)
+        instance.save()
+    class Meta:
+        model = UserInfo
+        exclude = ('user_created','time_created','user_modified','time_modified')
+
 class LanguageForm(ModelForm):
     class Meta:
         model = Language
 
-class CountryForm(ModelForm):
+class CountryForm(UserInfoForm):
     class Meta:
         model = Country
-
+        
 class RegionForm(ModelForm):
     class Meta:
         model = Region

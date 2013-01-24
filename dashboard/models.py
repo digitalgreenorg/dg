@@ -105,6 +105,15 @@ EQUIPMENT_PURPOSE = (
                      (7,'Individual'),
 )
 
+class UserInfo(models.Model):
+    user_created = models.ForeignKey(User, related_name ="%(class)s_related_created", null=True, blank=True)
+    time_created = models.DateTimeField(db_column='TIME_CREATED', auto_now_add=True, null=True, blank=True)
+    user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified", null=True, blank=True)
+    time_modified = models.DateTimeField(db_column='TIME_MODIFIED', auto_now=True, null=True, blank=True)
+    
+    class Meta:
+        abstract = True
+
 
 class OfflineUserManager(models.Manager):
     def get_offline_pk(self, username, flag_create):
@@ -175,7 +184,7 @@ class Region(models.Model):
     def __unicode__(self):
         return self.region_name
     
-class Country(models.Model):
+class Country(UserInfo):
     id = BigAutoField(primary_key = True)
     country_name = models.CharField(max_length=100, db_column='COUNTRY_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -557,7 +566,7 @@ class PersonRelations(models.Model):
     class Meta:
         db_table = u'PERSON_RELATIONS'
 
-class Animator(models.Model):
+class Animator(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
