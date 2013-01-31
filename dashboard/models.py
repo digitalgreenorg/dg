@@ -106,7 +106,7 @@ EQUIPMENT_PURPOSE = (
 )
 
 class UserInfo(models.Model):
-    user_created = models.ForeignKey(User, related_name ="%(class)s_related_created", null=True, blank=True)
+    user_created = models.ForeignKey(User, related_name ="%(class)s_related_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(db_column='TIME_CREATED', auto_now_add=True, null=True, blank=True)
     user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified", null=True, blank=True)
     time_modified = models.DateTimeField(db_column='TIME_MODIFIED', auto_now=True, null=True, blank=True)
@@ -159,12 +159,12 @@ class OfflineUserManager(models.Manager):
         offline_user.save()
         return True
 
-class OfflineUser(models.Model):
+class OfflineUser(UserInfo):
     user = models.ForeignKey(User)
     offline_pk_id = PositiveBigIntegerField()
     objects = OfflineUserManager()
 
-class RegionTest(models.Model):
+class RegionTest(UserInfo):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     id = models.AutoField(primary_key=True, db_column = 'id')
@@ -174,7 +174,7 @@ class RegionTest(models.Model):
     def __unicode__(self):
         return self.region_name
 
-class Region(models.Model):
+class Region(UserInfo):
     id = BigAutoField(primary_key = True)
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -196,7 +196,7 @@ class Country(UserInfo):
     def __unicode__(self):
         return self.country_name
 
-class EquipmentHolder(models.Model):
+class EquipmentHolder(UserInfo):
     id = BigAutoField(primary_key = True)
     content_type = models.ForeignKey(ContentType)
     object_id = PositiveBigIntegerField()
@@ -207,7 +207,7 @@ class EquipmentHolder(models.Model):
     def __unicode__(self):
         return u'%s' % self.content_object
 
-class Reviewer(models.Model):
+class Reviewer(UserInfo):
     id = BigAutoField(primary_key = True)
     content_type = models.ForeignKey(ContentType)
     object_id = PositiveBigIntegerField()
@@ -219,7 +219,7 @@ class Reviewer(models.Model):
         return u'%s' % self.content_object
 
 
-class DevelopmentManager(models.Model):
+class DevelopmentManager(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
@@ -237,7 +237,7 @@ class DevelopmentManager(models.Model):
     def __unicode__(self):
         return self.name
 
-class State(models.Model):
+class State(UserInfo):
     id = BigAutoField(primary_key = True)
     state_name = models.CharField(max_length=100, db_column='STATE_NAME', unique='True')
     region = BigForeignKey(Region)
@@ -250,7 +250,7 @@ class State(models.Model):
         return self.state_name
 
 
-class Partners(models.Model):
+class Partners(UserInfo):
     id = BigAutoField(primary_key = True)
     partner_name = models.CharField(max_length=100, db_column='PARTNER_NAME')
     date_of_association = models.DateField(null=True, db_column='DATE_OF_ASSOCIATION', blank=True)
@@ -266,7 +266,7 @@ class Partners(models.Model):
         return self.partner_name
 
 
-class FieldOfficer(models.Model):
+class FieldOfficer(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=100, db_column='NAME')
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
@@ -282,7 +282,7 @@ class FieldOfficer(models.Model):
     def __unicode__(self):
         return self.name
 
-class District(models.Model):
+class District(UserInfo):
     id = BigAutoField(primary_key = True)
     district_name = models.CharField(max_length=100, db_column='DISTRICT_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -296,7 +296,7 @@ class District(models.Model):
     def __unicode__(self):
         return self.district_name
 
-class Block(models.Model):
+class Block(UserInfo):
     id = BigAutoField(primary_key = True)
     block_name = models.CharField(max_length=100, db_column='BLOCK_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
@@ -311,7 +311,7 @@ class VillageFarmerbookManager(models.Manager):
     def get_query_set(self):
         return super(VillageFarmerbookManager, self).get_query_set().filter(person__image_exists=True).distinct()
 
-class Village(models.Model):
+class Village(UserInfo):
     id = BigAutoField(primary_key = True)
     village_name = models.CharField(max_length=100, db_column='VILLAGE_NAME')
     block = BigForeignKey(Block)
@@ -334,7 +334,7 @@ class Village(models.Model):
         return self.village_name
 
 
-class MonthlyCostPerVillage(models.Model):
+class MonthlyCostPerVillage(UserInfo):
     id = BigAutoField(primary_key = True)
     village = BigForeignKey(Village)
     date = models.DateField(db_column='DATE')
@@ -349,7 +349,7 @@ class MonthlyCostPerVillage(models.Model):
     class Meta:
         db_table = u'MONTHLY_COST_PER_VILLAGE'
 
-class PersonGroups(models.Model):
+class PersonGroups(UserInfo):
     id = BigAutoField(primary_key = True)
     DAY_CHOICES = (
                 ('Monday','Monday'),
@@ -378,7 +378,7 @@ class FarmerbookManager(models.Manager):
     def get_query_set(self):
         return super(FarmerbookManager, self).get_query_set().filter(image_exists=True)
 
-class Person(models.Model):
+class Person(UserInfo):
     id = BigAutoField(primary_key = True)
     person_name = models.CharField(max_length=100, db_column='PERSON_NAME')
     father_name = models.CharField(max_length=100, db_column='FATHER_NAME', blank=True)
@@ -558,7 +558,7 @@ class Person(models.Model):
             return self.person_name
         return  u'%s (%s)' % (self.person_name, self.father_name)
     
-class PersonRelations(models.Model):
+class PersonRelations(UserInfo):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person,related_name='person')
     relative = BigForeignKey(Person,related_name='relative')
@@ -589,7 +589,7 @@ class Animator(UserInfo):
         #return self.name
 
 
-class Training(models.Model):
+class Training(UserInfo):
     id = BigAutoField(primary_key = True)
     training_purpose = models.TextField(db_column='TRAINING_PURPOSE', blank=True)
     training_outcome = models.TextField(db_column='TRAINING_OUTCOME', blank=True)
@@ -604,14 +604,14 @@ class Training(models.Model):
         unique_together = ("training_start_date", "training_end_date", "village")
 
 
-class TrainingAnimatorsTrained(models.Model):
+class TrainingAnimatorsTrained(UserInfo):
     id = BigAutoField(primary_key = True)
     training = BigForeignKey(Training, db_column='training_id')
     animator = BigForeignKey(Animator, db_column='animator_id')
     class Meta:
         db_table = u'TRAINING_animators_trained'
 
-class AnimatorAssignedVillage(models.Model):
+class AnimatorAssignedVillage(UserInfo):
     id = BigAutoField(primary_key = True)
     animator = BigForeignKey(Animator)
     village = BigForeignKey(Village)
@@ -619,7 +619,7 @@ class AnimatorAssignedVillage(models.Model):
     class Meta:
         db_table = u'ANIMATOR_ASSIGNED_VILLAGE'
 
-class AnimatorSalaryPerMonth(models.Model):
+class AnimatorSalaryPerMonth(UserInfo):
     id = BigAutoField(primary_key = True)
     animator = BigForeignKey(Animator)
     date = models.DateField(db_column='DATE')
@@ -628,7 +628,7 @@ class AnimatorSalaryPerMonth(models.Model):
     class Meta:
         db_table = u'ANIMATOR_SALARY_PER_MONTH'
 
-class Language(models.Model):
+class Language(UserInfo):
     id = BigAutoField(primary_key = True)
     language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
@@ -638,7 +638,7 @@ class Language(models.Model):
         return self.language_name
 
 
-class Video(models.Model):
+class Video(UserInfo):
     id = BigAutoField(primary_key = True)
     title = models.CharField(max_length=200, db_column='TITLE')
     video_type = models.IntegerField(max_length=1, choices=VIDEO_TYPE, db_column='VIDEO_TYPE')
@@ -726,7 +726,7 @@ pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 
-class PracticeSector(models.Model):
+class PracticeSector(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -736,7 +736,7 @@ class PracticeSector(models.Model):
     class Meta:
         db_table = u'practice_sector'
 
-class PracticeSubSector(models.Model):    
+class PracticeSubSector(UserInfo):    
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -747,7 +747,7 @@ class PracticeSubSector(models.Model):
         db_table = u'practice_subsector'
 
 
-class PracticeTopic(models.Model):
+class PracticeTopic(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -758,7 +758,7 @@ class PracticeTopic(models.Model):
         db_table = u'practice_topic'
 
 
-class PracticeSubtopic(models.Model):
+class PracticeSubtopic(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -768,7 +768,7 @@ class PracticeSubtopic(models.Model):
     class Meta:
         db_table = u'practice_subtopic'
 
-class PracticeSubject(models.Model):
+class PracticeSubject(UserInfo):
     id = BigAutoField(primary_key = True)
     name = models.CharField(max_length=500)
     
@@ -778,7 +778,7 @@ class PracticeSubject(models.Model):
     class Meta:
         db_table = u'practice_subject'
 
-class Practices(models.Model):
+class Practices(UserInfo):
     id = BigAutoField(primary_key = True)
     practice_name = models.CharField(null=True, max_length=200, unique='True', db_column='PRACTICE_NAME')
     seasonality = models.CharField(null=True, max_length=3, choices=SEASONALITY, db_column='SEASONALITY')
@@ -797,14 +797,14 @@ class Practices(models.Model):
     def __unicode__(self):
         return self.practice_sector.name
 
-class PersonShownInVideo(models.Model):
+class PersonShownInVideo(UserInfo):
     id = BigAutoField(primary_key = True)
     video = BigForeignKey(Video, db_column='video_id')
     person = BigForeignKey(Person, db_column='person_id')
     class Meta:
         db_table = u'VIDEO_farmers_shown'
         
-class Screening(models.Model):
+class Screening(UserInfo):
     id = BigAutoField(primary_key = True)
     date = models.DateField(db_column='DATE')
     start_time = models.TimeField(db_column='START_TIME')
@@ -829,21 +829,21 @@ class Screening(models.Model):
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
-class GroupsTargetedInScreening(models.Model):
+class GroupsTargetedInScreening(UserInfo):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
     class Meta:
         db_table = u'SCREENING_farmer_groups_targeted'
 
-class VideosScreenedInScreening(models.Model):  
+class VideosScreenedInScreening(UserInfo):  
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     video = BigForeignKey(Video, db_column='video_id')
     class Meta:
         db_table = u'SCREENING_videoes_screened'
 
-class PersonAdoptPractice(models.Model):
+class PersonAdoptPractice(UserInfo):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person)
     video = BigForeignKey(Video)
@@ -857,7 +857,7 @@ class PersonAdoptPractice(models.Model):
         db_table = u'PERSON_ADOPT_PRACTICE'
         unique_together = ("person", "video", "date_of_adoption")
 
-class PersonMeetingAttendance(models.Model):
+class PersonMeetingAttendance(UserInfo):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening)
     person = BigForeignKey(Person)
@@ -876,7 +876,7 @@ pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 
-class Equipment(models.Model):
+class Equipment(UserInfo):
     id = BigAutoField(primary_key = True)
     equipment_type = models.IntegerField(choices=EQUIPMENT, db_column='EQUIPMENT_TYPE')
     other_equipment = models.CharField("Specify the equipment if 'Other' equipment type has been selected ", max_length=300, db_column='OTHER_EQUIPMENT', null = True, blank=True)
@@ -898,13 +898,13 @@ class Equipment(models.Model):
     class Meta:
         db_table = u'EQUIPMENT_ID'
 
-class UserPermission(models.Model):
+class UserPermission(UserInfo):
     username = models.ForeignKey(User)
     role = models.CharField(max_length=1,choices=ROLE)
     region_operated = BigForeignKey(Region, null=True, blank=True)
     district_operated = BigForeignKey(District, null=True, blank=True)
 
-class Target(models.Model):
+class Target(UserInfo):
     id = BigAutoField(primary_key = True)
     district = BigForeignKey(District)
     month_year = models.DateField("Month & Year")
@@ -941,7 +941,7 @@ class Target(models.Model):
         unique_together = ("district","month_year")
         
         
-class Rule(models.Model):
+class Rule(UserInfo):
     name = models.CharField(max_length=100);
     error_msg = models.CharField(max_length=500);
     description = models.TextField(blank=True)
@@ -949,7 +949,7 @@ class Rule(models.Model):
     def __unicode__(self):
         return u'%s' % (self.name)
 
-class Error(models.Model):
+class Error(UserInfo):
     rule = models.ForeignKey(Rule)
     district = BigForeignKey(District)
     content_type1 = models.ForeignKey(ContentType, related_name = 'content_type1')
@@ -966,7 +966,7 @@ class Error(models.Model):
     def __unicode__(self):
         return u'%s; %s; %s' % (self.rule, self.content_object1, self.content_object2)
     
-class VillagePrecalculation(models.Model):
+class VillagePrecalculation(UserInfo):
     village = BigForeignKey(Village)
     date = models.DateField()
     total_adopted_attendees = models.PositiveIntegerField(default=0)
