@@ -265,7 +265,9 @@ def video_search(request):
             vids = vids.filter(village__block__id = int(id))
         elif(geog=="VILLAGE"):
             vids = vids.filter(village__id = int(id))
-    search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
+        search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
+    else:
+        search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
     
     if(partners):
         vids = vids.filter(village__block__district__partner__id__in = map(int,partners))

@@ -169,7 +169,7 @@ def test_gwt(request, region_id):
     if request.method == 'POST':
         form = RegionTestForm(request.POST)
         if form.is_valid():
-            new_form  = form.save(commit=False)
+            new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
             new_form.id = request.POST['id']
             new_form.save()
             return HttpResponse("Success")
@@ -411,7 +411,7 @@ def save_country_online(request,id):
         else:
             form  = CountryForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -446,7 +446,7 @@ def save_country_offline(request, id):
         if(not id):
             form = CountryForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 return HttpResponse("1")
@@ -456,7 +456,7 @@ def save_country_offline(request, id):
             country = Country.objects.get(id=id)
             form = CountryForm(request.POST, instance = country)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -469,7 +469,7 @@ def save_region_online(request,id):
         else:
             form  = RegionForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -504,7 +504,7 @@ def save_region_offline(request, id):
         if(not id):
             form = RegionForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -515,7 +515,7 @@ def save_region_offline(request, id):
             region = Region.objects.get(id=id)
             form = RegionForm(request.POST, instance = region)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -528,7 +528,7 @@ def save_state_online(request,id):
         else:
             form  = StateForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -562,7 +562,7 @@ def save_state_offline(request, id):
         if(not id):
             form = StateForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -573,7 +573,7 @@ def save_state_offline(request, id):
             state = State.objects.get(id=id)
             form = StateForm(request.POST, instance = state)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -587,7 +587,7 @@ def save_fieldofficer_online(request,id):
         else:
             form  = FieldOfficerForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -622,7 +622,7 @@ def save_fieldofficer_offline(request, id):
         if(not id):
             form = FieldOfficerForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -633,7 +633,7 @@ def save_fieldofficer_offline(request, id):
             fieldofficer = FieldOfficer.objects.get(id=id)
             form = FieldOfficerForm(request.POST, instance = fieldofficer)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -647,7 +647,7 @@ def save_practice_online(request,id):
         else:
             form  = PracticeForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -686,7 +686,7 @@ def save_practice_offline(request, id):
         if(not id):
             form = PracticeForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -697,7 +697,7 @@ def save_practice_offline(request, id):
             practice = Practices.objects.get(id=id)
             form = PracticeForm(request.POST, instance = practice)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -722,7 +722,7 @@ def save_language_online(request,id):
         else:
             form  = LanguageForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -756,7 +756,7 @@ def save_language_offline(request,id):
         if(not id):
             form = LanguageForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -767,7 +767,7 @@ def save_language_offline(request,id):
             language = Language.objects.get(id=id)
             form = LanguageForm(request.POST, instance = language)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -780,7 +780,7 @@ def save_partner_online(request,id):
         else:
             form  = PartnerForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -814,7 +814,7 @@ def save_partner_offline(request, id):
         if(not id):
             form = PartnerForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -825,7 +825,7 @@ def save_partner_offline(request, id):
             partner = Partners.objects.get(id=id)
             form = PartnerForm(request.POST, instance = partner)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -838,7 +838,7 @@ def save_video_online(request,id):
         else:
             form = VideoForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -899,7 +899,7 @@ def save_video_offline(request, id):
         if(not id):
             form = VideoForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 form.save_m2m()
@@ -910,7 +910,7 @@ def save_video_offline(request, id):
             video = Video.objects.get(id=id)
             form = VideoForm(request.POST, instance = video)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -924,7 +924,7 @@ def save_personshowninvideo_online(request,id):
         else:
             form = PersonShownInVideoForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -960,7 +960,7 @@ def save_personshowninvideo_offline(request, id):
         if(not id):
             form = PersonShownInVideoForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -971,7 +971,7 @@ def save_personshowninvideo_offline(request, id):
             personshowninvideo = PersonShownInVideo.objects.get(id=id)
             form = PersonShownInVideoForm(request.POST, instance = personshowninvideo)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -985,7 +985,7 @@ def save_district_online(request,id):
         else:
             form  = DistrictForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -1020,7 +1020,7 @@ def save_district_offline(request, id):
         if(not id):
             form = DistrictForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1031,7 +1031,7 @@ def save_district_offline(request, id):
             district = District.objects.get(id=id)
             form = DistrictForm(request.POST, instance = district)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1045,7 +1045,7 @@ def save_block_online(request,id):
         else:
             form  = BlockForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -1101,7 +1101,7 @@ def save_block_offline(request, id):
         if(not id):
             form = BlockForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1112,7 +1112,7 @@ def save_block_offline(request, id):
             block = Block.objects.get(id=id)
             form = BlockForm(request.POST, instance = block)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1126,7 +1126,7 @@ def save_developmentmanager_online(request,id):
         else:
             form  = DevelopmentManagerForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -1160,7 +1160,7 @@ def save_developmentmanager_offline(request, id):
         if(not id):
             form = DevelopmentManagerForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1171,7 +1171,7 @@ def save_developmentmanager_offline(request, id):
             developmentmanager = DevelopmentManager.objects.get(id=id)
             form = DevelopmentManagerForm(request.POST, instance = developmentmanager)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1185,7 +1185,7 @@ def save_equipment_online(request,id):
         else:
             form  = EquipmentForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -1233,7 +1233,7 @@ def save_equipment_offline(request, id):
         if(not id):
             form = EquipmentForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1244,7 +1244,7 @@ def save_equipment_offline(request, id):
             equipment = Equipment.objects.get(id=id)
             form = EquipmentForm(request.POST, instance = equipment)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1263,12 +1263,14 @@ def save_village_online(request, id):
             formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES)
             formset_animator = AnimatorInlineFormSet(request.POST, request.FILES)
         if form.is_valid() and formset_person_group.is_valid() and formset_animator.is_valid():
-            saved_village = form.save()
+            saved_village = form.save(user = request.session.get('user_id'), id = id)
             village = Village.objects.get(pk=saved_village.id)
             formset_person_group = PersonGroupInlineFormSet(request.POST, request.FILES, instance=village)
+            group_instances = formset_person_group.save(commit = False)
+            save_all(group_instances, user = request.session.get('user_id'), id = id)
             formset_animator = AnimatorInlineFormSet(request.POST, request.FILES, instance=village)
-            formset_person_group.save()
-            formset_animator.save()
+            animator_instances = formset_animator.save(commit = False)
+            save_all(animator_instances, user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             errors = form.errors.as_text()
@@ -1334,7 +1336,7 @@ def save_village_offline(request, id):
         if(not id):
             form = VillageForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save(user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1345,7 +1347,7 @@ def save_village_offline(request, id):
             village = Village.objects.get(id=id)
             form = VillageForm(request.POST, instance = village)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1360,11 +1362,12 @@ def save_animator_online(request, id):
         else:
             form_animator = AnimatorForm(request.POST)
         if form_animator.is_valid():
-            saved_animator = form_animator.save()
+            saved_animator = form_animator.save(user = request.session.get('user_id'), id = id)
             animator = Animator.objects.get(pk=saved_animator.id)
             formset_animator_assigned_village = AnimatorAssignedVillageInlineFormSet(request.POST, request.FILES, instance=animator)
             if formset_animator_assigned_village.is_valid():
-                formset_animator_assigned_village.save()
+                animator_assigned_village_instances = formset_animator_assigned_village.save(commit = False)
+                save_all(animator_assigned_village_instances, user = request.session.get('user_id'), id = id)
                 return HttpResponse('')
             else:
                 errors = form_animator.errors.as_text()
@@ -1418,7 +1421,7 @@ def save_animator_offline(request, id):
         if(not id):
             form = AnimatorForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1429,7 +1432,7 @@ def save_animator_offline(request, id):
             animator = Animator.objects.get(id=id)
             form = AnimatorForm(request.POST, instance = animator)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1442,7 +1445,7 @@ def save_animatorassignedvillage_online(request,id):
         else:
             form = AnimatorAssignedVillageForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -1490,7 +1493,7 @@ def save_animatorassignedvillage_offline(request, id):
         if(not id):
             form = AnimatorAssignedVillageForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1500,7 +1503,7 @@ def save_animatorassignedvillage_offline(request, id):
             animatorassignedvillage = AnimatorAssignedVillage.objects.get(id=id)
             form = AnimatorAssignedVillageForm(request.POST, instance = animatorassignedvillage)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             return HttpResponse("0")
 
@@ -1515,10 +1518,11 @@ def save_persongroup_online(request,id):
             form = PersonGroupsForm(request.POST)
             formset = PersonFormSet(request.POST, request.FILES)
         if form.is_valid() and formset.is_valid():
-            saved_persongroup = form.save()
+            saved_persongroup = form.save(user = request.session.get('user_id'), id = id)
             persongroup = PersonGroups.objects.get(pk=saved_persongroup.id)
             formset = PersonFormSet(request.POST, request.FILES, instance=persongroup)
-            formset.save()
+            person_instances = formset.save(commit=False)
+            save_all(person_instances, user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             errors = form.errors.as_text()
@@ -1579,10 +1583,10 @@ def save_persongroup_offline(request, id):
         if(not id):
             form = PersonGroupsForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save(user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
-                OfflineUser.objects.set_offline_pk(new_form.id)
+                #OfflineUser.objects.set_offline_pk(new_form.id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1590,7 +1594,7 @@ def save_persongroup_offline(request, id):
             persongroup = PersonGroups.objects.get(id=id)
             form = PersonGroupsForm(request.POST, instance = persongroup)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1598,12 +1602,12 @@ def save_persongroup_offline(request, id):
 def save_person_online(request, id):
     if request.method == 'POST':
         if(id):
-            person = Person.objects.get(id = id)
+            person = Person.objects.get(id = id) 
             form = PersonForm(request.POST, instance = person)
         else:
             form = PersonForm(request.POST)
         if form.is_valid():
-            saved_person = form.save()
+            saved_person = form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             errors = form.errors.as_text()
@@ -1671,7 +1675,7 @@ def save_person_offline(request, id):
         if(not id):
             form = PersonForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save(user = request.session.get('user_id'), id = id, commit = False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1682,7 +1686,7 @@ def save_person_offline(request, id):
             person = Person.objects.get(id=id)
             form = PersonForm(request.POST, instance = person)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1695,7 +1699,7 @@ def save_personadoptpractice_online(request,id):
         else:
             form = PersonAdoptPracticeForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             villages = get_user_villages(request)
@@ -1759,9 +1763,9 @@ def save_personadoptpractice_offline(request, id):
         if(not id):
             form = PersonAdoptPracticeForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
-                new_form.save()
+                new_form.save()(user = request.session.get('user_id'), id = id)
                 OfflineUser.objects.set_offline_pk(new_form.id)
                 return HttpResponse("1")
             return HttpResponse("0")
@@ -1769,7 +1773,7 @@ def save_personadoptpractice_offline(request, id):
             personadoptpractice = PersonAdoptPractice.objects.get(id=id)
             form = PersonAdoptPracticeForm(request.POST, instance = personadoptpractice)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             return HttpResponse("0")
 
@@ -1787,10 +1791,11 @@ def save_screening_online(request,id):
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
             if form.is_valid() and formset.is_valid():
-                saved_screening = form.save()
+                saved_screening = form.save(user = request.session.get('user_id'), id = id)
                 screening = Screening.objects.get(pk=saved_screening.id)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance=screening)
-                formset.save()
+                pma_instances = formset.save(commit=False)
+                save_all(pma_instances, user = request.session.get('user_id'), id = id)
                 return HttpResponse('')
             else:
                 errors = form.errors.as_text()
@@ -1868,7 +1873,7 @@ def save_screening_offline(request, id):
         if(not id):
             form = ScreeningForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 form.save_m2m()
@@ -1880,7 +1885,7 @@ def save_screening_offline(request, id):
             screening = Screening.objects.get(id=id)
             form = ScreeningForm(request.POST, instance = screening)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1904,7 +1909,7 @@ def save_groupstargetedinscreening_offline(request, id):
         if(not id):
             form = GroupsTargetedInScreeningForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1915,7 +1920,7 @@ def save_groupstargetedinscreening_offline(request, id):
             grouptargeted = GroupsTargetedInScreening.objects.get(id=id)
             form = GroupsTargetedInScreeningForm(request.POST, instance = grouptargeted)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1925,7 +1930,7 @@ def save_videosscreenedinscreening_online(request):
     if request.method == 'POST':
         form = VideosScreenedInScreeningForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -1958,7 +1963,7 @@ def save_videosscreenedinscreening_offline(request, id):
         if(not id):
             form = VideosScreenedInScreeningForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -1969,7 +1974,7 @@ def save_videosscreenedinscreening_offline(request, id):
             videoscreened = VideosScreenedInScreening.objects.get(id=id)
             form = VideosScreenedInScreeningForm(request.POST, instance = videoscreened)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -1983,7 +1988,7 @@ def save_training_online(request,id):
         else:
             form  = TrainingForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -2021,7 +2026,7 @@ def save_training_offline(request, id):
         if(not id):
             form = TrainingForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 form.save_m2m()
@@ -2033,7 +2038,7 @@ def save_training_offline(request, id):
             training = Training.objects.get(id=id)
             form = TrainingForm(request.POST, instance = training)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2043,7 +2048,7 @@ def save_traininganimatorstrained_online(request):
     if request.method == 'POST':
         form = TrainingAnimatorsTrainedForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2075,7 +2080,7 @@ def save_traininganimatorstrained_offline(request, id):
         if(not id):
             form = TrainingAnimatorsTrainedForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -2086,7 +2091,7 @@ def save_traininganimatorstrained_offline(request, id):
             traininganimatortrained = TrainingAnimatorsTrained.objects.get(id=id)
             form = TrainingAnimatorsTrainedForm(request.POST, instance = traininganimatortrained)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2096,7 +2101,7 @@ def save_monthlycostpervillage_online(request):
     if request.method == 'POST':
         form = MonthlyCostPerVillageForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2126,7 +2131,7 @@ def save_monthlycostpervillage_offline(request, id):
         if(not id):
             form = MonthlyCostPerVillageForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 return HttpResponse("1")
@@ -2136,7 +2141,7 @@ def save_monthlycostpervillage_offline(request, id):
             monthlycostpervillage = MonthlyCostPerVillage.objects.get(id=id)
             form = MonthlyCostPerVillageForm(request.POST, instance = monthlycostpervillage)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2147,7 +2152,7 @@ def save_personrelation_online(request):
     if request.method == 'POST':
         form = PersonRelationsForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2180,7 +2185,7 @@ def save_personrelation_offline(request, id):
         if(not id):
             form = PersonRelationsForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 return HttpResponse("1")
@@ -2190,7 +2195,7 @@ def save_personrelation_offline(request, id):
             personrelations = PersonRelations.objects.get(id=id)
             form = PersonRelationsForm(request.POST, instance = personrelations)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2200,7 +2205,7 @@ def save_animatorsalarypermonth_online(request):
     if request.method == 'POST':
         form = AnimatorSalaryPerMonthForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2232,7 +2237,7 @@ def save_animatorsalarypermonth_offline(request, id):
         if(not id):
             form = AnimatorSalaryPerMonthForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 return HttpResponse("1")
@@ -2242,7 +2247,7 @@ def save_animatorsalarypermonth_offline(request, id):
             animatorsalarypermonth = AnimatorSalaryPerMonth.objects.get(id=id)
             form = AnimatorSalaryPerMonthForm(request.POST, instance = animatorsalarypermonth)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2280,7 +2285,7 @@ def save_personmeetingattendance_offline(request, id):
         if(not id):
             form = PersonMeetingAttendanceForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -2291,7 +2296,7 @@ def save_personmeetingattendance_offline(request, id):
             personmeetingattendance = PersonMeetingAttendance.objects.get(id=id)
             form = PersonMeetingAttendanceForm(request.POST, instance = personmeetingattendance)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2300,7 +2305,7 @@ def save_equipmentholder_online(request):
     if request.method == 'POST':
         form = EquipmentHolderForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2327,7 +2332,7 @@ def save_equipmentholder_offline(request, id):
         if(not id):
             form = EquipmentHolderForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 OfflineUser.objects.set_offline_pk(new_form.id)
@@ -2338,7 +2343,7 @@ def save_equipmentholder_offline(request, id):
             equipmentholder = EquipmentHolder.objects.get(id=id)
             form = EquipmentHolderForm(request.POST, instance = equipmentholder)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2348,7 +2353,7 @@ def save_reviewer_online(request):
     if request.method == 'POST':
         form = ReviewerForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(), status=201)
@@ -2375,7 +2380,7 @@ def save_reviewer_offline(request, id):
         if(not id):
             form = ReviewerForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 return HttpResponse("1")
@@ -2385,7 +2390,7 @@ def save_reviewer_offline(request, id):
             reviewer = Reviewer.objects.get(id=id)
             form = ReviewerForm(request.POST, instance = reviewer)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
@@ -2405,7 +2410,7 @@ def save_target_online(request,id):
         else:
             form = TargetForm(obj)
         if form.is_valid():
-            form.save()
+            form.save(user = request.session.get('user_id'), id = id)
             return HttpResponse('')
         else:
             return HttpResponse(form.errors.as_text(),status = 201)
@@ -2442,7 +2447,7 @@ def save_target_offline(request, id):
         if(not id):
             form = TargetForm(request.POST)
             if form.is_valid():
-                new_form  = form.save(commit=False)
+                new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
                 new_form.save()
                 form.save_m2m()
@@ -2454,7 +2459,7 @@ def save_target_offline(request, id):
             target = Target.objects.get(id=id)
             form = TargetForm(request.POST, instance = target)
             if form.is_valid():
-                form.save()
+                form.save(user = request.session.get('user_id'), id = id)
                 return HttpResponse("1")
             else:
                 return HttpResponse("0")
