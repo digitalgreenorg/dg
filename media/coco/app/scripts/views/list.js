@@ -11,7 +11,7 @@ define([
   // 'text!templates/project/list.html'
 ], function($,pass,pass,pass,ListItemView){
     
-    var ListView = Backbone.LayoutView.extend({
+    var ListView = Backbone.Layout.extend({
         
         events: {
             "click button#add": "addNew",
@@ -33,7 +33,7 @@ define([
 
         },
         
-        data:function(){
+        serialize:function(){
           return { 
               header_name: this.view_configs.page_header, 
               table_header:$('#' + this.table_template_name).html()

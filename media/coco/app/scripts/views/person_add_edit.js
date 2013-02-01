@@ -14,7 +14,7 @@ define([
 ], function($,pas,pass, person_model, person_collection, persongroup_collection, village_collection){
     
 
-    var PersonAddEditView = Backbone.LayoutView.extend({
+    var PersonAddEditView = Backbone.Layout.extend({
 
         events: {
             'click #save': 'setjustsave',

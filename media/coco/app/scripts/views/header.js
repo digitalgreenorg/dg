@@ -7,7 +7,7 @@ define([
   // 'text!templates/project/list.html'
 ], function($){
     
-    var HeaderView = Backbone.LayoutView.extend({
+    var HeaderView = Backbone.Layout.extend({
       template: "#header"
     });
     

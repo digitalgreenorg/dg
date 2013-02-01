@@ -464,7 +464,7 @@
                             // We need to indicate that we're done. But, how?
                             collection.trigger("reset");
                         } else {
-                            options.success(elements); // We're done. No more elements.
+                            options.success(this,elements,options); // We're done. No more elements.
                         }
                     }
                     else {

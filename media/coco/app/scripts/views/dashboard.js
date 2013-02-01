@@ -6,7 +6,7 @@ define([
   
 ], function($,pass, pass,person_collection){
     
-    var DashboardView = Backbone.LayoutView.extend({
+    var DashboardView = Backbone.Layout.extend({
       template: "#dashboard",
       events: {
           "click button#download": "Download",
