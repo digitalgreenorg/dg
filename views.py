@@ -1765,7 +1765,7 @@ def save_personadoptpractice_offline(request, id):
             if form.is_valid():
                 new_form  = form.save( user = request.session.get('user_id'), id = id, commit=False)
                 new_form.id = request.POST['id']
-                new_form.save()(user = request.session.get('user_id'), id = id)
+                new_form.save(user = request.session.get('user_id'), id = id)
                 OfflineUser.objects.set_offline_pk(new_form.id)
                 return HttpResponse("1")
             return HttpResponse("0")
