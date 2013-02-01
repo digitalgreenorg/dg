@@ -3,6 +3,15 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
 
+# function for saving formsets with user information
+def save_all(instances, user, id):
+    for instance in instances:
+        if(id):
+            instance.user_modified_id = user
+        else:
+            instance.user_created_id = user
+        instance.save()
+
 class UserInfoForm(ModelForm):
     def save(self, commit=True, user = None, id = None,  *args, **kwargs):
         instance = super(UserInfoForm, self).save(commit=False)
@@ -13,6 +22,7 @@ class UserInfoForm(ModelForm):
         if commit:
             instance.save()
         return instance
+        
     class Meta:
         model = UserInfo
         exclude = ('time_created','user_modified','time_modified')

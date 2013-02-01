@@ -114,7 +114,6 @@ class UserInfo(models.Model):
     class Meta:
         abstract = True
 
-
 class OfflineUserManager(models.Manager):
     def get_offline_pk(self, username, flag_create):
         """
@@ -149,7 +148,7 @@ class OfflineUserManager(models.Manager):
             return False
         try:
             offline_user = OfflineUser.objects.get(user=user)
-        except DoesNotExist:
+        except ObjectDoesNotExist:
             return False
         min_auto_increment = 10000000000000
         if offline_pk > min_auto_increment or offline_user.offline_pk_id > offline_pk:
