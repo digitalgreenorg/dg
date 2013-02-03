@@ -7,6 +7,8 @@ from django.forms.extras.widgets import *
 def save_all(instances, user, id):
     for instance in instances:
         if(id):
+            if instance.user_created_id == None:
+                instance.user_created_id = user
             instance.user_modified_id = user
         else:
             instance.user_created_id = user
