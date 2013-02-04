@@ -557,7 +557,7 @@ class Person(UserInfo):
             return self.person_name
         return  u'%s (%s)' % (self.person_name, self.father_name)
     
-class PersonRelations(UserInfo):
+class PersonRelations(models.Model):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person,related_name='person')
     relative = BigForeignKey(Person,related_name='relative')
@@ -603,7 +603,7 @@ class Training(UserInfo):
         unique_together = ("training_start_date", "training_end_date", "village")
 
 
-class TrainingAnimatorsTrained(UserInfo):
+class TrainingAnimatorsTrained(models.Model):
     id = BigAutoField(primary_key = True)
     training = BigForeignKey(Training, db_column='training_id')
     animator = BigForeignKey(Animator, db_column='animator_id')
@@ -796,7 +796,7 @@ class Practices(UserInfo):
     def __unicode__(self):
         return self.practice_sector.name
 
-class PersonShownInVideo(UserInfo):
+class PersonShownInVideo(models.Model):
     id = BigAutoField(primary_key = True)
     video = BigForeignKey(Video, db_column='video_id')
     person = BigForeignKey(Person, db_column='person_id')
@@ -828,14 +828,14 @@ class Screening(UserInfo):
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
-class GroupsTargetedInScreening(UserInfo):
+class GroupsTargetedInScreening(models.Model):
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
     class Meta:
         db_table = u'SCREENING_farmer_groups_targeted'
 
-class VideosScreenedInScreening(UserInfo):  
+class VideosScreenedInScreening(models.Model):  
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     video = BigForeignKey(Video, db_column='video_id')
