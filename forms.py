@@ -23,6 +23,7 @@ class UserInfoForm(ModelForm):
             instance.user_created_id = user
         if commit:
             instance.save()
+            self.save_m2m()
         return instance
         
     class Meta:
