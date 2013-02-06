@@ -589,7 +589,7 @@ class Training(models.Model):
     village = BigForeignKey(Village)
     development_manager_present = BigForeignKey(DevelopmentManager, null=True, blank=True, db_column='dm_id')
     fieldofficer = BigForeignKey(FieldOfficer, verbose_name="field officer present", db_column='fieldofficer_id')
-    animators_trained = models.ManyToManyField(Animator)
+    animators_trained = models.ManyToManyField(Animator, through='TrainingAnimatorsTrained')
     class Meta:
         db_table = u'TRAINING'
         unique_together = ("training_start_date", "training_end_date", "village")
@@ -658,7 +658,7 @@ class Video(models.Model):
     video_suitable_for = models.IntegerField(choices=SUITABLE_FOR,db_column='VIDEO_SUITABLE_FOR')
     remarks = models.TextField(blank=True, db_column='REMARKS')
     related_practice = BigForeignKey('Practices',blank=True,null=True)
-    farmers_shown = models.ManyToManyField(Person)
+    farmers_shown = models.ManyToManyField(Person, through='PersonShownInVideo')
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
@@ -807,8 +807,8 @@ class Screening(models.Model):
     village = BigForeignKey(Village)
     fieldofficer = BigForeignKey(FieldOfficer, null=True, blank=True)
     animator = BigForeignKey(Animator)
-    farmer_groups_targeted = models.ManyToManyField(PersonGroups)
-    videoes_screened = models.ManyToManyField(Video)
+    farmer_groups_targeted = models.ManyToManyField(PersonGroups, through='GroupsTargetedInScreening')
+    videoes_screened = models.ManyToManyField(Video, through='VideosScreenedInScreening')
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
         db_table = u'SCREENING'
