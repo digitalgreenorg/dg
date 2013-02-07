@@ -160,7 +160,7 @@ class RegionTest(models.Model):
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     id = models.AutoField(primary_key=True, db_column = 'id')
     class Meta:
-        db_table = u'REGION_TEST'
+        db_table = u'region_test'
 
     def __unicode__(self):
         return self.region_name
@@ -170,7 +170,7 @@ class Region(models.Model):
     region_name = models.CharField(max_length=100, db_column='REGION_NAME', unique='True')
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
-        db_table = u'REGION'
+        db_table = u'region'
 
     def __unicode__(self):
         return self.region_name
@@ -181,7 +181,7 @@ class Country(models.Model):
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     
     class Meta:
-        db_table = u'COUNTRY'
+        db_table = u'country'
         verbose_name_plural = "countries"
 
     def __unicode__(self):
@@ -193,7 +193,7 @@ class EquipmentHolder(models.Model):
     object_id = PositiveBigIntegerField()
     content_object = generic.GenericForeignKey("content_type", "object_id")
     class Meta:
-        db_table = u'EQUIPMENT_HOLDER'
+        db_table = u'equipment_holder'
 
     def __unicode__(self):
         return u'%s' % self.content_object
@@ -204,7 +204,7 @@ class Reviewer(models.Model):
     object_id = PositiveBigIntegerField()
     content_object = generic.GenericForeignKey("content_type", "object_id")
     class Meta:
-        db_table = u'REVIEWER'
+        db_table = u'reviewer'
 
     def __unicode__(self):
         return u'%s' % self.content_object
@@ -223,7 +223,7 @@ class DevelopmentManager(models.Model):
     start_day = models.DateField(null=True, db_column='START_DAY', blank=True)
     salary = models.FloatField(null=True, db_column='SALARY', blank=True)
     class Meta:
-        db_table = u'DEVELOPMENT_MANAGER'
+        db_table = u'development_manager'
 
     def __unicode__(self):
         return self.name
@@ -235,7 +235,7 @@ class State(models.Model):
     country = BigForeignKey(Country)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
-        db_table = u'STATE'
+        db_table = u'state'
 
     def __unicode__(self):
         return self.state_name
@@ -249,7 +249,7 @@ class Partners(models.Model):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
 
     class Meta:
-        db_table = u'PARTNERS'
+        db_table = u'partner'
         verbose_name = "Partner"
 
 
@@ -268,7 +268,7 @@ class FieldOfficer(models.Model):
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
 
     class Meta:
-        db_table = u'FIELD_OFFICER'
+        db_table = u'field_officer'
 
     def __unicode__(self):
         return self.name
@@ -282,7 +282,7 @@ class District(models.Model):
     fieldofficer_startday = models.DateField(null=True, db_column='FIELDOFFICER_STARTDAY', blank=True)
     partner = BigForeignKey(Partners)
     class Meta:
-        db_table = u'DISTRICT'
+        db_table = u'district'
 
     def __unicode__(self):
         return self.district_name
@@ -293,7 +293,7 @@ class Block(models.Model):
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     district = BigForeignKey(District)
     class Meta:
-        db_table = u'BLOCK'
+        db_table = u'block'
 
     def __unicode__(self):
         return self.block_name
@@ -318,7 +318,7 @@ class Village(models.Model):
     farmerbook_village_objects = VillageFarmerbookManager() #The manager for farmerbook
     
     class Meta:
-        db_table = u'VILLAGE'
+        db_table = u'village'
         unique_together = ("village_name","block")
 
     def __unicode__(self):
@@ -338,7 +338,7 @@ class MonthlyCostPerVillage(models.Model):
     digitalgreen_cost = models.FloatField(null=True, db_column='DIGITALGREEN_COST', blank=True)
     community_cost = models.FloatField(null=True, db_column='COMMUNITY_COST', blank=True)
     class Meta:
-        db_table = u'MONTHLY_COST_PER_VILLAGE'
+        db_table = u'monthly_cost_per_village'
 
 class PersonGroups(models.Model):
     id = BigAutoField(primary_key = True)
@@ -357,7 +357,7 @@ class PersonGroups(models.Model):
     time_updated = models.DateTimeField(db_column='TIME_UPDATED',auto_now=True)
     village = BigForeignKey(Village)
     class Meta:
-        db_table = u'PERSON_GROUPS'
+        db_table = u'person_groups'
         verbose_name = "Person group"
         unique_together = ("group_name", "village")
 
@@ -389,7 +389,7 @@ class Person(models.Model):
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook
     
     class Meta:
-        db_table = u'PERSON'
+        db_table = u'person'
         unique_together = ("person_name", "father_name", "group","village")
         
     # Called on any update/insert/delete of PersonMeetingAttendance/PersonShownInVideo
@@ -555,7 +555,7 @@ class PersonRelations(models.Model):
     relative = BigForeignKey(Person,related_name='relative')
     type_of_relationship = models.CharField(max_length=100, db_column='TYPE_OF_RELATIONSHIP')
     class Meta:
-        db_table = u'PERSON_RELATIONS'
+        db_table = u'person_relations'
 
 class Animator(models.Model):
     id = BigAutoField(primary_key = True)
@@ -573,7 +573,7 @@ class Animator(models.Model):
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
     class Meta:
-        db_table = u'ANIMATOR'
+        db_table = u'animator'
         unique_together = ("name", "gender", "partner","village")
     def __unicode__(self):
         return  u'%s (%s)' % (self.name, self.village)
@@ -591,7 +591,7 @@ class Training(models.Model):
     fieldofficer = BigForeignKey(FieldOfficer, verbose_name="field officer present", db_column='fieldofficer_id')
     animators_trained = models.ManyToManyField(Animator, through='TrainingAnimatorsTrained')
     class Meta:
-        db_table = u'TRAINING'
+        db_table = u'training'
         unique_together = ("training_start_date", "training_end_date", "village")
 
 
@@ -600,7 +600,7 @@ class TrainingAnimatorsTrained(models.Model):
     training = BigForeignKey(Training, db_column='training_id')
     animator = BigForeignKey(Animator, db_column='animator_id')
     class Meta:
-        db_table = u'TRAINING_animators_trained'
+        db_table = u'training_animators_trained'
 
 class AnimatorAssignedVillage(models.Model):
     id = BigAutoField(primary_key = True)
@@ -608,7 +608,7 @@ class AnimatorAssignedVillage(models.Model):
     village = BigForeignKey(Village)
     start_date = models.DateField(null=True, db_column='START_DATE', blank=True)
     class Meta:
-        db_table = u'ANIMATOR_ASSIGNED_VILLAGE'
+        db_table = u'animator_assigned_village'
 
 class AnimatorSalaryPerMonth(models.Model):
     id = BigAutoField(primary_key = True)
@@ -617,13 +617,13 @@ class AnimatorSalaryPerMonth(models.Model):
     total_salary = models.FloatField(null=True, db_column='TOTAL_SALARY', blank=True)
     pay_date = models.DateField(null=True, db_column='PAY_DATE', blank=True)
     class Meta:
-        db_table = u'ANIMATOR_SALARY_PER_MONTH'
+        db_table = u'animator_salary_per_month'
 
 class Language(models.Model):
     id = BigAutoField(primary_key = True)
     language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
-        db_table = u'LANGUAGE'
+        db_table = u'language'
 
     def __unicode__(self):
         return self.language_name
@@ -708,7 +708,7 @@ class Video(models.Model):
             send_mail("Error in update_viewer_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
     
     class Meta:
-        db_table = u'VIDEO'
+        db_table = u'video'
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
@@ -780,7 +780,7 @@ class Practices(models.Model):
     practice_subtopic = BigForeignKey(PracticeSubtopic, null=True)
     practice_subject = BigForeignKey(PracticeSubject, null=True)    
     class Meta:
-        db_table = u'PRACTICES'
+        db_table = u'practices'
         verbose_name = "Practice"
         unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
 
@@ -793,7 +793,7 @@ class PersonShownInVideo(models.Model):
     video = BigForeignKey(Video, db_column='video_id')
     person = BigForeignKey(Person, db_column='person_id')
     class Meta:
-        db_table = u'VIDEO_farmers_shown'
+        db_table = u'video_farmers_shown'
         
 class Screening(models.Model):
     id = BigAutoField(primary_key = True)
@@ -811,7 +811,7 @@ class Screening(models.Model):
     videoes_screened = models.ManyToManyField(Video, through='VideosScreenedInScreening')
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
-        db_table = u'SCREENING'
+        db_table = u'screening'
         unique_together = ("date", "start_time", "end_time","location","village")
 
     def __unicode__(self):
@@ -825,14 +825,14 @@ class GroupsTargetedInScreening(models.Model):
     screening = BigForeignKey(Screening, db_column='screening_id')
     persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
     class Meta:
-        db_table = u'SCREENING_farmer_groups_targeted'
+        db_table = u'screening_farmer_groups_targeted'
 
 class VideosScreenedInScreening(models.Model):  
     id = BigAutoField(primary_key = True)
     screening = BigForeignKey(Screening, db_column='screening_id')
     video = BigForeignKey(Video, db_column='video_id')
     class Meta:
-        db_table = u'SCREENING_videoes_screened'
+        db_table = u'screening_videoes_screened'
 
 class PersonAdoptPractice(models.Model):
     id = BigAutoField(primary_key = True)
@@ -845,7 +845,7 @@ class PersonAdoptPractice(models.Model):
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     
     class Meta:
-        db_table = u'PERSON_ADOPT_PRACTICE'
+        db_table = u'person_adopt_practice'
         unique_together = ("person", "video", "date_of_adoption")
 
 class PersonMeetingAttendance(models.Model):
@@ -856,7 +856,7 @@ class PersonMeetingAttendance(models.Model):
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
     class Meta:
-        db_table = u'PERSON_MEETING_ATTENDANCE'
+        db_table = u'person_meeting_attendance'
     
     def __unicode__(self):
         return  u'%s' % (self.id)
@@ -887,7 +887,7 @@ class Equipment(models.Model):
     remarks = models.TextField(blank=True)    
 
     class Meta:
-        db_table = u'EQUIPMENT_ID'
+        db_table = u'equipment_id'
 
 class UserPermission(models.Model):
     username = models.ForeignKey(User)
