@@ -14,153 +14,153 @@ def save_all(instances, user, id):
             instance.user_created_id = user
         instance.save()
 
-class UserInfoForm(ModelForm):
+class CocoModelForm(ModelForm):
     def save(self, commit=True, user = None, id = None,  *args, **kwargs):
-        instance = super(UserInfoForm, self).save(commit=False)
+        instance = super(CocoModelForm, self).save(commit=False)
         if (id):
             instance.user_modified_id = user
         else:
             instance.user_created_id = user
         if commit:
             instance.save()
-            self.save_m2m()
+#            self.save_m2m()  # removed after implementing through on m2m fields
         return instance
         
     class Meta:
-        model = UserInfo
-        exclude = ('time_created','user_modified','time_modified')
+        model = CocoModel
+        exclude = ('user_modified')
 
-class LanguageForm(UserInfoForm):
+class LanguageForm(CocoModelForm):
     class Meta:
         model = Language
 
-class CountryForm(UserInfoForm):
+class CountryForm(CocoModelForm):
     class Meta:
         model = Country
         
-class RegionForm(UserInfoForm):
+class RegionForm(CocoModelForm):
     class Meta:
         model = Region
 
-class RegionTestForm(UserInfoForm):
+class RegionTestForm(CocoModelForm):
     class Meta:
         model = RegionTest
 
-class StateForm(UserInfoForm):
+class StateForm(CocoModelForm):
     class Meta:
         model = State
 
-class DistrictForm(UserInfoForm):
+class DistrictForm(CocoModelForm):
     class Meta:
         model = District
 
-class BlockForm(UserInfoForm):
+class BlockForm(CocoModelForm):
     class Meta:
         model = Block
 
-class EquipmentForm(UserInfoForm):
+class EquipmentForm(CocoModelForm):
     class Meta:
         model = Equipment
 
-class PersonGroupsForm(UserInfoForm):
+class PersonGroupsForm(CocoModelForm):
     #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonGroups
       
-class PersonAdoptPracticeForm(UserInfoForm):
+class PersonAdoptPracticeForm(CocoModelForm):
     #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonAdoptPractice
         exclude = ('practice',)
 
-class PersonForm(UserInfoForm):
+class PersonForm(CocoModelForm):
     class Meta:
         model = Person    
         exclude=('equipmentholder','relations','adopted_agricultural_practices',)
           
-class DevelopmentManagerForm(UserInfoForm):
+class DevelopmentManagerForm(CocoModelForm):
     class Meta:
         model = DevelopmentManager
 
-class FieldOfficerForm(UserInfoForm):
+class FieldOfficerForm(CocoModelForm):
     class Meta:
         model = FieldOfficer
 
-class PartnerForm(UserInfoForm):
+class PartnerForm(CocoModelForm):
     class Meta:
         model = Partners
 
-class AnimatorForm(UserInfoForm):
+class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
         exclude = ('assigned_villages',)
 
-class AnimatorAssignedVillageForm(UserInfoForm):
+class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
         model = AnimatorAssignedVillage
 
-class PracticeForm(UserInfoForm):
+class PracticeForm(CocoModelForm):
     class Meta:
         model = Practices
 
-class VillageForm(UserInfoForm):
+class VillageForm(CocoModelForm):
     class Meta:
         model = Village
 
-class VideoForm(UserInfoForm):       
+class VideoForm(CocoModelForm):       
     class Meta:
         model = Video
         exclude = ('related_practice',)
 
-class PersonShownInVideoForm(UserInfoForm):
+class PersonShownInVideoForm(CocoModelForm):
     class Meta:
         model = PersonShownInVideo
 
-class ScreeningForm(UserInfoForm):
+class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
-        exclude = ('farmers_attendance',)
+        exclude = ('farmers_attendance')
 
-class GroupsTargetedInScreeningForm(UserInfoForm):
+class GroupsTargetedInScreeningForm(CocoModelForm):
     class Meta:
         model = GroupsTargetedInScreening        
         
-class VideosScreenedInScreeningForm(UserInfoForm):
+class VideosScreenedInScreeningForm(CocoModelForm):
     class Meta:
         model = VideosScreenedInScreening        
         
-class TrainingForm(UserInfoForm):
+class TrainingForm(CocoModelForm):
     class Meta:
         model = Training
         
-class TrainingAnimatorsTrainedForm(UserInfoForm):
+class TrainingAnimatorsTrainedForm(CocoModelForm):
     class Meta:
         model = TrainingAnimatorsTrained    
 
-class MonthlyCostPerVillageForm(UserInfoForm):
+class MonthlyCostPerVillageForm(CocoModelForm):
     class Meta:
         model = MonthlyCostPerVillage
         
-class PersonRelationsForm(UserInfoForm):
+class PersonRelationsForm(CocoModelForm):
     class Meta:
         model = PersonRelations
 
-class AnimatorSalaryPerMonthForm(UserInfoForm):
+class AnimatorSalaryPerMonthForm(CocoModelForm):
     class Meta:
         model = AnimatorSalaryPerMonth
         
-class PersonMeetingAttendanceForm(UserInfoForm):
+class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
         
-class EquipmentHolderForm(UserInfoForm):
+class EquipmentHolderForm(CocoModelForm):
     class Meta:
         model = EquipmentHolder
         
-class ReviewerForm(UserInfoForm):
+class ReviewerForm(CocoModelForm):
     class Meta:
         model = Reviewer
 
-class TargetForm(UserInfoForm):
+class TargetForm(CocoModelForm):
     class Meta:
         model = Target

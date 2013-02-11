@@ -1690,21 +1690,32 @@ def save_personadoptpractice_offline(request, id):
 def save_screening_online(request,id):
     results = {}
     PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
+    gtInlineFormset = inlineformset_factory(Screening, GroupsTargetedInScreening, extra=1)
     if request.method == 'POST':
         try:
             if(id):
                 screening = Screening.objects.get(id = id)
                 form = ScreeningForm(request.POST, instance = screening)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance = screening)
+                gtformset = gtInlineFormset(request.POST, request.FILES, instance = screening)
             else:
                 form = ScreeningForm(request.POST)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES)
-            if form.is_valid() and formset.is_valid():
+                gtformset = gtInlineFormset(request.POST, request.FILES)
+            if form.is_valid() and formset.is_valid() and gtformset.is_valid():
                 saved_screening = form.save(user = request.session.get('user_id'), id = id)
                 screening = Screening.objects.get(pk=saved_screening.id)
                 formset = PersonMeetingAttendanceInlineFormSet(request.POST, request.FILES, instance=screening)
+                gtformset = gtInlineFormset(request.POST, request.FILES, instance = screening)
                 pma_instances = formset.save(commit=False)
+                gtformset.save()
                 save_all(pma_instances, user = request.session.get('user_id'), id = id)
+                for group_id in request.POST.getlist('farmer_groups_targeted'):
+                    group = GroupsTargetedInScreening(screening_id = screening.id, persongroups_id = group_id)
+                    group.save()
+                for video_id in request.POST.getlist('videoes_screened'):
+                    video = VideosScreenedInScreening(screening_id = screening.id, video_id = video_id)
+                    video.save()
                 return HttpResponse('')
             else:
                 errors = form.errors.as_text()
