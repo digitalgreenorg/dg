@@ -23,7 +23,7 @@ class CocoModelForm(ModelForm):
             instance.user_created_id = user
         if commit:
             instance.save()
-#            self.save_m2m()  # removed after implementing through on m2m fields
+            self.save_m2m()  
         return instance
         
     class Meta:

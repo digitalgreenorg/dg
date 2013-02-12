@@ -6,8 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Min, Count, F
-from django.db.models.signals import pre_delete, post_delete, m2m_changed, pre_save
-from dashboard.fields import BigAutoField, BigForeignKey, PositiveBigIntegerField
+from django.db.models.signals import m2m_changed, pre_save, pre_delete, post_delete
+from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 import sys, traceback
 
 # Variables
@@ -597,18 +597,18 @@ class Training(CocoModel):
     village = BigForeignKey(Village)
     development_manager_present = BigForeignKey(DevelopmentManager, null=True, blank=True, db_column='dm_id')
     fieldofficer = BigForeignKey(FieldOfficer, verbose_name="field officer present", db_column='fieldofficer_id')
-    animators_trained = models.ManyToManyField(Animator, through='TrainingAnimatorsTrained')
+    animators_trained = BigManyToManyField(Animator)
     class Meta:
         db_table = u'training'
         unique_together = ("training_start_date", "training_end_date", "village")
 
-
-class TrainingAnimatorsTrained(models.Model):
-    id = BigAutoField(primary_key = True)
-    training = BigForeignKey(Training, db_column='training_id')
-    animator = BigForeignKey(Animator, db_column='animator_id')
-    class Meta:
-        db_table = u'training_animators_trained'
+#
+#class TrainingAnimatorsTrained(models.Model):
+#    id = BigAutoField(primary_key = True)
+#    training = BigForeignKey(Training, db_column='training_id')
+#    animator = BigForeignKey(Animator, db_column='animator_id')
+#    class Meta:
+#        db_table = u'training_animators_trained'
 
 class AnimatorAssignedVillage(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -666,7 +666,7 @@ class Video(CocoModel):
     video_suitable_for = models.IntegerField(choices=SUITABLE_FOR,db_column='VIDEO_SUITABLE_FOR')
     remarks = models.TextField(blank=True, db_column='REMARKS')
     related_practice = BigForeignKey('Practices',blank=True,null=True)
-    farmers_shown = models.ManyToManyField(Person, through='PersonShownInVideo')
+    farmers_shown = BigManyToManyField(Person)
     actors = models.CharField(max_length=1,choices=ACTORS,db_column='ACTORS')
     last_modified = models.DateTimeField(auto_now=True)
     youtubeid = models.CharField(max_length=20, db_column='YOUTUBEID',blank=True)
@@ -796,12 +796,12 @@ class Practices(CocoModel):
     def __unicode__(self):
         return self.practice_sector.name
 
-class PersonShownInVideo(models.Model):
-    id = BigAutoField(primary_key = True)
-    video = BigForeignKey(Video, db_column='video_id')
-    person = BigForeignKey(Person, db_column='person_id')
-    class Meta:
-        db_table = u'video_farmers_shown'
+#class PersonShownInVideo(models.Model):
+#    id = BigAutoField(primary_key = True)
+#    video = BigForeignKey(Video, db_column='video_id')
+#    person = BigForeignKey(Person, db_column='person_id')
+#    class Meta:
+#        db_table = u'video_farmers_shown'
         
 class Screening(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -815,8 +815,8 @@ class Screening(CocoModel):
     village = BigForeignKey(Village)
     fieldofficer = BigForeignKey(FieldOfficer, null=True, blank=True)
     animator = BigForeignKey(Animator)
-    farmer_groups_targeted = models.ManyToManyField(PersonGroups, through='GroupsTargetedInScreening')
-    videoes_screened = models.ManyToManyField(Video, through='VideosScreenedInScreening')
+    farmer_groups_targeted = BigManyToManyField(PersonGroups)
+    videoes_screened = BigManyToManyField(Video)
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
         db_table = u'screening'
@@ -828,19 +828,19 @@ class Screening(CocoModel):
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
-class GroupsTargetedInScreening(models.Model):
-    id = BigAutoField(primary_key = True)
-    screening = BigForeignKey(Screening, db_column='screening_id')
-    persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
-    class Meta:
-        db_table = u'screening_farmer_groups_targeted'
-
-class VideosScreenedInScreening(models.Model):  
-    id = BigAutoField(primary_key = True)
-    screening = BigForeignKey(Screening, db_column='screening_id')
-    video = BigForeignKey(Video, db_column='video_id')
-    class Meta:
-        db_table = u'screening_videoes_screened'
+#class GroupsTargetedInScreening(models.Model):
+#    id = BigAutoField(primary_key = True)
+#    screening = BigForeignKey(Screening, db_column='screening_id')
+#    persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
+#    class Meta:
+#        db_table = u'screening_farmer_groups_targeted'
+#
+#class VideosScreenedInScreening(models.Model):  
+#    id = BigAutoField(primary_key = True)
+#    screening = BigForeignKey(Screening, db_column='screening_id')
+#    video = BigForeignKey(Video, db_column='video_id')
+#    class Meta:
+#        db_table = u'screening_videoes_screened'
 
 class PersonAdoptPractice(CocoModel):
     id = BigAutoField(primary_key = True)
