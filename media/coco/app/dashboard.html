@@ -106,6 +106,16 @@
        <th></th>
 	   </tr>
 </script>
+<script type="text/template" id="village_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Block Name</th>
+       <th>Start Date</th>
+       <th>State</th>
+       <th></th>
+	   </tr>
+</script>
 
 <script type="text/template" id="person_list_item_template">
     <td><%= id %></td>
@@ -113,6 +123,18 @@
     <td> <%= father_name %></td>
     <td> <%= village.village_name %></td>
     <td> <%= group.group_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<script type="text/template" id="village_list_item_template">
+    <td><%= id %></td>
+    <td><%= village_name %></td>
+    <td> <%= block_name %></td>
+    <td> <%= start_date %></td>
+    <td> <%= state_name %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
     <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>

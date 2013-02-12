@@ -5,9 +5,7 @@ define([
   
 ], function(_){
   var person_offline_model = Backbone.Model.extend({
-        remove: function() {
-            this.destroy();
-        },
+        
         database: databasev1,
         storeName: "person",
 
