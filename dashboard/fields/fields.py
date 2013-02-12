@@ -39,6 +39,6 @@ class BigAutoField(AutoField):
                 _("This value must be a long integer."))
 
 
-add_introspection_rules([], ["^dashboard\.fields\.PositiveBigIntegerField"])
-add_introspection_rules([], ["^dashboard\.fields\.BigAutoField"])
+add_introspection_rules([], ["^dashboard\.fields\.fields\.PositiveBigIntegerField"])
+add_introspection_rules([], ["^dashboard\.fields\.fields\.BigAutoField"])
 
