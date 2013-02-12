@@ -33,17 +33,6 @@ class FarmerAttendanceInline(admin.TabularInline):
     raw_id_fields = ("person",)
     extra = 0
 
-class FarmersShownInline(admin.TabularInline):
-    model = PersonShownInVideo
-    extra = 0
-
-class VideosScreenedInline(admin.TabularInline):
-    model = VideosScreenedInScreening
-    extra = 0
-
-class GroupsTargetedInline(admin.TabularInline):
-    model = GroupsTargetedInScreening
-    extra = 0
 
 class ScreeningForm(forms.ModelForm):
     class DynamicChoiceField(forms.ChoiceField):
@@ -71,8 +60,8 @@ class ScreeningForm(forms.ModelForm):
         model = Screening
 
 class ScreeningAdmin(admin.ModelAdmin):
-    fields = ('date','start_time','end_time','location','village','animator','target_person_attendance','target_audience_interest','target_adoptions','fieldofficer',)
-    inlines = [FarmerAttendanceInline, GroupsTargetedInline, VideosScreenedInline]
+    fields = ('date','start_time','end_time','location','village','animator','target_person_attendance','target_audience_interest','farmer_groups_targeted','videoes_screened','target_adoptions','fieldofficer',)
+    inlines = [FarmerAttendanceInline,]
     filter_horizontal = ('videoes_screened',)
     list_display = ('date', 'village', 'location')
     search_fields = ['village__village_name']
@@ -183,11 +172,10 @@ class VideoAdmin(admin.ModelAdmin):
     fieldsets = [
                 (None, {'fields':['title','video_type','video_production_start_date','video_production_end_date','language','storybase','summary']}),
                 ('Upload Files',{'fields':['storyboard_filename','raw_filename','movie_maker_project_filename','final_edited_filename']}),
-                (None,{'fields':['village','facilitator','cameraoperator','actors']}),
+                (None,{'fields':['village','facilitator','cameraoperator','farmers_shown','actors']}),
                 ('Video Quality', {'fields':['picture_quality','audio_quality','editing_quality','edit_start_date','edit_finish_date','thematic_quality']}),
                 ('Review', {'fields': ['reviewer','approval_date','supplementary_video_produced','video_suitable_for','remarks','youtubeid']}),
     ]
-    inlines = [FarmersShownInline]
     list_display = ('id', 'title', 'village', 'video_production_start_date', 'video_production_end_date')
     search_fields = ['title', 'village__village_name']
     #raw_id_fields = ('village',)
