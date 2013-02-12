@@ -96,6 +96,6 @@ class BigManyToManyField(ManyToManyField):
             target = self.rel.to._meta.db_table
         cls._meta.duplicate_targets[self.column] = (target, "m2m")
 
-add_introspection_rules([], ["^dashboard\.fields\.BigForeignKey"])
-add_introspection_rules([], ["^dashboard\.fields\.BigManyToManyField"])
+add_introspection_rules([], ["^dashboard\.fields\.related\.BigForeignKey"])
+add_introspection_rules([], ["^dashboard\.fields\.related\.BigManyToManyField"])
 
