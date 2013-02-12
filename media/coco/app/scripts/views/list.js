@@ -21,7 +21,7 @@ define([
         
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
-            this.collection = new params.initialize.view_configs.backbone_collection();
+            this.collection = new this.view_configs.backbone_collection();
             this.table_template_name = params.initialize.view_configs.table_template_name;
             console.log("template_name : " + this.table_template_name)
             console.log(params.data);

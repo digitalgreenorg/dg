@@ -7,11 +7,12 @@ define([
   'collections/persongroup_collection',
   'collections/village_collection',
   'form_field_validator',
-  'syphon'
+  'syphon',
+  'views/notification',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pas,pass, person_model, person_collection, persongroup_collection, village_collection){
+], function($,pas,pass, person_model, person_collection, persongroup_collection, village_collection,pass,pass,notifs_view){
     
 
     var PersonAddEditView = Backbone.Layout.extend({
@@ -41,8 +42,9 @@ define([
 
             this.person_offline_model = new person_model.person_offline_model();
             this.person_online_model = new person_model.person_online_model();
-            this.view_configs = params.view_configs;
-
+            this.view_configs = params.initialize.view_configs;
+            this.appRouter = params.initialize.router;
+            
             // model = null;
             json = null;
             if (params.model_id) {
@@ -311,10 +313,10 @@ define([
 
             }
 
-            if (this.just_save) appRouter.navigate('person', true);
+            if (this.just_save) this.appRouter.navigate('person', true);
             else if (this.save_and_add_another) {
-                appRouter.navigate('person/add');
-                appRouter.addPerson(); //since may be already on the add page, therefore have to call this explicitly
+                this.appRouter.navigate('person/add');
+                this.appRouter.addPerson(); //since may be already on the add page, therefore have to call this explicitly
             } else console.log("Bug: ADD/Edit after save option not set!");
 
 

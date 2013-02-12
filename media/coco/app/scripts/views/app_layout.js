@@ -48,18 +48,18 @@ define([
           //           
           return this;
       },
-      render_add_edit_view: function(view_configs, data) {
+      render_add_edit_view: function(params, data) {
           var add_or_edit = "add";
           if (data) add_or_edit = "edit";
           var bcrumb_template = _.template($('#add_edit_breadcrumb').html());
           
           // $(this.el)
           //               .html('');
-          this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread1:view_configs.page_header.toLowerCase(),bread2:view_configs.page_header,add_or_edit:add_or_edit}) }}));
+          this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread1:params.view_configs.page_header.toLowerCase(),bread2:params.view_configs.page_header,add_or_edit:add_or_edit}) }}));
           // $(this.el)
           //     .append(header.render(bcrumb_template({bread1:view_configs.page_header.toLowerCase(),bread2:view_configs.page_header,add_or_edit:"Add"}))
           //     .el);
-          if (view_configs.page_header == "Person") {
+          if (params.view_configs.page_header == "Person") {
               current_add_edit_view = PersonAddEditView;
           } else {
               console.log("not person");
@@ -67,7 +67,7 @@ define([
           }
           
           this.setView("#content", new current_add_edit_view({
-              view_configs: view_configs,
+              initialize: params,
               model_id: data
           }));
           

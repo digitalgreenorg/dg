@@ -27,11 +27,11 @@ define([
         },
         addPerson: function() {
             console.log("add person url caught");
-            this.app_v.render_add_edit_view(this.configs.person_list_view_configs, null);
+            this.app_v.render_add_edit_view({view_configs:this.configs.person_list_view_configs,router:this}, null);
         },
         editPerson: function(id) {
             console.log("edit person url caught, id = " + id);
-            this.app_v.render_add_edit_view(this.configs.person_list_view_configs, id);
+            this.app_v.render_add_edit_view({view_configs:this.configs.person_list_view_configs,router:this}, id);
         },
         initialize: function(app_v, configs){
             this.app_v = app_v;
@@ -43,7 +43,7 @@ define([
   var initialize = function(){
     
     // var app_v = new AppView();
-    $("body").empty().append(AppLayout.el);
+    $("#app").empty().append(AppLayout.el);
 
     // Render the Layout.
     AppLayout.render();
