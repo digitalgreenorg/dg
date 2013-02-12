@@ -12,18 +12,19 @@ define([
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "showDashboard",
-            "person": "listPerson",
-            "person/add": "addPerson",
-            "person/edit/:id": "editPerson"
+            ":entity": "list",
+            ":entity/add": "addPerson",
+            ":entity/edit/:id": "editPerson"
         },
         showDashboard: function() {
             console.log("showdashboard url caught");
             
             this.app_v.render_dashboard();
         },
-        listPerson: function() {
-            console.log("list person url caught");
-            this.app_v.render_list_view({view_configs:this.configs.person_list_view_configs,router:this});
+        list: function(entity) {
+            console.log("ROUTER:list person url caught");
+            console.log("ROUTER:table_name= "+entity);
+            this.app_v.render_list_view({view_configs:this.configs[entity],router:this});
         },
         addPerson: function() {
             console.log("add person url caught");
@@ -33,6 +34,7 @@ define([
             console.log("edit person url caught, id = " + id);
             this.app_v.render_add_edit_view({view_configs:this.configs.person_list_view_configs,router:this}, id);
         },
+        
         initialize: function(app_v, configs){
             this.app_v = app_v;
             this.configs = configs;

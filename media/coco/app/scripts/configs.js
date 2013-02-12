@@ -4,11 +4,12 @@ define(['collections/person_collection', 'collections/animator_collection',
 
 function(person_collection, animator_collection, personadoptvideo_collection, persongroup_collection,
 screening_collection, video_collection, village_collection) {
-    var village_list_view_configs = {
+    var village_configs = {
         'page_header': 'Village',
-        'backbone_collection': village_collection.village_offline_collection,
         'table_template_name': 'village_table_template',
         'list_item_template_name': 'village_list_item_template',
+        'model_url': '/api/v1/village/',
+        'indexeddb_name': 'village'
     };
     var video_list_view_configs = {
         'page_header': 'Video',
@@ -28,12 +29,13 @@ screening_collection, video_collection, village_collection) {
         'table_template_name': 'screening_table_template',
         'list_item_template_name': 'screening_list_item_template',
     };
-    var person_list_view_configs = {
+    var person_configs = {
         'page_header': 'Person',
-        'backbone_collection': person_collection.person_offline_collection,
         'table_template_name': 'person_table_template',
         'list_item_template_name': 'person_list_item_template',
-        'add_edit_template_name': 'person_add_edit_template'
+        'add_edit_template_name': 'person_add_edit_template',
+        'model_url': '/api/v1/person/',
+        'indexeddb_name': 'person'
     };
     var personadoptvideo_list_view_configs = {
         'page_header': 'Adoption',
@@ -50,8 +52,8 @@ screening_collection, video_collection, village_collection) {
     
     return {
         
-        person_list_view_configs:person_list_view_configs,
-        village_list_view_configs:village_list_view_configs
+        person:person_configs,
+        village:village_configs
     }
 
 });

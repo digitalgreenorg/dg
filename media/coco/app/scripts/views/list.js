@@ -4,7 +4,8 @@ define([
   'backbone',
   'datatable',
   'views/list_item',
-  'collections/person_collection'
+  'collections/person_collection',
+  'indexeddb_backbone_config'
   
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
@@ -21,7 +22,22 @@ define([
         
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
-            this.collection = new this.view_configs.backbone_collection();
+            // this.collection = new this.view_configs.backbone_collection();
+            model = Backbone.Model.extend({
+                database: databasev1,
+                storeName: this.view_configs.indexeddb_name,
+            });
+            
+            generic_collection = Backbone.Collection.extend({
+                model: model,
+                database: databasev1,
+                storeName: this.view_configs.indexeddb_name,
+            });
+            
+            this.collection = new generic_collection();
+            
+            console.log(this.collection);
+            
             this.table_template_name = params.initialize.view_configs.table_template_name;
             console.log("template_name : " + this.table_template_name)
             console.log(params.data);
