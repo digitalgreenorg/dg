@@ -333,7 +333,7 @@
                 options.error(e);
             };
             writeRequest.onsuccess = function (e) {
-                options.success(json);
+                options.success(object,json,options);
             };
         },
 
@@ -361,7 +361,7 @@
             if (getRequest) {
                 getRequest.onsuccess = function (event) {
                     if (event.target.result) {
-                        options.success(event.target.result);
+                        options.success(object,event.target.result,options);
                     } else {
                         options.error("Not Found");
                     }
@@ -464,7 +464,7 @@
                             // We need to indicate that we're done. But, how?
                             collection.trigger("reset");
                         } else {
-                            options.success(this,elements,options); // We're done. No more elements.
+                            options.success(collection,elements,options); // We're done. No more elements.
                         }
                     }
                     else {
