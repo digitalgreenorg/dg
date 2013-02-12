@@ -309,7 +309,7 @@
                 options.error(e);
             };
             writeRequest.onsuccess = function (e) {
-                options.success(json);
+                options.success(object,json,options);
             };
         },
         
@@ -384,7 +384,7 @@
 
             var deleteRequest = store.delete(json.id);
             deleteRequest.onsuccess = function (event) {
-                options.success(null);
+                options.success(object,null,options);
             };
             deleteRequest.onerror = function (event) {
                 options.error("Not Deleted");
