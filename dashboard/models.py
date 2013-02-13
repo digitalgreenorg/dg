@@ -602,14 +602,6 @@ class Training(CocoModel):
         db_table = u'training'
         unique_together = ("training_start_date", "training_end_date", "village")
 
-#
-#class TrainingAnimatorsTrained(models.Model):
-#    id = BigAutoField(primary_key = True)
-#    training = BigForeignKey(Training, db_column='training_id')
-#    animator = BigForeignKey(Animator, db_column='animator_id')
-#    class Meta:
-#        db_table = u'training_animators_trained'
-
 class AnimatorAssignedVillage(CocoModel):
     id = BigAutoField(primary_key = True)
     animator = BigForeignKey(Animator)
@@ -796,13 +788,6 @@ class Practices(CocoModel):
     def __unicode__(self):
         return self.practice_sector.name
 
-#class PersonShownInVideo(models.Model):
-#    id = BigAutoField(primary_key = True)
-#    video = BigForeignKey(Video, db_column='video_id')
-#    person = BigForeignKey(Person, db_column='person_id')
-#    class Meta:
-#        db_table = u'video_farmers_shown'
-        
 class Screening(CocoModel):
     id = BigAutoField(primary_key = True)
     date = models.DateField(db_column='DATE')
@@ -828,20 +813,6 @@ class Screening(CocoModel):
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
     
-#class GroupsTargetedInScreening(models.Model):
-#    id = BigAutoField(primary_key = True)
-#    screening = BigForeignKey(Screening, db_column='screening_id')
-#    persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
-#    class Meta:
-#        db_table = u'screening_farmer_groups_targeted'
-#
-#class VideosScreenedInScreening(models.Model):  
-#    id = BigAutoField(primary_key = True)
-#    screening = BigForeignKey(Screening, db_column='screening_id')
-#    video = BigForeignKey(Video, db_column='video_id')
-#    class Meta:
-#        db_table = u'screening_videoes_screened'
-
 class PersonAdoptPractice(CocoModel):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person)
@@ -976,3 +947,33 @@ class VillagePrecalculation(CocoModel):
     class Meta:
         unique_together = ("village", "date")
         db_table = u'village_precalculation'
+        
+
+class TrainingAnimatorsTrained(models.Model):
+    id = BigAutoField(primary_key = True)
+    training = BigForeignKey(Training, db_column='training_id')
+    animator = BigForeignKey(Animator, db_column='animator_id')
+    class Meta:
+        db_table = u'training_animators_trained'
+
+class GroupsTargetedInScreening(models.Model):
+    id = BigAutoField(primary_key = True)
+    screening = BigForeignKey(Screening, db_column='screening_id')
+    persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
+    class Meta:
+        db_table = u'screening_farmer_groups_targeted'
+
+class VideosScreenedInScreening(models.Model):  
+    id = BigAutoField(primary_key = True)
+    screening = BigForeignKey(Screening, db_column='screening_id')
+    video = BigForeignKey(Video, db_column='video_id')
+    class Meta:
+        db_table = u'screening_videoes_screened'
+
+class PersonShownInVideo(models.Model):
+    id = BigAutoField(primary_key = True)
+    video = BigForeignKey(Video, db_column='video_id')
+    person = BigForeignKey(Person, db_column='person_id')
+    class Meta:
+        db_table = u'video_farmers_shown'
+        
