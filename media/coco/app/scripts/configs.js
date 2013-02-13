@@ -8,7 +8,7 @@ screening_collection, video_collection, village_collection) {
         'page_header': 'Village',
         'table_template_name': 'village_table_template',
         'list_item_template_name': 'village_list_item_template',
-        'model_url': '/api/v1/village/',
+        'rest_api_url': '/api/v1/village/',
         'entity_name': 'village'
     };
     var video_list_view_configs = {
@@ -34,7 +34,7 @@ screening_collection, video_collection, village_collection) {
         'table_template_name': 'person_table_template',
         'list_item_template_name': 'person_list_item_template',
         'add_edit_template_name': 'person_add_edit_template',
-        'model_url': '/api/v1/person/',
+        'rest_api_url': '/api/v1/person/',
         'entity_name': 'person'
     };
     var personadoptvideo_list_view_configs = {

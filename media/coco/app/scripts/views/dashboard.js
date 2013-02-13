@@ -6,6 +6,7 @@ define([
   'collections/village_collection',
   'collections/persongroup_collection',
   'configs',
+  'indexeddb_backbone_config'
   
 ], function($,pass, pass,person_collection,village_collection,persongroup_collection,configs){
     
@@ -26,16 +27,41 @@ define([
             }
       },
       
-      fetch_save: function(collection_online, collection_offline, storeName) {
+      fetch_save: function(config) {
           var prevTime, curTime;
           curTime = (new Date())
               .getTime();
           prevTime = curTime;
-          console.log("downloading  " + storeName);
+          console.log("DASHBOARD:DOWNLOAD: downloading  " + config.page_header);
+          var generic_model_offline = Backbone.Model.extend({
+                database: databasev1,
+                storeName: config.entity_name,
+          });
+          
+          var generic_collection_offline = Backbone.Collection.extend({
+                model: generic_model_offline,
+                database: databasev1,
+                storeName: config.entity_name,
+          });
+          
+          var generic_collection_online = Backbone.Collection.extend({
+                url: config.rest_api_url,
+                sync: Backbone.ajaxSync,
+                parse: function(data) {
+                    return data.objects;
+                }
+
+          });
+            
+          var collection_offline = new generic_collection_offline();
+          var collection_online = new generic_collection_online(); 
+          console.log(collection_offline);
+          console.log(collection_online);
+          
           collection_online.fetch({
               success: function() {
                   data = (collection_online.toJSON());
-                  console.log(storeName + " collection fetched ");
+                  console.log("DASHBOARD:DOWNLOAD: "+config.entity_name + " collection fetched ");
                   curTime = (new Date())
                       .getTime();
                   deltaTime = curTime - prevTime;
@@ -44,15 +70,17 @@ define([
                   var db;
                   var request = indexedDB.open("coco-database");
                   request.onerror = function(event) {
-                      console.log("Why didn't you allow my web app to use IndexedDB?!");
+                      console.log("DASHBOARD:DOWNLOAD: "+"Why didn't you allow my web app to use IndexedDB?!");
                   };
                   request.onsuccess = function(event) {
                       db = request.result;
-                      var clearTransaction = db.transaction([storeName], "readwrite");
-                      var clearRequest = clearTransaction.objectStore(storeName)
+                      var clearTransaction = db.transaction([config.entity_name], "readwrite");
+                      var clearRequest = clearTransaction.objectStore(config.entity_name)
                           .clear();
                       clearRequest.onsuccess = function(event) {
-                          console.log(storeName + ' objectstore cleared');
+                          console.log("DASHBOARD:DOWNLOAD: "+config.entity_name + ' objectstore cleared');
+                          console.log(collection_offline);
+          
                           for (var i = 0; i < data.length; i++) {
                               // console.log(data[i]);
                               collection_offline.create(data[i]);
@@ -63,9 +91,9 @@ define([
     
                           deltaTime = curTime - prevTime;
                           var writing_time = deltaTime;
-                          console.log(storeName + " downloaded");
-                          console.log(storeName + " downlaod time = " + download_time);
-                          console.log(storeName + " writing time = " + writing_time);
+                          console.log("DASHBOARD:DOWNLOAD: "+config.entity_name + " downloaded");
+                          console.log("DASHBOARD:DOWNLOAD: "+config.entity_name + " downlaod time = " + download_time);
+                          console.log("DASHBOARD:DOWNLOAD: "+config.entity_name + " writing time = " + writing_time);
     
                       };
     
@@ -79,33 +107,13 @@ define([
           console.log("starting download");
           //Download:fetch each model from server and save it to the indexeddb
     
-         villages_online = new village_collection.village_online_collection();
-         villages_offline = new village_collection.village_offline_collection();
-         // this.fetch_save(villages_online, villages_offline, "village");
-                    //                      
-          //          videos_online = new video_online_collection();
-          //          videos_offline = new video_offline_collection();
-          //          this.fetch_save(videos_online, videos_offline, "video");
-          //                      
-          persongroups_online = new persongroup_collection.persongroup_online_collection();
-          persongroups_offline = new persongroup_collection.persongroup_offline_collection();
-          // this.fetch_save(persongroups_online, persongroups_offline, "persongroup");
-                                         
-          //          screenings_online = new screening_online_collection();
-          //          screenings_offline = new screening_offline_collection();
-          //          this.fetch_save(screenings_online, screenings_offline, "screening");
-          //          
-          persons_online = new person_collection.person_online_collection();
-          persons_offline = new person_collection.person_offline_collection();
-          // this.fetch_save(persons_online, persons_offline, "person");
-          
-          // personadoptvideos_online = new personadoptvideo_online_collection();
-          //  personadoptvideos_offline = new personadoptvideo_offline_collection();
-          //  this.fetch_save(personadoptvideos_online, personadoptvideos_offline, "personadoptvideo");
-          //  
-          //  animators_online = new animator_online_collection();
-          //  animators_offline = new animator_offline_collection();
-          //  this.fetch_save(animators_online, animators_offline, "animator");
+    
+          for (var member in configs) {
+              // console.log(configs[member]);
+              this.fetch_save(configs[member]);
+         
+            }
+            
       },
         
     });
