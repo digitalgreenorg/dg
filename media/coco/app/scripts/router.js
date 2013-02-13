@@ -17,22 +17,21 @@ define([
             ":entity/edit/:id": "editPerson"
         },
         showDashboard: function() {
-            console.log("showdashboard url caught");
+            console.log("ROUTER: dashboard url caught");
             
             this.app_v.render_dashboard();
         },
         list: function(entity) {
-            console.log("ROUTER:list person url caught");
-            console.log("ROUTER:table_name= "+entity);
+            console.log("ROUTER: list "+entity+" url caught");
             this.app_v.render_list_view({view_configs:this.configs[entity],router:this});
         },
-        addPerson: function() {
-            console.log("add person url caught");
-            this.app_v.render_add_edit_view({view_configs:this.configs.person_list_view_configs,router:this}, null);
+        addPerson: function(entity) {
+            console.log("ROUTER: add "+entity+" url caught");
+            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, null);
         },
-        editPerson: function(id) {
-            console.log("edit person url caught, id = " + id);
-            this.app_v.render_add_edit_view({view_configs:this.configs.person_list_view_configs,router:this}, id);
+        editPerson: function(entity,id) {
+            console.log("ROUTER: edit "+entity+" url caught id = " + id);
+            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, id);
         },
         
         initialize: function(app_v, configs){

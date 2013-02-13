@@ -23,15 +23,10 @@ define([
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
             // this.collection = new this.view_configs.backbone_collection();
-            model = Backbone.Model.extend({
-                database: databasev1,
-                storeName: this.view_configs.indexeddb_name,
-            });
             
             generic_collection = Backbone.Collection.extend({
-                model: model,
                 database: databasev1,
-                storeName: this.view_configs.indexeddb_name,
+                storeName: this.view_configs.entity_name,
             });
             
             this.collection = new generic_collection();
