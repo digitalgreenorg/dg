@@ -4,13 +4,12 @@ define([
   'backbone',
   'datatable',
   'views/list_item',
-  'collections/person_collection',
   'indexeddb_backbone_config'
   
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pass,pass,pass,ListItemView){
+], function($,pass,pass,pass,ListItemView,indexeddb){
     
     var ListView = Backbone.Layout.extend({
         
@@ -25,7 +24,7 @@ define([
             // this.collection = new this.view_configs.backbone_collection();
             
             generic_collection = Backbone.Collection.extend({
-                database: databasev1,
+                database: indexeddb,
                 storeName: this.view_configs.entity_name,
             });
             

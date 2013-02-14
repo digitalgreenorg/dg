@@ -2,13 +2,10 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'collections/person_collection',
-  'collections/village_collection',
-  'collections/persongroup_collection',
   'configs',
   'indexeddb_backbone_config'
   
-], function($,pass, pass,person_collection,village_collection,persongroup_collection,configs){
+], function($,pass, pass, configs, indexeddb){
     
     var DashboardView = Backbone.Layout.extend({
       template: "#dashboard",
@@ -34,13 +31,13 @@ define([
           prevTime = curTime;
           console.log("DASHBOARD:DOWNLOAD: downloading  " + config.page_header);
           var generic_model_offline = Backbone.Model.extend({
-                database: databasev1,
+                database: indexeddb,
                 storeName: config.entity_name,
           });
           
           var generic_collection_offline = Backbone.Collection.extend({
                 model: generic_model_offline,
-                database: databasev1,
+                database: indexeddb,
                 storeName: config.entity_name,
           });
           

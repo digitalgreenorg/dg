@@ -2,17 +2,13 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'models/person_model',
-  'collections/person_collection',
-  'collections/persongroup_collection',
-  'collections/village_collection',
   'form_field_validator',
   'syphon',
   'views/notification',
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pas,pass, person_model, person_collection, persongroup_collection, village_collection,pass,pass,notifs_view){
+], function($,pas,pass,pass,pass,notifs_view){
     
 
     var PersonAddEditView = Backbone.Layout.extend({
