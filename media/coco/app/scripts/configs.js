@@ -13,12 +13,14 @@ function() {
 //         'table_template_name': 'video_table_template',
 //         'list_item_template_name': 'video_list_item_template'
 //     };
-//     var persongroup_list_view_configs = {
-//         'page_header': 'Group',
-//         'backbone_collection': persongroup_collection.persongroup_offline_collection,
-//         'table_template_name': 'persongroup_table_template',
-//         'list_item_template_name': 'persongroup_list_item_template'
-//     };
+    var group_configs = {
+        'page_header': 'Group',
+        'table_template_name': 'group_table_template',
+        'list_item_template_name': 'group_list_item_template',
+        'rest_api_url': '/api/v1/group/',
+        'entity_name': 'group'
+        
+    };
 //     var screening_list_view_configs = {
 //         'page_header': 'Screening',
 //         'backbone_collection': screening_collection.screening_offline_collection,
@@ -32,7 +34,11 @@ function() {
         'list_item_template_name': 'person_list_item_template',
         'add_edit_template_name': 'person_add_edit_template',
         'rest_api_url': '/api/v1/person/',
-        'entity_name': 'person'
+        'entity_name': 'person',
+        'foreign_entities':{
+            'village': {'placeholder':'id_village','name_field':'village_name'},
+            'group': {'placeholder':'id_group','name_field':'group_name'}
+        }
     };
     
     // var personadoptvideo_list_view_configs = {
@@ -51,7 +57,8 @@ function() {
     return {
         
         person:person_configs,
-        village:village_configs
+        village:village_configs,
+        group:group_configs
     }
 
 });
