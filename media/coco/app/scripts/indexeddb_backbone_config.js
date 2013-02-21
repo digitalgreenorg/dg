@@ -15,11 +15,15 @@ var idb = {
 
             for (var member in configs) {
                 transaction.db.createObjectStore(configs[member].entity_name, {
-                    autoIncrement: true
+                    autoIncrement: true,keyPath: "id"
                 });    
                 
               }
-            
+
+          transaction.db.createObjectStore("uploadqueue", {
+              autoIncrement: true,keyPath: "id"
+          });
+
             console.log("indexeddb database created")
             //store.createIndex("nameIndex", "country_name", { unique: false })
             next();

@@ -297,18 +297,20 @@
             var store = writeTransaction.objectStore(storeName);
             var json = object.toJSON();
             var writeRequest;
+            // console.log(json);
+            // if (!json.id) json.id = guid();
 
-            if (!json.id) json.id = guid();
-
-            if (!store.keyPath)
-              writeRequest = store.add(json, json.id);
-            else
+            // if (!store.keyPath)
+//               writeRequest = store.add(json, json.id);
+//             else
               writeRequest = store.add(json);
 
             writeRequest.onerror = function (e) {
                 options.error(e);
             };
             writeRequest.onsuccess = function (e) {
+                // console.log(e.target.result);
+                if(!json.id) json.id = e.target.result;
                 options.success(object,json,options);
             };
         },
@@ -322,11 +324,11 @@
             var json = object.toJSON();
             var writeRequest;
 
-            if (!json.id) json.id = guid();
+            // if (!json.id) json.id = guid();
 
-            if (!store.keyPath)
-              writeRequest = store.put(json, json.id);
-            else
+            // if (!store.keyPath)
+//               writeRequest = store.put(json, json.id);
+//             else
               writeRequest = store.put(json);
 
             writeRequest.onerror = function (e) {
