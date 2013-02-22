@@ -19,7 +19,6 @@ define([
       initialize: function(){
           
           // add dummy data to uploadqueue
-          // simulating person add
           var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: "uploadqueue",
@@ -36,47 +35,46 @@ define([
                 database: indexeddb,
                 storeName: "person",
           });
+          var generic_model_offline_vill = Backbone.Model.extend({
+                database: indexeddb,
+                storeName: "village",
+          });
           // var rem_model = new generic_model_offline();
           // rem_model.set({id:"76e162e5-958b-0df5-b414-4b7a8b4f948b"});
           // rem_model.destroy();
+          
+          // create a village, create a person in that village, edit the person and delete it
           var dummy_person = new generic_model_offline2();
-          dummy_person.set({age: 23,father_name: "asd",gender: "M",person_name: "sdk",village: "/api/v1/village/10000000000251/"});
-          console.log("UPLOAD: Dummy offline person model before save - "+ JSON.stringify(dummy_person.toJSON()));
-          dummy_person.save(null,{
-              success:function(model)
-              {          
-                  console.log("UPLOAD: Dummy offline person model after add save - "+ JSON.stringify(model.toJSON()));
-                  console.log("UPLOAD: Adding a model to uploadqueue");
-                  dummy_data_collection.create({data:model.toJSON(),action:"A",entity_name:"person"},
-                                    {
-                                        success:function(model)
-                                        {          
-                                            console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
-                                            
-                                        }
-                                    }
-                  );
-                  model.set('age',24);
-                  console.log("UPLOAD: Dummy offline person model before edit save - "+ JSON.stringify(model.toJSON()));
-                  model.save(null,{
+          var dummy_vill = new generic_model_offline_vill();
+          dummy_vill.set({village_name:"dummy_village_here",online_id:10000000000251});
+          dummy_vill.save(null,{
+              success: function(model)
+              {
+                  console.log("UPLOAD: Dummy offline village model after add save - "+ JSON.stringify(model.toJSON()));
+                  dummy_person.set({age: 23,father_name: "asd",gender: "M",person_name: "sdk",village: model.id});
+                  console.log("UPLOAD: Dummy offline person model before save - "+ JSON.stringify(dummy_person.toJSON()));
+                  dummy_person.save(null,{
                       success:function(model)
                       {          
-                          console.log("UPLOAD: Dummy offline person model after edit save - "+ JSON.stringify(model.toJSON()));
+                          console.log("UPLOAD: Dummy offline person model after add save - "+ JSON.stringify(model.toJSON()));
                           console.log("UPLOAD: Adding a model to uploadqueue");
-                          dummy_data_collection.create({data:model.toJSON(),action:"E",entity_name:"person"},
-                          {
+                          dummy_data_collection.create({data:model.toJSON(),action:"A",entity_name:"person"},
+                                            {
+                                                success:function(model)
+                                                {          
+                                                    console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
+                                            
+                                                }
+                                            }
+                          );
+                          model.set('age',24);
+                          console.log("UPLOAD: Dummy offline person model before edit save - "+ JSON.stringify(model.toJSON()));
+                          model.save(null,{
                               success:function(model)
                               {          
-                                  console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
-                                            
-                              }
-                          }
-                      );
-                          model.destroy({
-                              success: function(model_d){
-                                  console.log("UPLOAD: Deleted model.");
-                                  console.log("UPLOAD: Deleted an offline model - "+ JSON.stringify(model_d.toJSON()));
-                                  dummy_data_collection.create({data:model_d.toJSON(),action:"D",entity_name:"person"},
+                                  console.log("UPLOAD: Dummy offline person model after edit save - "+ JSON.stringify(model.toJSON()));
+                                  console.log("UPLOAD: Adding a model to uploadqueue");
+                                  dummy_data_collection.create({data:model.toJSON(),action:"E",entity_name:"person"},
                                   {
                                       success:function(model)
                                       {          
@@ -85,19 +83,42 @@ define([
                                       }
                                   }
                               );
-                          
-                                  
-                              },
-                              error: function(){
-                                  console.log("UPLOAD: Error deleting model.")
+                              // delete the model
+                                  // model.destroy({
+//                                       success: function(model_d){
+//                                           console.log("UPLOAD: Deleted model.");
+//                                           console.log("UPLOAD: Deleted an offline model - "+ JSON.stringify(model_d.toJSON()));
+//                                           dummy_data_collection.create({data:model_d.toJSON(),action:"D",entity_name:"person"},
+//                                           {
+//                                               success:function(model)
+//                                               {          
+//                                                   console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
+//                                             
+//                                               }
+//                                           }
+//                                       );
+//                           
+//                                   
+//                                       },
+//                                       error: function(){
+//                                           console.log("UPLOAD: Error deleting model.")
+//                                       }
+//                                   });
+          
                               }
                           });
           
                       }
                   });
-          
+                      
+                     
+              },
+              error: function()
+              {
+                  console.log("UPLOAD: Error creating a dummy village.")
               }
           });
+
 
           /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,10 +147,9 @@ define([
       process_upload_queue: function(){
           console.log("UPLOAD: inside upload queue: "+this.upload_collection.length+" entries");
           console.log((this.upload_collection.models));
-        $(document).on("read_next",this.next_upload);
-      ev = {
+          $(document).on("read_next",this.next_upload);
+          ev = {
           	type: "read_next",
-          	message: "Hello World!",
           	context: this
           };
           $.event.trigger(ev);
@@ -159,28 +179,81 @@ define([
       process_upload_entry: function(entry){
           console.log("UPLOAD: processing this uploadqueue entry - "+ JSON.stringify(entry.toJSON()));
           
-          if(entry.get("action") == "A")
+          if(entry.get("action") == "A"||entry.get("action") == "E")
           {
-              console.log("UPLOAD: its add action");
-              this.upload_add(entry);
-          }
-          else if(entry.get("action") == "E")
-          {
-              console.log("UPLOAD: its edit action");
-              this.upload_edit(entry);
+              console.log("UPLOAD: its add or edit action");
+              this.offline_to_online(entry);
           }
           else if(entry.get("action") == "D")
           {
               console.log("UPLOAD: its delete action");
               this.upload_delete(entry);
           }
+          else
+          {
+              console.log("ERROR:UPLOAD: its ambigous action in entry. None of A,E,D");
+              alert("ERROR!");
+              
+          }
           
             
-            //TODO: Is this offline id or any related id discarded?
-            //TODO: Translate offline ids to online ids
-            
             
           
+      },
+      
+      offline_to_online: function(entry){
+          console.log("UPLOAD:OFFLINE_TO_ONLINE: here am i");
+          var f_entities = all_configs[entry.get('entity_name')]["foreign_entities"];
+          console.log("UPLOAD:OFFLINE_TO_ONLINE: foreign entities for the model under consideration"+JSON.stringify(f_entities));
+          // var online_json = jQuery.extend(true, {}, entry.get("data"));
+          var online_json = entry.get("data");
+          console.log("UPLOAD:OFFLINE_TO_ONLINE: json before converting"+JSON.stringify(entry.get("data")));
+          var num_mem = f_entities.length;
+          for (member in f_entities)
+          {
+              if(!(member in entry.get("data")))
+                  continue;
+              console.log("UPLOAD:OFFLINE_TO_ONLINE: converting "+member+" offline to online");
+              var generic_model_offline = Backbone.Model.extend({
+                    database: indexeddb,
+                    storeName: member,
+              });
+              var f_model = new generic_model_offline();
+              f_model.set("id", entry.get("data")[member]);
+              var that = this;
+              f_model.fetch({
+                  success: function(model){
+                      console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- "+JSON.stringify(model.toJSON()));
+                      console.log("UPLOAD:OFFLINE_TO_ONLINE: member"+member);
+                      console.log("UPLOAD:OFFLINE_TO_ONLINE: but"+ model.storeName);
+                      online_json[model.storeName] = all_configs[entry.get('entity_name')]["rest_api_url"] + model.get("online_id")+"/";
+                      console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting"+JSON.stringify(online_json));
+                      num_mem--;
+                      if(!num_mem)
+                          {
+                              console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
+                              if(entry.get("action") == "A")
+                              {
+                                  console.log("UPLOAD: its add action");
+                                  that.upload_add(entry);
+                              }
+                              else if(entry.get("action") == "E")
+                              {
+                                  console.log("UPLOAD: its edit action");
+                                  that.upload_edit(entry);
+                              }
+          
+                          }
+                  },
+                  error: function(){
+                      console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
+                      //TODO: discard this and continue with next uploadqueue entry
+                  }
+              });
+          }
+          
+          
+            
       },
       
       upload_add: function(entry){
@@ -205,10 +278,12 @@ define([
             var offline_id = entry.get("data").id;
             
             upload_offline_model.set("id",offline_id);
-                  
+            var that = this;      
             var fetching = upload_offline_model.fetch({
                 success:function(model)
-                {          
+                {   // not deleted hence go forward
+                    
+                    // var online_json = that.offline_to_online(entry);      
                     upload_online_model.set(entry.get("data"));    //setting what was recorded and not the exact model
                     upload_online_model.unset('id');
                     console.log("UPLOAD:ADD: upload online model set - "+JSON.stringify(upload_online_model.toJSON()));
@@ -222,22 +297,29 @@ define([
                               // set online id in offline model
                                       model.set('online_id',upload_online_model.get("id"));
                                       model.save(null,{
-                                          success:function(model)
+                                          success: function(model)
                                           {          
                                               console.log("UPLOAD:ADD: offline model after evrthing-" + JSON.stringify(model.toJSON()));
                                               entry.destroy();
-                                              // document.dispatchEvent(lazy_evt);
                                               $.event.trigger(ev);
                                           },
                                           error: function() {
                                               //ToDO: error handling
                                               console.log("ERROR:UPLOAD:ADD: The offline model's online id could not be set.");
-                                              // document.dispatchEvent(lazy_evt);
+                                              entry.destroy();
                                               $.event.trigger(ev);
+                                              
                                           }
                                     });
+                            },
+                            error: function()
+                            {
+                                console.log("UPLOAD:ADD: Error adding model on server ");
+                                entry.destroy();
+                                $.event.trigger(ev);
                             }
                       });
+                  
                           ///////////////////////////////////////////////////////////////////////////////////////////////////
                        
             
@@ -245,8 +327,7 @@ define([
                 error: function() {
                     console.log("ERROR:UPLOAD:ADD: The offline model does not exist in indexeddb anymore. Can't set its online id. Must be deleted. Ignoring. ");
                     entry.destroy();
-                                              // document.dispatchEvent(lazy_evt);
-                                              $.event.trigger(ev);
+                    $.event.trigger(ev);
                 }
               });
 
@@ -276,9 +357,9 @@ define([
                 success:function(model)
                 {          
                     console.log("UPLOAD:EDIT: offline model fetched to get online id-" + JSON.stringify(model.toJSON()));
-                    upload_online_model.set(model.toJSON());
+                    upload_online_model.set(entry.get("data"));
                     console.log("UPLOAD:EDIT: upload online model from uploadqueue- "+JSON.stringify(upload_online_model.toJSON()));
-                    upload_online_model.set('id',upload_online_model.get('online_id'));
+                    upload_online_model.set('id',model.get('online_id'));
                     upload_online_model.unset('online_id');
                     console.log("UPLOAD:EDIT: upload online model set - "+JSON.stringify(upload_online_model.toJSON()));
                     upload_online_model.save(null,{
@@ -286,12 +367,13 @@ define([
                       {          
                           console.log("UPLOAD:EDIT: Dummy online person model after save - "+ JSON.stringify(upload_online_model.toJSON()));
                           entry.destroy();
-                          document.dispatchEvent(lazy_evt);
+                          $.event.trigger(ev);
                       },
                       error:function(model)
                       {
                           console.log("UPLOAD:EDIT: Erro editing model on server ");
-                          document.dispatchEvent(lazy_evt);
+                          entry.destroy();    
+                          $.event.trigger(ev);
                       }
                     });
                     console.log("UPLOAD:EDIT: upload online model save called.");
@@ -300,7 +382,7 @@ define([
                 error: function() {
                     //ToDO: error handling
                     console.log("ERROR:UPLOAD:EDIT: The offline model does not exist in indexeddb. Can't get its online id. Ignoring. ");
-                    // document.dispatchEvent(lazy_evt);
+                    entry.destroy();
                     $.event.trigger(ev);
                 }
               });
@@ -338,11 +420,13 @@ define([
                 success:function(model)
                 {          
                     console.log("UPLOAD:DELETE: deleted ");
-                    document.dispatchEvent(lazy_evt);
+                    entry.destroy();
+                    $.event.trigger(ev);
                 },
                 error: function(){
                     console.log("UPLOAD:DELETE: Error while deleting on server ");
-                    document.dispatchEvent(lazy_evt);
+                    entry.destroy();          
+                    $.event.trigger(ev);
                     
                 }
               });
@@ -351,9 +435,9 @@ define([
           else
           {
               console.log("UPLOAD:DELETE: No online_id was found on the model when deleted. Therefore its not on server yet. Hence taking no action.");
-              // document.dispatchEvent(lazy_evt);
+              entry.destroy();
               $.event.trigger(ev);
-              // document.dispatchEvent(lazy_evt);
+              
           }
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           
