@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Min, Count, F
-from django.db.models.signals import m2m_changed, pre_save, pre_delete, post_delete
+from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 import sys, traceback
 
@@ -105,14 +105,48 @@ EQUIPMENT_PURPOSE = (
                      (7,'Individual'),
 )
 
+
+def save_log(sender, **kwargs ):
+    instance = kwargs["instance"]
+    action  = kwargs["created"]
+    sender = sender.__name__    # get the name of the table which sent the request
+    sender = str(sender)
+    if instance.user_modified_id:
+        user = User.objects.get(id = instance.user_modified_id)
+    else:
+        user = User.objects.get(id = instance.user_created_id)
+    try:
+        log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
+        log.save()
+    except Exception as ex:
+        pass
+
+class ServerLog(models.Model):
+    id = BigAutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, null = True)
+    village = models.BigIntegerField(null = True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.BigIntegerField(null = True)
+    partner = models.BigIntegerField(null = True)
+    
+#    def __unicode__(self):
+#        return self.entry_table
+
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified", null=True, blank=True)
     time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
-    
+  
     class Meta:
         abstract = True
+
+    def get_village(self):
+        return self.village.id
+    def get_partner(self):
+        return self.village.block.district.partner.id
 
 class OfflineUserManager(models.Manager):
     def get_offline_pk(self, username, flag_create):
@@ -248,7 +282,6 @@ class State(CocoModel):
     def __unicode__(self):
         return self.state_name
 
-
 class Partners(CocoModel):
     id = BigAutoField(primary_key = True)
     partner_name = models.CharField(max_length=100, db_column='PARTNER_NAME')
@@ -263,7 +296,6 @@ class Partners(CocoModel):
 
     def __unicode__(self):
         return self.partner_name
-
 
 class FieldOfficer(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -294,7 +326,7 @@ class District(CocoModel):
 
     def __unicode__(self):
         return self.district_name
-
+                  
 class Block(CocoModel):
     id = BigAutoField(primary_key = True)
     block_name = models.CharField(max_length=100, db_column='BLOCK_NAME', unique='True')
@@ -329,9 +361,14 @@ class Village(CocoModel):
         db_table = u'village'
         unique_together = ("village_name","block")
 
+    def get_village(self):
+        return self.id
+    def get_partner(self):
+        return self.block.district.partner.id
+    
     def __unicode__(self):
         return self.village_name
-
+post_save.connect(save_log, sender = Village)
 
 class MonthlyCostPerVillage(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -372,6 +409,7 @@ class PersonGroups(CocoModel):
     def __unicode__(self):
         return  u'%s (%s)' % (self.group_name, self.village)
         #return self.group_name
+post_save.connect(save_log, sender = PersonGroups)
 
 class FarmerbookManager(models.Manager):
     def get_query_set(self):
@@ -551,12 +589,13 @@ class Person(CocoModel):
             error_type, value, tracebk = sys.exc_info()
             mail_body = str(type)+":"+str(value)+"\n"+str(traceback.extract_tb(tracebk))
             send_mail("Error in date_of_joining_handler", mail_body,'server@digitalgreen.org',recipient_list=['rahul@digitalgreen.org'])
-        
+
     def __unicode__(self):
         if (self.father_name is None or self.father_name==''):
             return self.person_name
         return  u'%s (%s)' % (self.person_name, self.father_name)
-    
+post_save.connect(save_log, sender = Person)
+
 class PersonRelations(models.Model):
     id = BigAutoField(primary_key = True)
     person = BigForeignKey(Person,related_name='person')
@@ -583,10 +622,16 @@ class Animator(CocoModel):
     class Meta:
         db_table = u'animator'
         unique_together = ("name", "gender", "partner","village")
+
+    def get_village(self):
+        return None
+    def get_partner(self):
+        return self.partner.id
+    
     def __unicode__(self):
         return  u'%s (%s)' % (self.name, self.village)
         #return self.name
-
+post_save.connect(save_log, sender = Animator)
 
 class Training(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -627,7 +672,6 @@ class Language(CocoModel):
 
     def __unicode__(self):
         return self.language_name
-
 
 class Video(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -710,12 +754,17 @@ class Video(CocoModel):
     class Meta:
         db_table = u'video'
         unique_together = ("title", "video_production_start_date", "video_production_end_date","village")
+
+    def get_village(self):
+        return None
+    
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
     
 pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
+post_save.connect(save_log, sender = Video)
 
 class PracticeSector(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -806,12 +855,13 @@ class Screening(CocoModel):
     class Meta:
         db_table = u'screening'
         unique_together = ("date", "start_time", "end_time","location","village")
-
+     
     def __unicode__(self):
         return u'%s %s' % (self.date, self.village)
     
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
+post_save.connect(save_log, sender = Screening)
     
 class PersonAdoptPractice(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -823,10 +873,16 @@ class PersonAdoptPractice(CocoModel):
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
     time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    def get_village(self):
+        return self.person.village.id
+    def get_partner(self):
+        return self.person.village.block.district.partner.id
     
     class Meta:
         db_table = u'person_adopt_practice'
         unique_together = ("person", "video", "date_of_adoption")
+post_save.connect(save_log, sender = PersonAdoptPractice)
 
 class PersonMeetingAttendance(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -910,7 +966,6 @@ class Target(CocoModel):
     
     class Meta:
         unique_together = ("district","month_year")
-        
         
 class Rule(CocoModel):
     name = models.CharField(max_length=100);
