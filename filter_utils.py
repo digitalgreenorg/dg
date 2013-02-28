@@ -21,6 +21,8 @@ def filter_objects_for_date(all_objects, date_field_name, search_text):
         return all_objects.none()
     except ValidationError:
         pass
+    except UnicodeDecodeError:
+        pass
     # Filter objects which match the month
     try:
         obj_with_month = all_objects.filter(**{'%s__month' % (date_field_name):search_text})
