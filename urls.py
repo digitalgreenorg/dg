@@ -262,7 +262,8 @@ urlpatterns = patterns('',
     (r'^analytics/video/?$',video_analytics.video),
     (r'^path/page/?$',page),
     (r'^path/update/?$',update),
-    (r'^fbconnect/', include('fbconnect.urls'))
+    (r'^fbconnect/', include('fbconnect.urls')),
+    (r'^api/', include('website.urls'))
 )
 
 # Static files serving locally

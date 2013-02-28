@@ -5,7 +5,7 @@ class Video(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
     title = models.CharField(max_length=100)
     thumbnailURL = models.CharField(max_length=100)
-    description = models.CharField(blank=True)
+    description = models.CharField(max_length=500,blank=True)
     youtubeID = models.CharField(max_length=20,blank=True)
     duration = models.BigIntegerField(null=True, blank=True)
     date = models.DateField()
@@ -73,10 +73,10 @@ class Activity(models.Model):
     date = models.DateField()
     #type = models.CharField(max_length=20,choices = ['F','P'] )
     title = models.CharField(max_length=100)
-    textContent = models.CharField()
+    textContent = models.CharField(max_length=1000)
     avatarURL = models.CharField(max_length=100)
-    #collectionUID = models.ForeignKey(Collection, related_name='collection_activity', blank=True)
-    #youtubeVideoID = models.CharField(max_length=20,blank=True)
+    collectionUID = models.ForeignKey(Collection, related_name='collection_activity', blank=True)
+    youtubeVideoID = models.CharField(max_length=20,blank=True)
     images = models.ManyToManyField(ImageSpec)
     
 class Language(models.Model):
@@ -102,16 +102,16 @@ class FilterValueDescription(models.Model):
     itemCount = models.BigIntegerField()
     
 class SearchCompletion(models.Model):
-    type = models.CharField(max_length=10,choices = ['Topic','Videos','Partners'])
+    type = models.CharField(max_length=10,choices = (('T','Topic'),('V','Videos'),('P','Partners')))
     searchTerm = models.CharField(max_length=100)
     
 class VideoWatchRecord(models.Model): 
-    videoUID = models.ForeignKey(Video,related_name='partner_comments')
-    personUID = models.ForeignKey(Person,related_name='partner_comments')
+    videoUID = models.ForeignKey(Video,related_name='video_watchrecord')
+    personUID = models.ForeignKey(Person,related_name='person_watchrecord')
     timeWatched = models.BigIntegerField()
     
 class UserInfo(models.Model):
-    personUID = models.ForeignKey(Person,related_name='partner_comments')
+    personUID = models.ForeignKey(Person,related_name='person_userinfo')
     #authToken
     #name
     avatarURL = models.URLField(max_length=200)
