@@ -67,6 +67,7 @@ define([
           }
           
           this.setView("#content", new current_add_edit_view({
+              serialize: {button1:"Save", button2:"Save and Add Another"},
               initialize: params,
               model_id: data
           }));

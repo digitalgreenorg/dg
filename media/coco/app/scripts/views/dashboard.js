@@ -1,5 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config'
-], function($, pass, pass, configs, indexeddb) {
+define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/show_add_edit_form', 'indexeddb-backbone'], function($, pass, pass, configs, indexeddb, ShowAddEditFormView) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -7,9 +6,9 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             "click button#download": "Download",
             "click button#upload": "Upload"
         },
+
         item_template: _.template($("#dashboard_item_template")
             .html()),
-
         initialize: function() {
 
             // add dummy data to uploadqueue
@@ -125,9 +124,26 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         },
 
+        increment_pb: function() {
+            var curr_pb = this.$('#pbar')
+                .width();
+            // console.log(curr_pb);
+            // console.log(curr_pb.split("px")[0]);
+            // curr_pb = parseInt(curr_pb.split("px")[0]);
+
+
+            var new_pb = progress_bar_step + curr_pb;
+            console.log("curr_pb= " + curr_pb);
+            console.log("step= " + progress_bar_step);
+            console.log("new_pb= " + new_pb);
+            this.$('#pbar')
+                .width(new_pb + "%");
+        },
+
         Upload: function() {
             console.log("UPLOAD: start the fuckin upload");
-
+            // this.$('#show_status').html(this.progress_bar_template());
+            // this.$("#upload_modal").modal('show');
             // fetch the upload queue from indexeddb
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
@@ -138,15 +154,18 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                 database: indexeddb,
                 storeName: "uploadqueue",
             });
+            this.generic_upload_model = generic_model_offline;
             this.upload_collection = new generic_offline_collection();
             this.upload_collection.bind('reset', this.process_upload_queue, this);
             this.upload_collection.fetch();
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         },
 
         // read each entry of the uploadqueue 
         process_upload_queue: function() {
             console.log("UPLOAD: inside upload queue: " + this.upload_collection.length + " entries");
+            progress_bar_step = 100 / this.upload_collection.length;
+            console.log("UPLOAD: progress bar step: " + progress_bar_step);
             $(document)
                 .on("read_next", this.next_upload);
             ev = {
@@ -161,6 +180,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         next_upload: function(event) {
             event.stopPropagation();
             console.log("in next_upload");
+            event.context.increment_pb();
             var model1 = event.context.upload_collection.shift();
             if (model1 == undefined) return;
             console.log(model1);
@@ -169,6 +189,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         },
 
         process_upload_entry: function(entry) {
+            this.current_entry = entry;
             console.log("UPLOAD: processing this uploadqueue entry - " + JSON.stringify(entry.toJSON()));
             if (entry.get("action") == "A" || entry.get("action") == "E") {
                 console.log("UPLOAD: its add or edit action");
@@ -184,25 +205,31 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
 
         offline_to_online: function(entry) {
             console.log("UPLOAD:OFFLINE_TO_ONLINE: here am i");
-            var f_entities = all_configs[entry.get('entity_name')]["foreign_entities"];
+            var f_entities = configs[entry.get('entity_name')]["foreign_entities"];
             console.log("UPLOAD:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
-            var online_json = entry.get("data");
+            var online_json = $.extend(null, entry.get("data"));
             console.log("UPLOAD:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(entry.get("data")));
-            var num_mem = f_entities.length;
+            var num_mem = Object.keys(f_entities)
+                .length;
+            // if(entry.id==737)
+            //                 num_mem = 0;
             if (!num_mem) {
                 console.log("UPLOAD:OFFLINE_TO_ONLINE: no foreign entities to convert");
                 if (entry.get("action") == "A") {
                     console.log("UPLOAD: its add action");
-                    this.upload_add(entry);
+                    this.upload_add(online_json);
                 } else if (entry.get("action") == "E") {
                     console.log("UPLOAD: its edit action");
-                    this.upload_edit(entry);
+                    this.upload_edit(online_json);
                 }
 
             } else {
 
                 for (member in f_entities) {
-                    if (!(member in entry.get("data"))) continue;
+                    if (!(member in entry.get("data"))) {
+                        num_mem--;
+                        continue;
+                    }
                     console.log("UPLOAD:OFFLINE_TO_ONLINE: converting " + member + " offline to online");
                     var generic_model_offline = Backbone.Model.extend({
                         database: indexeddb,
@@ -214,24 +241,27 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                     f_model.fetch({
                         success: function(model) {
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                            online_json[model.storeName] = all_configs[entry.get('entity_name')]["rest_api_url"] + model.get("online_id") + "/";
+                            online_json[model.storeName] = configs[entry.get('entity_name')]["rest_api_url"] + model.get("online_id") + "/";
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                             num_mem--;
                             if (!num_mem) {
                                 console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
                                 if (entry.get("action") == "A") {
                                     console.log("UPLOAD: its add action");
-                                    that.upload_add(entry);
+                                    that.upload_add(online_json);
                                 } else if (entry.get("action") == "E") {
                                     console.log("UPLOAD: its edit action");
-                                    that.upload_edit(entry);
+                                    that.upload_edit(online_json);
                                 }
 
                             }
                         },
                         error: function() {
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
-                            //TODO: discard this and continue with next uploadqueue entry
+                            //discard this and continue with next uploadqueue entry
+                            entry.destroy();
+                            $.event.trigger(ev);
+
                         }
                     });
                 }
@@ -241,18 +271,30 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
 
         },
 
-        upload_add: function(entry) {
+        upload_add: function(conv_json) {
+            //   this.setView("#upload_form", new PersonAddEditView({
+            //     initialize: {view_configs:configs[entry.get("entity_name")],router:this},
+            //     model_id: entry.get("data").id
+            // }));
 
+            // this.$('#upload_form').html('<form><input></input></form>');
+            // var shit = new upload_view({            });
+            // this.setView("#show_status",shit );
+
+            // this.render();
+            // shit.$('#upload_form').show();
             // create online,offline models for the entity of upload entry
+            var that = this;
+
             var generic_model_online = Backbone.Model.extend({
                 sync: Backbone.ajaxSync,
                 url: function() {
-                    return this.id ? all_configs[entry.get("entity_name")].rest_api_url + this.id + "/" : all_configs[entry.get("entity_name")].rest_api_url;
+                    return this.id ? configs[that.current_entry.get("entity_name")].rest_api_url + this.id + "/" : configs[that.current_entry.get("entity_name")].rest_api_url;
                 },
             });
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
-                storeName: entry.get("entity_name"),
+                storeName: that.current_entry.get("entity_name"),
             });
 
             var upload_online_model = new generic_model_online();
@@ -260,7 +302,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // set json from uploadqueue entry on online model, unset the id, save the model     
-            var offline_id = entry.get("data")
+            var offline_id = this.current_entry.get("data")
                 .id;
 
             upload_offline_model.set("id", offline_id);
@@ -269,7 +311,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                 success: function(model) { // not deleted hence go forward
 
                     // var online_json = that.offline_to_online(entry);      
-                    upload_online_model.set(entry.get("data")); //setting what was recorded and not the exact model
+                    upload_online_model.set(conv_json); //setting what was recorded and not the exact model
                     upload_online_model.unset('id');
                     console.log("UPLOAD:ADD: upload online model set - " + JSON.stringify(upload_online_model.toJSON()));
                     console.log("UPLOAD:ADD: upload online model save called.");
@@ -283,50 +325,161 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                             model.save(null, {
                                 success: function(model) {
                                     console.log("UPLOAD:ADD: offline model after evrthing-" + JSON.stringify(model.toJSON()));
-                                    entry.destroy();
+                                    that.current_entry.destroy();
                                     $.event.trigger(ev);
                                 },
                                 error: function() {
                                     //ToDO: error handling
-                                    console.log("ERROR:UPLOAD:ADD: The offline model's online id could not be set.");
-                                    entry.destroy();
+                                    console.log("ERROR:UPLOAD:ADD: Unexpected error.Couldn't save offline model.The offline model's online id could not be set.");
+                                    that.current_entry.destroy();
                                     $.event.trigger(ev);
 
                                 }
                             });
                         },
-                        error: function() {
+                        error: function(model, xhr, options) {
                             console.log("UPLOAD:ADD: Error adding model on server ");
-                            entry.destroy();
-                            $.event.trigger(ev);
+                            _(that)
+                                .bindAll('after_upload_error');
+                            $(document)
+                                .on("upload_error_resolved", that.after_upload_error);
+                            console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(that.current_entry.get("data")));
+                            p = new ShowAddEditFormView({
+                                serialize: {
+                                    button1: "Save again",
+                                    button2: "Discard"
+                                },
+                                initialize: {
+                                    view_configs: configs[that.current_entry.get("entity_name")],
+                                    router: this
+                                },
+                                model_id: that.current_entry.get("data")
+                                    .id,
+                                model_json: that.current_entry.get("data")
+                            });
+                            p.render();
+                            that.$('#error_msg')
+                                .html(xhr.responseText);
+                            console.log(xhr.statusText);
+                            that.$('#upload_form')
+                                .html(p.el);
+
+                            // $.event.trigger(ev);
+
                         }
+
                     });
 
                     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
                 },
+
+
                 error: function() {
                     console.log("ERROR:UPLOAD:ADD: The offline model does not exist in indexeddb anymore. Can't set its online id. Must be deleted. Ignoring. ");
-                    entry.destroy();
+                    //discard this and continue with next uploadqueue entry
+                    that.current_entry.destroy();
                     $.event.trigger(ev);
+
                 }
             });
 
 
         },
 
-        upload_edit: function(entry) {
+        after_upload_error: function(e) {
+            console.log("UPLOAD:ERROR: in after error");
+            this.$('#upload_form')
+                .html("");
+            this.$('#error_msg')
+                .html("");
+
+            e.stopPropagation();
+            if (e.discard) {
+                console.log("UPLOAD:ERROR: the entry was discraded");
+                if (this.current_entry.get("action") == "A") {
+                    var generic_model_offline = Backbone.Model.extend({
+                        database: indexeddb,
+                        storeName: this.current_entry.get("entity_name"),
+                    });
+
+                    var upload_offline_model = new generic_model_offline();
+                    var offline_id = this.current_entry.get("data")
+                        .id;
+
+                    upload_offline_model.set("id", offline_id);
+                    var that = this;
+                    upload_offline_model.destroy({
+                        success: function() {
+                            console.log("UPLOAD:ADD:ERROR: Discarded and destroyed from IDB.");
+                            that.current_entry.destroy();
+                            $.event.trigger(ev);
+                        },
+                        error: function() {
+                            console.log("ERROR:UPLOAD:ADD:ERROR: unexpected error. Coudn't delete an offline model");
+                            alert("error");
+                        }
+                    });
+
+
+                } else {
+                    this.current_entry.destroy();
+                    $.event.trigger(ev);
+                }
+
+            } else {
+                console.log("UPLOAD:ERROR: edit and retry");
+                console.log("UPLOAD:ERROR: json from form - " + JSON.stringify(e.context.final_json));
+                var after_upload_error_json = e.context.final_json;
+                var generic_model_offline = Backbone.Model.extend({
+                    database: indexeddb,
+                    storeName: this.current_entry.get("entity_name"),
+                });
+                var upload_offline_model = new generic_model_offline();
+                upload_offline_model.set(after_upload_error_json);
+                var that = this;
+                upload_offline_model.save(null, {
+                    success: function(model) {
+
+                        console.log("UPLOAD:ADD:ERROR:RETRY: edited to - " + JSON.stringify(model));
+                        that.current_entry.set('data', after_upload_error_json);
+                        var upload_model_edit = new that.generic_upload_model();
+                        upload_model_edit.set({
+                            data: after_upload_error_json,
+                            action: "E",
+                            entity_name: that.current_entry.get("entity_name")
+                        });
+                        that.upload_collection.unshift(that.current_entry);
+                        that.upload_collection.push(upload_model_edit); // to maintain the consistency between online and offline data. bcoz there cud be an Edit on this model later in the uploadqueue.
+                        $.event.trigger(ev);
+
+                    },
+                    error: function() {
+                        console.log("ERROR:UPLOAD:ADD:ERROR:RETRY: Unexpected Error.Couldn't save the offline model ");
+                    }
+                });
+
+
+
+                console.log(ev);
+            }
+
+        },
+
+
+        upload_edit: function(conv_json) {
             // create online,offline models for the entity of upload entry
+            var that = this;
             var generic_model_online = Backbone.Model.extend({
                 sync: Backbone.ajaxSync,
                 url: function() {
-                    return this.id ? all_configs[entry.get("entity_name")].rest_api_url + this.id + "/" : all_configs[entry.get("entity_name")].rest_api_url;
+                    return this.id ? configs[that.current_entry.get("entity_name")].rest_api_url + this.id + "/" : configs[that.current_entry.get("entity_name")].rest_api_url;
                 },
             });
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
-                storeName: entry.get("entity_name"),
+                storeName: that.current_entry.get("entity_name"),
             });
 
             var upload_offline_model = new generic_model_offline();
@@ -334,11 +487,12 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // set json from uploadqueue entry on online model, unset the id, save the model     
-            upload_offline_model.set(entry.get("data"));
+            upload_offline_model.set(this.current_entry.get("data"));
+            var that = this;
             var fetching = upload_offline_model.fetch({
                 success: function(model) {
                     console.log("UPLOAD:EDIT: offline model fetched to get online id-" + JSON.stringify(model.toJSON()));
-                    upload_online_model.set(entry.get("data"));
+                    upload_online_model.set(conv_json);
                     console.log("UPLOAD:EDIT: upload online model from uploadqueue- " + JSON.stringify(upload_online_model.toJSON()));
                     upload_online_model.set('id', model.get('online_id'));
                     upload_online_model.unset('online_id');
@@ -346,13 +500,38 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                     upload_online_model.save(null, {
                         success: function(model) {
                             console.log("UPLOAD:EDIT: Dummy online person model after save - " + JSON.stringify(upload_online_model.toJSON()));
-                            entry.destroy();
+                            that.current_entry.destroy();
                             $.event.trigger(ev);
                         },
-                        error: function(model) {
-                            console.log("UPLOAD:EDIT: Erro editing model on server ");
-                            entry.destroy();
-                            $.event.trigger(ev);
+                        error: function(model, xhr, options) {
+                            console.log("UPLOAD:EDIT: Error editing model on server ");
+
+                            _(that)
+                                .bindAll('after_upload_error');
+                            $(document)
+                                .on("upload_error_resolved", that.after_upload_error);
+                            console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(that.current_entry.get("data")));
+                            p = new ShowAddEditFormView({
+                                serialize: {
+                                    button1: "Save again",
+                                    button2: "Discard"
+                                },
+                                initialize: {
+                                    view_configs: configs[that.current_entry.get("entity_name")],
+                                    router: this
+                                },
+                                model_id: that.current_entry.get("data")
+                                    .id,
+                                model_json: that.current_entry.get("data")
+                            });
+
+                            p.render();
+                            that.$('#error_msg')
+                                .html(xhr.responseText);
+                            console.log(xhr.statusText);
+                            that.$('#upload_form')
+                                .html(p.el);
+
                         }
                     });
                     console.log("UPLOAD:EDIT: upload online model save called.");
@@ -361,7 +540,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                 error: function() {
                     //ToDO: error handling
                     console.log("ERROR:UPLOAD:EDIT: The offline model does not exist in indexeddb. Can't get its online id. Ignoring. ");
-                    entry.destroy();
+                    that.current_entry.destroy();
                     $.event.trigger(ev);
                 }
             });
@@ -375,7 +554,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             var generic_model_online = Backbone.Model.extend({
                 sync: Backbone.ajaxSync,
                 url: function() {
-                    return this.id ? all_configs[entry.get("entity_name")].rest_api_url + this.id + "/" : all_configs[entry.get("entity_name")].rest_api_url;
+                    return this.id ? configs[entry.get("entity_name")].rest_api_url + this.id + "/" : configs[entry.get("entity_name")].rest_api_url;
                 },
             });
             var generic_model_offline = Backbone.Model.extend({

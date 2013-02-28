@@ -6,8 +6,6 @@
 
 
 	<title>Dashboard</title>
-	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/docs/assets/css/bootstrap.css">
-	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/docs/assets/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 
 	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
@@ -19,11 +17,15 @@
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js"> 	  </script>
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script>
 	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.js"></script> -->
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script> -->
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
+	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
+	<script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
 	<!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/layoutmanager/backbone.layoutmanager.js"></script> -->
 	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
 	
     <!-- // application js -->
       <!-- // <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
@@ -42,6 +44,7 @@
     </ul>
 </div>
 </script>
+
 <script type="text/template" id="error_notifcation_template" >
     <div class="alert alert-error">
       <a class="close" data-dismiss="alert">×</a>
@@ -79,12 +82,35 @@
             
     <div class="span8" style="margin-left:20px;">
             
-        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;">Upload</button>
+        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;" data-toggle="modal" data-target="#upload_modal">Upload</button>
         
         <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
+        <div id="show_status">
+        </div>
+        
     </div>
-</script>
     
+    <div id="upload_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Syncing</h3>
+      </div>
+      <div class="modal-body">
+        <p >One fine body…</p>
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "pbar" style="width: 0%"></div>
+        </div>
+        <p id= "error_msg"> </p>
+        <div id= "upload_form">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+    
+</script>
+    <!--   -->
 <script type="text/template" id="person_table_template">
        <tr>
        <th>Id</th>
@@ -237,8 +263,8 @@
 														</div> 
     												</fieldset> 
     												<div class="form-actions">
-                                                      <button id='save' type="submit" class="btn btn-primary">Save</button>
-                                                      <button id='save_add_another' type="submit" class="btn btn-primary">Save and Add Another</button>
+                                                      <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
+                                                      <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
                                                     </div>
     									</div> 
     								
@@ -258,7 +284,7 @@
 
 <body>
 	
-	
+    
     <div id = "notifications">
         
     </div>
