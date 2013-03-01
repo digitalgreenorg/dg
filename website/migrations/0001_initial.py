@@ -8,53 +8,50 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Video'
-        db.create_table('website_video', (
-            ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('thumbnailURL', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
-            ('youtubeID', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
-            ('duration', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('date', self.gf('django.db.models.fields.DateField')()),
-            ('onlineLikes', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('offlineLikes', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('onlineViews', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('offlineViews', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('adoptions', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
-            ('tags', self.gf('django.db.models.fields.CharField')(max_length=100)),
-        ))
-        db.send_create_signal('website', ['Video'])
-
         # Adding model 'Country'
         db.create_table('website_country', (
             ('countryCode', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
-            ('countryName', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('countryName', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('website', ['Country'])
+
+        # Adding model 'Interest'
+        db.create_table('website_interest', (
+            ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=500)),
+        ))
+        db.send_create_signal('website', ['Interest'])
 
         # Adding model 'Farmer'
         db.create_table('website_farmer', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('thumbnailURL', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('imageURL', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('village', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('block', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('district', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('country', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_farmers', to=orm['website.Country'])),
+            ('thumbnailURL', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('imageURL', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('village', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('block', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('district', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('country', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('website', ['Farmer'])
+
+        # Adding M2M table for field interests on 'Farmer'
+        db.create_table('website_farmer_interests', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('farmer', models.ForeignKey(orm['website.farmer'], null=False)),
+            ('interest', models.ForeignKey(orm['website.interest'], null=False))
+        ))
+        db.create_unique('website_farmer_interests', ['farmer_id', 'interest_id'])
 
         # Adding model 'Partner'
         db.create_table('website_partner', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('location', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('location', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('joinDate', self.gf('django.db.models.fields.DateField')()),
-            ('logoURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
+            ('logoURL', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
             ('collectionCount', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
         ))
         db.send_create_signal('website', ['Partner'])
@@ -67,20 +64,51 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('website_partner_farmers', ['partner_id', 'farmer_id'])
 
-        # Adding model 'Collection'
-        db.create_table('website_collection', (
+        # Adding model 'Language'
+        db.create_table('website_language', (
+            ('languageCode', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('website', ['Language'])
+
+        # Adding model 'Video'
+        db.create_table('website_video', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('thumbnailURL', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('youtubeID', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('duration', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('date', self.gf('django.db.models.fields.DateField')()),
+            ('onlineLikes', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('offlineLikes', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('onlineViews', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('offlineViews', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('adoptions', self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True)),
+            ('tags', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('sector', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('subsector', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('topic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('subject', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('partnerUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='partner_videos', to=orm['website.Partner'])),
+            ('language', self.gf('django.db.models.fields.related.ForeignKey')(related_name='language_videos', max_length=20, to=orm['website.Language'])),
+        ))
+        db.send_create_signal('website', ['Video'])
+
+        # Adding model 'Collection'
+        db.create_table('website_collection', (
+            ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=500)),
+            ('thumbnailURL', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('country', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_collections', to=orm['website.Country'])),
             ('partnerUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='partner_collections', to=orm['website.Partner'])),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('tags', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('sector', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
-            ('subsector', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
-            ('topic', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
-            ('subject', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
+            ('language', self.gf('django.db.models.fields.related.ForeignKey')(related_name='language_collections', max_length=20, to=orm['website.Language'])),
+            ('tags', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('sector', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('subsector', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('topic', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
+            ('subject', self.gf('django.db.models.fields.CharField')(max_length=500, blank=True)),
         ))
         db.send_create_signal('website', ['Collection'])
 
@@ -104,9 +132,8 @@ class Migration(SchemaMigration):
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateField')()),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('textContent', self.gf('django.db.models.fields.CharField')(max_length=1000)),
-            ('avatarURL', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('collectionUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='collection_activity', blank=True, to=orm['website.Collection'])),
+            ('textContent', self.gf('django.db.models.fields.TextField')()),
+            ('avatarURL', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('youtubeVideoID', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
         ))
         db.send_create_signal('website', ['Activity'])
@@ -118,14 +145,6 @@ class Migration(SchemaMigration):
             ('imagespec', models.ForeignKey(orm['website.imagespec'], null=False))
         ))
         db.create_unique('website_activity_images', ['activity_id', 'imagespec_id'])
-
-        # Adding model 'Language'
-        db.create_table('website_language', (
-            ('countryCode', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['website.Country'])),
-            ('languageCode', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal('website', ['Language'])
 
         # Adding model 'Person'
         db.create_table('website_person', (
@@ -143,6 +162,7 @@ class Migration(SchemaMigration):
             ('partnerUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='partner_comments', to=orm['website.Partner'])),
             ('personUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='person_comments', to=orm['website.Person'])),
             ('inReplyToCommentUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='replies', to=orm['website.Comment'])),
+            ('videoUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='video_comments', to=orm['website.Video'])),
         ))
         db.send_create_signal('website', ['Comment'])
 
@@ -181,20 +201,29 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting model 'Video'
-        db.delete_table('website_video')
-
         # Deleting model 'Country'
         db.delete_table('website_country')
 
+        # Deleting model 'Interest'
+        db.delete_table('website_interest')
+
         # Deleting model 'Farmer'
         db.delete_table('website_farmer')
+
+        # Removing M2M table for field interests on 'Farmer'
+        db.delete_table('website_farmer_interests')
 
         # Deleting model 'Partner'
         db.delete_table('website_partner')
 
         # Removing M2M table for field farmers on 'Partner'
         db.delete_table('website_partner_farmers')
+
+        # Deleting model 'Language'
+        db.delete_table('website_language')
+
+        # Deleting model 'Video'
+        db.delete_table('website_video')
 
         # Deleting model 'Collection'
         db.delete_table('website_collection')
@@ -210,9 +239,6 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field images on 'Activity'
         db.delete_table('website_activity_images')
-
-        # Deleting model 'Language'
-        db.delete_table('website_language')
 
         # Deleting model 'Person'
         db.delete_table('website_person')
@@ -236,11 +262,10 @@ class Migration(SchemaMigration):
     models = {
         'website.activity': {
             'Meta': {'object_name': 'Activity'},
-            'avatarURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'collectionUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'collection_activity'", 'blank': 'True', 'to': "orm['website.Collection']"}),
+            'avatarURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
             'images': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['website.ImageSpec']", 'symmetrical': 'False'}),
-            'textContent': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
+            'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
             'youtubeVideoID': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
@@ -248,16 +273,16 @@ class Migration(SchemaMigration):
         'website.collection': {
             'Meta': {'object_name': 'Collection'},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_collections'", 'to': "orm['website.Country']"}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'language': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'language_collections'", 'max_length': '20', 'to': "orm['website.Language']"}),
             'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_collections'", 'to': "orm['website.Partner']"}),
-            'sector': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'sector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
             'videos': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'video_collections'", 'symmetrical': 'False', 'to': "orm['website.Video']"})
         },
@@ -269,24 +294,26 @@ class Migration(SchemaMigration):
             'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_comments'", 'to': "orm['website.Partner']"}),
             'personUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person_comments'", 'to': "orm['website.Person']"}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
+            'videoUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'video_comments'", 'to': "orm['website.Video']"})
         },
         'website.country': {
             'Meta': {'object_name': 'Country'},
             'countryCode': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'countryName': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'countryName': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.farmer': {
             'Meta': {'object_name': 'Farmer'},
-            'block': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_farmers'", 'to': "orm['website.Country']"}),
-            'district': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'imageURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'block': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'country': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'district': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'imageURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'interests': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'farmer_interests'", 'symmetrical': 'False', 'to': "orm['website.Interest']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'village': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'village': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.filtervaluedescription': {
             'Meta': {'object_name': 'FilterValueDescription'},
@@ -299,20 +326,24 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'})
         },
+        'website.interest': {
+            'Meta': {'object_name': 'Interest'},
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+        },
         'website.language': {
             'Meta': {'object_name': 'Language'},
-            'countryCode': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['website.Country']"}),
             'languageCode': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.partner': {
             'Meta': {'object_name': 'Partner'},
             'collectionCount': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'farmers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'farmer_partner'", 'symmetrical': 'False', 'to': "orm['website.Farmer']"}),
             'joinDate': ('django.db.models.fields.DateField', [], {}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'logoURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'logoURL': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
         },
@@ -337,17 +368,23 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Video'},
             'adoptions': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'duration': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'language': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'language_videos'", 'max_length': '20', 'to': "orm['website.Language']"}),
             'offlineLikes': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'offlineViews': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'onlineLikes': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'onlineViews': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_videos'", 'to': "orm['website.Partner']"}),
+            'sector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
+            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         'website.videowatchrecord': {
             'Meta': {'object_name': 'VideoWatchRecord'},

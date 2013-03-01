@@ -19,49 +19,22 @@ class Migration(DataMigration):
 
 #        language migrations
 
-        country=Country.objects.all()[0]
         lang=orm['dashboard.Language'].objects.all()
         for i in lang:
-            temp=Language(languageCode=str(i.id),countryCode=country,name=i.language_name)
+            temp=Language(languageCode=str(i.id),name=i.language_name)
             temp.save()
-
-#        video migrations
-
-        yt_service = gdata.youtube.service.YouTubeService()
-        yt_service.developer_key = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
-        yt_service.ssl = False
-        video=orm['dashboard.Video'].objects.all()
-        for i in video:
-            if i.youtubeid is not None:
-                offlk=0
-                offvw=0
-                for j in orm['dashboard.VideosScreenedInScreening'].objects.filter(video_id=i.id):
-                    offvw = offvw + len(orm['dashboard.PersonMeetingAttendance'].objects.filter(screening_id = j.screening_id))
-                    offlk = offlk + int(orm['dashboard.PersonMeetingAttendance'].objects.filter(screening_id = 6000019734).values ('screening_id').annotate(count = Sum('interested')).values_list('count', flat=True)[0])
-                adops=len(orm['dashboard.PersonAdoptPractice'].objects.filter(video_id=i.id))
-                try:
-                    entry = yt_service.GetYouTubeVideoEntry(video_id=i.youtubeid)
-                    if entry.rating is not None:
-                        temp=Video(uid=str(i.id),title=i.title,thumbnailURL=entry.media.thumbnail[0].url,description=i.summary[:100],youtubeID=i.youtubeid,duration=int(entry.media.duration.seconds),date=i.video_production_end_date,onlineLikes=int((float(entry.rating.average)*float(entry.rating.num_raters)-float(entry.rating.num_raters))/4),onlineViews=int(entry.statistics.view_count),offlineLikes=offlk,offlineViews=offvw,adoptions=adops,tags='null')
-                        temp.save()
-                    else:
-                        temp=Video(uid=str(i.id),title=i.title,thumbnailURL=entry.media.thumbnail[0].url,description=i.summary[:100],youtubeID=i.youtubeid,duration=int(entry.media.duration.seconds),date=i.video_production_end_date,onlineLikes=0,onlineViews=int(entry.statistics.view_count),offlineLikes=offlk,offlineViews=offvw,adoptions=adops,tags='null')
-                        temp.save()
-                except:
-                    pass
 
 #        farmer migrations
 
-        farmer=orm['dashboard.Person'].objects.all()[:1000]
+        farmer=orm['dashboard.Person'].objects.all()[:10000]
         for i in farmer:
             if i.image_exists:
                 smallpic = "https://s3.amazonaws.com/dg_farmerbook/2/"+str(i.id)+".jpg"
                 bigpic = "https://s3.amazonaws.com/dg_farmerbook/2/"+str(i.id)+".jpg" #ideally this should be /1/ but very few so replicating
             else:
-                smallpic = "NA"
-                bigpic = "NA"
-            cntry=Country.objects.filter(countryCode=str(i.village.block.district.state.country.id))[0]
-            temp=Farmer(uid=str(i.id),name=i.person_name,thumbnailURL=smallpic,imageURL=bigpic,village=i.village.village_name,block=i.village.block.block_name,district=i.village.block.district.district_name,state=i.village.block.district.state.state_name,country=cntry)
+                smallpic = ""
+                bigpic = ""
+            temp=Farmer(uid=str(i.id),name=i.person_name,thumbnailURL=smallpic,imageURL=bigpic,village=i.village.village_name,block=i.village.block.block_name,district=i.village.block.district.district_name,state=i.village.block.district.state.state_name,country=i.village.block.district.state.country.country_name)
             temp.save()
 
 #        partner migrations
@@ -69,7 +42,7 @@ class Migration(DataMigration):
         partner = orm['dashboard.Partners'].objects.all()
         for i in partner:
             if i.date_of_association is None:
-                dt=datetime.date.today()
+                continue
             else:
                 dt=i.date_of_association
             temp = Partner(uid=str(i.id),joinDate=dt,name=i.partner_name)
@@ -81,7 +54,47 @@ class Migration(DataMigration):
             for j in farmer:
                 temp.farmers.add(j)
         
+#        video migrations
 
+        yt_service = gdata.youtube.service.YouTubeService()
+        yt_service.developer_key = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
+        yt_service.ssl = False
+        video=orm['dashboard.Video'].objects.all()
+        for i in video:
+            if i.youtubeid is not None:
+                offlk=0
+                offvw=0
+                sec=""
+                subsec=""
+                top=""
+                sub=""
+                partner=Partner.objects.get(uid=str(i.village.block.district.partner.id))
+                lang=Language.objects.get(languageCode=str(i.language_id))
+                if(i.related_practice !=None):
+                    if i.related_practice.practice_sector != None:
+                        sec=i.related_practice.practice_sector.name
+                    if i.related_practice.practice_subsector != None:
+                        subsec=i.related_practice.practice_subsector.name
+                    if i.related_practice.practice_topic != None:
+                        top=i.related_practice.practice_topic.name
+                    if i.related_practice.practice_subject != None:
+                        sub=i.related_practice.practice_subject.name
+                        
+                for j in orm['dashboard.VideosScreenedInScreening'].objects.filter(video_id=i.id):
+                    offvw = offvw + len(orm['dashboard.PersonMeetingAttendance'].objects.filter(screening_id = j.screening_id))
+                    offlk = offlk + int(orm['dashboard.PersonMeetingAttendance'].objects.filter(screening_id = 6000019734).values ('screening_id').annotate(count = Sum('interested')).values_list('count', flat=True)[0])
+                adops=len(orm['dashboard.PersonAdoptPractice'].objects.filter(video_id=i.id))
+                try:
+                    entry = yt_service.GetYouTubeVideoEntry(video_id=i.youtubeid)
+                    if entry.rating is not None:
+                        temp=Video(uid=str(i.id),language=lang,partnerUID=partner,sector=sec,subsector=subsec,topic=top,subject=sub,title=i.title,thumbnailURL=entry.media.thumbnail[0].url,description=i.summary[:100],youtubeID=i.youtubeid,duration=int(entry.media.duration.seconds),date=i.video_production_end_date,onlineLikes=int((float(entry.rating.average)*float(entry.rating.num_raters)-float(entry.rating.num_raters))/4),onlineViews=int(entry.statistics.view_count),offlineLikes=offlk,offlineViews=offvw,adoptions=adops,tags='null')
+                        temp.save()
+                    else:
+                        temp=Video(uid=str(i.id),language=lang,partnerUID=partner,sector=sec,subsector=subsec,topic=top,subject=sub,title=i.title,thumbnailURL=entry.media.thumbnail[0].url,description=i.summary[:100],youtubeID=i.youtubeid,duration=int(entry.media.duration.seconds),date=i.video_production_end_date,onlineLikes=0,onlineViews=int(entry.statistics.view_count),offlineLikes=offlk,offlineViews=offvw,adoptions=adops,tags='null')
+                        temp.save()
+                except:
+                    pass
+                
 #            collections migrations
 
         collection_comb = orm['dashboard.Video'].objects.exclude(related_practice__practice_topic_id=None).values_list('village__block__district__partner_id','language_id','related_practice__practice_topic_id').annotate(c= Count('id')).filter(c__gte=5,c__lte=25)
@@ -97,14 +110,14 @@ class Migration(DataMigration):
             else:
                 sector = ""
             if len(set(videos.values_list('related_practice__practice_subsector_id')))==1 and videos[0].related_practice.practice_subsector!= None:
-                subsector = videos[0].related_practice.practice_subsector.name[:20]
+                subsector = videos[0].related_practice.practice_subsector.name
             else:
                 subsector = ""
             if len(set(videos.values_list('related_practice__practice_subject_id')))==1 and videos[0].related_practice.practice_subject != None:
                 subject = videos[0].related_practice.practice_subject.name
             else:
                 subject = ""
-            temp = Collection(uid=str(counter),topic=videos[0].related_practice.practice_topic.name[:20],language=Language.objects.get(languageCode=str(lang)).name,partnerUID=Partner.objects.get(uid=str(partner)),title=videos[0].related_practice.practice_topic.name[:20],sector=sector,subsector=subsector,subject=subject,country=country)
+            temp = Collection(uid=str(counter),topic=videos[0].related_practice.practice_topic.name,language=Language.objects.get(languageCode=str(lang)),partnerUID=Partner.objects.get(uid=str(partner)),title=videos[0].related_practice.practice_topic.name,sector=sector,subsector=subsector,subject=subject,country=country)
             temp.save()
             for vid in videos:
                 try:
@@ -125,14 +138,14 @@ class Migration(DataMigration):
             else:
                 sector = ""
             if len(set(videos.values_list('related_practice__practice_subsector_id')))==1 and videos[0].related_practice.practice_subsector!= None:
-                subsector = videos[0].related_practice.practice_subsector.name[:20]
+                subsector = videos[0].related_practice.practice_subsector.name
             else:
                 subsector = ""
             if len(set(videos.values_list('related_practice__practice_topic_id')))==1 and videos[0].related_practice.practice_topic != None:
                 continue
             else:
                 topic = ""
-            temp = Collection(uid=str(counter),topic=topic,language=Language.objects.get(languageCode=str(lang)).name,partnerUID=Partner.objects.get(uid=str(partner)),title=videos[0].related_practice.practice_subject.name[:20],sector=sector,subsector=subsector,subject=videos[0].related_practice.practice_subject.name[:20],country=country)
+            temp = Collection(uid=str(counter),topic=topic,language=Language.objects.get(languageCode=str(lang)),partnerUID=Partner.objects.get(uid=str(partner)),title=videos[0].related_practice.practice_subject.name,sector=sector,subsector=subsector,subject=videos[0].related_practice.practice_subject.name,country=country)
             temp.save()
             for vid in videos:
                 try:
@@ -175,11 +188,11 @@ class Migration(DataMigration):
         for i in range(len(activity)):
             for j in range(len(activity[i])):
                 if(activity[i][j][3]=='S'):
-                    temp = Activity(uid=str(counter),date=activity[i][j][2],title="Farmer Activity",textContent="Today "+activity[i][j][0]+" saw video titled "+ activity[i][j][1],collectionUID=Collection.objects.get(uid="1"))
+                    temp = Activity(uid=str(counter),date=activity[i][j][2],title="Farmer Activity",textContent="Today "+activity[i][j][0]+" saw video titled "+ activity[i][j][1])
                     temp.save()
                     counter=counter+1
                 else:
-                    temp=Activity(uid=str(counter),date=activity[i][j][2],title="Farmer Activity",textContent="Today "+activity[i][j][0]+" adopted video titled "+ activity[i][j][1],collectionUID=Collection.objects.get(uid="1"))
+                    temp=Activity(uid=str(counter),date=activity[i][j][2],title="Farmer Activity",textContent="Today "+activity[i][j][0]+" adopted video titled "+ activity[i][j][1])
                     temp.save()
                     counter=counter+1
         
@@ -199,17 +212,17 @@ class Migration(DataMigration):
                     village = k.village_set.all().order_by('start_date')
                     for l in village:
                         if partner_village_count==10 and repeat_flag==False:
-                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner "+i.partner_name+" has expanded their work to reach 10 villages today",collectionUID=Collection.objects.get(uid="1"))
+                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner "+i.partner_name+" has expanded their work to reach 10 villages today")
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
                         if partner_village_count==50 and repeat_flag==False:
-                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 50 villages today",collectionUID=Collection.objects.get(uid="1"))
+                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 50 villages today")
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
                         if partner_village_count==100 and repeat_flag==False:
-                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 100 villages today",collectionUID=Collection.objects.get(uid="1"))
+                            temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 100 villages today")
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
@@ -217,21 +230,45 @@ class Migration(DataMigration):
                             continue
                         else:
                             last_date = l.start_date
-                        temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" started working in Village "+l.village_name+" today",collectionUID=Collection.objects.get(uid="1"))
+                        temp = Activity(uid=str(counter),date=last_date,title="Partner Activity",textContent="Our Partner organisation "+i.partner_name+" started working in Village "+l.village_name+" today")
                         temp.save()
                         counter = counter + 1
                         partner_village_count = partner_village_count + 1
                         repeat_flag=False
                         video = l.video_set.all().order_by('video_production_end_date')
                         for m in video:
-                            temp = Activity(uid=str(counter),date=m.video_production_end_date,title="Partner Activity",textContent="A new video titled "+m.title+" was produced by our Partner "+i.partner_name,collectionUID=Collection.objects.get(uid="1"))
+                            temp = Activity(uid=str(counter),date=m.video_production_end_date,title="Partner Activity",textContent="A new video titled "+m.title+" was produced by our Partner "+i.partner_name)
                             temp.save()
-                            counter = counter + 1
-
+                            counter = counter + 1                
+        #interest migrations
+        subject=orm['dashboard.PracticeSubject'].objects.all()
+        for i in range(len(subject)):
+            temp=Interest(uid=str(i+1),name=subject[i].name)
+            temp.save()
+            pap = orm['dashboard.PersonAdoptPractice'].objects.filter(video__related_practice__practice_subject_id=subject[i].id)
+            for j in pap:
+                if len(Farmer.objects.filter(uid=str(j.person_id)))==1:
+                    farmer = Farmer.objects.get(uid=str(j.person_id))
+                    farmer.interests.add(temp)
+            
+       
+#        #comment migrations
+#        farmer=Farmer.objects.all()
+#        counter=1
+#        for i in farmer:
+#            pmas = orm['dashboard.PersonMeetingAttendance'].objects.filter(person_id=int(i.uid))
+#            for j in pmas:
+#                if j.expressed_question!='':
+#                    for k in j.screening.videoes_screened.all():
+#                        if len(Video.objects.filter(uid=str(k.id)))==1:
+#                            temp=Comment(uid=str(counter),date=j.screening.date,text=j.expressed_question,isOnline=False,personUID=i,videoUID =Video.objects.get(uid=str(k.id)) )
+#                            temp.save()
+#            
             
     def backwards(self, orm):
         pass
         "Write your backwards methods here."
+
 
     models = {
         'auth.group': {
@@ -696,11 +733,10 @@ class Migration(DataMigration):
         },
         'website.activity': {
             'Meta': {'object_name': 'Activity'},
-            'avatarURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'collectionUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'collection_activity'", 'blank': 'True', 'to': "orm['website.Collection']"}),
+            'avatarURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
             'images': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['website.ImageSpec']", 'symmetrical': 'False'}),
-            'textContent': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
+            'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
             'youtubeVideoID': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
@@ -708,16 +744,16 @@ class Migration(DataMigration):
         'website.collection': {
             'Meta': {'object_name': 'Collection'},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_collections'", 'to': "orm['website.Country']"}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'language': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'language_collections'", 'max_length': '20', 'to': "orm['website.Language']"}),
             'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_collections'", 'to': "orm['website.Partner']"}),
-            'sector': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
-            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'topic': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'sector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
             'videos': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'video_collections'", 'symmetrical': 'False', 'to': "orm['website.Video']"})
         },
@@ -729,24 +765,26 @@ class Migration(DataMigration):
             'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_comments'", 'to': "orm['website.Partner']"}),
             'personUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person_comments'", 'to': "orm['website.Person']"}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
+            'videoUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'video_comments'", 'to': "orm['website.Video']"})
         },
         'website.country': {
             'Meta': {'object_name': 'Country'},
             'countryCode': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'countryName': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'countryName': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.farmer': {
             'Meta': {'object_name': 'Farmer'},
-            'block': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_farmers'", 'to': "orm['website.Country']"}),
-            'district': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'imageURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'block': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'country': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'district': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'imageURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'interests': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'farmer_interests'", 'symmetrical': 'False', 'to': "orm['website.Interest']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'village': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'village': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.filtervaluedescription': {
             'Meta': {'object_name': 'FilterValueDescription'},
@@ -759,20 +797,24 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'imageURL': ('django.db.models.fields.URLField', [], {'max_length': '200'})
         },
+        'website.interest': {
+            'Meta': {'object_name': 'Interest'},
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+        },
         'website.language': {
             'Meta': {'object_name': 'Language'},
-            'countryCode': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['website.Country']"}),
             'languageCode': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'website.partner': {
             'Meta': {'object_name': 'Partner'},
             'collectionCount': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'farmers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'farmer_partner'", 'symmetrical': 'False', 'to': "orm['website.Farmer']"}),
             'joinDate': ('django.db.models.fields.DateField', [], {}),
-            'location': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'logoURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'logoURL': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
         },
@@ -797,17 +839,23 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Video'},
             'adoptions': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'duration': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'language': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'language_videos'", 'max_length': '20', 'to': "orm['website.Language']"}),
             'offlineLikes': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'offlineViews': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'onlineLikes': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'onlineViews': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_videos'", 'to': "orm['website.Partner']"}),
+            'sector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subject': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'subsector': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'tags': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'thumbnailURL': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
+            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         'website.videowatchrecord': {
             'Meta': {'object_name': 'VideoWatchRecord'},
