@@ -131,6 +131,7 @@ class Migration(SchemaMigration):
         db.create_table('website_activity', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateField')()),
+            ('type', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('textContent', self.gf('django.db.models.fields.TextField')()),
             ('avatarURL', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
@@ -150,6 +151,12 @@ class Migration(SchemaMigration):
         db.create_table('website_person', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('avatarURL', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
+            ('facebookID', self.gf('django.db.models.fields.CharField')(max_length=50, blank=True)),
+            ('twitterID', self.gf('django.db.models.fields.CharField')(max_length=50, blank=True)),
+            ('youtubeID', self.gf('django.db.models.fields.CharField')(max_length=50, blank=True)),
+            ('linkedInID', self.gf('django.db.models.fields.CharField')(max_length=50, blank=True)),
+            ('authToken', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
         ))
         db.send_create_signal('website', ['Person'])
 
@@ -157,12 +164,13 @@ class Migration(SchemaMigration):
         db.create_table('website_comment', (
             ('uid', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateField')()),
-            ('text', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('text', self.gf('django.db.models.fields.TextField')()),
             ('isOnline', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('partnerUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='partner_comments', to=orm['website.Partner'])),
-            ('personUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='person_comments', to=orm['website.Person'])),
-            ('inReplyToCommentUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='replies', to=orm['website.Comment'])),
-            ('videoUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='video_comments', to=orm['website.Video'])),
+            ('partnerUID', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='partner_comments', null=True, to=orm['website.Partner'])),
+            ('personUID', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='person_comments', null=True, to=orm['website.Person'])),
+            ('inReplyToCommentUID', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='replies', null=True, to=orm['website.Comment'])),
+            ('videoUID', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='video_comments', null=True, to=orm['website.Video'])),
+            ('farmerUID', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='farmer_comments', null=True, to=orm['website.Video'])),
         ))
         db.send_create_signal('website', ['Comment'])
 
@@ -190,14 +198,6 @@ class Migration(SchemaMigration):
             ('timeWatched', self.gf('django.db.models.fields.BigIntegerField')()),
         ))
         db.send_create_signal('website', ['VideoWatchRecord'])
-
-        # Adding model 'UserInfo'
-        db.create_table('website_userinfo', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('personUID', self.gf('django.db.models.fields.related.ForeignKey')(related_name='person_userinfo', to=orm['website.Person'])),
-            ('avatarURL', self.gf('django.db.models.fields.URLField')(max_length=200)),
-        ))
-        db.send_create_signal('website', ['UserInfo'])
 
 
     def backwards(self, orm):
@@ -255,9 +255,6 @@ class Migration(SchemaMigration):
         # Deleting model 'VideoWatchRecord'
         db.delete_table('website_videowatchrecord')
 
-        # Deleting model 'UserInfo'
-        db.delete_table('website_userinfo')
-
 
     models = {
         'website.activity': {
@@ -267,6 +264,7 @@ class Migration(SchemaMigration):
             'images': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['website.ImageSpec']", 'symmetrical': 'False'}),
             'textContent': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
             'youtubeVideoID': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'})
         },
@@ -289,13 +287,14 @@ class Migration(SchemaMigration):
         'website.comment': {
             'Meta': {'object_name': 'Comment'},
             'date': ('django.db.models.fields.DateField', [], {}),
-            'inReplyToCommentUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'replies'", 'to': "orm['website.Comment']"}),
+            'farmerUID': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'farmer_comments'", 'null': 'True', 'to': "orm['website.Video']"}),
+            'inReplyToCommentUID': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'replies'", 'null': 'True', 'to': "orm['website.Comment']"}),
             'isOnline': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'partner_comments'", 'to': "orm['website.Partner']"}),
-            'personUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person_comments'", 'to': "orm['website.Person']"}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'partnerUID': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner_comments'", 'null': 'True', 'to': "orm['website.Partner']"}),
+            'personUID': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'person_comments'", 'null': 'True', 'to': "orm['website.Person']"}),
+            'text': ('django.db.models.fields.TextField', [], {}),
             'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'videoUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'video_comments'", 'to': "orm['website.Video']"})
+            'videoUID': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'video_comments'", 'null': 'True', 'to': "orm['website.Video']"})
         },
         'website.country': {
             'Meta': {'object_name': 'Country'},
@@ -349,20 +348,20 @@ class Migration(SchemaMigration):
         },
         'website.person': {
             'Meta': {'object_name': 'Person'},
+            'authToken': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
+            'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
+            'facebookID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
+            'linkedInID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+            'twitterID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
+            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
+            'youtubeID': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'})
         },
         'website.searchcompletion': {
             'Meta': {'object_name': 'SearchCompletion'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'searchTerm': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '10'})
-        },
-        'website.userinfo': {
-            'Meta': {'object_name': 'UserInfo'},
-            'avatarURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'personUID': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person_userinfo'", 'to': "orm['website.Person']"})
         },
         'website.video': {
             'Meta': {'object_name': 'Video'},

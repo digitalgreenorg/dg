@@ -83,7 +83,7 @@ class ImageSpec(models.Model):
 class Activity(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
     date = models.DateField()
-    #type = models.CharField(max_length=20,choices = ['F','P'] )
+    type = models.CharField(max_length=20,choices = (('F','Farmer'),('P','Partner')) )
     title = models.CharField(max_length=100)
     textContent = models.TextField()
     avatarURL = models.CharField(max_length=100, blank=True)
@@ -93,16 +93,23 @@ class Activity(models.Model):
 class Person(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
     name = models.CharField(max_length=100)
+    avatarURL = models.URLField(max_length=200, blank=True)
+    facebookID = models.CharField(max_length=50, blank=True)
+    twitterID = models.CharField(max_length=50, blank=True) 
+    youtubeID = models.CharField(max_length=50, blank=True) 
+    linkedInID =  models.CharField(max_length=50, blank=True)
+    authToken = models.CharField(max_length=20, blank=True)
     
 class Comment(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
     date = models.DateField()
-    text = models.CharField(max_length=200)
+    text = models.TextField()
     isOnline = models.BooleanField()
-    partnerUID = models.ForeignKey(Partner,related_name='partner_comments')
-    personUID = models.ForeignKey(Person,related_name='person_comments')
-    inReplyToCommentUID= models.ForeignKey('self',related_name='replies')
-    videoUID = models.ForeignKey(Video,related_name='video_comments')
+    partnerUID = models.ForeignKey(Partner,related_name='partner_comments',null= True, blank=True)
+    personUID = models.ForeignKey(Person,related_name='person_comments',null= True, blank=True)
+    inReplyToCommentUID= models.ForeignKey('self',related_name='replies',null= True, blank=True)
+    videoUID = models.ForeignKey(Video,related_name='video_comments',null= True, blank=True)
+    farmerUID = models.ForeignKey(Farmer,related_name='farmer_comments',null= True, blank=True)
     
 class FilterValueDescription(models.Model):
     value = models.CharField(max_length=100)
@@ -117,14 +124,4 @@ class VideoWatchRecord(models.Model):
     personUID = models.ForeignKey(Person,related_name='person_watchrecord')
     timeWatched = models.BigIntegerField()
     
-class UserInfo(models.Model):
-    personUID = models.ForeignKey(Person,related_name='person_userinfo')
-    #authToken
-    #name
-    avatarURL = models.URLField(max_length=200)
-    #facebookID string
-    #twitterID string 
-    #youtubeID string 
-    #linkedInID string
-
     
