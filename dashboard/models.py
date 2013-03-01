@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
+from data_log import delete_log, save_log
 import sys, traceback
 
 # Variables
@@ -106,21 +107,8 @@ EQUIPMENT_PURPOSE = (
 )
 
 
-def save_log(sender, **kwargs ):
-    instance = kwargs["instance"]
-    action  = kwargs["created"]
-    sender = sender.__name__    # get the name of the table which sent the request
-    sender = str(sender)
-    if instance.user_modified_id:
-        user = User.objects.get(id = instance.user_modified_id)
-    else:
-        user = User.objects.get(id = instance.user_created_id)
-    try:
-        log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
-        log.save()
-    except Exception as ex:
-        pass
 
+    
 class ServerLog(models.Model):
     id = BigAutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now=True)
@@ -369,6 +357,7 @@ class Village(CocoModel):
     def __unicode__(self):
         return self.village_name
 post_save.connect(save_log, sender = Village)
+pre_delete.connect(delete_log, sender = Village)
 
 class MonthlyCostPerVillage(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -410,6 +399,7 @@ class PersonGroups(CocoModel):
         return  u'%s (%s)' % (self.group_name, self.village)
         #return self.group_name
 post_save.connect(save_log, sender = PersonGroups)
+pre_delete.connect(delete_log, sender = PersonGroups)
 
 class FarmerbookManager(models.Manager):
     def get_query_set(self):
@@ -595,6 +585,7 @@ class Person(CocoModel):
             return self.person_name
         return  u'%s (%s)' % (self.person_name, self.father_name)
 post_save.connect(save_log, sender = Person)
+pre_delete.connect(delete_log, sender = Person)
 
 class PersonRelations(models.Model):
     id = BigAutoField(primary_key = True)
@@ -632,6 +623,7 @@ class Animator(CocoModel):
         return  u'%s (%s)' % (self.name, self.village)
         #return self.name
 post_save.connect(save_log, sender = Animator)
+pre_delete.connect(delete_log, sender = Animator)
 
 class Training(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -760,11 +752,11 @@ class Video(CocoModel):
     
     def __unicode__(self):
         return  u'%s (%s)' % (self.title, self.village)
-    
 pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
 post_save.connect(save_log, sender = Video)
+pre_delete.connect(delete_log, sender = Video)
 
 class PracticeSector(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -862,6 +854,7 @@ class Screening(CocoModel):
 pre_save.connect(Person.date_of_joining_handler, sender=Screening)
 m2m_changed.connect(Video.update_viewer_count, sender=Screening.videoes_screened.through)
 post_save.connect(save_log, sender = Screening)
+pre_delete.connect(delete_log, sender = Screening)
     
 class PersonAdoptPractice(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -883,6 +876,7 @@ class PersonAdoptPractice(CocoModel):
         db_table = u'person_adopt_practice'
         unique_together = ("person", "video", "date_of_adoption")
 post_save.connect(save_log, sender = PersonAdoptPractice)
+pre_delete.connect(delete_log, sender = PersonAdoptPractice)
 
 class PersonMeetingAttendance(CocoModel):
     id = BigAutoField(primary_key = True)
@@ -896,8 +890,6 @@ class PersonMeetingAttendance(CocoModel):
     
     def __unicode__(self):
         return  u'%s' % (self.id)
-    
-    
 post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
@@ -967,6 +959,11 @@ class Target(CocoModel):
     class Meta:
         unique_together = ("district","month_year")
         
+class CocoUser(models.Model):
+    user = models.OneToOneField(User)
+    partner = BigForeignKey(Partners)
+    villages = BigManyToManyField(Village)
+
 class Rule(CocoModel):
     name = models.CharField(max_length=100);
     error_msg = models.CharField(max_length=500);

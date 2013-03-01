@@ -10,6 +10,7 @@ from static_site_views import *
 from path.views import page, update
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from dashboard.data_log import send_updated_log
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -262,7 +263,9 @@ urlpatterns = patterns('',
     (r'^analytics/video/?$',video_analytics.video),
     (r'^path/page/?$',page),
     (r'^path/update/?$',update),
-    (r'^fbconnect/', include('fbconnect.urls'))
+    (r'^fbconnect/', include('fbconnect.urls')),
+    (r'^get_log/?$',send_updated_log),
+     
 )
 
 # Static files serving locally
