@@ -41,12 +41,6 @@ def send_updated_log(request):
     coco_user = CocoUser.objects.get(user_id=user)
     partner_id = coco_user.partner_id
     villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
-    print user
-    print timestamp
-    print villages
-    print partner_id
-    for v in villages:
-        print v
     if timestamp:  
         rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
     else:
