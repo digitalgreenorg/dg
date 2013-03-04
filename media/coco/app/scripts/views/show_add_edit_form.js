@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            'click #button1': 'save',
+            // 'click #button1': 'save',
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -168,7 +168,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 }));
             });
             console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
-            Backbone.Syphon.deserialize(this, this.model_json);
+            if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
         },
 
 
@@ -184,7 +184,14 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 context: this,
                 discard: false
             };
+
+            ev_save = {
+                type: "save_clicked",
+                context: this,
+            };
+
             $.event.trigger(ev_res);
+            $.event.trigger(ev_save);
         },
 
         button2_clicked: function() {
@@ -193,7 +200,15 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 context: this,
                 discard: true
             };
+
+            ev_button2 = {
+                type: "button2_clicked",
+                context: this,
+                discard: true
+            };
+
             $.event.trigger(ev_res);
+            $.event.trigger(ev_button2);
         }
 
 
