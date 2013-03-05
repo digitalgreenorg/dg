@@ -192,6 +192,86 @@
     <option value='<%=id%>'><%=name%></option> 
 </script>
 
+<script type="text/template" id="form_template">
+<div id = "form_div">
+    <div id = "form_header">
+    
+    </div>
+    <div id = "model_form">
+    <form id="person_form" class="form-horizontal">
+                        
+    <%=form_template%>
+    <div class="form-actions">
+      <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
+      <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+    </div>
+    </form>
+    </div>
+	
+</div>
+</script>
+
+<script type="text/template" id="person_add_edit_template2">
+                            <fieldset>
+                                <legend>Add Person</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Name*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="person_name" placeholder="Person Name">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Father Name*</label>
+	                                 <div class="controls"> 
+	                                 	<input type="text" name="father_name" placeholder="Father Name">
+	                                 </div>
+                                 </div>
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Village*</label>
+	                                 <div class="controls"> 
+	                                 <select id = "id_village" name="village">
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                                <div class="control-group"> 
+	                                <label class="control-label">Gender*</label> 
+	                                <div class="controls">
+	                                <select name="gender">
+	                                    <option>
+	                                        Female
+	                                    </option>
+	                                    <option>
+	                                        Male
+	                                    </option>
+	                                </select>
+	                                </div>
+                                </div> 
+                                <div class="control-group">
+                                	<label class="control-label">Age</label>
+                                	<div class="controls"> 
+                                	<input class="input-mini" name="age" type="text" placeholder="Age">
+                                	</div>
+                                </div>
+                                <div class="control-group">
+	                                 <label class="control-label">Phone Number</label>
+	                                 <div class="controls">
+	                                 <input name="phone_no" type="text" placeholder="Phone Number">
+	                                 </div>
+                                 </div>
+								<div class="control-group"> 
+	                                 <label class="control-label">Group</label> 
+	                                 <div class="controls">
+	                                 <select id = "id_group" name="group">
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                            </fieldset>
+                        
+
+</script>
+
 <script type="text/template" id="person_add_edit_template">
 <form id ="person_add_form" class="form-horizontal">
 								<div> 

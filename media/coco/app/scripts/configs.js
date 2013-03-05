@@ -32,13 +32,88 @@ function() {
         'page_header': 'Person',
         'table_template_name': 'person_table_template',
         'list_item_template_name': 'person_list_item_template',
-        'add_edit_template_name': 'person_add_edit_template',
+        'add_edit_template_name': 'person_add_edit_template2',
         'rest_api_url': '/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities':{
             'village': {'placeholder':'id_village','name_field':'village_name'},
             'group': {'placeholder':'id_group','name_field':'group_name'}
-        }
+            },
+        'unique_togther_fields':[],
+        'form_field_validation': {
+			rules: {
+				person_name: {
+					required: true,
+					minlength: 2,
+					maxlength: 100,
+                    // allowedChar:true
+				},
+				
+				father_name: {
+					required: true,
+					minlength: 2,
+					maxlength: 100,
+                    // allowedChar:true
+				},
+				age: {
+					digits: true,
+					min:1,
+					max:100
+				},
+				gender: "required",
+				phone_no: {
+					digits: true,
+					maxlength: 10
+				},
+				village: {
+					required: true
+				}
+			},
+			messages: {
+				person_name: {
+					required: 'Enter group Name',
+					minlength: 'Group Name  should be atleast 2 characters',
+					maxlength: 'Group Name should be atmax 100 characters',
+					allowedChar: 'Group name should only contain alphabets and local language characters'
+				},
+				father_name: {
+					required: 'Father Name is required',
+					minlength: "Father Name  should be atleast 2 characters",
+					maxlength: 'Father Name should be atmax 100 characters',
+					allowedChar: 'Father name should only contain alphabets and local language characters'
+				},
+				age: {
+					digits: "Age should contain digits only",
+					min:"Age should not be less than 1 year",
+					max:"Age should not be more than 100 years"
+				},
+				phone_number_person: {
+					digits: 'phone number should contain only digits',
+					maxlength: "phone number should not contain more than 10 digits"
+				},
+				village: {
+					required: "Please enter village"
+				}
+			},
+			
+			highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-inline"
+		}
+            
     };
     
     // var personadoptvideo_list_view_configs = {

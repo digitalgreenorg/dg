@@ -15,13 +15,19 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             .html()),
         success_notif_template: _.template($('#' + 'success_notifcation_template')
             .html()),
-
+        template : '#form_template',                
+        serialize: function(){
+            s_passed = this.options.serialize;
+            s_passed["form_template"] = this.form_template;    
+            return s_passed;
+                
+        },
         initialize: function(params) {
             console.log("ADD/EDIT: params to add/edit view: ");
             console.log(params);
             this.view_configs = params.initialize.view_configs;
             this.appRouter = params.initialize.router;
-            this.template = '#' + this.view_configs.add_edit_template_name;
+            this.form_template = $('#' + this.view_configs.add_edit_template_name).html();
             options_inner_template = _.template($('#options_template')
                 .html());
 
@@ -131,28 +137,15 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
             // call validator on the form
             var context = this;
-            this.$('form')
-                .validate({
-                submitHandler: function() {
+            var validate_obj = $.extend(this.view_configs.form_field_validation,{
+                    "submitHandler" : function() {
                     context.save();
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element)
-                        .parent('div')
-                        .parent('div')
-                        .addClass("error");
-
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element)
-                        .parent('div')
-                        .parent('div')
-                        .removeClass("error");
-
-                },
-                errorElement: "span",
-                errorClass: "help-inline"
-            });
+                }
+                }
+                );
+            console.log("FORM: Form field validation - "+JSON.stringify(validate_obj));
+            this.$('form')
+                .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             return this;
@@ -194,7 +187,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 if (member in n_json) {
                     name_field = f_entities[member]["name_field"];
                     var id = n_json[member];
-                    if(id != ""){ 
+                    console.log(id);
+                    if((id != "")&&(id!=null)&&(id!=undefined)){ 
                         var entity = this.f_colls[c].where({
                             id: id
                         })[0];

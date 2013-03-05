@@ -31,7 +31,7 @@ define([
         edit: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            this.appRouter.navigate('person/edit/' + this.model.id, true);
+            this.appRouter.navigate(this.options.view_configs.entity_name+'/edit/' + this.model.id, true);
 
         },
 

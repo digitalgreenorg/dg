@@ -6,7 +6,7 @@ define([
   'views/dashboard',
   'views/list',
   'views/form_controller'
-  ], function($, underscore, Session, HeaderView, DashboardView, ListView, PersonAddEditView){
+  ], function($, underscore, Session, HeaderView, DashboardView, ListView, FormControllerView){
                   
     var AppLayout = Backbone.View.extend({
       template: "#page_layout",
@@ -59,14 +59,14 @@ define([
           // $(this.el)
           //     .append(header.render(bcrumb_template({bread1:view_configs.page_header.toLowerCase(),bread2:view_configs.page_header,add_or_edit:"Add"}))
           //     .el);
-          if (params.view_configs.page_header == "Person") {
-              current_add_edit_view = PersonAddEditView;
-          } else {
-              console.log("not person");
-              return this;
-          }
+          // if (params.view_configs.page_header == "Person") {
+//               current_add_edit_view = PersonAddEditView;
+//           } else {
+//               console.log("not person");
+//               return this;
+//           }
           
-          this.setView("#content", new current_add_edit_view({
+          this.setView("#content", new FormControllerView({
               serialize: {
                   button1: "Save",
                   button2: "Save and Add Another"
