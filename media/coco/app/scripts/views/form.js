@@ -115,6 +115,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     success: function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();
+                        that.normalize_json(that.model_json);
                         that.fill_form();
                     },
                     error: function() {
@@ -171,13 +172,53 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
         },
 
-
-        fill_form: function(m_json) {
+        normalize_json: function(d_json){
+            console.log("FORM: Before Normalised json = "+JSON.stringify(this.model_json));      
+            var f_entities = this.view_configs["foreign_entities"];
+            for (member in f_entities) {
+                if (member in d_json) {
+                    d_json[member] = d_json[member]["id"]; 
+                }
+                
+            }
+            console.log("FORM: Normalised json = "+JSON.stringify(this.model_json));      
+            return d_json;
+            
+        },
+            
+        denormalize_json: function(n_json){
+            console.log("FORM: Before DNormalising json - "+JSON.stringify(this.final_json))
+            var f_entities = this.view_configs["foreign_entities"];
+            var c=0;
+            for (member in f_entities) {
+                if (member in n_json) {
+                    name_field = f_entities[member]["name_field"];
+                    var id = n_json[member];
+                    if(id != ""){ 
+                        var entity = this.f_colls[c].where({
+                            id: id
+                        })[0];
+                        n_json[member] = {};
+                        n_json[member]["id"] = id;
+                        n_json[member][name_field] = entity.get(f_entities[member]["name_field"]);    
+                    }
+                    else
+                        delete n_json[member]
+                }
+                c++;
+            }
+            console.log("FORM: After DNormalising json - "+JSON.stringify(this.final_json))
+            
+        },
+                
+        fill_form: function() {
+            console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
         },
 
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
+            this.denormalize_json(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",
