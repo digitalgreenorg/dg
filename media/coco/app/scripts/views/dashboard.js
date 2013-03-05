@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/show_add_edit_form', 'indexeddb-backbone'], function($, pass, pass, configs, indexeddb, ShowAddEditFormView) {
+define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone'], function($, pass, pass, configs, indexeddb, Form) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -344,7 +344,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                             $(document)
                                 .on("upload_error_resolved", that.after_upload_error);
                             console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(that.current_entry.get("data")));
-                            p = new ShowAddEditFormView({
+                            p = new Form({
                                 serialize: {
                                     button1: "Save again",
                                     button2: "Discard"
@@ -511,7 +511,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                             $(document)
                                 .on("upload_error_resolved", that.after_upload_error);
                             console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(that.current_entry.get("data")));
-                            p = new ShowAddEditFormView({
+                            p = new Form({
                                 serialize: {
                                     button1: "Save again",
                                     button2: "Discard"

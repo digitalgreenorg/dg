@@ -1,8 +1,8 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'views/show_add_edit_form'
+define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'views/form'
 // Using the Require.js text! plugin, we are loaded raw text
 // which will be used as our views primary template
 // 'text!templates/project/list.html'
-], function($, pas, pass, pass, pass, notifs_view, indexeddb, all_configs, ShowAddEditFormView) {
+], function($, pas, pass, pass, pass, notifs_view, indexeddb, all_configs, Form) {
 
 
     var PersonAddEditView = Backbone.Layout.extend({
@@ -13,13 +13,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },
         template: "<div> <div id = 'form'></div> </div>",
         // views: {
-        //     "#form": new new ShowAddEditFormView(this.options)
+        //     "#form": new new Form(this.options)
         //   },        
         beforeRender: function() {
 
-            this.setView("#form", new ShowAddEditFormView(this.params));
+            this.setView("#form", new Form(this.params));
             // this.render();
-            // this.setView( "form",new ShowAddEditFormView(this.params));
+            // this.setView( "form",new Form(this.params));
             _(this)
                 .bindAll('on_save');
             _(this)

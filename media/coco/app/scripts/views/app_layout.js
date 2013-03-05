@@ -5,7 +5,7 @@ define([
   'views/header',
   'views/dashboard',
   'views/list',
-  'views/person_add_edit'
+  'views/form_controller'
   ], function($, underscore, Session, HeaderView, DashboardView, ListView, PersonAddEditView){
                   
     var AppLayout = Backbone.View.extend({
