@@ -20,7 +20,21 @@ class Farmer(models.Model):
     state = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
     #groups =
-    interests = models.ManyToManyField(Interest,related_name='farmer_interests')  
+    interests = models.ManyToManyField(Interest,related_name='farmer_interests')
+    
+    def update(self, name=None, thumbnailURL=None, imageURL=None, village=None, block= None,district= None, state = None, country= None):
+        self.name = name
+        self.thumbnailURL = thumbnailURL
+        self.imageURL = imageURL
+        self.village = village
+        self.block = block
+        self.district = district
+        self.state = state
+        self.country = country
+        print "saving"
+        self.save()
+        print "exiting"
+           
 
     
 class Partner(models.Model):
@@ -33,6 +47,11 @@ class Partner(models.Model):
     collectionCount = models.BigIntegerField(null=True, blank=True)
     #badges=
     farmers=models.ManyToManyField(Farmer,related_name='farmer_partner')
+    def update(self,uid=None, name=None, description=None, location=None, joindate=None, logoURL=None, collectionCount=None, farmers=None):
+        if not farmers == None:
+            self.farmers.add(farmers)
+        
+        
     
 class Language(models.Model):
     languageCode = models.CharField(max_length=20,primary_key = True)

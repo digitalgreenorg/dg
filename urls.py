@@ -10,11 +10,8 @@ from static_site_views import *
 from path.views import page, update
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-<<<<<<< HEAD
-from dashboard.website import update_website
-=======
+from dashboard.data_log_website import update_website
 from dashboard.data_log import send_updated_log
->>>>>>> data_log
 admin.autodiscover()
 
 urlpatterns = patterns('',
