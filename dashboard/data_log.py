@@ -8,7 +8,10 @@ def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
-    user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
+    try:
+        user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
+    except Exception , e:
+        user = None
     try:
         ServerLog = get_model('dashboard','ServerLog')
         log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
