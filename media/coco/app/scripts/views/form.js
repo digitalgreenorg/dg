@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            // 'click #button1': 'save',
+            'click #button1': 'save',
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.form_template = $('#' + this.view_configs.add_edit_template_name).html();
             options_inner_template = _.template($('#options_template')
                 .html());
-
+            this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
             // Creating the online,offline collections and models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
@@ -43,7 +43,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
             });
-
+            
+            
             this.offline_model = new generic_model_offline();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,7 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
             // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
             json = null;
-
+            this.edit_case = true;
             if (params.model_json) {
                 this.edit_case_json = true;
                 this.model_json = params.model_json;
@@ -81,6 +82,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 this.edit_case_id = true;
 
             } else this.edit_case = false;
+            
+            if(this.edit_case)
+                this.action = "E"
+            else
+                this.action = "A"            
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             this.just_save = false;
             this.save_and_add_another = false;
@@ -144,7 +150,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 }
                 }
                 );
-            console.log("FORM: Form field validation - "+JSON.stringify(validate_obj));
             this.$('form')
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +235,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
                 
         },  
-
+        show_errors: function(errors){
+            console.log("FORM: in show errors");
+            this.$('#form_errors').append(errors);
+        },        
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
             this.clean_json(this.final_json);
