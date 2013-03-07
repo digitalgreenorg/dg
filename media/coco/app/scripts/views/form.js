@@ -117,6 +117,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 this.fill_form();
 
             } else if (this.edit_case_id) {
+                console.log("FORM: EDIT: fetching this model - "+JSON.stringify(this.offline_model.toJSON()));
                 this.offline_model.fetch({
                     success: function(model) {
                         console.log("EDIT: edit model fetched");
@@ -187,7 +188,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 if (member in n_json) {
                     name_field = f_entities[member]["name_field"];
                     var id = n_json[member];
-                    console.log(id);
                     if((id != "")&&(id!=null)&&(id!=undefined)){ 
                         var entity = this.f_colls[c].where({
                             id: id
@@ -196,8 +196,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         n_json[member]["id"] = id;
                         n_json[member][name_field] = entity.get(f_entities[member]["name_field"]);    
                     }
-                    else
-                        delete n_json[member]
+                    else{
+                        n_json[member] = {};
+                        n_json[member]["id"] = null;
+                        n_json[member][name_field] = null;
+                     }
                 }
                 c++;
             }
@@ -209,9 +212,28 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
         },
+        
+            
+        clean_json: function(object_json){
+            console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
+            
+            for(member in object_json)
+                {   
+                    if(member == "")
+                        delete object_json[member];
+                    
+                    else if(object_json[member]==""||object_json[member]==null||object_json[member]==undefined)
+                    {
+                        object_json[member] = null
+                    }
+                }    
+            console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
+                
+        },  
 
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
+            this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
