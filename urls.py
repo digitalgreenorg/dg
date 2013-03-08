@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.views.generic.simple import direct_to_template
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from farmerbook import farmer_book_views
@@ -14,6 +15,8 @@ from dashboard.data_log import send_updated_log
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'coco/offline/$', direct_to_template, {'template': 'dashboard.html'}), 
+    (r'cocoproto/offline/$', direct_to_template, {'template': 'dashboard_offline.html'}), 
     (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^api/', include('dashboard.urls')),

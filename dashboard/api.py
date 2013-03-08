@@ -132,7 +132,7 @@ def get_user_districts(request):
         if(user_permission.role=='F'):
             districts = District.objects.filter(district_name = user_permission.district_operated)
     return districts
-
+    	
 
 class VillageLevelAuthorization(DjangoAuthorization):
     def __init__(self, field):
@@ -347,7 +347,6 @@ class PersonGroupsResource(ModelResource):
         g_field = getattr(bundle.obj, 'group_name')
         return "("+ g_field+"," + v_field +")"
 
-
 class ScreeningResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
@@ -561,7 +560,7 @@ class PersonResource(ModelResource):
                 print 'group id in video does not exist'
                 bundle.data['group'] = None
         return bundle
-        
+
 class PersonAdoptVideoResource(ModelResource):
     person = fields.ForeignKey(PersonResource, 'person')
 #    person_name = fields.CharField('person__person_name')

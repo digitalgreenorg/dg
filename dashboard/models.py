@@ -254,6 +254,7 @@ class Village(CocoModel):
     latitude = models.CharField(max_length=25, null=True, blank=True)
     longitude = models.CharField(max_length=25, null=True, blank=True)
     grade = models.CharField(max_length=1, null=True, blank=True)
+    animators = models.ManyToManyField('Animator', through='AnimatorAssignedVillage', related_name='animators')
     objects = models.Manager() #The default manager
     farmerbook_village_objects = VillageFarmerbookManager() #The manager for farmerbook
     
@@ -316,6 +317,7 @@ class Person(CocoModel):
     date_of_joining = models.DateField(null=True, blank=True)
     #changes done for farmerbook. one new Boolean field image_exists added
     image_exists = models.BooleanField(default=False)
+    screenings_attended = models.ManyToManyField('Screening', through='PersonMeetingAttendance', blank='False', null='False')
     
     objects = models.Manager() #The default manager
     farmerbook_objects = FarmerbookManager() #The manager for farmerbook

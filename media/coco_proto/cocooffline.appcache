@@ -1,0 +1,36 @@
+CACHE MANIFEST
+# 2012-11-1 v1.0.1
+CACHE:
+/media/coco_proto/bootstrap/docs/assets/css/bootstrap.css
+/media/coco_proto/bootstrap/docs/assets/css/bootstrap-responsive.css
+/media/coco_proto/bootstrap/docs/assets/js/jquery.js
+/media/js/backbone/json2.js
+/media/js/backbone/underscore-min.js
+/media/js/backbone/backbone-min.js
+/media/coco_proto/js/indexeddb-backbonejs-adapter/backbone-indexeddb.js
+/media/coco_proto/js/backbone_views.js
+/media/coco_proto/js/backbone_models.js
+/media/coco_proto/js/backbone.syphon.js
+/media/coco_proto/bootstrap/docs/assets/js/bootstrap.min.js
+/media/coco_proto/bootstrap/docs/assets/img/glyphicons-halflings.png 
+/media/coco_proto/bootstrap/docs/assets/js/bootstrap-alert.js
+/media/img/admin/nav-bg.gif  
+http://jzaefferer.github.com/jquery-validation/jquery.validate.js
+/media/coco_proto/datatablejs_media/js/jquery.dataTables.js
+/media/coco_proto/datatablejs_media/css/demo_table.css
+/media/coco_proto/datatablejs_media/images/back_disabled.png
+/media/coco_proto/datatablejs_media/images/back_enabled_hover.png
+/media/coco_proto/datatablejs_media/images/back_enabled.png
+/media/coco_proto/datatablejs_media/images/favicon.ico
+/media/coco_proto/datatablejs_media/images/forward_disabled.png
+/media/coco_proto/datatablejs_media/images/forward_enabled_hover.png
+/media/coco_proto/datatablejs_media/images/forward_enabled.png
+/media/coco_proto/datatablejs_media/images/sort_asc_disabled.png
+/media/coco_proto/datatablejs_media/images/sort_asc.png
+/media/coco_proto/datatablejs_media/images/sort_both.png
+/media/coco_proto/datatablejs_media/images/sort_desc_disabled.png
+/media/coco_proto/datatablejs_media/images/sort_desc.png
+/media/coco_proto/datatablejs_media/images/Sorting%20icons.psd
+ 
+NETWORK:
+/api/v1/

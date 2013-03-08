@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco_proto/cocooffline.appcache"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+<title>Dashboard</title>
+<link rel="stylesheet" href="/media/coco_proto/bootstrap/docs/assets/css/bootstrap.css">
+<link rel="stylesheet"  href="/media/coco_proto/bootstrap/docs/assets/css/bootstrap-responsive.css">
+<style type="text/css" title="currentStyle">
+    @import "/media/coco_proto/datatablejs_media/css/demo_table.css";
+</style>
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+<script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+<script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>-->
+
+<script type="text/javascript" src="/media/coco_proto/bootstrap/docs/assets/js/jquery.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone/json2.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone/underscore-min.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone/backbone-min.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/indexeddb-backbonejs-adapter/backbone-indexeddb.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone_views.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone_models.js"></script>
+<script type="text/javascript" src="/media/coco_proto/js/backbone.syphon.js"></script>
+<script type="text/javascript" src="/media/coco_proto/datatablejs_media/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/media/coco_proto/bootstrap/docs/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/media/coco_proto/bootstrap/docs/assets/js/bootstrap-alert.js"></script>
+<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+<meta name="robots" content="NONE,NOARCHIVE">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!-- <h3><%= header_name %></h3> -->
+<script type="text/template" id="header">
+<div class="page-header" style="margin-bottom:0px;">
+    <h1 ><a href="#">COCO</a></h1>
+    <ul class="breadcrumb">
+    <%=breadcrumb%>
+    </ul>
+</div>
+</script>
+<script type="text/template" id="error_notifcation_template" >
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Error! </strong><%= msg%>
+    </div>
+</script>
+<script type="text/template" id="success_notifcation_template" >
+    <div class="alert alert-success">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Success! </strong><%= msg%>
+    </div>
+</script>
+<script type="text/template" id="info_notifcation_template" >
+    <div class="alert alert-info">
+      <a class="close" data-dismiss="alert">×</a>
+      <strong>Info! </strong><%= msg%>
+    </div>
+</script>
+
+<script type="text/template" id="dashboard">
+    <div class="span4 well" style="margin-left:20px;">
+        <table class="table table-bordered" style="background:white;">
+        <tr>
+        <td><a href="#village" class="village">Village</a></td>
+        </tr>
+        <tr>
+        <td><a href="#video" class="video">Video</a></td>
+        </tr>
+        <tr>
+        <td><a href="#group" class="persongroup">Group</a></td>
+        </tr>
+        <tr>
+        <td><a href="#screening" class="screening">Screening</a></td>
+        </tr>
+        <tr>
+        <td><a href="#person" class="person">Person</a></td>
+        </tr>
+		<tr>
+        <td><a href="#personadoptvideo" class="personadoptvideo">Person Adopt Video</a></td>
+        </tr>
+		<tr>
+        <td><a href="#animator" class="animator">Animator</a></td>
+        </tr>
+        </table>
+   </div>
+            
+    <div class="span8" style="margin-left:20px;">
+            
+        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;">Upload</button>
+        
+        <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
+    </div>
+        
+</script>
+    
+<script type="text/template" id="person_table_template">
+<div style= "margin: 30px 30px 30px 30px;">
+       <table class="table table-striped display">
+       <thead>
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Father Name</th>
+       <th>Village</th>
+       <th>Group</th>
+       <th></th>
+	   </tr>
+       </thead>
+       <tbody>
+           
+       </tbody>
+</div>
+</script>
+<script type="text/template" id="person_list_item_template">
+    <td><%= id %></td>
+    <td><%= person_name %></td>
+    <td> <%= father_name %></td>
+    <td> <%= village.village_name %></td>
+    <td> <%= group.group_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+
+<!-- <div style= "float:left;">
+<input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
+<button id="search_button" class="btn" style="margin-left:10px;">Search</button>
+</div> -->
+<script  type="text/template" id="list_view_template">
+    <div class="well">
+    <span style= "font-size:20px;"><b><%= header_name %></b></span>
+    <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
+    </div>
+</script>
+
+	
+<script type="text/template" id="options_template">
+    <option value='<%=id%>'><%=name%></option> 
+</script>
+
+<script type="text/template" id="person_add_edit_template">
+<form id ="person_add_form" class="form-horizontal">
+								<div> 
+									<div > 
+										
+												<fieldset > 
+                                                        <legend>Add/Edit Person</legend>
+														<div class="control-group"> 
+															<label class="control-label"  for='id_person_name' >Person name:</label>
+                                                            <div class="controls">
+                                                            <input id='id_person_name' type='text'  name='person_name' class="required" maxlength='100' /> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_father_name'>Father name:</label>
+                                                            <div class="controls">
+                                                            <input id='id_father_name' type='text' name='father_name' maxlength='100' /> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_age'>Age:</label>
+                                                            <div class="controls">
+                                                            <input id='id_age' type='text' name='age' /> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_gender' >Gender:</label>
+                                                            <div class="controls">
+                                                            <select name='gender' id='id_gender' class="required"> 
+																<option value='' selected='selected'>---------</option> 
+																<option value='M'>Male</option> 
+																<option value='F'>Female</option> 
+															</select> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_phone_no'>Phone no:</label>
+                                                            <div class="controls">
+                                                            <input id='id_phone_no' type='text' name='phone_no' maxlength='100' /> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label"  for='id_address'>Address:</label>
+                                                            <div class="controls">
+                                                            <input id='id_address' type='text' name='address' maxlength='500' /> 
+                                                            </div>
+														</div> 
+														<div class="control-group"> 
+															<label class="control-label" for='id_land_holdings'>Land holdings(in acres):</label>
+                                                            <div class="controls">
+                                                            <input id='id_land_holdings' type='text' name='land_holdings' /> 
+                                                            </div>
+														</div> 
+													    <div class="control-group"> 
+    														<label class="control-label" for='id_village' >Village:</label> 
+    														<div class="controls">
+                                                            <select name='village' id='id_village' class="required">
+    														<option value='' selected='selected'>---------</option>
+    														</select>  
+                                                            </div>
+    												    </div> 
+											    		<div class="control-group"> 
+															<label class="control-label" for='id_group'>Group:</label>
+                                                            <div class="controls">
+                                                            <select name='group' id='id_group'> 
+															<option value='' selected='selected'>---------</option> 
+															</select> 
+                                                            </div>
+														</div> 
+    												</fieldset> 
+    												<div class="form-actions">
+                                                      <button id='save' type="submit" class="btn btn-primary">Save</button>
+                                                      <button id='save_add_another' type="submit" class="btn btn-primary">Save and Add Another</button>
+                                                    </div>
+    									</div> 
+    								
+    								</div>
+                                                    
+</form>                                                        </script>
+                                                        
+                                                        
+
+</head>
+<body>
+    <div id = "notifications">
+        
+    </div>
+    <div id="app">
+    </div>
+</body>
+</html>

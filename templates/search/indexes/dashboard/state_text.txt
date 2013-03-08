@@ -1,0 +1,4 @@
+{{ object.start_date }}
+{{ object.state_name }}
+{{ object.region }}
+{{ object.country }}

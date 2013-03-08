@@ -29,7 +29,7 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
-
+APPEND_SLASH = True
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = '/var/www/media/uploaded_files/'
@@ -63,8 +63,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware'
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+	
 )
 
 ROOT_URLCONF = 'urls'
@@ -77,7 +78,15 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/output'),
     os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
+    os.path.join(PROJECT_PATH, 'media/coco_proto/html'),
+    os.path.join(PROJECT_PATH, 'media/coco/app'),
+	
+	
 )
+
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_PATH, 'whoosh')
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
@@ -92,6 +101,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #'django.contrib.sites',
     'django.contrib.admindocs',
+    'haystack',
     'dashboard',
     #'debug_toolbar',
     'output',
