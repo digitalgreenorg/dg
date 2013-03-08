@@ -276,6 +276,8 @@ class Partners(CocoModel):
     date_of_association = models.DateField(null=True, db_column='DATE_OF_ASSOCIATION', blank=True)
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
+    description = models.TextField(blank=True)
+    logoURL = models.URLField(max_length=200, blank=True)
 
     class Meta:
         db_table = u'partners'
