@@ -1,6 +1,6 @@
 from tastypie.resources import ModelResource
 from tastypie import fields
-from website.models import Video, Language, Country, Farmer, Activity, Collection, Partner, Interest, Comment
+from website.models import Video, Language, Country, Farmer, Activity, Collection, Partner, Interests, Comment
 
 
 class BaseResource(ModelResource):
@@ -15,36 +15,40 @@ class CountryResource(BaseResource):
         queryset = Country.objects.all()
         resource_name = 'country'
 
-
 class LanguageResource(BaseResource):
     class Meta:
         queryset = Language.objects.all()
         resource_name = 'language'
 
-class InterestResource(BaseResource):
-    class Meta:
-        queryset = Interest.objects.all()
-        resource_name = 'interest'
-
-               
 class FarmerResource(BaseResource):
-    interest = fields.ManyToManyField(InterestResource, 'interests',full=True)
+    # Dehydrate interest to string[]
+    # partner FK
+    # M2M collections
     class Meta:
         queryset = Farmer.objects.all()
         resource_name = 'farmer'
                 
 class PartnerResource(BaseResource):
-    farmers= fields.ManyToManyField(FarmerResource, 'farmers')
+    #dehydrate badges
     class Meta:
         queryset = Partner.objects.all()
         resource_name = 'partner'
+        excludes = ['videos', 'likes', 'views', 'adoptions', 'badges']
+
+class PartnerFarmerResource(BaseResource):
+    #in Parteruid # out farmers
+    class Meta:
+        queryset = Partner.objects.all()
+        resource_name = 'partner'
+        excludes = ['videos', 'likes', 'views', 'adoptions', 'badges']
+
 
 class VideoResource(BaseResource):
-    partner = fields.ForeignKey(PartnerResource, 'partnerUID',full=True)
-    language = fields.ForeignKey(LanguageResource, 'language',full=True)
+    #dehydrate tags
     class Meta:
         queryset = Video.objects.all()
         resource_name = 'video'
+        excludes = ['sector','subsector','topic','subtopic','subject','state']
  
 class CollectionResource(BaseResource):
     country = fields.ForeignKey(CountryResource, 'country',full=True)
@@ -54,8 +58,13 @@ class CollectionResource(BaseResource):
     class Meta:
         queryset = Collection.objects.all()
         resource_name = 'collection'
+        excludes = ['category','subcategory','topic','subtopic','subject']
 
 class ActivityResource(BaseResource):
+    # page,count -> send order by descding date
+    #dehydrate comments[], imagespec
+    #foreign key partner, farmer, user, collection, video
+    # in-> partner famrer user out -> activities total count
     class Meta:
         queryset = Activity.objects.all()
         resource_name = 'activity'
@@ -63,8 +72,11 @@ class ActivityResource(BaseResource):
 class CommentResource(BaseResource):
     farmer = fields.ForeignKey(FarmerResource, 'farmerUID',full=True, null=True)
     video = fields.ForeignKey(VideoResource, 'videoUID', null=True)
-    partner = fields.ForeignKey(PartnerResource, 'partnerUID',full=True,null=True)
-    person = fields.ForeignKey(LanguageResource, 'personUID',full=True, null=True)
+    #user = fields.ForeignKey
+    #activityURI = fields.ForeignKey(LanguageResource, 'personUID',full=True, null=True)
+    #inReplyToCommentUID FK
+    #in videoID out Comment
+    #in activityID out Comment
     class Meta:
         queryset = Comment.objects.all()
         resource_name = 'comment'
