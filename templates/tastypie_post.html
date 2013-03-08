@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script>
+	
+</head>
+<body>
+	<div class="container">
+    	<h4>Post video json to tastypie</h4>
+    	<div class="btn btn-success" id='video_post'>Post Video json</div>
+    	<h4>Post Mediator json to tastypie</h4>
+    	<div class="btn btn-success" id='mediator_post'>Post Mediator json</div>
+    	<h4>Post Group json to tastypie</h4>
+    	<div class="btn btn-success" id='group_post'>Post Group json</div>
+    	<h4>Post Person json to tastypie</h4>
+    	<div class="btn btn-success" id='person_post'>Post Person json</div>
+    	<h4>Post Screening json to tastypie</h4>
+    	<div class="btn btn-success" id='screening_post'>Post Screening json</div>
+    </div>
+    <script type="text/javascript">
+    mediator_json = {
+	    "age": null, 
+	    "assigned_villages": [{"id": 10000000000514, "village_name": "Lagameshwar"}, {"id": 10000000000514, "village_name": "Lagameshwar"}], 
+	    "gender": "M", 
+	    "name": "Mohandas Pangi", 
+	    "phone_no": "",
+	    "partner": {"id": 10000000000001, "partner_name": "PRADAN"}
+    };
+    
+    group_json = {
+    	"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB 12345678", 
+    	"village": "/api/v1/village/6000009723/"
+    };
+    
+    person_json = {
+    	 "address": "",
+	     "age": null, 
+	     "father_name": "rami dfrtxdc", 
+	     "gender": "F", 
+	     "group": {"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB", "id": 6000010728}, 
+	     "person_name": "Mahadevi L Baddeppanavar 12345", 
+	     "phone_no": null, 
+	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
+     };
+     screening_json = {
+     		"animator": {"id": 10000000019306, "name": "Suvarna Avvanagol"}, 
+     		"date": "2011-10-19", 
+     		"end_time": "21:00:00", 
+     		"farmer_groups_targeted": [{"group_name": "Kranti Suvarna Sankalpa Mahila Swa Sahaya Sangha Akkatangerahal", "id": 10000000020232}], 
+     		"farmers_attendance": [
+     			{"id": 10000000025636, "person_name": "Basavva P Pangannavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": true},
+     			{"id": 10000000025637, "person_name": "Mallavva B Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000025638, "person_name": "Nagavva S Bangennavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "", "personmeetingattendance__interested": true}, 
+     			{"id": 10000000025639, "person_name": "Shivagangavva N Pangannavar", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000025640, "person_name": "Sumitra M Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
+     			{"id": 10000000025641, "person_name": "Kusuma D Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000025642, "person_name": "Kamala N Karadiguddi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
+     			{"id": 10000000025643, "person_name": "Kamala A Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
+     			{"id": 10000000025644, "person_name": "Sattevva M Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
+     			{"id": 10000000025646, "person_name": "Nagavva Y Pangannavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
+     			{"id": 10000000025647, "person_name": "Mallavva S Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000025648, "person_name": "Kashavva D Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000025650, "person_name": "Surekha B Bangennavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": true}, 
+     			{"id": 10000000026376, "person_name": "Duragavva B Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
+     			{"id": 10000000026377, "person_name": "Parvatevva M Morali ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "", "personmeetingattendance__interested": false}], 
+     		"location": "Duragappa home", 
+     		"start_time": "20:00:00", 
+     		"target_adoptions": 4, 
+     		"target_audience_interest": 8, 
+     		"target_person_attendance": 16, 
+     		"videoes_screened": [{"id": 10000000020142, "title": "Pest control by Chlli and Garlic juice extract   "}], 
+     		"village": {"id": 10000000019844, "village_name": "Akkatangerahal"},
+	 };
+	 
+	 video_json = {
+		 "actors": "I", 
+		 "approval_date": null, 
+		 "cameraoperator": {"id": 6000006633, "name": "Shankar Ganigi"}, 
+		 "facilitator": {"id": 10000000019578, "name": "Panchakshari Pattanshetti"}, 
+		 "farmers_shown": [{"id": 6000007310, "person_name": "Shankarappa Sattigeri"}],
+		 //"farmers_shown": ["/api/v1/person/6000007310/"] ,
+		 "language": {"id": 10000000000127, "language_name": "Kannada"}, 
+		 "summary": "Producing Vermicompost  in farm yard manure pit is easiest way to get.", 
+		 "title": "Vermicompost production in FYM pit 123456 789 123456 1234 1234 1234", 
+		 "video_production_end_date": "2011-01-14", 
+		 "video_production_start_date": "2011-01-13", 
+		 "video_suitable_for": 1, 
+		 "video_type": 2, 
+		 "village": {"id": 10000000019913, "village_name": "Mugalihal"}, 
+		 "youtubeid": "EikW0U9m3w0"
+	 };
+	$(document).ready( function () {
+		$('#screening_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/screening/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(screening_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		
+		$('#person_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/person/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(person_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#group_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/group/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(group_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});	
+		
+		$('#mediator_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/mediator/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(mediator_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+	
+		$('#video_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/video/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(video_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+	});
+	</script>
+</body>
+</html>

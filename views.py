@@ -68,6 +68,9 @@ def search(request):
         return HttpResponse(data)
     return HttpResponseNotFound()
 
+def tastypie_post(request):
+    return render_to_response("tastypie_post.html")
+
 def test(request, village_id):
     village = Village.objects.get(pk=int(village_id))
     animators = Animator.objects.filter(assigned_villages=village)

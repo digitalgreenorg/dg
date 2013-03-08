@@ -489,14 +489,14 @@ class Animator(CocoModel):
     age = models.IntegerField(max_length=3,null=True, db_column='AGE', blank=True)
     gender = models.CharField(max_length=1,choices=GENDER_CHOICES, db_column='GENDER')
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
-    partner = BigForeignKey(Partners)
-    village = BigForeignKey(Village, db_column = 'home_village_id')
+    partner = BigForeignKey(Partners, blank=True)
+#    village = BigForeignKey(Village, db_column = 'home_village_id')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_animators' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
     class Meta:
         db_table = u'animator'
-        unique_together = ("name", "gender", "partner","village")
+        unique_together = ("name", "gender", "partner")
 
     def get_village(self):
         return None
@@ -504,8 +504,8 @@ class Animator(CocoModel):
         return self.partner.id
     
     def __unicode__(self):
-        return  u'%s (%s)' % (self.name, self.village)
-        #return self.name
+        #return  u'%s (%s)' % (self.name, self.village)
+        return self.name
 post_save.connect(save_log, sender = Animator)
 pre_delete.connect(delete_log, sender = Animator)
 
@@ -598,7 +598,10 @@ class Video(CocoModel):
         return None
     
     def __unicode__(self):
-        return  u'%s (%s)' % (self.title, self.village)
+        try:
+            return  u'%s (%s)' % (self.title, self.village)
+        except:
+            return self.title
 pre_delete.connect(Person.date_of_joining_handler, sender=Video)
 pre_save.connect(Person.date_of_joining_handler, sender=Video)
 m2m_changed.connect(Person.date_of_joining_handler, sender=Video.farmers_shown.through)
