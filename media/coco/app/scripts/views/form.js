@@ -163,7 +163,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             $f_el = this.$('#' + f_entity_desc.placeholder);
             collection.each(function(f_model) {
                 $f_el.append(options_inner_template({
-                    id: f_model.get("id"),
+                    id: parseInt(f_model.get("id")),
                     name: f_model.get(f_entity_desc.name_field)
                 }));
             });
@@ -176,7 +176,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var f_entities = this.view_configs["foreign_entities"];
             for (member in f_entities) {
                 if (member in d_json) {
-                    d_json[member] = d_json[member]["id"]; 
+                    d_json[member] = parseInt(d_json[member]["id"]); 
                 }
                 
             }
@@ -192,7 +192,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             for (member in f_entities) {
                 if (member in n_json) {
                     name_field = f_entities[member]["name_field"];
-                    var id = n_json[member];
+                    var id = parseInt(n_json[member]);
                     if((id != "")&&(id!=null)&&(id!=undefined)){ 
                         var entity = this.f_colls[c].where({
                             id: id

@@ -31,7 +31,7 @@ define([
         },
         editPerson: function(entity,id) {
             console.log("ROUTER: edit "+entity+" url caught id = " + id);
-            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, id);
+            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, parseInt(id));
         },
         
         initialize: function(app_v, configs){

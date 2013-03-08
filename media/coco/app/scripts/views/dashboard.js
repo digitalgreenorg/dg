@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone'], function($, pass, pass, configs, indexeddb, Form) {
+define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection'], function($, pass, pass, configs, indexeddb, Form, pass, upload_collection) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -12,113 +12,113 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         initialize: function() {
 
             // add dummy data to uploadqueue
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "uploadqueue",
-            });
-
-            var generic_offline_collection = Backbone.Collection.extend({
-                model: generic_model_offline,
-                database: indexeddb,
-                storeName: "uploadqueue",
-            });
-            var dummy_data_collection = new generic_offline_collection();
-
-            var generic_model_offline2 = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "person",
-            });
-            var generic_model_offline_vill = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "village",
-            });
-            // var rem_model = new generic_model_offline();
-            // rem_model.set({id:"76e162e5-958b-0df5-b414-4b7a8b4f948b"});
-            // rem_model.destroy();
-
-            // create a village, create a person in that village, edit the person and delete it
-            var dummy_person = new generic_model_offline2();
-            var dummy_vill = new generic_model_offline_vill();
-            dummy_vill.set({
-                village_name: "dummy_village_here",
-                online_id: 10000000000251
-            });
-            dummy_vill.save(null, {
-                success: function(model) {
-                    console.log("UPLOAD: Dummy offline village model after add save - " + JSON.stringify(model.toJSON()));
-                    dummy_person.set({
-                        age: 23,
-                        father_name: "asd",
-                        gender: "M",
-                        person_name: "sdk",
-                        village: model.id
-                    });
-                    console.log("UPLOAD: Dummy offline person model before save - " + JSON.stringify(dummy_person.toJSON()));
-                    dummy_person.save(null, {
-                        success: function(model) {
-                            console.log("UPLOAD: Dummy offline person model after add save - " + JSON.stringify(model.toJSON()));
-                            console.log("UPLOAD: Adding a model to uploadqueue");
-                            dummy_data_collection.create({
-                                data: model.toJSON(),
-                                action: "A",
-                                entity_name: "person"
-                            }, {
-                                success: function(model) {
-                                    console.log("UPLOAD: Added a model to uploadqueue - " + JSON.stringify(model.toJSON()));
-
-                                }
-                            });
-                            model.set('age', 24);
-                            console.log("UPLOAD: Dummy offline person model before edit save - " + JSON.stringify(model.toJSON()));
-                            model.save(null, {
-                                success: function(model) {
-                                    console.log("UPLOAD: Dummy offline person model after edit save - " + JSON.stringify(model.toJSON()));
-                                    console.log("UPLOAD: Adding a model to uploadqueue");
-                                    dummy_data_collection.create({
-                                        data: model.toJSON(),
-                                        action: "E",
-                                        entity_name: "person"
-                                    }, {
-                                        success: function(model) {
-                                            console.log("UPLOAD: Added a model to uploadqueue - " + JSON.stringify(model.toJSON()));
-
-                                        }
-                                    });
-                                    // delete the model
-                                    // model.destroy({
-                                    //                                       success: function(model_d){
-                                    //                                           console.log("UPLOAD: Deleted model.");
-                                    //                                           console.log("UPLOAD: Deleted an offline model - "+ JSON.stringify(model_d.toJSON()));
-                                    //                                           dummy_data_collection.create({data:model_d.toJSON(),action:"D",entity_name:"person"},
-                                    //                                           {
-                                    //                                               success:function(model)
-                                    //                                               {          
-                                    //                                                   console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
-                                    //                                             
-                                    //                                               }
-                                    //                                           }
-                                    //                                       );
-                                    //                           
-                                    //                                   
-                                    //                                       },
-                                    //                                       error: function(){
-                                    //                                           console.log("UPLOAD: Error deleting model.")
-                                    //                                       }
-                                    //                                   });
-
-                                }
-                            });
-
-                        }
-                    });
-
-
-                },
-                error: function() {
-                    console.log("UPLOAD: Error creating a dummy village.")
-                }
-            });
-
+            // var generic_model_offline = Backbone.Model.extend({
+        //         database: indexeddb,
+        //         storeName: "uploadqueue",
+        //     });
+        // 
+        //     var generic_offline_collection = Backbone.Collection.extend({
+        //         model: generic_model_offline,
+        //         database: indexeddb,
+        //         storeName: "uploadqueue",
+        //     });
+        //     var dummy_data_collection = new generic_offline_collection();
+        // 
+        //     var generic_model_offline2 = Backbone.Model.extend({
+        //         database: indexeddb,
+        //         storeName: "person",
+        //     });
+        //     var generic_model_offline_vill = Backbone.Model.extend({
+        //         database: indexeddb,
+        //         storeName: "village",
+        //     });
+        //     // var rem_model = new generic_model_offline();
+        //     // rem_model.set({id:"76e162e5-958b-0df5-b414-4b7a8b4f948b"});
+        //     // rem_model.destroy();
+        // 
+        //     // create a village, create a person in that village, edit the person and delete it
+        //     var dummy_person = new generic_model_offline2();
+        //     var dummy_vill = new generic_model_offline_vill();
+        //     dummy_vill.set({
+        //         village_name: "dummy_village_here",
+        //         online_id: 10000000000251
+        //     });
+        //     dummy_vill.save(null, {
+        //         success: function(model) {
+        //             console.log("UPLOAD: Dummy offline village model after add save - " + JSON.stringify(model.toJSON()));
+        //             dummy_person.set({
+        //                 age: 23,
+        //                 father_name: "asd",
+        //                 gender: "M",
+        //                 person_name: "sdk",
+        //                 village: model.id
+        //             });
+        //             console.log("UPLOAD: Dummy offline person model before save - " + JSON.stringify(dummy_person.toJSON()));
+        //             dummy_person.save(null, {
+        //                 success: function(model) {
+        //                     console.log("UPLOAD: Dummy offline person model after add save - " + JSON.stringify(model.toJSON()));
+        //                     console.log("UPLOAD: Adding a model to uploadqueue");
+        //                     dummy_data_collection.create({
+        //                         data: model.toJSON(),
+        //                         action: "A",
+        //                         entity_name: "person"
+        //                     }, {
+        //                         success: function(model) {
+        //                             console.log("UPLOAD: Added a model to uploadqueue - " + JSON.stringify(model.toJSON()));
+        // 
+        //                         }
+        //                     });
+        //                     model.set('age', 24);
+        //                     console.log("UPLOAD: Dummy offline person model before edit save - " + JSON.stringify(model.toJSON()));
+        //                     model.save(null, {
+        //                         success: function(model) {
+        //                             console.log("UPLOAD: Dummy offline person model after edit save - " + JSON.stringify(model.toJSON()));
+        //                             console.log("UPLOAD: Adding a model to uploadqueue");
+        //                             dummy_data_collection.create({
+        //                                 data: model.toJSON(),
+        //                                 action: "E",
+        //                                 entity_name: "person"
+        //                             }, {
+        //                                 success: function(model) {
+        //                                     console.log("UPLOAD: Added a model to uploadqueue - " + JSON.stringify(model.toJSON()));
+        // 
+        //                                 }
+        //                             });
+        //                             // delete the model
+        //                             // model.destroy({
+        //                             //                                       success: function(model_d){
+        //                             //                                           console.log("UPLOAD: Deleted model.");
+        //                             //                                           console.log("UPLOAD: Deleted an offline model - "+ JSON.stringify(model_d.toJSON()));
+        //                             //                                           dummy_data_collection.create({data:model_d.toJSON(),action:"D",entity_name:"person"},
+        //                             //                                           {
+        //                             //                                               success:function(model)
+        //                             //                                               {          
+        //                             //                                                   console.log("UPLOAD: Added a model to uploadqueue - "+ JSON.stringify(model.toJSON()));
+        //                             //                                             
+        //                             //                                               }
+        //                             //                                           }
+        //                             //                                       );
+        //                             //                           
+        //                             //                                   
+        //                             //                                       },
+        //                             //                                       error: function(){
+        //                             //                                           console.log("UPLOAD: Error deleting model.")
+        //                             //                                       }
+        //                             //                                   });
+        // 
+        //                         }
+        //                     });
+        // 
+        //                 }
+        //             });
+        // 
+        // 
+        //         },
+        //         error: function() {
+        //             console.log("UPLOAD: Error creating a dummy village.")
+        //         }
+        //     });
+        // 
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,6 +259,8 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                         error: function() {
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
                             //discard this and continue with next uploadqueue entry
+                            
+                            //TODO: this model should be deleted from IDB and server ????
                             entry.destroy();
                             $.event.trigger(ev);
 
@@ -673,6 +675,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                             for (var i = 0; i < data.length; i++) {
                                 // console.log(data[i]);
                                 // adding online_id field to support offline functionality
+                                data[i]['id'] = parseInt(data[i]['id']);
                                 data[i]['online_id'] = data[i]['id'];
                                 collection_offline.create(data[i]);
                             }
