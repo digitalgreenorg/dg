@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from website.user_models import CommentLike, TimeWatched, VideoLike, UserCollectionHistory
 
 # Create your models here.
 class Country(models.Model):
@@ -142,5 +144,17 @@ class VideoWatchRecord(models.Model):
     videoUID = models.ForeignKey(Video,related_name='video_watchrecord')
     personUID = models.ForeignKey(Person,related_name='person_watchrecord')
     timeWatched = models.BigIntegerField()
+    
+class User(models.Model):
+    uid = models.CharField(max_length=20,primary_key = True)
+    name = models.CharField(max_length=100)
+    authToken = models.CharField(max_length=100, blank=True)
+    avatarURL = models.URLField(max_length=200, blank=True)
+    facebookID = models.CharField(max_length=50, blank=True)
+    twitterID = models.CharField(max_length=50, blank=True) 
+    youtubeID = models.CharField(max_length=50, blank=True) 
+    linkedInID =  models.CharField(max_length=50, blank=True)
+    authToken = models.CharField(max_length=20, blank=True)
+ 
     
     

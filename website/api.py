@@ -49,7 +49,7 @@ class VideoResource(BaseResource):
 class CollectionResource(BaseResource):
     country = fields.ForeignKey(CountryResource, 'country',full=True)
     videos = fields.ManyToManyField(VideoResource, 'videos')
-    partner = fields.ForeignKey(PartnerResource, 'partnerUID',full=True)
+    partner = fields.ForeignKey(PartnerResource, 'partnerUID')
     language = fields.ForeignKey(LanguageResource, 'language',full=True)
     class Meta:
         queryset = Collection.objects.all()
