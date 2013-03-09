@@ -63,7 +63,6 @@ class EquipmentForm(CocoModelForm):
         model = Equipment
 
 class PersonGroupsForm(CocoModelForm):
-    #village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonGroups
       

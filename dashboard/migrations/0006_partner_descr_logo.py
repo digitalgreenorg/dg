@@ -8,16 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'PersonAdoptPractice.time_updated'
-        db.add_column(u'PERSON_ADOPT_PRACTICE', 'time_updated',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True),
+        # Adding field 'Partners.description'
+        db.add_column(u'PARTNERS', 'description',
+                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
                       keep_default=False)
-        
-    def backwards(self, orm):
-        # Deleting field 'PersonAdoptPractice.time_updated'
-        db.delete_column(u'PERSON_ADOPT_PRACTICE', 'time_updated')
 
-        
+        # Adding field 'Partners.logoURL'
+        db.add_column(u'PARTNERS', 'logoURL',
+                      self.gf('django.db.models.fields.URLField')(default='', max_length=200, blank=True),
+                      keep_default=False)
+
+
+    def backwards(self, orm):
+        # Deleting field 'Partners.description'
+        db.delete_column(u'PARTNERS', 'description')
+
+        # Deleting field 'Partners.logoURL'
+        db.delete_column(u'PARTNERS', 'logoURL')
+
+
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -206,7 +215,9 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Partners', 'db_table': "u'PARTNERS'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'date_of_association': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'DATE_OF_ASSOCIATION'", 'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'id': ('dashboard.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'logoURL': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'partner_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PARTNER_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'})
         },
@@ -235,7 +246,6 @@ class Migration(SchemaMigration):
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'QUALITY'", 'blank': 'True'}),
             'quantity': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'QUANTITY'", 'blank': 'True'}),
             'quantity_unit': ('django.db.models.fields.CharField', [], {'max_length': '150', 'db_column': "'QUANTITY_UNIT'", 'blank': 'True'}),
-            'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'video': ('dashboard.fields.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
         },
         'dashboard.persongroups': {
