@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from website.user_models import CommentLike, TimeWatched, VideoLike, UserCollectionHistory
+#from website.user_models import CommentLike, TimeWatched, VideoLike, UserCollectionHistory
 
 # Create your models here.
 class Country(models.Model):
@@ -48,7 +48,7 @@ class Language(models.Model):
     
 class Video(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     description = models.TextField(blank=True)
     youtubeID = models.CharField(max_length=20, )
@@ -121,7 +121,7 @@ class Activity(models.Model):
     farmer = models.ForeignKey(Farmer,null=True,blank=True)
     collection = models.ForeignKey(Collection,null=True,blank=True)
     user = models.ForeignKey(User,null=True,blank=True)
-    video = models.ForeignKey(Video)
+    video = models.ForeignKey(Video,null=True,blank=True)
     
 class Comment(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)

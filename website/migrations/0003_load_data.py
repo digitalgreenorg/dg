@@ -183,7 +183,7 @@ class Migration(DataMigration):
 
 #        farmer migrations
 
-        for j in orm['dashboard.Partner'].objects.exclude(date_of_association=None):
+        for j in orm['dashboard.Partners'].objects.exclude(date_of_association=None):
             farmer=orm['dashboard.Person'].objects.filter(village__block__district__partner=j).exclude(image_exists=False)[:100]
             for i in farmer:
                 self.farmer_migration(orm, i);
@@ -258,17 +258,17 @@ class Migration(DataMigration):
                     village = k.village_set.all().order_by('start_date')
                     for l in village:
                         if partner_village_count==10 and repeat_flag==False:
-                            temp = Activity(uid=str(counter),date=last_date,textContent="Our Partner "+i.partner_name+" has expanded their work to reach 10 villages today",partner=Partner.objects.get(uid=i.id), video = Video.objects.all()[0])
+                            temp = Activity(uid=str(counter),date=last_date,textContent="Our Partner "+i.partner_name+" has expanded their work to reach 10 villages today",partner=Partner.objects.get(uid=i.id))
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
                         if partner_village_count==50 and repeat_flag==False:
-                            temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 50 villages today", partner=Partner.objects.get(uid=i.id), video = Video.objects.all()[0])
+                            temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 50 villages today", partner=Partner.objects.get(uid=i.id))
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
                         if partner_village_count==100 and repeat_flag==False:
-                            temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 100 villages today", partner=Partner.objects.get(uid=i.id), video = Video.objects.all()[0])
+                            temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" have expanded there work in 100 villages today", partner=Partner.objects.get(uid=i.id))
                             temp.save()
                             counter = counter + 1
                             repeat_flag=True
@@ -276,7 +276,7 @@ class Migration(DataMigration):
                             continue
                         else:
                             last_date = l.start_date
-                        temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" started working in Village "+l.village_name+" today", partner=Partner.objects.get(uid=i.id), video = Video.objects.all()[0])
+                        temp = Activity(uid=str(counter), date=last_date, textContent="Our Partner organisation "+i.partner_name+" started working in Village "+l.village_name+" today", partner=Partner.objects.get(uid=i.id))
                         temp.save()
                         counter = counter + 1
                         partner_village_count = partner_village_count + 1
