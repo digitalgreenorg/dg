@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            'click #button1': 'save',
+            // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -32,18 +32,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .html());
             this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
-            // Creating the online,offline collections and models for the entity in consideration 
+            
+            // Creating the offline models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
-            });
-
-            var generic_collection_offline = Backbone.Collection.extend({
-                model: generic_model_offline,
-                database: indexeddb,
-                storeName: this.view_configs.entity_name,
-            });
-            
+            }); 
             
             this.offline_model = new generic_model_offline();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,36 +54,48 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
 
                 this.f_colls.push(new generic_collection_offline());
+                // Reset is called when a collection has finished fetching.
+                // We are binding the reset of the last added collection to render_foreign_entity
                 _.last(this.f_colls)
                     .bind('reset', this.render_foreign_entity);
-
+                
+                /*
+                this.f_colls.push(new generic_collection_offline().bind);
+                
+                var f_collection = new generic_collection_offline();
+                f_collection.bind
+                f_colls.push(f_collection);
+                */
 
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
+            // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
             json = null;
-            this.edit_case = true;
+            this.edit_case = false;
+            // Edit case: we receive json from Upload
             if (params.model_json) {
-                this.edit_case_json = true;
+                this.edit_case_json = true; // edit_case_upload
                 this.model_json = params.model_json;
+                this.edit_case = true;
             } else if (params.model_id) {
 
                 this.offline_model.set({
                     id: params.model_id
                 });
                 this.edit_case_id = true;
+                this.edit_case = true;
 
-            } else this.edit_case = false;
-            
+            }
+            // No need for two variables. One is sufficient.
             if(this.edit_case)
                 this.action = "E"
             else
                 this.action = "A"            
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            this.just_save = false;
-            this.save_and_add_another = false;
+            
             _(this)
                 .bindAll('save');
 
@@ -106,7 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 this.f_colls[i].fetch({
                     success: function() {
                         console.log("ADD/EDIT: a foreign coll fetched");
-
+                        // render foreign collection is called automatically on successful fetch
                     },
                     error: function() {
                         //ToDO: error handling
@@ -237,7 +243,26 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },  
         show_errors: function(errors){
             console.log("FORM: in show errors");
-            this.$('#form_errors').append(errors);
+            var error_str = "";
+            console.log("FORM: SHOWERROR: ");
+            // errors = eval(errors);
+            // for(member in errors)
+            // {
+            //     if(member != "__all__"){
+            //         error_str += member +" : <br>";
+            //     }
+            //     
+            //     $.each(errors[member],function(err){
+            //         error_str += err+"<br>";
+            //     });
+            //     
+            // }
+            // console.log(eval(errors));
+            
+            
+            
+            
+            this.$('#form_errors').html(errors);
         },        
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);

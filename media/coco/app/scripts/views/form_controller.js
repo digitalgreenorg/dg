@@ -4,8 +4,16 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 // 'text!templates/project/list.html'
 ], function($, pas, pass, pass, pass, notifs_view, indexeddb, configs, Form, upload_collection) {
 
-
-    var PersonAddEditView = Backbone.Layout.extend({
+    // FormController: Brings up the Add/Edit form
+    
+    /*
+    If we are saving offline - we set the json from the form, (we denormalize it), save it in the model and save the model in the upload queue.
+    If we are saving online - we set the json from the form, (we denormalize it), we convert foreign keys ids to the online namespace, save the offline model, and then save it on server.
+    If server save succeeds, then we set the online_id in the offline model.
+    */
+    
+    
+    var FormControllerView = Backbone.Layout.extend({
 
         initialize: function(params) {
             this.params = params;
@@ -14,15 +22,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log(upload_collection.models);    
 
         },
-        template: "<div> <div id = 'form'></div> </div>",
-        // views: {
-        //     "#form": new new Form(this.options)
-        //   },        
+        template: "<div><div id = 'form'></div></div>",
+        
         beforeRender: function() {
-
+            // #form is the id of the element inside in template where the new view will be inserted.
             this.setView("#form", new Form(this.params));
-            // this.render();
-            // this.setView( "form",new Form(this.params));
             _(this)
                 .bindAll('on_save');
             _(this)
@@ -34,32 +38,32 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
 
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template')
-            .html()),
+        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
             
         on_save: function(e) {
             e.stopPropagation();
             console.log("ADD/EDIT: Save clicked on form - ");
             // console.log(e);
-            this.form = e.context;
+            this.form = e.context; // form_view
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
             this.form.offline_model.set(this.form.final_json);
-            var that = this;
-            this.offline_m = this.form.offline_model;
-            if(that.is_uploadqueue_empty()&&that.is_internet_connected())
+            var that = this; // Please change to form_controller or something else which makes the content clear.
+            this.offline_m = this.form.offline_model; // Remove this line
+            if(that.is_uploadqueue_empty() && that.is_internet_connected())
             {
                 console.log("FORMCONTROLLER: the uploadqueue is empty and internet connected");
                 //TODO: SAve on server, 
                 //TODO: get the online id  
                 //TODO: save online_id in offline model
                 //TODO: offline to online
-                that.offline_to_online(this.form.final_json);
-                        
+                that.offline_to_online(this.form.final_json); // If offline to online conversion succeds, then we save it to offline db. If this is succesful, then save it on server, then get online id from the server and set it on the offline object. If there is an error, then ?
+                // Error callbacks???
             }
             else
             {
-                //put into uploadqueue
-                this.offline_m.save(null,{
+                //put into uploadqueue. save it in the offline db and upload Q.
+                // Offline save
+                this.offline_m.save(null,{ // already set the json upstairs
                     success: function(model){
                         console.log("FORMCONTROLLER:ON_SAVE: model saved in offline");
                         console.log(model);
@@ -80,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 },
                                 error: function(model){
                                     console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(model.toJSON()));
-                                    that.form.show_errors("Unexepected Error- error adding model to uploadqueue")
+                                    // that.form.show_errors("Unexepected Error- error adding model to uploadqueue")
                                     alert("unepected error. check log");
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
@@ -94,7 +98,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     },
                     error: function(){
                         console.log("FORMCONTROLLER:ON_SAVE: Unexpected Error - error saving the model offline.")
-                        that.form.show_errors("Unexepected Error- error saving the model offline")
+                        // that.form.show_errors("Unexepected Error- error saving the model offline")
                         alert("Unexpected error. Check log");
                         $(notifs_view.el)
                             .append(that.error_notif_template({
@@ -108,20 +112,22 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             
         },
-            
+        
+        
         offline_to_online: function(json) {
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: here am i");
             console.log(this.params);
             var f_entities = this.params.initialize.view_configs["foreign_entities"];
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
-            var online_json = $.extend(null, json);
+            var online_json = $.extend(null, json); // making a copy of object json
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));
-            var num_mem = Object.keys(f_entities).length;
+            var num_mem = Object.keys(f_entities).length; // Number of foreign entities referenced in this model.
             if (!num_mem) {
                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: no foreign entities to convert");
                 this.after_offline_to_online_success(online_json);
             } else {
                 for (member in f_entities) {
+                    // If this foreign entity is not present in the current object, continue.
                     if (!(member in online_json)) {
                         num_mem--;
                         continue;
@@ -129,7 +135,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting " + member + " offline to online.");
                     var generic_model_offline = Backbone.Model.extend({
                         database: indexeddb,
-                        storeName: member,
+                        storeName: member, // add attribute name
                     });
                     var f_model = new generic_model_offline();
                     f_model.set("id", online_json[member]["id"]);
@@ -138,6 +144,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         success: function(model) {
                             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
                             online_json[model.storeName]["id"] =   model.get("online_id");
+                            // access the attribute name
                             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                             num_mem--;
                             if (!num_mem) {
@@ -149,7 +156,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                             //TODO: this model should be deleted from IDB and server ????
                             alert("unexpected error. check console log");
-                            that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
+                            // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
                             $(notifs_view.el)
                                 .append(that.error_notif_template({
                                 msg: "A foreign entity referenced does not exists in IDB."
@@ -163,7 +170,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         },
         
-        after_offline_to_online_success: function(o_json){
+        after_offline_to_online_success: function(o_json){ // call this send_to_server
             var that = this;
             var generic_model_online = Backbone.Model.extend({
                 sync: Backbone.ajaxSync,
@@ -174,7 +181,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var upload_online_model = new generic_model_online();
             
             this.offline_m.save(null,{
-                success: function(model){
+                success: function(model){ // please change this to offline_model
                     console.log("FORMCONTROLLER:ON_SAVE: model saved in offline");
                     upload_online_model.set(o_json);
                     if(that.form.action == "A")
@@ -183,7 +190,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                     else
                     {
-                        upload_online_model.set('id', model.get('online_id'));
+                        upload_online_model.set('id', parseInt(model.get('online_id')));
                         upload_online_model.unset('online_id');
                     
                     }
@@ -202,13 +209,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                     console.log("FRMCONTROLLER: Successfuly saved on server and offline.")
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
-                                        msg: "Success! saved on server and offline"
+                                        msg: "Success! Saved on server and offline"
                                     }));    
                                 },
                                 error: function() {
                                     //ToDO: error handling
                                     console.log("ERROR:FRMCONTROLLER: Unexpected error.Couldn't save offline model.The offline model's online id could not be set.");
-                                    that.form.show_errors("Unexepected Error- error saving the model offline");
+                                    // that.form.show_errors("Unexepected Error- error saving the model offline");
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
                                         msg: "Error setting onlineid of offline model"
@@ -217,9 +224,9 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 }
                             });
                         },
-                        error: function(){
+                        error: function(model, xhr, options){
                             console.log("FORMCONTROLLER:ADD: Error saving model on server ");
-                            that.form.show_errors("Error saving the model on server");
+                            that.form.show_errors(xhr.responseText);
                             $(notifs_view.el)
                                 .append(that.error_notif_template({
                                 msg: "Error saving the model on server"
@@ -234,7 +241,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 },
                 error: function(){
                     console.log("FORMCONTROLLER:ON_SAVE: Unexpected Error - error saving the model offline.");
-                    that.form.show_errors("Unexepected Error- error saving the model offline");
+                    // that.form.show_errors("Unexepected Error- error saving the model offline");
                     $(notifs_view.el)
                         .append(that.error_notif_template({
                         msg: "Error saving the model offline"
@@ -244,12 +251,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             });
                        
                         
-        },
+        },    
         
-        after_offline_to_online_fail: function(){
-            
-        },        
-            
         is_uploadqueue_empty : function(){
             console.log("FORMCONTROLLER: length of upload_collection - "+upload_collection.length);
             console.log(upload_collection);
@@ -273,5 +276,5 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     });
 
     // Our module now returns our view
-    return PersonAddEditView;
+    return FormControllerView;
 });

@@ -205,7 +205,7 @@
                         
     <%=form_template%>
     <div class="form-actions">
-      <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
+      <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
       <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
     </div>
     </form>
@@ -241,12 +241,9 @@
 	                                <label class="control-label">Gender*</label> 
 	                                <div class="controls">
 	                                <select name="gender">
-	                                    <option>
-	                                        Female
-	                                    </option>
-	                                    <option>
-	                                        Male
-	                                    </option>
+    									<option value='' selected='selected'>---------</option> 
+    									<option value='M'>Male</option> 
+    									<option value='F'>Female</option> 
 	                                </select>
 	                                </div>
                                 </div> 
