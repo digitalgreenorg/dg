@@ -36,6 +36,7 @@ class Partner(models.Model):
     joinDate = models.DateField()
     logoURL = models.URLField(max_length=200)
     collectionCount = models.BigIntegerField(null=True, blank=True)
+    #Internal Fields
     videos = models.BigIntegerField(null=True, blank=True)
     views = models.BigIntegerField(null=True, blank=True)
     likes = models.BigIntegerField(null=True, blank=True)
