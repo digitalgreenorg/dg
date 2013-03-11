@@ -82,7 +82,11 @@ class ModelFormValidation(FormValidation):
                 data[field] = self.uri_to_pk(data[field])
         
         # validate and return messages on error
-        form = self.form_class(data)
+        if request.method == "PUT":
+            #Handles edit case
+            form = self.form_class(data, instance = bundle.obj)
+        else:
+            form = self.form_class(data)
         if form.is_valid():
             return {}
         return form.errors
