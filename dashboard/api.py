@@ -204,6 +204,7 @@ class MediatorResource(ModelResource):
         if partner:
             partner = partner[0]
         animators = Animator.objects.filter(partner__in = [partner]).values_list('id', flat=True)
+        print animators
         return object_list.filter(id__in= animators)
 
     
