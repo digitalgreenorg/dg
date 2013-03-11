@@ -252,17 +252,16 @@
 <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
 </div> -->
 <script  type="text/template" id="list_view_template">
-    <div class="well">
-    <span style= "font-size:20px;"><b><%= header_name %></b></span>
-    <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
+    <div id="legend">
+    	<legend class=""><%= header_name %></legend>
     </div>
-	<div style= "margin: 30px 30px 30px 30px;">
-	       <table id= "list_table" class="table table-striped display">
-	       <thead>
-	       <%= table_header%>
-	       </thead>
-	       <tbody>
-		   </tbody>
+	<div >
+       <table id= "list_table" class="table table-striped display">
+       <thead>
+       <%= table_header%>
+       </thead>
+       <tbody>
+	   </tbody>
 	</div>
 	
 </script>
@@ -273,25 +272,25 @@
 </script>
 
 <script type="text/template" id="form_template">
-<div id = "form_div">
-    <div id = "form_header">
+    <div id = "form_div">
+        <div id = "form_header">
     
-    </div>
-    <div id = "form_errors" style = "color:red">
+        </div>
+        <div id = "form_errors" style = "color:red">
     
-    </div>
-    <div id = "model_form">
-    <form id="person_form" class="form-horizontal">
+        </div>
+        <div id = "model_form">
+        <form id="person_form" class="form-horizontal">
                         
-    <%=form_template%>
-    <div class="form-actions">
-      <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-      <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
-    </div>
-    </form>
-    </div>
+        <%=form_template%>
+        <div class="form-actions">
+          <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
+          <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+        </div>
+        </form>
+        </div>
 	
-</div>
+    </div>
 </script>
 
 <script type="text/template" id="person_add_edit_template2">
@@ -434,7 +433,7 @@
    
    <script type="text/template" id="page_layout">
    <div id = "side_panel" class="span2 well"></div>
-   <div id = "content"></div>
+   <div id = "content" class="span10" style="padding-top:20px;padding-bottom:20px;"></div>
    		
    </script>
    
