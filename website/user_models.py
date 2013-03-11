@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from website.models import Collection, Comment, Video, User
 from django.db import models
     
 class UserCollectionHistory(models.Model):
