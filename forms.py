@@ -85,7 +85,7 @@ class PartnerForm(CocoModelForm):
 class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
-        exclude = ('assigned_villages',)
+        exclude = ('assigned_villages')
 
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
