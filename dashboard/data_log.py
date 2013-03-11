@@ -2,19 +2,22 @@ from dashboard.models import User
 from datetime import datetime
 from django.db.models import get_model
 import json
+from django.forms.models import model_to_dict
 from django.http import HttpResponse
 
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
+    model_dict = model_to_dict(instance)
+    json_str = json.dumps(model_dict) 
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
-    except Exception , e:
+    except Exception, ex:
         user = None
     try:
         ServerLog = get_model('dashboard','ServerLog')
-        log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner())
+        log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner(),instance_json = json_str)
         log.save()
     except Exception as ex:
         print ex
