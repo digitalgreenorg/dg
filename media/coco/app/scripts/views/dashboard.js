@@ -606,11 +606,17 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             // this.collection.fetch();
             for (var member in configs) {
                 // console.log(configs[member]);
-                $('tbody')
+                $('#dashboard_items')
                     .append(this.item_template({
                     name: member,
                     title: configs[member]["page_header"]
                 }));
+                $('#dashboard_items_add')
+                    .append(this.item_template({
+                    name: member+"/add",
+                    title: '<i class="icon-plus-sign"></i>'
+                }));
+                    
 
             }
         },
