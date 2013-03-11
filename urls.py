@@ -13,6 +13,7 @@ from django.contrib import admin
 from dashboard.data_log_website import update_website
 from dashboard.data_log import send_updated_log
 admin.autodiscover()
+from website.views import get_search_completion, get_search_collection
 
 urlpatterns = patterns('',
     (r'^coco/', redirect_url),
@@ -266,8 +267,10 @@ urlpatterns = patterns('',
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^api/', include('website.urls')),
-    (r'^update_website/?$', update_website),
-    (r'^get_log/?$',send_updated_log),
+#    (r'^update_website/?$', update_website),
+#    (r'^get_log/?$',send_updated_log),
+    (r'^searchcompletion/?$',get_search_completion),
+    (r'^searchcollection/?$',get_search_collection),
 )
 
 # Static files serving locally

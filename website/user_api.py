@@ -7,7 +7,6 @@ from website.api import CollectionResource, VideoResource, CommentResource
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.authentication import BasicAuthentication, Authentication
 
-
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -33,6 +32,7 @@ class UserCollectionHistoryResource(ModelResource):
         filtering = {
            "userUID": ALL,
         }
+        fields = ['completed','viewed','liked']
         
 class VideoLikeResource(ModelResource):
     video = fields.ForeignKey(VideoResource, 'videoUID')

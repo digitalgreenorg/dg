@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from website.api import VideoResource, LanguageResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, CommentResource
 from website.user_api import SignInResource, UserCollectionHistoryResource, VideoLikeResource, CommentLikeResource, UserResource
+
 video_resource = VideoResource()
 language_resource = LanguageResource()
 country_resource = CountryResource()
@@ -32,5 +33,6 @@ urlpatterns = patterns('',
     (r'v1/', include(videolike_resource.urls)),
     (r'v1/', include(commentlike_resource.urls)),
     (r'v1/', include(user_resource.urls)),
+    
     
 )
