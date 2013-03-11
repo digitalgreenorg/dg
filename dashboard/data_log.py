@@ -4,13 +4,14 @@ from django.db.models import get_model
 import json
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
+from django.core.serializers.json import DjangoJSONEncoder
 
 def save_log(sender, **kwargs ):
     instance = kwargs["instance"]
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
     model_dict = model_to_dict(instance)
-    json_str = json.dumps(model_dict) 
+    json_str = json.dumps(model_dict, cls=DjangoJSONEncoder) 
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
     except Exception, ex:
