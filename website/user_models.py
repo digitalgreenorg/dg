@@ -1,6 +1,4 @@
 from django.contrib.auth.models import User
-from dashboard.fields import BigForeignKey 
-from website.models import Collection, Comment, Video, User
 from django.db import models
     
 class UserCollectionHistory(models.Model):
@@ -21,8 +19,3 @@ class CommentLike(models.Model):
 
 class TimeWatched(models.Model):
     videoWatchRecord = models.ForeignKey('VideoWatchRecord')
-    
-    
-    
-
-    

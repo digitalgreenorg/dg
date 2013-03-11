@@ -12,8 +12,7 @@ class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
-        
-        
+
 class SignInResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -37,9 +36,12 @@ class UserCollectionHistoryResource(ModelResource):
         
 class VideoLikeResource(ModelResource):
     video = fields.ForeignKey(VideoResource, 'videoUID')
+    user = fields.ForeignKey(UserResource,'userUID')
     class Meta:
         queryset = VideoLike.objects.all()
         resource_name = 'updateVideoLike'
+        authentication = Authentication()
+        authorization = Authorization()
 
 class CommentLikeResource(ModelResource):
     comment = fields.ForeignKey(CommentResource, 'commentUID')
