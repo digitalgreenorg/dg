@@ -270,8 +270,8 @@ urlpatterns = patterns('',
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^api/', include('website.urls')),
-    (r'^update_website/?$', update_website),
-    (r'^get_log/?$',send_updated_log),
+#    (r'^update_website/?$', update_website),
+#    (r'^get_log/?$',send_updated_log),
 )
 
 # Static files serving locally
