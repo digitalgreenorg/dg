@@ -131,12 +131,12 @@ define([
                         storeName: member,
                     });
                     var f_model = new generic_model_offline();
-                    f_model.set("id", entry.get("data")[member]);
+                    f_model.set("id", entry.get("data")[member]["id"]);
                     var that = this;
                     f_model.fetch({
                         success: function(model) {
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                            online_json[model.storeName] = configs[entry.get('entity_name')]["rest_api_url"] + model.get("online_id") + "/";
+                            online_json[model.storeName]["id"] = model.get("online_id");
                             console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                             num_mem--;
                             if (!num_mem) {
