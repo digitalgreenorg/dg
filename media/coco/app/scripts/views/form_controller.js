@@ -123,48 +123,105 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
             var online_json = $.extend(null, json); // making a copy of object json
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));
-            var num_mem = Object.keys(f_entities).length; // Number of foreign entities referenced in this model.
+            // var num_mem = Object.keys(f_entities).length; // Number of foreign entities referenced in this model.
+            var num_mem = 0;
+            for(member in f_entities)
+            {
+                num_mem += Object.keys(f_entities[member]).length;
+            }
+            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: number of foreign elements - " + num_mem);
             if (!num_mem) {
                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: no foreign entities to convert");
                 this.after_offline_to_online_success(online_json);
             } else {
                 for (member in f_entities) {
-                    // If this foreign entity is not present in the current object, continue.
-                    if (!(member in online_json)) {
-                        num_mem--;
-                        continue;
-                    }
-                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting " + member + " offline to online.");
-                    var generic_model_offline = Backbone.Model.extend({
-                        database: indexeddb,
-                        storeName: member, // add attribute name
-                    });
-                    var f_model = new generic_model_offline();
-                    f_model.set("id", online_json[member]["id"]);
-                    var that = this;
-                    f_model.fetch({
-                        success: function(model) {
-                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                            online_json[model.storeName]["id"] =   model.get("online_id");
-                            // access the attribute name
-                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                    for(element in f_entities[member])
+                    {
+                        // If this foreign entity is not present in the current object, continue.
+                        if (!(element in online_json)) {
                             num_mem--;
                             if (!num_mem) {
                                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
-                                that.after_offline_to_online_success(online_json);
+                                this.after_offline_to_online_success(online_json);
+                                return;
                             }
-                        },
-                        error: function() {
-                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
-                            //TODO: this model should be deleted from IDB and server ????
-                            alert("unexpected error. check console log");
-                            // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
-                            $(notifs_view.el)
-                                .append(that.error_notif_template({
-                                msg: "A foreign entity referenced does not exists in IDB."
-                            }));
+                            else
+                                continue;
                         }
-                    });
+                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting " + element + " offline to online.");
+                        if(online_json[element] instanceof Array)
+                        {
+                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is multiselect. Fetching its collection.");
+                            var generic_offline_collection = Backbone.Collection.extend({
+                                database: indexeddb,
+                                storeName: member,
+                                attribute: element    
+                            });
+                            var f_collection = new generic_offline_collection();
+                            var that = this;
+                            f_collection.fetch({
+                                success: function(collection){
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
+                                    $.each(online_json[element],function(index,object){
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
+                                        var model = collection.get(object["id"]);
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
+                                        object["id"] =   model.get("online_id");
+                                    });
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                                    num_mem--;
+                                    if (!num_mem) {
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
+                                        that.after_offline_to_online_success(online_json);
+                                    }            
+                                },
+                                error: function(){
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error :foreign collection fetch failed");  
+                                    alert("unexpected error. check console log");
+                                    $(notifs_view.el)
+                                        .append(that.error_notif_template({
+                                        msg: "A foreign entity referenced does not exists in IDB."
+                                    }));          
+                                }        
+                            });
+    
+                        }
+                        else
+                        {
+                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is single select. Fetching its model.");
+                            var generic_model_offline = Backbone.Model.extend({
+                                database: indexeddb,
+                                storeName: member, // add attribute name
+                                attribute: element    
+                            });
+                            var f_model = new generic_model_offline();
+                            f_model.set("id", online_json[element]["id"]);
+                            var that = this;
+                            f_model.fetch({
+                                success: function(model) {
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
+                                    online_json[element]["id"] =   model.get("online_id");
+                                    // access the attribute name
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                                    num_mem--;
+                                    if (!num_mem) {
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
+                                        that.after_offline_to_online_success(online_json);
+                                    }
+                                },
+                                error: function() {
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
+                                    //TODO: this model should be deleted from IDB and server ????
+                                    alert("unexpected error. check console log");
+                                    // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
+                                    $(notifs_view.el)
+                                        .append(that.error_notif_template({
+                                        msg: "A foreign entity referenced does not exists in IDB."
+                                    }));
+                                }
+                            });
+                        }
+                    }
                 }
             }
 

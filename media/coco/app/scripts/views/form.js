@@ -165,15 +165,19 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         render_foreign_entity: function(collection, options) {
             console.log("ADD/EDIT: rendering foreign entity");
-            f_entity_desc = this.view_configs.foreign_entities[collection.__proto__.storeName];
-            $f_el = this.$('#' + f_entity_desc.placeholder);
-            collection.each(function(f_model) {
-                $f_el.append(options_inner_template({
-                    id: parseInt(f_model.get("id")),
-                    name: f_model.get(f_entity_desc.name_field)
-                }));
-            });
-            console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+            for(element in this.view_configs.foreign_entities[collection.__proto__.storeName])
+            {
+                f_entity_desc = this.view_configs.foreign_entities[collection.__proto__.storeName][element];
+                $f_el = this.$('#' + f_entity_desc.placeholder);
+                collection.each(function(f_model) {
+                    $f_el.append(options_inner_template({
+                        id: parseInt(f_model.get("id")),
+                        name: f_model.get(f_entity_desc.name_field)
+                    }));
+                });
+                console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                    
+            }
             if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
         },
 
@@ -196,23 +200,49 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var f_entities = this.view_configs["foreign_entities"];
             var c=0;
             for (member in f_entities) {
-                if (member in n_json) {
-                    name_field = f_entities[member]["name_field"];
-                    var id = parseInt(n_json[member]);
-                    if((id != "")&&(id!=null)&&(id!=undefined)){ 
-                        var entity = this.f_colls[c].where({
-                            id: id
-                        })[0];
-                        n_json[member] = {};
-                        n_json[member]["id"] = id;
-                        n_json[member][name_field] = entity.get(f_entities[member]["name_field"]);    
-                    }
-                    else{
-                        n_json[member] = {};
-                        n_json[member]["id"] = null;
-                        n_json[member][name_field] = null;
-                     }
+                for(element in f_entities[member])
+                {
+                    if (element in n_json) {
+                        name_field = f_entities[member][element]["name_field"];
+                        
+                        if (n_json[element] instanceof Array) {
+                            var el_array = [];
+                            var that = this;
+                            $.each(n_json[element],function(index, id){
+                                id = parseInt(id);
+                                console.log(id);
+                                if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                                    var entity = that.f_colls[c].where({
+                                        id: id
+                                    })[0];
+                                    var el_dict = {};
+                                    el_dict["id"] = id;
+                                    el_dict[name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                                    el_array.push(el_dict);    
+                                }
+                            });
+                            n_json[element] = el_array;
+                        } else {
+                            var id = parseInt(n_json[element]);
+                            if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                                var entity = this.f_colls[c].where({
+                                    id: id
+                                })[0];
+                                n_json[element] = {};
+                                n_json[element]["id"] = id;
+                                n_json[element][name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                            }
+                            else{
+                                n_json[element] = {};
+                                n_json[element]["id"] = null;
+                                n_json[element][name_field] = null;
+                            }
+                        }
+                        
+                        
+                    }    
                 }
+                
                 c++;
             }
             console.log("FORM: After DNormalising json - "+JSON.stringify(this.final_json))

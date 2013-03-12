@@ -28,6 +28,23 @@ function() {
 //         'list_item_template_name': 'screening_list_item_template',
 //     };
 
+    var mediator_configs = {
+        'page_header': 'Mediator',
+        'table_template_name': 'mediator_table_template',
+        'list_item_template_name': 'mediator_list_item_template',
+        'add_edit_template_name': 'mediator_add_edit_template',
+        'rest_api_url': '/api/v1/mediator/',
+        'entity_name': 'mediator',
+        'foreign_entities':{
+            'village': {
+                "assigned_villages" : {'placeholder':'id_ass_villages','name_field':'village_name'},        //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+            }
+         },
+        'unique_togther_fields':[],
+        'form_field_validation': {
+        }
+    };
+  
     var person_configs = {
         'page_header': 'Person',
         'table_template_name': 'person_table_template',
@@ -36,9 +53,13 @@ function() {
         'rest_api_url': '/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities':{
-            'village': {'placeholder':'id_village','name_field':'village_name'},
-            'group': {'placeholder':'id_group','name_field':'group_name'}
+            'village': {
+                'village': {'placeholder':'id_village','name_field':'village_name'},
             },
+            'group': {
+                'group': {'placeholder':'id_group','name_field':'group_name'}
+            }
+         },
         'unique_togther_fields':[],
         'form_field_validation': {
 			rules: {
@@ -133,7 +154,8 @@ function() {
         
         person:person_configs,
         village:village_configs,
-        group:group_configs
+        group:group_configs,
+        mediator:mediator_configs    
     }
 
 });

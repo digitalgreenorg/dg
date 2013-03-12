@@ -171,6 +171,68 @@
 	   </tr>
 </script>
 
+
+
+<!--///////////////////////////////////////////////////// MEDIATOR TEMPLATES START //////////////////////////////////////////////-->
+<script type="text/template" id="mediator_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Gender</th>
+       <th>Partner</th>
+       <th></th>
+	   </tr>
+</script>
+<script type="text/template" id="mediator_list_item_template">
+    <td><%= id %></td>
+    <td><%= name %></td>
+    <td> <%= gender %></td>
+    <td> <%= partner.partner_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+<script type="text/template" id="mediator_add_edit_template">
+                            <fieldset>
+                                <legend>Add Mediator</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Name*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="name" placeholder="Name">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+ 	                                <label class="control-label">Gender*</label> 
+ 	                                <div class="controls">
+ 	                                <select name="gender">
+     									<option value='' selected='selected'>---------</option> 
+     									<option value='M'>Male</option> 
+     									<option value='F'>Female</option> 
+ 	                                </select>
+ 	                                </div>
+                                 </div> 
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Assigned Villages</label>
+	                                 <div class="controls"> 
+	                                 <select id = "id_ass_villages" name="assigned_villages" multiple>
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                                <div class="control-group">
+	                                 <label class="control-label">Phone Number</label>
+	                                 <div class="controls">
+	                                 <input name="phone_no" type="text" placeholder="Phone Number">
+	                                 </div>
+                                 </div>
+							</fieldset>
+                        
+
+</script>
+<!--//////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
+
+
 <script type="text/template" id="person_list_item_template">
     <td><%= id %></td>
     <td><%= person_name %></td>

@@ -3,11 +3,12 @@ define([
   'underscore',
   'backbone',
   'indexeddb_backbone_config',
-      'configs'
+  'configs',
+  'views/form'
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,_,pass,indexeddb, configs){
+], function($,pas,pass,indexeddb, configs, Form){
     
     var UploadView = Backbone.Layout.extend({
         
@@ -104,10 +105,13 @@ define([
             console.log("UPLOAD:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
             var online_json = $.extend(null, entry.get("data"));
             console.log("UPLOAD:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(entry.get("data")));
-            var num_mem = Object.keys(f_entities)
-                .length;
-            // if(entry.id==737)
-            //                 num_mem = 0;
+            // var num_mem = Object.keys(f_entities).length;
+            var num_mem = 0;
+            for(member in f_entities)
+            {
+                num_mem += Object.keys(f_entities[member]).length;
+            }
+            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: number of foreign elements - " + num_mem);
             if (!num_mem) {
                 console.log("UPLOAD:OFFLINE_TO_ONLINE: no foreign entities to convert");
                 if (entry.get("action") == "A") {
@@ -121,26 +125,12 @@ define([
             } else {
 
                 for (member in f_entities) {
-                    if (!(member in entry.get("data"))) {
-                        num_mem--;
-                        continue;
-                    }
-                    console.log("UPLOAD:OFFLINE_TO_ONLINE: converting " + member + " offline to online");
-                    var generic_model_offline = Backbone.Model.extend({
-                        database: indexeddb,
-                        storeName: member,
-                    });
-                    var f_model = new generic_model_offline();
-                    f_model.set("id", entry.get("data")[member]["id"]);
-                    var that = this;
-                    f_model.fetch({
-                        success: function(model) {
-                            console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                            online_json[model.storeName]["id"] = model.get("online_id");
-                            console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                    for(element in f_entities[member])
+                    {
+                        if (!(element in online_json)) {
                             num_mem--;
                             if (!num_mem) {
-                                console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
+                                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
                                 if (entry.get("action") == "A") {
                                     console.log("UPLOAD: its add action");
                                     that.upload_add(online_json);
@@ -148,19 +138,96 @@ define([
                                     console.log("UPLOAD: its edit action");
                                     that.upload_edit(online_json);
                                 }
-
+                                return;
                             }
-                        },
-                        error: function() {
-                            console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
-                            //discard this and continue with next uploadqueue entry
-                            
-                            //TODO: this model should be deleted from IDB and server ????
-                            entry.destroy();
-                            $.event.trigger(ev);
-
+                            else
+                                continue;
                         }
-                    });
+                        console.log("UPLOAD:OFFLINE_TO_ONLINE: converting " + member + " offline to online");
+                        
+                        if(online_json[element] instanceof Array)
+                        {
+                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is multiselect. Fetching its collection.");
+                            var generic_offline_collection = Backbone.Collection.extend({
+                                database: indexeddb,
+                                storeName: member,
+                                attribute: element    
+                            });
+                            var f_collection = new generic_offline_collection();
+                            var that = this;
+                            f_collection.fetch({
+                                success: function(collection){
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
+                                    $.each(online_json[element],function(index,object){
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
+                                        var model = collection.get(object["id"]);
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
+                                        object["id"] =   model.get("online_id");
+                                    });
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                                    num_mem--;
+                                    if (!num_mem) {
+                                        console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
+                                        if (entry.get("action") == "A") {
+                                            console.log("UPLOAD: its add action");
+                                            that.upload_add(online_json);
+                                        } else if (entry.get("action") == "E") {
+                                            console.log("UPLOAD: its edit action");
+                                            that.upload_edit(online_json);
+                                        }
+
+                                    }           
+                                },
+                                error: function(){
+                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error :foreign collection fetch failed");  
+                                    alert("unexpected error. check console log");
+                                    $(notifs_view.el)
+                                        .append(that.error_notif_template({
+                                        msg: "A foreign entity referenced does not exists in IDB."
+                                    }));          
+                                }        
+                            });
+    
+                        }
+                        else
+                        {    
+                            var generic_model_offline = Backbone.Model.extend({
+                                database: indexeddb,
+                                storeName: member,
+                            });
+                            var f_model = new generic_model_offline();
+                            f_model.set("id", entry.get("data")[element]["id"]);
+                            var that = this;
+                            f_model.fetch({
+                                success: function(model) {
+                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
+                                    online_json[model.storeName]["id"] = model.get("online_id");
+                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                                    num_mem--;
+                                    if (!num_mem) {
+                                        console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
+                                        if (entry.get("action") == "A") {
+                                            console.log("UPLOAD: its add action");
+                                            that.upload_add(online_json);
+                                        } else if (entry.get("action") == "E") {
+                                            console.log("UPLOAD: its edit action");
+                                            that.upload_edit(online_json);
+                                        }
+
+                                    }
+                                },
+                                error: function() {
+                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
+                                    //discard this and continue with next uploadqueue entry
+                            
+                                    //TODO: this model should be deleted from IDB and server ????
+                                    entry.destroy();
+                                    $.event.trigger(ev);
+
+                                }
+                            });
+                        }    
+                    }
                 }
             }
 
@@ -236,10 +303,8 @@ define([
                         },
                         error: function(model, xhr, options) {
                             console.log("UPLOAD:ADD: Error adding model on server ");
-                            _(that)
-                                .bindAll('after_upload_error');
-                            $(document)
-                                .on("upload_error_resolved", that.after_upload_error);
+                            _(that).bindAll('after_upload_error');
+                            $(document).on("upload_error_resolved", that.after_upload_error);
                             console.log("UPLOAD:ERROR: need to show this json -" + JSON.stringify(that.current_entry.get("data")));
                             p = new Form({
                                 serialize: {
