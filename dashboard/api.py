@@ -559,8 +559,7 @@ class PersonResource(ModelResource):
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     
-    def dehydrate_id(self, bundle):
-        print type(getattr(bundle.obj, 'id'))
+    
     def dehydrate_label(self,bundle):
         #for sending out label incase of dropdowns
         v_field = getattr(bundle.obj, 'village').village_name
