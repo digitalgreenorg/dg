@@ -84,7 +84,7 @@ class ModelFormValidation(FormValidation):
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
-            form = self.form_class(data, instance = bundle.obj)
+            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
         else:
             form = self.form_class(data)
         if form.is_valid():
