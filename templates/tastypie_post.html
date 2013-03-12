@@ -21,11 +21,11 @@
     <script type="text/javascript">
     mediator_json = {
 	    "age": null, 
-	    "assigned_villages": [{"id": 10000000000514, "village_name": "Lagameshwar"}, {"id": 10000000000514, "village_name": "Lagameshwar"}], 
+	    "assigned_villages": [{"id": 10000000000514, "village_name": "Lagameshwar"}, {"id": 10000000000059, "village_name": "Kumdabadi"}], 
 	    "gender": "M", 
-	    "name": "Mohandas Pangi", 
+	    "name": "Mohandas Pangi 1123", 
 	    "phone_no": "",
-	    "partner": {"id": 10000000000001, "partner_name": "PRADAN"}
+	    //"partner": {"id": 10000000000001, "partner_name": "PRADAN"}
     };
     
     group_json = {
@@ -33,16 +33,37 @@
     	"village": "/api/v1/village/6000009723/"
     };
     
-    person_json = {
+    /*person_json = {
     	 "address": "",
 	     "age": null, 
 	     "father_name": "rami dfrtxdc", 
 	     "gender": "F", 
 	     "group": {"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB", "id": 6000010728}, 
-	     "person_name": "Mahadevi L Baddeppanavar 12345", 
+	     "person_name": "Mahadevi L Baddeppanavar 12345 1234 1234", 
 	     "phone_no": null, 
 	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
-     };
+     };*/
+     person_json = {
+	     "id":6000010751,
+	     "age":null,
+	     "father_name":"father 1",
+	     "gender":"M",
+	     "group":{"id":6000010742,"group_name":"Sri Jai Hanuman Swa Sahaya Sangha Hirekoppa B"},
+	     "label":"Maibub Mulla (Hirekoppa.B,)",
+	     "person_name":"Maibub Mulla ",
+	     "phone_no":null,
+	     "resource_uri":"/api/v1/person/6000010751/",
+	     "videos_seen":"[{'id': 10000000019142L, 'title': u'Stone basen in mango plants '}, {'id': 10000000019143L, 'title': u'Live hedge fencing in WADI'}]",
+	     "village":{"id":32000001327,"village_name":"Nanda Maal"}
+     }
+     
+     /*person_json = {"age":24,"father_name":"father","gender":"M",
+     "group":{"id":6000010742,"group_name":"Sri Jai Hanuman Swa Sahaya Sangha Hirekoppa B"},
+     "label":"Maibub Mulla (Hirekoppa.B,)",
+     "person_name":"Maibub Mulla ","phone_no":null,
+     "videos_seen":"[{'id': 10000000019142L, 'title': u'Stone basen in mango plants '}, {'id': 10000000019143L, 'title': u'Live hedge fencing in WADI'}]","village":{"id":32000001327,"village_name":"Nanda Maal"}} 
+     */
+     
      screening_json = {
      		"animator": {"id": 10000000019306, "name": "Suvarna Avvanagol"}, 
      		"date": "2011-10-19", 
@@ -76,13 +97,13 @@
 	 video_json = {
 		 "actors": "I", 
 		 "approval_date": null, 
-		 "cameraoperator": {"id": 6000006633, "name": "Shankar Ganigi"}, 
-		 "facilitator": {"id": 10000000019578, "name": "Panchakshari Pattanshetti"}, 
+		 "cameraoperator": {"id": 7000001564, "name": "Shankar Ganigi"}, 
+		 "facilitator": {"id": 7000001564, "name": "Panchakshari Pattanshetti"}, 
 		 "farmers_shown": [{"id": 6000007310, "person_name": "Shankarappa Sattigeri"}],
 		 //"farmers_shown": ["/api/v1/person/6000007310/"] ,
 		 "language": {"id": 10000000000127, "language_name": "Kannada"}, 
 		 "summary": "Producing Vermicompost  in farm yard manure pit is easiest way to get.", 
-		 "title": "Vermicompost production in FYM pit 123456 789 123456 1234 1234 1234", 
+		 "title": "Vermicompost production in FYM pit 123456 789 123456 1234 1234 1234 1234 1234", 
 		 "video_production_end_date": "2011-01-14", 
 		 "video_production_start_date": "2011-01-13", 
 		 "video_suitable_for": 1, 
@@ -114,8 +135,8 @@
 		
 		$('#person_post').click( function () {
 			$.ajax({
-		        type: "POST",
-		        url: 'http://127.0.0.1:8000/api/v1/person/',
+		        type: "PUT",
+		        url: 'http://127.0.0.1:8000/api/v1/person/6000010751/',
 		        contentType:'application/json',
   				dataType: 'application/json',
 		        async: true,
