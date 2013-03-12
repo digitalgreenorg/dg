@@ -10,26 +10,26 @@
 
 	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
     <!-- // importing libraries -->
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/json2.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/underscore-min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/backbone-min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js"> 	  </script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/json2.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/underscore-min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/backbone-min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js">       </script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script> -->
 	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
+    <!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script> -->
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
     
-	<script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
     
 	<!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/layoutmanager/backbone.layoutmanager.js"></script> -->
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
 	
     <!-- // application js -->
@@ -69,33 +69,9 @@
     </div>
 </script>
 
-
-<script type="text/template" id="dashboard_item_template0">
-        <tr>
-        <td><a href="#<%= name%>"><%= title%></a></td>
-        </tr>
-</script>
-
-<script type="text/template" id="dashboard0">
-    <div class="span4 well" style="margin-left:20px;">
-        <table class="table table-bordered" style="background:white;">
-            <tbody>
-                
-            </tbody>
-        </table>
-   </div>
-            
-    <div class="span8" style="margin-left:20px;">
-            
-        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;" data-toggle="modal" data-target="#upload_modal">Upload</button>
-        
-        <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
-        <div id="show_status">
-        </div>
-        
-    </div>
-    
-    <div id="upload_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header">
+<script type="text/template" id="upload_template">
+    <div id="upload_modal" class="modal hide fade" >
+      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Syncing</h3>
       </div>
@@ -113,8 +89,8 @@
         <a href="#" class="btn btn-primary">Save changes</a>
       </div>
     </div>
-    
 </script>
+   
 
 <script type="text/template" id="dashboard_item_template">
         <li><a href="#<%= name%>"><%= title%></a></li>
@@ -126,7 +102,7 @@
                     Hi Sreenivas! <a href="#/logout">Log out</a>
                 </div>
                 <div id="coco_brand">
-                    COCO
+                    <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
                     <div class="span1 btn pull-left">Sync</div>
@@ -150,27 +126,10 @@
                 </div>
             </div>
             
-    
-            <div id="upload_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Syncing</h3>
-              </div>
-              <div class="modal-body">
-                <p >One fine body…</p>
-                <div class="progress progress-info progress-striped">
-                  <div class="bar" id = "pbar" style="width: 0%"></div>
-                </div>
-                <p id= "error_msg"> </p>
-                <div id= "upload_form">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <a href="#" class="btn">Close</a>
-                <a href="#" class="btn btn-primary">Save changes</a>
-              </div>
-            </div>
-    
+            <div id = "upload_modal_ph"></div>
 </script>
+
+
     <!--  <div id="coco_nav" class="pull-left">
                     <ul class="nav nav-stacked">
                         <li><a href="#video_list">Videos</a></li>
@@ -432,9 +391,53 @@
 </form>                                                        </script>
    
    <script type="text/template" id="page_layout">
-   <div id = "side_panel" class="span2 well"></div>
+   <div id = "side_panel" class="span2 well" style = "height:100%"></div>
    <div id = "content" class="span10" style="padding-top:20px;padding-bottom:20px;"></div>
    		
+   </script>
+   
+   <script type="text/template" id="status">
+        
+   </script>
+   
+   <script type="text/template" id="first_time_status">
+       Welcome to COCO. 
+       <br>
+       COCO has not been yet setup on this system. Before anything, you need to download data. Click on the download button.
+       <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
+        <div id = "download_modal">
+    
+        </div>    
+   </script>
+   
+   
+   
+   <script type="text/template" id="download_template">
+       <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h3>Full Download</h3>
+         </div>
+         <div class="modal-body">
+           <p >One fine body…</p>
+           <div class="progress progress-info progress-striped">
+             <div class="bar" id = "pbar" style="width: 0%"></div>
+           </div>
+           <div id="d_status">
+           
+           </div>
+         </div>
+         <div class="modal-footer">
+           <a href="#" class="btn">Close</a>
+         </div>
+       </div>
+    
+        
+   </script>
+   
+   <script type="text/template" id="sync_status_template">
+   Last Downloaded on - <%=timestamp%><br>
+   Data entries awaiting upload - <%=upload_entries%> 
+        
    </script>
    
    

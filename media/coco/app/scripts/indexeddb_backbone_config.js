@@ -7,7 +7,7 @@ define([
   
   
 var idb = {
-    id: "coco-database",
+    id: "offline-database",
     description: "The offline database for COCO",
     migrations: [{
         version: 1,
@@ -17,15 +17,18 @@ var idb = {
                 transaction.db.createObjectStore(configs[member].entity_name, {
                     autoIncrement: true,keyPath: "id"
                 });    
-                
-              }
+            }
 
-          transaction.db.createObjectStore("uploadqueue", {
+            transaction.db.createObjectStore("uploadqueue", {
               autoIncrement: true,keyPath: "id"
-          });
+            });
+        
+            var meta_store = transaction.db.createObjectStore("meta_data", {
+              autoIncrement: true,keyPath: "id"
+            });      
+            meta_store.createIndex("metaIndex", "key", { unique: true })
 
             console.log("indexeddb database created")
-            //store.createIndex("nameIndex", "country_name", { unique: false })
             next();
         }
     }]

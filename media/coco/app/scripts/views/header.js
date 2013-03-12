@@ -2,6 +2,7 @@ define([
   'jquery',
   'underscore',
   'backbone',
+     'layoutmanager' 
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'

@@ -5,8 +5,10 @@ define([
   'views/header',
   'views/dashboard',
   'views/list',
-  'views/form_controller'
-  ], function($, underscore, Session, HeaderView, DashboardView, ListView, FormControllerView){
+  'views/form_controller',
+'views/status',
+'layoutmanager'      
+  ], function($, underscore, Session, HeaderView, DashboardView, ListView, FormControllerView, StatusView){
                   
     var AppLayout = Backbone.View.extend({
       template: "#page_layout",
@@ -27,7 +29,7 @@ define([
           //     .append(header.render("<li class='active' >Dashboard</li>")
           //     .el);
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
-          // this.setView("#content", new DashboardView());
+          this.setView("#content", new StatusView());
           this.render();
           //         
           // $(this.el)
@@ -50,16 +52,44 @@ define([
           // var bcrumb_template = _.template($('#add_edit_breadcrumb').html());
 //           this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread1:params.view_configs.page_header.toLowerCase(),bread2:params.view_configs.page_header,add_or_edit:add_or_edit}) }}));
           
-          this.setView("#content", new FormControllerView({
-              serialize: {
-                  button1: "Save",
-                  button2: "Save and Add Another"
-              },
-              initialize: params,
-              model_id: data,
-              model_json: null
           
-          }));
+          if(!this.formcontroller_v)
+          {
+              this.formcontroller_v = new FormControllerView({
+                            serialize: {
+                                button1: "Save",
+                                button2: "Save and Add Another"
+                            },
+                            initialize: params,
+                            model_id: data,
+                            model_json: null
+          
+                        });
+          }
+          else
+          {
+              this.formcontroller_v.params = {
+                            serialize: {
+                                button1: "Save",
+                                button2: "Save and Add Another"
+                            },
+                            initialize: params,
+                            model_id: data,
+                            model_json: null
+          
+                        };
+            this.formcontroller_v.options = {
+                          serialize: {
+                              button1: "Save",
+                              button2: "Save and Add Another"
+                          },
+                          initialize: params,
+                          model_id: data,
+                          model_json: null
+          
+                      };            
+          }
+          this.setView("#content", this.formcontroller_v);
               
           this.render();
           

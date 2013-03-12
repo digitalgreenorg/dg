@@ -16,17 +16,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var FormControllerView = Backbone.Layout.extend({
 
         initialize: function(params) {
+            console.log("FORMCONTROLLER: initializing a new object");
             this.params = params;
             console.log(this.params);
             console.log("FORMCONTROLLER: upload_collection recvd - ")
-            console.log(upload_collection.models);    
-
-        },
-        template: "<div><div id = 'form'></div></div>",
-        
-        beforeRender: function() {
-            // #form is the id of the element inside in template where the new view will be inserted.
-            this.setView("#form", new Form(this.params));
+            console.log(upload_collection.models);   
             _(this)
                 .bindAll('on_save');
             _(this)
@@ -35,7 +29,15 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .on("save_clicked", this.on_save);
             $(document)
                 .on("button2_clicked", this.on_button2);
+             
 
+        },
+        template: "<div><div id = 'form'></div></div>",
+        
+        beforeRender: function() {
+            // #form is the id of the element inside in template where the new view will be inserted.
+            this.setView("#form", new Form(this.params));
+            
 
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
@@ -71,8 +73,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         upload_collection.create(
                             {
                                 data:model.toJSON(),
-                                action: this.form.action,
-                                entity_name: this.form.entity_name        
+                                action: that.form.action,
+                                entity_name: that.form.entity_name        
                             },
                             {
                                 success: function(model){
@@ -267,7 +269,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         on_button2: function(e) {
             e.stopPropagation();
-            console.log("ADD/EDIT: Button 2 clicked on form");
+            console.log("FORMCONTROLLER: Button 2 clicked on form");
         }
 
 
