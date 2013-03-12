@@ -7,7 +7,7 @@ from tastypie.validation import FormValidation
 from tastypie.validation import Validation
 from functools import partial
 from dashboard.models import Country, State, District, Block, Village, FieldOfficer,Partners, \
-                Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
+                AnimatorAssignedVillage, Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
 from forms import  VideoForm, PersonForm, AnimatorForm, PersonGroupsForm, ScreeningForm
 from django.forms.models import model_to_dict
 from django.db import models
@@ -82,7 +82,11 @@ class ModelFormValidation(FormValidation):
                 data[field] = self.uri_to_pk(data[field])
         
         # validate and return messages on error
-        form = self.form_class(data)
+        if request.method == "PUT":
+            #Handles edit case
+            form = self.form_class(data, instance = bundle.obj)
+        else:
+            form = self.form_class(data)
         if form.is_valid():
             return {}
         return form.errors
@@ -149,21 +153,53 @@ class VillageLevelAuthorization(DjangoAuthorization):
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
-    assigned_villages = fields.ToManyField('dashboard.api.VillageResource', 'assigned_villages')
-    partner = fields.ForeignKey('dashboard.api.PartnerResource', 'partner')
+    assigned_villages = fields.ListField()#fields.ToManyField('dashboard.api.VillageResource', 'assigned_villages')
+    partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
     
     class Meta:
         queryset = Animator.objects.all()
         resource_name = 'mediator'
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-        validation = ModelFormValidation(form_class=AnimatorForm)
+        #validation = ModelFormValidation(form_class=AnimatorForm)
         excludes = ['total_adoptions','time_created', 'time_modified' ]
-    dehydrate_assigned_villages = partial(many_to_many_to_subfield, field_name='assigned_villages',sub_field_names=['id', 'village_name'])
+    #dehydrate_assigned_villages = partial(many_to_many_to_subfield, field_name='assigned_villages',sub_field_names=['id', 'village_name'])
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     
-    def hydrate(self, bundle):
+    def dehydrate_assigned_villages(self, bundle):
+        v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
+        vil_list=[]
+        for i in v_field:
+            vil_list.append({"id":i.id, "name":i.village_name})
+        return vil_list
+    
+#    def hydrate(self, bundle):
+#        print bundle
+#
+#    def save_m2m(self, bundle):
+#        print 'in savem2m'
+#        assigned_villages = bundle.data.get('assigned_villages', [])
+#        print assigned_villages
+#        bundle.obj.assigned_villages.set(*assigned_villages)
+#        return super(MediatorResource, self).save_m2m(bundle)
+#    
+#    def save_m2m(self, bundle):
+#        print 'in save m2m'
+#        print bundle
+#    
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle = super(MediatorResource, self).obj_create(
+            bundle)
+        vil_list = bundle.data.get('assigned_villages')
+        print vil_list
+        for vil in vil_list:
+            vil = Village.objects.get(id = int(vil.split('/')[-2]))
+            u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
+            u.save()
+    
+        print 'in obj create'
         print bundle
+        return bundle
     
     def apply_authorization_limits(self, request, object_list):
         districts = get_user_districts(request)
@@ -172,6 +208,7 @@ class MediatorResource(ModelResource):
         if partner:
             partner = partner[0]
         animators = Animator.objects.filter(partner__in = [partner]).values_list('id', flat=True)
+        print animators
         return object_list.filter(id__in= animators)
 
     
@@ -185,16 +222,17 @@ class MediatorResource(ModelResource):
     
     def hydrate_partner(self, bundle):
         print 'in hydrate partner'
-        print bundle
-        partner = bundle.data.get('partner')
-        if partner and not hasattr(bundle,'partner_flag'):
+        #print bundle
+        #partner = bundle.data.get('partner')
+        if not hasattr(bundle,'partner_flag'):
             try:
-                id = partner.get('id')
+                id = 10000000000001
                 bundle.data['partner'] = "/api/v1/partner/"+str(id)+"/"
                 bundle.partner_flag = True
             except:
                 print 'partner id in video does not exist'
                 bundle.data['partner'] = None
+        print bundle
         return bundle
 
     
@@ -521,6 +559,8 @@ class PersonResource(ModelResource):
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
     
+    def dehydrate_id(self, bundle):
+        print type(getattr(bundle.obj, 'id'))
     def dehydrate_label(self,bundle):
         #for sending out label incase of dropdowns
         v_field = getattr(bundle.obj, 'village').village_name

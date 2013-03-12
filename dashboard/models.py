@@ -55,6 +55,7 @@ class ServerLog(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
+    instance_json = models.CharField(max_length=1000, null=True, blank=True)
     
 #    def __unicode__(self):
 #        return self.entry_table
@@ -524,9 +525,15 @@ class Language(CocoModel):
     language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
         db_table = u'language'
-
+    def get_village(self):
+        return None
+    def get_partner(self):
+        return None
     def __unicode__(self):
         return self.language_name
+post_save.connect(save_log, sender = Language)
+pre_delete.connect(delete_log, sender = Language)
+
 
 class Video(CocoModel):
     id = BigAutoField(primary_key = True)
