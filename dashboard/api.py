@@ -6,7 +6,7 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.validation import FormValidation
 from tastypie.validation import Validation
 from functools import partial
-from dashboard.models import Country, State, District, Block, Village, FieldOfficer,Partners, \
+from dashboard.models import CocoUser, Country, State, District, Block, Village, FieldOfficer,Partners, \
                 AnimatorAssignedVillage, Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
 from forms import  VideoForm, PersonForm, AnimatorForm, PersonGroupsForm, ScreeningForm
 from django.forms.models import model_to_dict
@@ -71,7 +71,7 @@ class ModelFormValidation(FormValidation):
             data = {}
         # copy data, so we don't modify the bundle
         data = data.copy()
-        
+        print data
         # convert URIs to PK integers for all relation fields
         relation_fields = [name for name, field in
                            self.form_class.base_fields.items()
@@ -81,6 +81,7 @@ class ModelFormValidation(FormValidation):
             if field in data:
                 data[field] = self.uri_to_pk(data[field])
         
+        print self.form_class
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
@@ -90,6 +91,75 @@ class ModelFormValidation(FormValidation):
         if form.is_valid():
             return {}
         return form.errors
+
+class MediatorFormValidation(FormValidation):
+    """
+        Override tastypie's standard ``FormValidation`` since this does not care
+        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
+        """
+    
+    def uri_to_pk(self, uri):
+        """
+            Returns the integer PK part of a URI.
+            
+            Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+            returns the URI unmodified.
+            
+            Also handles lists of URIs
+            """
+        
+        if uri is None:
+            return None
+        
+        # convert everything to lists
+        #multiple = not isinstance(uri, basestring)
+        #uris = uri if multiple else [uri]
+        converted = []
+        if type(uri) == type(dict()):
+            print 'dict'
+            converted.append(uri.get('id'))
+            return uri.get('id')
+        elif type(uri) == type(list()):
+            print 'list'
+            for item in uri:
+                print item.get('id')
+                converted.append(item.get('id'))
+            return converted
+
+    def is_valid(self, bundle, request=None):
+        print request.user.id
+        partner_id = get_user_partner_id(request)
+        if partner_id:
+            bundle.data['partner'] ={'id':partner_id, 'partner_name':''} #"/api/v1/partner/"+str(partner_id)+"/"
+        data = bundle.data
+        
+        print data
+        # Ensure we get a bound Form, regardless of the state of the bundle.
+        if data is None:
+            data = {}
+        # copy data, so we don't modify the bundle
+        data = data.copy()
+        print data
+        # convert URIs to PK integers for all relation fields
+        relation_fields = [name for name, field in
+                           self.form_class.base_fields.items()
+                           if issubclass(field.__class__, ModelChoiceField)]
+        
+        for field in relation_fields:
+            if field in data:
+                data[field] = self.uri_to_pk(data[field])
+        
+        #print self.form_class
+        # validate and return messages on error
+        if request.method == "PUT":
+            #Handles edit case
+            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
+        else:
+            form = self.form_class(data)
+        if form.is_valid():
+            return {}
+        return form.errors
+
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -105,6 +175,16 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
     return dict
 
+def get_user_partner_id(request):
+    if request.user.id:
+        partner_id = CocoUser.objects.filter(user__id = request.user.id)
+        if partner_id:
+            partner_id = partner_id[0]
+        else:
+            partner_id = None
+            if request.user.id == 1 or request.user.id == 2:
+                partner_id = 10000000000001            
+    return partner_id
 def get_user_villages(request):
     if request:
         user_permissions = UserPermission.objects.filter(username = request.user)
@@ -161,7 +241,7 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-        validation = ModelFormValidation(form_class=AnimatorForm)
+        validation = MediatorFormValidation(form_class=AnimatorForm)
         excludes = ['total_adoptions','time_created', 'time_modified' ]
     #dehydrate_assigned_villages = partial(many_to_many_to_subfield, field_name='assigned_villages',sub_field_names=['id', 'village_name'])
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
@@ -202,6 +282,7 @@ class MediatorResource(ModelResource):
         return bundle
     
     def apply_authorization_limits(self, request, object_list):
+        print 'in authorize'
         districts = get_user_districts(request)
         #get partner first
         partner = Partners.objects.filter(district__in = districts)
@@ -222,6 +303,7 @@ class MediatorResource(ModelResource):
     
     def hydrate_partner(self, bundle):
         print 'in hydrate partner'
+        print self
         #print bundle
         #partner = bundle.data.get('partner')
         if not hasattr(bundle,'partner_flag'):
