@@ -38,6 +38,19 @@ def merge_screenings(scr1,scr2):
     merge_pmas(scr1, scr2)
     delete_scr(scr2)
     
+#def animator_unique_together_migration():
+#    dup_list=Animator.objects.values('name','gender','partner').annotate(sameanimator=Count('name')).filter(sameanimator__gt=1)
+#    for i in dup_list:
+#        make_unique=Animator.objects.filter(name=i['name'],gender=i['gender'],partner=i['partner'])
+#        for j in range(len(make_unique)):
+#            print 'modifying animator with name, id, partner,village', make_unique[j].name, make_unique[j].id, make_unique[j].partner.partner_name, make_unique[j].village.village_name
+#            final_animator_name = make_unique[j].name + ' ('+make_unique[j].village.village_name +')'
+#            make_unique[j].name = final_animator_name
+#            make_unique[j].save()
+#            print 'after modifying animator: name, id, partner,village', make_unique[j].name, make_unique[j].id, make_unique[j].partner.partner_name, make_unique[j].village.village_name
+#    dup_list=Animator.objects.values('name','gender','partner').annotate(sameanimator=Count('name')).filter(sameanimator__gt=1)
+#    print 'migration complete..Dups remaining:',len(dup_list)
+
 def clean_person_group_screening():
     grp_dupes=PersonGroups.objects.values('village','group_name').annotate(sameper=Count('village')).filter(sameper__gt=1)
     for i in grp_dupes:
