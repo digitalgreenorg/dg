@@ -6,7 +6,7 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.validation import FormValidation
 from tastypie.validation import Validation
 from functools import partial
-from dashboard.models import Country, State, District, Block, Village, FieldOfficer,Partners, \
+from dashboard.models import CocoUser, Country, State, District, Block, Village, FieldOfficer,Partners, \
                 AnimatorAssignedVillage, Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
 from forms import  VideoForm, PersonForm, AnimatorForm, PersonGroupsForm, ScreeningForm
 from django.forms.models import model_to_dict
@@ -71,7 +71,7 @@ class ModelFormValidation(FormValidation):
             data = {}
         # copy data, so we don't modify the bundle
         data = data.copy()
-        
+        print data
         # convert URIs to PK integers for all relation fields
         relation_fields = [name for name, field in
                            self.form_class.base_fields.items()
@@ -81,6 +81,7 @@ class ModelFormValidation(FormValidation):
             if field in data:
                 data[field] = self.uri_to_pk(data[field])
         
+        print self.form_class
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
@@ -90,6 +91,75 @@ class ModelFormValidation(FormValidation):
         if form.is_valid():
             return {}
         return form.errors
+
+class MediatorFormValidation(FormValidation):
+    """
+        Override tastypie's standard ``FormValidation`` since this does not care
+        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
+        """
+    
+    def uri_to_pk(self, uri):
+        """
+            Returns the integer PK part of a URI.
+            
+            Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+            returns the URI unmodified.
+            
+            Also handles lists of URIs
+            """
+        
+        if uri is None:
+            return None
+        
+        # convert everything to lists
+        #multiple = not isinstance(uri, basestring)
+        #uris = uri if multiple else [uri]
+        converted = []
+        if type(uri) == type(dict()):
+            print 'dict'
+            converted.append(uri.get('id'))
+            return uri.get('id')
+        elif type(uri) == type(list()):
+            print 'list'
+            for item in uri:
+                print item.get('id')
+                converted.append(item.get('id'))
+            return converted
+
+    def is_valid(self, bundle, request=None):
+        print request.user.id
+        partner_id = get_user_partner_id(request)
+        if partner_id:
+            bundle.data['partner'] ={'id':partner_id, 'partner_name':''} #"/api/v1/partner/"+str(partner_id)+"/"
+        data = bundle.data
+        
+        print data
+        # Ensure we get a bound Form, regardless of the state of the bundle.
+        if data is None:
+            data = {}
+        # copy data, so we don't modify the bundle
+        data = data.copy()
+        print data
+        # convert URIs to PK integers for all relation fields
+        relation_fields = [name for name, field in
+                           self.form_class.base_fields.items()
+                           if issubclass(field.__class__, ModelChoiceField)]
+        
+        for field in relation_fields:
+            if field in data:
+                data[field] = self.uri_to_pk(data[field])
+        
+        #print self.form_class
+        # validate and return messages on error
+        if request.method == "PUT":
+            #Handles edit case
+            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
+        else:
+            form = self.form_class(data)
+        if form.is_valid():
+            return {}
+        return form.errors
+
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -105,6 +175,16 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
     return dict
 
+def get_user_partner_id(request):
+    if request.user.id:
+        partner_id = CocoUser.objects.filter(user__id = request.user.id)
+        if partner_id:
+            partner_id = partner_id[0]
+        else:
+            partner_id = None
+            if request.user.id == 1 or request.user.id == 2:
+                partner_id = 10000000000001            
+    return partner_id
 def get_user_villages(request):
     if request:
         user_permissions = UserPermission.objects.filter(username = request.user)
@@ -153,7 +233,7 @@ class VillageLevelAuthorization(DjangoAuthorization):
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
-    assigned_villages = fields.ListField()#fields.ToManyField('dashboard.api.VillageResource', 'assigned_villages')
+    assigned_villages = fields.ListField()
     partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
     
     class Meta:
@@ -161,10 +241,9 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-        validation = ModelFormValidation(form_class=AnimatorForm)
-        excludes = ['total_adoptions','time_created', 'time_modified' ]
+        validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
-    #dehydrate_assigned_villages = partial(many_to_many_to_subfield, field_name='assigned_villages',sub_field_names=['id', 'village_name'])
+        excludes = ['total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     
     def dehydrate_assigned_villages(self, bundle):
@@ -174,32 +253,15 @@ class MediatorResource(ModelResource):
             vil_list.append({"id":i.id, "name":i.village_name})
         return vil_list
     
-#    def hydrate(self, bundle):
-#        print bundle
-#
-#    def save_m2m(self, bundle):
-#        print 'in savem2m'
-#        assigned_villages = bundle.data.get('assigned_villages', [])
-#        print assigned_villages
-#        bundle.obj.assigned_villages.set(*assigned_villages)
-#        return super(MediatorResource, self).save_m2m(bundle)
-#    
-#    def save_m2m(self, bundle):
-#        print 'in save m2m'
-#        print bundle
-#    
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(MediatorResource, self).obj_create(
             bundle)
         vil_list = bundle.data.get('assigned_villages')
-        print vil_list
         for vil in vil_list:
             vil = Village.objects.get(id = int(vil.split('/')[-2]))
             u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
             u.save()
     
-        print 'in obj create'
-        print bundle
         return bundle
     
     def apply_authorization_limits(self, request, object_list):
@@ -209,7 +271,6 @@ class MediatorResource(ModelResource):
         if partner:
             partner = partner[0]
         animators = Animator.objects.filter(partner__in = [partner]).values_list('id', flat=True)
-        print animators
         return object_list.filter(id__in= animators)
 
     
@@ -221,24 +282,7 @@ class MediatorResource(ModelResource):
             label = label + i.village_name + ","
         return "("+ label +")"
     
-    def hydrate_partner(self, bundle):
-        print 'in hydrate partner'
-        #print bundle
-        #partner = bundle.data.get('partner')
-        if not hasattr(bundle,'partner_flag'):
-            try:
-                id = 10000000000001
-                bundle.data['partner'] = "/api/v1/partner/"+str(id)+"/"
-                bundle.partner_flag = True
-            except:
-                print 'partner id in video does not exist'
-                bundle.data['partner'] = None
-        print bundle
-        return bundle
-
-    
     def hydrate_assigned_villages(self, bundle):
-        print 'in hydrate assigned villlages'
         m2m_list = bundle.data.get('assigned_villages')
         resource_uri_list = []
         for item in m2m_list:
@@ -246,7 +290,6 @@ class MediatorResource(ModelResource):
                 resource_uri_list.append("/api/v1/village/"+str(item.get('id'))+"/")
             except:
                 continue
-                print 'in exception'
         if not hasattr(bundle,'assigned_villages_flag'):
             bundle.data['assigned_villages'] = resource_uri_list
             bundle.assigned_villages_flag = True
@@ -288,6 +331,7 @@ class VideoResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
+        always_return_data = True
         excludes = ['viewers','time_created', 'time_modified', 'duration' ]
     
     def apply_authorization_limits(self, request, object_list):
@@ -299,8 +343,6 @@ class VideoResource(ModelResource):
         return object_list.filter(id__in= vids)
 
     def hydrate_language(self, bundle):
-        print 'in hydrate language'
-        print bundle
         language = bundle.data.get('language')
         if language and not hasattr(bundle,'language_flag'):
             try:
@@ -313,8 +355,6 @@ class VideoResource(ModelResource):
         return bundle
     
     def hydrate_village(self, bundle):
-        print 'in hydrate village'
-        print bundle
         village = bundle.data.get('village')
         if village and not hasattr(bundle,'village_flag'):
             try:
@@ -327,7 +367,6 @@ class VideoResource(ModelResource):
         return bundle
     
     def hydrate_cameraoperator(self, bundle):
-        print 'in hydrate camera operator'
         cameraoperator = bundle.data.get('cameraoperator')
         if cameraoperator and not hasattr(bundle,'cameraoperator_flag'):
             try:
@@ -340,7 +379,6 @@ class VideoResource(ModelResource):
         return bundle
     
     def hydrate_facilitator(self, bundle):
-        print 'in hydrate facilitator'
         facilitator = bundle.data.get('facilitator')
         if facilitator and not hasattr(bundle,'facilitator_flag'):
             try:
@@ -353,7 +391,6 @@ class VideoResource(ModelResource):
         return bundle
     
     def hydrate_farmers_shown(self, bundle):
-        print 'in hydrate farmers shown'
         m2m_list = bundle.data.get('farmers_shown')
         resource_uri_list = []
         for item in m2m_list:
@@ -361,7 +398,6 @@ class VideoResource(ModelResource):
                 resource_uri_list.append("/api/v1/person/"+str(item.get('id'))+"/")
             except:
                 continue
-                print 'in exception'
         if not hasattr(bundle,'farmers_shown_flag'):
             bundle.data['farmers_shown'] = resource_uri_list
             bundle.farmers_shown_flag = True
