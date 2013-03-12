@@ -491,7 +491,7 @@ class Animator(CocoModel):
     gender = models.CharField(max_length=1,choices=GENDER_CHOICES, db_column='GENDER')
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     partner = BigForeignKey(Partners, blank=True)
-    village = BigForeignKey(Village, db_column = 'home_village_id')
+#    village = BigForeignKey(Village, db_column = 'home_village_id')
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_animators' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
@@ -505,7 +505,6 @@ class Animator(CocoModel):
         return self.partner.id
     
     def __unicode__(self):
-        #return  u'%s (%s)' % (self.name, self.village)
         return self.name
 post_save.connect(save_log, sender = Animator)
 pre_delete.connect(delete_log, sender = Animator)
