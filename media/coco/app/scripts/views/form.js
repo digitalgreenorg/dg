@@ -182,15 +182,26 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },
 
         normalize_json: function(d_json){
-            console.log("FORM: Before Normalised json = "+JSON.stringify(this.model_json));      
+            console.log("FORM: Before Normalised json = "+JSON.stringify(d_json));      
             var f_entities = this.view_configs["foreign_entities"];
             for (member in f_entities) {
-                if (member in d_json) {
-                    d_json[member] = parseInt(d_json[member]["id"]); 
+                for(element in f_entities[member])
+                {
+                    if (element in d_json) {
+                        if (d_json[element] instanceof Array) {
+                            var el_array = [];
+                            $.each(d_json[element],function(index,object){
+                                el_array.push(parseInt(object["id"]));
+                            });
+                            d_json[element] = el_array;
+                        }
+                        else {
+                            d_json[element] = parseInt(d_json[member]["id"]); 
+                        }
+                    }
                 }
-                
             }
-            console.log("FORM: Normalised json = "+JSON.stringify(this.model_json));      
+            console.log("FORM: Normalised json = "+JSON.stringify(d_json));      
             return d_json;
             
         },
