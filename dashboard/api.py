@@ -84,7 +84,7 @@ class ModelFormValidation(FormValidation):
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
-            form = self.form_class(data, instance = bundle.obj)
+            form = self.form_class(data, instance = bundle.obj.__class__.objects.get(pk=bundle.data['id']))
         else:
             form = self.form_class(data)
         if form.is_valid():
@@ -161,7 +161,7 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-        #validation = ModelFormValidation(form_class=AnimatorForm)
+        validation = ModelFormValidation(form_class=AnimatorForm)
         excludes = ['total_adoptions','time_created', 'time_modified' ]
     #dehydrate_assigned_villages = partial(many_to_many_to_subfield, field_name='assigned_villages',sub_field_names=['id', 'village_name'])
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])

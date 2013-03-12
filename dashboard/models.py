@@ -507,7 +507,6 @@ class Animator(CocoModel):
         return self.partner.id
     
     def __unicode__(self):
-        #return  u'%s (%s)' % (self.name, self.village)
         return self.name
 post_save.connect(save_log, sender = Animator)
 pre_delete.connect(delete_log, sender = Animator)

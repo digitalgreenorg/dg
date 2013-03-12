@@ -36,7 +36,7 @@
     /*person_json = {
     	 "address": "",
 	     "age": null, 
-	     "father_name": "rami dfrtxdc", 
+	     "father_name": "rami dfrtxdc 123 123 123 1", 
 	     "gender": "F", 
 	     "group": {"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB", "id": 6000010728}, 
 	     "person_name": "Mahadevi L Baddeppanavar 12345 1234 1234", 
@@ -44,6 +44,18 @@
 	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
      };*/
      person_json = {
+     	"id":10000000037226,
+     	"age":"23",
+     	"father_name":"father",
+     	"gender":"F",
+     	"group":{"id":10000000020986, "group_name":"Durga Devi B Swa Sahaya Sangha Hirekoppa.B"},
+     	"label":"Krushnavva Dodamani(Hirekoppa.B,)",
+     	"person_name":"Krushnavva Dodamani",
+     	"phone_no":"1234568",
+     	"resource_uri":"/api/v1/person/10000000037226/",
+     	"village":{"id":32000001327,"village_name":"Nanda Maal"}
+     }
+     /*person_json = {
 	     "id":6000010751,
 	     "age":null,
 	     "father_name":"father 1",
@@ -55,7 +67,7 @@
 	     "resource_uri":"/api/v1/person/6000010751/",
 	     "videos_seen":"[{'id': 10000000019142L, 'title': u'Stone basen in mango plants '}, {'id': 10000000019143L, 'title': u'Live hedge fencing in WADI'}]",
 	     "village":{"id":32000001327,"village_name":"Nanda Maal"}
-     }
+     }*/
      
      /*person_json = {"age":24,"father_name":"father","gender":"M",
      "group":{"id":6000010742,"group_name":"Sri Jai Hanuman Swa Sahaya Sangha Hirekoppa B"},
@@ -136,7 +148,7 @@
 		$('#person_post').click( function () {
 			$.ajax({
 		        type: "PUT",
-		        url: 'http://127.0.0.1:8000/api/v1/person/6000010751/',
+		        url: 'http://127.0.0.1:8000/api/v1/person/10000000037226/',
 		        contentType:'application/json',
   				dataType: 'application/json',
 		        async: true,
