@@ -162,7 +162,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             f_collection.fetch({
                                 success: function(collection){
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
-                                    $.each(online_json[element],function(index,object){
+                                    $.each(online_json[collection.attribute],function(index,object){
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
                                         var model = collection.get(object["id"]);
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
@@ -200,7 +200,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             f_model.fetch({
                                 success: function(model) {
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                                    online_json[element]["id"] =   model.get("online_id");
+                                    online_json[model.attribute]["id"] =   model.get("online_id");
                                     // access the attribute name
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                                     num_mem--;

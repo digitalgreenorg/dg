@@ -196,7 +196,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             d_json[element] = el_array;
                         }
                         else {
-                            d_json[element] = parseInt(d_json[member]["id"]); 
+                            d_json[element] = parseInt(d_json[element]["id"]); 
                         }
                     }
                 }
