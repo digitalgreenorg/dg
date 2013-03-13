@@ -45,6 +45,49 @@ function() {
         }
     };
   
+    var video_configs = {
+        'page_header': 'Video',
+        'table_template_name': 'video_table_template',
+        'list_item_template_name': 'video_list_item_template',
+        'add_edit_template_name': 'video_add_edit_template',
+        'rest_api_url': '/api/v1/video/',
+        'entity_name': 'video',
+        'foreign_entities':{
+            'mediator': {
+                "facilitator" : {'placeholder':'id_facilitator','name_field':'name'},        
+                "cameraoperator" : {'placeholder':'id_cameraoperator','name_field':'name'},
+            },
+            'person': {
+                "farmers_shown" : {'placeholder':'id_farmers_shown','name_field':'person_name'},
+            },
+            'village': {
+                "village" : {'placeholder':'id_village','name_field':'village_name'},
+            },
+            'language': {
+                "language": {'placeholder':'id_language','name_field':'language_name'}
+            }                    
+                                
+                        
+         },
+        'unique_togther_fields':[],
+        'form_field_validation': {
+        }
+    };
+    
+    var language_configs = {
+        'page_header': 'Laguage',
+        'table_template_name': 'language_table_template',
+        'list_item_template_name': 'language_list_item_template',
+        'add_edit_template_name': 'language_add_edit_template',
+        'rest_api_url': '/api/v1/language/',
+        'entity_name': 'language',
+        'foreign_entities':{},
+        'unique_togther_fields':[],
+        'form_field_validation': {
+        }
+    };
+  
+  //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
     var person_configs = {
         'page_header': 'Person',
         'table_template_name': 'person_table_template',
@@ -155,7 +198,9 @@ function() {
         person:person_configs,
         village:village_configs,
         group:group_configs,
-        mediator:mediator_configs    
+        mediator:mediator_configs,
+        video: video_configs,
+        language: language_configs    
     }
 
 });
