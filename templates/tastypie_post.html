@@ -12,7 +12,8 @@
     	<h4>Post Mediator json to tastypie</h4>
     	<div class="btn btn-success" id='mediator_post'>Post Mediator json</div>
     	<h4>Post Group json to tastypie</h4>
-    	<div class="btn btn-success" id='group_post'>Post Group json</div>
+    	<div class="btn btn-success" id='group_post'>Post Group json</div> 
+    	<div class="btn btn-warning" id='group_edit_post'>Post Group Edit Data</div>
     	<h4>Post Person json to tastypie</h4>
     	<div class="btn btn-success" id='person_post'>Post Person json</div>
     	<h4>Post Screening json to tastypie</h4>
@@ -27,12 +28,7 @@
 	    "phone_no": "",
 	    //"partner": {"id": 10000000000001, "partner_name": "PRADAN"}
     };
-    
-    group_json = {
-    	"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB 12345678", 
-    	"village": "/api/v1/village/6000009723/"
-    };
-    
+        
     /*person_json = {
     	 "address": "",
 	     "age": null, 
@@ -134,6 +130,20 @@
 		 "village": {"id": 10000000000252, "village_name": "Mugalihal"}, 
 		 "youtubeid": "EikW0U9m3w0"
 	 };
+	 
+	 group_json = {
+		 "group_label": "(B R Ambedkar Swa Sahaya Sangha HirekoppaB,Hirekoppa.B)", 
+		 "group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB 123 123 123", 
+		 //for sreenu use id 10000000000251 for admin use id 6000009723
+		 "village": {"id": 10000000000251, "village_name": "Hirekoppa.B"}
+	 }
+	 
+	 group_edit_json = {
+	 	"id": "10000000000855",
+		 "group_label": "(FARMER'S CLUB,Dalaiput)", 
+		 "group_name": "FARMER'S CLUB 123",
+		 "village": {"id": 10000000000251, "village_name": "Dalaiput"}
+	 }
 	$(document).ready( function () {
 		$('#screening_post').click( function () {
 			$.ajax({
@@ -185,6 +195,26 @@
 		        async: true,
 		        //json object to sent to the authentication url
 		        data: JSON.stringify(group_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#group_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        url: 'http://127.0.0.1:8000/api/v1/group/10000000000855/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(group_edit_json),
 		        success: function () {	
 		        	alert("Thanks!"); 
 		        },

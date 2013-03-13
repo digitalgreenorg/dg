@@ -160,7 +160,6 @@ class MediatorFormValidation(FormValidation):
             return {}
         return form.errors
 
-
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
@@ -414,13 +413,29 @@ class PersonGroupsResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupsForm)
-    dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id'])
+        excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
+        always_return_data = True
+    dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     
     def dehydrate_group_label(self,bundle):
         #for sending out label incase of dropdowns
         v_field = getattr(bundle.obj, 'village').village_name
         g_field = getattr(bundle.obj, 'group_name')
         return "("+ g_field+"," + v_field +")"
+    
+    def hydrate_village(self, bundle):
+        print 'in hydrate village'
+        village = bundle.data.get('village')
+        if village and not hasattr(bundle,'village_flag'):
+            try:
+                village_id = village.get('id')
+                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
+                bundle.village_flag = True
+            except:
+                print 'village id in Group does not exist'
+                bundle.data['village'] = None
+        return bundle
+    
 
 
 class ScreeningResource(ModelResource):
