@@ -54,7 +54,7 @@ def send_updated_log(request):
         rows = ServerLog.objects.filter(village__in = villages, partner = partner_id )
     if rows:
         from django.core import serializers
-        data = serializers.serialize('json', rows, fields=('action','entry_table','model_id'))
+        data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'instance_json'))
         return HttpResponse(data, mimetype="application/json")
     else:
         return HttpResponse("0")
