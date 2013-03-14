@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            'click #button1': 'save',
+            'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         serialize: function(){
             s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
+            s_passed["inline"] = (this.inline) ? true: false;
             return s_passed;
                 
         },
@@ -32,18 +33,16 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .html());
             this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
-            // Creating the online,offline collections and models for the entity in consideration 
+            this.inline = this.view_configs.inline;
+            // 'inline':{
+//                 'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute": "group", "header" : "person_inline_header"
+//             }
+            
+            // Creating the offline models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
-            });
-
-            var generic_collection_offline = Backbone.Collection.extend({
-                model: generic_model_offline,
-                database: indexeddb,
-                storeName: this.view_configs.entity_name,
-            });
-            
+            }); 
             
             this.offline_model = new generic_model_offline();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,36 +59,48 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
 
                 this.f_colls.push(new generic_collection_offline());
+                // Reset is called when a collection has finished fetching.
+                // We are binding the reset of the last added collection to render_foreign_entity
                 _.last(this.f_colls)
                     .bind('reset', this.render_foreign_entity);
-
+                
+                /*
+                this.f_colls.push(new generic_collection_offline().bind);
+                
+                var f_collection = new generic_collection_offline();
+                f_collection.bind
+                f_colls.push(f_collection);
+                */
 
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
+            // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
             json = null;
-            this.edit_case = true;
+            this.edit_case = false;
+            // Edit case: we receive json from Upload
             if (params.model_json) {
-                this.edit_case_json = true;
+                this.edit_case_json = true; // edit_case_upload
                 this.model_json = params.model_json;
+                this.edit_case = true;
             } else if (params.model_id) {
 
                 this.offline_model.set({
                     id: params.model_id
                 });
                 this.edit_case_id = true;
+                this.edit_case = true;
 
-            } else this.edit_case = false;
-            
+            }
+            // No need for two variables. One is sufficient.
             if(this.edit_case)
                 this.action = "E"
             else
                 this.action = "A"            
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            this.just_save = false;
-            this.save_and_add_another = false;
+            
             _(this)
                 .bindAll('save');
 
@@ -97,6 +108,23 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         afterRender: function() {
             console.log("ADD/EDIT:foreign colls being fetched:");
+
+            //render inlines
+            if(this.inline)
+            {
+                this.$('#inline_header').html($('#'+this.inline.header).html());
+                var inline_t = $('#'+this.inline.template).html();
+                for(var i=0;i<this.inline.num_rows;i++)
+                {
+                    this.$('#inline_body').append(inline_t);    
+                }
+                
+            }
+            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            
+            
 
 
             // fetching all foreign collections
@@ -106,7 +134,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 this.f_colls[i].fetch({
                     success: function() {
                         console.log("ADD/EDIT: a foreign coll fetched");
-
+                        // render foreign collection is called automatically on successful fetch
                     },
                     error: function() {
                         //ToDO: error handling
@@ -159,28 +187,43 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         render_foreign_entity: function(collection, options) {
             console.log("ADD/EDIT: rendering foreign entity");
-            f_entity_desc = this.view_configs.foreign_entities[collection.__proto__.storeName];
-            $f_el = this.$('#' + f_entity_desc.placeholder);
-            collection.each(function(f_model) {
-                $f_el.append(options_inner_template({
-                    id: parseInt(f_model.get("id")),
-                    name: f_model.get(f_entity_desc.name_field)
-                }));
-            });
-            console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+            for(element in this.view_configs.foreign_entities[collection.__proto__.storeName])
+            {
+                f_entity_desc = this.view_configs.foreign_entities[collection.__proto__.storeName][element];
+                $f_el = this.$('#' + f_entity_desc.placeholder);
+                collection.each(function(f_model) {
+                    $f_el.append(options_inner_template({
+                        id: parseInt(f_model.get("id")),
+                        name: f_model.get(f_entity_desc.name_field)
+                    }));
+                });
+                console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                    
+            }
             if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
         },
 
         normalize_json: function(d_json){
-            console.log("FORM: Before Normalised json = "+JSON.stringify(this.model_json));      
+            console.log("FORM: Before Normalised json = "+JSON.stringify(d_json));      
             var f_entities = this.view_configs["foreign_entities"];
             for (member in f_entities) {
-                if (member in d_json) {
-                    d_json[member] = parseInt(d_json[member]["id"]); 
+                for(element in f_entities[member])
+                {
+                    if (element in d_json) {
+                        if (d_json[element] instanceof Array) {
+                            var el_array = [];
+                            $.each(d_json[element],function(index,object){
+                                el_array.push(parseInt(object["id"]));
+                            });
+                            d_json[element] = el_array;
+                        }
+                        else {
+                            d_json[element] = parseInt(d_json[element]["id"]); 
+                        }
+                    }
                 }
-                
             }
-            console.log("FORM: Normalised json = "+JSON.stringify(this.model_json));      
+            console.log("FORM: Normalised json = "+JSON.stringify(d_json));      
             return d_json;
             
         },
@@ -190,23 +233,49 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var f_entities = this.view_configs["foreign_entities"];
             var c=0;
             for (member in f_entities) {
-                if (member in n_json) {
-                    name_field = f_entities[member]["name_field"];
-                    var id = parseInt(n_json[member]);
-                    if((id != "")&&(id!=null)&&(id!=undefined)){ 
-                        var entity = this.f_colls[c].where({
-                            id: id
-                        })[0];
-                        n_json[member] = {};
-                        n_json[member]["id"] = id;
-                        n_json[member][name_field] = entity.get(f_entities[member]["name_field"]);    
-                    }
-                    else{
-                        n_json[member] = {};
-                        n_json[member]["id"] = null;
-                        n_json[member][name_field] = null;
-                     }
+                for(element in f_entities[member])
+                {
+                    if (element in n_json) {
+                        name_field = f_entities[member][element]["name_field"];
+                        
+                        if (n_json[element] instanceof Array) {
+                            var el_array = [];
+                            var that = this;
+                            $.each(n_json[element],function(index, id){
+                                id = parseInt(id);
+                                console.log(id);
+                                if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                                    var entity = that.f_colls[c].where({
+                                        id: id
+                                    })[0];
+                                    var el_dict = {};
+                                    el_dict["id"] = id;
+                                    el_dict[name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                                    el_array.push(el_dict);    
+                                }
+                            });
+                            n_json[element] = el_array;
+                        } else {
+                            var id = parseInt(n_json[element]);
+                            if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                                var entity = this.f_colls[c].where({
+                                    id: id
+                                })[0];
+                                n_json[element] = {};
+                                n_json[element]["id"] = id;
+                                n_json[element][name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                            }
+                            else{
+                                n_json[element] = {};
+                                n_json[element]["id"] = null;
+                                n_json[element][name_field] = null;
+                            }
+                        }
+                        
+                        
+                    }    
                 }
+                
                 c++;
             }
             console.log("FORM: After DNormalising json - "+JSON.stringify(this.final_json))
@@ -237,12 +306,76 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },  
         show_errors: function(errors){
             console.log("FORM: in show errors");
-            this.$('#form_errors').append(errors);
+            var error_str = "";
+            console.log("FORM: SHOWERROR: ");
+            // errors = eval(errors);
+            // for(member in errors)
+            // {
+            //     if(member != "__all__"){
+            //         error_str += member +" : <br>";
+            //     }
+            //     
+            //     $.each(errors[member],function(err){
+            //         error_str += err+"<br>";
+            //     });
+            //     
+            // }
+            // console.log(eval(errors));
+            
+            
+            
+            
+            this.$('#form_errors').html(errors);
         },        
+        fetch_inlines: function(raw_json){
+            console.log("FORM: fetching inlines");
+            var all_inlines = $('#inline_body tr');    
+            raw_json["inlines"] = [];
+            var that = this;
+            var inline_attrs = [];
+            $.each(all_inlines,function(index, inl){
+                // console.log();
+                var inl_obj = {};
+                var inputs = $(inl).find("input");
+                var ignore = true;
+                $.each(inputs,function(index1, inp){
+                    inl_obj[$(inp).attr("name")]= $(inp).val();
+                    if($(inp).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(inp).attr("name"));
+                });
+                var selects = $(inl).find("select");
+                $.each(selects,function(index2, sel){
+                    inl_obj[$(sel).attr("name")]= $(sel).val();
+                    if($(sel).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(sel).attr("name"));
+                });
+                $.each(that.inline.borrow_attributes,function(index,b_attr){
+                    inl_obj[b_attr.inline_attribute] = raw_json[b_attr.host_attribute]    
+                });
+                if(!ignore)
+                    raw_json["inlines"].push(inl_obj);
+                // console.log($(inl).serializeArray());    
+            });
+            
+            //remove inline attrs from raw_json...let them be inside raw_json.inlines only
+            $.each(inline_attrs,function(index,attr){
+                delete raw_json[attr];
+            });
+            console.log(inline_attrs);
+            
+            
+        },
+                    
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
             this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
+            if(this.inline)
+                this.fetch_inlines(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",

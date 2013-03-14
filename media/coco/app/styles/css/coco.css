@@ -1,0 +1,55 @@
+.coco_form .control-label {
+    font-weight:bold;
+}
+
+#coco_content {
+    padding-top: 20px;
+}
+
+#coco_brand {
+    font-size:32px;
+    height: 50px;
+    width: 100px;
+    padding-top: 20px;
+}
+
+#coco_userinfo {
+    font-size:11px;
+}
+
+#coco_sync {
+    margin-bottom:50px;
+}
+
+#coco_nav_add {
+    width:18px;
+}
+
+div.dataTables_length label {
+    width: 460px;
+    float: left;
+    text-align: left;
+}
+ 
+div.dataTables_length select {
+    width: 75px;
+}
+ 
+div.dataTables_filter label {
+    float: right;
+    width: 460px;
+}
+ 
+div.dataTables_info {
+    padding-top: 8px;
+}
+ 
+div.dataTables_paginate {
+    float: right;
+    margin: 0;
+}
+ 
+table {
+    margin: 1em 0;
+    clear: both;
+}

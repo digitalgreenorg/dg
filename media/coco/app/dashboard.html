@@ -10,21 +10,26 @@
 
 	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
     <!-- // importing libraries -->
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/json2.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/underscore-min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/backbone-min.js"></script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js"> 	  </script>
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/json2.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/underscore-min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/backbone-min.js"></script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js">       </script>
+    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script> -->
 	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
-	<script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
+	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
+	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
+    <!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script> -->
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
+    
+    
 	<!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/layoutmanager/backbone.layoutmanager.js"></script> -->
-	<script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script>
+    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script> -->
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
 	
     <!-- // application js -->
@@ -64,33 +69,9 @@
     </div>
 </script>
 
-
-<script type="text/template" id="dashboard_item_template">
-        <tr>
-        <td><a href="#<%= name%>"><%= title%></a></td>
-        </tr>
-</script>
-
-<script type="text/template" id="dashboard">
-    <div class="span4 well" style="margin-left:20px;">
-        <table class="table table-bordered" style="background:white;">
-            <tbody>
-                
-            </tbody>
-        </table>
-   </div>
-            
-    <div class="span8" style="margin-left:20px;">
-            
-        <button id="upload" class="btn btn-large btn-primary" style="margin-left:300px;margin-top:10px;" data-toggle="modal" data-target="#upload_modal">Upload</button>
-        
-        <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
-        <div id="show_status">
-        </div>
-        
-    </div>
-    
-    <div id="upload_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-header">
+<script type="text/template" id="upload_template">
+    <div id="upload_modal" class="modal hide fade" >
+      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Syncing</h3>
       </div>
@@ -108,9 +89,67 @@
         <a href="#" class="btn btn-primary">Save changes</a>
       </div>
     </div>
-    
 </script>
-    <!--   -->
+   
+
+<script type="text/template" id="dashboard_item_template">
+        <li><a href="#<%= name%>"><%= title%></a></li>
+</script>
+
+<script  type="text/template" id="dashboard">
+            <div id="coco_sidebar" class="">
+                <div id="coco_userinfo">
+                    Hi Sreenivas! <a href="#/logout">Log out</a>
+                </div>
+                <div id="coco_brand">
+                    <a href="#">COCO</a>
+                </div>
+                <div id="coco_sync" class="row">
+                    <div class="span1 btn pull-left">Sync</div>
+                    <div class="btn pull-right" href="#"><i class="icon-wrench"></i></div>
+                </div>
+
+                <button id="upload" class="btn btn-primary"  data-toggle="modal" data-target="#upload_modal">Upload</button>
+        
+                <button id="download" class="btn  btn-primary" >Download</button>
+                
+                <div id="coco_nav" class="pull-left">
+                    <ul id = "dashboard_items" class="nav nav-stacked">
+                        
+                    </ul>
+                </div>
+                
+                <div id="coco_nav_add" class="pull-right">
+                    <ul id = "dashboard_items_add" class="nav nav-stacked">
+                        
+                    </ul>
+                </div>
+            </div>
+            
+            <div id = "upload_modal_ph"></div>
+</script>
+
+
+    <!--  <div id="coco_nav" class="pull-left">
+                    <ul class="nav nav-stacked">
+                        <li><a href="#video_list">Videos</a></li>
+                        <li><a href="#mediator_list">Mediators</a></li>
+                        <li><a href="#group_list">Groups</a></li>
+                        <li><a href="#person_list">Person</a></li>
+                        <li><a href="#screening_list">Screening</a></li>
+                        <li><a href="#adoption_list">Adoption</a></li>
+                    </ul>
+                </div>
+                <div id="coco_nav_add" class="pull-right">
+                    <ul class="nav nav-stacked">
+                        <li><a href="#video_tab"><i class="icon-plus-sign"></i></a></li>
+                        <li><a href="#mediator_tab"><i class="icon-plus-sign"></i></a></li>
+                        <li><a href="#group_tab"><i class="icon-plus-sign"></i></a></li>
+                        <li><a href="#person_tab"><i class="icon-plus-sign"></i></a></li>
+                        <li><a href="#screening_tab"><i class="icon-plus-sign"></i></a></li>
+                        <li><a href="#adoption_tab"><i class="icon-plus-sign"></i></a></li>
+                    </ul>
+                </div> -->
 <script type="text/template" id="person_table_template">
        <tr>
        <th>Id</th>
@@ -131,6 +170,356 @@
        <th></th>
 	   </tr>
 </script>
+
+
+
+<!--///////////////////////////////////////////////////// MEDIATOR TEMPLATES START //////////////////////////////////////////////-->
+<script type="text/template" id="mediator_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Gender</th>
+       <th></th>
+	   </tr>
+</script>
+<script type="text/template" id="mediator_list_item_template">
+    <td><%= id %></td>
+    <td><%= name %></td>
+    <td> <%= gender %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+<script type="text/template" id="mediator_add_edit_template">
+                            <fieldset>
+                                <legend>Add Mediator</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Name*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="name" placeholder="Name">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+ 	                                <label class="control-label">Gender*</label> 
+ 	                                <div class="controls">
+ 	                                <select name="gender">
+     									<option value='' selected='selected'>---------</option> 
+     									<option value='M'>Male</option> 
+     									<option value='F'>Female</option> 
+ 	                                </select>
+ 	                                </div>
+                                 </div> 
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Assigned Villages</label>
+	                                 <div class="controls"> 
+	                                 <select id = "id_ass_villages" name="assigned_villages" multiple>
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                                <div class="control-group">
+	                                 <label class="control-label">Phone Number</label>
+	                                 <div class="controls">
+	                                 <input name="phone_no" type="text" placeholder="Phone Number">
+	                                 </div>
+                                 </div>
+							</fieldset>
+                        
+
+</script>
+
+<!--//////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--///////////////////////////////////////////////////// GROUP TEMPLATES START //////////////////////////////////////////////-->
+<script type="text/template" id="group_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Village</th>
+       <th></th>
+	   </tr>
+</script>
+<script type="text/template" id="group_list_item_template">
+    <td><%= id %></td>
+    <td><%= group_name %></td>
+    <td> <%= village.village_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+<script type="text/template" id="group_add_edit_template">
+                            <fieldset>
+                                <legend>Add Group</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Name*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="group_name" placeholder="Name">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Village*</label>
+	                                 <div class="controls"> 
+	                                 <select id = "id_village" name="village">
+                                        <option value='' selected='selected'>---------</option> 
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                            </fieldset>
+                        
+
+</script>
+
+<script type="text/template" id="person_inline">
+    <tr id="row7">
+        <td><div class="control-group"><div class="controls">
+            <input type="text" id="person_row7" name="person_name">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input type="text" id="father_row7" name="father_name">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input class="input-mini" type="text" id="age_row7" name="age">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <select id="gender_row7" class="input-small" name="gender">
+			<option value='' selected='selected'>---------</option> 
+			<option value='M'>Male</option> 
+			<option value='F'>Female</option>
+            </select>
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input id="phonenumber_row7" name="phone_no" type="text">
+        </div></div></td>
+    </tr>
+</script>  
+
+<script type="text/template" id="person_inline_header">
+<tr> <th> Person Name*</th><th> Father Name*</th><th> Age</th><th> Gender*</th><th> Phone No</th></tr>
+</script>
+
+<!--//////////////////////////////////////////////////// GROUP TEMPLATES END ///////////////////////////////////////////////-->
+
+
+<script type="text/template" id="form_template">
+    <div id = "form_div">
+        <div id = "form_header">
+    
+        </div>
+        <div id = "form_errors" style = "color:red">
+    
+        </div>
+        <div id = "model_form">
+        <form id="person_form" class="">
+                        
+            <%=form_template%>
+        
+            <% if (inline == true) { %>
+                <table id= "inline">
+                    <thead id ="inline_header">
+                    </thead>
+                    <tbody id= "inline_body">
+        
+                    </tbody>
+                </table>
+            <% } %>
+        
+            <div class="form-actions">
+              <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
+              <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+            </div>
+        </form>
+        </div>
+	
+    </div>
+</script>
+
+<!--///////////////////////////////////////////////////// VIDEO TEMPLATES START //////////////////////////////////////////////-->
+<script type="text/template" id="video_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Title</th>
+	   <th>Start Date</th>
+	   <th>End Date</th>
+       <th></th>
+	   </tr>
+</script>
+<script type="text/template" id="video_list_item_template">
+    <td><%= id %></td>
+    <td><%= title %></td>
+    <td> <%= video_production_start_date %></td>
+    <td> <%= video_production_end_date %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+<script type="text/template" id="video_add_edit_template">
+                            <fieldset>
+                                <legend>Add Video</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Title*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="title" placeholder="Title">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+ 	                                <label class="control-label">Video Type*</label> 
+ 	                                <div class="controls">
+ 	                                <select name="video_type">
+                                        <option value="" selected="selected">
+                                            ---------
+                                        </option>
+                                        <option value="1">
+                                            Demonstration
+                                        </option>
+                                        <option value="2">
+                                            Success Story/Testimonial
+                                        </option>
+                                        <option value="3">
+                                            Activity Introduction
+                                        </option>
+                                        <option value="4">
+                                            Discussion
+                                        </option>
+                                        <option value="5">
+                                            General Awareness
+                                        </option>
+                                    </select>
+ 	                                </div>
+                                 </div> 
+                                 <div class="control-group">
+                                     <label class="control-label">Production Start Date*</label>
+                                     <div class="controls">
+                                         <input class="input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
+                                     </div>
+                                     <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                                 </div>
+                                 <div class="control-group">
+                                     <label class="control-label">Production End Date*</label>
+                                     <div class="controls">
+                                         <input class="input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
+                                     </div>
+                                     <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                                 </div>
+                                 
+                                 <div class="control-group">
+                                             <label class="control-label">Language*</label>
+                                             <div class="controls">
+                                                 <select id = "id_language" name="language">
+                                                     <option selected="selected" value="">
+                                                         ---------
+                                                     </option>
+                                                 </select>
+                                             </div>
+                                         </div>
+                                
+                                 <div class="control-group">
+                                 <label>Summary</label>
+                                 <div class="controls">
+                                     <textarea name="summary" class="input-xlarge" rows="4" placeholder="Summary"></textarea>
+                                 </div>
+                             </div>
+                             <div class="control-group">
+                                 <label class="control-label">Village*</label>
+                                 <div class="controls">
+                                     <select id = "id_village" name="village">
+                                     	<option value="">---------- </option>
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="control-group">
+                                 <label class="control-label">Facilitator*</label>
+                                 <div class="controls">
+                                     <select id = "id_facilitator" name="facilitator">
+                                         <option selected="selected" value="">
+                                             ---------
+                                         </option>
+                                     </select>
+                                 </div>
+                             </div>                     
+                             <div class="control-group">
+                                 <label class="control-label">Camera Operator*</label>
+                                 <div class="controls">
+                                     <select id = "id_cameraoperator" name="cameraoperator">
+                                         <option selected="selected" value="">
+                                             ---------
+                                         </option>
+                                                                         
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Persons Shown*</label>
+                                <div class="controls">
+                                    <select size="20" multiple="multiple" class="input-xlarge" id = "id_farmers_shown" name="farmers_shown">                              </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Actors*</label>
+                                    <div class="controls">
+                                        <select class="input-medium" name="actors">
+                                            <option value="" selected="selected">
+                                                ---------
+                                            </option>
+                                            <option value="I">
+                                                Individual
+                                            </option>
+                                            <option value="F">
+                                                Family
+                                            </option>
+                                            <option value="G">
+                                                Group
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Video Suitable For*</label>
+                                    <div class="controls">
+                                        <select name="video_suitable_for">
+                                            <option value="" selected="selected">
+                                                ---------
+                                            </option>
+                                            <option value="1">
+                                                Dissemination
+                                            </option>
+                                            <option value="2">
+                                                Video Production Training
+                                            </option>
+                                            <option value="3">
+                                                Dissemination Training
+                                            </option>
+                                            <option value="4">
+                                                Nothing
+                                            </option>
+                                            <option value="5">
+                                                Pending For Approval
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label>Approval Date</label>
+                                    <div class="controls">
+                                        <input class="input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
+                                    </div>
+                                    <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                                </div>
+                                <div class="control-group">
+                                    <label>Youtube Id</label>
+                                    <div class="controls">
+                                        <input name="youtubeid" type="text" placeholder="youtubeid"><br>
+                                    </div>
+                                </div>
+							</fieldset>
+                        
+
+</script>
+<!--//////////////////////////////////////////////////// VIDEO TEMPLATES END ///////////////////////////////////////////////-->
+
 
 <script type="text/template" id="person_list_item_template">
     <td><%= id %></td>
@@ -172,17 +561,16 @@
 <button id="search_button" class="btn" style="margin-left:10px;">Search</button>
 </div> -->
 <script  type="text/template" id="list_view_template">
-    <div class="well">
-    <span style= "font-size:20px;"><b><%= header_name %></b></span>
-    <button id="add" class="btn" style="float:right;margin-right:10px;">Add</button>
+    <div id="legend">
+    	<legend class=""><%= header_name %></legend>
     </div>
-	<div style= "margin: 30px 30px 30px 30px;">
-	       <table id= "list_table" class="table table-striped display">
-	       <thead>
-	       <%= table_header%>
-	       </thead>
-	       <tbody>
-		   </tbody>
+	<div >
+       <table id= "list_table" class="table table-striped display">
+       <thead>
+       <%= table_header%>
+       </thead>
+       <tbody>
+	   </tbody>
 	</div>
 	
 </script>
@@ -190,28 +578,6 @@
 	
 <script type="text/template" id="options_template">
     <option value=<%=id%>><%=name%></option> 
-</script>
-
-<script type="text/template" id="form_template">
-<div id = "form_div">
-    <div id = "form_header">
-    
-    </div>
-    <div id = "form_errors" style = "color:red">
-    
-    </div>
-    <div id = "model_form">
-    <form id="person_form" class="form-horizontal">
-                        
-    <%=form_template%>
-    <div class="form-actions">
-      <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
-      <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
-    </div>
-    </form>
-    </div>
-	
-</div>
 </script>
 
 <script type="text/template" id="person_add_edit_template2">
@@ -241,12 +607,9 @@
 	                                <label class="control-label">Gender*</label> 
 	                                <div class="controls">
 	                                <select name="gender">
-	                                    <option>
-	                                        Female
-	                                    </option>
-	                                    <option>
-	                                        Male
-	                                    </option>
+    									<option value='' selected='selected'>---------</option> 
+    									<option value='M'>Male</option> 
+    									<option value='F'>Female</option> 
 	                                </select>
 	                                </div>
                                 </div> 
@@ -356,10 +719,53 @@
 </form>                                                        </script>
    
    <script type="text/template" id="page_layout">
-   <div id = "header"></div>
-   
-   <div id = "content"></div>
+   <div id = "side_panel" class="span2 well" style = "height:100%"></div>
+   <div id = "content" class="span10" style="padding-top:20px;padding-bottom:20px;"></div>
    		
+   </script>
+   
+   <script type="text/template" id="status">
+        
+   </script>
+   
+   <script type="text/template" id="first_time_status">
+       Welcome to COCO. 
+       <br>
+       COCO has not been yet setup on this system. Before anything, you need to download data. Click on the download button.
+       <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
+        <div id = "download_modal">
+    
+        </div>    
+   </script>
+   
+   
+   
+   <script type="text/template" id="download_template">
+       <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h3>Full Download</h3>
+         </div>
+         <div class="modal-body">
+           <p >One fine body…</p>
+           <div class="progress progress-info progress-striped">
+             <div class="bar" id = "pbar" style="width: 0%"></div>
+           </div>
+           <div id="d_status">
+           
+           </div>
+         </div>
+         <div class="modal-footer">
+           <a href="#" class="btn">Close</a>
+         </div>
+       </div>
+    
+        
+   </script>
+   
+   <script type="text/template" id="sync_status_template">
+   Last Downloaded on - <%=timestamp%><br>
+   Data entries awaiting upload - <%=upload_entries%> 
+        
    </script>
    
    

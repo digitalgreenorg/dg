@@ -13,7 +13,41 @@ require.config({
     'datatable': 'libs/datatablejs_media/js/jquery.dataTables.min',
     'form_field_validator': 'libs/jquery.validate',
     'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
-    'syphon':'libs/backbone.syphon'
+    'syphon':'libs/backbone.syphon',
+    'bootstrapjs': 'libs/bootstrap/js/bootstrap.min'    
+  },
+  
+  shims:{
+      'backbone': {
+                      //These script dependencies should be loaded before loading
+                      //backbone.js
+                      deps: ['underscore', 'jquery'], // here I would like to load the already loaded library
+                          }   , 
+      'indexeddb-backbone': {
+                      //These script dependencies should be loaded before loading
+                      //backbone.js
+                      deps: ['backbone'], // here I would like to load the already loaded library
+                          }    ,
+      'layoutmanager': {
+                      //These script dependencies should be loaded before loading
+                      //backbone.js
+                      deps: ['backbone'], // here I would like to load the already loaded library
+                          },
+    'bootstrapjs': {
+                  //These script dependencies should be loaded before loading
+                  //backbone.js
+                  deps: ['jquery'], // here I would like to load the already loaded library
+                      },    
+      'underscore': {
+                    //These script dependencies should be loaded before loading
+                    //backbone.js
+                    deps: ['jquery'], // here I would like to load the already loaded library
+                    export: "_"    
+                        },    
+                              
+                                                    
+
+                  
   }
 });
  
