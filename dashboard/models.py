@@ -716,7 +716,6 @@ class PersonAdoptPractice(CocoModel):
     quality = models.CharField(max_length=200, db_column='QUALITY', blank=True)
     quantity = models.IntegerField(null=True, db_column='QUANTITY', blank=True)
     quantity_unit = models.CharField(max_length=150, db_column='QUANTITY_UNIT', blank=True)
-    time_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def get_village(self):
         return self.person.village.id
