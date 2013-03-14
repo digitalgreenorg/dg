@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
+            'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         serialize: function(){
             s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
+            s_passed["inline"] = (this.inline) ? true: false;
             return s_passed;
                 
         },
@@ -32,6 +33,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .html());
             this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
+            this.inline = this.view_configs.inline;
+            // 'inline':{
+//                 'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute": "group", "header" : "person_inline_header"
+//             }
             
             // Creating the offline models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
@@ -103,6 +108,23 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         afterRender: function() {
             console.log("ADD/EDIT:foreign colls being fetched:");
+
+            //render inlines
+            if(this.inline)
+            {
+                this.$('#inline_header').html($('#'+this.inline.header).html());
+                var inline_t = $('#'+this.inline.template).html();
+                for(var i=0;i<this.inline.num_rows;i++)
+                {
+                    this.$('#inline_body').append(inline_t);    
+                }
+                
+            }
+            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            
+            
 
 
             // fetching all foreign collections
@@ -305,10 +327,55 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             this.$('#form_errors').html(errors);
         },        
+        fetch_inlines: function(raw_json){
+            console.log("FORM: fetching inlines");
+            var all_inlines = $('#inline_body tr');    
+            raw_json["inlines"] = [];
+            var that = this;
+            var inline_attrs = [];
+            $.each(all_inlines,function(index, inl){
+                // console.log();
+                var inl_obj = {};
+                var inputs = $(inl).find("input");
+                var ignore = true;
+                $.each(inputs,function(index1, inp){
+                    inl_obj[$(inp).attr("name")]= $(inp).val();
+                    if($(inp).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(inp).attr("name"));
+                });
+                var selects = $(inl).find("select");
+                $.each(selects,function(index2, sel){
+                    inl_obj[$(sel).attr("name")]= $(sel).val();
+                    if($(sel).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(sel).attr("name"));
+                });
+                $.each(that.inline.borrow_attributes,function(index,b_attr){
+                    inl_obj[b_attr.inline_attribute] = raw_json[b_attr.host_attribute]    
+                });
+                if(!ignore)
+                    raw_json["inlines"].push(inl_obj);
+                // console.log($(inl).serializeArray());    
+            });
+            
+            //remove inline attrs from raw_json...let them be inside raw_json.inlines only
+            $.each(inline_attrs,function(index,attr){
+                delete raw_json[attr];
+            });
+            console.log(inline_attrs);
+            
+            
+        },
+                    
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
             this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
+            if(this.inline)
+                this.fetch_inlines(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",

@@ -48,6 +48,20 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             // console.log(e);
             this.form = e.context; // form_view
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
+            
+            //TODO: if inline present, separate it
+            
+            if(this.form.inline)
+            {
+                console.log("FORMCONTROLLER: separating inlines from final json");
+                this.inline_models = $.extend(null,this.form.final_json.inlines);
+                delete this.form.final_json.inlines;
+                console.log(this.inline_models);
+                $.each(this.inline_models,function(index, imodel){
+                    console.log(imodel);
+                });
+            }
+            
             this.form.offline_model.set(this.form.final_json);
             var that = this; // Please change to form_controller or something else which makes the content clear.
             this.offline_m = this.form.offline_model; // Remove this line
@@ -77,8 +91,59 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 entity_name: that.form.entity_name        
                             },
                             {
-                                success: function(model){
-                                    console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(model.toJSON()));
+                                success: function(u_model){
+                                    console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
+                                    
+                                    // Save inlines
+                                    if(that.form.inline)
+                                    {
+                                        console.log("FORMCONTROLLER: saving inlines");
+                                        var for_attr = {};
+                                        $.each(that.form.inline.foreign_attribute.host_attribute,function(index, obj){
+                                           for_attr[obj] = model.get(obj);
+                                           console.log(obj);
+                                           console.log(model[obj]);
+                                        });
+                                        $.each(that.inline_models,function(index, ijson){
+                                            console.log(ijson);
+                                            var generic_model_offline = Backbone.Model.extend({
+                                                database: indexeddb,
+                                                storeName: that.form.inline.entity, // add attribute name
+                                            });
+                                            var i_model = new generic_model_offline();
+                                            i_model.set(ijson);
+                                            i_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
+                                            i_model.save(null,{
+                                                success: function(in_model){
+                                                    console.log("FORMCONTROLLER: inline model saved - "+JSON.stringify(in_model.toJSON()));
+                                                    upload_collection.create(
+                                                        {
+                                                            data: in_model.toJSON(),
+                                                            action: "A",   //TODO: what if grp was edited, some inlines were edited and some new created
+                                                            entity_name: that.form.inline.entity        
+                                                        },
+                                                        {
+                                                            success:function(u_model){
+                                                                console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
+                                                            },
+                                                            error: function(u_model){
+                                                                console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
+                                    
+                                                            }    
+                                                        }
+                                                    );            
+                                                },
+                                                error: function(error){
+                                                    console.log("FORMCONTROLLER: error saving inline model");
+                                                    console.log(error);
+                                                }    
+                                            });
+                                            
+                            
+                                        });
+                                        
+                                    }
+                                    ///////////////////////////////////////////////////////////////////////////////////////////////
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
                                         msg: "Success! Model saved offline and added to uploadqueue"
@@ -224,9 +289,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                 }
             }
-
-
-
         },
         
         after_offline_to_online_success: function(o_json){ // call this send_to_server
@@ -266,6 +328,72 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 success: function(model) {
                                     console.log("FRMCONTROLLER: offline model after evrthing-" + JSON.stringify(model.toJSON()));
                                     console.log("FRMCONTROLLER: Successfuly saved on server and offline.")
+                                        
+                                        
+                                    ///saving inline models
+                                    if(that.form.inline)
+                                    {
+                                        console.log("FORMCONTROLLER: saving inlines");
+                                        ////////////////////creating foreign atrribute for inlines///////////////////
+                                        var for_attr = {};
+                                        $.each(that.form.inline.foreign_attribute.host_attribute,function(index, obj){
+                                           for_attr[obj] = model.get(obj);
+                                        });
+                                        var for_attr_online = {};
+                                        $.each(that.form.inline.foreign_attribute.host_attribute,function(index, obj){
+                                           for_attr_online[obj] = online_model.get(obj);
+                                        });
+                                        /////////////////////////////////////////////////////////////////////////////
+                                        $.each(that.inline_models,function(index, ijson){
+                                            /////////////////creating offline model for inline/////////////////
+                                            var generic_model_offline = Backbone.Model.extend({
+                                                database: indexeddb,
+                                                storeName: that.form.inline.entity, // add attribute name
+                                            });
+                                            var generic_model_online = Backbone.Model.extend({
+                                                sync: Backbone.ajaxSync,
+                                                url: function() {
+                                                    return this.id ? configs[that.form.inline.entity].rest_api_url + this.id + "/" : configs[that.form.inline.entity].rest_api_url;
+                                                },
+                                            });
+                                            var i_model = new generic_model_offline();
+                                            var i_model_online = new generic_model_online();
+                                            //////////////////////////////////////////////////////////////////
+                                            
+                                            /////////setting the offline json on model and saving it/////////
+                                            i_model.set(ijson);
+                                            i_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
+                                            i_model.save(null,{
+                                                success: function(in_model){
+                                                    console.log("FORMCONTROLLER: inline model saved - "+JSON.stringify(in_model.toJSON()));
+                                                    i_model_online.set(ijson);
+                                                    i_model_online.set(that.form.inline.foreign_attribute.inline_attribute, for_attr_online);
+                                                    
+                                                //replacing borrowed attributes with online-converted attributes from online model//
+                                                    $.each(that.inline.borrow_attributes,function(index,b_attr){
+                                                        i_model_online.set(b_attr.inline_attribute) = online_model.get(b_attr.host_attribute);    
+                                                    });
+                                                ///////////////////////////////////////////////////////////////////////////////////    
+                                                    i_model_online.save(null,{
+                                                        success: function(on_in_model){
+                                                            console.log("inline saved online - "+JSON.stringify(on_in_model.toJSON()));
+                                                        },
+                                                        error: function(){
+                                                            console.log("error saving inline online");
+                                                        }    
+                                                    })    
+                                                },
+                                                error: function(error){
+                                                    console.log("FORMCONTROLLER: error saving inline model");
+                                                    console.log(error);
+                                                }    
+                                            });
+                                            ///////////////////////////////////////////////////////////////////////
+                                        });
+                                    }
+                                    
+                                    //////////////////////////////////////////////////////////////////////////////////////////////    
+                                        
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
                                         msg: "Success! Saved on server and offline"

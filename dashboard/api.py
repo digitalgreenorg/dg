@@ -414,7 +414,7 @@ class PersonGroupsResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupsForm)
-    dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     
     def dehydrate_group_label(self,bundle):
         #for sending out label incase of dropdowns

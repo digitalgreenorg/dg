@@ -13,14 +13,6 @@ function() {
 //         'table_template_name': 'video_table_template',
 //         'list_item_template_name': 'video_list_item_template'
 //     };
-    var group_configs = {
-        'page_header': 'Group',
-        'table_template_name': 'group_table_template',
-        'list_item_template_name': 'group_list_item_template',
-        'rest_api_url': '/api/v1/group/',
-        'entity_name': 'group'
-        
-    };
 //     var screening_list_view_configs = {
 //         'page_header': 'Screening',
 //         'backbone_collection': screening_collection.screening_offline_collection,
@@ -88,6 +80,24 @@ function() {
     };
   
   //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+    var group_configs = {
+      'page_header': 'Group',
+      'table_template_name': 'group_table_template',
+      'list_item_template_name': 'group_list_item_template',
+      'add_edit_template_name': 'group_add_edit_template',
+      'rest_api_url': '/api/v1/group/',
+      'entity_name': 'group',
+      'foreign_entities':{
+          'village': {
+              'village': {'placeholder':'id_village','name_field':'village_name'},
+          },
+      },
+      'inline':{
+          'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute":{ 'host_attribute':["id","group_name"], 'inline_attribute': "group"}, "header" : "person_inline_header", 'borrow_attributes':[{'host_attribute':'village','inline_attribute':'village'}]
+      }    
+        
+    };
+  
     var person_configs = {
         'page_header': 'Person',
         'table_template_name': 'person_table_template',

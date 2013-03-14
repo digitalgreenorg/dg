@@ -228,7 +228,113 @@
                         
 
 </script>
+
 <!--//////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
+
+<!--///////////////////////////////////////////////////// GROUP TEMPLATES START //////////////////////////////////////////////-->
+<script type="text/template" id="group_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Village</th>
+       <th></th>
+	   </tr>
+</script>
+<script type="text/template" id="group_list_item_template">
+    <td><%= id %></td>
+    <td><%= group_name %></td>
+    <td> <%= village.village_name %></td>
+    <td>
+	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
+    </td>
+</script>
+<script type="text/template" id="group_add_edit_template">
+                            <fieldset>
+                                <legend>Add Group</legend>
+                                <div class="control-group"> 
+                                	<label class="control-label">Name*</label>
+                                	<div class="controls">
+                                 	<input type="text" name="group_name" placeholder="Name">
+                                 	</div>
+                                 </div>
+                                 <div class="control-group"> 
+	                                 <label class="control-label">Village*</label>
+	                                 <div class="controls"> 
+	                                 <select id = "id_village" name="village">
+                                        <option value='' selected='selected'>---------</option> 
+	                                    
+	                                </select>
+	                                </div>
+                                </div>
+                            </fieldset>
+                        
+
+</script>
+
+<script type="text/template" id="person_inline">
+    <tr id="row7">
+        <td><div class="control-group"><div class="controls">
+            <input type="text" id="person_row7" name="person_name">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input type="text" id="father_row7" name="father_name">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input class="input-mini" type="text" id="age_row7" name="age">
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <select id="gender_row7" class="input-small" name="gender">
+			<option value='' selected='selected'>---------</option> 
+			<option value='M'>Male</option> 
+			<option value='F'>Female</option>
+            </select>
+        </div></div></td>
+        <td><div class="control-group"><div class="controls">
+            <input id="phonenumber_row7" name="phone_no" type="text">
+        </div></div></td>
+    </tr>
+</script>  
+
+<script type="text/template" id="person_inline_header">
+<tr> <th> Person Name*</th><th> Father Name*</th><th> Age</th><th> Gender*</th><th> Phone No</th></tr>
+</script>
+
+<!--//////////////////////////////////////////////////// GROUP TEMPLATES END ///////////////////////////////////////////////-->
+
+
+<script type="text/template" id="form_template">
+    <div id = "form_div">
+        <div id = "form_header">
+    
+        </div>
+        <div id = "form_errors" style = "color:red">
+    
+        </div>
+        <div id = "model_form">
+        <form id="person_form" class="">
+                        
+            <%=form_template%>
+        
+            <% if (inline == true) { %>
+                <table id= "inline">
+                    <thead id ="inline_header">
+                    </thead>
+                    <tbody id= "inline_body">
+        
+                    </tbody>
+                </table>
+            <% } %>
+        
+            <div class="form-actions">
+              <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
+              <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+            </div>
+        </form>
+        </div>
+	
+    </div>
+</script>
 
 <!--///////////////////////////////////////////////////// VIDEO TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="video_table_template">
@@ -472,28 +578,6 @@
 	
 <script type="text/template" id="options_template">
     <option value=<%=id%>><%=name%></option> 
-</script>
-
-<script type="text/template" id="form_template">
-    <div id = "form_div">
-        <div id = "form_header">
-    
-        </div>
-        <div id = "form_errors" style = "color:red">
-    
-        </div>
-        <div id = "model_form">
-        <form id="person_form" class="form-horizontal">
-                        
-        <%=form_template%>
-        <div class="form-actions">
-          <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-          <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
-        </div>
-        </form>
-        </div>
-	
-    </div>
 </script>
 
 <script type="text/template" id="person_add_edit_template2">
