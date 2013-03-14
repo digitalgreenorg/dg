@@ -11,6 +11,7 @@
     	<div class="btn btn-success" id='video_post'>Post Video json</div>
     	<h4>Post Mediator json to tastypie</h4>
     	<div class="btn btn-success" id='mediator_post'>Post Mediator json</div>
+    	<div class="btn btn-warning" id='mediator_edit_post'>Post Mediator Edit Data</div>
     	<h4>Post Group json to tastypie</h4>
     	<div class="btn btn-success" id='group_post'>Post Group json</div> 
     	<div class="btn btn-warning" id='group_edit_post'>Post Group Edit Data</div>
@@ -18,16 +19,27 @@
     	<div class="btn btn-success" id='person_post'>Post Person json</div>
     	<h4>Post Screening json to tastypie</h4>
     	<div class="btn btn-success" id='screening_post'>Post Screening json</div>
+    	<div class="btn btn-warning" id='screening_edit_post'>Post Screening Edit Data</div>
     </div>
     <script type="text/javascript">
     mediator_json = {
 	    "age": null, 
 	    "assigned_villages": [{"id": 10000000000514, "village_name": "Lagameshwar"}, {"id": 10000000000059, "village_name": "Kumdabadi"}], 
 	    "gender": "M", 
-	    "name": "Mohandas Pangi 1123 123 123 123 123", 
+	    "name": "Mohand Pan 1123 123 123 123 123 123 1", 
 	    "phone_no": "",
 	    //"partner": {"id": 10000000000001, "partner_name": "PRADAN"}
     };
+    mediator_edit_json = {
+	    "age": null, 
+	    "assigned_villages": [{"id": 10000000000514, "village_name": "Kumdabadi"}, {"id": 10000000000089, "village_name": "Rajam Sahi"}], 
+	    "gender": "M", 
+	    "id": "7000001564", 
+	    "mediator_label": "(Kanthikena,Kumdabadi,Rajam Sahi,)", 
+	    "name": "Jagannath Soren", 
+	    "phone_no": "", 
+	    "resource_uri": "/api/v1/mediator/7000001564/"
+    }
         
     /*person_json = {
     	 "address": "",
@@ -73,8 +85,8 @@
      */
      
      screening_json = {
-	     "animator": {"id": 10000000000059, "name": "Manjunatha Pattar"}, 
-	     "date": "2011-01-01", 
+	     "animator": {"id": 10000000019306, "name": "Manjunatha Pattar"}, 
+	     "date": "2011-02-26", 
 	     "end_time": "20:00:00", 
 	     "farmer_groups_targeted": [{"group_name": "Tippu Sultana Swa Sahaya Sangha", "id": 6000001301}], 
 	     "farmers_attendance": [{"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010761, "interested": false, "person_id": 6000001302, "person_name": "Mahammad Hanif Budan Sab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010762, "interested": false, "person_id": 6000001303, "person_name": "Raje Sab Budan Sab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010763, "interested": false, "person_id": 6000001304, "person_name": "Shabana Lalasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010764, "interested": false, "person_id": 6000001305, "person_name": "Yashin Suleman Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010765, "interested": false, "person_id": 6000001306, "person_name": "Shahin Rajesab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010766, "interested": true, "person_id": 6000001307, "person_name": "Goribi Allasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010767, "interested": false, "person_id": 6000001308, "person_name": "Vajirabi Budansab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010768, "interested": false, "person_id": 6000001309, "person_name": "Allabi Imamasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010769, "interested": true, "person_id": 6000001310, "person_name": " Lalabi Daval Sab Bannur"}],
@@ -83,35 +95,36 @@
 	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
      }
      
-     /*screening_json = {
-     		"animator": {"id": 10000000019306, "name": "Suvarna Avvanagol"}, 
-     		"date": "2011-10-19", 
-     		"end_time": "21:00:00", 
-     		"farmer_groups_targeted": [{"group_name": "Kranti Suvarna Sankalpa Mahila Swa Sahaya Sangha Akkatangerahal", "id": 10000000020232}], 
-     		"farmers_attendance": [
-     			{"id": 10000000025636, "person_name": "Basavva P Pangannavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": true},
-     			{"id": 10000000025637, "person_name": "Mallavva B Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000025638, "person_name": "Nagavva S Bangennavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "", "personmeetingattendance__interested": true}, 
-     			{"id": 10000000025639, "person_name": "Shivagangavva N Pangannavar", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000025640, "person_name": "Sumitra M Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
-     			{"id": 10000000025641, "person_name": "Kusuma D Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000025642, "person_name": "Kamala N Karadiguddi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
-     			{"id": 10000000025643, "person_name": "Kamala A Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
-     			{"id": 10000000025644, "person_name": "Sattevva M Sanadi ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
-     			{"id": 10000000025646, "person_name": "Nagavva Y Pangannavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false},
-     			{"id": 10000000025647, "person_name": "Mallavva S Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000025648, "person_name": "Kashavva D Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000025650, "person_name": "Surekha B Bangennavar ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": true}, 
-     			{"id": 10000000026376, "person_name": "Duragavva B Kaparatti ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "",  "personmeetingattendance__interested": false}, 
-     			{"id": 10000000026377, "person_name": "Parvatevva M Morali ", "personmeetingattendance__expressed_adoption_video": null, "personmeetingattendance__expressed_question": "", "personmeetingattendance__interested": false}], 
-     		"location": "Duragappa home", 
-     		"start_time": "20:00:00", 
-     		"target_adoptions": 4, 
-     		"target_audience_interest": 8, 
-     		"target_person_attendance": 16, 
-     		"videoes_screened": [{"id": 10000000020142, "title": "Pest control by Chlli and Garlic juice extract   "}], 
-     		"village": {"id": 10000000019844, "village_name": "Akkatangerahal"},
-	 };*/
+     screening_edit_json = {
+     		"animator": {"id": 6000008358, "name": "Manjunatha Pattar"}, 
+     		"date": "2011-01-26", 
+     		"end_time": "20:00:00", 
+     		"farmer_groups_targeted": [{"group_name": "Gayatri Devi  Swa Sahaya Sangha ", "id": 6000001115}], 
+     		"farmers_attendance": [{"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010781, "interested": false, "person_id": 6000001117, "person_name": "Kalavati Mahadeva Kamabar"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010782, "interested": false, "person_id": 6000001118, "person_name": "Shashikala Ramanna Kambar"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010783, "interested": true, "person_id": 6000001119, "person_name": "Dyamavva Ramanna Kambar"}], 
+     		"id": "6000010777", 
+     		"resource_uri": "/api/v1/screening/6000010777/", 
+     		"start_time": "19:00:00", 
+     		"videoes_screened": [{"id": 10000000019133, "title": "Green Fodder for Whole Year"}], 
+     		"village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
+	 };
+	 
+	 adoption_edit_json =  {
+		 "date_of_adoption": "2011-05-02", 
+		 "group": "[{'id': 10000000020262L, 'group_name': u'Chamundeswari SWa Sahay Sangha Hirekoppa'}]", 
+		 "id": "6000017854", 
+		 "person": {"id": 10000000026123, "person_name": "Manjula.N.Ganigera"}, 
+		 "prior_adoption_flag": null, 
+		 "video": {"id": 6000007313, "title": "Vermicompost production in FYM pit"}, 
+		 "village": "[{'id': 10000000000509L, 'village_name': u'Hirekoppa'}]"
+	 }
+	 
+	 adoption_json =  {
+		 "date_of_adoption": "2011-05-04", 
+		 "group": "[{'id': 10000000020262, 'group_name': u'Chamundeswari SWa Sahay Sangha Hirekoppa'}]", 
+		 "person": {"id": 10000000026123, "person_name": "Manjula.N.Ganigera"}, 
+		 "video": {"id": 6000007313, "title": "Vermicompost production in FYM pit"}, 
+		 "village": "[{'id': 10000000000509L, 'village_name': u'Hirekoppa'}]"
+	 }
 	 
 	 video_json = {
 		 "actors": "I", 
@@ -165,6 +178,25 @@
 		    });
 		});
 		
+		$('#screening_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        url: 'http://127.0.0.1:8000/api/v1/screening/6000010777/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(screening_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
 		
 		$('#person_post').click( function () {
 			$.ajax({
@@ -236,6 +268,27 @@
 		        async: true,
 		        //json object to sent to the authentication url
 		        data: JSON.stringify(mediator_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#mediator_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/mediator/7000001564/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(mediator_edit_json),
 		        success: function () {	
 		        	alert("Thanks!"); 
 		        },
