@@ -370,8 +370,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                                     i_model_online.set(that.form.inline.foreign_attribute.inline_attribute, for_attr_online);
                                                     
                                                 //replacing borrowed attributes with online-converted attributes from online model//
-                                                    $.each(that.inline.borrow_attributes,function(index,b_attr){
-                                                        i_model_online.set(b_attr.inline_attribute) = online_model.get(b_attr.host_attribute);    
+                                                    $.each(that.form.inline.borrow_attributes,function(index,b_attr){
+                                                        i_model_online.set(b_attr.inline_attribute, online_model.get(b_attr.host_attribute));    
                                                     });
                                                 ///////////////////////////////////////////////////////////////////////////////////    
                                                     i_model_online.save(null,{
