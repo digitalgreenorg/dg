@@ -57,9 +57,9 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 this.inline_models = $.extend(null,this.form.final_json.inlines);
                 delete this.form.final_json.inlines;
                 console.log(this.inline_models);
-                $.each(this.inline_models,function(index, imodel){
-                    console.log(imodel);
-                });
+                // $.each(this.inline_models,function(index, imodel){
+//                     console.log(imodel);
+//                 });
             }
             
             this.form.offline_model.set(this.form.final_json);
@@ -109,17 +109,25 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                             var generic_model_offline = Backbone.Model.extend({
                                                 database: indexeddb,
                                                 storeName: that.form.inline.entity, // add attribute name
+                                                action: "A"    
                                             });
                                             var i_model = new generic_model_offline();
                                             i_model.set(ijson);
                                             i_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
+                                            var i_model_action = "A";
+                                            if(i_model.id)
+                                            {
+                                                console.log("this inline has been edited");
+                                                i_model_action = "E";
+                                                i_model.action = "E";
+                                            }
                                             i_model.save(null,{
                                                 success: function(in_model){
                                                     console.log("FORMCONTROLLER: inline model saved - "+JSON.stringify(in_model.toJSON()));
                                                     upload_collection.create(
                                                         {
                                                             data: in_model.toJSON(),
-                                                            action: "A",   //TODO: what if grp was edited, some inlines were edited and some new created
+                                                            action: in_model.action,   //TODO: what if grp was edited, some inlines were edited and some new created
                                                             entity_name: that.form.inline.entity        
                                                         },
                                                         {
@@ -227,12 +235,17 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             f_collection.fetch({
                                 success: function(collection){
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
+                                    var conv_array = [];
                                     $.each(online_json[collection.attribute],function(index,object){
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
                                         var model = collection.get(object["id"]);
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
-                                        object["id"] =   model.get("online_id");
+                                        var con_obj = $.extend(null,object);
+                                        con_obj["id"] =   model.get("online_id"); 
+                                        conv_array.push(con_obj);
+                                        // object["id"] =   model.get("online_id");
                                     });
+                                    online_json[collection.attribute] = conv_array;
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                                     num_mem--;
                                     if (!num_mem) {
@@ -265,12 +278,17 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             f_model.fetch({
                                 success: function(model) {
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                                    online_json[model.attribute]["id"] =   model.get("online_id");
+                                    // online_json[model.attribute]["id"] =   model.get("online_id");
+                                    var con_obj = $.extend(null,online_json[model.attribute]);
+                                    con_obj["id"] =   model.get("online_id"); 
+                                    online_json[model.attribute] = con_obj;
                                     // access the attribute name
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                                     num_mem--;
                                     if (!num_mem) {
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: original json - "+ JSON.stringify(json));
+                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fully converted json - "+JSON.stringify(online_json))
                                         that.after_offline_to_online_success(online_json);
                                     }
                                 },
@@ -303,7 +321,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             this.offline_m.save(null,{
                 success: function(model){ // please change this to offline_model
-                    console.log("FORMCONTROLLER:ON_SAVE: model saved in offline");
+                    console.log("FORMCONTROLLER:ON_SAVE: model saved in offline - "+JSON.stringify(model.toJSON()));
                     upload_online_model.set(o_json);
                     if(that.form.action == "A")
                     {
@@ -360,34 +378,118 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                             var i_model_online = new generic_model_online();
                                             //////////////////////////////////////////////////////////////////
                                             
-                                            /////////setting the offline json on model and saving it/////////
-                                            i_model.set(ijson);
-                                            i_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
-                                            i_model.save(null,{
-                                                success: function(in_model){
-                                                    console.log("FORMCONTROLLER: inline model saved - "+JSON.stringify(in_model.toJSON()));
-                                                    i_model_online.set(ijson);
-                                                    i_model_online.set(that.form.inline.foreign_attribute.inline_attribute, for_attr_online);
+                                            if(ijson.id)
+                                            {
+                                                /////////setting the offline json on model and saving it/////////
+                                                i_model.set("id",ijson.id);
+                                                i_model.fetch({
+                                                    success: function(off_in_model){
+                                                        prev_json = off_in_model.toJSON();
+                                                        ijson = $.extend(prev_json, ijson);
+                                                        off_in_model.set(ijson);
+                                                        off_in_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
+                                                        //////////starts here
+                                                        off_in_model.save(null,{
+                                                            success: function(in_model){
+                                                                console.log("FORMCONTROLLER: inline saved offline- "+JSON.stringify(in_model.toJSON()));
+                                                                i_model_online.set(ijson);
+                                                                i_model_online.set(that.form.inline.foreign_attribute.inline_attribute, for_attr_online);
                                                     
-                                                //replacing borrowed attributes with online-converted attributes from online model//
-                                                    $.each(that.form.inline.borrow_attributes,function(index,b_attr){
-                                                        i_model_online.set(b_attr.inline_attribute, online_model.get(b_attr.host_attribute));    
-                                                    });
-                                                ///////////////////////////////////////////////////////////////////////////////////    
-                                                    i_model_online.save(null,{
-                                                        success: function(on_in_model){
-                                                            console.log("inline saved online - "+JSON.stringify(on_in_model.toJSON()));
-                                                        },
-                                                        error: function(){
-                                                            console.log("error saving inline online");
-                                                        }    
-                                                    })    
-                                                },
-                                                error: function(error){
-                                                    console.log("FORMCONTROLLER: error saving inline model");
-                                                    console.log(error);
-                                                }    
-                                            });
+                                                            //replacing borrowed attributes with online-converted attributes from online model//
+                                                                $.each(that.form.inline.borrow_attributes,function(index,b_attr){
+                                                                    i_model_online.set(b_attr.inline_attribute, online_model.get(b_attr.host_attribute));    
+                                                                });
+                                                                i_model_online.set("id", parseInt(i_model_online.get("online_id")));
+                                                                i_model_online.unset("online_id");
+                                                            ////////////////////////////////////////////////////////////////////
+                                                                i_model_online.save(null,{
+                                                                    success: function(on_in_model){
+                                                                        console.log("FORMCONTROLLER: inline saved online - "+JSON.stringify(on_in_model.toJSON()));
+                                                                        i_model.set('online_id', on_in_model.get("id"));
+                                                                        i_model.save(null, {
+                                                                            success: function(model) {
+                                                                                console.log("FRMCONTROLLER: inline offline model after evrthing-" + JSON.stringify(model.toJSON()));
+                                                                                console.log("FRMCONTROLLER: Inline model Successfuly saved on server and offline.");
+                                    
+                                                                            },
+                                                                            error: function(){
+                                                                                console.log("ERROR:FRMCONTROLLER: Unexpected error.Couldn't save offline model.The offline model's online id could not be set.");
+                                                                                // that.form.show_errors("Unexepected Error- error saving the model offline");
+                                                                                $(notifs_view.el)
+                                                                                    .append(that.error_notif_template({
+                                                                                    msg: "Error setting onlineid of offline model"
+                                                                                }));
+                                                                    
+                                                                            }        
+                                                                        });    
+                                                                    },
+                                                                    error: function(){
+                                                                        console.log("error saving inline online");
+                                                                    }    
+                                                                });    
+                                                            },
+                                                            error: function(error){
+                                                                console.log("FORMCONTROLLER: error saving inline model");
+                                                                console.log(error);
+                                                            }    
+                                                        });
+                                                        
+                                                        //////ends here
+                                                    },
+                                                    error: function(err){
+                                                        console.log("ERROR:FORMCONTROLLER: Unexpected error. The inline model edited could not be fetched - "+err);
+                                                                        
+                                                    }        
+                                                })
+                                                
+                                            }
+                                            else{
+                                                /////////setting the offline json on model and saving it/////////
+                                                i_model.set(ijson);
+                                                i_model.set(that.form.inline.foreign_attribute.inline_attribute, for_attr);
+                                                i_model.save(null,{
+                                                    success: function(in_model){
+                                                        console.log("FORMCONTROLLER: inline model saved - "+JSON.stringify(in_model.toJSON()));
+                                                        i_model_online.set(ijson);
+                                                        i_model_online.set(that.form.inline.foreign_attribute.inline_attribute, for_attr_online);
+                                                    
+                                                    //replacing borrowed attributes with online-converted attributes from online model//
+                                                        $.each(that.form.inline.borrow_attributes,function(index,b_attr){
+                                                            i_model_online.set(b_attr.inline_attribute, online_model.get(b_attr.host_attribute));    
+                                                        });
+                                                    ////////////////////////////////////////////////////////////////////////////    
+                                                        i_model_online.save(null,{
+                                                            success: function(on_in_model){
+                                                                console.log("inline saved online - "+JSON.stringify(on_in_model.toJSON()));
+                                                                i_model.set('online_id', on_in_model.get("id"));
+                                                                i_model.save(null, {
+                                                                    success: function(model) {
+                                                                        console.log("FRMCONTROLLER: inline offline model after evrthing-" + JSON.stringify(model.toJSON()));
+                                                                        console.log("FRMCONTROLLER: Inline model Successfuly saved on server and offline.");
+                                    
+                                                                    },
+                                                                    error: function(){
+                                                                        console.log("ERROR:FRMCONTROLLER: Unexpected error.Couldn't save offline model.The offline model's online id could not be set.");
+                                                                        // that.form.show_errors("Unexepected Error- error saving the model offline");
+                                                                        $(notifs_view.el)
+                                                                            .append(that.error_notif_template({
+                                                                            msg: "Error setting onlineid of offline model"
+                                                                        }));
+                                                                    
+                                                                    }        
+                                                                });    
+                                                            },
+                                                            error: function(){
+                                                                console.log("error saving inline online");
+                                                            }    
+                                                        });    
+                                                    },
+                                                    error: function(error){
+                                                        console.log("FORMCONTROLLER: error saving inline model");
+                                                        console.log(error);
+                                                    }    
+                                                });
+                                            }
                                             ///////////////////////////////////////////////////////////////////////
                                         });
                                     }

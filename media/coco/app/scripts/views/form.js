@@ -80,11 +80,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
             json = null;
             this.edit_case = false;
+            this.edit_id = null;
             // Edit case: we receive json from Upload
             if (params.model_json) {
                 this.edit_case_json = true; // edit_case_upload
                 this.model_json = params.model_json;
                 this.edit_case = true;
+                this.edit_id = this.model_json.id;
             } else if (params.model_id) {
 
                 this.offline_model.set({
@@ -92,7 +94,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 this.edit_case_id = true;
                 this.edit_case = true;
-
+                this.edit_id = params.model_id;
             }
             // No need for two variables. One is sufficient.
             if(this.edit_case)
@@ -120,7 +122,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 }
                 
             }
-            
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             
@@ -145,7 +146,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            // fetching offline model
+            // fetching offline model and inlines
             var that = this;
             if (this.edit_case_json) {
                 this.fill_form();
@@ -166,6 +167,33 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
 
                 });
+                
+                if(this.inline)
+                {
+                    //TODO: fetching the whole collection. Can this be more effifcient by fetching just the relevant models? Done this way because the foreign field in model is a object and am not yet able to specify a condition on such fields using the I-B adapter.
+                    console.log("FORM:EDIT: Fteching inline collection");
+                    var generic_offline_collection = Backbone.Collection.extend({
+                        database: indexeddb,
+                        storeName: this.inline.entity,
+                    });
+                    this.inline_collection = new generic_offline_collection();
+                    this.inline_collection.fetch({
+                        success: function(collection){
+                            console.log("FORM: EDIT: Inline collection fetched! - "+ collection.storeName);
+                            // var inl_models =  collection.where({
+//                                 that.inline.foreign_attribute.inline_attribute.id : that.edit_id
+//                             });
+                            var inl_models = collection.filter(function(model){
+                               return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
+                            });
+                            console.log(inl_models);
+                            that.fill_inlines(inl_models);
+                        },
+                        error: function(){
+                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                        }        
+                    });
+                }
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -176,15 +204,39 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     "submitHandler" : function() {
                     context.save();
                 }
-                }
-                );
+            });
             this.$('form')
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             return this;
         },
+        
+        fill_inlines: function(model_array){
+            console.log("Filling inlines");
+            var count = 0;
+            var trs = $('#inline_body tr');
+            console.log(trs);
+            var that = this;
+            $.each(model_array,function(index, model){
+                that.fill_form_elements(trs[count], model.toJSON());
+                count++;
+            });
+        },    
 
+        // takes a jquery object containgg form elements.Fills all input and select elements with the corrsponding value in json    
+        fill_form_elements: function(container, o_json){
+            var input_elms = $(container).find('input');
+            $.each(input_elms,function(index,inp){
+                $(inp).val(o_json[$(inp).attr('name')]);
+            });
+            var sel_elms = $(container).find('select');
+            $.each(sel_elms,function(index,sel){
+                $(sel).val(o_json[$(sel).attr('name')]);
+            });
+            $(container).attr("model_id", o_json.id);
+        },
+                    
         render_foreign_entity: function(collection, options) {
             console.log("ADD/EDIT: rendering foreign entity");
             for(element in this.view_configs.foreign_entities[collection.__proto__.storeName])
@@ -327,7 +379,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             this.$('#form_errors').html(errors);
         },        
-        fetch_inlines: function(raw_json){
+        parse_inlines: function(raw_json){
             console.log("FORM: fetching inlines");
             var all_inlines = $('#inline_body tr');    
             raw_json["inlines"] = [];
@@ -338,6 +390,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var inl_obj = {};
                 var inputs = $(inl).find("input");
                 var ignore = true;
+                if($(inl).attr("model_id"))
+                    inl_obj.id = parseInt($(inl).attr("model_id"));
                 $.each(inputs,function(index1, inp){
                     inl_obj[$(inp).attr("name")]= $(inp).val();
                     if($(inp).val()!="")
@@ -375,7 +429,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
             if(this.inline)
-                this.fetch_inlines(this.final_json);
+                this.parse_inlines(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",
