@@ -37,7 +37,7 @@ define([
         },    
 
         start_upload: function() {
-            this.$('#upload_modal').modal('show');
+            // this.$('#upload_modal').modal('show');
             console.log("UPLOAD: start the fuckin upload");
             // this.$('#show_status').html(this.progress_bar_template());
             // this.$("#upload_modal").modal('show');
