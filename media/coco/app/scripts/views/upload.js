@@ -158,12 +158,17 @@ define([
                             f_collection.fetch({
                                 success: function(collection){
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
-                                    $.each(online_json[element],function(index,object){
+                                    var conv_array = [];
+                                    $.each(online_json[collection.attribute],function(index,object){
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
                                         var model = collection.get(object["id"]);
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
-                                        object["id"] =   model.get("online_id");
+                                        var con_obj = $.extend(null,object);
+                                        con_obj["id"] =   model.get("online_id"); 
+                                        conv_array.push(con_obj);
+                                        // object["id"] =   model.get("online_id");
                                     });
+                                    online_json[collection.attribute] = conv_array;
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                                     num_mem--;
                                     if (!num_mem) {
@@ -194,6 +199,7 @@ define([
                             var generic_model_offline = Backbone.Model.extend({
                                 database: indexeddb,
                                 storeName: member,
+                                attribute: element        
                             });
                             var f_model = new generic_model_offline();
                             f_model.set("id", entry.get("data")[element]["id"]);
@@ -201,7 +207,11 @@ define([
                             f_model.fetch({
                                 success: function(model) {
                                     console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                                    online_json[model.storeName]["id"] = model.get("online_id");
+                                    // online_json[model.storeName]["id"] = model.get("online_id");
+                                    var con_obj = $.extend(null,online_json[model.attribute]);
+                                    con_obj["id"] =   model.get("online_id"); 
+                                    online_json[model.attribute] = con_obj;
+                                    
                                     console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
                                     num_mem--;
                                     if (!num_mem) {
