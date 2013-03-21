@@ -97,6 +97,71 @@ function() {
       }    
         
     };
+
+    var screening_configs = {
+      'page_header': 'Screening',
+      'table_template_name': 'screening_table_template',
+      'list_item_template_name': 'screening_list_item_template',
+      'add_edit_template_name': 'screening_add_edit_template',
+      'rest_api_url': '/api/v1/screening/',
+      'entity_name': 'screening',
+      'foreign_entities':{
+          'village': {
+              'village': {'placeholder':'id_village','name_field':'village_name'},
+          },
+          'video': {
+              'videoes_screened': {'placeholder':'id_videoes_screened','name_field':'title'},
+          },
+          'mediator': {
+              'animator': {
+                  'placeholder':'id_animator',
+                  'name_field':'name',
+                  'dependency':{
+                      'source_entity': 'village',
+                      'source_form_element': 'village',      
+                      'dep_attr': 'assigned_villages'      
+                  }      
+              }
+          },
+          'group': {
+              farmer_groups_targeted:{
+                  'placeholder':'id_group',
+                  'name_field':'group_name',
+                  'dependency':{
+                      'source_entity': 'village',
+                      'source_form_element': 'village',      
+                      'dep_attr': 'village'      
+                  }      
+              }
+          },
+          'person': {
+              farmers_attendance: {
+                  'name_field':'person_name',
+                  'dependency':{
+                      'source_entity': 'group',
+                      'source_form_element': 'farmer_groups_targeted',      
+                      'dep_attr': 'group'      
+                   },
+                  'expanded' : {
+                      template : 'person_pma_template',
+                      placeholder : 'pmas'      
+                                
+                  }          
+                                    
+              }
+          }  
+                                        
+      },      
+    };
+    
+    var adoption_configs = {
+      'page_header': 'Adoption',
+      'table_template_name': 'adoption_table_template',
+      'list_item_template_name': 'adoption_list_item_template',
+      'add_edit_template_name': 'adoption_add_edit_template',
+      'rest_api_url': '/api/v1/personadoptvideo/',
+      'entity_name': 'adoption'
+    };
   
     var person_configs = {
         'page_header': 'Person',
@@ -205,12 +270,14 @@ function() {
     
     return {
         
-        person:person_configs,
-        village:village_configs,
-        group:group_configs,
-        mediator:mediator_configs,
+        person: person_configs,
+        village: village_configs,
+        group: group_configs,
+        mediator: mediator_configs,
         video: video_configs,
-        language: language_configs    
+        language: language_configs,
+        screening: screening_configs,
+        adoption: adoption_configs        
     }
 
 });

@@ -21,7 +21,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             s_passed["form_template"] = this.form_template;    
             s_passed["inline"] = (this.inline) ? true: false;
             return s_passed;
-                
         },
         initialize: function(params) {
             console.log("ADD/EDIT: params to add/edit view: ");
@@ -34,9 +33,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
             this.inline = this.view_configs.inline;
-            // 'inline':{
-//                 'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute": "group", "header" : "person_inline_header"
-//             }
             
             // Creating the offline models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
@@ -52,12 +48,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             _(this)
                 .bindAll('render_foreign_entity');
 
+            this.f_index = [];
             for (f_entity in this.view_configs.foreign_entities) {
                 var generic_collection_offline = Backbone.Collection.extend({
                     database: indexeddb,
                     storeName: all_configs[f_entity].entity_name,
                 });
-
+                this.f_index.push(f_entity);    
                 this.f_colls.push(new generic_collection_offline());
                 // Reset is called when a collection has finished fetching.
                 // We are binding the reset of the last added collection to render_foreign_entity
@@ -73,6 +70,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 */
 
             }
+            console.log(this.f_index);
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -143,6 +141,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                 });
             }
+            this.dependencies = {}; 
+            this.element_entity_map={};
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -236,21 +236,107 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             });
             $(container).attr("model_id", o_json.id);
         },
-                    
-        render_foreign_entity: function(collection, options) {
-            console.log("ADD/EDIT: rendering foreign entity");
-            for(element in this.view_configs.foreign_entities[collection.__proto__.storeName])
+        
+        fill_dep_entity: function(ev){
+            var source = $(ev.target).attr("id");
+            var curr_value = $(ev.target).val();
+            for(var i=0; i<this.dependencies[source].length;i++)
             {
-                f_entity_desc = this.view_configs.foreign_entities[collection.__proto__.storeName][element];
+                var element = this.dependencies[source][i];
+                var entity = this.element_entity_map[element];
+                var index = this.f_index.indexOf(entity);
+                var collection = this.f_colls[index];
+                var dep_desc = this.view_configs.foreign_entities[entity][element].dependency;
+                if(collection.length)
+                {
+                    console.log(collection.at(0).get(dep_desc.dep_attr));
+                    if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
+                    {
+                        console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
+                        var filtered_models = collection.filter(function(model){
+                           var exists = false;
+                           $.each(model.get(dep_desc.dep_attr),function(index, object){
+                                if(object.id == curr_value)
+                                    exists = true;
+                           });
+                           return exists;
+                        });
+                        
+                    }
+                    else{
+                        console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
+                        var filtered_models = collection.filter(function(model){
+                           return model.get(dep_desc.dep_attr).id == curr_value;
+                        });
+                    }
+                    this.fill_foreign_entity(element, filtered_models);
+                }
+                
+            }
+            
+        },    
+          
+        fill_foreign_entity: function(element, model_array){
+            var f_entity_desc = this.view_configs.foreign_entities[this.element_entity_map[element]][element];
+            if(f_entity_desc.expanded)
+            {
+                _.template($('#options_template')
+                                .html());
+                console.log(f_entity_desc.expanded.template);
+                console.log($('#' + f_entity_desc.expanded.template));
+                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                $f_el.html('');
+                $.each(model_array,function(index, f_model){
+                    $f_el.append(expanded_template(f_model.toJSON()));    
+                });
+            }
+            else{
                 $f_el = this.$('#' + f_entity_desc.placeholder);
-                collection.each(function(f_model) {
+                $f_el.html('');
+                $.each(model_array,function(index, f_model){
                     $f_el.append(options_inner_template({
                         id: parseInt(f_model.get("id")),
                         name: f_model.get(f_entity_desc.name_field)
-                    }));
+                    }));    
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+            }
+        },
+                        
+        render_foreign_entity: function(collection, options) {
+            console.log("ADD/EDIT: rendering foreign entity");
+            _(this).bindAll('fill_dep_entity');
+            for(element in this.view_configs.foreign_entities[collection.storeName])
+            {
+                this.element_entity_map[element] = collection.storeName;
+                if(this.view_configs.foreign_entities[collection.storeName][element]["dependency"])
+                {
+                    console.log("FORM:render_for_entity: dependency exists ");
+                    var f_ens = this.view_configs.foreign_entities;
+                    var source_entity = f_ens[collection.storeName][element].dependency.source_entity;
+                    var source_elm = f_ens[collection.storeName][element].dependency.source_form_element;
+                    console.log(source_entity);
+                    console.log(source_elm);
+                    var source_elm_id = f_ens[source_entity][source_elm].placeholder;
+                    console.log(source_elm_id);
+                    var that = this;
+                    if(source_elm_id in this.dependencies)
+                        {
+                            this.dependencies[source_elm_id].push(element);
+                        }    
+                    else{
+                        this.dependencies[source_elm_id] = [];
+                        this.dependencies[source_elm_id].push(element);
+                        var that = this;
+                        $('#'+source_elm_id).change(that.fill_dep_entity);
+                    }
+                    console.log("dependencies = "+JSON.stringify(this.dependencies));    
                     
+                }
+                else{
+                    this.fill_foreign_entity(element, collection.toArray());
+                }
             }
             if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
         },

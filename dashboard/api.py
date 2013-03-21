@@ -630,7 +630,7 @@ class PersonResource(ModelResource):
     def dehydrate_videos_seen(self, bundle):
         person_id = getattr(bundle.obj, 'id')
         videos = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().values('id','title')
-        return videos
+        return list(videos)
     
     def hydrate_village(self, bundle):
         print 'in hydrate village'
