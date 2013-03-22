@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from tastypie import fields
-from tastypie.authentication import BasicAuthentication
+from tastypie.authentication import BasicAuthentication, Authentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
@@ -228,7 +228,7 @@ class MediatorResource(ModelResource):
     class Meta:
         queryset = Animator.objects.all()
         resource_name = 'mediator'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('assigned_villages__in')
         authorization = Authorization()
         # validation = MediatorFormValidation(form_class=AnimatorForm)
@@ -309,7 +309,7 @@ class VillageResource(ModelResource):
     class Meta:
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('id__in')
         authorization = Authorization()
         
@@ -331,7 +331,7 @@ class VideoResource(ModelResource):
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = DjangoAuthorization()
         authorization = Authorization()
         
@@ -415,7 +415,7 @@ class PersonGroupsResource(ModelResource):
     class Meta:
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('village__in')
         authorization = Authorization()
         
@@ -453,7 +453,7 @@ class ScreeningResource(ModelResource):
     class Meta:
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('village__in')
         authorization = Authorization()
         
@@ -621,7 +621,7 @@ class PersonResource(ModelResource):
     class Meta:
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('village__in')
         authorization = Authorization()
         
@@ -680,7 +680,7 @@ class PersonAdoptVideoResource(ModelResource):
     class Meta:
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'personadoptvideo'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         # authorization = VillageLevelAuthorization('person__village__in')
         authorization = Authorization()
         
@@ -734,7 +734,7 @@ class FieldOfficerResource(ModelResource):
     class Meta:
         queryset = FieldOfficer.objects.all()
         resource_name = 'field_officer'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         authorization = Authorization()
       
 # class BlockResource(ModelResource):
@@ -757,7 +757,7 @@ class PartnersResource(ModelResource):
     class Meta:
         queryset = Partners.objects.all()
         resource_name = 'partner'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         authorization = Authorization()
         
 
@@ -765,7 +765,7 @@ class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
         resource_name = 'language'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         authorization = Authorization()
         
 
@@ -773,6 +773,6 @@ class PersonMeetingAttendanceResource(ModelResource):
     class Meta:
         queryset = PersonMeetingAttendance.objects.all()
         resource_name = 'pma'
-        # authentication = BasicAuthentication()
+        authentication = Authentication()
         authorization = Authorization()
         
