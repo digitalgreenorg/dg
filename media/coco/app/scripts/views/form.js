@@ -249,7 +249,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var dep_desc = this.view_configs.foreign_entities[entity][element].dependency;
                 if(collection.length)
                 {
-                    console.log(collection.at(0).get(dep_desc.dep_attr));
                     if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
                     {
                         console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
@@ -280,16 +279,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var f_entity_desc = this.view_configs.foreign_entities[this.element_entity_map[element]][element];
             if(f_entity_desc.expanded)
             {
-                _.template($('#options_template')
-                                .html());
-                console.log(f_entity_desc.expanded.template);
-                console.log($('#' + f_entity_desc.expanded.template));
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
                 $.each(model_array,function(index, f_model){
                     $f_el.append(expanded_template(f_model.toJSON()));    
                 });
+                this.expanded = element;
             }
             else{
                 $f_el = this.$('#' + f_entity_desc.placeholder);
@@ -301,6 +297,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }));    
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+            }
+            if(this.edit_case)
+            {
+                Backbone.Syphon.deserialize(this, this.model_json);
             }
         },
                         
@@ -509,13 +509,60 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             
         },
-                    
+        
+        parse_expanded: function(raw_json){
+            console.log("FORM: fetching expandeds");
+            var element = this.expanded;
+            var entity = this.element_entity_map[element];
+            var desc = this.view_configs.foreign_entities[entity][element]
+            console.log("FORM:expande desc -" +JSON.stringify(desc));   
+            var placeholder = desc.expanded.placeholder; 
+            var all_inlines = $('#'+placeholder+ ' tr');    
+            raw_json[element] = [];
+            var that = this;
+            var inline_attrs = [];
+            $.each(all_inlines,function(index, inl){
+                // console.log();
+                var inl_obj = {};
+                var inputs = $(inl).find("input");
+                var ignore = true;
+                if($(inl).attr("model_id"))
+                    inl_obj.id = parseInt($(inl).attr("model_id"));
+                $.each(inputs,function(index1, inp){
+                    inl_obj[$(inp).attr("name")]= $(inp).val();
+                    if($(inp).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(inp).attr("name"));
+                });
+                var selects = $(inl).find("select");
+                $.each(selects,function(index2, sel){
+                    inl_obj[$(sel).attr("name")]= $(sel).val();
+                    if($(sel).val()!="")
+                        ignore = false;
+                    if(index==0)
+                        inline_attrs.push($(sel).attr("name"));
+                });
+                if(!ignore)
+                    raw_json[element].push(inl_obj);
+                // console.log($(inl).serializeArray());    
+            });
+            
+            //remove inline attrs from raw_json...let them be inside raw_json.inlines only
+            $.each(inline_attrs,function(index,attr){
+                delete raw_json[attr];
+            });
+            // console.log(inline_attrs);    
+        },    
+        
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
             this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
             if(this.inline)
                 this.parse_inlines(this.final_json);
+            if(this.expanded)
+                this.parse_expanded(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",

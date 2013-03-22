@@ -33,8 +33,8 @@
     <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
 	
     <!-- // application js -->
-        <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
-         <!-- // <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
+        <!-- // <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
+        <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -330,16 +330,12 @@
                 	<label>Groups Attended*</label>
                     <div class="controls">
                         <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple"></select> 
-                        <i class="icon-arrow-right"></i>
-                        <select name="farmer_groups_targeted" id="id_group_screening_right" multiple="multiple"></select>
                     </div>
                 </div>
                 <div class="control-group">
                 	<label>Person</label>
                 	<div class="controls">
                         <select id="id_person" name = "person" multiple="multiple"></select>
-                    	<i class="icon-arrow-right"></i>
-                    	<select name="person_screening" id="id_person_screening_right" multiple="multiple"></select>
                     </div>
                 </div>
                     <br>
@@ -389,7 +385,7 @@
     <td>
     <div class="control-group">
         <div class="controls">
-        <%=id%>
+        <input type="text" id="person_row7" name="person_id" value = "<%=id%>" disabled>
         </div>
     </div>
     </td>
