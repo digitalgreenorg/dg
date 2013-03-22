@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from tastypie import fields
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
+from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.validation import FormValidation
 from tastypie.validation import Validation
@@ -227,9 +228,10 @@ class MediatorResource(ModelResource):
     class Meta:
         queryset = Animator.objects.all()
         resource_name = 'mediator'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('assigned_villages__in')
-        validation = MediatorFormValidation(form_class=AnimatorForm)
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('assigned_villages__in')
+        authorization = Authorization()
+        # validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
@@ -307,8 +309,10 @@ class VillageResource(ModelResource):
     class Meta:
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('id__in')
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('id__in')
+        authorization = Authorization()
+        
         max_limit = None
 
 class VideoResource(ModelResource):
@@ -327,9 +331,11 @@ class VideoResource(ModelResource):
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
-        authentication = BasicAuthentication()
-        authorization = DjangoAuthorization()
-        validation = ModelFormValidation(form_class=VideoForm)
+        # authentication = BasicAuthentication()
+        # authorization = DjangoAuthorization()
+        authorization = Authorization()
+        
+        # validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
         excludes = ['viewers','time_created', 'time_modified', 'duration' ]
     
@@ -409,9 +415,11 @@ class PersonGroupsResource(ModelResource):
     class Meta:
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
-        validation = ModelFormValidation(form_class=PersonGroupsForm)
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('village__in')
+        authorization = Authorization()
+        
+        # validation = ModelFormValidation(form_class=PersonGroupsForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
@@ -445,9 +453,11 @@ class ScreeningResource(ModelResource):
     class Meta:
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
-        validation = ModelFormValidation(form_class = ScreeningForm)
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('village__in')
+        authorization = Authorization()
+        
+        # validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     
@@ -611,9 +621,11 @@ class PersonResource(ModelResource):
     class Meta:
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
-        validation = ModelFormValidation(form_class = PersonForm)
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('village__in')
+        authorization = Authorization()
+        
+        # validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
         excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
@@ -668,8 +680,10 @@ class PersonAdoptVideoResource(ModelResource):
     class Meta:
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'personadoptvideo'
-        authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('person__village__in')
+        # authentication = BasicAuthentication()
+        # authorization = VillageLevelAuthorization('person__village__in')
+        authorization = Authorization()
+        
         excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
@@ -720,7 +734,8 @@ class FieldOfficerResource(ModelResource):
     class Meta:
         queryset = FieldOfficer.objects.all()
         resource_name = 'field_officer'
-        authentication = BasicAuthentication()
+        # authentication = BasicAuthentication()
+        authorization = Authorization()
       
 # class BlockResource(ModelResource):
 #     district = fields.ForeignKey(DistrictResource, 'district')
@@ -742,16 +757,22 @@ class PartnersResource(ModelResource):
     class Meta:
         queryset = Partners.objects.all()
         resource_name = 'partner'
-        authentication = BasicAuthentication()
+        # authentication = BasicAuthentication()
+        authorization = Authorization()
+        
 
 class LanguageResource(ModelResource):    
     class Meta:
         queryset = Language.objects.all()
         resource_name = 'language'
-        authentication = BasicAuthentication()
+        # authentication = BasicAuthentication()
+        authorization = Authorization()
+        
 
 class PersonMeetingAttendanceResource(ModelResource):    
     class Meta:
         queryset = PersonMeetingAttendance.objects.all()
         resource_name = 'pma'
-        authentication = BasicAuthentication()
+        # authentication = BasicAuthentication()
+        authorization = Authorization()
+        
