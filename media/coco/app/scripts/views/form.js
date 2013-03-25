@@ -283,7 +283,9 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
                 $.each(model_array,function(index, f_model){
-                    $f_el.append(expanded_template(f_model.toJSON()));    
+                    var t_json = f_model.toJSON();
+                    t_json["index"] = index; 
+                    $f_el.append(expanded_template(t_json));    
                 });
                 this.expanded = element;
             }
@@ -373,9 +375,28 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
-                    if (element in n_json) {
+                    if(f_entities[member][element].expanded)
+                    {
+                        for(el in f_entities[member][element].expanded.denormalize)
+                        {
+                            var d_obj = f_entities[member][element].expanded.denormalize;
+                            if (n_json[element] instanceof Array) {
+                                $.each(n_json[element], function(index, obj){
+                                    var id = obj[el];
+                                    var tr_el = $('tr[index='+index+']');
+                                    var label = $(tr_el).find('select option:selected').text();
+                                    // console.log((sel_el));
+                                    // var label = $(sel_el)
+                                    obj[el]={};
+                                    obj[el]["id"] = id;
+                                    obj[el][d_obj[el]["name_field"]] = label;
+                                });    
+                            }
+                            
+                        }
+                    }
+                    else if (element in n_json) {
                         name_field = f_entities[member][element]["name_field"];
-                        
                         if (n_json[element] instanceof Array) {
                             var el_array = [];
                             var that = this;
@@ -409,11 +430,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 n_json[element][name_field] = null;
                             }
                         }
-                        
-                        
                     }    
                 }
-                
                 c++;
             }
             console.log("FORM: After DNormalising json - "+JSON.stringify(this.final_json))
@@ -446,23 +464,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORM: in show errors");
             var error_str = "";
             console.log("FORM: SHOWERROR: ");
-            // errors = eval(errors);
-            // for(member in errors)
-            // {
-            //     if(member != "__all__"){
-            //         error_str += member +" : <br>";
-            //     }
-            //     
-            //     $.each(errors[member],function(err){
-            //         error_str += err+"<br>";
-            //     });
-            //     
-            // }
-            // console.log(eval(errors));
-            
-            
-            
-            
             this.$('#form_errors').html(errors);
         },        
         parse_inlines: function(raw_json){
@@ -522,7 +523,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var that = this;
             var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
-                // console.log();
                 var inl_obj = {};
                 var inputs = $(inl).find("input");
                 var ignore = true;
@@ -558,11 +558,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         save: function() {
             this.final_json = Backbone.Syphon.serialize(this);
             this.clean_json(this.final_json);
+            if(this.expanded)
+                this.parse_expanded(this.final_json);
             this.denormalize_json(this.final_json);
             if(this.inline)
                 this.parse_inlines(this.final_json);
-            if(this.expanded)
-                this.parse_expanded(this.final_json);
             this.final_json = $.extend(this.model_json, this.final_json);
             ev_res = {
                 type: "upload_error_resolved",

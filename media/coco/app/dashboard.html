@@ -374,7 +374,7 @@
 </script>
 
 <script type="text/template" id="person_pma_template">
-    <tr id="row7" model_id = <%=id%>>
+    <tr id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
     <td>
     <div class="control-group">
         <div class="controls">
@@ -401,7 +401,7 @@
                 <div class="controls">
                     <select id="expressed_adoption_video_row7" name="expressed_adoption_video">
                         <% _.each(videos_seen, function(vid) { %> 
-							<option value= "<%= vid.id%>">"<%= vid.title %>"</option> 
+							<option value= "<%= vid.id%>"><%= vid.title %></option> 
                         <%});%>    
                     </select>
                 </div>

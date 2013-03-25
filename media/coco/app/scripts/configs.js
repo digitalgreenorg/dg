@@ -144,7 +144,12 @@ function() {
                    },
                   'expanded' : {
                       template : 'person_pma_template',
-                      placeholder : 'pmas'      
+                      placeholder : 'pmas',
+                      denormalize: {
+                          "expressed_adoption_video" :{ 
+                              name_field : 'title'
+                          }
+                      }        
                                 
                   }          
                                     
