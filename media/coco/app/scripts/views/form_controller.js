@@ -198,10 +198,28 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));
             // var num_mem = Object.keys(f_entities).length; // Number of foreign entities referenced in this model.
             var num_mem = 0;
+            var convert_fields = [];
             for(member in f_entities)
             {
-                num_mem += Object.keys(f_entities[member]).length;
+                for(element in f_entities[member])
+                {
+                    convert_fields.push(element);
+                    num_mem++;
+                    if(f_entities[member][element].expanded)
+                    {
+                        if(f_entities[member][element].expanded.foreign_fields)
+                        {
+                            for(field in f_entities[member][element].expanded.foreign_fields)
+                            {
+                                num_mem++;
+                                convert_fields.push(field);
+                            }
+                        }
+                    }
+                }
             }
+            
+            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The convert fields = "+ convert_fields);
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: number of foreign elements - " + num_mem);
             if (!num_mem) {
                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: no foreign entities to convert");
@@ -225,10 +243,16 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         if(online_json[element] instanceof Array)
                         {
                             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is multiselect. Fetching its collection.");
+                            var id_field = "id";
+                            if(f_entities[member][element].id_field)
+                            {
+                                id_field  = f_entities[member][element].id_field;
+                            }
                             var generic_offline_collection = Backbone.Collection.extend({
                                 database: indexeddb,
                                 storeName: member,
-                                attribute: element    
+                                attribute: element,
+                                id_field: id_field    
                             });
                             var f_collection = new generic_offline_collection();
                             var that = this;
@@ -238,10 +262,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                     var conv_array = [];
                                     $.each(online_json[collection.attribute],function(index,object){
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
-                                        var model = collection.get(object["id"]);
+                                        var model = collection.get(object[collection.id_field]);
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
                                         var con_obj = $.extend(null,object);
-                                        con_obj["id"] =   model.get("online_id"); 
+                                        con_obj[collection.id_field] =   model.get("online_id"); 
                                         conv_array.push(con_obj);
                                         // object["id"] =   model.get("online_id");
                                     });
@@ -304,11 +328,59 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 }
                             });
                         }
+                        
+                        if(f_entities[member][element].expanded)
+                        {
+                            if(f_entities[member][element].expanded.foreign_fields)
+                            {
+                                // TODO: proces these foreign fields
+                                for(field in f_entities[member][element].expanded.foreign_fields)
+                                {
+                                    var entity = f_entities[member][element].expanded.foreign_fields[field].entity_name;
+                                    // if(online_json[element][field] instanceof Array)
+                                    {
+                                        var generic_offline_collection = Backbone.Collection.extend({
+                                            database: indexeddb,
+                                            storeName: entity,
+                                            attribute: element,
+                                            sub_attribute: field        
+                                        });
+                                        var f_collection = new generic_offline_collection();
+                                        var that = this;
+                                        console.log(entity);
+                                        f_collection.fetch({
+                                            success: function(collection){
+                                                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
+                                                var conv_array = [];
+                                                var id_field = "id";
+                                                $.each(online_json[collection.attribute],function(index,object){
+                                                    var field_object = object[field];
+                                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(field_object));
+                                                    var model = collection.get(field_object[id_field]);
+                                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
+                                                    var con_obj = $.extend(null,field_object);
+                                                    con_obj[id_field] =   model.get("online_id"); 
+                                                    object[field] = con_obj;
+                                                    // conv_array.push(con_obj);
+                                                    // object["id"] =   model.get("online_id");
+                                                });
+                                                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
+                                                num_mem--;
+                                                if (!num_mem) {
+                                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
+                                                    that.after_offline_to_online_success(online_json);
+                                                }            
+                                            }
+                                        });        
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        
+            
         after_offline_to_online_success: function(o_json){ // call this send_to_server
             var that = this;
             var generic_model_online = Backbone.Model.extend({

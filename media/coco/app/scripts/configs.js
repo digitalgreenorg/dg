@@ -136,26 +136,28 @@ function() {
           },
           'person': {
               farmers_attendance: {
-                  'name_field':'person_name',
                   'dependency':{
                       'source_entity': 'group',
                       'source_form_element': 'farmer_groups_targeted',      
                       'dep_attr': 'group'      
                    },
-                  'expanded' : {
+                  id_field : "person_id",                   // for offline_to_online conversion      
+                  'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                       template : 'person_pma_template',
                       placeholder : 'pmas',
-                      denormalize: {
+                      denormalize: {                            // any field in expanded template to be denormalised     
                           "expressed_adoption_video" :{ 
                               name_field : 'title'
                           }
-                      }        
-                                
+                      },
+                      foreign_fields:{                          // any more field in expanded template for offline to online conv
+                            "expressed_adoption_video" : {
+                                entity_name: "video"
+                            }  
+                      }                  
                   }          
-                                    
               }
           }  
-                                        
       },      
     };
     
