@@ -160,6 +160,7 @@ define([
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_downloaded created in meta_data objectStore:");    
                                     console.log(JSON.stringify(model.toJSON()));
+                                    this.$('#full_download_modal').modal('hide');
                             
                                 },
                                 error: function(one,two,three){
@@ -167,6 +168,7 @@ define([
                                     console.log(one);
                                     console.log(two);
                                     console.log(three);
+                                    
                                 }
                             });
                             
