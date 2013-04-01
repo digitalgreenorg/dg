@@ -20,6 +20,9 @@
     	<h4>Post Screening json to tastypie</h4>
     	<div class="btn btn-success" id='screening_post'>Post Screening json</div>
     	<div class="btn btn-warning" id='screening_edit_post'>Post Screening Edit Data</div>
+    	<h4>Post Adoption json to tastypie</h4>
+    	<div class="btn btn-success" id='adoption_post'>Post Adoption json</div>
+    	<div class="btn btn-warning" id='adoption_edit_post'>Post Adoption Edit Data</div>
     </div>
     <script type="text/javascript">
     mediator_json = {
@@ -113,7 +116,6 @@
 		 "group": "[{'id': 10000000020262L, 'group_name': u'Chamundeswari SWa Sahay Sangha Hirekoppa'}]", 
 		 "id": "6000017854", 
 		 "person": {"id": 10000000026123, "person_name": "Manjula.N.Ganigera"}, 
-		 "prior_adoption_flag": null, 
 		 "video": {"id": 6000007313, "title": "Vermicompost production in FYM pit"}, 
 		 "village": "[{'id': 10000000000509L, 'village_name': u'Hirekoppa'}]"
 	 }
@@ -289,6 +291,46 @@
 		        async: true,
 		        //json object to sent to the authentication url
 		        data: JSON.stringify(mediator_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#adoption_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/adoption/6000017854/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(adoption_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#adoption_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/adoption/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        data: JSON.stringify(adoption_json),
 		        success: function () {	
 		        	alert("Thanks!"); 
 		        },
