@@ -400,9 +400,13 @@
             <div class="control-group">
                 <div class="controls">
                     <select id="expressed_adoption_video_row7" name="expressed_adoption_video">
-                        <% _.each(videos_seen, function(vid) { %> 
+                        <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
+                            if(vid.id == expressed_adoption_video.id){
+                             %> 
+ 							<option selected="selected" value= "<%= vid.id%>"><%= vid.title %></option> 
+                            <%}else{%>
 							<option value= "<%= vid.id%>"><%= vid.title %></option> 
-                        <%});%>    
+                        <%}});}%>    
                     </select>
                 </div>
             </div>
@@ -410,7 +414,11 @@
         <td>
             <div class="control-group">
                 <div class="controls">
+                <%if(typeof(expressed_question)!="undefined"){%>
+                    <input type="text" id="expressed_question_row7" name="expressed_question" value ="<%=expressed_question%>">
+                <%} else{%>
                     <input type="text" id="expressed_question_row7" name="expressed_question" >
+                <%}%>    
                 </div>
             </div>
         </td>

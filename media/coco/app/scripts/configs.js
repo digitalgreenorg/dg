@@ -154,7 +154,8 @@ function() {
                             "expressed_adoption_video" : {
                                 entity_name: "video"
                             }  
-                      }                  
+                      },
+                      extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]                    
                   }          
               }
           }  

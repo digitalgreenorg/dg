@@ -47,8 +47,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.f_colls = new Array();
             _(this)
                 .bindAll('render_foreign_entity');
-
+            _(this).bindAll('fill_dep_entity');
             this.f_index = [];
+            this.num_f_elems = 0;
+            this.dependencies = {}; 
+            this.element_entity_map={};
+            this.foreign_elements_rendered = {};
             for (f_entity in this.view_configs.foreign_entities) {
                 var generic_collection_offline = Backbone.Collection.extend({
                     database: indexeddb,
@@ -68,9 +72,38 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 f_collection.bind
                 f_colls.push(f_collection);
                 */
-
+                for(element in this.view_configs.foreign_entities[f_entity])
+                {
+                    this.num_f_elems++; // total num of f elems
+                    this.element_entity_map[element] = f_entity; //created mapping of element - entity
+                    this.foreign_elements_rendered[element] = false;
+                    // creating source - dependency mapping to be used for in-form events
+                    if(this.view_configs.foreign_entities[f_entity][element]["dependency"])
+                    {
+                        console.log("FORM: dependency exists ");
+                        var f_ens = this.view_configs.foreign_entities;
+                        var source_entity = f_ens[f_entity][element].dependency.source_entity;
+                        var source_elm = f_ens[f_entity][element].dependency.source_form_element;
+                        console.log(source_entity);
+                        console.log(source_elm);
+                        var source_elm_id = f_ens[source_entity][source_elm].placeholder;
+                        console.log(source_elm_id);
+                        var that = this;
+                        if(source_elm_id in this.dependencies)
+                            {
+                                this.dependencies[source_elm_id].push(element);
+                            }    
+                        else{
+                            this.dependencies[source_elm_id] = [];
+                            this.dependencies[source_elm_id].push(element);
+                            var that = this;
+                            // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
+                        }
+                        console.log("dependencies = "+JSON.stringify(this.dependencies));    
+                    }
+                    
+                }
             }
-            console.log(this.f_index);
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -109,7 +142,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         afterRender: function() {
             console.log("ADD/EDIT:foreign colls being fetched:");
 
-            //render inlines
+            //render empty inlines - add case done
             if(this.inline)
             {
                 this.$('#inline_header').html($('#'+this.inline.header).html());
@@ -129,7 +162,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             // fetching all foreign collections
             //TODO: handle error callback
             for (var i = 0; i < this.f_colls.length; i++) {
-                console.log(this.f_colls[i]);
                 this.f_colls[i].fetch({
                     success: function() {
                         console.log("ADD/EDIT: a foreign coll fetched");
@@ -141,15 +173,22 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                 });
             }
-            this.dependencies = {}; 
-            this.element_entity_map={};
+            // this.dependencies = {}; 
+//             this.element_entity_map={};
+            this.num_initial_f_entities = 0;
+            var that = this;
+            for(el_id in this.dependencies)
+            {
+                console.log("creating changeevent for - "+el_id);
+                $('#'+el_id).change(this.fill_dep_entity);
+            }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
             // fetching offline model and inlines
             var that = this;
             if (this.edit_case_json) {
-                this.fill_form();
+                this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
                 console.log("FORM: EDIT: fetching this model - "+JSON.stringify(this.offline_model.toJSON()));
@@ -191,6 +230,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         },
                         error: function(){
                             console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                            //TODO: error handling
                         }        
                     });
                 }
@@ -247,6 +287,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var index = this.f_index.indexOf(entity);
                 var collection = this.f_colls[index];
                 var dep_desc = this.view_configs.foreign_entities[entity][element].dependency;
+                console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
                 if(collection.length)
                 {
                     if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
@@ -277,7 +318,40 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
           
         fill_foreign_entity: function(element, model_array){
             var f_entity_desc = this.view_configs.foreign_entities[this.element_entity_map[element]][element];
-            if(f_entity_desc.expanded)
+            // this.num_f_elems--; 
+            if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+            {
+                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                $f_el.html('');
+                var id_field = "id"
+                if(f_entity_desc.id_field)
+                     id_field = f_entity_desc.id_field;
+                var entity = this.element_entity_map[element];
+                var index = this.f_index.indexOf(entity);
+                var collection = this.f_colls[index];
+                
+                $.each(this.model_json[element], function(index, f_json){
+                    // console.log(f_json[id_field]);
+                    // console.log(collection);
+                    model = collection.get(f_json[id_field]);
+                    if(model)
+                    {
+                        var t_json = model.toJSON();
+                        t_json["index"] = index; 
+                        $.each(f_entity_desc.expanded.extra_fields, function(index,field){
+                            t_json[field] = f_json[field];
+                        });
+                        console.log(t_json);
+                        $f_el.append(expanded_template(t_json));    
+                    }
+                });
+                
+                
+                this.expanded = element;
+                this.foreign_elements_rendered[element] = true;
+            }
+            else if(f_entity_desc.expanded)
             {
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
@@ -300,47 +374,49 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
             }
-            if(this.edit_case)
+            // if(this.edit_case && this.num_f_elems>=0)
+//             {
+//                 console.log("SYPHONING");
+//                 Backbone.Syphon.deserialize(this, this.model_json);
+//             }
+            if(this.edit_case && !this.foreign_elements_rendered[element])
             {
-                Backbone.Syphon.deserialize(this, this.model_json);
+                var t_json = {};
+                t_json[element] = this.model_json[element]
+                    
+                // t_json = {t_json};
+                // Backbone.Syphon.deserialize(this, t_json);
+                console.log("FORM: putting in value of -"+element);
+                this.$('form [name='+element+']').val(this.model_json[element]).change();
+                this.foreign_elements_rendered[element] = true;
             }
         },
                         
         render_foreign_entity: function(collection, options) {
+            console.log(this.num_f_elems);
             console.log("ADD/EDIT: rendering foreign entity");
-            _(this).bindAll('fill_dep_entity');
             for(element in this.view_configs.foreign_entities[collection.storeName])
             {
-                this.element_entity_map[element] = collection.storeName;
-                if(this.view_configs.foreign_entities[collection.storeName][element]["dependency"])
-                {
-                    console.log("FORM:render_for_entity: dependency exists ");
-                    var f_ens = this.view_configs.foreign_entities;
-                    var source_entity = f_ens[collection.storeName][element].dependency.source_entity;
-                    var source_elm = f_ens[collection.storeName][element].dependency.source_form_element;
-                    console.log(source_entity);
-                    console.log(source_elm);
-                    var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-                    console.log(source_elm_id);
-                    var that = this;
-                    if(source_elm_id in this.dependencies)
-                        {
-                            this.dependencies[source_elm_id].push(element);
-                        }    
-                    else{
-                        this.dependencies[source_elm_id] = [];
-                        this.dependencies[source_elm_id].push(element);
-                        var that = this;
-                        $('#'+source_elm_id).change(that.fill_dep_entity);
-                    }
-                    console.log("dependencies = "+JSON.stringify(this.dependencies));    
-                    
-                }
-                else{
-                    this.fill_foreign_entity(element, collection.toArray());
-                }
+                this.num_f_elems--; 
+                
             }
-            if (this.model_json) Backbone.Syphon.deserialize(this, this.model_json);
+            
+            if(this.num_f_elems==0)
+            {
+                for(element in this.foreign_elements_rendered)
+                {
+                    var entity = this.element_entity_map[element];
+                    if(this.view_configs.foreign_entities[entity][element]["dependency"])
+                    {
+                
+                    }
+                    else{
+                        var index = this.f_index.indexOf(entity);
+                        var collection1 = this.f_colls[index];
+                        this.fill_foreign_entity(element, collection1.toArray());
+                    }
+                }
+            }   
         },
 
         normalize_json: function(d_json){
@@ -349,7 +425,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
-                    if (element in d_json) {
+                    if(this.view_configs["foreign_entities"][member][element].expanded)
+                    {
+                        
+                    }
+                    else if (element in d_json) {
                         if (d_json[element] instanceof Array) {
                             var el_array = [];
                             $.each(d_json[element],function(index,object){
@@ -441,6 +521,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         fill_form: function() {
             console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
+            
         },
         
             
