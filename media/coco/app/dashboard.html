@@ -401,7 +401,7 @@
                 <div class="controls">
                     <select id="expressed_adoption_video_row7" name="expressed_adoption_video">
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
-                            if(vid.id == expressed_adoption_video.id){
+                            if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
  							<option selected="selected" value= "<%= vid.id%>"><%= vid.title %></option> 
                             <%}else{%>
