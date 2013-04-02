@@ -607,8 +607,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var inl_obj = {};
                 var inputs = $(inl).find("input");
                 var ignore = true;
-                if($(inl).attr("model_id"))
-                    inl_obj.id = parseInt($(inl).attr("model_id"));
+                // if($(inl).attr("model_id"))
+                //     inl_obj.id = parseInt($(inl).attr("model_id"));
                 $.each(inputs,function(index1, inp){
                     inl_obj[$(inp).attr("name")]= $(inp).val();
                     if($(inp).val()!="")

@@ -356,11 +356,14 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                                 $.each(online_json[collection.attribute],function(index,object){
                                                     var field_object = object[field];
                                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(field_object));
-                                                    var model = collection.get(field_object[id_field]);
-                                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
-                                                    var con_obj = $.extend(null,field_object);
-                                                    con_obj[id_field] =   model.get("online_id"); 
-                                                    object[field] = con_obj;
+                                                    if(field_object[id_field])
+                                                    {
+                                                        var model = collection.get(field_object[id_field]);
+                                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
+                                                        var con_obj = $.extend(null,field_object);
+                                                        con_obj[id_field] =   model.get("online_id"); 
+                                                        object[field] = con_obj;
+                                                    }
                                                     // conv_array.push(con_obj);
                                                     // object["id"] =   model.get("online_id");
                                                 });
