@@ -217,7 +217,7 @@ class VillageLevelAuthorization(DjangoAuthorization):
         # params = {
         #             village_field: villages,
         #         }
-        return object_list.filter(**kwargs)
+        return object_list.filter(**kwargs).distinct()
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
@@ -235,6 +235,7 @@ class MediatorResource(ModelResource):
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
 
     def dehydrate_assigned_villages(self, bundle):
+        print 'in dehrate assigned villages'
         v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
         vil_list=[]
         for i in v_field:
