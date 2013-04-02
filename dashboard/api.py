@@ -33,9 +33,6 @@ class ModelFormValidation(FormValidation):
         if uri is None:
             return None
         
-        # convert everything to lists
-        #multiple = not isinstance(uri, basestring)
-        #uris = uri if multiple else [uri]
         converted = []
         if type(uri) == type(dict()):
             converted.append(uri.get('id'))
@@ -44,24 +41,7 @@ class ModelFormValidation(FormValidation):
             for item in uri:
                 converted.append(item.get('id'))
             return converted
-#        print uris
-#        print uris.get('id')
-#        
-#        converted.append(uris.get('id'))
-#        # handle all passed URIs
-#        
-#        for one_uri in uris:
-#            print one_uri
-#            try:
-#                # hopefully /api/v1/<resource_name>/<pk>/
-#                converted.append(int(one_uri.split('/')[-2]))
-#            except (IndexError, ValueError):
-#                raise ValueError(
-#                                 "URI %s could not be converted to PK integer." % one_uri)
-        
-        # convert back to original format
-       # return converted if multiple else converted[0]
-    
+
     def is_valid(self, bundle, request=None):
         data = bundle.data
         # Ensure we get a bound Form, regardless of the state of the bundle.
@@ -109,8 +89,6 @@ class MediatorFormValidation(FormValidation):
             return None
         
         # convert everything to lists
-        #multiple = not isinstance(uri, basestring)
-        #uris = uri if multiple else [uri]
         converted = []
         if type(uri) == type(dict()):
             converted.append(uri.get('id'))
@@ -141,7 +119,6 @@ class MediatorFormValidation(FormValidation):
             if field in data:
                 data[field] = self.uri_to_pk(data[field])
         
-        #print self.form_class
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
@@ -229,9 +206,9 @@ class MediatorResource(ModelResource):
         queryset = Animator.objects.all()
         resource_name = 'mediator'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('assigned_villages__in')
-        authorization = Authorization()
-        # validation = MediatorFormValidation(form_class=AnimatorForm)
+        authorization = VillageLevelAuthorization('assigned_villages__in')
+        #authorization = Authorization()
+        validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
@@ -311,8 +288,8 @@ class VillageResource(ModelResource):
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('id__in')
-        authorization = Authorization()
+        authorization = VillageLevelAuthorization('id__in')
+        #authorization = Authorization()
         
         max_limit = None
 
@@ -333,10 +310,10 @@ class VideoResource(ModelResource):
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
         authentication = Authentication()
-        # authorization = DjangoAuthorization()
-        authorization = Authorization()
+        authorization = DjangoAuthorization()
+        #authorization = Authorization()
         
-        # validation = ModelFormValidation(form_class=VideoForm)
+        validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
         excludes = ['viewers','time_created', 'time_modified', 'duration' ]
     
@@ -417,10 +394,10 @@ class PersonGroupsResource(ModelResource):
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('village__in')
-        authorization = Authorization()
+        authorization = VillageLevelAuthorization('village__in')
+        #authorization = Authorization()
         
-        # validation = ModelFormValidation(form_class=PersonGroupsForm)
+        validation = ModelFormValidation(form_class=PersonGroupsForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
@@ -455,10 +432,10 @@ class ScreeningResource(ModelResource):
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('village__in')
-        authorization = Authorization()
+        authorization = VillageLevelAuthorization('village__in')
+        #authorization = Authorization()
         
-        # validation = ModelFormValidation(form_class = ScreeningForm)
+        validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     
@@ -621,10 +598,10 @@ class PersonResource(ModelResource):
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('village__in')
-        authorization = Authorization()
+        authorization = VillageLevelAuthorization('village__in')
+        #authorization = Authorization()
         
-        # validation = ModelFormValidation(form_class = PersonForm)
+        validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
         excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
@@ -680,8 +657,8 @@ class PersonAdoptVideoResource(ModelResource):
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'personadoptvideo'
         authentication = Authentication()
-        # authorization = VillageLevelAuthorization('person__village__in')
-        authorization = Authorization()
+        authorization = VillageLevelAuthorization('person__village__in')
+        #authorization = Authorization()
         
         excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
