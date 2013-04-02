@@ -457,7 +457,6 @@ class ScreeningResource(ModelResource):
         screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
-            print pma['person_id'], pma['expressed_adoption_video']['id']
 #            try:
 #                per = Person.objects.get(id = pma['person_id'])
 #            except:
@@ -485,7 +484,6 @@ class ScreeningResource(ModelResource):
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
-            print pma['person_id'], pma['expressed_adoption_video']['id']
             pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], expressed_adoption_video = pma['expressed_adoption_video']['id'],
                                            interested = pma['interested'], 
                                           expressed_question = pma['expressed_question'])
@@ -519,7 +517,7 @@ class ScreeningResource(ModelResource):
                                                                                            'interested', 
                                                                                            'expressed_question')
             if pma:
-                pma_list.append({'id':pma[0]['id'], 'person_id':pma[0]['person__id'],'person_name':pma[0]['person__person_name'], 
+                pma_list.append({'person_id':pma[0]['person__id'],'person_name':pma[0]['person__person_name'], 
                              'expressed_adoption_video': {'id':pma[0]['expressed_adoption_video__id'], 'title':pma[0]['expressed_adoption_video__title']},
                               'interested': pma[0]['interested'], 'expressed_question': pma[0]['expressed_question']})
             
