@@ -14,7 +14,7 @@ class BigForeignKey(ForeignKey):
             # return PositiveBigIntegerField().db_type()
             # thereby fixing any BigAutoField as PositiveBigIntegerField
             return PositiveBigIntegerField().db_type(connection=connection)
-        return rel_field.db_type()
+        return rel_field.db_type(connection=connection)
     
 def create_many_to_many_intermediary_model(field, klass):
     from django.db import models
