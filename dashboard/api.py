@@ -457,7 +457,7 @@ class ScreeningResource(ModelResource):
 #                    print 'expressed adoption video does not exist in pma'
 #            else:
 #                vid = None
-            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], expressed_adoption_video = pma['expressed_adoption_video']['id'],
+            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
                                            interested = pma['interested'], 
                                           expressed_question = pma['expressed_question'])
             pma.save()
