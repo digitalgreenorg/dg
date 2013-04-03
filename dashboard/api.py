@@ -457,7 +457,7 @@ class ScreeningResource(ModelResource):
 #                    print 'expressed adoption video does not exist in pma'
 #            else:
 #                vid = None
-            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], expressed_adoption_video = pma['expressed_adoption_video']['id'],
+            pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
                                            interested = pma['interested'], 
                                           expressed_question = pma['expressed_question'])
             pma.save()
@@ -666,13 +666,23 @@ class PersonAdoptVideoResource(ModelResource):
     
     def dehydrate_group(self, bundle):
         person_id = getattr(bundle.obj, 'person').id
-        group = PersonGroups.objects.filter(person__id = person_id).values('id', 'group_name')
-        return group
+        t_dict = {}
+        group = Person.objects.get(id = person_id).group
+        if group:
+            t_dict["id"] = group.id
+            t_dict["group_name"] = group.group_name
+        else:
+            t_dict["id"] = None
+            t_dict["group_name"] = None
+        return t_dict
     
     def dehydrate_village(self, bundle):
         person_id = getattr(bundle.obj, 'person').id
-        village = Village.objects.filter(person__id = person_id).values('id', 'village_name')
-        return village
+        t_dict = {}
+        village = Person.objects.get(id=person_id).village
+        t_dict["id"] = village.id
+        t_dict["village_name"] = village.village_name
+        return t_dict
     
     def hydrate_village(self, bundle):
         print 'in hydrate village'
