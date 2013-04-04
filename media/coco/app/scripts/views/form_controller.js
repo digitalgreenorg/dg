@@ -192,7 +192,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         offline_to_online: function(json) {
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: here am i");
             console.log(this.params);
-            var f_entities = this.params.initialize.view_configs["foreign_entities"];
+            // var f_entities = this.params.initialize.view_configs["foreign_entities"];
+            var f_entities = this.form.foreign_entities;
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
             var online_json = $.extend(null, json); // making a copy of object json
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));

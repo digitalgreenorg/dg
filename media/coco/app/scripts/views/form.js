@@ -323,11 +323,52 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                     else{
                         console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
+                        // var filtered_models = collection.filter(function(model){
+//                             if(typeof model.get(dep_desc.dep_attr) == "object")
+//                                 return model.get(dep_desc.dep_attr).id == curr_value;
+//                             else
+//                                 return model.get(dep_desc.dep_attr) == curr_value;
+//                         });
+                        var that = this;
                         var filtered_models = collection.filter(function(model){
+                            var compare = null;
                             if(typeof model.get(dep_desc.dep_attr) == "object")
-                                return model.get(dep_desc.dep_attr).id == curr_value;
+                                compare = model.get(dep_desc.dep_attr).id; 
                             else
-                                return model.get(dep_desc.dep_attr) == curr_value;
+                                compare = model.get(dep_desc.dep_attr)
+                            if(dep_desc.rev_sub_attr)
+                                {
+                                    var src_entity = dep_desc.source_entity;
+                                    var index = that.f_index.indexOf(src_entity);
+                                    var s_collection = that.f_colls[index];
+                                    // console.log(collection);
+                                    var s_model = s_collection.get(curr_value);
+                                    console.log(s_model);
+                                    var exists = false;
+                                    console.log()
+                                    if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
+                                    {
+                                        
+                                        $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
+                                            console.log(src_compare+ " "+ compare);
+                                            if(typeof src_compare == "object")
+                                            {
+                                                if(compare == src_compare.id)
+                                                    exists = true;
+                                            }
+                                            else
+                                            {
+                                                if(compare == src_compare)
+                                                    exists = true;
+                                            }
+                                        });
+                                    }
+                                    return exists;
+                                }        
+                            else
+                                {
+                                    return compare == curr_value;
+                                }            
                         });
                     }
                     
@@ -531,12 +572,18 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         } else {
                             var id = parseInt(n_json[element]);
                             if((id != "")&&(id!=null)&&(id!=undefined)){ 
-                                var entity = this.f_colls[c].where({
-                                    id: id
-                                })[0];
+                                // var entity = this.f_colls[c].where({
+//                                     id: id
+//                                 })[0];
+//                                 n_json[element] = {};
+//                                 n_json[element]["id"] = id;
+//                                 n_json[element][name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                                // var tr_el = $('tr[index='+index+']');
+                                //var label = $(tr_el).find('select option:selected').text();
+                                // var sel_el = $('select[name='+element+'] option:selected').text(); 
                                 n_json[element] = {};
                                 n_json[element]["id"] = id;
-                                n_json[element][name_field] = entity.get(f_entities[member][element]["name_field"]);    
+                                n_json[element][name_field] = $('select[name='+element+'] option:selected').text();     
                             }
                             else{
                                 n_json[element] = {};

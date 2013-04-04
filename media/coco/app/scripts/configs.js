@@ -197,17 +197,20 @@ function() {
             'foreign_entities':{
                 'person': {
                   'person': {'placeholder':'id_person','name_field':'person_name'},
-                  'video': {
-                      'placeholder':'id_video',
-                      'sub_attr': 'videos_seen',  
-                      'name_field':'title',
-                      'dependency':{
-                          'source_entity': 'person',
-                          'source_form_element': 'person',      
-                          'dep_attr': 'id'      
-                      }   
-                  }      
                 },
+                'video': {
+                    'video': {
+                        'placeholder':'id_video',
+                        // 'sub_attr': 'videos_seen',
+                        'name_field':'title',
+                        'dependency':{
+                            'source_entity': 'person',
+                            'source_form_element': 'person',      
+                            'dep_attr': 'id',
+                            'rev_sub_attr': 'videos_seen',                
+                        }   
+                    }      
+                }      
             }
          }    
             
