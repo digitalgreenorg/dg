@@ -24,7 +24,8 @@ function() {
         'page_header': 'Mediator',
         'table_template_name': 'mediator_table_template',
         'list_item_template_name': 'mediator_list_item_template',
-        'add_edit_template_name': 'mediator_add_edit_template',
+        'add_template_name': 'mediator_add_edit_template',
+        'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
         'foreign_entities':{
@@ -41,7 +42,8 @@ function() {
         'page_header': 'Video',
         'table_template_name': 'video_table_template',
         'list_item_template_name': 'video_list_item_template',
-        'add_edit_template_name': 'video_add_edit_template',
+        'add_template_name': 'video_add_edit_template',
+        'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/api/v1/video/',
         'entity_name': 'video',
         'foreign_entities':{
@@ -70,7 +72,8 @@ function() {
         'page_header': 'Laguage',
         'table_template_name': 'language_table_template',
         'list_item_template_name': 'language_list_item_template',
-        'add_edit_template_name': 'language_add_edit_template',
+        'add_template_name': 'language_add_edit_template',
+        'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'foreign_entities':{},
@@ -84,7 +87,8 @@ function() {
       'page_header': 'Group',
       'table_template_name': 'group_table_template',
       'list_item_template_name': 'group_list_item_template',
-      'add_edit_template_name': 'group_add_edit_template',
+      'add_template_name': 'group_add_edit_template',
+      'edit_template_name': 'group_add_edit_template',
       'rest_api_url': '/api/v1/group/',
       'entity_name': 'group',
       'foreign_entities':{
@@ -102,7 +106,8 @@ function() {
       'page_header': 'Screening',
       'table_template_name': 'screening_table_template',
       'list_item_template_name': 'screening_list_item_template',
-      'add_edit_template_name': 'screening_add_edit_template',
+      'add_template_name': 'screening_add_edit_template',
+      'edit_template_name': 'screening_add_edit_template',
       'rest_api_url': '/api/v1/screening/',
       'entity_name': 'screening',
       'foreign_entities':{
@@ -163,19 +168,57 @@ function() {
     };
     
     var adoption_configs = {
-      'page_header': 'Adoption',
-      'table_template_name': 'adoption_table_template',
-      'list_item_template_name': 'adoption_list_item_template',
-      'add_edit_template_name': 'adoption_add_edit_template',
-      'rest_api_url': '/api/v1/personadoptvideo/',
-      'entity_name': 'adoption'
+        'page_header': 'Adoption',
+        'table_template_name': 'adoption_table_template',
+        'list_item_template_name': 'adoption_list_item_template',
+        'add_template_name': 'adoption_add_template',
+        'edit_template_name': 'adoption_edit_template',
+        'rest_api_url': '/api/v1/personadoptvideo/',
+        'entity_name': 'adoption',
+          add: {
+            'foreign_entities':{
+                'village': {
+                  'village': {'placeholder':'id_village','name_field':'village_name'},
+                },
+                'group': {
+                  'group': {
+                      'placeholder':'id_group',
+                      'name_field':'group_name',
+                      'dependency':{
+                          'source_entity': 'village',
+                          'source_form_element': 'village',      
+                          'dep_attr': 'village'      
+                      }   
+                  }
+                }
+            }    
+          },
+          edit:{
+            'foreign_entities':{
+                'person': {
+                  'person': {'placeholder':'id_person','name_field':'person_name'},
+                  'video': {
+                      'placeholder':'id_video',
+                      'sub_attr': 'videos_seen',  
+                      'name_field':'title',
+                      'dependency':{
+                          'source_entity': 'person',
+                          'source_form_element': 'person',      
+                          'dep_attr': 'id'      
+                      }   
+                  }      
+                },
+            }
+         }    
+            
     };
   
     var person_configs = {
         'page_header': 'Person',
         'table_template_name': 'person_table_template',
         'list_item_template_name': 'person_list_item_template',
-        'add_edit_template_name': 'person_add_edit_template2',
+        'add_template_name': 'person_add_edit_template2',
+        'edit_template_name': 'person_add_edit_template2',
         'rest_api_url': '/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities':{

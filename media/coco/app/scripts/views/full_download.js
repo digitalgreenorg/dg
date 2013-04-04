@@ -55,7 +55,7 @@ define([
             var that = this;
             collection_online.fetch({
                 data: {
-                    limit: 100
+                    limit: 0
                 },
                 success: function() {
                     data = (collection_online.toJSON());

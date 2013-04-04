@@ -27,7 +27,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log(params);
             this.view_configs = params.initialize.view_configs;
             this.appRouter = params.initialize.router;
-            this.form_template = $('#' + this.view_configs.add_edit_template_name).html();
             options_inner_template = _.template($('#options_template')
                 .html());
             this.entity_name = this.view_configs.entity_name;
@@ -42,71 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
             this.offline_model = new generic_model_offline();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            // Get foreign entities, create their offline collection to be fetched afterRender, bind them to render_foreign_entity
-            this.f_colls = new Array();
-            _(this)
-                .bindAll('render_foreign_entity');
-            _(this).bindAll('fill_dep_entity');
-            this.f_index = [];
-            this.num_f_elems = 0;
-            this.dependencies = {}; 
-            this.element_entity_map={};
-            this.foreign_elements_rendered = {};
-            for (f_entity in this.view_configs.foreign_entities) {
-                var generic_collection_offline = Backbone.Collection.extend({
-                    database: indexeddb,
-                    storeName: all_configs[f_entity].entity_name,
-                });
-                this.f_index.push(f_entity);    
-                this.f_colls.push(new generic_collection_offline());
-                // Reset is called when a collection has finished fetching.
-                // We are binding the reset of the last added collection to render_foreign_entity
-                _.last(this.f_colls)
-                    .bind('reset', this.render_foreign_entity);
-                
-                /*
-                this.f_colls.push(new generic_collection_offline().bind);
-                
-                var f_collection = new generic_collection_offline();
-                f_collection.bind
-                f_colls.push(f_collection);
-                */
-                for(element in this.view_configs.foreign_entities[f_entity])
-                {
-                    this.num_f_elems++; // total num of f elems
-                    this.element_entity_map[element] = f_entity; //created mapping of element - entity
-                    this.foreign_elements_rendered[element] = false;
-                    // creating source - dependency mapping to be used for in-form events
-                    if(this.view_configs.foreign_entities[f_entity][element]["dependency"])
-                    {
-                        console.log("FORM: dependency exists ");
-                        var f_ens = this.view_configs.foreign_entities;
-                        var source_entity = f_ens[f_entity][element].dependency.source_entity;
-                        var source_elm = f_ens[f_entity][element].dependency.source_form_element;
-                        console.log(source_entity);
-                        console.log(source_elm);
-                        var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-                        console.log(source_elm_id);
-                        var that = this;
-                        if(source_elm_id in this.dependencies)
-                            {
-                                this.dependencies[source_elm_id].push(element);
-                            }    
-                        else{
-                            this.dependencies[source_elm_id] = [];
-                            this.dependencies[source_elm_id].push(element);
-                            var that = this;
-                            // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
-                        }
-                        console.log("dependencies = "+JSON.stringify(this.dependencies));    
-                    }
-                    
-                }
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+            
             // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
             // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
             json = null;
@@ -133,6 +68,89 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             else
                 this.action = "A"            
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            if(this.edit_case)
+            {
+                this.form_template = $('#' + this.view_configs.edit_template_name).html();
+                if(this.view_configs.edit)
+                    this.foreign_entities = this.view_configs.edit.foreign_entities
+                else
+                    this.foreign_entities = this.view_configs.foreign_entities
+            }
+            else
+            {
+                this.form_template = $('#' + this.view_configs.add_template_name).html();
+                if(this.view_configs.add)
+                    this.foreign_entities = this.view_configs.add.foreign_entities
+                else
+                    this.foreign_entities = this.view_configs.foreign_entities
+            }
+
+            // Get foreign entities, create their offline collection to be fetched afterRender, bind them to render_foreign_entity
+            this.f_colls = new Array();
+            _(this)
+                .bindAll('render_foreign_entity');
+            _(this).bindAll('fill_dep_entity');
+            this.f_index = [];
+            this.num_f_elems = 0;
+            this.dependencies = {}; 
+            this.element_entity_map={};
+            this.foreign_elements_rendered = {};
+            for (f_entity in this.foreign_entities) {
+                var generic_collection_offline = Backbone.Collection.extend({
+                    database: indexeddb,
+                    storeName: all_configs[f_entity].entity_name,
+                });
+                this.f_index.push(f_entity);    
+                this.f_colls.push(new generic_collection_offline());
+                // Reset is called when a collection has finished fetching.
+                // We are binding the reset of the last added collection to render_foreign_entity
+                _.last(this.f_colls)
+                    .bind('reset', this.render_foreign_entity);
+                
+                /*
+                this.f_colls.push(new generic_collection_offline().bind);
+                
+                var f_collection = new generic_collection_offline();
+                f_collection.bind
+                f_colls.push(f_collection);
+                */
+                for(element in this.foreign_entities[f_entity])
+                {
+                    this.num_f_elems++; // total num of f elems
+                    this.element_entity_map[element] = f_entity; //created mapping of element - entity
+                    this.foreign_elements_rendered[element] = false;
+                    // creating source - dependency mapping to be used for in-form events
+                    if(this.foreign_entities[f_entity][element]["dependency"])
+                    {
+                        console.log("FORM: dependency exists ");
+                        var f_ens = this.foreign_entities;
+                        var source_entity = f_ens[f_entity][element].dependency.source_entity;
+                        var source_elm = f_ens[f_entity][element].dependency.source_form_element;
+                        console.log(source_entity);
+                        console.log(source_elm);
+                        var source_elm_id = f_ens[source_entity][source_elm].placeholder;
+                        console.log(source_elm_id);
+                        var that = this;
+                        if(source_elm_id in this.dependencies)
+                            {
+                                this.dependencies[source_elm_id].push(element);
+                            }    
+                        else{
+                            this.dependencies[source_elm_id] = [];
+                            this.dependencies[source_elm_id].push(element);
+                            var that = this;
+                            // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
+                        }
+                        console.log("dependencies = "+JSON.stringify(this.dependencies));    
+                    }
+                    
+                }
+            }
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            
             
             _(this)
                 .bindAll('save');
@@ -163,8 +181,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             //TODO: handle error callback
             for (var i = 0; i < this.f_colls.length; i++) {
                 this.f_colls[i].fetch({
-                    success: function() {
-                        console.log("ADD/EDIT: a foreign coll fetched");
+                    success: function(collection) {
+                        console.log("ADD/EDIT: a foreign coll fetched - "+collection.storeName);
                         // render foreign collection is called automatically on successful fetch
                     },
                     error: function() {
@@ -286,7 +304,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var entity = this.element_entity_map[element];
                 var index = this.f_index.indexOf(entity);
                 var collection = this.f_colls[index];
-                var dep_desc = this.view_configs.foreign_entities[entity][element].dependency;
+                var dep_desc = this.foreign_entities[entity][element].dependency;
                 console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
                 if(collection.length)
                 {
@@ -306,8 +324,21 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     else{
                         console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
                         var filtered_models = collection.filter(function(model){
-                           return model.get(dep_desc.dep_attr).id == curr_value;
+                            if(typeof model.get(dep_desc.dep_attr) == "object")
+                                return model.get(dep_desc.dep_attr).id == curr_value;
+                            else
+                                return model.get(dep_desc.dep_attr) == curr_value;
                         });
+                    }
+                    
+                    console.log(filtered_models);
+                    var sub_attr = this.foreign_entities[entity][element].sub_attr;
+                    if(sub_attr)
+                    {
+                        $.each(filtered_models, function(index, obj){
+                            filtered_models[index] = obj.get(sub_attr);
+                        });
+                        filtered_models = filtered_models[0];
                     }
                     this.fill_foreign_entity(element, filtered_models);
                 }
@@ -317,7 +348,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },    
           
         fill_foreign_entity: function(element, model_array){
-            var f_entity_desc = this.view_configs.foreign_entities[this.element_entity_map[element]][element];
+            var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
             // this.num_f_elems--; 
             if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
             {
@@ -367,9 +398,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 $f_el.html('');
                 $.each(model_array,function(index, f_model){
+                    var f_json = f_model; 
+                    if(f_model instanceof Backbone.Model)
+                        f_json = f_model.toJSON();
                     $f_el.append(options_inner_template({
-                        id: parseInt(f_model.get("id")),
-                        name: f_model.get(f_entity_desc.name_field)
+                        id: parseInt(f_json["id"]),
+                        name: f_json[f_entity_desc.name_field]
                     }));    
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
@@ -395,7 +429,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         render_foreign_entity: function(collection, options) {
             console.log(this.num_f_elems);
             console.log("ADD/EDIT: rendering foreign entity");
-            for(element in this.view_configs.foreign_entities[collection.storeName])
+            for(element in this.foreign_entities[collection.storeName])
             {
                 this.num_f_elems--; 
                 
@@ -406,7 +440,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 for(element in this.foreign_elements_rendered)
                 {
                     var entity = this.element_entity_map[element];
-                    if(this.view_configs.foreign_entities[entity][element]["dependency"])
+                    if(this.foreign_entities[entity][element]["dependency"])
                     {
                 
                     }
@@ -421,11 +455,11 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
         normalize_json: function(d_json){
             console.log("FORM: Before Normalised json = "+JSON.stringify(d_json));      
-            var f_entities = this.view_configs["foreign_entities"];
+            var f_entities = this.foreign_entities;
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
-                    if(this.view_configs["foreign_entities"][member][element].expanded)
+                    if(this.foreign_entities[member][element].expanded)
                     {
                         
                     }
@@ -450,7 +484,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             
         denormalize_json: function(n_json){
             console.log("FORM: Before DNormalising json - "+JSON.stringify(this.final_json))
-            var f_entities = this.view_configs["foreign_entities"];
+            var f_entities = this.foreign_entities;
             var c=0;
             for (member in f_entities) {
                 for(element in f_entities[member])
@@ -596,7 +630,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORM: fetching expandeds");
             var element = this.expanded;
             var entity = this.element_entity_map[element];
-            var desc = this.view_configs.foreign_entities[entity][element]
+            var desc = this.foreign_entities[entity][element]
             console.log("FORM:expande desc -" +JSON.stringify(desc));   
             var placeholder = desc.expanded.placeholder; 
             var all_inlines = $('#'+placeholder+ ' tr');    
