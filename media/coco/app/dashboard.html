@@ -199,7 +199,7 @@
        <tr>
        <th>Id</th>
 	   <th>Name</th>
-	   <th>Gender</th>
+	   <th>Assigned Villages</th>
        <th></th>
 	   </tr>
 </script>
@@ -209,7 +209,6 @@
     <td> <%= gender %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 <script type="text/template" id="mediator_add_edit_template">
@@ -605,6 +604,7 @@
        <tr>
        <th>Id</th>
 	   <th>Title</th>
+	   <th>Village</th>
 	   <th>Start Date</th>
 	   <th>End Date</th>
        <th></th>
@@ -613,6 +613,7 @@
 <script type="text/template" id="video_list_item_template">
     <td><%= id %></td>
     <td><%= title %></td>
+	<td> <%= village.village_name %></td>
     <td> <%= video_production_start_date %></td>
     <td> <%= video_production_end_date %></td>
     <td>
