@@ -1,0 +1,86 @@
+                    {{#activities}}
+                    <li class="js-news-feed-item">
+                        <article class="media">
+                            <div class="img img-lg">
+                                <img src="{{avatarURL}}" alt="" />
+                            </div>
+                            <div class="bd">
+                                <div class="bd-text layout-vr-sm">
+                                    <div class="copy copy-lt layout-vr-sm">{{date}}</div>
+                                    <h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3>
+                                    <p class="copy">
+                                        {{textContent}}
+                                    </p>
+                                </div>
+                                <div class="grid js-assets-container">
+
+                                    {{#_hasImages}}
+                                    <ul class="h-list layout-vr-md">
+                                        {{#images}}
+                                        <li>
+                                            <a href="{{imageLinkURL}}"><img src="{{imageURL}}" alt="{{altString}}" /></a>
+                                        </li>
+                                        {{/images}}
+                                    </ul>
+                                    {{/_hasImages}}
+
+                                    {{#collection}}
+                                    <div class="grid-col">
+                                        <div class="vid-cat-selected">
+                                            <div class="vid-cat">
+                                                <img src="{{collection.thumbnailURL}}" />
+                                                <div class="vid-flag">
+                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                        <li>{{collection.videos.length}} Videos</li>
+                                                        <li>{{collection._collectionStats._totalDuration}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="vid-cat-inner">
+                                                    <div class="vid-cat-hd">
+                                                        <h3 class="hdg-green hdg-f copy hdg-bold">{{collection.title}}</h3>
+                                                    </div>
+                                                    <div class="vid-cat-bd">
+                                                        <p class="copy copy-sm layout-vr-tiny">{{collection.state}} | {{collection.language}}</p>
+                                                        <p class="copy copy-sm">By: {{collection.partner.name}}</p>
+                                                    </div>
+                                                    <!-- NOTE: These aren't present in the comps, but included in case they're later desired -->
+                                                    <!-- <div class="vid-cat-ft">
+                                                        <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
+                                                            <li class="like">{{collection._collectionStats.likes}}</li>
+                                                            <li class="view">{{collection._collectionStats.views}}</li>
+                                                            <li class="check">{{collection._collectionStats.adoptions}}</li>
+                                                        </ul>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div> <!-- End .vid-cat-selected -->
+                                    </div> <!-- End .grid-col -->
+                                    <div class="grid-lt">
+                                        <div class="news-videoDrawer">
+                                            <div class="news-video-carousel carousel-wrapper js-carousel-wrapper">
+                                                <div class="carousel-container js-carousel-container">
+                                                    <ul class="carousel-list">
+                                                        {{#collection._carouselSlides}}
+                                                        <li>
+                                                            <ul class="h-list">
+                                                                {{#videos}}
+                                                                <li>
+                                                                    <a href="{{videoURL}}"><img src="{{thumbnailURL}}" alt="{{title}}" /></a>
+                                                                </li>
+                                                                {{/videos}}
+                                                            </ul>
+                                                        </li>
+                                                        {{/collection._carouselSlides}}
+                                                    </ul>
+                                                </div>
+                                                <div class="arrow arrow-left carousel-previous-slide js-carousel-previous-slide">Previous</div>
+                                                <div class="arrow arrow-right carousel-next-slide js-carousel-next-slide">Next</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/collection}}
+                                </div> <!-- End .grid -->
+                            </div> <!-- End .bd -->
+                        </article>
+                    </li>
+                    {{/activities}}

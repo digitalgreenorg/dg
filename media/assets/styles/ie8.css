@@ -1,0 +1,12 @@
+/* ---------------------------------------------------------------------
+Original Author: Susan Robertson
+Contributors: N/A
+
+Target Browsers: IE8, IE7, IE6
+Media Type: Screen, Projection
+Width: All Sizes
+------------------------------------------------------------------------ */
+
+.commentBox .comment-text {
+    top: -10px;
+}

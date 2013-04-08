@@ -1,0 +1,147 @@
+                    {{#activities}}
+                    <li>
+                        <div class="grid activity">
+                            <div class="grid-col date copy">
+                                {{date}}
+                            </div>
+                            <i class="indicator"></i>
+                            <div class="grid-col event">
+                                <div class="event-box">
+                                    <div class="media">
+                                        <div class="img">
+                                            <img src="{{avatarURL}}" alt="" />
+                                        </div>
+                                        <div class="bd">
+                                            <div class="bd-text-event">
+                                                <h3 class="hdg-green copy layout-vr-tiny hdg-bold">{{title}}</h3>
+                                                <p class="copy copy">
+                                                    {{textContent}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{#_hasImages}}
+                                    <ul class="h-list layout-vr-md">
+                                        {{#images}}
+                                        <li>
+                                            <a href="{{imageLinkURL}}"><img src="{{imageURL}}" alt="{{altString}}" /></a>
+                                        </li>
+                                        {{/images}}
+                                    </ul>
+                                    {{/_hasImages}}
+
+                                    <!-- Begin Video Collection -->
+                                    {{#collection}}
+                                    <div class="grid layout-vr-md">
+                                        <div class="grid-col">
+                                            <div class="vid-cat-selected">
+                                                <div class="vid-cat">
+                                                    <img src="{{collection.thumbnailURL}}" />
+                                                    <div class="vid-flag">
+                                                        <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
+                                                            <li>{{collection.videos.length}} Videos</li>
+                                                            <li>{{collection._collectionStats._totalDuration}}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="vid-cat-inner">
+                                                        <div class="vid-cat-hd">
+                                                            <h3 class="hdg-green hdg-f copy hdg-bold">{{collection.title}}</h3>
+                                                        </div>
+                                                        <div class="vid-cat-bd">
+                                                            <p class="copy copy-sm layout-vr-tiny">{{collection.state}} | {{collection.language}}</p>
+                                                            <p class="copy copy-sm">By: {{collection.partner.name}}</p>
+                                                        </div>
+                                                        <!-- NOTE: These aren't present in the comps, but included in case they're later desired -->
+                                                        <!-- <div class="vid-cat-ft">
+                                                            <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
+                                                                <li class="like">{{collection._collectionStats.likes}}</li>
+                                                                <li class="view">{{collection._collectionStats.views}}</li>
+                                                                <li class="check">{{collection._collectionStats.adoptions}}</li>
+                                                            </ul>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid-lt">
+                                            <div class="news-videoDrawer news-videoDrawer-profile">
+                                                <div class="activity-video-carousel carousel-wrapper js-carousel-wrapper">
+                                                    <div class="carousel-container js-carousel-container">
+                                                        <ul class="carousel-list">
+                                                            {{#collection._carouselSlides}}
+                                                            <li>
+                                                                <ul class="h-list">
+                                                                    {{#videos}}
+                                                                    <li>
+                                                                        <a href="{{videoURL}}"><img src="{{thumbnailURL}}" alt="{{title}}" /></a>
+                                                                    </li>
+                                                                    {{/videos}}
+                                                                </ul>
+                                                            </li>
+                                                            {{/collection._carouselSlides}}
+                                                        </ul>
+                                                    </div>
+                                                    <div class="arrow arrow-left carousel-previous-slide js-carousel-previous-slide">Previous</div>
+                                                    <div class="arrow arrow-right carousel-next-slide js-carousel-next-slide">Next</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Video Collection -->
+                                    {{/collection}}
+
+                                    <ul class="h-list h-list-divided copy copy list-icons-green layout-vr-md">
+                                        <li class="like"><a href="#"><span class="copy-dk">{{_likes}}</span> Likes</a></li>
+                                        <li class="comment"><a href="#">Comment</a></li>
+                                        <li>
+                                            <a class="btn share-btn alt"><div class="icon"></div>
+                                                <span class="label">Share</span>
+
+                                                <div class="sharethis-wrapper">
+                                                    <div class='st_facebook_hcount' displayText='Facebook'></div>
+                                                    <div class='st_twitter_hcount' displayText='Tweet'></div>
+                                                    <div class='st_linkedin_hcount' displayText='LinkedIn'></div>
+                                                    <div class='st_email_hcount' displayText='Email'></div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="commentBox commentBox-arrow">
+
+                                        {{#_hasComments}}
+                                        <div class="comments-left">
+                                            <h4 class="copy layout-vr-md">{{numberOfComments}} Comments</h4>
+                                            <ol class="comment-list">
+                                                {{#comments}}
+                                                <li>
+                                                    <div class="media">
+                                                        <div class="img">
+                                                            <img src="{{user.avatarURLSmall}}" alt="User Avatar">
+                                                        </div>
+                                                        <div class="bd">
+                                                            <h5 class="hdg-green hdg-bold copy layout-vr-sm">{{user.name}}</h5>
+                                                            <p class="copy layout-vr-sm">{{text}}</p>
+                                                            <p class="copy copy-lt">{{date}}</p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                {{/comments}}
+                                            </ol>
+                                        </div>
+                                        {{/_hasComments}}
+
+                                        <div class="commentBox-form js-comment-container">
+                                            <form>
+                                                <label for="comment" class="text-hide">Comments</label>
+                                                <input type="text" class="comment-text js-comment-text" placeholder="Write a comment or ask a question..." />
+                                                <input type="submit" class="btn" value="Submit" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {{/activities}}
