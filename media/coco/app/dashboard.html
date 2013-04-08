@@ -373,7 +373,7 @@ ss="modal" aria-hidden="true">&times;</button>
     <td>
     <div class="control-group">
         <div class="controls">
-            <i class="icon-remove remove"></i>
+            <i class="icon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').remove();"></i>
         </div>
     </div>
     </td>
@@ -427,7 +427,7 @@ ss="modal" aria-hidden="true">&times;</button>
     </tr>
 </script>
 
-<!--//////////////////////////////////////////////////// SCREENING TEMPLATES END ///////////////////////////////////////////////-->
+<!--//////////////////////////////////////////////////// SCREENING TEMPLATES END //////////////////////////////////////////////-->
 
 <!--/////////////////////////////////////////////////// ADOPTION TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="adoption_table_template">
@@ -450,40 +450,85 @@ ss="modal" aria-hidden="true">&times;</button>
     <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
-<script type="text/template" id="adoption_add_edit_template">
+<script type="text/template" id="adoption_edit_template">
+        <fieldset>
+                <legend>Edit Adoption</legend>
+                <div class="control-group">
+                	<label class="control-label">Person*</label>
+                	<div class="controls"> 
+                	<select name="person" id="id_person">
+                    <option value="">---------- </option>
+                    </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                	<label>Video*</label>
+                    <div class="controls">
+                        <select name="video" id="id_video"></select>
+                    </div>
+                </div>
+                <div class="control-group"> 
+                	<label class="control-label">Date*</label>
+                	<div class="controls">
+                        <input class="input-small" id="date" type="text" placeholder="Date" name="date_of_adoption">  
+                 	</div>
+                 	<span class="help-block">Date should be in the format of yyyy-mm-dd</span>
+                 </div>
+        </fieldset>
+    
+</script>
+<script type="text/template" id="adoption_add_template">
                             <fieldset>
-                                <legend>Add Mediator</legend>
-                                <div class="control-group"> 
-                                	<label class="control-label">Name*</label>
-                                	<div class="controls">
-                                 	<input type="text" name="name" placeholder="Name">
-                                 	</div>
-                                 </div>
-                                 <div class="control-group"> 
- 	                                <label class="control-label">Gender*</label> 
- 	                                <div class="controls">
- 	                                <select name="gender">
-     									<option value='' selected='selected'>---------</option> 
-     									<option value='M'>Male</option> 
-     									<option value='F'>Female</option> 
- 	                                </select>
- 	                                </div>
-                                 </div> 
-                                 <div class="control-group"> 
-	                                 <label class="control-label">Assigned Villages</label>
-	                                 <div class="controls"> 
-	                                 <select id = "id_ass_villages" name="assigned_villages" multiple>
-	                                    
-	                                </select>
+                                <legend>Add Adoption</legend>
+                                <div class="control-group">
+                                	<label class="control-label">Village*</label>
+                                	<div class="controls"> 
+                                	<select name="village" id="id_village">
+                                    <option value="">---------- </option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                	<label>Groups Attended*</label>
+	                                <div class="controls">
+	                                    <select name="group" id="id_group" multiple="multiple"></select>
 	                                </div>
                                 </div>
                                 <div class="control-group">
-	                                 <label class="control-label">Phone Number</label>
-	                                 <div class="controls">
-	                                 <input name="phone_no" type="text" placeholder="Phone Number">
-	                                 </div>
-                                 </div>
-							</fieldset>
+                                	<label>Person</label>
+                                	<div class="controls">
+		                                <select name="person" id="id_person" multiple="multiple"></select>
+	                                </div>
+                                </div>
+                                    <br>
+                            </fieldset>
+                            <fieldset>
+                            	<h5>Adoptions</h5>
+                                <table id="pav_table" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Delete?
+                                            </th>
+                                            <th>
+                                                Sr No.
+                                            </th>
+                                            <th>
+                                                Person
+                                            </th>
+                                            <th>
+                                                Video
+                                            </th>
+                                            <th>
+                                                Date Of Adoption
+                                            </th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bulk">
+                                    </tbody>
+                                </table>
+                            </fieldset>
                         
 
 </script>
