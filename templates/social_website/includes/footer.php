@@ -42,8 +42,8 @@
         <!-- End Main Wrapper -->
 
         <!-- JAVASCRIPT -->
-        <script type="text/javascript" src="scripts/libs/external/requirejs/require.js"></script>
-        <script type="text/javascript" src="scripts/main.js"></script>
+        <script type="text/javascript" src="social_website/scripts/libs/external/requirejs/require.js"></script>
+        <script type="text/javascript" src="social_website/scripts/main.js"></script>
 
         <script type="text/javascript">var switchTo5x=true;</script>
         <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
