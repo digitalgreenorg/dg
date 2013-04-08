@@ -92,16 +92,17 @@
 
 <script type="text/template" id="download_template">
     <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Full Download</h3>
+        <button type="button" class="close" data-dismi
+ss="modal" aria-hidden="true">&times;</button>
+        <h3>Download</h3>
       </div>
       <div class="modal-body">
-        <p >One fine body…</p>
+        <p >Please wait...</p>
         <div class="progress progress-info progress-striped">
-          <div class="bar" id = "pbar" style="width: 0%"></div>
+          <div class="bar" id = "pbar" style="width: 20%">20%</div>
         </div>
         <div id="d_status">
-           
+           Downloading 10 of 253 Videos...
         </div>
       </div>
       <div class="modal-footer">
@@ -129,11 +130,6 @@
                     <div class="span1 btn pull-left">Sync</div>
                     <div class="btn pull-right" href="#"><i class="icon-wrench"></i></div>
                 </div>
-
-                <button id="upload" class="btn btn-primary"  data-toggle="modal" data-target="#upload_modal">Upload</button>
-        
-                <button id="download" class="btn  btn-primary" >Download</button>
-                
                 <div id="coco_nav" class="pull-left">
                     <ul id = "dashboard_items" class="nav nav-stacked">
                         
@@ -1004,8 +1000,29 @@
    </script>
    
    <script type="text/template" id="sync_status_template">
-   Last Downloaded on - <%=timestamp%><br>
-   Data entries awaiting upload - <%=upload_entries%> 
+   <div>Database downloaded at - <%=timestamp%>,</div><br>
+   <div>Last sync at 3 pm on 2012-03-31,</div><br>
+   <div>Entries to download 150,</div><br>
+  <div class="row pull-left" style="margin-left:0px; margin-right:10px;"> Entries to Upload</div>
+<div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+        <i class="icon-chevron-down"></i>
+      </a>
+    </div>
+    <div id="collapseOne" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <table class="table">
+			<th> To Upload</th>
+			<th> Id </th>
+			<th> Label </th>
+			<tbody>
+			<tr><td>Screening</td><td>2000000012</td><td>Date:2012-03-31</td></tr>
+			</tbody>
+		</table>
+      </div>
+  
+  </div>
         
    </script>
    
