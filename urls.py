@@ -264,6 +264,7 @@ urlpatterns = patterns('',
     (r'^path/page/?$',page),
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls')),
+    (r'^social/', include('social_website.urls')),
     (r'^get_log/?$',send_updated_log),
      
 )

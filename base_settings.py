@@ -77,11 +77,13 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/output'),
     os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
+    os.path.join(PROJECT_PATH, 'templates/social_website'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth'
+    'django.core.context_processors.static',
+    'django.contrib.auth.context_processors.auth',  
 )
 
 INSTALLED_APPS = (
@@ -101,7 +103,8 @@ INSTALLED_APPS = (
     'farmerbook',
     'video_practice_map',
     'path',
-    'fbconnect'
+    'fbconnect',
+    'social_website',
 )
 
 LOGGING = {
