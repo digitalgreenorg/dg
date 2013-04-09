@@ -1,8 +1,5 @@
-<?php
-$jsController = "ViewCollections";
-include("includes/header.php");
-    ?>
-        <?php include("includes/partials/search.php"); ?>
+{% include "includes/header.html" %}
+        {% include "includes/partials/search.html" %}
         
         <section class="gradientBg">
             <div id="main" role="main" class="wrapper">
@@ -356,6 +353,5 @@ include("includes/header.php");
             </div>
         </section>
 
-<?php
-include ("includes/footer.php");
-?>
+{% include "includes/footer.html" %}
+

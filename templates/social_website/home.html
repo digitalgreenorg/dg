@@ -1,11 +1,7 @@
-<?php
-$jsController = "Home";
-include("includes/header.php");
-?>
-    <?php include("includes/partials/mainCarousel.php"); ?>
-    
-    <?php include("includes/partials/search.php"); ?>
-    
+{% include "includes/header.html" %}
+    {% include "includes/partials/mainCarousel.html" %}
+    {% include "includes/partials/search.html" %}
+
     <section id="main" role="main" class="wrapper">
         <div class="inner-wrapper">
             <header class="grid">
@@ -74,7 +70,7 @@ include("includes/header.php");
                         <h1 class="hdg-a hdg-source-lt">Collections</h1>
                     </div>
                     <div class="grid-rt">
-                        <?php include("includes/partials/mostFilters.php"); ?>
+                        {% include "includes/partials/mostFilters.html"%}
                     </div>
                 </header> <!-- End .clearfix -->
                 <ul class="blocks blocks-4-up clearfix js-collections-container">
@@ -108,6 +104,4 @@ include("includes/header.php");
         </div> <!-- End .inner-wrapper -->
     </section>
 
-<?php
-include ("includes/footer.php");
-?>
+{% include "includes/footer.html"%}

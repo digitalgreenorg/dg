@@ -1,8 +1,5 @@
-<?php
-$jsController = "Collections";
-include("includes/header.php");
-?>
-    <?php include("includes/partials/search.php"); ?>
+{% include "includes/header.html" %}
+    {% include "includes/partials/search.html" %}
     
     <!-- Main page content -->
     
@@ -13,13 +10,13 @@ include("includes/header.php");
                     <h1 class="hdg-a hdg-source-lt">Collections</h1>
                 </div>
                 <div class="grid-rt">
-                    <?php include("includes/partials/mostFilters.php"); ?>
+                    {% include "includes/partials/mostFilters.html" %}
                 </div>
             </header> <!-- End .grid -->
             <div class="clearfix">
 
                 <!-- Filter bar -->
-                <?php include("includes/partials/filterBar.php"); ?>
+                {% include "includes/partials/filterBar.html" %}
                 
                 <div class="grid-col grid-size3of4">
                     <div class="layout-vr-md borderBottom">
@@ -56,6 +53,4 @@ include("includes/header.php");
         </div> <!-- End .inner-wrapper -->
     </section> <!-- End .wrapper -->
 
-<?php
-include ("includes/footer.php");
-?>
+{% include "includes/footer.html" %}
