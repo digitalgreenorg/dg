@@ -761,7 +761,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
-                inl_obj["index"] = $(inp).attr("index");
+                inl_obj["index"] = $(inl).attr("index");
                 var inputs = $(inl).find("input");
                 var ignore = true;
                 // if($(inl).attr("model_id"))
