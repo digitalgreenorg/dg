@@ -173,17 +173,18 @@ def get_user_villages(request):
 #Get User Districts for video download purpose
 
 def get_user_districts(request):
-    user_permissions = UserPermission.objects.filter(username = request.user)
-    districts = District.objects.none()
-    for user_permission in user_permissions:
-        if(user_permission.role=='A'):
-            districts = districts | District.objects.all()
-        if(user_permission.role=='D'):
-            states = State.objects.filter(region = user_permission.region_operated)
-            districts = districts | District.objects.filter(state__in = states)
-        if(user_permission.role=='F'):
-            districts = District.objects.filter(district_name = user_permission.district_operated)
-    return districts
+    if request:
+        user_permissions = UserPermission.objects.filter(username = request.user)
+        districts = District.objects.none()
+        for user_permission in user_permissions:
+            if(user_permission.role=='A'):
+                districts = districts | District.objects.all()
+            if(user_permission.role=='D'):
+                states = State.objects.filter(region = user_permission.region_operated)
+                districts = districts | District.objects.filter(state__in = states)
+            if(user_permission.role=='F'):
+                districts = District.objects.filter(district_name = user_permission.district_operated)
+        return districts
 
 class VillageLevelAuthorization(DjangoAuthorization):
     def __init__(self, field):
@@ -655,7 +656,7 @@ class PersonAdoptVideoResource(ModelResource):
     village = fields.DictField(null = True)
     class Meta:
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
-        resource_name = 'personadoptvideo'
+        resource_name = 'adoption'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('person__village__in')
         #authorization = Authorization()
@@ -684,18 +685,18 @@ class PersonAdoptVideoResource(ModelResource):
         t_dict["village_name"] = village.village_name
         return t_dict
     
-    def hydrate_village(self, bundle):
-        print 'in hydrate village'
+    def hydrate_video(self, bundle):
+        print 'in hydrate video'
         print bundle
-        village = bundle.data.get('village')
-        if village and not hasattr(bundle,'village_flag'):
+        video = bundle.data.get('video')
+        if video and not hasattr(bundle,'video_flag'):
             try:
-                village_id = village.get('id')
-                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
-                bundle.village_flag = True
+                video_id = video.get('id')
+                bundle.data['video'] = "/api/v1/video/"+str(video_id)+"/"
+                bundle.video_flag = True
             except:
-                print 'village id in video does not exist'
-                bundle.data['village'] = None
+                print 'video id in pap does not exist'
+                bundle.data['video'] = None
         return bundle
     
     def hydrate_person(self, bundle):
