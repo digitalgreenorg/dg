@@ -31,7 +31,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .html());
             this.entity_name = this.view_configs.entity_name;
             this.final_json = null;
-            this.inline = this.view_configs.inline;
+            
             
             // Creating the offline models for the entity in consideration 
             var generic_model_offline = Backbone.Model.extend({
@@ -73,17 +73,33 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             {
                 this.form_template = $('#' + this.view_configs.edit_template_name).html();
                 if(this.view_configs.edit)
-                    this.foreign_entities = this.view_configs.edit.foreign_entities
+                {
+                    this.foreign_entities = this.view_configs.edit.foreign_entities;
+                    this.inline = this.view_configs.edit.inline;
+                    this.bulk = this.view_configs.edit.bulk;
+                }
                 else
-                    this.foreign_entities = this.view_configs.foreign_entities
+                {
+                    this.foreign_entities = this.view_configs.foreign_entities;
+                    this.inline = this.view_configs.inline;
+                    this.bulk = this.view_configs.bulk;
+                }
             }
             else
             {
                 this.form_template = $('#' + this.view_configs.add_template_name).html();
                 if(this.view_configs.add)
-                    this.foreign_entities = this.view_configs.add.foreign_entities
+                {
+                    this.foreign_entities = this.view_configs.add.foreign_entities;
+                    this.inline = this.view_configs.add.inline;
+                    this.bulk = this.view_configs.add.bulk;
+                }
                 else
-                    this.foreign_entities = this.view_configs.foreign_entities
+                {
+                    this.foreign_entities = this.view_configs.foreign_entities;
+                    this.inline = this.view_configs.inline;
+                    this.bulk = this.view_configs.bulk;
+                }
             }
 
             // Get foreign entities, create their offline collection to be fetched afterRender, bind them to render_foreign_entity
@@ -129,6 +145,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         var source_elm = f_ens[f_entity][element].dependency.source_form_element;
                         console.log(source_entity);
                         console.log(source_elm);
+                        console.log(f_ens);
                         var source_elm_id = f_ens[source_entity][source_elm].placeholder;
                         console.log(source_elm_id);
                         var that = this;
@@ -164,10 +181,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             if(this.inline)
             {
                 this.$('#inline_header').html($('#'+this.inline.header).html());
-                var inline_t = $('#'+this.inline.template).html();
-                for(var i=0;i<this.inline.num_rows;i++)
+                if(!this.inline.no_render)
                 {
-                    this.$('#inline_body').append(inline_t);    
+                    var inline_t = $('#'+this.inline.template).html();
+                    for(var i=0;i<this.inline.num_rows;i++)
+                    {
+                        this.$('#inline_body').append(inline_t);    
+                    }
                 }
                 
             }
@@ -524,9 +544,14 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },
             
         denormalize_json: function(n_json){
-            console.log("FORM: Before DNormalising json - "+JSON.stringify(this.final_json))
-            var f_entities = this.foreign_entities;
+            console.log("FORM: Before DNormalising json - "+JSON.stringify(n_json))
+            var f_entities = {};    
+            if(this.bulk)
+                f_entities = this.bulk.foreign_fields;
+            else            
+                f_entities = this.foreign_entities;
             var c=0;
+            console.log(f_entities);
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
@@ -536,8 +561,9 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         {
                             var d_obj = f_entities[member][element].expanded.denormalize;
                             if (n_json[element] instanceof Array) {
-                                $.each(n_json[element], function(index, obj){
+                                $.each(n_json[element], function(ind, obj){
                                     var id = obj[el];
+                                    var index = obj["index"];
                                     var tr_el = $('tr[index='+index+']');
                                     var label = $(tr_el).find('select option:selected').text();
                                     // console.log((sel_el));
@@ -545,10 +571,59 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                     obj[el]={};
                                     obj[el]["id"] = id;
                                     obj[el][d_obj[el]["name_field"]] = label;
+                                    // delete obj["index"];
                                 });    
+                                
                             }
                             
                         }
+                    }
+                    else if (this.bulk)
+                    {
+                        var name_field = f_entities[member][element]["name_field"];
+                        var that = this;
+                        $.each(n_json.bulk, function(ind, obj){
+                            var id = obj[element];
+                            var index = obj["index"];
+                            console.log("index = "+index);
+                            var tr_el = $('tr[index='+index+']');
+                            var dom_el = $('tr[index='+index+']').find('[name='+element+']');
+                            var label = null;
+                            var el_dict = {};
+                            if($(dom_el).is("select"))
+                            {
+                                label = $(tr_el).find('select[name='+element+'] option:selected').text();
+                                el_dict["id"] = parseInt(id);
+                                el_dict[name_field] = label;   
+                                
+                            }
+                            else if($(dom_el).is("input"))
+                            {
+                                var index = that.f_index.indexOf(member);
+                                console.log(index);
+                                
+                                var collection1 = that.f_colls[index];
+                                console.log(element);
+                                console.log(collection1);
+                                var model = collection1.where({
+                                    id: parseInt(id)
+                                })[0];
+                                el_dict["id"] = parseInt(id);
+                                el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
+                            }
+                            // console.log((sel_el));
+                            // var label = $(sel_el)
+                            console.log(el_dict);          
+                            obj[element] = el_dict;
+                            console.log(JSON.stringify(obj));
+                            // delete obj["index"];
+                            console.log(JSON.stringify(obj));
+                            
+                                
+                        });
+                        
+                        
+                        
                     }
                     else if (element in n_json) {
                         name_field = f_entities[member][element]["name_field"];
@@ -595,7 +670,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 }
                 c++;
             }
-            console.log("FORM: After DNormalising json - "+JSON.stringify(this.final_json))
+            console.log("FORM: After DNormalising json - "+JSON.stringify(n_json))
             
         },
                 
@@ -686,6 +761,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
+                inl_obj["index"] = $(inp).attr("index");
                 var inputs = $(inl).find("input");
                 var ignore = true;
                 // if($(inl).attr("model_id"))
@@ -715,17 +791,82 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 delete raw_json[attr];
             });
             // console.log(inline_attrs);    
-        },    
+        },  
+              
+        
+        parse_bulk: function(raw_json){
+            console.log("FORM: fetching bulks");
+            var all_inlines = $('#bulk tr');    
+            raw_json["bulk"] = [];
+            var that = this;
+            // var inline_attrs = [];
+            $.each(all_inlines,function(index, inl){
+                var inl_obj = {};
+                inl_obj["index"] = $(inl).attr("index");
+                var inputs = $(inl).find("input");
+                var ignore = true;
+                // if($(inl).attr("model_id"))
+                //     inl_obj.id = parseInt($(inl).attr("model_id"));
+                $.each(inputs,function(index1, inp){
+                    inl_obj[$(inp).attr("name")]= $(inp).val();
+                    if($(inp).val()!="")
+                        ignore = false;
+                    // if(index==0)
+                    //     inline_attrs.push($(inp).attr("name"));
+                });
+                var selects = $(inl).find("select");
+                $.each(selects,function(index2, sel){
+                    inl_obj[$(sel).attr("name")]= $(sel).val();
+                    if($(sel).val()!="")
+                        ignore = false;
+                    // if(index==0)
+                    //     inline_attrs.push($(sel).attr("name"));
+                });
+                // $.each(that.inline.borrow_attributes,function(index,b_attr){
+                //     inl_obj[b_attr.inline_attribute] = raw_json[b_attr.host_attribute]    
+                // });
+                if(!ignore)
+                    raw_json["bulk"].push(inl_obj);
+                // console.log($(inl).serializeArray());    
+            });
+            
+            // //remove inline attrs from raw_json...let them be inside raw_json.inlines only
+  //           $.each(inline_attrs,function(index,attr){
+  //               delete raw_json[attr];
+  //           });
+  //           console.log(inline_attrs);
+  //           
+            
+        },
+        
+            
         
         save: function() {
-            this.final_json = Backbone.Syphon.serialize(this);
-            this.clean_json(this.final_json);
-            if(this.expanded)
-                this.parse_expanded(this.final_json);
-            this.denormalize_json(this.final_json);
-            if(this.inline)
-                this.parse_inlines(this.final_json);
-            this.final_json = $.extend(this.model_json, this.final_json);
+            if(this.bulk)
+            {
+                this.final_json= {};
+                this.parse_bulk(this.final_json);
+                console.log(JSON.stringify(this.final_json));
+                var that = this;
+                // $.each(this.final_json.bulk, function(index, obj){
+                    that.clean_json(this.final_json);
+                    that.denormalize_json(this.final_json);
+                // });
+            }
+            else
+            {
+                this.final_json = Backbone.Syphon.serialize(this);
+                this.clean_json(this.final_json);
+                if(this.expanded)
+                {
+                    this.parse_expanded(this.final_json);
+                }
+                this.denormalize_json(this.final_json);
+                if(this.inline)
+                    this.parse_inlines(this.final_json);
+                this.final_json = $.extend(this.model_json, this.final_json);
+            }
+
             ev_res = {
                 type: "upload_error_resolved",
                 context: this,

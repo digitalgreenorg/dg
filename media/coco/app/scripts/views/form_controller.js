@@ -72,13 +72,67 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 //TODO: get the online id  
                 //TODO: save online_id in offline model
                 //TODO: offline to online
-                that.offline_to_online(this.form.final_json); // If offline to online conversion succeds, then we save it to offline db. If this is succesful, then save it on server, then get online id from the server and set it on the offline object. If there is an error, then ?
+                if(this.form.bulk)
+                {
+                    $.each(this.form.final_json.bulk, function(ind, obj){
+                        that.offline_to_online(obj);
+                    });
+                }
+                else
+                {
+                    that.offline_to_online(this.form.final_json); // If offline to online conversion succeds, then we save it to offline db. If this is succesful, then save it on server, then get online id from the server and set it on the offline object. If there is an error, then ?
+                }
                 // Error callbacks???
             }
             else
             {
                 //put into uploadqueue. save it in the offline db and upload Q.
                 // Offline save
+                if(this.form.bulk)
+                {
+                    console.log("FORMCONTROLLER: ITS A BULK");
+                    this.bulk_jsons = this.form.final_json.bulk;
+                    $.each(this.bulk_jsons,function(index, ijson){
+                        console.log(ijson);
+                        var generic_model_offline = Backbone.Model.extend({
+                            database: indexeddb,
+                            storeName: that.form.entity_name, // add attribute name
+                            action: "A"    
+                        });
+                        var i_model = new generic_model_offline();
+                        i_model.set(ijson);
+                        i_model.save(null,{
+                            success: function(in_model){
+                                console.log("FORMCONTROLLER: bulk model saved offline - "+JSON.stringify(in_model.toJSON()));
+                                upload_collection.create(
+                                    {
+                                        data: in_model.toJSON(),
+                                        action: in_model.action,   
+                                        entity_name: that.form.entity_name        
+                                    },
+                                    {
+                                        success:function(u_model){
+                                            console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
+                                            $(notifs_view.el)
+                                                .append(that.error_notif_template({
+                                                msg: "Success! Model saved offline and added to uploadqueue"
+                                            }));
+                                        },
+                                        error: function(u_model){
+                                            console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
+                
+                                        }    
+                                    }
+                                );            
+                            },
+                            error: function(error){
+                                console.log("FORMCONTROLLER: error saving inline model");
+                                console.log(error);
+                            }    
+                        });
+                    });
+                    return;
+                }
                 this.offline_m.save(null,{ // already set the json upstairs
                     success: function(model){
                         console.log("FORMCONTROLLER:ON_SAVE: model saved in offline");
@@ -194,6 +248,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log(this.params);
             // var f_entities = this.params.initialize.view_configs["foreign_entities"];
             var f_entities = this.form.foreign_entities;
+            if(this.form.bulk)
+            {
+                f_entities = this.form.bulk.foreign_fields;
+            }
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
             var online_json = $.extend(null, json); // making a copy of object json
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));
@@ -206,7 +264,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 {
                     convert_fields.push(element);
                     num_mem++;
-                    if(f_entities[member][element].expanded)
+                    if(f_entities[member][element].expanded&&!f_entities[member][element].only_render)
                     {
                         if(f_entities[member][element].expanded.foreign_fields)
                         {
@@ -224,7 +282,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: number of foreign elements - " + num_mem);
             if (!num_mem) {
                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: no foreign entities to convert");
-                this.after_offline_to_online_success(online_json);
+                this.after_offline_to_online_success(online_json,json);
             } else {
                 for (member in f_entities) {
                     for(element in f_entities[member])
@@ -234,7 +292,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             num_mem--;
                             if (!num_mem) {
                                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
-                                this.after_offline_to_online_success(online_json);
+                                this.after_offline_to_online_success(online_json,json);
                                 return;
                             }
                             else
@@ -275,7 +333,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                     num_mem--;
                                     if (!num_mem) {
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
-                                        that.after_offline_to_online_success(online_json);
+                                        that.after_offline_to_online_success(online_json,json);
                                     }            
                                 },
                                 error: function(){
@@ -298,8 +356,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 attribute: element    
                             });
                             var f_model = new generic_model_offline();
-                            f_model.set("id", online_json[element]["id"]);
+                            f_model.set("id", parseInt(online_json[element]["id"]));
                             var that = this;
+                            console.log(online_json[element]["id"]);
+                            console.log(parseInt(online_json[element]["id"]));
+                            
+                            console.log("Fetching ths model - ");
+                            console.log((f_model));
                             f_model.fetch({
                                 success: function(model) {
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
@@ -314,13 +377,14 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: original json - "+ JSON.stringify(json));
                                         console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fully converted json - "+JSON.stringify(online_json))
-                                        that.after_offline_to_online_success(online_json);
+                                        that.after_offline_to_online_success(online_json,json);
                                     }
                                 },
-                                error: function() {
+                                error: function(error) {
                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                                     //TODO: this model should be deleted from IDB and server ????
-                                    alert("unexpected error. check console log");
+                                    console.log(error);
+                                    alert("unexpected error. check console log "+error);
                                     // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
                                     $(notifs_view.el)
                                         .append(that.error_notif_template({
@@ -330,7 +394,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             });
                         }
                         
-                        if(f_entities[member][element].expanded)
+                        if(f_entities[member][element].expanded&&!f_entities[member][element].only_render)
                         {
                             if(f_entities[member][element].expanded.foreign_fields)
                             {
@@ -372,7 +436,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                                 num_mem--;
                                                 if (!num_mem) {
                                                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
-                                                    that.after_offline_to_online_success(online_json);
+                                                    that.after_offline_to_online_success(online_json,json);
                                                 }            
                                             }
                                         });        
@@ -385,7 +449,66 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             }
         },
             
-        after_offline_to_online_success: function(o_json){ // call this send_to_server
+        after_offline_to_online_success: function(o_json, off_json){ // call this send_to_server
+            console.log("FORMCONTROLLER: Got this json to save online - "+JSON.stringify(o_json));
+            var that = this;
+            if(this.form.bulk)
+            {
+                var generic_model_offline = Backbone.Model.extend({
+                    database: indexeddb,
+                    storeName: that.form.entity_name, // add attribute name
+                });
+                var generic_model_online = Backbone.Model.extend({
+                    sync: Backbone.ajaxSync,
+                    url: function() {
+                        return this.id ? that.params.initialize.view_configs.rest_api_url + this.id + "/" : that.params.initialize.view_configs.rest_api_url;
+                    },
+                });
+                var b_model_offline = new generic_model_offline();
+                var b_model_online = new generic_model_online();
+            
+                b_model_online.set(o_json);
+                b_model_online.save(null, {
+                    success: function(on_model){
+                        console.log("FRMCONTROLLER: online model after save - " + JSON.stringify(on_model.toJSON()));
+                        b_model_offline.set(off_json);
+                        b_model_offline.set('online_id',parseInt(on_model.get("id")));
+                        b_model_offline.save(null,{
+                            success: function(off_model){
+                                console.log("FRMCONTROLLER: offline model after evrthing-" + JSON.stringify(off_model.toJSON()));
+                                console.log("FRMCONTROLLER: Successfuly saved on server and offline.");
+                                $(notifs_view.el)
+                                    .append(that.success_notif_template({
+                                    msg: "Success! Saved on server and offline"
+                                }));    
+                            },
+                            error: function(){
+                                console.log("FORMCONTROLLER:ON_SAVE: Unexpected Error - error saving the model offline.");
+                                // that.form.show_errors("Unexepected Error- error saving the model offline");
+                                $(notifs_view.el)
+                                    .append(that.error_notif_template({
+                                    msg: "Error saving the model offline"
+                                }));
+                            }    
+                        });
+                        
+                    },
+                    error: function(model,xhr,options){
+                        console.log("error saving a bulk model on server");
+                        $(notifs_view.el)
+                            .append(that.error_notif_template({
+                            msg: "Error saving the model on server"
+                        }));
+                        that.form.show_errors(xhr.responseText);
+                            
+                       
+                    }    
+                });
+                
+                
+                return;    
+            }
+            
             var that = this;
             var generic_model_online = Backbone.Model.extend({
                 sync: Backbone.ajaxSync,
