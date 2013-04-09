@@ -478,7 +478,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                 console.log("FRMCONTROLLER: offline model after evrthing-" + JSON.stringify(off_model.toJSON()));
                                 console.log("FRMCONTROLLER: Successfuly saved on server and offline.");
                                 $(notifs_view.el)
-                                    .append(that.success_notif_template({
+                                    .append(that.error_notif_template({
                                     msg: "Success! Saved on server and offline"
                                 }));    
                             },

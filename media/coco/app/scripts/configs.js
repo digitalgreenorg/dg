@@ -173,7 +173,7 @@ function() {
         'list_item_template_name': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
-        'rest_api_url': '/api/v1/personadoptvideo/',
+        'rest_api_url': '/api/v1/adoption/',
         'entity_name': 'adoption',
             
           add: {

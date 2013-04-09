@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         template: "#dashboard",
         events: {
             // "click button#download": "Download",
-            "click button#upload": "upload"
+            "click #sync": "upload"
         },
 
         item_template: _.template($("#dashboard_item_template")
