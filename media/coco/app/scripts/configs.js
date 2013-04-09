@@ -175,6 +175,7 @@ function() {
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/api/v1/personadoptvideo/',
         'entity_name': 'adoption',
+            
           add: {
             'foreign_entities':{
                 'village': {
@@ -190,8 +191,47 @@ function() {
                           'dep_attr': 'village'      
                       }   
                   }
-                }
-            }    
+                },
+                'person': {
+                    farmers_attendance: {
+                        only_render: true,
+                        'dependency':{
+                            'source_entity': 'group',
+                            'source_form_element': 'group',      
+                            'dep_attr': 'group'      
+                         },
+                        id_field : "person_id",                   // for offline_to_online conversion      
+                        'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
+                            template : 'adoption_inline',
+                            placeholder : 'bulk',
+                            denormalize: {                            // any field in expanded template to be denormalised     
+                                "expressed_adoption_video" :{ 
+                                    name_field : 'title'
+                                }
+                            },
+                            foreign_fields:{                          // any more field in expanded template for offline to online conv
+                                  "expressed_adoption_video" : {
+                                      entity_name: "video"
+                                  }  
+                            },
+                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]                    
+                        }          
+                    }
+                }    
+            },
+            // 'inline':{
+//                 no_render : true, 'entity': 'adoption', 'num_rows':10, "template": "adoption_inline", "foreign_attribute":{ 'host_attribute':[], 'inline_attribute': null}, "header" : "adoption_inline_header", 'borrow_attributes':[]
+//             }
+            'bulk':{
+                foreign_fields:{                          // any more field in expanded template for offline to online conv
+                      "video" : {
+                          video:{'name_field':'title'}
+                      },
+                      "person" : {
+                          person:{'name_field':'person_name'}
+                      }            
+                },
+            }        
           },
           edit:{
             'foreign_entities':{
