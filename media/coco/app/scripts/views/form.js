@@ -226,6 +226,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             // fetching offline model and inlines
             var that = this;
             if (this.edit_case_json) {
+                that.normalize_json(this.model_json);
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
