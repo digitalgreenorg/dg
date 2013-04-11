@@ -6,7 +6,8 @@ requirejs.config({
     paths: {
         framework: 'libs/framework',
         controllers: 'app/controllers',
-        jquery: 'libs/external/jquery-1.8.3.min'
+        jquery: 'libs/external/jquery-1.8.3.min',
+        appConfig: 'appConfig'
     },
     shim: {}
 });

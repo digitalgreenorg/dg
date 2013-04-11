@@ -47,11 +47,11 @@ define(function(require) {
             var references = this._references;
             
             // data feeds
-            var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed.php');
+            var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
             recentlyViewedDataFeed.addInputParam('userId', true);
             this._addCollectionsDataFeed('recent', recentlyViewedDataFeed);
 
-            var completedCollectionsDataFeed = new GenericCollectionsDataFeed('api/completedCollections.php');
+            var completedCollectionsDataFeed = new GenericCollectionsDataFeed('api/completedCollections');
             completedCollectionsDataFeed.addInputParam('userId', true);
             this._addCollectionsDataFeed('completed', completedCollectionsDataFeed);
 
@@ -96,8 +96,8 @@ define(function(require) {
 
             // TODO: where do we get the uid from??
             this
-                ._setAllCollectionsInputParam('page', state.currentPage)
-                ._setAllCollectionsInputParam('count', collectionsPerPage)
+                ._setAllCollectionsInputParam('offset', state.currentPage)
+                ._setAllCollectionsInputParam('limit', collectionsPerPage)
                 ._setAllCollectionsInputParam('userId', 1337);
         },
 

@@ -127,8 +127,8 @@ define(function(require) {
             }
             
             var dataFeed = this._references.dataFeed;
-            dataFeed.setInputParam('page', page, true)
-            dataFeed.setInputParam('count', collectionsPerPage, true);
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', collectionsPerPage, true);
 
             var collectionsArray = dataFeed.getCollections();
             var totalCount = dataFeed.getTotalCount();

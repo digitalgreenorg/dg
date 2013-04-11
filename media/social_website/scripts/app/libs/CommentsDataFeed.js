@@ -27,13 +27,13 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/comment.php');
+            this.base('api/comment/');
 
             // prepare data model
             this._dataModel.addSubModel('comments', true);
 
-            this.addInputParam('page', false, 0);
-            this.addInputParam('count', false, 10);
+            this.addInputParam('offset', false, 0);
+            this.addInputParam('limit', false, 10);
         },
 
         fetch: function(page, countPerPage) {
@@ -45,8 +45,8 @@ define(function(require) {
                 countPerPage = 12;
             }
 
-            this.setInputParam('page', page, true);
-            this.setInputParam('count', countPerPage, true);
+            this.setInputParam('offset', page, true);
+            this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
             this.base();
@@ -60,8 +60,8 @@ define(function(require) {
             var commentsModel = dataModel.get('comments');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.count;
-            var page = unprocessedData.requestParameters.page;
+            var countPerPage = unprocessedData.requestParameters.limit;
+            var page = unprocessedData.requestParameters.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
@@ -92,8 +92,8 @@ define(function(require) {
 
         getComments: function() {
 
-            var page = this.getInputParam('page');
-            var countPerPage = this.getInputParam('count');
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
 
             var comments = this._dataModel.get('comments').getSubset(page * countPerPage, countPerPage);
 

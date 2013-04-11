@@ -25,7 +25,7 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/collectionsSearch.php');
+            this.base('api/collectionsSearch/');
 
             this._filters = {};
 
@@ -35,8 +35,8 @@ define(function(require) {
             var collectionsSubModel = dataModel.addSubModel('collections', true);
 
             // set up input params
-            this.addInputParam('page', true, 0, true);
-            this.addInputParam('count', true, 12, true);
+            this.addInputParam('offset', true, 0, true);
+            this.addInputParam('limit', true, 12, true);
             this.addInputParam('filters', false, null, true, collectionsSubModel);
             this.addInputParam('orderBy', false, null, true, collectionsSubModel);
             this.addInputParamCacheClear('language', collectionsSubModel);
@@ -51,8 +51,8 @@ define(function(require) {
                 countPerPage = 12;
             }
 
-            this.setInputParam('page', page, true);
-            this.setInputParam('count', countPerPage, true);
+            this.setInputParam('offset', page, true);
+            this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
             this.base();
@@ -66,16 +66,16 @@ define(function(require) {
             var collectionsModel = dataModel.get('collections');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.count;
-            var page = unprocessedData.requestParameters.page;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
 
             // import collections from data
-            var collectionsToAdd = unprocessedData.collections;
+            var collectionsToAdd = unprocessedData.objects;
             var startingCacheId = page * countPerPage;
-
+            
             collectionsModel.addSubset(collectionsToAdd, startingCacheId);
         },
 
@@ -149,8 +149,8 @@ define(function(require) {
 
         getCollections: function() {
 
-            var page = this.getInputParam('page');
-            var countPerPage = this.getInputParam('count');
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
 
             var collections = this._dataModel.get('collections').getSubset(page * countPerPage, countPerPage);
 

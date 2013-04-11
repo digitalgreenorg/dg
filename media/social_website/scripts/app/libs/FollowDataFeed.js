@@ -15,8 +15,8 @@ define(function(require) {
 
         constructor: function() {
             // NOTE: response code testing; only one is required for implementation
-            this.base('api/genericReturnOK.php');
-            // this.base('api/genericReturnError.php');
+            this.base('api/genericReturnOK');
+            // this.base('api/genericReturnError');
             
             this.addInputParam('userID', true);
             this.addInputParam('activityId', true);

@@ -105,8 +105,8 @@ define(function(require) {
             }
             
             var dataFeed = this._references.dataFeed;
-            dataFeed.setInputParam('page', page, true)
-            dataFeed.setInputParam('count', newsItemsPerPage, true);
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', newsItemsPerPage, true);
 
             var activitiesData = dataFeed.getNewsItems();
             var totalCount = dataFeed.getTotalCount();

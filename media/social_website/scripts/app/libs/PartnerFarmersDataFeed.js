@@ -23,7 +23,7 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/partnerFarmers.php');
+            this.base('api/partnerFarmers/');
 
             // prepare data model
             var partnerFarmersSubModel = this._dataModel.addSubModel('partnerFarmers', true);
@@ -31,8 +31,8 @@ define(function(require) {
             this.addInputParam('partnerUID', false, undefined, true, partnerFarmersSubModel);
             this.addInputParamCacheClear('language', partnerFarmersSubModel);
 
-            this.addInputParam('page', false);
-            this.addInputParam('count', false);
+            this.addInputParam('offset', false);
+            this.addInputParam('limit', false);
 
             this.getPartnerFarmers();
         },
@@ -46,8 +46,8 @@ define(function(require) {
                 countPerPage = 12;
             }
 
-            this.setInputParam('page', page, true);
-            this.setInputParam('count', countPerPage, true);
+            this.setInputParam('offset', page, true);
+            this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
             this.base();
@@ -61,8 +61,8 @@ define(function(require) {
             var model = dataModel.get('partnerFarmers');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.count;
-            var page = unprocessedData.requestParameters.page;
+            var countPerPage = unprocessedData.requestParameters.limit;
+            var page = unprocessedData.requestParameters.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
@@ -84,8 +84,8 @@ define(function(require) {
 
         getPartnerFarmers: function() {
 
-            var page = this.getInputParam('page');
-            var countPerPage = this.getInputParam('count');
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
 
             var data = this._dataModel.get('partnerFarmers').getSubset(page * countPerPage, countPerPage);
 

@@ -3,14 +3,15 @@ define(function(require) {
     
     var DataFeed = require('app/libs/DataFeed');
     var globalEventManager = require('framework/globalEventManager');
-
+    var appConfig = require('appConfig');
+    
     var DigitalGreenDataFeed = DataFeed.extend({
 
         _boundFunctions: undefined,
 
         constructor: function(feedURL) {
-            this.base(feedURL);
-
+            this.base(appConfig.apiUrl + feedURL);
+            
             this.addInputParam('language', false, '', true);
         },
 

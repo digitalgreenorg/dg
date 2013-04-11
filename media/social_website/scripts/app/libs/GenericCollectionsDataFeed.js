@@ -30,7 +30,7 @@ define(function(require) {
             var collectionsSubModel = dataModel.addSubModel('collections', true);
 
             // set up input params
-            this.addInputParam('page', true, 0, true);
+            this.addInputParam('offset', true, 0, true);
             // TODO: if count per page could *ever* be changed by the user, additional
             // work would need to be done to either invalidate the last group of entries
             // of any newly created "partial" pages, invalidate the whole cache, etc.
@@ -55,8 +55,8 @@ define(function(require) {
             var collectionsModel = dataModel.get('collections');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.count;
-            var page = unprocessedData.requestParameters.page;
+            var countPerPage = unprocessedData.requestParameters.limit;
+            var page = unprocessedData.requestParameters.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
@@ -82,8 +82,8 @@ define(function(require) {
                 var totalCount = this.getTotalCount();
 
                 this.trigger('totalNumberOfCollectionsReached', {
-                    currentPage: this.getInputParam('page'),
-                    totalPages: Math.ceil(totalCount / this.getInputParam('count')),
+                    currentPage: this.getInputParam('offset'),
+                    totalPages: Math.ceil(totalCount / this.getInputParam('limit')),
                     totalCount: totalCount
                 });
             }
@@ -92,7 +92,7 @@ define(function(require) {
         },
 
         _translatePageDescriptor: function(pageDescriptor) {
-            var pageNumber = this.getInputParam('page');
+            var pageNumber = this.getInputParam('offset');
 
             if (pageDescriptor != undefined) {
                 switch (pageDescriptor) {
@@ -120,7 +120,7 @@ define(function(require) {
         setCollectionsPage: function(pageDescriptor) {
             var pageNumber = this._translatePageDescriptor(pageDescriptor);
 
-            this.setInputParam('page', pageNumber);
+            this.setInputParam('offset', pageNumber);
 
             return pageNumber;
         },
@@ -129,7 +129,7 @@ define(function(require) {
 
             this.setCollectionsPage(pageDescriptor);
 
-            var countPerPage = this.getInputParam('count');
+            var countPerPage = this.getInputParam('limit');
 
             var collectionsModel = this._dataModel.get('collections');
 
@@ -156,8 +156,8 @@ define(function(require) {
             // alert if we've just now received all collections
             this.checkHaveAllCollections();
 
-            var pageNumber = this.getInputParam('page');
-            var countPerPage = this.getInputParam('count');
+            var pageNumber = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
 
             var returnData = {
                 startPage: pageNumber,
@@ -179,8 +179,8 @@ define(function(require) {
 
             var returnData = {
                 startPage: 0,
-                currentPage: this.getInputParam('page'),
-                countPerPage: this.getInputParam('count'),
+                currentPage: this.getInputParam('offset'),
+                countPerPage: this.getInputParam('limit'),
                 collections: this._dataModel.get('collections').get()
             };
 

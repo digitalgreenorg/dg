@@ -25,7 +25,7 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/activity.php');
+            this.base('api/activity/');
 
             // prepare data model
             var activitiesSubModel = this._dataModel.addSubModel('activities', true);
@@ -35,8 +35,8 @@ define(function(require) {
             this.addInputParam('userUID', false, undefined, true, activitiesSubModel);
             this.addInputParamCacheClear('language', activitiesSubModel);
 
-            this.addInputParam('page', false);
-            this.addInputParam('count', false);
+            this.addInputParam('offset', false);
+            this.addInputParam('limit', false);
         },
 
         fetch: function(page, countPerPage) {
@@ -48,8 +48,8 @@ define(function(require) {
                 countPerPage = 5;
             }
 
-            this.setInputParam('page', page, true);
-            this.setInputParam('count', countPerPage, true);
+            this.setInputParam('offset', page, true);
+            this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
             this.base();
@@ -63,8 +63,8 @@ define(function(require) {
             var model = dataModel.get('activities');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.count;
-            var page = unprocessedData.requestParameters.page;
+            var countPerPage = unprocessedData.requestParameters.limit;
+            var page = unprocessedData.requestParameters.offset;
 
             // store total count
             dataModel.set('totalCount', unprocessedData.totalCount);
@@ -86,8 +86,8 @@ define(function(require) {
 
         getActivities: function() {
 
-            var page = this.getInputParam('page');
-            var countPerPage = this.getInputParam('count');
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
 
             var data = this._dataModel.get('activities').getSubset(page * countPerPage, countPerPage);
 

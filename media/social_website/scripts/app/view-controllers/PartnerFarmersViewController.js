@@ -127,8 +127,8 @@ define(function(require) {
             }
             
             var dataFeed = this._references.dataFeed;
-            dataFeed.setInputParam('page', page, true)
-            dataFeed.setInputParam('count', farmersPerPage, true);
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', farmersPerPage, true);
 
 
             var partnerFarmersArray = dataFeed.getPartnerFarmers();

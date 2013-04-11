@@ -107,8 +107,8 @@ define(function(require) {
             }
             
             var dataFeed = this._references.dataFeed;
-            dataFeed.setInputParam('page', page, true)
-            dataFeed.setInputParam('count', commentsPerPage, true);
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', commentsPerPage, true);
 
             var commentsArray = dataFeed.getComments();
             var totalCount = dataFeed.getTotalCount();
