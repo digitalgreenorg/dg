@@ -8,20 +8,40 @@ from django.core.serializers.json import DjangoJSONEncoder
 #from dashboard.api import VideoResource
 
 def save_log(sender, **kwargs ):
+    print 'save log'
+    from dashboard.models import ServerLog
     instance = kwargs["instance"]
     action  = kwargs["created"]
+    print instance
+    print type(instance)
     sender = sender.__name__    # get the name of the table which sent the request
     model_dict = model_to_dict(instance)
+    print instance.user_created_id, instance.user_modified_id
     json_str = json.dumps(model_dict, cls=DjangoJSONEncoder)
+    print json_str
+    print sender
+    print action
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
+        print user
     except Exception, ex:
+        print 'user none'
         user = None
     try:
-        ServerLog = get_model('dashboard','ServerLog')
+        print 'in try'
+        try:
+            instance.get_village()
+        except Exception as e:
+            print type(e), e
+        print user 
+        print action
+        print sender
+        print instance.id
+        print instance.get_partner()
         log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner(),instance_json = json_str)
         log.save()
     except Exception as ex:
+        print 'in excpetion'
         print ex
     
 def delete_log(sender, **kwargs ):
@@ -59,9 +79,10 @@ def send_updated_log(request):
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
     if timestamp:
         if partner_id:  
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id ).exclude(user_id = coco_user.id)
         else:
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages).exclude(user_id = coco_user.id)
+    ####Not necessary..need to remove it..####
     else:
         if partner_id:
             rows = ServerLog.objects.filter(village__in = villages, partner = partner_id )

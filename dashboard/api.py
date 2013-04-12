@@ -654,8 +654,8 @@ class PersonResource(ModelResource):
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
         authentication = BasicAuthentication()
-        authorization = VillageLevelAuthorization('village__in')
-        #authorization = Authorization()
+        #authorization = VillageLevelAuthorization('village__in')
+        authorization = Authorization()
         
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
@@ -706,9 +706,9 @@ class PersonResource(ModelResource):
     
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(PersonResource, self).obj_create(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
-            bundle.obj.save()
+        #if request.user:
+            #bundle.obj.user_created_id = request.user.id
+            #bundle.obj.save()
         return bundle
 
     
