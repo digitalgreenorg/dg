@@ -1,11 +1,12 @@
 from dashboard.models import User
 from datetime import datetime
 from django.db.models import get_model
+from django.core import serializers
 import json
 from django.utils import simplejson
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.simplejson import JSONEncoder
 #from dashboard.api import VideoResource
 
 def save_log(sender, **kwargs ):
@@ -13,13 +14,9 @@ def save_log(sender, **kwargs ):
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
     model_dict = model_to_dict(instance)
-    try:
-        json_str = simplejson.dumps(model_dict, cls=DjangoJSONEncoder)
-    except TypeError as e:
-        ##Log the error in new relic..Failing to json encode file fields
-        #modify it..video is not getting saved because of this encoder
-        json_str = ""
-        pass
+    data = serializers.serialize('json', [instance,])
+    struct = json.loads(data)
+    json_str = json.dumps(struct[0])
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
     except Exception, ex:
