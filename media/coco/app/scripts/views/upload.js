@@ -5,11 +5,12 @@ define([
   'indexeddb_backbone_config',
   'configs',
   'views/form',
-  'collections/upload_collection'                      
+  'collections/upload_collection',
+  'offline_to_online'                            
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pas,pass,indexeddb, configs, Form, upload_collection){
+], function($,pas,pass,indexeddb, configs, Form, upload_collection, OfflineToOnline){
     
     var UploadView = Backbone.Layout.extend({
         
@@ -23,6 +24,8 @@ define([
             console.log("UPLOAD: initializing new upload view");
             $(document)
                 .on("read_next", this.next_upload);
+            _(this)
+                .bindAll('json_converted');
         },  
               
         start_upload: function() {
@@ -82,7 +85,8 @@ define([
             console.log("UPLOAD: processing this uploadqueue entry - " + JSON.stringify(entry.toJSON()));
             if (entry.get("action") == "A" || entry.get("action") == "E") {
                 console.log("UPLOAD: its add or edit action");
-                this.offline_to_online(entry);
+                // this.offline_to_online(entry);
+                OfflineToOnline.convert(entry.get("data"), configs[entry.get('entity_name')]["foreign_entities"]).then(this.json_converted);
             } else if (entry.get("action") == "D") {
                 console.log("UPLOAD: its delete action");
                 this.upload_delete(entry);
@@ -90,7 +94,18 @@ define([
                 console.log("ERROR:UPLOAD: its ambigous action in entry. None of A,E,D");
             }
         },
-
+            
+        json_converted: function(something){
+            console.log("Gotcha B****: conv json");
+            console.log(something);
+            if (this.current_entry.get("action") == "A") {
+                console.log("UPLOAD: its add action");
+                this.upload_add(something.on_json);
+            } else if (this.current_entry.get("action") == "E") {
+                console.log("UPLOAD: its edit action");
+                this.upload_edit(something.on_json);
+            }
+        },
         offline_to_online: function(entry) {
             console.log("UPLOAD:OFFLINE_TO_ONLINE: here am i");
             var f_entities = configs[entry.get('entity_name')]["foreign_entities"];
