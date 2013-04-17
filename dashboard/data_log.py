@@ -1,10 +1,12 @@
 from dashboard.models import User
 from datetime import datetime
 from django.db.models import get_model
+from django.core import serializers
 import json
+from django.utils import simplejson
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
-from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.simplejson import JSONEncoder
 #from dashboard.api import VideoResource
 
 def save_log(sender, **kwargs ):
@@ -16,11 +18,9 @@ def save_log(sender, **kwargs ):
     print type(instance)
     sender = sender.__name__    # get the name of the table which sent the request
     model_dict = model_to_dict(instance)
-    print instance.user_created_id, instance.user_modified_id
-    json_str = json.dumps(model_dict, cls=DjangoJSONEncoder)
-    print json_str
-    print sender
-    print action
+    data = serializers.serialize('json', [instance,])
+    struct = json.loads(data)
+    json_str = json.dumps(struct[0])
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
         print user
