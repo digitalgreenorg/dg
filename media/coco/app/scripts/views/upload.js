@@ -4,55 +4,46 @@ define([
   'backbone',
   'indexeddb_backbone_config',
   'configs',
-  'views/form'
+  'views/form',
+  'collections/upload_collection',
+  'offline_to_online'                            
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pas,pass,indexeddb, configs, Form){
+], function($,pas,pass,indexeddb, configs, Form, upload_collection, OfflineToOnline){
     
     var UploadView = Backbone.Layout.extend({
         
         template: "#upload_template",
         increment_pb: function() {
-            var curr_pb = this.$('#pbar')
-                .width();
-            // console.log(curr_pb);
-            // console.log(curr_pb.split("px")[0]);
-            // curr_pb = parseInt(curr_pb.split("px")[0]);
-            var new_pb = progress_bar_step + curr_pb;
-            console.log("curr_pb= " + curr_pb);
-            console.log("step= " + progress_bar_step);
-            console.log("new_pb= " + new_pb);
-            this.$('#pbar')
-                .width(new_pb + "%");
+            w = parseInt(document.getElementById('pbar').style.width);
+            document.getElementById('pbar').style.width= (w + progress_bar_step) +'%';
         },
         
         initialize: function(){
-            // this.$('#upload_modal').modal({keyboard: false});
             console.log("UPLOAD: initializing new upload view");
             $(document)
                 .on("read_next", this.next_upload);
-            
-            
-        },    
-
+            _(this)
+                .bindAll('json_converted');
+        },  
+              
         start_upload: function() {
-            // this.$('#upload_modal').modal('show');
+            this.$('#upload_modal').modal('show');
             console.log("UPLOAD: start the fuckin upload");
-            // this.$('#show_status').html(this.progress_bar_template());
-            // this.$("#upload_modal").modal('show');
-            // fetch the upload queue from indexeddb
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "uploadqueue",
-            });
-            var generic_offline_collection = Backbone.Collection.extend({
-                model: generic_model_offline,
-                database: indexeddb,
-                storeName: "uploadqueue",
-            });
-            this.generic_upload_model = generic_model_offline;
-            this.upload_collection = new generic_offline_collection();
+            // var generic_model_offline = Backbone.Model.extend({
+//                 database: indexeddb,
+//                 storeName: "uploadqueue",
+//             });
+//             var generic_offline_collection = Backbone.Collection.extend({
+//                 model: generic_model_offline,
+//                 database: indexeddb,
+//                 storeName: "uploadqueue",
+//             });
+
+            // this.generic_upload_model = generic_model_offline;
+            // this.upload_collection = new generic_offline_collection();
+            this.upload_collection = upload_collection;
             this.upload_collection.bind('reset', this.process_upload_queue, this);
             this.upload_collection.fetch();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +52,7 @@ define([
         // read each entry of the uploadqueue 
         process_upload_queue: function() {
             console.log("UPLOAD: inside upload queue: " + this.upload_collection.length + " entries");
+            $('#num_upload').html(this.upload_collection.length);
             progress_bar_step = 100 / this.upload_collection.length;
             console.log("UPLOAD: progress bar step: " + progress_bar_step);
             ev = {
@@ -78,9 +70,13 @@ define([
             console.log(this);
             event.context.increment_pb();
             var model1 = event.context.upload_collection.shift();
-            if (model1 == undefined) return;
+            if (model1 == undefined) {
+                $('#upload_modal').modal('hide'); 
+                return;
+            }
             console.log(model1);
             event.context.process_upload_entry(model1);
+            $('#curr_status').html("Uploading "+model1.get("entity_name"));
 
         },
 
@@ -89,16 +85,27 @@ define([
             console.log("UPLOAD: processing this uploadqueue entry - " + JSON.stringify(entry.toJSON()));
             if (entry.get("action") == "A" || entry.get("action") == "E") {
                 console.log("UPLOAD: its add or edit action");
-                this.offline_to_online(entry);
+                // this.offline_to_online(entry);
+                OfflineToOnline.convert(entry.get("data"), configs[entry.get('entity_name')]["foreign_entities"]).then(this.json_converted);
             } else if (entry.get("action") == "D") {
                 console.log("UPLOAD: its delete action");
                 this.upload_delete(entry);
             } else {
                 console.log("ERROR:UPLOAD: its ambigous action in entry. None of A,E,D");
-                // alert("ERROR!");
             }
         },
-
+            
+        json_converted: function(something){
+            console.log("Gotcha B****: conv json");
+            console.log(something);
+            if (this.current_entry.get("action") == "A") {
+                console.log("UPLOAD: its add action");
+                this.upload_add(something.on_json);
+            } else if (this.current_entry.get("action") == "E") {
+                console.log("UPLOAD: its edit action");
+                this.upload_edit(something.on_json);
+            }
+        },
         offline_to_online: function(entry) {
             console.log("UPLOAD:OFFLINE_TO_ONLINE: here am i");
             var f_entities = configs[entry.get('entity_name')]["foreign_entities"];

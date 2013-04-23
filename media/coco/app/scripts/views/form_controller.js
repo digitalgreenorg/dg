@@ -1,8 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'views/form', 'collections/upload_collection'
+define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 
+    'views/notification', 'indexeddb_backbone_config', 'configs', 'views/form', 'collections/upload_collection', 'offline_to_online'
 // Using the Require.js text! plugin, we are loaded raw text
 // which will be used as our views primary template
 // 'text!templates/project/list.html'
-], function($, pas, pass, pass, pass, notifs_view, indexeddb, configs, Form, upload_collection) {
+], function($, pas, pass, pass, pass, notifs_view, indexeddb, configs, Form, upload_collection, OfflineToOnline) {
 
     // FormController: Brings up the Add/Edit form
     
@@ -25,6 +26,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .bindAll('on_save');
             _(this)
                 .bindAll('on_button2');
+            _(this)
+                .bindAll('json_converted');
             $(document)
                 .on("save_clicked", this.on_save);
             $(document)
@@ -42,6 +45,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
             
+        json_converted: function(something){
+            console.log("Gotcha B****: conv json");
+            console.log(something);
+            this.after_offline_to_online_success(something.on_json, something.off_json)
+        },    
+
         on_save: function(e) {
             e.stopPropagation();
             console.log("ADD/EDIT: Save clicked on form - ");
@@ -75,12 +84,18 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 if(this.form.bulk)
                 {
                     $.each(this.form.final_json.bulk, function(ind, obj){
-                        that.offline_to_online(obj);
+                        // that.listenTo(OfflineToOnline, 'converted', that.json_converted);
+                        // OfflineToOnline.convert(obj, that.form.bulk.foreign_fields);
+                        OfflineToOnline.convert(obj, that.form.bulk.foreign_fields).then(that.json_converted);
                     });
                 }
                 else
                 {
-                    that.offline_to_online(this.form.final_json); // If offline to online conversion succeds, then we save it to offline db. If this is succesful, then save it on server, then get online id from the server and set it on the offline object. If there is an error, then ?
+                    // that.offline_to_online(this.form.final_json); // If offline to online conversion succeds, then we save it to offline db. If this is succesful, then save it on server, then get online id from the server and set it on the offline object. If there is an error, then ?
+                    // this.listenTo(OfflineToOnline, 'converted', this.json_converted);
+                    // OfflineToOnline.convert(this.form.final_json,this.form.foreign_entities)
+                    OfflineToOnline.convert(this.form.final_json,this.form.foreign_entities).then(this.json_converted);
+                    
                 }
                 // Error callbacks???
             }
