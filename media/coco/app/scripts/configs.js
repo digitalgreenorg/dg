@@ -362,6 +362,10 @@ function() {
     //     'list_item_template_name': 'animator_list_item_template'
     // };
     
+    var misc = {
+        download_size : 2000
+    };
+    
     return {
         
         person: person_configs,
@@ -371,7 +375,8 @@ function() {
         video: video_configs,
         language: language_configs,
         screening: screening_configs,
-        adoption: adoption_configs        
+        adoption: adoption_configs,
+        misc: misc            
     }
 
 });
