@@ -265,6 +265,7 @@ urlpatterns = patterns('',
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^get_log/?$',send_updated_log),
+    (r'^dimagi/', include('dimagi.urls')),
      
 )
 

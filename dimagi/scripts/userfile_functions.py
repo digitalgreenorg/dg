@@ -16,7 +16,6 @@ def read_userfile(file):
     return data
 
 def rm_bom(filename):
-    print filename
     out = r'C:\Users\Yash\Documents\GitHub\dg\dimagi\scripts\try2.xml'
     with open(filename, 'rb') as source_file:
         with open(out, 'w+b') as dest_file:
@@ -92,20 +91,20 @@ def upload_file(file):
     response = urllib2.urlopen(request)
     return response.getcode()
 
-if __name__ == '__main__':
-    file = 'userfileappilot.json'
-#    user_villages = []
-#    json_data = json.dumps([{'user_id': '53d48b7a60a11661405244b98581d3ea',
-#                          'username': 'krishna',
-#                          'villages' : [10000000020940,10000000020936,10000000020938,10000000021295]},
-##                            {'user_id': 'f097d1d213ad3a08fee6643133465660',
-##                          'username': 'y2',
-##                          'villages' : [10000000020974,10000000020975,10000000021293,
-##                                        10000000020958,10000000020960,10000000020956]}
-#                            ])
-#    data = json.loads(json_data)
-#    write_userfile(file,json_data)
-    data = read_userfile(file)
-    print data
-    villages = data[0]['villages']
-    make_upload_file(villages, r'C:\Users\Yash\Documents\GitHub\dg\dimagi\scripts\try.xml')
+#if __name__ == '__main__':
+#    file = 'userfileappilot.json'
+##    user_villages = []
+##    json_data = json.dumps([{'user_id': '53d48b7a60a11661405244b98581d3ea',
+##                          'username': 'krishna',
+##                          'villages' : [10000000020940,10000000020936,10000000020938,10000000021295]},
+###                            {'user_id': 'f097d1d213ad3a08fee6643133465660',
+###                          'username': 'y2',
+###                          'villages' : [10000000020974,10000000020975,10000000021293,
+###                                        10000000020958,10000000020960,10000000020956]}
+##                            ])
+##    data = json.loads(json_data)
+##    write_userfile(file,json_data)
+#    data = read_userfile(file)
+#    print data
+#    villages = data[0]['villages']
+#    make_upload_file(villages, r'C:\Users\Yash\Documents\GitHub\dg\dimagi\scripts\try.xml')

@@ -1,7 +1,7 @@
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
-import csv,datetime, json, urllib2, uuid, base64
+import os, csv, datetime, json, urllib2, uuid, base64
 from userfile_functions import upload_file, write_person_detail
 from django.db.models import get_model
 
@@ -65,21 +65,23 @@ def close_case(case_id, filename):
 def get_person_id_from_pma(instance):
     PersonMeetingAttendance = get_model('dashboard',instance.entry_table)
     person_id = PersonMeetingAttendance.objects.get(id = instance.model_id).person.id
-    print person_id
     return person_id
     
 def update_case(sender, **kwargs):
     instance = kwargs["instance"]
     action  = instance.action
-    print instance.entry_table
     if instance.entry_table == 'Person' or instance.entry_table == 'PersonMeetingAttendance' or instance.entry_table == 'PersonAdoptPractice':
         if instance.entry_table == 'Person':
             person_id = instance.model_id
         else:
-            print 'in save of ' + str(instance.entry_table)
             person_id = get_person_id_from_pma(instance)
         case_id = get_case_id(person_id)
+        scripts_dir = os.path.dirname(__file__)
+        dir = scripts_dir + "\case_update"
+        if not os.path.exists(dir):
+            os.makedirs(dir)
         filename = 'person' + str(person_id) + '.xml'
+        filename = os.path.join(dir,filename)
         if action == 0 or action == 1:
             write_person_detail(person_id,filename,0, case_id )
         else:
@@ -107,19 +109,3 @@ def update_case_person_dict(user_id):
             case_person_dict[person_id] = case['case_id']
     write_dict(case_person_dict, 'user.csv')
     return case_person_dict
-    
-if __name__ == '__main__':
-    user_id = 'krishna'
-    person_id = 5000001002
-#    data = get_user_data(user_id)
-#    already_exists = check_person_id(data, person_id)
-#    if not already_exists:
-#        write_person_detail(person_id,'person.xml' )
-#        response = upload_file('person.xml')
-#        print response
-#    close_case('cbb7d038-4905-4776-a798-e0c9f1ddcf98','close.xml')
-    dict = update_case_person_dict(user_id)
-    print dict
-    print len(dict)
-    dd = read_dict('user.csv')
-    print dd
