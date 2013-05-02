@@ -15,14 +15,6 @@ def read_userfile(file):
     data = json.loads(json_data)
     return data
 
-def rm_bom(filename):
-    out = r'C:\Users\Yash\Documents\GitHub\dg\dimagi\scripts\try2.xml'
-    with open(filename, 'rb') as source_file:
-        with open(out, 'w+b') as dest_file:
-            contents = source_file.read()
-            dest_file.write(contents.decode('utf-8').encode('utf-8-sig'))
-    return out
-
 def write_person_detail(person_id, filename, i=0, case_id=None):
     import codecs
     f = codecs.open(filename, "w",'utf-8')
@@ -72,7 +64,6 @@ def write_person_detail(person_id, filename, i=0, case_id=None):
     f.write('</n' + unicode(i) + ':meta>\n')
     f.write('</data>')
     f.close()
-#    f = rm_bom(filename)
     return f
 
 def make_upload_file(villages, filename):
