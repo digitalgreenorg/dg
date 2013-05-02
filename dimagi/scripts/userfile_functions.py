@@ -24,16 +24,16 @@ def rm_bom(filename):
             dest_file.write(contents.decode('utf-8').encode('utf-8-sig'))
     return out
 
-def write_person_detail(person_ids, filename, i=0, case_id=None):
+def write_person_detail(person_id, filename, i=0, case_id=None):
     import codecs
-    f = open(filename, "w")
+    f = codecs.open(filename, "w",'utf-8')
     Person = get_model('dashboard','Person')
     PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
     PersonAdoptPractice = get_model('dashboard','PersonAdoptPractice')
     f.write('<?xml version="1.0" ?>\n')
     f.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
-    f.write('<num_people>' + str(len(person_ids)) + '</num_people>\n')
-    for person_id in person_ids:
+    f.write('<num_people>' + unicode(1) + '</num_people>\n')
+    for n in range(0,1):
         person = Person.objects.get(id = person_id)
     #    f = open(filename,'w')
         case_id = uuid.uuid4()
@@ -42,35 +42,35 @@ def write_person_detail(person_ids, filename, i=0, case_id=None):
         vids = PersonMeetingAttendance.objects.filter(person = person).values_list('screening__videoes_screened', flat = True)
         videos_seen = ''
         for vid in vids:
-            videos_seen = videos_seen + str(vid) + ' '
+            videos_seen = videos_seen + unicode(vid) + ' '
         # Getting list of videos adopted
         adopts = PersonAdoptPractice.objects.filter(person = person).values_list('video', flat = True)
         videos_adopted = ''
         for vid in adopts:
-            videos_adopted = videos_adopted + str(vid) + ' '
+            videos_adopted = videos_adopted + unicode(vid) + ' '
         # Putting all the info in xml tags
         f.write('<people>\n')
-        f.write('<n'+str(i)+':case case_id="'+str(case_id)+ '" date_modified="'+ str(datetime.datetime.now().date()) + '" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n'+str(i)+'="http://commcarehq.org/case/transaction/v2">\n')
-        f.write('<n'+str(i)+':create>\n')
-        f.write('<n'+str(i)+':case_type>person</n'+str(i)+':case_type>\n')
-        f.write('<n'+str(i)+':owner_id>' + '2523fc995ccfd1d27c15111ec8987be6' + '</n'+str(i)+':owner_id>\n')
-        f.write('<n'+str(i)+':case_name>' + unicode(person.person_name) + '</n'+str(i)+':case_name>\n')
-        f.write('</n'+str(i)+':create>\n')
-        f.write('<n'+str(i)+':update>\n')
-        f.write('<n'+str(i)+':id>' + str(person.id) + '</n'+str(i)+':id>\n')
-        f.write('<n'+str(i)+':group_id>' + str(person.group.id)+ '</n'+str(i)+':group_id>\n')
-        f.write('<n'+str(i)+':videos_seen>' + videos_seen + '</n'+str(i)+':videos_seen>\n')
-        f.write('<n'+str(i)+':videos_adopted>' + '' + '</n'+str(i)+':videos_adopted>\n')
-        f.write('</n'+str(i)+':update>\n')
-        f.write('</n'+str(i)+':case>\n')
+        f.write('<n'+unicode(i)+':case case_id="'+unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
+        f.write('<n'+unicode(i)+':create>\n')
+        f.write('<n'+unicode(i)+':case_type>person</n'+unicode(i)+':case_type>\n')
+        f.write('<n'+unicode(i)+':owner_id>' + '2523fc995ccfd1d27c15111ec8987be6' + '</n'+unicode(i)+':owner_id>\n')
+        f.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '</n'+unicode(i)+':case_name>\n')
+        f.write('</n'+unicode(i)+':create>\n')
+        f.write('<n'+unicode(i)+':update>\n')
+        f.write('<n'+unicode(i)+':id>' + unicode(person.id) + '</n'+unicode(i)+':id>\n')
+        f.write('<n'+unicode(i)+':group_id>' + unicode(person.group.id)+ '</n'+unicode(i)+':group_id>\n')
+        f.write('<n'+unicode(i)+':videos_seen>' + videos_seen + '</n'+unicode(i)+':videos_seen>\n')
+        f.write('<n'+unicode(i)+':videos_adopted>' + '' + '</n'+unicode(i)+':videos_adopted>\n')
+        f.write('</n'+unicode(i)+':update>\n')
+        f.write('</n'+unicode(i)+':case>\n')
         f.write('</people>\n')
         # Writing closing meta info of the form
         i += 1
         
-    f.write('<n'+str(i) + ':meta xmlns:n' + str(i) + '="http://openrosa.org/jr/xforms">\n')
-    f.write('<n'+str(i) + ':userID>2523fc995ccfd1d27c15111ec8987be6</n' + str(i) + ':userID>\n')
-    f.write('<n'+str(i) + ':instanceID>2729386f-7fd2-42cc-807f-786bf2dc952b</n' + str(i) + ':instanceID>\n')
-    f.write('</n' + str(i) + ':meta>\n')
+    f.write('<n'+unicode(i) + ':meta xmlns:n' + unicode(i) + '="http://openrosa.org/jr/xforms">\n')
+    f.write('<n'+unicode(i) + ':userID>2523fc995ccfd1d27c15111ec8987be6</n' + unicode(i) + ':userID>\n')
+    f.write('<n'+unicode(i) + ':instanceID>2729386f-7fd2-42cc-807f-786bf2dc952b</n' + unicode(i) + ':instanceID>\n')
+    f.write('</n' + unicode(i) + ':meta>\n')
     f.write('</data>')
     f.close()
 #    f = rm_bom(filename)
@@ -89,9 +89,8 @@ def upload_file(file):
 #    print 'uploading ' + file
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
     request = urllib2.Request("https://www.commcarehq.org/a/dgappilot/receiver", datagen, headers)
-    response = urllib2.urlopen(request).read()
-    return response
-    
+    response = urllib2.urlopen(request)
+    return response.getcode()
 
 if __name__ == '__main__':
     file = 'userfileappilot.json'

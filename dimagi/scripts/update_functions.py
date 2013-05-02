@@ -63,18 +63,20 @@ def close_case(case_id, filename):
     return f
 
 def get_person_id_from_pma(instance):
-    PersonMeetingAttendance = get_model('dashboard','PersonMeetingAttendance')
+    PersonMeetingAttendance = get_model('dashboard',instance.entry_table)
     person_id = PersonMeetingAttendance.objects.get(id = instance.model_id).person.id
+    print person_id
     return person_id
     
 def update_case(sender, **kwargs):
     instance = kwargs["instance"]
     action  = instance.action
     print instance.entry_table
-    if instance.entry_table == 'Person' or instance.entry_table == 'PersonMeetingAttendance':
+    if instance.entry_table == 'Person' or instance.entry_table == 'PersonMeetingAttendance' or instance.entry_table == 'PersonAdoptPractice':
         if instance.entry_table == 'Person':
             person_id = instance.model_id
-        elif instance.entry_table == 'PersonMeetingAttendance': 
+        else:
+            print 'in save of ' + str(instance.entry_table)
             person_id = get_person_id_from_pma(instance)
         case_id = get_case_id(person_id)
         filename = 'person' + str(person_id) + '.xml'
