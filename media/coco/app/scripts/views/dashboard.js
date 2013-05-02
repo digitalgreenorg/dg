@@ -1,16 +1,19 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection','views/upload'], function($, pass, pass, configs, indexeddb, Form, pass, upload_collection, UploadView) {
+define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection','views/upload', 'views/incremental_download'], function($, pass, pass, configs, indexeddb, Form, pass, upload_collection, UploadView,IncDownloadView) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
         events: {
             // "click button#download": "Download",
-            "click #sync": "upload"
+            "click #sync": "upload",
+            "click #inc_download": "inc_download",
+                
         },
 
         item_template: _.template($("#dashboard_item_template")
             .html()),
         initialize: function() {
             this.upload_v = null;
+            this.inc_download_v = null;
         },
 
         afterRender: function() { /* Work with the View after render. */
@@ -50,7 +53,19 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
 //             this.render();
 //             up_v.start_upload();
 
-        }    
+        },
+            
+        inc_download: function(){
+            if(!this.inc_download_v)
+            {
+                this.inc_download_v = new IncDownloadView();
+            }
+            this.setView("#upload_modal_ph",this.inc_download_v);
+            this.render();
+            this.inc_download_v.start_incremental_download();
+            
+            
+        }        
 
         
     });
