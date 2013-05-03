@@ -21,6 +21,10 @@
 			<instance id="mediator" src="jr://fixture/item-list:mediator"/>
 			<instance id="video" src="jr://fixture/item-list:video"/>
 			<instance id="unique_video" src="jr://fixture/item-list:unique_video"/>
+<<<<<<< HEAD
+=======
+			<instance id="all_videos" src="jr://fixture/item-list:all_videos"/>
+>>>>>>> dimagi2
 			
 			<bind nodeset="/data/selected_date" type="xsd:date" required="true()"/>
 			
@@ -118,7 +122,11 @@
 		</select1>
 		<select1 ref="/data/selected_video">
 			<label ref="jr:itext('selected_video-label')"/>
+<<<<<<< HEAD
 			<itemset nodeset="instance('unique_video')/unique_video_list/unique_video[selected(/data/listofvideos,id) ]">
+=======
+			<itemset nodeset="instance('all_videos')/all_videos_list/all_videos[selected(/data/listofvideos,id) ]">
+>>>>>>> dimagi2
 				<label ref="name"/>
 				<value ref="id"/>
 			</itemset>

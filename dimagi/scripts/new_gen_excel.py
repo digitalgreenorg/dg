@@ -55,6 +55,7 @@ def write_person_info(cluster_dict, workbook):
     sheet.write(row, 3, "field: seen")
     sheet.write(row, 4, "group 1")
     row += 1
+    vid_list = []
     for cluster in cluster_dict:
         for vill in cluster['villages']:
             village_person_info = Person.objects.filter(village__village_name = vill).values_list('id','person_name','group')
@@ -69,6 +70,7 @@ def write_person_info(cluster_dict, workbook):
                 if len(vid_id_list) > 0:
                     arr = ''
                     for vid in vid_id_list:
+                        vid_list.append(vid)
                         arr = arr + str(vid) + ' '
                     sheet.write(row, 3, arr)
                 else:
@@ -89,6 +91,19 @@ def write_person_info(cluster_dict, workbook):
                     row += 1
         if len(village_person_info) < 1:
             print " No person found in " + cluster['cluster'] 
+    
+    sheet = workbook.add_sheet('all_videos')
+    row = 0
+    sheet.write(row, 0, "field: id")
+    sheet.write(row, 1, "field: name ")
+    vid_list = set(vid_list)
+    row += 1
+    for id in vid_list:
+        vid_obj = Video.objects.get(id = id)
+        title = vid_obj.title
+        sheet.write(row, 0, str(id))
+        sheet.write(row, 1, unicode(title))
+        row += 1
     return sheet
 
 def write_group_info(cluster_dict, workbook):
@@ -103,8 +118,7 @@ def write_group_info(cluster_dict, workbook):
     row += 1
     for cluster in cluster_dict:
         for vill in cluster['villages']:
-            print vill
-            village_persongroup_info = PersonGroups.objects.filter(village__village_name = vill).values_list('id','group_name','village')
+            village_persongroup_info = PersonGroups.objects.filter(village = vill).values_list('id','group_name','village')
             group_info.append(village_persongroup_info)
             for group in village_persongroup_info:
                 watched = PersonMeetingAttendance.objects.filter(person__group = group[0], screening__date__gt = three_months).values_list('screening__videoes_screened').distinct().count() 
@@ -119,7 +133,7 @@ def write_group_info(cluster_dict, workbook):
                     sheet.write(row, 3, '0')
                 sheet.write(row, 4, cluster['cluster'])
                 row += 1
-            if Person.objects.filter(village__village_name = vill, group = None).count() > 0:
+            if Person.objects.filter(village = vill, group = None).count() > 0:
                 sheet.write(row, 0, str(vill_id))
                 sheet.write(row, 1, 'Without Group')
                 sheet.write(row, 2, str(vill_id))
@@ -145,7 +159,7 @@ def write_village_info(cluster_dict, workbook):
     for cluster in cluster_dict:
         for vill in cluster['villages']:
             
-            village_info = Village.objects.filter(village_name = vill).values_list('id','village_name')
+            village_info = Village.objects.filter(id = vill).values_list('id','village_name')
             if village_info:
                 watched = PersonMeetingAttendance.objects.filter(person__village = village_info[0][0], screening__date__gt = three_months).values_list('screening__videoes_screened').distinct().count()
                 village_id = truncate_id(village_info[0][0])
@@ -263,49 +277,41 @@ def write_video_schedule_info(vid_dict, workbook):
             print str(record['id']) + " not found"
     return sheet
         
-
-wb = xlrd.open_workbook('..\Pilot_Cluster_Data.xls')
-wb.sheet_names()
-sh = wb.sheet_by_index(0)
-clusters_to_take = [1, 6, 11, 16, 21, 26]
-index=0
-reload(sys)
-print sys.getdefaultencoding()
-permission_group = []
+from userfile_functions import read_userfile
+data = read_userfile('userfileappilot.json')
 cluster_village_dict = []
-mediator_village_dict = []
- 
-while index < len(clusters_to_take):
-    i=clusters_to_take[index]
-    name = sh.cell(rowx=i,colx=0).value
-    print "Processing values of cluster " + name
-    cluster_village_dict.append({'cluster':name , 'villages': [sh.cell(rowx=i+vill,colx=1).value for vill in range(0,5) if sh.cell(rowx=i+vill,colx=1).value !='']})
-#    for village in range(0,5):
-#        mediator_village_dict.append({'mediator': sh.cell(rowx=i+village,colx=1).value,
-#                                      'village': sh.cell(rowx=i+village,colx=1).value,
-#                                      'cluster': name})
-    
-    index += 1 
-
+mediator_dict = []
+for entry in data:
+    print entry['username']
+    villages = entry['villages']
+    cluster_village_dict.append({'cluster': entry['username'],
+                                 'villages': entry['villages']})
+    for v in villages:
+        village = Village.objects.get(id = v).village_name
+        mediator = Animator.objects.filter(assigned_villages = v)[0]
+        mediator_dict.append({'mediator':mediator,
+                              'village': village,
+                              'cluster' : entry['username']})
 workbook = xlwt.Workbook(encoding = 'utf-8')
-
-cluster_village_dict, mediator_dict= find_exact_villages(cluster_village_dict)
-
-person_sheet = write_person_info(cluster_village_dict, workbook)
 group_sheet = write_group_info(cluster_village_dict, workbook)
 village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_dict, workbook)
-#video_sheet = write_person_watched_video_info(cluster_village_dict, workbook)
 video_schedule_dict, video_list = video_schedule.get_video_schedule()
-video_distinct_sheet = write_distinct(video_list,workbook)
 print video_list
+video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
+video_list = set(video_list)
+print video_list
+video_distinct_sheet = write_distinct(video_list,workbook)
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-workbook.save('trial-2-Fixture.xls')
-
-print "Done"
+workbook.save('trial-2-Fixtures_02_25.xls')
 
 
 
+
+
+
+
+    
 
 
     

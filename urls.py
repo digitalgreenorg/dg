@@ -275,6 +275,8 @@ urlpatterns = patterns('',
 #    (r'^get_log/?$',send_updated_log),
     (r'^searchcompletion/?$',get_search_completion),
     (r'^searchcollection/?$',get_search_collection),
+    (r'^get_log/?$',send_updated_log),
+    (r'^dimagi/', include('dimagi.urls')),
 )
 
 # Static files serving locally

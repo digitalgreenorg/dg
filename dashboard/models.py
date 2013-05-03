@@ -9,6 +9,7 @@ from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
+from dimagi.scripts.update_functions import update_case
 import sys, traceback
 
 # Variables
@@ -118,6 +119,8 @@ class ServerLog(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
+    instance_json = models.CharField(max_length=1000, null=True, blank=True)
+post_save.connect(update_case, sender = ServerLog)
     
 #    def __unicode__(self):
 #        return self.entry_table
@@ -125,7 +128,7 @@ class ServerLog(models.Model):
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified", null=True, blank=True)
+    user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified",editable = False, null=True, blank=True)
     time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
   
     class Meta:
@@ -663,9 +666,15 @@ class Language(CocoModel):
     language_name = models.CharField(max_length=100,  unique='True')
     class Meta:
         db_table = u'language'
-
+    def get_village(self):
+        return None
+    def get_partner(self):
+        return None
     def __unicode__(self):
         return self.language_name
+post_save.connect(save_log, sender = Language)
+pre_delete.connect(delete_log, sender = Language)
+
 
 class Video(CocoModel):
     id = BigAutoField(primary_key = True)

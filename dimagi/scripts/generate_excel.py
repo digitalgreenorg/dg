@@ -246,8 +246,3 @@ video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
 workbook.save('trial-2-Fixture.xls')
 print "Done"
 
-
-
-
-
-    

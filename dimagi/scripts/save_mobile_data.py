@@ -59,7 +59,7 @@ def save_screening_data(xml_tree):
                                         location = 'Mobile',
                                         village_id = screening_data['selected_village'],
                                         animator_id = screening_data['selected_mediator'] )
-
+              
                 if screening.full_clean() == None: # change to full_clean() 
                     screening.save()
                     status['screening'] = 1
@@ -84,6 +84,7 @@ def save_screening_data(xml_tree):
                 else:
                     status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                     error_msg = 'Not valid' 
+                        
             except Exception as ex:
                 status['screening'] = error_list['SCREENING_SAVE_ERROR'] 
                 error_msg = unicode(ex)
@@ -108,13 +109,13 @@ def save_adoption_data(xml_tree):
             try:
                 pap = PersonAdoptPractice( person_id = screening_data['selected_person'],
                                      date_of_adoption = screening_data['date'],
-                                     video_id = screening_data['selected_video'])
+                                     video_id = screening_data['selected_video'],
+                                     )
             
                 if pap.full_clean() == None:
                     pap.save()
                     status = 1
                     error_msg = 'Sucessful'
-
             except ValidationError ,e:
                 status = error_list['ADOPTION_SAVE_ERROR'] 
                 error_msg = unicode(e)
@@ -126,3 +127,16 @@ def save_adoption_data(xml_tree):
     return status, error_msg
 
 
+
+if __name__ == "__main__":
+    xml_file = r'C:\Users\Yash\Desktop\trial.xml'
+    xml_parse = minidom.parse(xml_file)
+    data = xml_parse.getElementsByTagName('data')
+    if data[0].attributes["name"].value.lower() == 'screening' :
+        status,msg = save_screening_data(xml_parse)
+    elif data[0].attributes["name"].value.lower() == 'adoption' :
+        status,msg = save_adoption_data(xml_parse)
+    else :
+        status = -1
+    print status 
+    print msg
