@@ -27,7 +27,7 @@ define([
         },
         
         increment_pb: function() {
-            w = parseInt(document.getElementById('pbar').style.width);
+            w = parseFloat(document.getElementById('pbar').style.width);
             document.getElementById('pbar').style.width= (w + this.progress_bar_step) +'%';
         },
         

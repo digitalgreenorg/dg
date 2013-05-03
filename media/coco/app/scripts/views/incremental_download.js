@@ -12,8 +12,18 @@ define([
         
         template: "#incremental_download_template",
         increment_pb: function() {
-            w = parseInt(document.getElementById('pbar').style.width);
-            document.getElementById('pbar').style.width= (w + progress_bar_step) +'%';
+            w = parseFloat(document.getElementById('inc_pbar').style.width);
+            document.getElementById('inc_pbar').style.width= (w + this.progress_bar_step) +'%';
+            // alert(w);
+        },
+        
+        update_status: function(status){
+            console.log(status);
+            $('#inc_status').html(status);
+        },
+        
+        update_action: function(action){
+            $('#inc_action').html(action);
         },
         
         initialize: function(){
@@ -44,15 +54,31 @@ define([
         iterate_incd_objects: function(incd_objects){
             this.incd_objects = incd_objects;
             this.in_progress = true;
+            this.progress_bar_step = 100/incd_objects.length;
+            this.download_status = {};
+            this.download_status["total"] = incd_objects.length;
+            this.download_status["downloaded"] = 0;
             console.log("INCD objects received");
             console.log(incd_objects);
             this.pick_next();
         },  
         
         pick_next: function(){
+            var that = this;
+            this.update_status(this.download_status["downloaded"]+"/"+this.download_status["total"]);
             this.cur_incd_o = this.incd_objects.shift();
             if(this.cur_incd_o)
-                this.process_incd_object(this.cur_incd_o).then(this.pick_next);
+            {
+                this.process_incd_object(this.cur_incd_o)
+                    .fail(function(){
+                        console.log("FAILED TO INC DOWNLOAD AN OBJECT");
+                    })
+                    .always(function(){
+                        that.increment_pb();
+                        that.download_status["downloaded"]++;
+                        that.pick_next();
+                    })
+            }
         },     
         
         // {"pk":9372,"model":"dashboard.serverlog","fields":{"action":1,"timestamp":"2013-04-15T06:47:35","entry_table":"Screening","model_id":10000000132086}}
@@ -96,6 +122,7 @@ define([
                 
             this.offline_model = new generic_model_offline();
             this.online_model = new generic_model_online();
+            this.update_action("Downloading "+this.get_entity_name(incd_o));
             
             switch(this.get_action(incd_o))
                 {
@@ -122,7 +149,7 @@ define([
                     {
                         that.fetch_from_online(that.get_online_id(incd_o))
                             .done(function(on_model){
-                                OnlineToOffline.convert(on_model.toJSON(), get_foreign_field_desc(incd_o))
+                                OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
                                     .done(function(on_off_obj){
                                         that.add_offline(on_off_obj.off_json)
                                             .done(function(off_model){
@@ -160,7 +187,7 @@ define([
                 .done(function(off_model){
                     that.fetch_from_online(that.get_online_id(incd_o))
                         .done(function(on_model){
-                            OnlineToOffline.convert(on_model.toJSON(), get_foreign_field_desc(incd_o))
+                            OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
                                 .done(function(on_off_obj){
                                     that.edit_offline(off_model, on_off_obj.off_json)
                                         .done(function(off_model){

@@ -16,7 +16,7 @@ define([
         
         template: "#upload_template",
         increment_pb: function() {
-            w = parseInt(document.getElementById('pbar').style.width);
+            w = parseFloat(document.getElementById('pbar').style.width);
             document.getElementById('pbar').style.width= (w + progress_bar_step) +'%';
         },
         
