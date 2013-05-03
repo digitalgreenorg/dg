@@ -17,13 +17,13 @@ def get_case_person_list():
     urllib2.install_opener(opener)
     page_content = urllib2.urlopen(URL)
     data = json.loads(page_content.read())
-    case_ids = []
-    print data['objects']
+    case_ids = {}
     person_caseid_dict = {}
     for case in data['objects']:
         case_id = case['case_id']
-        person_id = case['properties']['id']
-        person_caseid_dict[person_id] = case_id
+        if case['properties'].has_key('id'):
+            person_id = case['properties']['id']
+            person_caseid_dict[person_id] = case_id
     fp = open('person_case','wb')
     pickle.dump({
                  'person_caseid_dict': person_caseid_dict,
@@ -31,7 +31,7 @@ def get_case_person_list():
     fp.close()
     
 def get_case_id(person_id):
-    fp = open('data','rb')
+    fp = open('person_case','rb')
     loaded = pickle.load(fp)
     fp.close()
     person_caseid_dict = loaded['person_caseid_dict']
@@ -66,7 +66,6 @@ def get_case_user_list(user_id):
                  'case_user_dict': case_user_dict,
                  },fp)
     fp.close()
-    print len(case_user_dict)
     
 
 def check_person_id(data, person_id):
@@ -124,7 +123,7 @@ def update_case(sender, **kwargs):
             person_id = instance.model_id
         else:
             person_id = get_person_id_from_pma(instance)
-        case_id = get_case_id(person_id)
+        case_id = get_case_id(str(person_id))
         scripts_dir = os.path.dirname(__file__)
         dir = scripts_dir + "\case_update"
         if not os.path.exists(dir):
@@ -149,16 +148,8 @@ def read_dict(filename):
     data = json.loads(json_data)
     return data
 
-def update_case_person_dict(user_id):
-    case_person_dict = {}
-    data = get_user_data(user_id)
-    for case in data:
-        if case['properties'].has_key('id'):
-            person_id = case['properties']['id']
-            case_person_dict[person_id] = case['case_id']
-    write_dict(case_person_dict, 'user.csv')
-    return case_person_dict
-
-user_id = '2523fc995ccfd1d27c15111ec8987be6'
+#
+#user_id = '2523fc995ccfd1d27c15111ec8987be6'
 #get_case_user_list(user_id)
-update_case_person_dict(user_id)
+#get_case_person_list()
+#get_case_id(1010)
