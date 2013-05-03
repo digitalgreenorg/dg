@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.http import HttpResponse
 from models import XMLSubmission
 from xml.dom import minidom

@@ -105,8 +105,7 @@ INSTALLED_APPS = (
     'path',
     'fbconnect',
     'tastypie',
-    'website'
-    'dimagi',
+    'website',
 )
 
 LOGGING = {
