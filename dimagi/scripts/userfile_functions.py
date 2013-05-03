@@ -1,7 +1,7 @@
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
-import csv,datetime, json, urllib2, uuid, pickle
+import csv,datetime, json, urllib2, uuid, pickle,os
 from django.db.models import get_model
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
@@ -18,7 +18,9 @@ def read_userfile(file):
     return data
 
 def write_person_detail(person_id, filename, i=0, case_id=None):
-    fp = open('case_user','rb')
+    dir = os.path.dirname(__file__)
+    filepath = os.path.join(dir,'case_user')
+    fp = open(filepath,'rb')
     loaded = pickle.load(fp)
     fp.close()
     case_user_dict = loaded['case_user_dict']

@@ -31,7 +31,9 @@ def get_case_person_list():
     fp.close()
     
 def get_case_id(person_id):
-    fp = open('person_case','rb')
+    dir = os.path.dirname(__file__)
+    filepath = os.path.join(dir,'person_case')
+    fp = open(filepath,'rb')
     loaded = pickle.load(fp)
     fp.close()
     person_caseid_dict = loaded['person_caseid_dict']
@@ -61,7 +63,9 @@ def get_case_user_list(user_id):
         case_id = case['case_id']
         user_id = case['user_id']
         case_user_dict[case_id] = user_id
-    fp = open('case_user','wb')
+    dir = os.path.dirname(__file__)
+    filepath = os.path.join(dir,'case_user')
+    fp = open(filepath,'wb')
     pickle.dump({
                  'case_user_dict': case_user_dict,
                  },fp)
@@ -78,7 +82,9 @@ def check_person_id(data, person_id):
     return exists
 
 def close_case(case_id, filename):
-    fp = open('case_user','rb')
+    dir = os.path.dirname(__file__)
+    filepath = os.path.join(dir,'case_user')
+    fp = open(filepath,'rb')
     loaded = pickle.load(fp)
     fp.close()
     case_user_dict = loaded['case_user_dict']
@@ -152,4 +158,6 @@ def read_dict(filename):
 #user_id = '2523fc995ccfd1d27c15111ec8987be6'
 #get_case_user_list(user_id)
 #get_case_person_list()
-#get_case_id(1010)
+#person_id = 10000000128094
+#print type(person_id)
+#print get_case_id(str(person_id))

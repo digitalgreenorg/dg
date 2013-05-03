@@ -2,7 +2,7 @@
 <data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">
 <num_people>1</num_people>
 <people>
-<n0:case case_id="b8fa36cc-f613-4655-9457-0681738dcfd2" date_modified="2013-05-03" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n0="http://commcarehq.org/case/transaction/v2">
+<n0:case case_id="7cf99c1b-d3bc-4a5f-90d3-a51b48b36096" date_modified="2013-05-03" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n0="http://commcarehq.org/case/transaction/v2">
 <n0:create>
 <n0:case_type>person</n0:case_type>
 <n0:owner_id>2523fc995ccfd1d27c15111ec8987be6</n0:owner_id>
