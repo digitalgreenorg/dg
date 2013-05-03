@@ -1,15 +1,45 @@
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
-import os, csv, datetime, json, urllib2, uuid, base64
+import os, csv, datetime, json, urllib2, uuid, base64, pickle
 from userfile_functions import upload_file, write_person_detail
 from django.db.models import get_model
 
+def get_case_person_list():
+    BASE_URL = 'https://www.commcarehq.org/a/dgappilot2/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
+    Realm = 'DJANGO'
+    Username = 'nandinibhardwaj@gmail.com'
+    Password = 'digitalgreen'
+    URL = BASE_URL
+    authhandler = urllib2.HTTPDigestAuthHandler()
+    authhandler.add_password(Realm, URL, Username, Password)
+    opener = urllib2.build_opener(authhandler)
+    urllib2.install_opener(opener)
+    page_content = urllib2.urlopen(URL)
+    data = json.loads(page_content.read())
+    case_ids = []
+    print data['objects']
+    person_caseid_dict = {}
+    for case in data['objects']:
+        case_id = case['case_id']
+        person_id = case['properties']['id']
+        person_caseid_dict[person_id] = case_id
+    fp = open('person_case','wb')
+    pickle.dump({
+                 'person_caseid_dict': person_caseid_dict,
+                 },fp)
+    fp.close()
+    
 def get_case_id(person_id):
-    return 'c80ac8cb-58d9-4533-a928-e5e7cc9607a3' # dummy case id
+    fp = open('data','rb')
+    loaded = pickle.load(fp)
+    fp.close()
+    person_caseid_dict = loaded['person_caseid_dict']
+    return person_caseid_dict[person_id]
+
 
 def get_user_data(user_id):
-    BASE_URL = 'https://www.commcarehq.org/a/dgappilot/api/v0.3/case/?limit=500'  #taking 500 as upper limit for now
+    BASE_URL = 'https://www.commcarehq.org/a/dgappilot2/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
     Realm = 'DJANGO'
     Username = 'nandinibhardwaj@gmail.com'
     Password = 'digitalgreen'
@@ -24,6 +54,21 @@ def get_user_data(user_id):
     case_ids = []
     return data['objects']
 
+def get_case_user_list(user_id):
+    case_user_dict = {}
+    data = get_user_data(user_id)
+    for case in data:
+        case_id = case['case_id']
+        user_id = case['user_id']
+        case_user_dict[case_id] = user_id
+    fp = open('case_user','wb')
+    pickle.dump({
+                 'case_user_dict': case_user_dict,
+                 },fp)
+    fp.close()
+    print len(case_user_dict)
+    
+
 def check_person_id(data, person_id):
     exists = False
     for case in data:
@@ -34,7 +79,11 @@ def check_person_id(data, person_id):
     return exists
 
 def close_case(case_id, filename):
-    owner_id = '2523fc995ccfd1d27c15111ec8987be6'
+    fp = open('case_user','rb')
+    loaded = pickle.load(fp)
+    fp.close()
+    case_user_dict = loaded['case_user_dict']
+    owner_id = case_user_dict[case_id]
     # Putting all the info in xml tags
     f = open(filename,'w')
     f.write('<?xml version="1.0" ?>\n')
@@ -42,7 +91,7 @@ def close_case(case_id, filename):
     f.write('<num_people>1</num_people>\n')
     f.write('<people>\n')
     i = 0
-    f.write('<n'+str(i)+':case case_id="'+str(case_id)+ '" date_modified="'+ str(datetime.datetime.now().date()) + '" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n'+str(i)+'="http://commcarehq.org/case/transaction/v2">\n')
+    f.write('<n'+str(i)+':case case_id="'+str(case_id)+ '" date_modified="'+ str(datetime.datetime.now().date()) + '" user_id="' + owner_id +'" xmlns:n'+str(i)+'="http://commcarehq.org/case/transaction/v2">\n')
     f.write('<n'+str(i)+':create>\n')
     f.write('<n'+str(i)+':case_type>person</n'+str(i)+':case_type>\n')
     f.write('<n'+str(i)+':owner_id>' + owner_id + '</n'+str(i)+':owner_id>\n')
@@ -55,7 +104,7 @@ def close_case(case_id, filename):
     # Writing closing meta info of the form
     i += 1
     f.write('<n'+str(i) + ':meta xmlns:n' + str(i) + '="http://openrosa.org/jr/xforms">\n')
-    f.write('<n'+str(i) + ':userID>2523fc995ccfd1d27c15111ec8987be6</n' + str(i) + ':userID>\n')
+    f.write('<n'+str(i) + ':userID>' + owner_id + '</n' + str(i) + ':userID>\n')
     f.write('<n'+str(i) + ':instanceID>2729386f-7fd2-42cc-807f-786bf2dc952b</n' + str(i) + ':instanceID>\n')
     f.write('</n' + str(i) + ':meta>\n')
     f.write('</data>')
@@ -109,3 +158,7 @@ def update_case_person_dict(user_id):
             case_person_dict[person_id] = case['case_id']
     write_dict(case_person_dict, 'user.csv')
     return case_person_dict
+
+user_id = '2523fc995ccfd1d27c15111ec8987be6'
+#get_case_user_list(user_id)
+update_case_person_dict(user_id)

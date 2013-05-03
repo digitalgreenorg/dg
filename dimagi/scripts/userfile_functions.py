@@ -1,10 +1,12 @@
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
-import csv,datetime, json, urllib2, uuid
+import csv,datetime, json, urllib2, uuid, pickle
 from django.db.models import get_model
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
+
+
 
 def write_userfile(file, data):
     f = open(file,'w')
@@ -16,6 +18,10 @@ def read_userfile(file):
     return data
 
 def write_person_detail(person_id, filename, i=0, case_id=None):
+    fp = open('case_user','rb')
+    loaded = pickle.load(fp)
+    fp.close()
+    case_user_dict = loaded['case_user_dict']
     import codecs
     f = codecs.open(filename, "w",'utf-8')
     Person = get_model('dashboard','Person')
@@ -25,6 +31,7 @@ def write_person_detail(person_id, filename, i=0, case_id=None):
     f.write('<data uiVersion="1" version="8" name="New Form" xmlns:jrm="http://dev.commcarehq.org/jr/xforms" xmlns="http://openrosa.org/formdesigner/DB63E17D-B572-4F5B-926E-061583DAE9DA">\n')
     f.write('<num_people>' + unicode(1) + '</num_people>\n')
     for n in range(0,1):
+        owner_id = case_user_dict[case_id]
         person = Person.objects.get(id = person_id)
     #    f = open(filename,'w')
         case_id = uuid.uuid4()
@@ -41,10 +48,10 @@ def write_person_detail(person_id, filename, i=0, case_id=None):
             videos_adopted = videos_adopted + unicode(vid) + ' '
         # Putting all the info in xml tags
         f.write('<people>\n')
-        f.write('<n'+unicode(i)+':case case_id="'+unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="2523fc995ccfd1d27c15111ec8987be6" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
+        f.write('<n'+unicode(i)+':case case_id="' + unicode(case_id)+ '" date_modified="'+ unicode(datetime.datetime.now().date()) + '" user_id="' + owner_id + '" xmlns:n'+unicode(i)+'="http://commcarehq.org/case/transaction/v2">\n')
         f.write('<n'+unicode(i)+':create>\n')
         f.write('<n'+unicode(i)+':case_type>person</n'+unicode(i)+':case_type>\n')
-        f.write('<n'+unicode(i)+':owner_id>' + '2523fc995ccfd1d27c15111ec8987be6' + '</n'+unicode(i)+':owner_id>\n')
+        f.write('<n'+unicode(i)+':owner_id>'  + owner_id + '</n'+unicode(i)+':owner_id>\n')
         f.write('<n'+unicode(i)+':case_name>' + unicode(person.person_name) + '</n'+unicode(i)+':case_name>\n')
         f.write('</n'+unicode(i)+':create>\n')
         f.write('<n'+unicode(i)+':update>\n')
