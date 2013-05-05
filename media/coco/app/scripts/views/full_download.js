@@ -57,6 +57,7 @@ define([
                 })
                 .fail(function(){
                     console.log("Error while downloading.");
+                    alert("ERROR while doing full download");
                 });
         },
         
@@ -238,20 +239,20 @@ define([
                 storeName: "meta_data",
             });
             var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_downloaded"});
+            meta_model.set({key: "last_full_download"});
             meta_model.fetch({
                 success: function(model){
-                    console.log("DASHBOARD:DOWNLOAD: ast_downloaded fetched from meta_data objectStore:");
+                    console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
                     model.set('timestamp',new Date());
                     model.save(null,{
                         success: function(){
-                            console.log("DASHBOARD:DOWNLOAD: last_downloaded updated in meta_data objectStore:");    
+                            console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
                             console.log(JSON.stringify(model.toJSON()));
                             
                         },
                         error: function(one,two,three){
-                            console.log("DASHBOARD:DOWNLOAD: error updating last_downloaded in meta_data objectStore");    
+                            console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
                             console.log(one);
                             console.log(two);
                             console.log(three);
@@ -259,19 +260,19 @@ define([
                     });
                 },
                 error: function(error){
-                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_downloaded from meta_data objectStore");
+                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
                             meta_model.set('timestamp',new Date());
                             meta_model.save(null,{
                                 success: function(model){
-                                    console.log("DASHBOARD:DOWNLOAD: last_downloaded created in meta_data objectStore:");    
+                                    console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
                                     console.log(JSON.stringify(model.toJSON()));
                                     this.$('#full_download_modal').modal('hide');
                             
                                 },
                                 error: function(error){
-                                    console.log("DASHBOARD:DOWNLOAD: error creating last_downloaded in meta_data objectStore : ");
+                                    console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
                                 }
                             });
