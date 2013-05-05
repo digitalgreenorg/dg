@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         template: "#dashboard",
         events: {
             // "click button#download": "Download",
-            "click #sync": "upload",
+            "click #sync": "sync",
             "click #inc_download": "inc_download",
                 
         },
@@ -14,6 +14,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         initialize: function() {
             this.upload_v = null;
             this.inc_download_v = null;
+            this.background_download();
         },
 
         afterRender: function() { /* Work with the View after render. */
@@ -35,36 +36,69 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             }
         },
         
+        sync: function(){
+            var that = this;
+            this.upload()
+                .done(function(){
+                    console.log("UPLOAD FINISHED");
+                })
+                .fail(function(error){
+                    console.log("ERROR IN UPLOAD");
+                    console.log(error);
+                })
+                .always(function(){
+                    that.inc_download({background:false})
+                        .done(function(){
+                            console.log("INC DOWNLOAD FINISHED");
+                        })
+                        .fail(function(error){
+                            console.log("ERROR IN INC DOWNLOAD");
+                            console.log(error);
+                        });
+                });
+        },
+        
         upload: function(){
+            var dfd = $.Deferred();
             if(!this.upload_v){
-                console.log("DASHBIARD: creating new upload view"); 
                 this.upload_v = new UploadView();
             }
             this.setView("#upload_modal_ph",this.upload_v);
             this.render();
-            this.upload_v.start_upload();
-            // var up_v = new UploadView();
-//             if(this.getView("#upload_modal_ph"))
-//                 {
-//                     alert("view r");
-//                     this.removeView("#upload_modal_ph");
-//                 }
-//             this.setView("#upload_modal_ph",up_v);
-//             this.render();
-//             up_v.start_upload();
-
+            this.upload_v.start_upload()
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                   dfd.reject(); 
+                });
+            return dfd;
         },
             
-        inc_download: function(){
+        inc_download: function(options){
+            var dfd = $.Deferred();
             if(!this.inc_download_v)
             {
                 this.inc_download_v = new IncDownloadView();
             }
             this.setView("#upload_modal_ph",this.inc_download_v);
             this.render();
-            this.inc_download_v.start_incremental_download();
-            
-            
+            this.inc_download_v.start_incremental_download(options)
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                   dfd.reject(); 
+                });
+            return dfd;
+        },
+        
+        background_download: function(){
+            var that = this;
+            this.inc_download({background:true})
+                .always(function(){
+                    setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+                });
         }        
 
         

@@ -26,27 +26,17 @@ define([
                 .on("read_next", this.next_upload);
             _(this)
                 .bindAll('json_converted');
+            this.whole_upload_dfd = null;
         },      
               
         start_upload: function() {
+            this.whole_upload_dfd = new $.Deferred();
             this.$('#upload_modal').modal('show');
             console.log("UPLOAD: start the fuckin upload");
-            // var generic_model_offline = Backbone.Model.extend({
-//                 database: indexeddb,
-//                 storeName: "uploadqueue",
-//             });
-//             var generic_offline_collection = Backbone.Collection.extend({
-//                 model: generic_model_offline,
-//                 database: indexeddb,
-//                 storeName: "uploadqueue",
-//             });
-
-            // this.generic_upload_model = generic_model_offline;
-            // this.upload_collection = new generic_offline_collection();
             this.upload_collection = upload_collection;
             this.upload_collection.bind('reset', this.process_upload_queue, this);
             this.upload_collection.fetch();
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            return this.whole_upload_dfd;
         },
 
         // read each entry of the uploadqueue 
@@ -57,9 +47,9 @@ define([
             console.log("UPLOAD: progress bar step: " + progress_bar_step);
             ev = {
                 type: "read_next",
-                context: this
+                context: this,
             };
-            $.event.trigger(ev);
+            $.event.trigger(ev); 
 
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +62,7 @@ define([
             var model1 = event.context.upload_collection.shift();
             if (model1 == undefined) {
                 $('#upload_modal').modal('hide'); 
-                return;
+                return event.context.whole_upload_dfd.resolve();
             }
             console.log(model1);
             event.context.process_upload_entry(model1);
