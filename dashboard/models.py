@@ -909,8 +909,8 @@ post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttend
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
-post_save.connect(save_log, sender = PersonMeetingAttendance)
-pre_delete.connect(delete_log, sender = PersonMeetingAttendance)
+#post_save.connect(save_log, sender = PersonMeetingAttendance)
+#pre_delete.connect(delete_log, sender = PersonMeetingAttendance)
 
 class Equipment(CocoModel):
     id = BigAutoField(primary_key = True)
