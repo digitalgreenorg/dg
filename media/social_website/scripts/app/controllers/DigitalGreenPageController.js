@@ -29,7 +29,7 @@ define(function(require) {
         constructor: function(bootstrapConfig, globalHelpers) {
             this.base(bootstrapConfig, globalHelpers);
 
-            var languageCookie = Util.Cookie.get('language');
+            var languageCookie = Util.Cookie.get('language__name');
 
             var $customSelectElement = jQuery('.js-custom-select');
             if ($customSelectElement.length) {
@@ -59,7 +59,7 @@ define(function(require) {
         },
 
         _onOptionChanged: function(value) {
-            Util.Cookie.set('language', value);
+            Util.Cookie.set('language__name', value);
             globalEventManager.trigger('languageChanged', value);
         },
 

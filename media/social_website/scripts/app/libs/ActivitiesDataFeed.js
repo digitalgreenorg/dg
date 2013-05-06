@@ -33,7 +33,7 @@ define(function(require) {
             this.addInputParam('partnerUID', false, undefined, true, activitiesSubModel);
             this.addInputParam('farmerID', false, undefined, true, activitiesSubModel);
             this.addInputParam('userUID', false, undefined, true, activitiesSubModel);
-            this.addInputParamCacheClear('language', activitiesSubModel);
+            this.addInputParamCacheClear('language__name', activitiesSubModel);
 
             this.addInputParam('offset', false);
             this.addInputParam('limit', false);
@@ -63,12 +63,11 @@ define(function(require) {
             var model = dataModel.get('activities');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.limit;
-            var page = unprocessedData.requestParameters.offset;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
-            dataModel.set('totalCount', unprocessedData.totalCount);
-
+            dataModel.set('totalCount', unprocessedData.meta.total_count);
             // import
             var dataToAdd = unprocessedData.activities;
             var startingCacheId = page * countPerPage;

@@ -38,8 +38,8 @@ define(function(require) {
             this.addInputParam('offset', true, 0, true);
             this.addInputParam('limit', true, 12, true);
             this.addInputParam('filters', false, null, true, collectionsSubModel);
-            this.addInputParam('orderBy', false, null, true, collectionsSubModel);
-            this.addInputParamCacheClear('language', collectionsSubModel);
+            this.addInputParam('order_by', false, null, true, collectionsSubModel);
+            this.addInputParamCacheClear('language__name', collectionsSubModel);
         },
 
         fetch: function(page, countPerPage) {
@@ -51,7 +51,7 @@ define(function(require) {
                 countPerPage = 12;
             }
 
-            this.setInputParam('offset', page, true);
+            this.setInputParam('offset', page*countPerPage, true);
             this.setInputParam('limit', countPerPage, true);
 
             // perform the fetch
@@ -67,10 +67,10 @@ define(function(require) {
 
             // gather count and page for caching and saving purposes
             var countPerPage = unprocessedData.meta.limit;
-            var page = unprocessedData.meta.offset;
+            var page = unprocessedData.meta.offset/unprocessedData.meta.limit;
 
             // store total count
-            dataModel.set('totalCount', unprocessedData.totalCount);
+            dataModel.set('totalCount', unprocessedData.meta.total_count);
 
             // import collections from data
             var collectionsToAdd = unprocessedData.objects;

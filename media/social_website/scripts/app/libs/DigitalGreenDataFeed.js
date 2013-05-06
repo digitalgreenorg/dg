@@ -12,7 +12,7 @@ define(function(require) {
         constructor: function(feedURL) {
             this.base(appConfig.apiUrl + feedURL);
             
-            this.addInputParam('language', false, '', true);
+            this.addInputParam('language__name', false, '', true);
         },
 
         _initConfig: function() {
@@ -39,7 +39,7 @@ define(function(require) {
         },
 
         _onLanguageChanged: function(value) {
-            this.setInputParam('language', value);
+            this.setInputParam('language__name', value);
         },
 
         _processData: function(unprocessedData) {

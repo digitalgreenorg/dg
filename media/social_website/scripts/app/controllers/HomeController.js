@@ -35,7 +35,7 @@ define(function(require) {
                 .setVideosPerDrawer(5);
 
             // set the active filter to be Most Liked to init the collections
-            references.collectionMostFiltersViewController.setActiveFilter('MostLiked');
+            references.collectionMostFiltersViewController.setActiveFilter('-likes');
             
             this._getNewsFeed();
 
@@ -79,7 +79,7 @@ define(function(require) {
         },
 
         _onOrderChanged: function(orderCriteria) {
-            this._references.collectionViewController.setInputParam('orderBy', orderCriteria);
+            this._references.collectionViewController.setInputParam('order_by', orderCriteria);
         },
 
         _getCollections: function() {

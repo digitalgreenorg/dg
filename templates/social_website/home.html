@@ -10,17 +10,17 @@
                 </div>
                 <div class="grid-rt">
                     <div class="language-select custom-select js-custom-select">
-                        <select>
+                        <select >
                             <!-- TODO: populate this dynamically -->
-                            <option value="all">All Languages</option>
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
+                            <option value='All Language'>All Language</option>
+                            {% for item in language %}
+                             	<option>{{item}}</option>
+                         	{% endfor %}
                         </select>
                         <div class="custom-select-container">
                             <div class="icon"></div>
                             <div class="selected-item-label js-selected-item-label"></div>
-                            <ul class="options js-options">
+                            <ul class="options js-options" style='overflow-y:scroll;height:218px;'>
                                 <!-- Dynamic content filled by select box -->
                             </ul>
                         </div>
@@ -34,25 +34,25 @@
                     </div>
                     <div class="grid-col grid-size1of4">
                         <div class="grid-pad-lt-sm">
-                            <h3 class="hdg-green hdg-c layout-vr-sm">Collection Title</h3>
-                            <h4 class="copy hdg-bold"> State, Country</h4>
-                            <h5 class="copy layout-vr-sm">Language</h5>
-                            <p class="layout-vr-md">Lorem ipsum dolor sit amet, cons ectetur adipiscing elit. Praesent ac tortor purus. Cras sed velit leo, nec tristique risus. </p>
+                            <h3 class="hdg-green hdg-c layout-vr-sm">Interculture</h3>
+                            <h4 class="copy hdg-bold"> Madhya Pradesh, India</h4>
+                            <h5 class="copy layout-vr-sm">Hindi</h5>
+                            <p class="layout-vr-md"></p>
                             <div class="featured-logo copy layout-vr-md">
-                                <img class="" src="http://placehold.it/41x39" alt="" /> 
-                                SERP
+                                <img class="" src="http://www.asaindia.org/images/ngo_01.gif" height=41 width=39 alt="" /> 
+                                ASA
                             </div>
                             <div class="featured-ft">
                                 <div class="featured-ft-videoDetails">
                                    <ul class="h-list h-list-sm h-list-divided copy copy-white">
-                                       <li>6 Videos</li>
-                                       <li>23:15</li>
+                                       <li>11 Videos</li>
+                                       <li>58:07</li>
                                    </ul>
                                 </div>
                                 <ul class="h-list h-list-sm copy-sm copy-dk vid-cat-list-dk">
-                                    <li class="like"><span class="text-hide">Likes</span> 10,000</li>
-                                    <li class="view"><span class="text-hide">Viewed</span> 6,018</li>
-                                    <li class="check"><span class="text-hide">Adopted</span> 4, 020</li>
+                                    <li class="like"><span class="text-hide">Likes</span> 240,697</li>
+                                    <li class="view"><span class="text-hide">Viewed</span> 2,018,090</li>
+                                    <li class="check"><span class="text-hide">Adopted</span> 172,451</li>
                                 </ul>
                             </div>
                         </div>

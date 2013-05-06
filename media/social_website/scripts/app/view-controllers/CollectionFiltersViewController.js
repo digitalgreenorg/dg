@@ -168,7 +168,7 @@ define(function(require) {
 
         _indicateCurrentLanguageSelection: function() {
 
-            var currentLanguageCode = Util.Cookie.get('language');
+            var currentLanguageCode = Util.Cookie.get('language__name');
             if (!currentLanguageCode) {
                 return;
             }
@@ -189,7 +189,7 @@ define(function(require) {
             var len = languageCategoryOptions.length;
             for (; i < len; i++) {
                 if (languageCategoryOptions[i].value == currentLanguageCode) {
-                    this._setFilterStatus('language', i, true);
+                    this._setFilterStatus('language__name', i, true);
                     return;
                 }
             }

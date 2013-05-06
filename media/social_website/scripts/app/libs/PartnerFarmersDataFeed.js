@@ -29,7 +29,7 @@ define(function(require) {
             var partnerFarmersSubModel = this._dataModel.addSubModel('partnerFarmers', true);
 
             this.addInputParam('partnerUID', false, undefined, true, partnerFarmersSubModel);
-            this.addInputParamCacheClear('language', partnerFarmersSubModel);
+            this.addInputParamCacheClear('language__name', partnerFarmersSubModel);
 
             this.addInputParam('offset', false);
             this.addInputParam('limit', false);

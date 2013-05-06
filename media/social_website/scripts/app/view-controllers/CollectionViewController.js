@@ -113,7 +113,6 @@ define(function(require) {
         },
 
         getCollections: function(page, collectionsPerPage) {
-
             if (page == undefined) {
                 page = this._state.currentPageNumber;
             } else {
@@ -132,7 +131,6 @@ define(function(require) {
 
             var collectionsArray = dataFeed.getCollections();
             var totalCount = dataFeed.getTotalCount();
-
             if (collectionsArray == false) {
                 return false;
             }
@@ -230,9 +228,6 @@ define(function(require) {
 
         _getCollectionStats: function(collectionData) {
             var time = 0;
-            var adoptions = 0;
-            var views = 0;
-            var likes = 0;
 
             var videos = collectionData.videos;
 
@@ -246,16 +241,13 @@ define(function(require) {
                 var currentVideo = videos[i];
 
                 time += currentVideo.duration;
-                adoptions += currentVideo.adoptions;
-                views += currentVideo.offlineViews + currentVideo.onlineViews;
-                likes += currentVideo.offlineLikes + currentVideo.onlineLikes;
             }
 
             return {
                 time: Util.secondsToHMSFormat(time),
-                adoptions: Util.integerCommaFormat(adoptions),
-                views: Util.integerCommaFormat(views),
-                likes: Util.integerCommaFormat(likes)
+                adoptions: Util.integerCommaFormat(collectionData.adoptions),
+                views: Util.integerCommaFormat(collectionData.views),
+                likes: Util.integerCommaFormat(collectionData.likes)
             };
         },
 
@@ -289,7 +281,6 @@ define(function(require) {
         _renderPagination: function(totalCount) {
             var collectionsPerPage = this._state.collectionsPerPage;
             var pages = Math.ceil(totalCount / collectionsPerPage);
-
             var paginationPages = [];
             var i = 0;
             for (; i < pages; i++) {
@@ -316,6 +307,7 @@ define(function(require) {
 
             var $currentTarget = jQuery(e.currentTarget);
             var pageIndex = $currentTarget.data('pageIndex');
+            alert(pageIndex);
 
             // if we're already viewing the page clicked, no need to continue
             if (pageIndex == this._state.currentPageNumber) {
@@ -358,6 +350,7 @@ define(function(require) {
                 .not($currentDrawer);
 
             var containerAlreadyOpen = $currentVideoDrawerContainer.hasClass('open');
+            
             if (!containerAlreadyOpen) {
                 // animate the desired container open
                 this._openVideoDrawerContainers($currentVideoDrawerContainer);
@@ -365,7 +358,25 @@ define(function(require) {
                 // animate any containers aside from our to-be-open container closed
                 this._closeVideoDrawerContainers($videoDrawerContainers.not($currentVideoDrawerContainer));
             }
-
+                        
+            // to check if the collection clicked is the same which has the carousel open
+            //var visible = this._references.$collectionsContainer.find('.js-video-container').find('.open').find('.js-video-drawer').filter(function() {
+            //	   return $(this).css('visibility') == 'visible';});
+            var visible;
+       
+            this._references.$collectionsContainer.find('.js-video-container').each(function() {
+            	if($(this).hasClass('open')) {
+            	visible = $(this).find('.js-video-drawer').filter(function() {
+                    return $(this).css('visibility') == 'visible';});
+            }
+            });
+            
+           if(collectionItemIndex==visible.data('parentCollectionItemIndex')){
+        	   this._hideDrawers($currentDrawer);
+        	   this._closeVideoDrawerContainers($currentVideoDrawerContainer);
+            }
+           else{
+        	   
             // display the desired drawer
             this._showDrawers($currentDrawer);
 
@@ -395,6 +406,7 @@ define(function(require) {
             } else {
                 $drawerPointer.css('left', newLeftPosition);
             }
+           }
         },
 
         _openVideoDrawerContainers: function($videoDrawerContainers) {
