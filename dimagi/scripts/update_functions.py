@@ -6,7 +6,7 @@ from userfile_functions import upload_file, write_person_detail
 from django.db.models import get_model
 
 def get_case_person_list():
-    BASE_URL = 'https://www.commcarehq.org/a/dgappilot2/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
+    BASE_URL = 'https://www.commcarehq.org/a/biharpilot/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
     Realm = 'DJANGO'
     Username = 'nandinibhardwaj@gmail.com'
     Password = 'digitalgreen'
@@ -37,11 +37,12 @@ def get_case_id(person_id):
     loaded = pickle.load(fp)
     fp.close()
     person_caseid_dict = loaded['person_caseid_dict']
-    return person_caseid_dict[person_id]
+    case_id = person_caseid_dict[person_id]
+    return case_id
 
 
 def get_user_data(user_id):
-    BASE_URL = 'https://www.commcarehq.org/a/dgappilot2/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
+    BASE_URL = 'https://www.commcarehq.org/a/biharpilot/api/v0.3/case/?limit=1000'  #taking 500 as upper limit for now
     Realm = 'DJANGO'
     Username = 'nandinibhardwaj@gmail.com'
     Password = 'digitalgreen'
@@ -56,13 +57,15 @@ def get_user_data(user_id):
     case_ids = []
     return data['objects']
 
-def get_case_user_list(user_id):
-    case_user_dict = {}
-    data = get_user_data(user_id)
-    for case in data:
-        case_id = case['case_id']
-        user_id = case['user_id']
-        case_user_dict[case_id] = user_id
+
+def get_case_user_list(user_ids):
+    for user_id in user_ids:
+        case_user_dict = {}
+        data = get_user_data(user_id)
+        for case in data:
+            case_id = case['case_id']
+            user_id = case['user_id']
+            case_user_dict[case_id] = user_id
     dir = os.path.dirname(__file__)
     filepath = os.path.join(dir,'case_user')
     fp = open(filepath,'wb')
@@ -155,9 +158,8 @@ def read_dict(filename):
     return data
 
 #
-#user_id = '2523fc995ccfd1d27c15111ec8987be6'
-#get_case_user_list(user_id)
+#user_ids = ['8a7cc079078e17fd20e068eb4bd05729', #Joshin
+#            '8a7cc079078e17fd20e068eb4bb0f056'] #Disha
+#get_case_user_list(user_ids)
 #get_case_person_list()
-#person_id = 10000000128094
-#print type(person_id)
-#print get_case_id(str(person_id))
+

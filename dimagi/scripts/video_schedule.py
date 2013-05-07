@@ -49,7 +49,7 @@ from dashboard.models import *
 import xlrd
 
 def get_video_schedule():
-    book = xlrd.open_workbook("video_schedule.xls", formatting_info=1)
+    book = xlrd.open_workbook("bihar_video_schedule.xls", formatting_info=1)
     sheets = book.sheet_names()
     sheet = book.sheet_by_index(0)   # using the first sheet
     dates = ['2013-01-01','2013-01-16','2013-02-01','2013-02-16','2013-03-01','2013-03-16','2013-04-01','2013-04-16','2013-05-01','2013-05-16','2013-06-01','2013-06-16',
