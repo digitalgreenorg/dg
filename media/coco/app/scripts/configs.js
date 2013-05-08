@@ -28,12 +28,12 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
+        'unique_togther_fields':['name', 'gender'],
         'foreign_entities':{
             'village': {
                 "assigned_villages" : {'placeholder':'id_ass_villages','name_field':'village_name'},        //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
             }
          },
-        'unique_togther_fields':[],
         'form_field_validation': {
         }
     };
@@ -46,6 +46,7 @@ function() {
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/api/v1/video/',
         'entity_name': 'video',
+        'unique_togther_fields':['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
         'foreign_entities':{
             'mediator': {
                 "facilitator" : {'placeholder':'id_facilitator','name_field':'name'},        
@@ -63,7 +64,6 @@ function() {
                                 
                         
          },
-        'unique_togther_fields':[],
         'form_field_validation': {
         }
     };
@@ -77,7 +77,6 @@ function() {
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'foreign_entities':{},
-        'unique_togther_fields':[],
         'form_field_validation': {
         }
     };
@@ -91,6 +90,7 @@ function() {
       'edit_template_name': 'group_add_edit_template',
       'rest_api_url': '/api/v1/group/',
       'entity_name': 'group',
+      'unique_togther_fields':['group_name', 'village.id'],
       'foreign_entities':{
           'village': {
               'village': {'placeholder':'id_village','name_field':'village_name'},
@@ -110,6 +110,7 @@ function() {
       'edit_template_name': 'screening_add_edit_template',
       'rest_api_url': '/api/v1/screening/',
       'entity_name': 'screening',
+      'unique_togther_fields':['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
       'foreign_entities':{
           'village': {
               'village': {'placeholder':'id_village','name_field':'village_name'},
@@ -175,7 +176,7 @@ function() {
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/api/v1/adoption/',
         'entity_name': 'adoption',
-            
+        'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
           add: {
             'foreign_entities':{
                 'village': {
@@ -272,7 +273,7 @@ function() {
                 'group': {'placeholder':'id_group','name_field':'group_name'}
             }
          },
-        'unique_togther_fields':[],
+        'unique_togther_fields':['person_name', 'father_name', 'village.id', 'group.id'],
         'form_field_validation': {
 			rules: {
 				person_name: {

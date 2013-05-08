@@ -29,7 +29,8 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
                     return dfd.resolve(model);
                 },
                 error: function(error){
-                    return dfd.reject("Error saving object in offline - "+error);
+                    console.log(error);
+                    return dfd.reject("Error saving object in offline - "+error.srcElement.error.name);
                 }
             });
             return dfd;
