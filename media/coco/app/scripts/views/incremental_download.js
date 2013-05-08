@@ -163,7 +163,17 @@ define([
         
         // {"pk":9372,"model":"dashboard.serverlog","fields":{"action":1,"timestamp":"2013-04-15T06:47:35","entry_table":"Screening","model_id":10000000132086}}
         get_entity_name: function(obj){
-            return obj.fields.entry_table.toLowerCase();
+            for (var member in all_configs) {
+                if (member == obj.fields.entry_table.toLowerCase())
+                {
+                    return all_configs[member].entity_name;
+                }
+                else if((all_configs[member].inc_table_name)&&(all_configs[member].inc_table_name == obj.fields.entry_table.toLowerCase()))
+                {
+                    return all_configs[member].entity_name;
+                }
+            }
+            return -1;
         },
             
         get_action: function(obj){

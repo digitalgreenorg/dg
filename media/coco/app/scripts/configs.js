@@ -176,6 +176,7 @@ function() {
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/api/v1/adoption/',
         'entity_name': 'adoption',
+        'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
           add: {
             'foreign_entities':{

@@ -95,11 +95,24 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         
         background_download: function(){
             var that = this;
-            this.inc_download({background:true})
-                .always(function(){
-                    setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
-                });
-        }        
+            console.log("Going for background inc download");
+            //check if uploadqueue is empty and internet is connected - if both true do the background download
+            if(this.is_uploadqueue_empty() && this.is_internet_connected())
+            {
+                this.inc_download({background:true})
+                    .always(function(){
+                        setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+                    });
+            }
+        },
+        
+        is_uploadqueue_empty : function(){
+            return upload_collection.fetched&&upload_collection.length<=0;    
+        },
+        
+        is_internet_connected : function(){
+            return navigator.onLine;
+        },               
 
         
     });
