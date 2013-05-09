@@ -90,6 +90,7 @@ function() {
       'edit_template_name': 'group_add_edit_template',
       'rest_api_url': '/api/v1/group/',
       'entity_name': 'group',
+      'inc_table_name': 'persongroups',
       'unique_togther_fields':['group_name', 'village.id'],
       'foreign_entities':{
           'village': {

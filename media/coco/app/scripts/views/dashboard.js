@@ -96,13 +96,17 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         background_download: function(){
             var that = this;
             console.log("Going for background inc download");
+            var call_again = function(){
+                setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+            };
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected())
             {
                 this.inc_download({background:true})
-                    .always(function(){
-                        setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
-                    });
+                    .always(call_again);
+            }
+            else{
+                call_again();
             }
         },
         
