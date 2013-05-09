@@ -17,11 +17,13 @@ define([
         model: generic_model_offline,
         database: indexeddb,
         storeName: "uploadqueue",
+        fetched: false
     });
     var upload_collection = new generic_upload_collection();
     upload_collection.fetch({
-        success: function(){
-            console.log("UPLOADCOLLECTION : successfully fetched")            
+        success: function(coll){
+            console.log("UPLOADCOLLECTION : successfully fetched");
+            coll.fetched = true; 
         },
         error: function(){
             console.log("UPLOADCOLLECTION :  fetch failed")            

@@ -16,7 +16,7 @@ define([
         
         template: "#upload_template",
         increment_pb: function() {
-            w = parseInt(document.getElementById('pbar').style.width);
+            w = parseFloat(document.getElementById('pbar').style.width);
             document.getElementById('pbar').style.width= (w + progress_bar_step) +'%';
         },
         
@@ -26,27 +26,17 @@ define([
                 .on("read_next", this.next_upload);
             _(this)
                 .bindAll('json_converted');
-        },  
+            this.whole_upload_dfd = null;
+        },      
               
         start_upload: function() {
+            this.whole_upload_dfd = new $.Deferred();
             this.$('#upload_modal').modal('show');
             console.log("UPLOAD: start the fuckin upload");
-            // var generic_model_offline = Backbone.Model.extend({
-//                 database: indexeddb,
-//                 storeName: "uploadqueue",
-//             });
-//             var generic_offline_collection = Backbone.Collection.extend({
-//                 model: generic_model_offline,
-//                 database: indexeddb,
-//                 storeName: "uploadqueue",
-//             });
-
-            // this.generic_upload_model = generic_model_offline;
-            // this.upload_collection = new generic_offline_collection();
             this.upload_collection = upload_collection;
             this.upload_collection.bind('reset', this.process_upload_queue, this);
             this.upload_collection.fetch();
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            return this.whole_upload_dfd;
         },
 
         // read each entry of the uploadqueue 
@@ -57,9 +47,9 @@ define([
             console.log("UPLOAD: progress bar step: " + progress_bar_step);
             ev = {
                 type: "read_next",
-                context: this
+                context: this,
             };
-            $.event.trigger(ev);
+            $.event.trigger(ev); 
 
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +62,7 @@ define([
             var model1 = event.context.upload_collection.shift();
             if (model1 == undefined) {
                 $('#upload_modal').modal('hide'); 
-                return;
+                return event.context.whole_upload_dfd.resolve();
             }
             console.log(model1);
             event.context.process_upload_entry(model1);
@@ -106,152 +96,7 @@ define([
                 this.upload_edit(something.on_json);
             }
         },
-        offline_to_online: function(entry) {
-            console.log("UPLOAD:OFFLINE_TO_ONLINE: here am i");
-            var f_entities = configs[entry.get('entity_name')]["foreign_entities"];
-            console.log("UPLOAD:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
-            var online_json = $.extend(null, entry.get("data"));
-            console.log("UPLOAD:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(entry.get("data")));
-            // var num_mem = Object.keys(f_entities).length;
-            var num_mem = 0;
-            for(member in f_entities)
-            {
-                num_mem += Object.keys(f_entities[member]).length;
-            }
-            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: number of foreign elements - " + num_mem);
-            if (!num_mem) {
-                console.log("UPLOAD:OFFLINE_TO_ONLINE: no foreign entities to convert");
-                if (entry.get("action") == "A") {
-                    console.log("UPLOAD: its add action");
-                    this.upload_add(online_json);
-                } else if (entry.get("action") == "E") {
-                    console.log("UPLOAD: its edit action");
-                    this.upload_edit(online_json);
-                }
-
-            } else {
-
-                for (member in f_entities) {
-                    for(element in f_entities[member])
-                    {
-                        if (!(element in online_json)) {
-                            num_mem--;
-                            if (!num_mem) {
-                                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: all converted");
-                                if (entry.get("action") == "A") {
-                                    console.log("UPLOAD: its add action");
-                                    that.upload_add(online_json);
-                                } else if (entry.get("action") == "E") {
-                                    console.log("UPLOAD: its edit action");
-                                    that.upload_edit(online_json);
-                                }
-                                return;
-                            }
-                            else
-                                continue;
-                        }
-                        console.log("UPLOAD:OFFLINE_TO_ONLINE: converting " + member + " offline to online");
-                        
-                        if(online_json[element] instanceof Array)
-                        {
-                            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is multiselect. Fetching its collection.");
-                            var generic_offline_collection = Backbone.Collection.extend({
-                                database: indexeddb,
-                                storeName: member,
-                                attribute: element    
-                            });
-                            var f_collection = new generic_offline_collection();
-                            var that = this;
-                            f_collection.fetch({
-                                success: function(collection){
-                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE : foreign collection successfully fetched");
-                                    var conv_array = [];
-                                    $.each(online_json[collection.attribute],function(index,object){
-                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting this object inside multiselect" + JSON.stringify(object));
-                                        var model = collection.get(object["id"]);
-                                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: fetched same object from collection" + JSON.stringify(model.toJSON()));
-                                        var con_obj = $.extend(null,object);
-                                        con_obj["id"] =   model.get("online_id"); 
-                                        conv_array.push(con_obj);
-                                        // object["id"] =   model.get("online_id");
-                                    });
-                                    online_json[collection.attribute] = conv_array;
-                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
-                                    num_mem--;
-                                    if (!num_mem) {
-                                        console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
-                                        if (entry.get("action") == "A") {
-                                            console.log("UPLOAD: its add action");
-                                            that.upload_add(online_json);
-                                        } else if (entry.get("action") == "E") {
-                                            console.log("UPLOAD: its edit action");
-                                            that.upload_edit(online_json);
-                                        }
-
-                                    }           
-                                },
-                                error: function(){
-                                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error :foreign collection fetch failed");  
-                                    alert("unexpected error. check console log");
-                                    $(notifs_view.el)
-                                        .append(that.error_notif_template({
-                                        msg: "A foreign entity referenced does not exists in IDB."
-                                    }));          
-                                }        
-                            });
-    
-                        }
-                        else
-                        {    
-                            var generic_model_offline = Backbone.Model.extend({
-                                database: indexeddb,
-                                storeName: member,
-                                attribute: element        
-                            });
-                            var f_model = new generic_model_offline();
-                            f_model.set("id", entry.get("data")[element]["id"]);
-                            var that = this;
-                            f_model.fetch({
-                                success: function(model) {
-                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                                    // online_json[model.storeName]["id"] = model.get("online_id");
-                                    var con_obj = $.extend(null,online_json[model.attribute]);
-                                    con_obj["id"] =   model.get("online_id"); 
-                                    online_json[model.attribute] = con_obj;
-                                    
-                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: json after converting" + JSON.stringify(online_json));
-                                    num_mem--;
-                                    if (!num_mem) {
-                                        console.log("UPLOAD:OFFLINE_TO_ONLINE: all converted");
-                                        if (entry.get("action") == "A") {
-                                            console.log("UPLOAD: its add action");
-                                            that.upload_add(online_json);
-                                        } else if (entry.get("action") == "E") {
-                                            console.log("UPLOAD: its edit action");
-                                            that.upload_edit(online_json);
-                                        }
-
-                                    }
-                                },
-                                error: function() {
-                                    console.log("UPLOAD:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned does not exist anymore.");
-                                    //discard this and continue with next uploadqueue entry
-                            
-                                    //TODO: this model should be deleted from IDB and server ????
-                                    entry.destroy();
-                                    $.event.trigger(ev);
-
-                                }
-                            });
-                        }    
-                    }
-                }
-            }
-
-
-
-        },
-
+        
         upload_add: function(conv_json) {
             //   this.setView("#upload_form", new PersonAddEditView({
             //     initialize: {view_configs:configs[entry.get("entity_name")],router:this},

@@ -2,7 +2,7 @@ define([
   'jquery',
   'configs',
   
-], function($, configs){
+], function(pass, configs){
   
   
   
@@ -14,9 +14,15 @@ var idb = {
         migrate: function(transaction, next) {
 
             for (var member in configs) {
-                transaction.db.createObjectStore(configs[member].entity_name, {
+                var entity_store = transaction.db.createObjectStore(configs[member].entity_name, {
                     autoIncrement: true,keyPath: "id"
                 });    
+                entity_store.createIndex("onlineIndex", "online_id", { unique: true });
+                var uniques = configs[member].unique_togther_fields;
+                if(uniques&&uniques.length)
+                {
+                    entity_store.createIndex("uniquesindex", uniques, { unique: true });    
+                }
             }
 
             transaction.db.createObjectStore("uploadqueue", {

@@ -1,45 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!-- manifest="/media/coco/cocooffline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" >
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/cocooffline.appcache">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 
 	<title>Dashboard</title>
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
-
-	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/media/css/ie.css" /><![endif]-->
-    <!-- // importing libraries -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.min.js"></script>
-    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/json2.js"></script>
-    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/underscore-min.js"></script>
-    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone/backbone-min.js"></script>
-    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/indexeddb-backbonejs-adapter/backbone-indexeddb.js">       </script>
-    // <script type="text/javascript" src="/media/coco/dist/scripts/libs/backbone.syphon.js"></script> -->
-	<!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/datatablejs_media/js/jquery.dataTables.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-alert.js"></script> -->
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
-    <!-- // <script type="text/javascript" src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap-modal.js"></script> -->
     
-    
-	<!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/layoutmanager/backbone.layoutmanager.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/jquery.validate.js"></script> -->
-    <!-- // <script type="text/javascript" src="/media/coco/dist/scripts/libs/bootstrap/docs/assets/js/bootstrap.min.js"></script> -->
-	
-    <!-- // application js -->
-        <!-- // <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script> -->
-        <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <!-- <h3><%= header_name %></h3> -->
+
 <script type="text/template" id="header">
 <div class="page-header" style="margin-bottom:0px;">
     <h1 ><a href="#">COCO</a></h1>
@@ -72,7 +51,7 @@
     <div id="upload_modal" class="modal hide fade" >
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Syncing</h3>
+        <h3>Uploading</h3>
       </div>
       <div class="modal-body">
           Data items to be uploaded = <span id="num_upload"> </span>
@@ -96,6 +75,30 @@
     </div>
 </script>
 
+<script type="text/template" id="incremental_download_template">
+    <div id="incremental_download_modal" class="modal hide fade" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Downloading</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+        </div>
+        <table class="table">
+            <tr>
+                <td id="inc_action"> </td>
+                <td id="inc_status"> </td>
+            </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+</script>
+
 <script type="text/template" id="download_template">
     <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
         <button type="button" class="close" data-dismi
@@ -105,18 +108,21 @@ ss="modal" aria-hidden="true">&times;</button>
       <div class="modal-body">
         <p >Please wait...</p>
         <div class="progress progress-info progress-striped">
-          <div class="bar" id = "pbar" style="width: 20%">20%</div>
+          <div class="bar" id = "pbar" style="width: 0%"></div>
         </div>
         <div id="d_status">
-           Downloading 10 of 253 Videos...
+            <table class="table" style="width:100%">
+                <%$.each(all_configs, function(key,val) {
+                    if(key!="misc"){%> 
+        			    <tr id="<%=key%>"><td><%= key %></td><td class="status">In Progress</td></tr>
+                <%}});%>
+            </table>   
         </div>
       </div>
       <div class="modal-footer">
         <a href="#" class="btn">Close</a>
       </div>
     </div>
-    
-        
 </script>
    
 
@@ -318,7 +324,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= end_time %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 <script type="text/template" id="screening_add_edit_template">
@@ -497,7 +502,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= video.title %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 <script type="text/template" id="adoption_edit_template">
@@ -674,7 +678,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= village.village_name %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 <script type="text/template" id="group_add_edit_template">
@@ -783,7 +786,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= video_production_end_date %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 <script type="text/template" id="video_add_edit_template">
@@ -959,7 +961,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= group.group_name %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 
@@ -971,7 +972,6 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= state_name %></td>
     <td>
 	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    <a href="#" class="destroy" title="Delete this entry"><i class="icon-remove"></i></a>
     </td>
 </script>
 

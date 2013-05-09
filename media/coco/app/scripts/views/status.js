@@ -1,14 +1,11 @@
 define([
-  'jquery',
-  'underscore',
-  'backbone',
-      'indexeddb_backbone_config',
-'views/full_download',
-          'configs',
+    'jquery',
+    'underscore',
+    'backbone',
+    'indexeddb_backbone_config',
+    'views/full_download',
+    'configs',
     'collections/upload_collection'                
-  // Using the Require.js text! plugin, we are loaded raw text
-  // which will be used as our views primary template
-  // 'text!templates/project/list.html'
 ], function($,p,pass,indexeddb,FullDownloadView, configs, upload_collection){
     
     var StatusView = Backbone.Layout.extend({
@@ -59,7 +56,7 @@ define([
                 storeName: "meta_data",
             });
             this.meta_model = new generic_model_offline();
-            this.meta_model.set({key: "last_downloaded"});
+            this.meta_model.set({key: "last_full_download"});
             this.fill_status();
             
         },
