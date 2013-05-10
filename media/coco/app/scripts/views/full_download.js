@@ -22,8 +22,42 @@ define([
         },
 
         afterRender: function(){
+        },
+        
+        start_full_download: function(){
+            var dfd = new $.Deferred();
             this.$('#full_download_modal').modal('show');
-            this.Download();
+            console.log("DASHBOARD:DOWNLOAD: starting download");
+            //Download:fetch each model from server and save it to the indexeddb
+            var that = this;
+            this.num_of_entities = Object.keys(all_configs).length; // Number of foreign entities referenced in this model.
+            this.progress_bar_step = 100 / this.num_of_entities;
+            this.fetch_status = {};
+            var entity_dfds = [];
+            for (var member in all_configs) {
+                if(member == "misc")
+                    continue;
+                var entity_dfd = this.start_full_download_for_entity(all_configs[member]["entity_name"]);
+                entity_dfds.push(entity_dfd);
+                this.fetch_status[member] = {};
+            }
+            $.when.apply($, entity_dfds)
+                .done(function(){
+                    that.finish_download()
+                        .done(function(){
+                            that.$('#full_download_modal').modal('hide');
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject();
+                        })
+                })
+                .fail(function(error){
+                    console.log("Error while downloading.");
+                    alert("ERROR while doing full download");
+                    dfd.reject();
+                });
+            return dfd;    
         },
         
         increment_pb: function() {
@@ -35,33 +69,7 @@ define([
             $('#'+entity_name).find('.status').html(status);
         },
             
-        Download: function() {
-            console.log("DASHBOARD:DOWNLOAD: starting download");
-            //Download:fetch each model from server and save it to the indexeddb
-            var that = this;
-            this.num_of_entities = Object.keys(all_configs).length; // Number of foreign entities referenced in this model.
-            this.progress_bar_step = 100 / this.num_of_entities;
-            this.fetch_status = {};
-            var entity_dfds = [];
-            for (var member in all_configs) {
-                if(member == "misc")
-                    continue;
-                var entity_dfd = this.start_full_download(all_configs[member]["entity_name"]);
-                entity_dfds.push(entity_dfd);
-                this.fetch_status[member] = {};
-            }
-            $.when.apply($, entity_dfds)
-                .done(function(){
-                    console.log("Finished full download.");
-                    that.finish_download();
-                })
-                .fail(function(){
-                    console.log("Error while downloading.");
-                    alert("ERROR while doing full download");
-                });
-        },
-        
-        start_full_download: function(entity_name){
+        start_full_download_for_entity: function(entity_name){
             var dfd = new $.Deferred();
             var that = this;
             this.clear_object_store(entity_name)
@@ -73,7 +81,7 @@ define([
                             that.fetch_status[entity_name]["total"] = total_num_objects;
                             that.fetch_status[entity_name]["downloaded"] = 0;
                             that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
-                            that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
+                            that.chunk_it_fetch_it_save_it(entity_name, 200)
                                 .done(function(){
                                     console.log("FINISHED DOWNLOADING - " + entity_name);
                                     that.increment_pb();
@@ -233,6 +241,7 @@ define([
         },
                 
         finish_download: function(){
+            var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
@@ -249,13 +258,11 @@ define([
                         success: function(){
                             console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
                             console.log(JSON.stringify(model.toJSON()));
-                            
+                            dfd.resolve();
                         },
-                        error: function(one,two,three){
+                        error: function(error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
-                            console.log(one);
-                            console.log(two);
-                            console.log(three);
+                            dfd.reject(error);
                         }
                     });
                 },
@@ -268,18 +275,19 @@ define([
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
                                     console.log(JSON.stringify(model.toJSON()));
-                                    this.$('#full_download_modal').modal('hide');
-                            
+                                    dfd.resolve();
                                 },
                                 error: function(error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
+                                    dfd.reject(error);
                                 }
                             });
                             
                         }    
                 }        
             });
+            return dfd;
         }        
         
                 

@@ -6,31 +6,53 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             // "click button#download": "Download",
             "click #sync": "sync",
             "click #inc_download": "inc_download",
-                
         },
-
+        
         item_template: _.template($("#dashboard_item_template")
             .html()),
         initialize: function() {
             this.upload_v = null;
             this.inc_download_v = null;
-            this.background_download();
+            // this.background_download();
         },
 
         afterRender: function() { /* Work with the View after render. */
             // this.collection.fetch();
             for (var member in configs) {
                 // console.log(configs[member]);
-                $('#dashboard_items')
-                    .append(this.item_template({
-                    name: member,
-                    title: configs[member]["page_header"]
-                }));
-                $('#dashboard_items_add')
-                    .append(this.item_template({
-                    name: member+"/add",
-                    title: '<i class="icon-plus-sign"></i>'
-                }));
+                if(member=="misc")
+                    continue;
+                var listing =true;
+                var add = true;
+                if(configs[member].dashboard_display)
+                {
+                    listing = configs[member].dashboard_display.listing;
+                    add = configs[member].dashboard_display.add;
+                }
+                if(listing||add)
+                {
+                    if(listing)
+                    {
+                        $('#dashboard_items')
+                            .append(this.item_template({
+                            name: member,
+                            title: configs[member]["page_header"]
+                        }));
+                    }
+                    if(add)
+                    {
+                        $('#dashboard_items_add')
+                            .append(this.item_template({
+                            name: member+"/add",
+                            title: '<i class="icon-plus-sign"></i>'
+                        }));
+                    }
+                    else
+                    {
+                        $('#dashboard_items_add')
+                            .append("<li><i class='icon-white icon-plus-sign'></li>");
+                    }
+                }
                     
 
             }

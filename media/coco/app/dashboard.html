@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!-- manifest="/media/coco/cocooffline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/cocooffline.appcache">
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" >
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
@@ -8,12 +8,14 @@
 	<title>Dashboard</title>
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="/media/coco/app/scripts/libs/chosen/chosen.css">
+    <link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
+	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -179,6 +181,7 @@ ss="modal" aria-hidden="true">&times;</button>
    </script>
    
 <script type="text/template" id="sync_status_template">
+    <div id="modal"></div>
    <div>Database first time downloaded at - <%=timestamp%>,</div><br>
    <div>Last Synced at - </div><br>
    <div>Entries to Download - </div><br>
@@ -285,7 +288,7 @@ ss="modal" aria-hidden="true">&times;</button>
                                  <div class="control-group"> 
 	                                 <label class="control-label">Assigned Villages</label>
 	                                 <div class="controls"> 
-	                                 <select id = "id_ass_villages" name="assigned_villages" multiple>
+	                                 <select id = "id_ass_villages" name="assigned_villages" class = "chzn-select" multiple>
 	                                    
 	                                </select>
 	                                </div>
@@ -332,14 +335,14 @@ ss="modal" aria-hidden="true">&times;</button>
                 <div class="control-group"> 
                 	<label class="control-label">Date*</label>
                 	<div class="controls">
-                 	<input class="input-small" id="date" type="text" placeholder="Date" name="date">  
+                 	<input class="date-picker input-small" id="date" type="text" placeholder="Date" name="date">  
                  	</div>
                  	<span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                  </div>
                  <div class="control-group ">
                  	<label class="control-label">Start Time*</label>
                  	<div class="controls input-append bootstrap-timepicker">
-                 		<input class="input-mini" id="start_time_picker" type="text" placeholder="hh:mm" name="start_time">
+                 		<input class="time-picker input-mini" id="start_time_picker" type="text" placeholder="hh:mm" name="start_time">
                  		<span class="add-on"><i class="icon-time"></i></span>
                  	</div>
                  	<span class="help-block">Time should be in the format of hh:mm in 24 hours format</span>
@@ -347,7 +350,7 @@ ss="modal" aria-hidden="true">&times;</button>
                  <div class="control-group "> 
                  	<label class="control-label">End Time*</label>
                  	<div class="controls input-append bootstrap-timepicker"> 
-                 		<input class="input-mini" id="end_time_picker" type="text" placeholder="hh:mm" name="end_time">
+                 		<input class="time-picker input-mini" id="end_time_picker" type="text" placeholder="hh:mm" name="end_time">
                  		<span class="add-on"><i class="icon-time"></i></span>
                  	</div>
                  	<span class="help-block">Time should be in the format of hh:mm in 24 hours format</span>
@@ -355,7 +358,7 @@ ss="modal" aria-hidden="true">&times;</button>
                  <div class="control-group">
                 	<label class="control-label">Village*</label>
                 	<div class="controls"> 
-                	<select name="village" id="id_village" placeholder="Enter animator to enable">
+                	<select name="village" id="id_village" class="chzn-select" placeholder="Enter animator to enable">
                     <option value='' selected='selected'>---------</option> 
                     </select>
                 	</div>
@@ -363,7 +366,7 @@ ss="modal" aria-hidden="true">&times;</button>
                 <div class="control-group">
                  	<label class="control-label">Mediator*</label>
                  	<div class="controls"> 
-                 	<select name="animator" id="id_animator">
+                 	<select name="animator" id="id_animator" class="chzn-select">
                        <option value='' selected='selected'>---------</option> 
      				</select > 
                	    </div>
@@ -371,7 +374,7 @@ ss="modal" aria-hidden="true">&times;</button>
                <div class="control-group"> 
                 	<label class="control-label">Videos Screened*</label>
                 	<div class="controls"> 
-                	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened">
+                	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chzn-select">
                         <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
@@ -379,7 +382,7 @@ ss="modal" aria-hidden="true">&times;</button>
                 <div class="control-group">
                 	<label>Groups Attended*</label>
                     <div class="controls">
-                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple"></select> 
+                        <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chzn-select"></select> 
                     </div>
                 </div>
                 <div class="control-group">
@@ -449,7 +452,7 @@ ss="modal" aria-hidden="true">&times;</button>
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <select id="expressed_adoption_video_row7" name="expressed_adoption_video">
+                    <select id="expressed_adoption_video_row7" name="expressed_adoption_video" class="chzn-select">
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -510,7 +513,7 @@ ss="modal" aria-hidden="true">&times;</button>
                 <div class="control-group">
                 	<label class="control-label">Person*</label>
                 	<div class="controls"> 
-                	<select name="person" id="id_person">
+                	<select name="person" id="id_person" class="chzn-select">
                     <option value="">---------- </option>
                     </select>
                     </div>
@@ -518,7 +521,7 @@ ss="modal" aria-hidden="true">&times;</button>
                 <div class="control-group">
                 	<label>Video*</label>
                     <div class="controls">
-                        <select name="video" id="id_video"></select>
+                        <select name="video" id="id_video" class="chzn-select"></select>
                     </div>
                 </div>
                 <div class="control-group"> 
@@ -537,7 +540,7 @@ ss="modal" aria-hidden="true">&times;</button>
                                 <div class="control-group">
                                 	<label class="control-label">Village*</label>
                                 	<div class="controls"> 
-                                	<select name="village" id="id_village">
+                                	<select name="village" id="id_village" class="chzn-select">
                                     <option value="">---------- </option>
                                     </select>
                                     </div>
@@ -545,13 +548,13 @@ ss="modal" aria-hidden="true">&times;</button>
                                 <div class="control-group">
                                 	<label>Groups Attended*</label>
 	                                <div class="controls">
-	                                    <select name="group" id="id_group" multiple="multiple"></select>
+	                                    <select name="group" id="id_group" multiple="multiple" class="chzn-select"></select>
 	                                </div>
                                 </div>
                                 <div class="control-group">
                                 	<label>Person</label>
                                 	<div class="controls">
-		                                <select name="float_person" id="id_person" multiple="multiple"></select>
+		                                <select name="float_person" id="id_person" multiple="multiple" class="chzn-select"></select>
 	                                </div>
                                 </div>
                                     <br>
@@ -638,7 +641,7 @@ ss="modal" aria-hidden="true">&times;</button>
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <select id="video" name="video">
+                    <select id="video" name="video" class="chzn-select">
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -692,7 +695,7 @@ ss="modal" aria-hidden="true">&times;</button>
                                  <div class="control-group"> 
 	                                 <label class="control-label">Village*</label>
 	                                 <div class="controls"> 
-	                                 <select id = "id_village" name="village">
+	                                 <select id = "id_village" name="village" class="chzn-select">
                                         <option value='' selected='selected'>---------</option> 
 	                                    
 	                                </select>
@@ -758,7 +761,7 @@ ss="modal" aria-hidden="true">&times;</button>
             <% } %>
         
             <div class="form-actions">
-              <button id='button1' type="button" class="btn btn-primary"><%=button1%></button>
+              <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
               <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
             </div>
         </form>
@@ -825,14 +828,14 @@ ss="modal" aria-hidden="true">&times;</button>
                                  <div class="control-group">
                                      <label class="control-label">Production Start Date*</label>
                                      <div class="controls">
-                                         <input class="input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
+                                         <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
                                      </div>
                                      <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                                  </div>
                                  <div class="control-group">
                                      <label class="control-label">Production End Date*</label>
                                      <div class="controls">
-                                         <input class="input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
+                                         <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
                                      </div>
                                      <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                                  </div>
@@ -857,7 +860,7 @@ ss="modal" aria-hidden="true">&times;</button>
                              <div class="control-group">
                                  <label class="control-label">Village*</label>
                                  <div class="controls">
-                                     <select id = "id_village" name="village">
+                                     <select id = "id_village" name="village" class="chzn-select">
                                      	<option value="">---------- </option>
                                      </select>
                                  </div>
@@ -865,7 +868,7 @@ ss="modal" aria-hidden="true">&times;</button>
                              <div class="control-group">
                                  <label class="control-label">Facilitator*</label>
                                  <div class="controls">
-                                     <select id = "id_facilitator" name="facilitator">
+                                     <select id = "id_facilitator" name="facilitator" class="chzn-select">
                                          <option selected="selected" value="">
                                              ---------
                                          </option>
@@ -875,7 +878,7 @@ ss="modal" aria-hidden="true">&times;</button>
                              <div class="control-group">
                                  <label class="control-label">Camera Operator*</label>
                                  <div class="controls">
-                                     <select id = "id_cameraoperator" name="cameraoperator">
+                                     <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select">
                                          <option selected="selected" value="">
                                              ---------
                                          </option>
@@ -886,7 +889,7 @@ ss="modal" aria-hidden="true">&times;</button>
                             <div class="control-group">
                                 <label class="control-label">Persons Shown*</label>
                                 <div class="controls">
-                                    <select size="20" multiple="multiple" class="input-xlarge" id = "id_farmers_shown" name="farmers_shown">                              </select>
+                                    <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -936,7 +939,7 @@ ss="modal" aria-hidden="true">&times;</button>
                                 <div class="control-group">
                                     <label>Approval Date</label>
                                     <div class="controls">
-                                        <input class="input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
+                                        <input class="date-picker input-small" id="approval_date" name="approval_date" type="text" placeholder="Approval Date">
                                     </div>
                                     <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                                 </div>
@@ -1028,7 +1031,7 @@ ss="modal" aria-hidden="true">&times;</button>
                                  <div class="control-group"> 
 	                                 <label class="control-label">Village*</label>
 	                                 <div class="controls"> 
-	                                 <select id = "id_village" name="village">
+	                                 <select id = "id_village" name="village" class="chzn-select">
 	                                    
 	                                </select>
 	                                </div>
@@ -1058,7 +1061,7 @@ ss="modal" aria-hidden="true">&times;</button>
 								<div class="control-group"> 
 	                                 <label class="control-label">Group</label> 
 	                                 <div class="controls">
-	                                 <select id = "id_group" name="group">
+	                                 <select id = "id_group" name="group" class="chzn-select">
 	                                    
 	                                </select>
 	                                </div>
@@ -1124,7 +1127,7 @@ ss="modal" aria-hidden="true">&times;</button>
 													    <div class="control-group"> 
     														<label class="control-label" for='id_village' >Village:</label> 
     														<div class="controls">
-                                                            <select name='village' id='id_village' class="required">
+                                                            <select name='village' id='id_village' class="required" class="chzn-select">
     														<option value='' selected='selected'>---------</option>
     														</select>  
                                                             </div>
@@ -1132,7 +1135,7 @@ ss="modal" aria-hidden="true">&times;</button>
 											    		<div class="control-group"> 
 															<label class="control-label" for='id_group'>Group:</label>
                                                             <div class="controls">
-                                                            <select name='group' id='id_group'> 
+                                                            <select name='group' id='id_group' class="chzn-select"> 
 															<option value='' selected='selected'>---------</option> 
 															</select> 
                                                             </div>

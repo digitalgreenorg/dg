@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'indexeddb-backbone'
+define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'indexeddb-backbone','chosen','date_picker','time_picker'
 // Using the Require.js text! plugin, we are loaded raw text
 // which will be used as our views primary template
 // 'text!templates/project/list.html'
@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
+            // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -287,7 +287,20 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.$('form')
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            $(".chzn-select").chosen();
+            $(".date-picker")
+                .datepicker({
+                    format: 'yyyy-mm-dd'
+                });
+            $(".date-picker").focusout(function () {
+                    $(this).datepicker('hide');
+                   });
+            $(".time-picker")
+                .timepicker({
+                    minuteStep: 1,
+                    defaultTime: false,
+                    showMeridian: false
+                });                
             return this;
         },
         
@@ -469,6 +482,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }));    
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                 $f_el.trigger("liszt:updated");
             }
             // if(this.edit_case && this.num_f_elems>=0)
 //             {
@@ -484,6 +498,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 // Backbone.Syphon.deserialize(this, t_json);
                 console.log("FORM: putting in value of -"+element);
                 this.$('form [name='+element+']').val(this.model_json[element]).change();
+                this.$('form [name='+element+']').trigger("liszt:updated");
                 this.foreign_elements_rendered[element] = true;
             }
         },
@@ -678,7 +693,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         fill_form: function() {
             console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
-            
         },
         
             
