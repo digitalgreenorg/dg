@@ -298,31 +298,48 @@ function() {
               'animator': {
                   'placeholder':'id_animator',
                   'name_field':'name',
-                  'dependency':{
+                  'dependency':[{
                       'source_entity': 'village',
                       'source_form_element': 'village',      
                       'dep_attr': 'assigned_villages'      
-                  }      
+                  }]      
               }
           },
           'group': {
               farmer_groups_targeted:{
                   'placeholder':'id_group',
                   'name_field':'group_name',
-                  'dependency':{
+                  'dependency':[{
                       'source_entity': 'village',
                       'source_form_element': 'village',      
                       'dep_attr': 'village'      
-                  }      
+                  }]      
               }
           },
           'person': {
+              person:{
+                  'placeholder':'id_person',
+                  'name_field':'person_name',
+                  'dependency':[{
+                      'source_entity': 'village',
+                      'source_form_element': 'village',      
+                      'dep_attr': 'village'      
+                   }],
+                   'filter':{attr:'group',value:null }
+              },
               farmers_attendance: {
-                  'dependency':{
-                      'source_entity': 'group',
-                      'source_form_element': 'farmer_groups_targeted',      
-                      'dep_attr': 'group'      
-                   },
+                   dependency: [
+                        {
+                           'source_entity': 'group',
+                           'source_form_element': 'farmer_groups_targeted',      
+                           'dep_attr': 'group'      
+                        },
+                        {
+                             'source_entity': 'person',
+                             'source_form_element': 'person',      
+                             'dep_attr': 'id'      
+                        }
+                   ],
                   id_field : "person_id",                   // for offline_to_online conversion      
                   'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                       template : 'person_pma_template',
@@ -363,21 +380,38 @@ function() {
                   'group': {
                       'placeholder':'id_group',
                       'name_field':'group_name',
-                      'dependency':{
+                      'dependency':[{
                           'source_entity': 'village',
                           'source_form_element': 'village',      
                           'dep_attr': 'village'      
-                      }   
+                      }]   
                   }
                 },
                 'person': {
+                    float_person:{
+                        'placeholder':'id_person',
+                        'name_field':'person_name',
+                        'dependency':[{
+                            'source_entity': 'village',
+                            'source_form_element': 'village',      
+                            'dep_attr': 'village'      
+                         }],
+                         'filter':{attr:'group',value:null }
+                    },
                     farmers_attendance: {
                         only_render: true,
-                        'dependency':{
-                            'source_entity': 'group',
-                            'source_form_element': 'group',      
-                            'dep_attr': 'group'      
-                         },
+                        dependency: [
+                             {
+                                'source_entity': 'group',
+                                'source_form_element': 'group',      
+                                'dep_attr': 'group'      
+                             },
+                             {
+                                  'source_entity': 'person',
+                                  'source_form_element': 'float_person',      
+                                  'dep_attr': 'id'      
+                             }
+                        ],
                         id_field : "person_id",                   // for offline_to_online conversion      
                         'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template : 'adoption_inline',
@@ -421,12 +455,12 @@ function() {
                         'placeholder':'id_video',
                         // 'sub_attr': 'videos_seen',
                         'name_field':'title',
-                        'dependency':{
+                        'dependency':[{
                             'source_entity': 'person',
                             'source_form_element': 'person',      
                             'dep_attr': 'id',
                             'rev_sub_attr': 'videos_seen',                
-                        }   
+                        }]   
                     }      
                 }      
             }
