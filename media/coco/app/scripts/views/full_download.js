@@ -81,7 +81,7 @@ define([
                             that.fetch_status[entity_name]["total"] = total_num_objects;
                             that.fetch_status[entity_name]["downloaded"] = 0;
                             that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
-                            that.chunk_it_fetch_it_save_it(entity_name, 200)
+                            that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
                                 .done(function(){
                                     console.log("FINISHED DOWNLOADING - " + entity_name);
                                     that.increment_pb();
