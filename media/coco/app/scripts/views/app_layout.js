@@ -21,6 +21,21 @@ define([
           this.setView("#side_panel", new DashboardView());
                 
       },
+      
+      hide_side_panel: function(){
+          console.log("HIDE SIDE PANEL");
+          console.log($("#side_panel"));
+          this.$("#side_panel").hide();
+          $("#content").removeClass('span10');
+          $("#content").addClass('span12');
+          $("#content").prepend("<div><a id='right_arrow'><img style='width:30px;' src='/media/coco/app/images/right_arrow.png'/></a></div>");
+          $("#right_arrow").click(function() {
+              $("#content").removeClass('span12');
+              $("#content").addClass('span10');
+              $('#right_arrow').remove();
+              $("#side_panel").show();
+          });
+      },
           
       render_dashboard: function() {
           // $(this.el)
@@ -31,6 +46,7 @@ define([
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
           this.setView("#content", new StatusView());
           this.render();
+          
           //         
           // $(this.el)
           //               .append(dashboard.render()
@@ -41,8 +57,11 @@ define([
       render_list_view: function(params) {
           // var bcrumb_template = _.template($('#list_breadcrumb').html());
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread:params.view_configs.page_header}) }}));
+          var that = this;
           this.setView("#content", new ListView({initialize:params}));
-          this.render();
+          this.render().done(function(){
+              that.hide_side_panel();
+          });
           
           return this;
       },
@@ -89,9 +108,11 @@ define([
           
                       };            
           }
+          var that = this;
           this.setView("#content", this.formcontroller_v);
-              
-          this.render();
+          this.render().done(function(){
+              that.hide_side_panel();
+          });   
           
           return this;
       }

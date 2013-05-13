@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'indexeddb-backbone'
+define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'indexeddb-backbone','chosen','date_picker','time_picker'
 // Using the Require.js text! plugin, we are loaded raw text
 // which will be used as our views primary template
 // 'text!templates/project/list.html'
@@ -8,7 +8,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
     var ShowAddEditFormView = Backbone.Layout.extend({
 
         events: {
-            'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
+            // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template')
@@ -137,28 +137,40 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     this.element_entity_map[element] = f_entity; //created mapping of element - entity
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
-                    if(this.foreign_entities[f_entity][element]["dependency"])
+                    var dependency = this.foreign_entities[f_entity][element]["dependency"];
+                    if(dependency)
                     {
-                        console.log("FORM: dependency exists ");
                         var f_ens = this.foreign_entities;
-                        var source_entity = f_ens[f_entity][element].dependency.source_entity;
-                        var source_elm = f_ens[f_entity][element].dependency.source_form_element;
-                        console.log(source_entity);
-                        console.log(source_elm);
-                        console.log(f_ens);
-                        var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-                        console.log(source_elm_id);
                         var that = this;
-                        if(source_elm_id in this.dependencies)
-                            {
-                                this.dependencies[source_elm_id].push(element);
-                            }    
-                        else{
-                            this.dependencies[source_elm_id] = [];
-                            this.dependencies[source_elm_id].push(element);
-                            var that = this;
-                            // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
-                        }
+                        $.each(dependency,function(index,dep){
+                            var source_entity = dep.source_entity;
+                            var source_elm = dep.source_form_element;
+                            var source_elm_id = f_ens[source_entity][source_elm].placeholder;
+                            if(source_elm_id in that.dependencies)
+                                {
+                                    that.dependencies[source_elm_id].push(element);
+                                }    
+                            else{
+                                that.dependencies[source_elm_id] = [];
+                                that.dependencies[source_elm_id].push(element);
+                            }
+                        });
+                        // console.log("FORM: dependency exists ");
+//                         var f_ens = this.foreign_entities;
+//                         var source_entity = f_ens[f_entity][element].dependency.source_entity;
+//                         var source_elm = f_ens[f_entity][element].dependency.source_form_element;
+//                         var source_elm_id = f_ens[source_entity][source_elm].placeholder;
+//                         var that = this;
+//                         if(source_elm_id in this.dependencies)
+//                             {
+//                                 this.dependencies[source_elm_id].push(element);
+//                             }    
+//                         else{
+//                             this.dependencies[source_elm_id] = [];
+//                             this.dependencies[source_elm_id].push(element);
+//                             // var that = this;
+//                             // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
+//                         }
                         console.log("dependencies = "+JSON.stringify(this.dependencies));    
                     }
                     
@@ -287,7 +299,20 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.$('form')
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            $(".chzn-select").chosen();
+            $(".date-picker")
+                .datepicker({
+                    format: 'yyyy-mm-dd'
+                });
+            $(".date-picker").focusout(function () {
+                    $(this).datepicker('hide');
+                   });
+            $(".time-picker")
+                .timepicker({
+                    minuteStep: 1,
+                    defaultTime: false,
+                    showMeridian: false
+                });                
             return this;
         },
         
@@ -318,92 +343,103 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         
         fill_dep_entity: function(ev){
             var source = $(ev.target).attr("id");
-            var curr_value = $(ev.target).val();
             for(var i=0; i<this.dependencies[source].length;i++)
             {
+                //Fully Reset the dependent select element by looking at all its sources.
                 var element = this.dependencies[source][i];
                 var entity = this.element_entity_map[element];
                 var index = this.f_index.indexOf(entity);
                 var collection = this.f_colls[index];
-                var dep_desc = this.foreign_entities[entity][element].dependency;
+                var dependencies = this.foreign_entities[entity][element].dependency;
+                var final_models = [];
                 console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
-                if(collection.length)
-                {
-                    if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
+                var that = this;
+                $.each(dependencies, function(index, dep_desc){
+                    if(collection.length)
                     {
-                        console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
-                        var filtered_models = collection.filter(function(model){
-                           var exists = false;
-                           $.each(model.get(dep_desc.dep_attr),function(index, object){
-                                if(object.id == curr_value)
-                                    exists = true;
-                           });
-                           return exists;
-                        });
+                        var dep_attr = dep_desc.dep_attr;
+                        var source_form_element = dep_desc.source_form_element;
+                        var source_entity = dep_desc.source_entity;
+                        var source_placeholder = that.foreign_entities[source_entity][source_form_element].placeholder;
+                        var curr_value = $('#'+source_placeholder).val();
+                        var filtered_models = [];
+                        if(!curr_value)
+                        {
+                            return;
+                        }
+                        if(!(curr_value instanceof Array))
+                        {
+                            v = curr_value;
+                            curr_value = [];
+                            curr_value.push(parseInt(v));
+                        }
+                        else{
+                            $.each(curr_value, function(index,val){
+                                curr_value[index] = parseInt(val);
+                            });
+                        }
+                        if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
+                        {
+                            console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
+                            filtered_models = collection.filter(function(model){
+                               var exists = false;
+                               $.each(model.get(dep_desc.dep_attr),function(index, object){
+                                    if(!($.inArray( object.id, curr_value)==-1))
+                                        exists = true;
+                               });
+                               return exists;
+                            });
                         
-                    }
-                    else{
-                        console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
-                        // var filtered_models = collection.filter(function(model){
-//                             if(typeof model.get(dep_desc.dep_attr) == "object")
-//                                 return model.get(dep_desc.dep_attr).id == curr_value;
-//                             else
-//                                 return model.get(dep_desc.dep_attr) == curr_value;
-//                         });
-                        var that = this;
-                        var filtered_models = collection.filter(function(model){
-                            var compare = null;
-                            if(typeof model.get(dep_desc.dep_attr) == "object")
-                                compare = model.get(dep_desc.dep_attr).id; 
-                            else
-                                compare = model.get(dep_desc.dep_attr)
-                            if(dep_desc.rev_sub_attr)
-                                {
-                                    var src_entity = dep_desc.source_entity;
-                                    var index = that.f_index.indexOf(src_entity);
-                                    var s_collection = that.f_colls[index];
-                                    // console.log(collection);
-                                    var s_model = s_collection.get(curr_value);
-                                    console.log(s_model);
-                                    var exists = false;
-                                    console.log()
-                                    if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
+                        }
+                        else{
+                            console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
+                            filtered_models = collection.filter(function(model){
+                                var compare = null;
+                                if(typeof model.get(dep_desc.dep_attr) == "object")
+                                    compare = model.get(dep_desc.dep_attr).id; 
+                                else
+                                    compare = model.get(dep_desc.dep_attr)
+                                if(dep_desc.rev_sub_attr)
                                     {
-                                        
-                                        $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
-                                            console.log(src_compare+ " "+ compare);
-                                            if(typeof src_compare == "object")
-                                            {
-                                                if(compare == src_compare.id)
-                                                    exists = true;
-                                            }
-                                            else
-                                            {
-                                                if(compare == src_compare)
-                                                    exists = true;
-                                            }
-                                        });
-                                    }
-                                    return exists;
-                                }        
-                            else
-                                {
-                                    return compare == curr_value;
-                                }            
-                        });
+                                        var src_entity = dep_desc.source_entity;
+                                        var index = that.f_index.indexOf(src_entity);
+                                        var s_collection = that.f_colls[index];
+                                        var s_model = s_collection.get(curr_value[0]);
+                                        console.log(s_model);
+                                        var exists = false;
+                                        console.log()
+                                        if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
+                                        {
+                                            $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
+                                                console.log(src_compare+ " "+ compare);
+                                                if(typeof src_compare == "object")
+                                                {
+                                                    if(compare == src_compare.id)
+                                                        exists = true;
+                                                }
+                                                else
+                                                {
+                                                    if(compare == src_compare)
+                                                        exists = true;
+                                                }
+                                            });
+                                        }
+                                        return exists;
+                                    }        
+                                else
+                                    {
+                                        if(!($.inArray(compare, curr_value)==-1))
+                                            exists = true;
+                                        else
+                                            exists = false;
+                                        return exists;
+                                    }            
+                            });
+                        }
                     }
-                    
-                    console.log(filtered_models);
-                    var sub_attr = this.foreign_entities[entity][element].sub_attr;
-                    if(sub_attr)
-                    {
-                        $.each(filtered_models, function(index, obj){
-                            filtered_models[index] = obj.get(sub_attr);
-                        });
-                        filtered_models = filtered_models[0];
-                    }
-                    this.fill_foreign_entity(element, filtered_models);
-                }
+                    final_models = final_models.concat(filtered_models);
+                });
+                that.fill_foreign_entity(element, final_models);
                 
             }
             
@@ -412,6 +448,21 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         fill_foreign_entity: function(element, model_array){
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
             // this.num_f_elems--; 
+            var filter = f_entity_desc.filter;
+            if(filter)
+            {
+                console.log("FILTERING FOREIGN ENTITY!");
+                var filter_attr = filter.attr;
+                var filter_value = filter.value;
+                filtered = [];
+                $.each(model_array, function(index, obj){
+                    if(obj.get(filter_attr).id == filter_value)
+                    {
+                        filtered.push(obj);
+                    }
+                });
+                model_array = filtered;
+            }
             if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
             {
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
@@ -469,6 +520,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }));    
                 });
                 console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                 $f_el.trigger("liszt:updated");
             }
             // if(this.edit_case && this.num_f_elems>=0)
 //             {
@@ -484,6 +536,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 // Backbone.Syphon.deserialize(this, t_json);
                 console.log("FORM: putting in value of -"+element);
                 this.$('form [name='+element+']').val(this.model_json[element]).change();
+                this.$('form [name='+element+']').trigger("liszt:updated");
                 this.foreign_elements_rendered[element] = true;
             }
         },
@@ -678,7 +731,6 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         fill_form: function() {
             console.log("FORM: filling form with the model - "+JSON.stringify(this.model_json));
             Backbone.Syphon.deserialize(this, this.model_json);
-            
         },
         
             

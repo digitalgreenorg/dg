@@ -14,7 +14,10 @@ require.config({
     'form_field_validator': 'libs/jquery.validate',
     'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
     'syphon':'libs/backbone.syphon',
-    'bootstrapjs': 'libs/bootstrap/js/bootstrap.min'    
+    'bootstrapjs': 'libs/bootstrap/js/bootstrap.min',
+    'chosen': 'libs/chosen/chosen.jquery.min',
+    'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',    
+    'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',    
   },
   
   shims:{

@@ -5,7 +5,8 @@ function() {
         'table_template_name': 'village_table_template',
         'list_item_template_name': 'village_list_item_template',
         'rest_api_url': '/api/v1/village/',
-        'entity_name': 'village'
+        'entity_name': 'village',
+        'dashboard_display': {listing: true, add: false}
     };
     // var video_list_view_configs = {
 //         'page_header': 'Video',
@@ -35,7 +36,54 @@ function() {
             }
          },
         'form_field_validation': {
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 100,
+                    allowedChar: true
+                },
+                gender: "required",
+                phone_no: {
+                    digits: true,
+                    maxlength: 10
+                },
+                assigned_villages: "required",
+            },
+            messages: {
+                name: {
+                    required: 'Enter Mediator Name',
+                    minlength: 'Mediator Name  should be atleast 2 characters',
+                    maxlength: 'Mediator Name should be atmax 100 characters',
+                    allowedChar: 'Mediator name should only contain alphabets and local language characters'
+                },
+                gender: "Enter Gender",
+                phone_no: {
+                    digits: 'phone number should contain only digits',
+                    maxlength: "phone number should not contain more than 10 digits"
+                },
+                assigned_villages: "Enter Assigned Villages",
+            },
+
+            highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-inline"
+
         }
+
     };
   
     var video_configs = {
@@ -65,6 +113,94 @@ function() {
                         
          },
         'form_field_validation': {
+            rules: {
+                title: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 200,
+                    // allowedChar: true
+                },
+                video_type: "required",
+                video_production_start_date: {
+                    required: true,
+                    // validateDate: true
+                },
+                video_production_end_date: {
+                    required: true,
+                    // validateDate: true
+                },
+                language: "required",
+                summary: {
+                    minlength: 2,
+                    maxlength: 500,
+                    // allowedChar: true
+                },
+                village: "required",
+                facilitator: "required",
+                cameraoperator: "required",
+                farmers_shown: "required",
+                actors: "required",
+                video_suitable_for: "required",
+                approval_date: {
+                    // validateDate: true
+                },
+                youtubeid: {
+                    maxlength: 20
+                }
+            },
+            messages: {
+                title: {
+                    required: 'Enter Video Title',
+                    minlength: 'Video title should be atleast 2 characters',
+                    maxlength: 'Video title should be atmax 200 characters',
+                    // allowedChar: 'Video title should only contain alphabets and local language characters'
+                },
+                video_type: "Enter Video Type",
+                video_production_start_date: {
+                    required: 'Enter Video Production Start Date',
+                    validateDate: "Enter Video Production Start Date in the form of yyyy-mm-dd"
+                },
+                video_production_end_date: {
+                    required: 'Enter Video Production End Date',
+                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd"
+                },
+                language: "Enter Language",
+                summary: {
+                    minlength: "summary should be atleast 2 characters",
+                    maxlength: "summary should be atmax 500 characters",
+                    // allowedChar: "summary should not contain special characters"
+                },
+                village: "Enter Village",
+                facilitator: "Enter Facilitator",
+                cameraoperator: "Enter Camera Operator",
+                farmers_shown: "Enter Persons Shown",
+                actors: "Enter Actors",
+                video_suitable_for: "Enter Video Suitable For",
+                approval_date: {
+                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd"
+                },
+                youtubeid: {
+                    maxlength: "youtubeid should be not more than 20 characters"
+                }
+            },
+
+            highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-inline"
+            
         }
     };
     
@@ -78,7 +214,8 @@ function() {
         'entity_name': 'language',
         'foreign_entities':{},
         'form_field_validation': {
-        }
+        },
+        'dashboard_display': {listing: false, add: false}
     };
   
   //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
@@ -99,7 +236,45 @@ function() {
       },
       'inline':{
           'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute":{ 'host_attribute':["id","group_name"], 'inline_attribute': "group"}, "header" : "person_inline_header", 'borrow_attributes':[{'host_attribute':'village','inline_attribute':'village'}]
-      }    
+      },
+      'form_field_validation': {
+            rules: {
+                group_name: {
+                    required: true,
+                minlength: 2,
+                    maxlength: 100,
+                    allowedChar: true
+                },
+                village: "required"
+            },
+            messages: {
+                name: {
+                    required: 'Enter group Name',
+                    minlength: 'Group Name  should be atleast 2 characters',
+                    maxlength: 'Group Name should be atmax 100 characters',
+                    allowedChar: 'Group name should only contain alphabets and local language characters'
+                },
+                village: "Enter village"
+            },
+
+            highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-inline"
+        }
+
         
     };
 
@@ -123,31 +298,48 @@ function() {
               'animator': {
                   'placeholder':'id_animator',
                   'name_field':'name',
-                  'dependency':{
+                  'dependency':[{
                       'source_entity': 'village',
                       'source_form_element': 'village',      
                       'dep_attr': 'assigned_villages'      
-                  }      
+                  }]      
               }
           },
           'group': {
               farmer_groups_targeted:{
                   'placeholder':'id_group',
                   'name_field':'group_name',
-                  'dependency':{
+                  'dependency':[{
                       'source_entity': 'village',
                       'source_form_element': 'village',      
                       'dep_attr': 'village'      
-                  }      
+                  }]      
               }
           },
           'person': {
+              person:{
+                  'placeholder':'id_person',
+                  'name_field':'person_name',
+                  'dependency':[{
+                      'source_entity': 'village',
+                      'source_form_element': 'village',      
+                      'dep_attr': 'village'      
+                   }],
+                   'filter':{attr:'group',value:null }
+              },
               farmers_attendance: {
-                  'dependency':{
-                      'source_entity': 'group',
-                      'source_form_element': 'farmer_groups_targeted',      
-                      'dep_attr': 'group'      
-                   },
+                   dependency: [
+                        {
+                           'source_entity': 'group',
+                           'source_form_element': 'farmer_groups_targeted',      
+                           'dep_attr': 'group'      
+                        },
+                        {
+                             'source_entity': 'person',
+                             'source_form_element': 'person',      
+                             'dep_attr': 'id'      
+                        }
+                   ],
                   id_field : "person_id",                   // for offline_to_online conversion      
                   'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                       template : 'person_pma_template',
@@ -188,21 +380,38 @@ function() {
                   'group': {
                       'placeholder':'id_group',
                       'name_field':'group_name',
-                      'dependency':{
+                      'dependency':[{
                           'source_entity': 'village',
                           'source_form_element': 'village',      
                           'dep_attr': 'village'      
-                      }   
+                      }]   
                   }
                 },
                 'person': {
+                    float_person:{
+                        'placeholder':'id_person',
+                        'name_field':'person_name',
+                        'dependency':[{
+                            'source_entity': 'village',
+                            'source_form_element': 'village',      
+                            'dep_attr': 'village'      
+                         }],
+                         'filter':{attr:'group',value:null }
+                    },
                     farmers_attendance: {
                         only_render: true,
-                        'dependency':{
-                            'source_entity': 'group',
-                            'source_form_element': 'group',      
-                            'dep_attr': 'group'      
-                         },
+                        dependency: [
+                             {
+                                'source_entity': 'group',
+                                'source_form_element': 'group',      
+                                'dep_attr': 'group'      
+                             },
+                             {
+                                  'source_entity': 'person',
+                                  'source_form_element': 'float_person',      
+                                  'dep_attr': 'id'      
+                             }
+                        ],
                         id_field : "person_id",                   // for offline_to_online conversion      
                         'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template : 'adoption_inline',
@@ -246,12 +455,12 @@ function() {
                         'placeholder':'id_video',
                         // 'sub_attr': 'videos_seen',
                         'name_field':'title',
-                        'dependency':{
+                        'dependency':[{
                             'source_entity': 'person',
                             'source_form_element': 'person',      
                             'dep_attr': 'id',
                             'rev_sub_attr': 'videos_seen',                
-                        }   
+                        }]   
                     }      
                 }      
             }
@@ -307,10 +516,10 @@ function() {
 			},
 			messages: {
 				person_name: {
-					required: 'Enter group Name',
-					minlength: 'Group Name  should be atleast 2 characters',
-					maxlength: 'Group Name should be atmax 100 characters',
-					allowedChar: 'Group name should only contain alphabets and local language characters'
+					required: 'Enter person Name',
+					minlength: 'Person Name  should be atleast 2 characters',
+					maxlength: 'Person Name should be atmax 100 characters',
+					allowedChar: 'Person name should only contain alphabets and local language characters'
 				},
 				father_name: {
 					required: 'Father Name is required',
@@ -366,20 +575,19 @@ function() {
     // };
     
     var misc = {
-        download_size : 2000,
+        download_size : 200,
         background_download_interval:60*1000
     };
     
     return {
-        
-        person: person_configs,
         village: village_configs,
-        group: group_configs,
         mediator: mediator_configs,
         video: video_configs,
-        language: language_configs,
+        group: group_configs,
+        person: person_configs,
         screening: screening_configs,
         adoption: adoption_configs,
+        language: language_configs,
         misc: misc            
     }
 

@@ -98,18 +98,6 @@ define([
         },
         
         upload_add: function(conv_json) {
-            //   this.setView("#upload_form", new PersonAddEditView({
-            //     initialize: {view_configs:configs[entry.get("entity_name")],router:this},
-            //     model_id: entry.get("data").id
-            // }));
-
-            // this.$('#upload_form').html('<form><input></input></form>');
-            // var shit = new upload_view({            });
-            // this.setView("#show_status",shit );
-
-            // this.render();
-            // shit.$('#upload_form').show();
-            // create online,offline models for the entity of upload entry
             var that = this;
 
             var generic_model_online = Backbone.Model.extend({
