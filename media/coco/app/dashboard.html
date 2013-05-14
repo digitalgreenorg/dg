@@ -15,7 +15,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -259,12 +259,14 @@ ss="modal" aria-hidden="true">&times;</button>
 	   </tr>
 </script>
 <script type="text/template" id="mediator_list_item_template">
+    <tr>
     <td><%= id %></td>
     <td><%= name %></td>
     <td> <%= gender %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
+	<a href="#mediator/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	</td>
+    </tr>
 </script>
 <script type="text/template" id="mediator_add_edit_template">
                             <fieldset>
@@ -319,6 +321,7 @@ ss="modal" aria-hidden="true">&times;</button>
 	   </tr>
 </script>
 <script type="text/template" id="screening_list_item_template">
+    <tr>
     <td><%= id %></td>
     <td><%= date %></td>
     <td> <%= animator.name %></td>
@@ -326,8 +329,9 @@ ss="modal" aria-hidden="true">&times;</button>
     <td> <%= start_time %></td>
     <td> <%= end_time %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	<a href="#screening/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
     </td>
+    </tr>
 </script>
 <script type="text/template" id="screening_add_edit_template">
             <fieldset>
@@ -499,13 +503,15 @@ ss="modal" aria-hidden="true">&times;</button>
 	   </tr>
 </script>
 <script type="text/template" id="adoption_list_item_template">
+    <tr>
     <td><%= id %></td>
     <td><%= date_of_adoption %></td>
     <td> <%= person.person_name %></td>
     <td> <%= video.title %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
+	<a href="#adoption/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	</td>
+    </tr>
 </script>
 <script type="text/template" id="adoption_edit_template">
         <fieldset>
@@ -676,12 +682,14 @@ ss="modal" aria-hidden="true">&times;</button>
 	   </tr>
 </script>
 <script type="text/template" id="group_list_item_template">
+    <tr>
     <td><%= id %></td>
     <td><%= group_name %></td>
     <td> <%= village.village_name %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
+	<a href="#group/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	</td>
+    </tr>
 </script>
 <script type="text/template" id="group_add_edit_template">
                             <fieldset>
@@ -782,14 +790,16 @@ ss="modal" aria-hidden="true">&times;</button>
 	   </tr>
 </script>
 <script type="text/template" id="video_list_item_template">
+    <tr>
     <td><%= id %></td>
     <td><%= title %></td>
 	<td> <%= village.village_name %></td>
     <td> <%= video_production_start_date %></td>
     <td> <%= video_production_end_date %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
+	<a href="#video/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	</td>
+    </tr>
 </script>
 <script type="text/template" id="video_add_edit_template">
                             <fieldset>
@@ -955,27 +965,30 @@ ss="modal" aria-hidden="true">&times;</button>
 </script>
 <!--//////////////////////////////////////////////////// VIDEO TEMPLATES END ///////////////////////////////////////////////-->
 
-
 <script type="text/template" id="person_list_item_template">
+<tr>
     <td><%= id %></td>
     <td><%= person_name %></td>
     <td> <%= father_name %></td>
     <td> <%= village.village_name %></td>
     <td> <%= group.group_name %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	<a href="#person/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
     </td>
+</tr>
 </script>
 
 <script type="text/template" id="village_list_item_template">
+<tr>
     <td><%= id %></td>
     <td><%= village_name %></td>
     <td> <%= block_name %></td>
     <td> <%= start_date %></td>
     <td> <%= state_name %></td>
     <td>
-	<a href="#" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+        <a href="#village/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
     </td>
+</tr>
 </script>
 
 <script type="text/template" id="dashboard_breadcrumb">
@@ -1002,8 +1015,6 @@ ss="modal" aria-hidden="true">&times;</button>
        <thead>
        <%= table_header%>
        </thead>
-       <tbody>
-	   </tbody>
 	</div>
 	
 </script>

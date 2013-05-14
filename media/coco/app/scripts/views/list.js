@@ -13,40 +13,28 @@ define([
     
     var ListView = Backbone.Layout.extend({
         
-        events: {
-            "click button#add": "addNew",
-        },
-        
         template: "#list_view_template",
         
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
-            // this.collection = new this.view_configs.backbone_collection();
             
             generic_collection = Backbone.Collection.extend({
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
             });
-            
             this.collection = new generic_collection();
-            
-            console.log(this.collection);
-            
-            this.table_template_name = params.initialize.view_configs.table_template_name;
-            console.log("template_name : " + this.table_template_name)
-            console.log(params.data);
-            this.table_header = $('#' + this.table_template_name)
+            this.table_header = $('#' + params.initialize.view_configs.table_template_name)
                 .html();
+            this.item_template = _.template($('#' + params.initialize.view_configs.list_item_template_name)
+            .html());
             this.collection.bind('all', this.render_data, this);
             this.datatable = null;
-            this.appRouter = params.initialize.router;
-
         },
         
         serialize:function(){
           return { 
               header_name: this.view_configs.page_header, 
-              table_header:$('#' + this.table_template_name).html()
+              table_header:this.table_header
            };  
         },
         
@@ -59,31 +47,42 @@ define([
             if (this.datatable) {
                 this.datatable.fnDestroy();
             }
-            $tbody = this.$("tbody");
-            $tbody.html('');
             console.log("in render_data...change in collection...rendering list view");
-
+            tbody = $('<tbody>');
+            tbody.html('');
             this.collection.each(function(model) {
-                $tbody.append(new ListItemView({
-                    model: model,
-                    view_configs: this.view_configs,
-                    appRouter: this.appRouter
-                    
-                })
-                    .render()
-                    .el);
+                tbody.append(this.item_template(model.toJSON()));
             }, this);
-            console.log(this.$('#list_table'));
+            this.$('#list_table').append(tbody);
+            
+            //alternate 1 - using raw string to build table rows
+            //     $tbody = this.$("tbody");
+            //     $tbody.html('');
+            //     var all_items= '';
+            //     this.collection.each(function(model) {
+            //         all_items+=(this.item_template(model.toJSON()));
+            //     }, this);
+            //     // console.log(all_items);
+            //     $tbody.html(all_items);
+            ////////////
+            
+            //alternate 2 - using a separate view for each row
+            //     this.collection.each(function(model) {
+            //         tbody.append(new ListItemView({
+            //             model: model,
+            //             view_configs: this.view_configs,
+            //             appRouter: this.appRouter
+            //             
+            //         })
+            //             .render()
+            //             .el);
+            //     }, this);
+            ////////////
+            
             this.datatable = this.$('#list_table')
                 .dataTable();
         },
-
-        addNew: function() {
-            this.appRouter.navigate('person/add', true);
-        },
-
-
-
+        
     });
     
     
