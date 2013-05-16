@@ -133,6 +133,74 @@ def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
 
+class ObjectDoesNotExist(Exception):
+    "The requested object does not exist"
+    silent_variable_failure = True
+
+class TastypieError(Exception):
+    """A base exception for other tastypie-related errors."""
+    pass
+
+class NotFound(TastypieError):
+    """
+    Raised when the resource/object in question can't be found.
+    """
+    pass
+
+def obj_create(self, bundle, request=None, **kwargs):
+        """
+        Overriding Tastypie implementation of ``obj_create` because tastypie is calling save of foreign key values on adding new resource`.
+        """
+        bundle.obj = self._meta.object_class()
+
+        for key, value in kwargs.items():
+            setattr(bundle.obj, key, value)
+
+        bundle = self.full_hydrate(bundle)
+
+        # Save the main object.
+        bundle.obj.user_created_id = request.user.id
+        bundle.obj.save()
+
+        return bundle
+
+def obj_update(self, bundle, request=None, **kwargs):
+        if not bundle.obj or not bundle.obj.pk:
+            # Attempt to hydrate data from kwargs before doing a lookup for the object.
+            # This step is needed so certain values (like datetime) will pass model validation.
+            try:
+                bundle.obj = self.get_object_list(request).model()
+                bundle.data.update(kwargs)
+                bundle = self.full_hydrate(bundle)
+                lookup_kwargs = kwargs.copy()
+
+                for key in kwargs.keys():
+                    if key == 'pk':
+                        continue
+                    elif getattr(bundle.obj, key, NOT_AVAILABLE) is not NOT_AVAILABLE:
+                        lookup_kwargs[key] = getattr(bundle.obj, key)
+                    else:
+                        del lookup_kwargs[key]
+            except:
+                # if there is trouble hydrating the data, fall back to just
+                # using kwargs by itself (usually it only contains a "pk" key
+                # and this will work fine.
+                lookup_kwargs = kwargs
+
+            try:
+                bundle.obj = self.obj_get(request, **lookup_kwargs)
+            except ObjectDoesNotExist:
+                raise NotFound("A model instance matching the provided arguments could not be found.")
+
+        bundle = self.full_hydrate(bundle)
+
+        # Save the main object.
+        if request.user:
+            bundle.obj.user_modified_id = request.user.id
+        bundle.obj.save()        
+        
+        return bundle
+
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
@@ -145,7 +213,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 
 def get_user_partner_id(request):
     if request.user.id:
-        partner_id = CocoUser.objects.filter(user__id = request.user.id)
+        partner_id = CocoUser.objects.filter(user__id = request.user.id).values_list('partner__id',flat=True)
         if partner_id:
             partner_id = partner_id[0]
         else:
@@ -153,6 +221,7 @@ def get_user_partner_id(request):
             if request.user.id == 1 or request.user.id == 2:
                 partner_id = 10000000000001            
     return partner_id
+
 def get_user_villages(request):
     if request:
         user_permissions = UserPermission.objects.filter(username = request.user)
@@ -223,7 +292,7 @@ class MediatorResource(ModelResource):
         return vil_list
     
     def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(MediatorResource, self).obj_create(bundle, request, **kwargs)
+        bundle = obj_create(self, bundle, request, **kwargs)
         if request.user:
             bundle.obj.user_created_id = request.user.id
             bundle.obj.save()
@@ -237,7 +306,7 @@ class MediatorResource(ModelResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = super(MediatorResource, self).obj_update(bundle, request, **kwargs)
+        bundle = obj_update(self, bundle, request, **kwargs)
         if request.user:
             bundle.obj.user_modified_id = request.user.id
             bundle.obj.save()
@@ -295,8 +364,6 @@ class VillageResource(ModelResource):
         resource_name = 'village'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('id__in')
-        #authorization = Authorization()
-        
         max_limit = None
 
 class VideoResource(ModelResource):
@@ -311,14 +378,14 @@ class VideoResource(ModelResource):
     dehydrate_cameraoperator = partial(foreign_key_to_id, field_name='cameraoperator', sub_field_names=['id','name'])
     dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id','name'])
     dehydrate_farmers_shown = partial(many_to_many_to_subfield, field_name='farmers_shown',sub_field_names=['id','person_name'])
+    obj_create = obj_create
+    obj_update = obj_update
     
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-        #authorization = Authorization()
-        
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
         excludes = ['viewers','time_created', 'time_modified', 'duration' ]
@@ -330,20 +397,6 @@ class VideoResource(ModelResource):
         #doing set of two lists avoid merging duplicates in the final merged list
         vids = list(set(screened_vids + produced_vids))
         return object_list.filter(id__in= vids)
-
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(VideoResource, self).obj_create(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
-            bundle.obj.save()
-        return bundle
-    
-    def obj_update(self, bundle, request=None, **kwargs):
-        bundle = super(VideoResource, self).obj_update(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
-            bundle.obj.save()
-        return bundle    
     
     def hydrate_language(self, bundle):
         language = bundle.data.get('language')
@@ -421,20 +474,8 @@ class PersonGroupsResource(ModelResource):
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
-    
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(PersonGroupsResource, self).obj_create(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
-            bundle.obj.save()
-        return bundle
-    
-    def obj_update(self, bundle, request=None, **kwargs):
-        bundle = super(PersonGroupsResource, self).obj_update(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
-            bundle.obj.save()
-        return bundle    
+    obj_create = obj_create
+    obj_update = obj_update
     
     def dehydrate_group_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -467,35 +508,18 @@ class ScreeningResource(ModelResource):
         resource_name = 'screening'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
-        #authorization = Authorization()
-        
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     
     def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(ScreeningResource, self).obj_create(bundle, request, **kwargs)
+        bundle = obj_create(self, bundle, request, **kwargs)
         user_id = None
         if request.user:
             user_id =  request.user.id
-            bundle.obj.user_created_id = user_id
-            bundle.obj.save()
         screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
-#            try:
-#                per = Person.objects.get(id = pma['person_id'])
-#            except:
-#                per = None
-#                print 'person does not exist in pma'
-#            if pma['expressed_adoption_video']['id']:
-#                try:
-#                    vid = Video.objects.get(id = pma['expressed_adoption_video']['id'])
-#                except:
-#                    vid = None
-#                    print 'expressed adoption video does not exist in pma'
-#            else:
-#                vid = None
             pma = PersonMeetingAttendance(screening_id=screening_id, person_id=pma['person_id'], 
                                           expressed_adoption_video_id = pma['expressed_adoption_video']['id'],
                                            interested = pma['interested'], user_created_id = user_id,
@@ -506,12 +530,10 @@ class ScreeningResource(ModelResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = super(ScreeningResource, self).obj_update(bundle, request, **kwargs)
+        bundle = obj_update(self, bundle, request, **kwargs)
         user_id = None
         if request.user:
             user_id =  request.user.id
-            bundle.obj.user_modified_id = user_id
-            bundle.obj.save()
         
         screening_id = bundle.data.get('id')
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
@@ -647,7 +669,6 @@ class PersonResource(ModelResource):
     label = fields.CharField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
-    #user_created = fields.ForeignKey(CocoUserResource, 'user_created', null=True)
     videos_seen = fields.DictField(null=True)
     
     class Meta:
@@ -655,14 +676,13 @@ class PersonResource(ModelResource):
         resource_name = 'person'
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('village__in')
-        #authorization = Authorization()
-        
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
         excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
-    
+    obj_create = obj_create
+    obj_update = obj_update
     
     def dehydrate_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -704,22 +724,6 @@ class PersonResource(ModelResource):
                 bundle.data['group'] = None
         return bundle
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(PersonResource, self).obj_create(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
-            bundle.obj.save()
-        return bundle
-
-    
-    def obj_update(self, bundle, request=None, **kwargs):
-        bundle = super(PersonResource, self).obj_update(bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
-            bundle.obj.save()
-        return bundle
-
-
 class PersonAdoptVideoResource(ModelResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
@@ -731,11 +735,12 @@ class PersonAdoptVideoResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = VillageLevelAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
-        #authorization = Authorization()
-        
+        always_return_data = True
         excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    obj_create = obj_create
+    obj_update = obj_update
     
     def dehydrate_group(self, bundle):
         person_id = getattr(bundle.obj, 'person').id
@@ -785,26 +790,6 @@ class PersonAdoptVideoResource(ModelResource):
                 bundle.data['person'] = None
         return bundle
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(PersonAdoptVideoResource, self).obj_create(bundle, request, **kwargs)
-        print 'in obj create pap'
-        if request.user:
-            print request.user.id
-            bundle.obj.user_created_id = request.user.id
-            bundle.obj.save()
-        return bundle
-
-    
-    def obj_update(self, bundle, request=None, **kwargs):
-        bundle = super(PersonAdoptVideoResource, self).obj_update(bundle, request, **kwargs)
-        print 'in obj update pap'
-        if request.user:
-            print request.user.id
-            bundle.obj.user_modified_id = request.user.id
-            bundle.obj.save()
-        return bundle
-
-
 # Disallow POST PUT DELETE
 # Get Id and String
 
@@ -853,4 +838,8 @@ class PersonMeetingAttendanceResource(ModelResource):
         resource_name = 'pma'
         authentication = BasicAuthentication()
         authorization = Authorization()
+
+class NOT_AVAILABLE:
+    def __str__(self):
+        return 'No such data is available.'
         

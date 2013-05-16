@@ -781,3 +781,24 @@ class Error(CocoModel):
         
     def __unicode__(self):
         return u'%s; %s; %s' % (self.rule, self.content_object1, self.content_object2)
+
+class GroupsTargetedInScreening(models.Model):
+    id = BigAutoField(primary_key = True)
+    screening = BigForeignKey(Screening, db_column='screening_id')
+    persongroups = BigForeignKey(PersonGroups, db_column='persongroups_id')
+    class Meta:
+        db_table = u'screening_farmer_groups_targeted'
+
+class VideosScreenedInScreening(models.Model):  
+    id = BigAutoField(primary_key = True)
+    screening = BigForeignKey(Screening, db_column='screening_id')
+    video = BigForeignKey(Video, db_column='video_id')
+    class Meta:
+        db_table = u'screening_videoes_screened'
+
+class PersonShownInVideo(models.Model):
+    id = BigAutoField(primary_key = True)
+    video = BigForeignKey(Video, db_column='video_id')
+    person = BigForeignKey(Person, db_column='person_id')
+    class Meta:
+        db_table = u'video_farmers_shown'
