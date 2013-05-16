@@ -452,7 +452,7 @@ ss="modal" aria-hidden="true">&times;</button>
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <select id="expressed_adoption_video_row7" name="expressed_adoption_video" class="chzn-select">
+                    <select  name="expressed_adoption_video" class="chzn-select">
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -468,9 +468,9 @@ ss="modal" aria-hidden="true">&times;</button>
             <div class="control-group">
                 <div class="controls">
                 <%if(typeof(expressed_question)!="undefined"){%>
-                    <input type="text" id="expressed_question_row7" name="expressed_question" value ="<%=expressed_question%>">
+                    <input type="text"  name="expressed_question" value ="<%=expressed_question%>">
                 <%} else{%>
-                    <input type="text" id="expressed_question_row7" name="expressed_question" >
+                    <input type="text"  name="expressed_question" >
                 <%}%>    
                 </div>
             </div>

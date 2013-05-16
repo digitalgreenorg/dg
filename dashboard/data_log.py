@@ -74,7 +74,9 @@ def send_updated_log(request):
         partner_id = None
         villages = Village.objects.all().values_list('id', flat=True)
     else:
-        coco_user = CocoUser.objects.get(user_id=request.user.id)
+        print request.user
+        print "done"
+        coco_user = CocoUser.objects.get(user_id=35)
         partner_id = coco_user.partner_id
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
     if timestamp:

@@ -488,9 +488,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         });
                         console.log(t_json);
                         $f_el.append(expanded_template(t_json));    
+                        $(".chzn-select").chosen();
+                        
                     }
                 });
-                
                 
                 this.expanded = element;
                 this.foreign_elements_rendered[element] = true;
@@ -506,6 +507,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     $f_el.append(expanded_template(t_json));    
                 });
                 this.expanded = element;
+                $(".chzn-select").chosen();
             }
             else{
                 $f_el = this.$('#' + f_entity_desc.placeholder);
