@@ -539,6 +539,8 @@ if __name__ == "__main__":
     parser.add_argument("mysql_root_password", help="MySQL Root Password")
     parser.add_argument("action", help="Task to run. Currently only referesh. Can include add.",  choices=['refresh_schema'])
     args = parser.parse_args()
+    print("Log")
+    print(datetime.date.today())
     if args.action == "refresh_schema":
         an_sync_obj = AnalyticsSync(args.mysql_root_username, args.mysql_root_password)
         an_sync_obj.refresh_build()
