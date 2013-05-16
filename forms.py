@@ -104,22 +104,22 @@ class VideoForm(CocoModelForm):
         model = Video
         exclude = ('related_practice',)
 
-#class PersonShownInVideoForm(CocoModelForm):
-#    class Meta:
-#        model = PersonShownInVideo
+class PersonShownInVideoForm(CocoModelForm):
+    class Meta:
+        model = PersonShownInVideo
 
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening
         exclude = ('farmers_attendance')
 
-#class GroupsTargetedInScreeningForm(CocoModelForm):
-#    class Meta:
-#        model = GroupsTargetedInScreening        
-#        
-#class VideosScreenedInScreeningForm(CocoModelForm):
-#    class Meta:
-#        model = VideosScreenedInScreening        
+class GroupsTargetedInScreeningForm(CocoModelForm):
+    class Meta:
+        model = GroupsTargetedInScreening        
+        
+class VideosScreenedInScreeningForm(CocoModelForm):
+    class Meta:
+        model = VideosScreenedInScreening        
         
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
