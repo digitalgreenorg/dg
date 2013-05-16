@@ -191,7 +191,7 @@ define([
                                 .done(function(on_model){
                                     console.log("INCD:ADD: Successfully uploaded model. uploaded model - "+JSON.stringify(on_model.toJSON()));
                                     var off_json = off_model.toJSON();
-                                    off_json.online_id = on_model.get("id");
+                                    off_json.online_id = parseInt(on_model.get("id"));
                                     Offline.save(off_model, that.get_entity_name(up_model), off_json)
                                         .done(function(off_model){
                                             console.log("OFF model after all upload - "+JSON.stringify(off_model.toJSON()));
@@ -251,7 +251,7 @@ define([
             var that = this;
             Offline.save(null, this.get_entity_name(this.current_entry), after_upload_error_json)
                 .done(function(off_model){
-                    this.$('#upload_form')
+                    that.$('#upload_form')
                         .html("");
                     that.current_entry.set('data', after_upload_error_json);
                     that.upload_add_edit(that.current_entry, that.curr_entry_dfd);

@@ -230,7 +230,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             for(el_id in this.dependencies)
             {
                 console.log("creating changeevent for - "+el_id);
-                $('#'+el_id).change(this.fill_dep_entity);
+                this.$('#'+el_id).change(this.fill_dep_entity);
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -352,7 +352,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 var collection = this.f_colls[index];
                 var dependencies = this.foreign_entities[entity][element].dependency;
                 var final_models = [];
-                console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
+                // console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
                 var that = this;
                 $.each(dependencies, function(index, dep_desc){
                     if(collection.length)
@@ -380,7 +380,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         }
                         if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
                         {
-                            console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
+                            // console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
                             filtered_models = collection.filter(function(model){
                                var exists = false;
                                $.each(model.get(dep_desc.dep_attr),function(index, object){
@@ -392,7 +392,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         
                         }
                         else{
-                            console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
+                            // console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
                             filtered_models = collection.filter(function(model){
                                 var compare = null;
                                 if(typeof model.get(dep_desc.dep_attr) == "object")
@@ -405,9 +405,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                         var index = that.f_index.indexOf(src_entity);
                                         var s_collection = that.f_colls[index];
                                         var s_model = s_collection.get(curr_value[0]);
-                                        console.log(s_model);
+                                        // console.log(s_model);
                                         var exists = false;
-                                        console.log()
                                         if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
                                         {
                                             $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
@@ -446,12 +445,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },    
           
         fill_foreign_entity: function(element, model_array){
+            console.log("FILLING FOREIGN ENTITY - "+element);
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
             // this.num_f_elems--; 
             var filter = f_entity_desc.filter;
             if(filter)
             {
-                console.log("FILTERING FOREIGN ENTITY!");
+                // console.log("FILTERING FOREIGN ENTITY!");
                 var filter_attr = filter.attr;
                 var filter_value = filter.value;
                 filtered = [];
@@ -465,6 +465,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             }
             if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
             {
+                console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
@@ -488,16 +489,15 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         });
                         console.log(t_json);
                         $f_el.append(expanded_template(t_json));    
-                        $(".chzn-select").chosen();
-                        
                     }
                 });
-                
+                $(".chzn-select").chosen();
                 this.expanded = element;
                 this.foreign_elements_rendered[element] = true;
             }
-            else if(f_entity_desc.expanded)
+            else if(f_entity_desc.expanded && !this.foreign_elements_rendered[element])
             {
+                console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
                 $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
                 $f_el.html('');
@@ -508,8 +508,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 this.expanded = element;
                 $(".chzn-select").chosen();
+                this.foreign_elements_rendered[element] = true;
             }
             else{
+                console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 $f_el.html('');
                 $.each(model_array,function(index, f_model){
@@ -521,7 +523,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         name: f_json[f_entity_desc.name_field]
                     }));    
                 });
-                console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                // console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
                  $f_el.trigger("liszt:updated");
             }
             // if(this.edit_case && this.num_f_elems>=0)
@@ -536,7 +538,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     
                 // t_json = {t_json};
                 // Backbone.Syphon.deserialize(this, t_json);
-                console.log("FORM: putting in value of -"+element);
+                // console.log("FORM: putting in value of -"+element);
                 this.$('form [name='+element+']').val(this.model_json[element]).change();
                 this.$('form [name='+element+']').trigger("liszt:updated");
                 this.foreign_elements_rendered[element] = true;
@@ -545,7 +547,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                         
         render_foreign_entity: function(collection, options) {
             console.log(this.num_f_elems);
-            console.log("ADD/EDIT: rendering foreign entity");
+            // console.log("ADD/EDIT: rendering foreign entity");
             for(element in this.foreign_entities[collection.storeName])
             {
                 this.num_f_elems--; 
