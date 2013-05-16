@@ -49,6 +49,36 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
                 }
             })
             return dfd;
+        },
+        
+        delete_object: function(off_model, entity_name, id){
+            var dfd = new $.Deferred();
+            if(!off_model)
+            {
+                off_model = this.create_b_model(entity_name);
+            }
+            if(id)
+            {
+                off_model.set("id",id);
+            }
+            off_model.destroy({
+                success: function(model){
+                    return dfd.resolve(model);
+                },
+                error: function(error){
+                    console.log(error);
+                    return dfd.reject("Error destroying object in offline - "+error.srcElement.error.name);
+                }
+            });
+            return dfd;
+        },
+        
+        add_to_uploadq: function(){
+            
+        },
+        
+        delete_from_uploadq: function(){
+            
         }
         
     }

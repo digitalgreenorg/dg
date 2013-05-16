@@ -748,6 +748,13 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     {
                         object_json[member] = null
                     }
+                    if(object_json[member]==null)
+                    {
+                        if(this.$('[name='+member+']').is('select[multiple]'))
+                        {
+                            object_json[member] = [];
+                        }
+                    }
                 }    
             console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
                 
@@ -935,6 +942,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
             $.event.trigger(ev_res);
             $.event.trigger(ev_save);
+            this.trigger("save_clicked",ev_res);
         },
 
         button2_clicked: function() {
@@ -952,6 +960,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 
             $.event.trigger(ev_res);
             $.event.trigger(ev_button2);
+            this.trigger("button2_clicked",ev_res);
         }
 
 
