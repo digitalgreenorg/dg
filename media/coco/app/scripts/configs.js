@@ -6,7 +6,7 @@ function() {
         'list_item_template_name': 'village_list_item_template',
         'rest_api_url': '/api/v1/village/',
         'entity_name': 'village',
-        'dashboard_display': {listing: true, add: false}
+        'dashboard_display': {listing: false, add: false}
     };
     // var video_list_view_configs = {
 //         'page_header': 'Video',
