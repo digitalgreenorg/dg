@@ -12,6 +12,7 @@ define([
         template: "#sync_status_template",
         events: {
             "click button#download": "download",
+            "click button#reset_database": "reset"
         },
         serialize: function(){
             return {
@@ -26,7 +27,13 @@ define([
             var that = this;
             // this.template = "#sync_status_template";
             that.upload_entries =  upload_collection.length;
-            this.meta_model.fetch({
+            var generic_model_offline = Backbone.Model.extend({
+                database: indexeddb,
+                storeName: "meta_data",
+            });
+            var meta_model = new generic_model_offline();
+            meta_model.set({key: "last_full_download"});
+            meta_model.fetch({
                 success: function(model){
                     console.log("STATUS: last_downloaded fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
@@ -48,14 +55,7 @@ define([
                            // that.template = "#first_time_status";
                            that.render()
                                .done(function(){
-                                   that.download()
-                                       .done(function(){
-                                           console.log("Finished FULL DOWNLOAD");
-                                           that.fill_status();
-                                       })
-                                       .fail(function(){
-                                       
-                                       })
+                                   that.download();
                                });
                            // that.download();
                         }    
@@ -66,12 +66,7 @@ define([
             _(this).bindAll('fill_status');
             // upload_collection.bind('reset',this.fill_status);   
 //             upload_collection.bind('remove',this.fill_status);   
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            this.meta_model = new generic_model_offline();
-            this.meta_model.set({key: "last_full_download"});
+            
             this.fill_status();
             
         },
@@ -82,15 +77,33 @@ define([
                 this.full_download_v = new FullDownloadView();
             }
             this.setView("#modal",this.full_download_v).render();
-            // this.render();
+            var that = this;
             this.full_download_v.start_full_download()
                 .done(function(){
+                    that.fill_status();
                     dfd.resolve();
                 })
                 .fail(function(){
                    dfd.reject(); 
                 });
             return dfd;
+        },
+        
+        reset: function(){
+            var request = indexedDB.deleteDatabase("offline-database");
+            request.onerror = function(event) {
+                console.log(event);
+                console.log("RESET DATABASE:Error!");
+                alert("Error while resetting database! Refresh the page and try again.");
+            };
+            request.onsuccess = function(event) {
+                console.log("RESET DATABASE:Success!");
+                location.reload();
+            }
+            request.onblocked = function(event) {
+                console.log("RESET DATABASE:Blocked!");
+                location.reload();
+            };
         }    
     
           

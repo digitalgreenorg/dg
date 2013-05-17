@@ -9,6 +9,10 @@ define([
   // 'text!templates/project/list.html'
 ], function($,_,pass,indexeddb, all_configs){
     
+    
+    //clears objectstores - meta_data, uploadqueue, all config-defined objectstores
+    //refills all config-defined objectstores
+    //fills the last_downlaoded timestamp in meta_data
     var FullDownloadView = Backbone.Layout.extend({
         template: "#download_template",
 
@@ -34,6 +38,8 @@ define([
             this.progress_bar_step = 100 / this.num_of_entities;
             this.fetch_status = {};
             var entity_dfds = [];
+            this.clear_object_store("meta_data");
+            this.clear_object_store("uploadqueue");
             for (var member in all_configs) {
                 if(member == "misc")
                     continue;
