@@ -192,8 +192,16 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         },
 
         afterRender: function() {
-            console.log("ADD/EDIT:foreign colls being fetched:");
-
+            for (f_entity in this.foreign_entities) {
+                for(element in this.foreign_entities[f_entity])
+                {
+                    if(!this.foreign_entities[f_entity][element].expanded)
+                    {
+                        this.$('[name='+element+']').prop("disabled", true);
+                    }
+                }
+            }
+            
             //render empty inlines - add case done
             if(this.inline)
             {
@@ -532,6 +540,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }));    
                 });
                 // console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
+                 $f_el.prop("disabled", false);
                  $f_el.trigger("liszt:updated");
             }
             // if(this.edit_case && this.num_f_elems>=0)
@@ -539,7 +548,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
 //                 console.log("SYPHONING");
 //                 Backbone.Syphon.deserialize(this, this.model_json);
 //             }
-            if(this.edit_case && !this.foreign_elements_rendered[element])
+            if(this.edit_case && !this.foreign_elements_rendered[element] &&!f_entity_desc.expanded)
             {
                 var t_json = {};
                 t_json[element] = this.model_json[element]
