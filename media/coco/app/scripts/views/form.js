@@ -112,6 +112,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.dependencies = {}; 
             this.element_entity_map={};
             this.foreign_elements_rendered = {};
+            this.num_sources = {};
             for (f_entity in this.foreign_entities) {
                 var generic_collection_offline = Backbone.Collection.extend({
                     database: indexeddb,
@@ -138,6 +139,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
                     var dependency = this.foreign_entities[f_entity][element]["dependency"];
+                    if(dependency)
+                        this.num_sources[element] = dependency.length;
+                    else
+                        this.num_sources[element] = 0;   
                     if(dependency)
                     {
                         var f_ens = this.foreign_entities;
@@ -343,6 +348,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
         
         fill_dep_entity: function(ev){
             var source = $(ev.target).attr("id");
+            console.log("FILLING DEP ENTITIES OF -"+source);
             for(var i=0; i<this.dependencies[source].length;i++)
             {
                 //Fully Reset the dependent select element by looking at all its sources.
@@ -446,6 +452,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
           
         fill_foreign_entity: function(element, model_array){
             console.log("FILLING FOREIGN ENTITY - "+element);
+            this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
             // this.num_f_elems--; 
             var filter = f_entity_desc.filter;
@@ -493,9 +500,10 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 $(".chzn-select").chosen();
                 this.expanded = element;
-                this.foreign_elements_rendered[element] = true;
+                if(this.num_sources[element]<=0)
+                    this.foreign_elements_rendered[element] = true;
             }
-            else if(f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+            else if(f_entity_desc.expanded)
             {
                 console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
                 var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
@@ -508,7 +516,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 this.expanded = element;
                 $(".chzn-select").chosen();
-                this.foreign_elements_rendered[element] = true;
+                // this.foreign_elements_rendered[element] = true;
             }
             else{
                 console.log("NOT EXPANDED");
@@ -541,7 +549,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 // console.log("FORM: putting in value of -"+element);
                 this.$('form [name='+element+']').val(this.model_json[element]).change();
                 this.$('form [name='+element+']').trigger("liszt:updated");
-                this.foreign_elements_rendered[element] = true;
+                if(this.num_sources[element]<=0)
+                    this.foreign_elements_rendered[element] = true;
             }
         },
                         
