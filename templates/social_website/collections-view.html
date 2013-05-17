@@ -6,15 +6,15 @@
                 <div class="inner-wrapper">
                     <div class="grid layout-vr-sm">
                         <div class="grid-col grid-size2of3">
-                            <h1 class="hdg-bold hdg-a layout-vr-tiny">Veri Composting in Southwest Region</h1>
-                            <h2 class="hdg-upper copy">Veri Composting</h2>
+                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ collection.title}} in {{ collection.state}}</h1>
+                            <h2 class="hdg-upper copy">{{ collection.title}}</h2>
                         </div>
                         <div class="grid-col grid-size1of3">
                             <div class="push-top-sm">
                                 <div class="featured-ft-videoDetails">
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
-                                       <li>12 Videos</li>
-                                       <li>1:05:00</li>
+                                       <li>{{ collection.video_count}} Videos</li>
+                                       <li>{{ collection.duration}}</li>
                                    </ul>
                                 </div>
                             </div>
@@ -31,16 +31,16 @@
                         <div class="bd">
                             <div class="media">
                                 <div class="img">
-                                    <img src="http://placehold.it/60x60" alt="" />
+                                    <img src="{{ featured_collection.partner_logo}}" alt="" />
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny">ASA</h2>
-                                    <p class="copy layout-vr-tiny">Member since 2009</p>
-                                    <a class="hdg-bold copy" href="#">50 Collections</a>
+                                    <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner_name}}</h2>
+                                    <p class="copy layout-vr-tiny">Member since {{ collection.partner_year}}</p>
+                                    <a class="hdg-bold copy" href="#">{{ collection.partner_collections}} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
-                            <h3 class="copy hdg-bold layout-vr-tiny">State, Country</h3>
-                            <h3 class="copy layout-vr-md">Language</h3>
+                            <h3 class="copy hdg-bold layout-vr-tiny">{{ collection.state}}, {{ collection.country}}</h3>
+                            <h3 class="copy layout-vr-md">{{ collection.language}}</h3>
                             
                             <!-- Collection Stats -->
                             <div class="collection-stats">
@@ -49,7 +49,7 @@
                                     <div class="stat-bar-container">
                                         <!-- <div class="left-value js-left-value"></div> -->
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="1220">
+                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{collection.adoptions}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="right-stat-label">Adopted</div>
@@ -61,7 +61,7 @@
                                     <div class="stat-bar-container">
                                         <div class="left-value js-left-value"></div>
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="4000" data-right-value="1000">
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{collection.online_views}}" data-right-value="{{collection.offline_views}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="left-stat-label">Online Views</div>
@@ -74,7 +74,7 @@
                                     <div class="stat-bar-container">
                                         <div class="left-value js-left-value"></div>
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="1750" data-right-value="1520">
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{collection.online_likes}}" data-right-value="{{collection.offline_likes}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="left-stat-label">Online Likes</div>
@@ -110,10 +110,10 @@
                                 <ul class="carousel-list">
                                     
                                     <!-- Each carousel slide will be in a li here -->
-                                    <?php for ($i = 0; $i < 5; $i++): ?>
+                                    {% for i in videos %}
                                     <li>
                                         <ul class="h-list h-list-xlg clearfix">
-                                            <?php for ($j = 0; $j < 5; $j++): ?>
+                                            {% for j in videos %}
                                             <!-- The "show-playing" and "show-progress" classes toggle display of the respective overlays -->
                                             <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->
                                             <!-- <li class="vidDrawer-video show-playing js-vidDrawer-video"> -->
@@ -139,10 +139,10 @@
                                                     1. <span class="copy-extra-lt">Video Title</span>
                                                 </div>
                                             </li>
-                                            <?php endfor; ?>
+                                            {% endfor %}
                                         </ul>
                                     </li>
-                                    <?php endfor; ?>
+                                    {% endfor %}
                                     <!-- End carousel slides -->
                                 </ul>
                             </div>
@@ -223,7 +223,7 @@
                     </div> <!-- End .grid-size2of3 -->
                     <div class="grid-col grid-size1of3">
                         <div class="grid-pad-lt">
-                            <h2 class="hdg-a hdg-source-lt layout-vr-sm">Related Videos</h2>
+                            <h2 class="hdg-a hdg-source-lt layout-vr-sm">Related Collections</h2>
                             <div class="boxPlain">
                                 <ul class="v-list-lg">
                                     <li>

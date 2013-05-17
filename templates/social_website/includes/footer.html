@@ -1,11 +1,11 @@
-            <div class="follow">
+            <div class="follow">	
                 <div class="wrapper">
                     <div class="inner-wrapper">
                         <div class="hdg-follow">
                             <h3 class="hdg-a hdg-source-lt">Follow Us</h3>
                         </div>
                         <ul class="social" role="navigation">
-                            <li><a href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c">1, 185 <span>Like</span></h5></a></li>
+                            <li><a href="http://www.facebook.com/digitalgreenorg"><h4 class="social-icon icon-fb">Facebook</h4> <h5 class="sub-text hdg-c" id="fb-likes">100 <span>Like</span></h5></a></li>
                             <li><a href="https://twitter.com/digitalgreenorg"><h4 class="social-icon icon-twitter">Twitter</h4> <h5 class="sub-text hdg-c">1, 064 <span>Followers</span></h5></a></li>
                             <li><a href="http://www.youtube.com/user/digitalgreenorg"><h4 class="social-icon icon-youtube">You Tube</h4> <h5 class="sub-text hdg-c">2, 541 <span>Videos</span></h5></a></li>
                             <li><a href="http://www.linkedin.com/company/619071"><h4 class="social-icon icon-linkedin">Linked In</h4> <h5 class="sub-text hdg-c">34 <span>Contacts</span></h5></a></li>
@@ -40,13 +40,48 @@
             </footer>
         </div>
         <!-- End Main Wrapper -->
-
         <!-- JAVASCRIPT -->
         <script type="text/javascript" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script>
         <script type="text/javascript" src="{% url mainjs %}"></script>
-
         <script type="text/javascript">var switchTo5x=true;</script>
         <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
         <script type="text/javascript">stLight.options({publisher: "5e0ffe84-d022-4b7d-88e1-a273f081e67e", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+        <script src="http://www.youtube.com/player_api"></script>
+		<script type="text/javascript">
+		$.getJSON('http://graph.facebook.com/digitalgreenorg?fields=likes', function(data) {
+			  $('#fb-likes').html(data.likes+" <span>Likes</span>")
+			});
+		//$.getJSON('http://api.twitter.com/1/followers/ids.json?cursor=-1&screen_name=digitalgreenorg', function(data) {
+		//		alert(data);
+			  //$('#tw-followers').html(count(data.ids)+" <span>Followers</span>")
+		//	});
+		function hide_this() {
+			$(".delete").hide();
+			$("#video-img").append("<div id='player'></div>");
+			initialize_player();
+		}
+		var player;
+		function initialize_player() {
+			player = new YT.Player('player', {
+			height: '424',
+			width: '1024',
+			videoId: 'l-wNFTfC-_A',
+			events: {
+				'onReady': onPlayerReady,
+				'onStateChange': onPlayerStateChange
+			}
+			});
+		}
+		function onPlayerReady(event) {
+			event.target.playVideo();
+		}
+		function onPlayerStateChange(event) {        
+			if(event.data === 0) {            
+				player.destroy();
+				$(".delete").show();			
+			}
+		}
+	
+		</script>
     </body>
 </html>

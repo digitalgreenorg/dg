@@ -60,11 +60,11 @@ define(function(require) {
             var commentsModel = dataModel.get('comments');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.limit;
-            var page = unprocessedData.requestParameters.offset;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
-            dataModel.set('totalCount', unprocessedData.totalCount);
+            dataModel.set('totalCount', unprocessedData.meta.total_count);
 
             // import comments from data
             var commentsToAdd = unprocessedData.comments;

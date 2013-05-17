@@ -2784,7 +2784,16 @@ textarea.comment-text {
     background-position: -83px -616px;
 }
 
+.play_button {
+	background: url(../images/arrow-slideshow.png) no-repeat right 0;
+    height: 28px;
+}
 
+.play_button:hover {
+	background-position: right -50px;
+    color: #49cd34;
+}
+ 
 
 
 
@@ -2804,7 +2813,7 @@ textarea.comment-text {
 
 .stat-bar {
     height: 5px;
-    background-color: #327fb5;
+    background-color: #fc7f2f;
 
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -2816,7 +2825,7 @@ textarea.comment-text {
 .stat-indicator {
     width: 0;
     height: 100%;
-    background-color: #fc7f2f;
+    background-color: #327fb5;
 }
 
 
