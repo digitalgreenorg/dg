@@ -1,0 +1,111 @@
+{% include "includes/header.html" %}
+    {% include "includes/partials/mainCarousel.html" %}
+    {% include "includes/partials/search.html" %}
+
+    <section id="main" role="main" class="wrapper">
+        <div class="inner-wrapper">
+            <header class="grid">
+                <div class="grid-col">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-sm">Featured Collection</h2>
+                </div>
+                <div class="grid-rt">
+                    <div class="language-select custom-select js-custom-select">
+                        <select >
+                            <!-- TODO: populate this dynamically -->
+                            <option value='All Language'>All Language</option>
+                            {% for item in language %}
+                             	<option>{{item}}</option>
+                         	{% endfor %}
+                        </select>
+                        <div class="custom-select-container">
+                            <div class="icon"></div>
+                            <div class="selected-item-label js-selected-item-label"></div>
+                            <ul class="options js-options" style='overflow-y:scroll;height:218px;'>
+                                <!-- Dynamic content filled by select box -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="featured layout-vr-xlg">
+                <div class="grid">
+                    <div class="grid-col grid-size3of4">
+                    {% for img in featured_collection.thumbnail %}
+                    <img class="mosaic" id="{{forloop.counter}}" src="{{img}}" style="display:none;" >
+                    {% endfor %}
+                        <canvas id="myCanvas"  style="border:1px solid #d3d3d3;height:320px; width:'250px';">
+						<img src="{{ featured_collection.thumbnail_default}}" ></canvas>
+                    </div>
+                    <div class="grid-col grid-size1of4">
+                        <div class="grid-pad-lt-sm">
+                           <h3 class="hdg-green hdg-c layout-vr-sm">{{ featured_collection.title}}</h3>
+                            <h4 class="copy hdg-bold"> {{ featured_collection.state}}, {{ featured_collection.country}}</h4>
+                            <h5 class="copy layout-vr-sm">{{ featured_collection.language}}</h5>
+                            <p class="layout-vr-md"></p>
+                            <div class="featured-logo copy layout-vr-md">
+                                <img class="" src="{{ featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
+                                {{ featured_collection.partner_name}}
+                            </div>
+                            <div class="featured-ft">
+                                <div class="featured-ft-videoDetails">
+                                   <ul class="h-list h-list-sm h-list-divided copy copy-white">
+                                       <li>{{ featured_collection.video_count}} Videos</li>
+                                       <li>{{ featured_collection.duration}}</li>
+                                   </ul>
+                                </div>
+                                <ul class="h-list h-list-sm copy-sm copy-dk vid-cat-list-dk">
+                                    <li class="like"><span class="text-hide">Likes</span>   {{ featured_collection.likes}}</li>
+                                    <li class="view"><span class="text-hide">Viewed</span> {{ featured_collection.views}}</li>
+                                    <li class="check"><span class="text-hide">Adopted</span> {{ featured_collection.adoptions}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End .featured -->
+        </div> <!-- End .inner-wrapper -->
+    </section> <!-- End .wrapper -->
+    
+    <section class="gradientBg">
+        <div class="wrapper">
+            <div class="inner-wrapper js-collections-wrapper">
+                <header class="clearfix layout-vr-lg">
+                    <div class="grid-col">
+                        <h1 class="hdg-a hdg-source-lt">Collections</h1>
+                    </div>
+                    <div class="grid-rt">
+                        {% include "includes/partials/mostFilters.html"%}
+                    </div>
+                </header> <!-- End .clearfix -->
+                <ul class="blocks blocks-4-up clearfix js-collections-container">
+
+                        <!-- Dynamic Collections Content Here -->
+
+                </ul>
+                <div class="gradientBg-ft">
+                    <div class="pagination-wrapper js-pagination">
+
+                            <!-- Dynamic Pagination Here -->
+
+                    </div>
+                    <div class="gradientBg-ft-btn">
+                        <a href="/social/discover/" class="btn">See All Collections</a>
+                    </div>
+                </div>
+            </div> <!-- End .inner-wrapper -->
+        </div> <!-- End .wrapper -->
+    </section>
+    
+    <section class="wrapper layout-vr-xlg">
+        <div class="inner-wrapper js-news-feed-wrapper">
+            <h2 class="hdg-a hdg-source-lt layout-vr-md">News Feed</h2>
+            <ul class="v-list-lg v-list-divided v-list-divided-dk js-news-feed-container">
+                <!-- Dynamic News Feed Content Here -->
+            </ul>
+            <div class="news-ft">
+                <a href="#" class="btn js-news-feed-show-more-btn">Show More</a>
+            </div>
+        </div> <!-- End .inner-wrapper -->
+    </section>
+
+{% include "includes/footer.html"%}

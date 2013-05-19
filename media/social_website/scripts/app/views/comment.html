@@ -1,0 +1,83 @@
+{{#comments}}
+<li class="js-comment">
+    <div class="media">
+        {{#user.avatarURL}}
+        <div class="img comment-left-img">
+            <img src="{{user.avatarURL}}" alt="" />
+        </div>
+        {{/user.avatarURL}}
+        <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
+            <div class="comment-left-carat">
+                <div class="comment-hd">
+                    <h3 class="copy"><span class="hdg-bold">{{user.name}}</span>, <span class="copy-lt">{{user.country.countryName}}</span></h3>
+                </div>
+                <div class="comment-bd">
+                    <p class="copy layout-vr-sm">{{text}}</p>
+                    <p class="copy copy-lt">{{date}}</p>
+                </div>
+                <div class="comment-ft">
+                    <div class="grid">
+                        <div class="grid-col">
+                            <ul class="h-list h-list-sm h-list-divided">
+                                <li><a class="comment-reply {{#_replied}}replied{{/_replied}}" href="#">Reply</a></li>
+                                <li><a href="#" class="comment-like js-comment-like-button {{#liked}}liked{{/liked}}" data-comment-uid="{{uid}}" data-comment-liked="{{#liked}}1{{/liked}}{{^liked}}0{{/liked}}">
+                                        <span class="liked like-count js-like-count">{{_formattedLikedCount}}</span>
+                                        <span class="liked js-like-label">Like{{#_likesPlural}}s{{/_likesPlural}}</span>
+                                        <span class="not-liked">Like</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="grid-rt">
+                            {{#replies.length}}
+                            <a href="#" class="comment-responses js-reply-visibility-toggle">{{replies.length}} Response{{#_repliesPlural}}s{{/_repliesPlural}}</a>
+                            {{/replies.length}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End .media -->
+
+
+
+    <ol class="reply-container js-reply-container">
+        {{#replies}}
+        <li>
+            <div class="media">
+                {{#user.avatarURL}}
+                <div class="img comment-left-img">
+                    <img src="{{user.avatarURL}}" alt="" />
+                </div>
+                {{/user.avatarURL}}
+                <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
+                    <div class="comment-left-carat">
+                        <div class="comment-hd">
+                            <h3 class="copy"><span class="hdg-bold">{{user.name}}</span>, <span class="copy-lt">{{user.country.countryName}}</span></h3>
+                        </div>
+                        <div class="comment-bd">
+                            <p class="copy layout-vr-sm">{{text}}</p>
+                            <p class="copy copy-lt">{{date}}</p>
+                        </div>
+                        <div class="comment-ft">
+                            <div class="grid">
+                                <div class="grid-col">
+                                    <ul class="h-list h-list-sm h-list-divided">
+                                        <li><a href="#" class="comment-like js-comment-like-button {{#liked}}liked{{/liked}}" data-comment-uid="{{uid}}" data-comment-liked="{{#liked}}1{{/liked}}{{^liked}}0{{/liked}}">
+                                                <span class="liked like-count js-like-count">{{_formattedLikedCount}}</span>
+                                                <span class="liked js-like-label">Like{{#_likesPlural}}s{{/_likesPlural}}</span>
+                                                <span class="not-liked">Like</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End .media -->
+        </li>
+        {{/replies}}
+    </ol>
+</li>
+{{/comments}}
