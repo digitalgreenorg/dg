@@ -99,5 +99,3 @@ def send_updated_log(request):
     else:
         return HttpResponse("0")
     
-    
-    
