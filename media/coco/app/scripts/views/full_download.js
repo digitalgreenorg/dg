@@ -61,6 +61,8 @@ define([
                 .fail(function(error){
                     console.log("Error while downloading.");
                     alert("ERROR while doing full download");
+                    console.log(error);
+                    alert(error);
                     dfd.reject();
                 });
             return dfd;    
@@ -94,20 +96,20 @@ define([
                                     that.update_status(entity_name, "Done <span style='float:right'>"+that.fetch_status[entity_name]["downloaded"]+"/"+total_num_objects+"</span>");
                                     return dfd.resolve();
                                 })
-                                .fail(function(){
-                                    return dfd.reject();
+                                .fail(function(error){
+                                    return dfd.reject(error);
                                 });
                         })
                         .fail(function(){
                             console.log("DASHBOARD:DOWNLOAD:UnexpectedError: Error fetching num of objects to download for - " + entity_name);
                             alert("DASHBOARD:DOWNLOAD:UnexpectedError: Error fetching num of objects to download for - " + entity_name);
-                            return dfd.reject();
+                            return dfd.reject("Failed to fetch num of objects for - "+entity_name);
                         });
                 })
-                .fail(function(){
+                .fail(function(error){
                     console.log("DASHBOARD:DOWNLOAD:UnexpectedError: Error while clearing objectstore - " + entity_name);
                     alert("DASHBOARD:DOWNLOAD:UnexpectedError: Error while clearing objectstore - " + entity_name);
-                    return dfd.reject();
+                    return dfd.reject("Failed to clear object store - "+entity_name);
                 });
             return dfd;
         },
@@ -176,8 +178,8 @@ define([
                 .done(function(){
                     return dfd.resolve();
                 })
-                .fail(function(){
-                    return dfd.reject();
+                .fail(function(error){
+                    return dfd.reject(error);
                 });
             return dfd;
         },
@@ -192,7 +194,7 @@ define([
                 })
                 .fail(function(){
                     console.log("DASHBOARD:DOWNLOAD: error fetching collection from server");
-                    return dfd.reject();
+                    return dfd.reject("Failed to fetch collection for "+entity_name);
                 });
             return dfd;    
         },
@@ -268,7 +270,7 @@ define([
                         },
                         error: function(error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
-                            dfd.reject(error);
+                            dfd.reject("error updating last_full_download in meta_data objectStore");
                         }
                     });
                 },
@@ -286,7 +288,7 @@ define([
                                 error: function(error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
-                                    dfd.reject(error);
+                                    dfd.reject("error creating last_full_download in meta_data objectStore");
                                 }
                             });
                             
