@@ -32,13 +32,26 @@ define([
             _(this)
                 .bindAll('pick_next');
             this.start_timestamp = null;
+            this.in_progress = false;
         },  
               
         start_incremental_download: function(options) {
             var dfd = new $.Deferred();
-            console.log(options);
+            this.in_progress = true;
+            var that = this;            
             if(!(options.background))
-                this.$('#incremental_download_modal').modal('show');
+            {
+                this.template = incremental_download_template;
+                this.render()
+                    .done(function(){
+                        that.$('#incremental_download_modal').modal('show');                    
+                    });
+            }
+            else
+            {
+                this.template = incremental_download_background_template;
+                this.render();
+            }
             console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
             var that = this;
             this.getIncObjects()
@@ -47,20 +60,25 @@ define([
                         .done(function(){
                             that.finish_download()
                                 .done(function(){
-                                    that.$('#incremental_download_modal').modal('hide');
+                                    that.$('#incremental_download_modal').modal('hide');                    
+                                    that.remove();
+                                    that.in_progress = false;
                                     dfd.resolve();
                                 })
                                 .fail(function(error){
+                                    that.in_progress = false;
                                     dfd.reject(error);
                                 });
                         })
                         .fail(function(){
+                            that.in_progress = false;
                             //No way to reach here! This dfd is always resolved bcoz failed object download are ignored 
                         })
                 })
                 .fail(function(error){
                     console.log(error);
                     // alert("INCREMENTAL DOWNLOAD FAILED: "+error);
+                    that.in_progress = false;
                     dfd.reject(error);
                 });
             return dfd;    
@@ -124,7 +142,6 @@ define([
             this.incd_objects = incd_objects;
             if(!this.incd_objects.length)
                 return dfd.resolve();
-            this.in_progress = true;
             this.progress_bar_step = 100/incd_objects.length;
             this.download_status = {};
             this.download_status["total"] = incd_objects.length;
