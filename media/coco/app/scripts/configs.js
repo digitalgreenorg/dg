@@ -575,8 +575,8 @@ function() {
     // };
     
     var misc = {
-        download_size : 200,
-        background_download_interval:60*1000
+        download_size : 2000,
+        background_download_interval:5*60*1000
     };
     
     return {
