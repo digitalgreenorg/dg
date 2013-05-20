@@ -158,9 +158,17 @@ define([
         
         chunk_it_fetch_it_save_it: function(entity_name, total_num_objects){
             var dfd = new $.Deferred();
-            var num_chunks = Math.ceil(total_num_objects/ all_configs.misc.download_size); 
+            var limit = 1500;
+            if(all_configs[entity_name].download_chunk_size)
+            {
+                limit = all_configs[entity_name].download_chunk_size;
+            }
+            else if(all_configs.misc.download_chunk_size)
+            {
+                limit = all_configs.misc.download_chunk_size;
+            }
+            var num_chunks = Math.ceil(total_num_objects/ limit); 
             console.log("Num of chunks for - "+entity_name+" = "+num_chunks);
-            var limit = all_configs.misc.download_size;
             var offset = 0;
             var chunk_dfds = [];
             var that = this;
