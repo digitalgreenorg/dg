@@ -102,6 +102,19 @@
     </div>
 </script>
 
+<script type="text/template" id="incremental_download_background_template">
+<div class="row">
+    <div id="incremental_download_back" style="position:fixed;bottom:0px;z-index:10000" class="span2">
+    Downloading...
+      <div>
+        <div class="progress progress-info progress-striped">
+          <div class="bar" id = "inc_pbar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+</div>    
+</script>
+
 <script type="text/template" id="download_template">
     <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
         <button type="button" class="close" data-dismi

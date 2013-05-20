@@ -44,8 +44,9 @@ define([
           //     .append(header.render("<li class='active' >Dashboard</li>")
           //     .el);
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
-          this.setView("#content", new StatusView());
-          this.render();
+          var s_view = new StatusView()
+          this.setView("#content", s_view);
+          s_view.render();
           
           //         
           // $(this.el)
@@ -58,8 +59,9 @@ define([
           // var bcrumb_template = _.template($('#list_breadcrumb').html());
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread:params.view_configs.page_header}) }}));
           var that = this;
-          this.setView("#content", new ListView({initialize:params}));
-          this.render();
+          var l_view = new ListView({initialize:params});
+          this.setView("#content",l_view);
+          l_view.render();
           
           return this;
       },
@@ -108,7 +110,7 @@ define([
           }
           var that = this;
           this.setView("#content", this.formcontroller_v);
-          this.render();
+          this.formcontroller_v.render();
           
           return this;
       }

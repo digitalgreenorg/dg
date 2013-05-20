@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         initialize: function() {
             this.upload_v = null;
             this.inc_download_v = null;
-            // this.background_download();
+            this.background_download();
         },
 
         afterRender: function() { /* Work with the View after render. */
@@ -60,6 +60,17 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
         
         sync: function(){
             var that = this;
+            //If background inc download is in progress, tel user to wait till its finished
+            //TODO: alterntely we can interrupt inc download and start with sync
+            if(this.inc_download_v)
+            {
+                if(this.inc_download_v.in_progress)
+                {
+                    alert("Please wait till download is finished");
+                    return;
+                }
+            }
+            this.sync_in_progress = true;
             this.upload()
                 .done(function(){
                     console.log("UPLOAD FINISHED");
@@ -72,10 +83,12 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                     that.inc_download({background:false})
                         .done(function(){
                             console.log("INC DOWNLOAD FINISHED");
+                            that.sync_in_progress = false;
                         })
                         .fail(function(error){
                             console.log("ERROR IN INC DOWNLOAD");
                             console.log(error);
+                            that.sync_in_progress = false;
                         });
                 });
         },
@@ -86,7 +99,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                 this.upload_v = new UploadView();
             }
             this.setView("#upload_modal_ph",this.upload_v);
-            this.render();
+            this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
                     dfd.resolve();
@@ -103,8 +116,12 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             {
                 this.inc_download_v = new IncDownloadView();
             }
+            if(this.inc_download_v.in_progress)
+            {
+                return dfd.resolve();
+            }
             this.setView("#upload_modal_ph",this.inc_download_v);
-            this.render();
+            this.inc_download_v.render();
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     dfd.resolve();
@@ -122,7 +139,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                 setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
             };
             //check if uploadqueue is empty and internet is connected - if both true do the background download
-            if(this.is_uploadqueue_empty() && this.is_internet_connected())
+            if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)
             {
                 this.inc_download({background:true})
                     .always(call_again);
