@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CATALOG>
 	<TEAM>
+		<TITLE>Aider l'Inde rurale, une vidéo à la fois</TITLE>
+		<HEADLINE>L'Inde rurale, qui abrite plus de 60% de la population indienne et plus de 300 millions de pauvres, est mal en point. Un organisme, né dans les laboratoires de Microsoft, espère changer la donne.</HEADLINE>
+		<REFERENCE>http://www.lapresse.ca/international/asie-oceanie/201305/15/01-4651076-aider-linde-rurale-une-video-a-la-fois.php</REFERENCE>
+		<PRESSDATE>Tue, 15 May 2013</PRESSDATE>
+		<PLACE>Web</PLACE>
+		<DESC>"Un fonctionnaire indien arrive dans un village. Il choisit un fermier influent. Lui enseigne une nouvelle technique pour améliorer sa production et repart, promettant de revenir. Neuf fois sur dix, ses enseignements restent lettre morte."</DESC>
+		<COMPANY></COMPANY>
+		<IMGLINK></IMGLINK>
+		<VIDEOLINK>NULL</VIDEOLINK>
+		<VIDEOREFERENCE>NULL</VIDEOREFERENCE>
+	</TEAM>
+	
+	<TEAM>
 		<TITLE>Digital Green meets Hillary Clinton</TITLE>
 		<HEADLINE>Clinton calls for larger collaboration between Indian, U.S entrepreneurs.</HEADLINE>
 		<REFERENCE>http://www.newstrackindia.com/newsdetails/2012/05/08/128-Clinton-calls-for-larger-collaboration-between-Indian-U-S-entrepreneurs.html</REFERENCE>

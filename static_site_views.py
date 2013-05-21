@@ -4,6 +4,10 @@ from output.views.common import home_with_analytics
 from farmerbook import farmer_book_views
 from farmerbook.farmer_book_views import get_leaderboard_data
 #Mindless views for plain HTML pages on the main website
+
+def farmerfunda(request):
+    return redirect('https://docs.google.com/a/digitalgreen.org/forms/d/1vrg0WObCuJLfLjdV44JnpIFX-ggZk4fCh7di0I8md9w/viewform') 
+
 def home(request):
     if request.get_host() == "sandbox.digitalgreen.org":
         return HttpResponseRedirect('/coco/home.html')
