@@ -281,12 +281,17 @@ define([
             var that = this;
             this.fetch_collection(entity_name, offset, limit)
                 .done(function(collection){
-                    that.save_collection(entity_name, collection);
-                    return dfd.resolve(collection.length);    
+                    that.save_collection(entity_name, collection)
+                        .done(function(){
+                            return dfd.resolve(collection.length);    
+                        })
+                        .fail(function(error){
+                            return dfd.reject("DOWNLOAD: Failed to save an object of "+entity_name+" - "+error);
+                        });
                 })
                 .fail(function(){
                     console.log("DASHBOARD:DOWNLOAD: error fetching collection from server");
-                    return dfd.reject("Failed to fetch collection for "+entity_name);
+                    return dfd.reject("DOWNLOAD: Failed to fetch collection for "+entity_name);
                 });
             return dfd;    
         },
@@ -317,29 +322,45 @@ define([
         },
         
         save_collection: function(entity_name, collection){
-            //Not treating as async bcoz individual async calls of create are too many to monitor and they return almost instantly
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: entity_name,
-            });
-            var generic_collection_offline = Backbone.Collection.extend({
-                model: generic_model_offline,
-                database: indexeddb,
-                storeName: entity_name,
-            });
-            var collection_offline = new generic_collection_offline();
+            var dfd = new $.Deferred();
             objects = collection.toJSON();
+            var dfds = [];
             for (var i = 0; i < objects.length; i++) {
                 objects[i]['id'] = parseInt(objects[i]['id']);
-                objects[i]['online_id'] = objects[i]['id'];
-                collection_offline.create(objects[i],{
-                    success: function(){
-                        // console.log("created");
-                    }
-                });
+                objects[i]['online_id'] = parseInt(objects[i]['id']);
+                var s_dfd = this.save_object(entity_name, objects[i]);
+                dfds.push(s_dfd);
             }
+            $.when.apply($,dfds)
+                .done(function(){
+                    return dfd.resolve();
+                })
+                .fail(function(error){
+                    console.log(error);
+                    return dfd.reject();
+                })
+            return dfd;    
         },
-                
+        
+        /* custom save to allow constraint error fails */
+        save_object: function(entity_name, json){
+            var dfd = new $.Deferred();
+            var model =  Offline.create_b_model(entity_name);
+            model.save(json,{
+                success: function(){
+                    return dfd.resolve();
+                },
+                error: function(error){
+                    if(error.srcElement.error.name=="ConstraintError")
+                    {
+                        return dfd.resolve();
+                    }
+                    return dfd.reject();
+                }
+            });
+            return dfd;
+        },
+                        
         finish_download: function(){
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
