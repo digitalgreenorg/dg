@@ -7,11 +7,25 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
         //Creates and return a new offline backbone model object for the given entity
         create_b_model: function(entity_name)
         {
-            var generic_model_offline = Backbone.Model.extend({
+            var model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: entity_name,
             });
-            return new generic_model_offline();
+            return new model_offline();
+        },
+        
+        create_b_collection: function(entity_name){
+            var model_offline = Backbone.Model.extend({
+                database: indexeddb,
+                storeName: entity_name,
+            });
+
+            var collection_offline = Backbone.Collection.extend({
+                model: model_offline,
+                database: indexeddb,
+                storeName: entity_name,
+            });
+            return new collection_offline();
         },
     
         //Saves object to offline object store. 
@@ -36,6 +50,12 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
             return dfd;
         },
         
+        /*
+        creates a offline model
+        sets the id
+        fetches it
+        returns fetched model
+        */
         fetch_object: function(entity_name, id){
             var dfd = new $.Deferred();
             var off_model = this.create_b_model(entity_name);
@@ -48,6 +68,20 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
                     dfd.reject("Error fetching object from offline - "+error);
                 }
             })
+            return dfd;
+        },
+        
+        fetch_collection: function(entity_name){
+            var dfd = new $.Deferred();
+            var off_coll = this.create_b_collection(entity_name);
+            off_coll.fetch({
+                success: function(off_coll){
+                    dfd.resolve(off_coll);
+                },
+                error: function(error){
+                    dfd.reject("Error fetching collection -"+entity_name+"- from offline - "+error);
+                }
+            });
             return dfd;
         },
         
@@ -71,14 +105,6 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config',
                 }
             });
             return dfd;
-        },
-        
-        add_to_uploadq: function(){
-            
-        },
-        
-        delete_from_uploadq: function(){
-            
         }
         
     }
