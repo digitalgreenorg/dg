@@ -11,6 +11,9 @@ define([
     var IncrementalDownloadView = Backbone.Layout.extend({
         
         template: "#incremental_download_template",
+        events:{
+            "click #stop_inc_download": "stop_inc_download"
+        },
         increment_pb: function() {
             w = parseFloat(document.getElementById('inc_pbar').style.width);
             document.getElementById('inc_pbar').style.width= (w + this.progress_bar_step) +'%';
@@ -31,19 +34,31 @@ define([
                 .bindAll('iterate_incd_objects');
             _(this)
                 .bindAll('pick_next');
+            _(this)
+                .bindAll('stop_inc_download');
             this.start_timestamp = null;
             this.in_progress = false;
         },  
-              
-        start_incremental_download: function(options) {
-            var dfd = new $.Deferred();
+        
+        stop_inc_download: function(){
+            console.log("stopping inc download");
+            this.user_interrupt = true;
+        },
+        
+        //initializes the global vars used, ui
+        initialize_inc_download: function(options){
             this.in_progress = true;
-            var that = this;            
+            this.user_interrupt = false;
+            var that = this;
             if(!(options.background))
             {
                 this.template = incremental_download_template;
                 this.render()
                     .done(function(){
+                        that.$('#incremental_download_modal').modal({
+                            keyboard: false,
+                            backdrop: "static",
+                        });
                         that.$('#incremental_download_modal').modal('show');                    
                     });
             }
@@ -52,33 +67,49 @@ define([
                 this.template = incremental_download_background_template;
                 this.render();
             }
+        },
+        
+        tear_down: function(){
+            this.$('#incremental_download_modal').modal('hide');                    
+            this.remove();
+            this.in_progress = false;
+        },
+              
+        start_incremental_download: function(options) {
+            var dfd = new $.Deferred();
+            var that = this;        
+            this.initialize_inc_download(options);    
             console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
             var that = this;
             this.getIncObjects()
                 .done(function(objects){
                     that.iterate_incd_objects(objects)
-                        .done(function(){
-                            that.finish_download()
+                        .done(function(last_object_timestamp){
+                            that.finish_download(last_object_timestamp)
                                 .done(function(){
-                                    that.$('#incremental_download_modal').modal('hide');                    
-                                    that.remove();
-                                    that.in_progress = false;
+                                    that.tear_down();
                                     dfd.resolve();
                                 })
                                 .fail(function(error){
-                                    that.in_progress = false;
+                                    that.tear_down();
                                     dfd.reject(error);
                                 });
                         })
-                        .fail(function(){
-                            that.in_progress = false;
-                            //No way to reach here! This dfd is always resolved bcoz failed object download are ignored 
-                        })
+                        .fail(function(error){
+                            //when user interrupts
+                            if(error.last_object_timestamp)
+                            {
+                                that.finish_download(error.last_object_timestamp)
+                                    .always(function(){
+                                        that.tear_down();
+                                        dfd.reject(error.err_msg);
+                                    });
+                            }
+                            dfd.reject(error.err_msg)
+                        });
                 })
                 .fail(function(error){
-                    console.log(error);
-                    // alert("INCREMENTAL DOWNLOAD FAILED: "+error);
-                    that.in_progress = false;
+                    that.tear_down();
                     dfd.reject(error);
                 });
             return dfd;    
@@ -86,9 +117,10 @@ define([
 
         getIncObjects: function(){
             var dfd = new $.Deferred();
+            this.start_timestamp = new Date();
             this.get_last_download_timestamp()
                 .done(function(timestamp){
-                    $.get("/get_log/",{timestamp:"2012-03-10 12:06:04"})
+                    $.get("/get_log/",{timestamp:timestamp})
                         .fail(function(){ 
                             dfd.reject("Incremental download objects fetch failed!");
                         })
@@ -138,9 +170,8 @@ define([
             
         iterate_incd_objects: function(incd_objects){
             var dfd = new $.Deferred();
-            this.start_timestamp = new Date();
             this.incd_objects = incd_objects;
-            if(!this.incd_objects.length)
+            if(!this.incd_objects.length || this.incd_objects==0)
                 return dfd.resolve();
             this.progress_bar_step = 100/incd_objects.length;
             this.download_status = {};
@@ -154,10 +185,32 @@ define([
         
         pick_next: function(whole_download_dfd){
             var that = this;
+            this.prev_incd_o = this.cur_incd_o;
             this.update_status(this.download_status["downloaded"]+"/"+this.download_status["total"]);
             this.cur_incd_o = this.incd_objects.shift();
-            if(this.cur_incd_o)
+            if(!this.cur_incd_o)
             {
+                var update_timestamp;
+                if(this.prev_incd_o)
+                    update_timestamp = this.get_timestamp(this.prev_incd_o)
+                else
+                    update_timestamp = this.start_timestamp;    
+                return whole_download_dfd.resolve(update_timestamp);
+            }
+            else if(this.user_interrupt)
+            {
+                var update_timestamp;
+                if(this.prev_incd_o)
+                    update_timestamp = this.get_timestamp(this.prev_incd_o)
+                else
+                    update_timestamp = null;
+                return whole_download_dfd.reject({
+                    err_msg:"User stopped Sync", 
+                    last_object_timestamp: update_timestamp
+                });
+            }
+            else
+            {   
                 this.process_incd_object(this.cur_incd_o)
                     .fail(function(error){
                         console.log("FAILED TO INC DOWNLOAD AN OBJECT: ");
@@ -170,15 +223,15 @@ define([
                         that.increment_pb();
                         that.download_status["downloaded"]++;
                         that.pick_next(whole_download_dfd);
-                    })
-            }
-            else
-            {   
-                whole_download_dfd.resolve();
+                    });
             }
         },     
         
         // {"pk":9372,"model":"dashboard.serverlog","fields":{"action":1,"timestamp":"2013-04-15T06:47:35","entry_table":"Screening","model_id":10000000132086}}
+        get_timestamp: function(obj){
+            return obj.fields.timestamp;
+        },
+        
         get_entity_name: function(obj){
             for (var member in all_configs) {
                 if (member == obj.fields.entry_table.toLowerCase())
@@ -282,7 +335,7 @@ define([
                             })
                             .fail(function(response){
                                 // console.log("INCD: Error fetching model from server - "+response.statusText);
-                                dfd.reject(reject);
+                                dfd.reject(response);
                             });
                     }
                 })
@@ -430,7 +483,7 @@ define([
             return dfd.promise();    
         },
         
-        finish_download: function(){
+        finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
@@ -444,7 +497,7 @@ define([
                 success: function(model){
                     console.log("DASHBOARD:DOWNLOAD: last_inc_download fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',that.start_timestamp);
+                    model.set('timestamp',last_object_timestamp);
                     model.save(null,{
                         success: function(){
                             console.log("DASHBOARD:DOWNLOAD: last_inc_download updated in meta_data objectStore:");    
@@ -462,7 +515,7 @@ define([
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_inc_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
-                            meta_model.set('timestamp',that.start_timestamp);
+                            meta_model.set('timestamp',last_object_timestamp);
                             meta_model.save(null,{
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_inc_download created in meta_data objectStore:");    

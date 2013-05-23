@@ -1,4 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection','views/upload', 'views/incremental_download'], function($, pass, pass, configs, indexeddb, Form, pass, upload_collection, UploadView,IncDownloadView) {
+define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection','views/upload', 'views/incremental_download','views/notification'],
+ function($, pass, pass, configs, indexeddb, Form, pass, upload_collection, UploadView,IncDownloadView, notifs_view) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -7,7 +8,8 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             "click #sync": "sync",
             "click #inc_download": "inc_download",
         },
-        
+        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
+        success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
         item_template: _.template($("#dashboard_item_template")
             .html()),
         initialize: function() {
@@ -84,11 +86,19 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                         .done(function(){
                             console.log("INC DOWNLOAD FINISHED");
                             that.sync_in_progress = false;
+                            $(notifs_view.el)
+                                .append(that.success_notif_template({
+                                msg: "Incremental download successfully finished."
+                            }));
                         })
                         .fail(function(error){
                             console.log("ERROR IN INC DOWNLOAD");
                             console.log(error);
                             that.sync_in_progress = false;
+                            $(notifs_view.el)
+                                .append(that.error_notif_template({
+                                msg: "Failed to do Incremental Download : "+error
+                            }));
                         });
                 });
         },
@@ -112,6 +122,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             
         inc_download: function(options){
             var dfd = $.Deferred();
+            var that = this;
             if(!this.inc_download_v)
             {
                 this.inc_download_v = new IncDownloadView();
@@ -124,10 +135,10 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             this.inc_download_v.render();
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
-                    dfd.resolve();
+                    return dfd.resolve();
                 })
-                .fail(function(){
-                   dfd.reject(); 
+                .fail(function(error){
+                    return dfd.reject(); 
                 });
             return dfd;
         },

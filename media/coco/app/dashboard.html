@@ -15,7 +15,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -81,7 +81,6 @@
 <script type="text/template" id="incremental_download_template">
     <div id="incremental_download_modal" class="modal hide fade" >
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Downloading</h3>
       </div>
       <div class="modal-body">
@@ -96,8 +95,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn">Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
+          <button id="stop_inc_download" type="button" class="btn">Stop It!</button>
       </div>
     </div>
 </script>
