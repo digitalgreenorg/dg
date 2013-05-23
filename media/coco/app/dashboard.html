@@ -15,7 +15,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
     
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
 	
 	
 	<meta name="robots" content="NONE,NOARCHIVE">
@@ -117,8 +117,6 @@
 
 <script type="text/template" id="download_template">
     <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
-        <button type="button" class="close" data-dismi
-ss="modal" aria-hidden="true">&times;</button>
         <h3>Download</h3>
       </div>
       <div class="modal-body">
@@ -136,7 +134,7 @@ ss="modal" aria-hidden="true">&times;</button>
         </div>
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn">Close</a>
+        <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Stop It!</button>
       </div>
     </div>
 </script>

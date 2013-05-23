@@ -5,8 +5,9 @@ define([
     'indexeddb_backbone_config',
     'views/full_download',
     'configs',
-    'collections/upload_collection'                
-], function($,p,pass,indexeddb,FullDownloadView, configs, upload_collection){
+    'collections/upload_collection',
+    'views/notification'                
+], function($,p,pass,indexeddb,FullDownloadView, configs, upload_collection, notifs_view){
     
     var StatusView = Backbone.Layout.extend({
         template: "#sync_status_template",
@@ -21,6 +22,8 @@ define([
                 upload_collection: upload_collection.toJSON()
             }
         },
+        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
+        success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
         timestamp: null,
         upload_entries: null,
         fill_status: function(){
@@ -81,9 +84,17 @@ define([
             this.full_download_v.start_full_download()
                 .done(function(){
                     that.fill_status();
+                    $(notifs_view.el)
+                        .append(that.success_notif_template({
+                        msg: "Successfully downloaded the database."
+                    }));
                     dfd.resolve();
                 })
-                .fail(function(){
+                .fail(function(error){
+                    $(notifs_view.el)
+                        .append(that.error_notif_template({
+                        msg: "Failed to download the database - "+error
+                    }));
                    dfd.reject(); 
                 });
             return dfd;
