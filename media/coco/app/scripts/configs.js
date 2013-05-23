@@ -36,6 +36,7 @@ function() {
             }
          },
         'form_field_validation': {
+        	ignore: [],
             rules: {
                 name: {
                     required: true,
@@ -358,7 +359,61 @@ function() {
                   }          
               }
           }  
-      },      
+      },
+      'form_field_validation': {
+    	  rules: {
+				date: {
+					required: true,
+					validateDate: true
+				},
+				start_time: {
+					required: true,
+					validateTime: true
+				},
+				end_time: {
+					required: true,
+					validateTime: true
+				},
+				animator:"required",
+				village:"required",
+				videoes_screened:"required",
+				
+			},
+			messages: {
+				date: {
+					required: 'Enter Screening Date',
+					validateDate: 'Enter Screening Date in the form of yyyy-mm-dd',
+				},
+				start_time: {
+					required: 'Enter Video Production Start Date',
+					validateTime: 'Enter the start time in the form of hh:mm  Use 24 hour format',
+				},
+				end_time: {
+					required: 'Enter Video Production End Date',
+					validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
+				},
+				animator: "Enter Animator",
+				village:"Enter Village",
+				videoes_screened:"Enter Videos Screened",
+			},
+			
+			highlight: function(element, errorClass, validClass) {
+              $(element)
+                  .parent('div')
+                  .parent('div')
+                  .addClass("error");
+
+          },
+          unhighlight: function(element, errorClass, validClass) {
+              $(element)
+                  .parent('div')
+                  .parent('div')
+                  .removeClass("error");
+
+          },
+          errorElement: "span",
+          errorClass: "help-inline"
+      }
     };
     
     var adoption_configs = {

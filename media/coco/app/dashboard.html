@@ -326,11 +326,11 @@ ss="modal" aria-hidden="true">&times;</button>
 <script type="text/template" id="screening_table_template">
        <tr>
        <th>Id</th>
-	   <th>Date</th>
+	   <th>Screening Date</th>
 	   <th>Animator</th>
        <th>Village</th>
-       <th>Start Time</th>
-       <th>End Time</th>
+	   <th>Groups Attended</th>
+       <th>Videos Screened</th>
        <th></th>
 	   </tr>
 </script>
@@ -340,8 +340,25 @@ ss="modal" aria-hidden="true">&times;</button>
     <td><%= date %></td>
     <td> <%= animator.name %></td>
     <td> <%= village.village_name %></td>
-    <td> <%= start_time %></td>
-    <td> <%= end_time %></td>
+	<td>
+	<% 
+		var groups="";
+		$.each(farmer_groups_targeted, function(index,val) {
+			groups = groups + val.group_name +"; ";
+     	});
+	%>
+	<%= groups %>
+	</td>    
+	<td> 
+	<% 
+		var videos="";
+		$.each(videoes_screened, function(index,val) {
+			videos = videos + val.title + "; ";
+     	});
+	%>
+	<%= videos %>
+	</td>
+    
     <td>
 	<a href="#screening/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
     </td>

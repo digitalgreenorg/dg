@@ -313,13 +313,16 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $(".chzn-select").chosen();
+            $(".chzn-container").css('float', 'left');
+            $(".chzn-container").css('margin-bottom','20px');
+            $(".control-group").css('clear', 'both');
+            
             $(".date-picker")
                 .datepicker({
                     format: 'yyyy-mm-dd'
-                });
-            $(".date-picker").focusout(function () {
+                }).on('changeDate', function(ev){
                     $(this).datepicker('hide');
-                   });
+                });
             $(".time-picker")
                 .timepicker({
                     minuteStep: 1,
