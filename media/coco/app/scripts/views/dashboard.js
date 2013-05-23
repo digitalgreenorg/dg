@@ -76,10 +76,18 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             this.upload()
                 .done(function(){
                     console.log("UPLOAD FINISHED");
+                    $(notifs_view.el)
+                        .append(that.success_notif_template({
+                        msg: "Upload successfully finished."
+                    }));
                 })
                 .fail(function(error){
                     console.log("ERROR IN UPLOAD");
                     console.log(error);
+                    $(notifs_view.el)
+                        .append(that.success_notif_template({
+                        msg: "Sync Incomplete. Failed to finish Upload : "+error
+                    }));
                 })
                 .always(function(){
                     that.inc_download({background:false})
@@ -97,7 +105,7 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
                             that.sync_in_progress = false;
                             $(notifs_view.el)
                                 .append(that.error_notif_template({
-                                msg: "Failed to do Incremental Download : "+error
+                                msg: "Sync Incomplete. Failed to do Incremental Download : "+error
                             }));
                         });
                 });
@@ -112,10 +120,10 @@ define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_confi
             this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
-                    dfd.resolve();
+                    return dfd.resolve();
                 })
-                .fail(function(){
-                   dfd.reject(); 
+                .fail(function(error){
+                   return dfd.reject(error); 
                 });
             return dfd;
         },

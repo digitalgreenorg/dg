@@ -20,7 +20,17 @@ define([
         
         initialize: function(){
             console.log("UPLOAD: initializing new upload view");
+            _(this).bindAll('stop_upload');
         },      
+        
+        events:{
+            "click #stop_upload": "stop_upload"
+        },
+              
+        stop_upload: function(){
+            console.log("stopping upload");
+            this.user_interrupt = true;
+        },
               
         increment_pb: function() {
             w = parseFloat(document.getElementById('pbar').style.width);
@@ -35,24 +45,43 @@ define([
             $('#upl_action').html(action);
         },
               
+        initialize_upload: function(){
+            this.user_interrupt = false;
+            this.in_progress = true;
+            this.$('#incremental_download_modal').modal({
+                keyboard: false,
+                backdrop: "static",
+            });
+            this.$('#upload_modal').modal('show');
+            
+        },
+        
+        tear_down: function(){
+            $('#upload_modal').modal('hide'); 
+            // this.remove();   
+            this.in_progress = false; 
+        },
+              
         start_upload: function() {
             var dfd = new $.Deferred();
-            this.$('#upload_modal').modal('show');
             console.log("UPLOAD: start the fuckin upload");
             var that = this;
+            this.initialize_upload();
             this.get_uploadq()
                 .done(function(collection){
                     that.iterate_uploadq(collection)
                         .done(function(){
-                            $('#upload_modal').modal('hide'); 
+                            that.tear_down();
                             dfd.resolve();
                         })
-                        .fail(function(){
-                        
+                        .fail(function(error){
+                            that.tear_down();
+                            dfd.reject(error);
                         });
                 })
                 .fail(function(error){
-                
+                    that.tear_down();
+                    dfd.reject(error);
                 });
             return dfd;
         },
@@ -76,7 +105,6 @@ define([
             this.upload_collection = uploadq;
             console.log("UPLOAD: inside upload queue: " + this.upload_collection.length + " entries");
             $('#num_upload').html(this.upload_collection.length);
-            this.in_progress = true;
             progress_bar_step = 100 / this.upload_collection.length;
             this.upload_status = {};
             this.upload_status["total"] = this.upload_collection.length;
@@ -122,8 +150,13 @@ define([
             var that = this;
             this.update_status(this.upload_status["uploaded"]+"/"+this.upload_status["total"]);
             this.current_entry = this.upload_collection.shift();
-            if (this.current_entry == undefined) {
+            if (!this.current_entry) {
                 return whole_upload_dfd.resolve();
+            }
+            else if (this.user_interrupt)
+            {
+                this.upload_collection.unshift(this.current_entry);
+                return whole_upload_dfd.reject("User stopped Sync");
             }
             else{
                 this.process_upload_entry(this.current_entry)
