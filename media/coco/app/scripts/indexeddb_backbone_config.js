@@ -34,7 +34,12 @@ var idb = {
             });      
             meta_store.createIndex("metaIndex", "key", { unique: true })
 
-            console.log("indexeddb database created")
+            var full_download_info_store = transaction.db.createObjectStore("full_download_info", {
+              autoIncrement: true,keyPath: "id"
+            });      
+            full_download_info_store.createIndex("downloadedIndex", ["entity_name", "offset", "limit"], { unique: true });
+
+            console.log("indexeddb database created");
             next();
         }
     }]

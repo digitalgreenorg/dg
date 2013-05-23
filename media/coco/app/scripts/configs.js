@@ -287,6 +287,7 @@ function() {
       'edit_template_name': 'screening_add_edit_template',
       'rest_api_url': '/api/v1/screening/',
       'entity_name': 'screening',
+      download_chunk_size: 200,
       'unique_togther_fields':['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
       'foreign_entities':{
           'village': {
@@ -630,8 +631,8 @@ function() {
     // };
     
     var misc = {
-        download_size : 200,
-        background_download_interval:60*1000
+        download_chunk_size : 2000,
+        background_download_interval:5*60*1000
     };
     
     return {
