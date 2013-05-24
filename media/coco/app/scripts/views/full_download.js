@@ -22,6 +22,7 @@ define([
         template: "#download_template",
 
         initialize: function(){
+            _(this).bindAll('stop_download');
         },
         
         serialize: function(){
@@ -29,8 +30,21 @@ define([
                 all_configs: all_configs
             }
         },
-
+        
+        events:{
+            'click #stop_full_download': 'stop_download'
+        },
+        
         afterRender: function(){
+        },
+        
+        stop_download: function(){
+            console.log("stopping download");
+            this.remove_ui();
+            this.full_download_dfd.reject("User stopped download");
+            $.each(this.network_requests, function(index, xhr){
+                xhr.abort();
+            });
         },
 
         /* 
@@ -43,10 +57,18 @@ define([
             var dfd = new $.Deferred();
             
             //intialize UI objects
+            this.$('#full_download_modal').modal({
+                keyboard: false,
+                backdrop: "static",
+            });
             this.$('#full_download_modal').modal('show');
             var num_of_entities = Object.keys(all_configs).length; 
             this.progress_bar_step = 100 / num_of_entities;
             this.fetch_status = {};
+            /////////////////////////////////////////
+            
+            //every request made to server will be stored in this, - to abort if user chooses to stop download
+            this.network_requests = [];
             /////////////////////////////////////////
             
             // fetching the full_download_info collection to be used for resuming download
@@ -60,12 +82,17 @@ define([
                     dfd.reject(error);
                 });
             //////////////////////////////////////////    
-            dfd.resolve();
             return dfd;
         },
         
+        remove_ui: function(){
+            this.$('#full_download_modal').modal('hide'); // calling remove without hiding modal causes modal's backdrop to remain
+            this.remove();
+            
+        },
+        
         start_full_download: function(){
-            var dfd = new $.Deferred();
+            this.full_download_dfd = new $.Deferred();
             var that = this;
             this.initialize_download()
                 .done(function(){
@@ -73,31 +100,32 @@ define([
                         .done(function(){
                             that.finish_download()
                                 .done(function(){
-                                    that.$('#full_download_modal').modal('hide'); // calling remove without hiding modal causes modal's backdrop to remain
-                                    that.remove();
-                                    dfd.resolve();
+                                    that.remove_ui();
+                                    that.full_download_dfd.resolve();
                                 })
                                 .fail(function(error){
-                                    dfd.reject(error);
+                                    that.remove_ui();
+                                    that.full_download_dfd.reject(error);
                                 });
                         })
                         .fail(function(error){
-                            alert("ERROR while doing full download");
-                            console.log(error);
-                            alert(error);
+                            that.remove_ui();
+                            that.full_download_dfd.reject(error);
                         })
                 })
                 .fail(function(error){
-                    dfd.reject(error);
+                    that.remove_ui();
+                    that.full_download_dfd.reject(error);
                 });
                 
-            return dfd;    
+            return this.full_download_dfd;    
         },
         
         /* Starts download for all tables defined in config object. Rejects when any of them fails, Resolves when all are 
         successfully downloaded*/
         iterate_object_stores: function(){
             var dfd = new $.Deferred();
+            this.$('#stop_full_download').prop("disabled", false);
             var entity_dfds = [];
             for (var member in all_configs) {
                 if(member == "misc")
@@ -112,7 +140,7 @@ define([
                     dfd.resolve();
                 })
                 .fail(function(error){
-                    dfd.reject();
+                    dfd.reject(error);
                 });
             return dfd;    
         },
@@ -182,7 +210,7 @@ define([
         get_num_of_objects_to_download: function(entity_name){
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: Fetching num of objects to download for - "+entity_name);
-            $.get(all_configs[entity_name].rest_api_url, {limit:1,offset:0}, function(data){
+            var xhr = $.get(all_configs[entity_name].rest_api_url, {limit:1,offset:0}, function(data){
                 if(data){
                     if(data.meta){
                         return dfd.resolve(data.meta.total_count);
@@ -193,6 +221,7 @@ define([
                 else
                     return dfd.reject();
             });
+            this.network_requests.push(xhr);
             return dfd;
         },
         
@@ -306,7 +335,7 @@ define([
                 }
             });
             var collection_online = new generic_collection_online();
-            collection_online.fetch({
+            var xhr = collection_online.fetch({
                 data: {
                     limit: limit,
                     offset: offset
@@ -318,6 +347,7 @@ define([
                     return dfd.reject();
                 }
             });
+            this.network_requests.push(xhr);
             return dfd;
         },
         

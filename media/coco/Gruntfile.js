@@ -197,14 +197,26 @@ module.exports = function( grunt ) {
             // out: "../dist",
             dir: "dist",
             paths: {
-                    "jquery": "empty:",
-                    "underscore": 'empty:',
-                    'backbone': 'empty:',
+                    // "jquery": "empty:",
+                    // "underscore": 'empty:',
+                    // 'backbone': 'empty:',
                     // 'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
-                    'indexeddb-backbone': 'empty:',
-                    'datatable':'libs/datatablejs_media/js/jquery.dataTables.min',
-                    'form_field_validator': 'empty:',
-                    'layoutmanager': 'empty:'
+                    // 'indexeddb-backbone': 'empty:',
+                    // 'datatable':'libs/datatablejs_media/js/jquery.dataTables.min',
+                    // 'form_field_validator': 'empty:',
+                    // 'layoutmanager': 'empty:'
+                    'jquery': 'libs/jquery.min',
+                    'underscore': 'libs/backbone/underscore-min',
+                    'backbone': 'libs/backbone/backbone-min',
+                    'indexeddb-backbone': 'libs/indexeddb-backbonejs-adapter/backbone-indexeddb',
+                    'datatable': 'libs/datatablejs_media/js/jquery.dataTables.min',
+                    'form_field_validator': 'libs/jquery.validate',
+                    'layoutmanager': 'libs/layoutmanager/backbone.layoutmanager',
+                    'syphon':'libs/backbone.syphon',
+                    'bootstrapjs': 'libs/bootstrap/js/bootstrap.min',
+                    'chosen': 'libs/chosen/chosen.jquery.min',
+                    'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',    
+                    'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',    
                 },
             // name: "main"
             // out: ""
