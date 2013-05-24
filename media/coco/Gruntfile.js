@@ -190,7 +190,6 @@ module.exports = function( grunt ) {
     
     requirejs: {
         compile: {
-          options: {
             appDir: "app/",
             baseUrl: "scripts",
             // mainConfigFile: "app/scripts/main.js",
@@ -271,7 +270,6 @@ module.exports = function( grunt ) {
                    //                        }
                    //                    },
                    
-          }
         }
       }
   
