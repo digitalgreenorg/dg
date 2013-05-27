@@ -48,7 +48,7 @@ define([
         initialize_upload: function(){
             this.user_interrupt = false;
             this.in_progress = true;
-            this.$('#incremental_download_modal').modal({
+            this.$('#upload_modal').modal({
                 keyboard: false,
                 backdrop: "static",
             });
