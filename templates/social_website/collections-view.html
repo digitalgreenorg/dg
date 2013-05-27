@@ -1,5 +1,6 @@
 {% include "includes/header.html" %}
         {% include "includes/partials/search.html" %}
+         {% load app_tags %}
         
         <section class="gradientBg">
             <div id="main" role="main" class="wrapper">
@@ -23,7 +24,7 @@
                     <div class="media layout-vr-md">
                         <div class="video-wrapper">
                             <!-- Implementation Note: include the youtube video id and video uid in the data tag below -->
-                            <div id="video-target" data-video-id="cpc_iSun0xA" data-video-uid="432">
+                            <div id="video-target" data-video-id="{{video.youtubeID}}" data-video-uid="432">
                                 You need Flash player 8+ and JavaScript enabled to view this video.
                             </div>
                         </div>
@@ -110,18 +111,19 @@
                                 <ul class="carousel-list">
                                     
                                     <!-- Each carousel slide will be in a li here -->
-                                    {% for i in videos %}
+                                    {% for i in slides %}
                                     <li>
                                         <ul class="h-list h-list-xlg clearfix">
                                             {% for j in videos %}
+                                            {% if forloop.counter <= forloop.parentloop.counter|custom_multiply and forloop.counter > forloop.parentloop.counter|add:'-1'|custom_multiply    %}
                                             <!-- The "show-playing" and "show-progress" classes toggle display of the respective overlays -->
                                             <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->
                                             <!-- <li class="vidDrawer-video show-playing js-vidDrawer-video"> -->
                                             <li class="vidDrawer-video show-progress js-vidDrawer-video">
                                             <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
                                                 <div class="vidDrawer-image">
-                                                    <img src="http://placehold.it/155x95" alt="" />
-                                                    <div class="overlay now-playing">
+                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" height=95 width=155 alt="" /> </a>
+                                                  <!--  <div class="overlay now-playing">
                                                         Now Playing
                                                     </div>
                                                     <div class="overlay progress">
@@ -131,14 +133,16 @@
                                                             <div class="watched">watched</div>
                                                         </div>
                                                     </div>
+                                                    -->
                                                 </div>
                                                 <div class="vidDrawer-flag copy-white">
-                                                    5:13
+                                                    {{j.2}}
                                                 </div>
                                                 <div class="vidDrawer-hd copy-dk">
-                                                    1. <span class="copy-extra-lt">Video Title</span>
+                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{j.0}}</span>
                                                 </div>
                                             </li>
+                                            {% endif %}
                                             {% endfor %}
                                         </ul>
                                     </li>
@@ -155,16 +159,14 @@
                         </div>
                     </div>
                     <div class="layout-vr-lg">
-                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">1. Veri Composting in Southwest Region</h2>
-                        <p class="copy copy-lt layout-vr-sm">Jan. 10, 2013</p>
-                        <p class="copy copy-margin">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas neque orci, lacinia ac adipiscing at, accumsan vitae felis. Vivamus sed leo justo, vitae ultricies dui. Nam iaculis varius purus, eget consequat justo vehicula at. Integer in lorem vitae nisl accumsan malesuada. Phasellus suscipit porttitor leo, at fermentum velit ultricies ut. </p>
+                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{video.videoID}}. {{video.title}}</h2>
+                        <p class="copy copy-lt layout-vr-sm">{{video.date}}</p>
+                        <p class="copy copy-margin">{{video.description}}</p>
                         <h3 class="tag">Tag</h3>
                         <ul class="h-list h-list-sm push-top-tiny">
-                            <li><a href="#">Compost,</a></li>
-                            <li><a href="#">Agricultural,</a></li>
-                            <li><a href="#">Methods,</a></li>
-                            <li><a href="#">Veri Composting,</a></li>
-                            <li><a href="#">ASA</a></li>
+                        	{% for tag in video.tags %}
+                            <li><a href="#">{{tag}}{% if not forloop.last %}, {% endif %}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div> <!-- End .inner-wrapper -->
