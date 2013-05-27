@@ -312,7 +312,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             this.$('form')
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $(".chzn-select").chosen();
+            $(".chzn-select").chosen({'search_contains':true});
             $(".chzn-container").css('float', 'left');
             $(".chzn-container").css('margin-bottom','20px');
             $(".control-group").css('clear', 'both');
