@@ -323,15 +323,16 @@
 					//console.log(json[i].grade);
 					var latLng = new google.maps.LatLng(vil_details.latitude, vil_details.longitude);
 					if(vil_details.grade == 'A') {
-						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/greena.png'});
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/greena.png'});
 					} else if(vil_details.grade == 'B') {
-						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
 					} else if(vil_details.grade == 'C') {
-						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/yellowc.png'});
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/yellowc.png'});
 					} else if(vil_details.grade == 'D') {
-						markers[i] = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
+						marker = new google.maps.Marker({'position': latLng, 'title':vil_details.name, 'icon': '/media/farmerbook/images/orangeb.png'});
 					}
-					google.maps.event.addDomListener(markers[i], 'click', MakeInfoWindowEvent(map, markers[i], vil_details.id));
+					markers.push(marker);
+					google.maps.event.addDomListener(marker, 'click', MakeInfoWindowEvent(map, markers[i], vil_details.id));
 				});
 				var markerCluster = new MarkerClusterer(map, markers);				
 					
