@@ -114,7 +114,8 @@ function() {
                         
          },
         'form_field_validation': {
-            rules: {
+        	ignore: [],
+        	rules: {
                 title: {
                     required: true,
                     minlength: 2,
@@ -239,6 +240,7 @@ function() {
           'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute":{ 'host_attribute':["id","group_name"], 'inline_attribute': "group"}, "header" : "person_inline_header", 'borrow_attributes':[{'host_attribute':'village','inline_attribute':'village'}]
       },
       'form_field_validation': {
+    	    ignore: [],
             rules: {
                 group_name: {
                     required: true,
@@ -362,6 +364,7 @@ function() {
           }  
       },
       'form_field_validation': {
+    	  ignore: [],
     	  rules: {
 				date: {
 					required: true,
@@ -542,6 +545,7 @@ function() {
          },
         'unique_togther_fields':['person_name', 'father_name', 'village.id', 'group.id'],
         'form_field_validation': {
+        	ignore: [],
 			rules: {
 				person_name: {
 					required: true,
