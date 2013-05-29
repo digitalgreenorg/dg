@@ -206,15 +206,8 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             if(this.inline)
             {
                 this.$('#inline_header').html($('#'+this.inline.header).html());
-                if(!this.inline.no_render)
-                {
-                    var inline_t = $('#'+this.inline.template).html();
-                    for(var i=0;i<this.inline.num_rows;i++)
-                    {
-                        this.$('#inline_body').append(inline_t);    
-                    }
-                }
-                
+                if(!this.edit_case)
+                    this.append_new_inlines();    
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
@@ -332,29 +325,74 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             return this;
         },
         
+        append_new_inlines: function(){
+            var inline_t  = _.template($('#'+this.inline.template).html());
+            // var inline_t = $('#'+this.inline.template).html();
+            for(var i=0;i<this.inline.num_rows;i++)
+            {
+                var tr = $(inline_t({index:i}));
+                this.$('#inline_body').append(tr);    
+                $(tr).on('change', this.switch_validation_for_inlines);
+            }
+        },
+        
+        switch_validation_for_inlines: function(){
+            console.log("tr chenaged");
+            var empty = true;
+            $(this).find(':input').each(function() {
+                console.log($(this).val());
+                if($(this).val())
+                    empty = false;
+            });
+            if(!empty)
+            {
+                $(this).find(':input').each(function() {
+                    $(this).removeClass("donotvalidate")
+                });
+            }
+            else
+            {
+                $(this).find(':input').each(function() {
+                    $(this).addClass("donotvalidate")
+                });
+            }
+        },
+        
         fill_inlines: function(model_array){
             console.log("Filling inlines");
-            var count = 0;
-            var trs = $('#inline_body tr');
-            console.log(trs);
             var that = this;
+            var inline_t  = _.template($('#'+this.inline.template).html());
+            
             $.each(model_array,function(index, model){
-                that.fill_form_elements(trs[count], model.toJSON());
-                count++;
+                var tr = inline_t({index:index});
+                var filled_tr = that.fill_form_elements($(tr), model.toJSON());
+                $(filled_tr).find(':input').removeClass("donotvalidate");
+                that.$('#inline_body').append(filled_tr);
+                $(filled_tr).on('change', that.check_tr);
             });
         },    
 
         // takes a jquery object containgg form elements.Fills all input and select elements with the corrsponding value in json    
         fill_form_elements: function(container, o_json){
-            var input_elms = $(container).find('input');
-            $.each(input_elms,function(index,inp){
-                $(inp).val(o_json[$(inp).attr('name')]);
+            container.attr("model_id", o_json.id);
+            container.find(':input').each(function() {
+                if(!$(this).attr('name'))
+                    return;
+                var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    			switch(this.type) {
+    				case 'password':
+    				case 'select-multiple':
+    				case 'select-one':
+    				case 'text':
+    				case 'textarea':
+    					$(this).val(o_json[attr_name]);
+    					break;
+    				case 'checkbox':
+    				case 'radio':
+    					this.checked = o_json[attr_name];
+                }
             });
-            var sel_elms = $(container).find('select');
-            $.each(sel_elms,function(index,sel){
-                $(sel).val(o_json[$(sel).attr('name')]);
-            });
-            $(container).attr("model_id", o_json.id);
+            return container;
         },
         
         fill_dep_entity: function(ev){
@@ -510,6 +548,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     }
                 });
                 $(".chzn-select").chosen();
+                $(".date-picker")
+                    .datepicker({
+                        format: 'yyyy-mm-dd'
+                    }).on('changeDate', function(ev){
+                        $(this).datepicker('hide');
+                    });
                 this.expanded = element;
                 if(this.num_sources[element]<=0)
                     this.foreign_elements_rendered[element] = true;
@@ -527,6 +571,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                 });
                 this.expanded = element;
                 $(".chzn-select").chosen();
+                $(".date-picker")
+                    .datepicker({
+                        format: 'yyyy-mm-dd'
+                    }).on('changeDate', function(ev){
+                        $(this).datepicker('hide');
+                    });
                 // this.foreign_elements_rendered[element] = true;
             }
             else{
@@ -652,9 +702,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                                     obj[el][d_obj[el]["name_field"]] = label;
                                     // delete obj["index"];
                                 });    
-                                
                             }
-                            
                         }
                     }
                     else if (this.bulk)
@@ -666,12 +714,12 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                             var index = obj["index"];
                             console.log("index = "+index);
                             var tr_el = $('tr[index='+index+']');
-                            var dom_el = $('tr[index='+index+']').find('[name='+element+']');
+                            var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
                             var label = null;
                             var el_dict = {};
                             if($(dom_el).is("select"))
                             {
-                                label = $(tr_el).find('select[name='+element+'] option:selected').text();
+                                label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
                                 el_dict["id"] = parseInt(id);
                                 el_dict[name_field] = label;   
                                 
@@ -782,12 +830,14 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
                 
         },  
+        
         show_errors: function(errors){
             console.log("FORM: in show errors");
             var error_str = "";
             console.log("FORM: SHOWERROR: ");
             this.$('#form_errors').html(errors);
         },        
+        
         parse_inlines: function(raw_json){
             console.log("FORM: fetching inlines");
             var all_inlines = $('#inline_body tr');    
@@ -795,33 +845,33 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var that = this;
             var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
-                // console.log();
                 var inl_obj = {};
-                var inputs = $(inl).find("input");
                 var ignore = true;
                 if($(inl).attr("model_id"))
                     inl_obj.id = parseInt($(inl).attr("model_id"));
-                $.each(inputs,function(index1, inp){
-                    inl_obj[$(inp).attr("name")]= $(inp).val();
-                    if($(inp).val()!="")
+                $(inl).find(':input').each(function() {
+                    if(!$(this).attr('name'))
+                        return;
+                    else
+                        inline_attrs.push($(this).attr("name"));    
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    				switch(this.type) {
+    					case 'password':
+    					case 'select-multiple':
+    					case 'select-one':
+    					case 'text':
+    					case 'textarea':
+    						inl_obj[attr_name] = $(this).val();
+    						break;
+    					case 'checkbox':
+    					case 'radio':
+    						inl_obj[attr_name] = this.checked;
+    				}
+                    if(inl_obj[attr_name]!="")
                         ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(inp).attr("name"));
-                });
-                var selects = $(inl).find("select");
-                $.each(selects,function(index2, sel){
-                    inl_obj[$(sel).attr("name")]= $(sel).val();
-                    if($(sel).val()!="")
-                        ignore = false;
-                    if(index==0)
-                        inline_attrs.push($(sel).attr("name"));
-                });
-                $.each(that.inline.borrow_attributes,function(index,b_attr){
-                    inl_obj[b_attr.inline_attribute] = raw_json[b_attr.host_attribute]    
                 });
                 if(!ignore)
                     raw_json["inlines"].push(inl_obj);
-                // console.log($(inl).serializeArray());    
             });
             
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -884,47 +934,33 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
             var all_inlines = $('#bulk tr');    
             raw_json["bulk"] = [];
             var that = this;
-            // var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 inl_obj["index"] = $(inl).attr("index");
-                var inputs = $(inl).find("input");
-                var ignore = true;
-                // if($(inl).attr("model_id"))
-                //     inl_obj.id = parseInt($(inl).attr("model_id"));
-                $.each(inputs,function(index1, inp){
-                    inl_obj[$(inp).attr("name")]= $(inp).val();
-                    if($(inp).val()!="")
+                $(inl).find(':input').each(function() {
+                    if(!$(this).attr('name'))
+                        return;
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+    				switch(this.type) {
+    					case 'password':
+    					case 'select-multiple':
+    					case 'select-one':
+    					case 'text':
+    					case 'textarea':
+    						inl_obj[attr_name] = $(this).val();
+    						break;
+    					case 'checkbox':
+    					case 'radio':
+    						inl_obj[attr_name] = this.checked;
+    				}
+                    if(inl_obj[attr_name]!="")
                         ignore = false;
-                    // if(index==0)
-                    //     inline_attrs.push($(inp).attr("name"));
                 });
-                var selects = $(inl).find("select");
-                $.each(selects,function(index2, sel){
-                    inl_obj[$(sel).attr("name")]= $(sel).val();
-                    if($(sel).val()!="")
-                        ignore = false;
-                    // if(index==0)
-                    //     inline_attrs.push($(sel).attr("name"));
-                });
-                // $.each(that.inline.borrow_attributes,function(index,b_attr){
-                //     inl_obj[b_attr.inline_attribute] = raw_json[b_attr.host_attribute]    
-                // });
                 if(!ignore)
                     raw_json["bulk"].push(inl_obj);
-                // console.log($(inl).serializeArray());    
             });
-            
-            // //remove inline attrs from raw_json...let them be inside raw_json.inlines only
-  //           $.each(inline_attrs,function(index,attr){
-  //               delete raw_json[attr];
-  //           });
-  //           console.log(inline_attrs);
-  //           
-            
         },
         
-            
         
         save: function() {
             if(this.bulk)

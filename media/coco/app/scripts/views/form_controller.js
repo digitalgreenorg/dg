@@ -291,7 +291,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon',
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
-                            var on_ijson = $.extend(true,null,ijson);
+                            var on_ijson = $.extend(true,null,off_ijson);
                             $.each(form.inline.borrow_attributes, function(index,b_attr){
                                 off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
                                 on_ijson[b_attr.inline_attribute] = parent_on_json[b_attr.host_attribute];    

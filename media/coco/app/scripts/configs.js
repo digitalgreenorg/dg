@@ -239,6 +239,7 @@ function() {
           'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute":{ 'host_attribute':["id","group_name"], 'inline_attribute': "group"}, "header" : "person_inline_header", 'borrow_attributes':[{'host_attribute':'village','inline_attribute':'village'}]
       },
       'form_field_validation': {
+            ignore: ".donotvalidate",  
             rules: {
                 group_name: {
                     required: true,

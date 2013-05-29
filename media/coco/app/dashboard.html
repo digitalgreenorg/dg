@@ -563,7 +563,7 @@
                 <div class="control-group"> 
                 	<label class="control-label">Date*</label>
                 	<div class="controls">
-                        <input class="input-small" id="date" type="text" placeholder="Date" name="date_of_adoption">  
+                        <input class="input-small date-picker" id="date" type="text" placeholder="Date" name="date_of_adoption">  
                  	</div>
                  	<span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                  </div>
@@ -663,21 +663,22 @@
     <td>
     <div class="control-group">
         <div class="controls">
-        <input type="text" id="person_row7" name="person" value = "<%=id%>" disabled>
+        <input type="text" style="display:none;" id="person_row<%=index%>" name="person<%=index%>" value = "<%=id%>" disabled>
+        <%=index%>
         </div>
     </div>
     </td>
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <input type="text" id="person_row7" name="person_name" value = "<%=person_name%>">
+                    <input type="text" id="person_row<%=index%>" name="person_name<%=index%>" value = "<%=person_name%>" disabled>
                 </div>
             </div>
         </td>
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <select id="video" name="video" class="chzn-select">
+                    <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select" required>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -692,7 +693,7 @@
         <td>
             <div class="control-group">
                 <div class="controls">
-                    <input type="text" id="date_of_adoption" name="date_of_adoption" >
+                    <input type="text" class="date-picker input-small inl_date" id="date_of_adoption<%=index%>" name="date_of_adoption<%=index%>" required validateDate>
                 </div>
             </div>
         </td>
@@ -745,25 +746,25 @@
 </script>
 
 <script type="text/template" id="person_inline">
-    <tr id="row7">
+    <tr>
         <td><div class="control-group"><div class="controls">
-            <input type="text" id="person_row7" name="person_name" >
+            <input type="text" name="person_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate" >
         </div></div></td>
         <td><div class="control-group"><div class="controls">
-            <input type="text" id="father_row7" name="father_name">
+            <input type="text" name="father_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate">
         </div></div></td>
         <td><div class="control-group"><div class="controls">
-            <input class="input-mini" type="text" id="age_row7" name="age" >
+            <input class="input-mini donotvalidate" type="text"  name="age<%=index%>" digits min="1" max="100">
         </div></div></td>
         <td><div class="control-group"><div class="controls">
-            <select value = 'M' id="gender_row7" class="input-small" name="gender">
+            <select value = 'M'  class="input-small donotvalidate" name="gender<%=index%>" required >
 			<option value='' selected='selected'>---------</option> 
 			<option value='M'>Male</option> 
 			<option value='F'>Female</option>
             </select>
         </div></div></td>
         <td><div class="control-group"><div class="controls">
-            <input id="phonenumber_row7" name="phone_no" type="text">
+            <input  name="phone_no<%=index%>" type="text" maxlength="10" digits class="donotvalidate">
         </div></div></td>
     </tr>
 </script>  
