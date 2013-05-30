@@ -815,7 +815,7 @@ define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'v
                     if(member == "")
                         delete object_json[member];
                     
-                    else if(object_json[member]==""||object_json[member]==null||object_json[member]==undefined)
+                    else if(object_json[member]===""||object_json[member]==null||object_json[member]==undefined)
                     {
                         object_json[member] = null
                     }

@@ -275,7 +275,7 @@ function() {
 
             },
             errorElement: "span",
-            errorClass: "help-inline"
+            errorClass: "help-inline",
         }
 
         
@@ -430,6 +430,25 @@ function() {
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
+        form_field_validation:{
+            highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-block",
+            display: "block"
+        },
           add: {
             'foreign_entities':{
                 'village': {
