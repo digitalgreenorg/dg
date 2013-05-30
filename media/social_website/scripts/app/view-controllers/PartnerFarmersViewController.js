@@ -101,7 +101,7 @@ define(function(require) {
         },
 
         getTotalPages: function(){
-            return Math.ceil(this.getTotalCount()/this.getFarmersPerPage());
+            return Math.ceil(this.getTotalCount()/this.getFarmersPerPage())-1;
         },
 
         setTotalCount: function(n) {
