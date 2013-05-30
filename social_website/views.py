@@ -121,7 +121,7 @@ def partner_view(request):
         }
     context= {
         'header': {
-            'jsController':'ViewCollections',
+            'jsController':'Profile',
             'loggedIn':False},
         'partner':partner_dict
         }

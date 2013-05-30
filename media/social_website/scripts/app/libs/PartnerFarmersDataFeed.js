@@ -28,7 +28,7 @@ define(function(require) {
             // prepare data model
             var partnerFarmersSubModel = this._dataModel.addSubModel('partnerFarmers', true);
 
-            this.addInputParam('partnerUID', false, undefined, true, partnerFarmersSubModel);
+            this.addInputParam('uid', false, undefined, true, partnerFarmersSubModel);
             this.addInputParamCacheClear('language__name', partnerFarmersSubModel);
 
             this.addInputParam('offset', false);
@@ -45,7 +45,7 @@ define(function(require) {
             if (countPerPage == undefined) {
                 countPerPage = 12;
             }
-
+            this.setInputParam('uid',location.search.split('=')[1],true);
             this.setInputParam('offset', page, true);
             this.setInputParam('limit', countPerPage, true);
 
@@ -61,14 +61,14 @@ define(function(require) {
             var model = dataModel.get('partnerFarmers');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.limit;
-            var page = unprocessedData.requestParameters.offset;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
-            dataModel.set('totalCount', unprocessedData.totalCount);
+            dataModel.set('totalCount', unprocessedData.objects[0]['farmer'].length);
 
             // import
-            var dataToAdd = unprocessedData.farmers;
+            var dataToAdd = unprocessedData.objects[0]['farmer'];
             var startingCacheId = page * countPerPage;
 
             model.addSubset(dataToAdd, startingCacheId);

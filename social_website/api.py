@@ -93,11 +93,14 @@ class FarmerResource(BaseResource):
         resource_name = 'farmer'
 
 class PartnerFarmerResource(BaseResource):
-    farmer = fields.ToManyField('website.api.FarmerResource', 'farmer_set',null=True)
+    farmer = fields.ToManyField('social_website.api.FarmerResource', 'farmer_set',full=True)
     class Meta:
         queryset = Partner.objects.all()
         resource_name = 'partnerFarmers'
         fields=['farmer','name','uid']
+        filtering={
+                   'uid':ALL
+                   }
 
 
 class VideoResource(BaseResource):
