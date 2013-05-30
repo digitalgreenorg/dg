@@ -114,7 +114,8 @@ function() {
                         
          },
         'form_field_validation': {
-            rules: {
+        	ignore: [],
+        	rules: {
                 title: {
                     required: true,
                     minlength: 2,
@@ -363,6 +364,7 @@ function() {
           }  
       },
       'form_field_validation': {
+    	  ignore: [],
     	  rules: {
 				date: {
 					required: true,
@@ -543,6 +545,7 @@ function() {
          },
         'unique_togther_fields':['person_name', 'father_name', 'village.id', 'group.id'],
         'form_field_validation': {
+        	ignore: [],
 			rules: {
 				person_name: {
 					required: true,
