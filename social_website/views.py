@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
 from django.shortcuts import *
 from social_website.models import Language, Collection, Partner
+from pyes import *
 
 
 def social_home(request):
@@ -45,3 +46,89 @@ def partner_view(request):
     partner_dict={'name':partner.name,'joinyear':partner.joinDate.year,'description':partner.description,'videos':partner.videos,'views':partner.views,'likes':partner.likes,'adoptions':partner.adoptions,'logoURL':partner.logoURL}
     context= {'header': {'jsController':'ViewCollections', 'loggedIn':False},'partner':partner_dict}
     return render_to_response('profile.html' , context,context_instance = RequestContext(request))
+
+def searchCompletions(request):
+    searchString = request.GET.get('searchString')
+    maxCount = int(request.GET.get('maxCount'))
+    print maxCount
+    q = {
+    "match" : { "searchTerm" : {
+                         "query" : searchString,
+                         "type": "phrase"
+                         }
+              }
+    }
+    result_list = []
+    try :
+        conn = ES(['127.0.0.1:9200'])
+        results = conn.search(q,indices=['test-index'])
+        print len(results)
+    except Exception, ex:
+        print ex
+    i = 0
+    for r in range(0, maxCount - 1):
+        result_list.append(results[r])
+    resp = json.dumps({"responseCode":"OK","requestParameters":{"searchString":searchString,"maxCount":unicode(maxCount)},"completions": result_list, "totalCount": unicode(maxCount)})
+    return HttpResponse(resp)
+
+def make_sub_filter(filters, field):
+    kwargs = {}
+    kwargs[field] = ''
+    filters[field] = {}
+    filters[field]['title'] = field.title()
+    filters[field]['options'] = []
+    for obj in set(Collection.objects.exclude(**kwargs).values_list(field, flat=True)): #works same as .exclude(field = '')
+        filters[field]['options'].append({"title" : obj,"value" : obj})
+    return filters
+
+def searchFilters(request):
+    filters = {}
+    filters['language'] = {}
+    filters['language']['title'] = 'Language'
+    filters['language']['options'] = []
+    for lang in Language.objects.all():
+        filters['language']['options'].append({"title" : lang.name,"value" : lang.name})
+    
+    filters['partner'] = {}
+    filters['partner']['title'] = 'Partner'
+    filters['partner']['options'] = []
+    for partner in Partner.objects.all():
+        filters['partner']['options'].append({"title" : partner.name,"value" : partner.name})
+        
+    filters = make_sub_filter(filters, 'category')
+    filters = make_sub_filter(filters, 'subcategory')
+    filters = make_sub_filter(filters, 'topic')
+    filters = make_sub_filter(filters, 'state')
+
+    data = json.dumps({"categories" : filters})
+    return HttpResponse(data)
+
+def elasticSearch(request):
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices="test2"
+    conn.refresh("test2")
+    q = {"filtered":{
+                     "query" : {
+                        "match_all" : {}
+                        },
+#                        "filter" : {
+#                                    "and": [
+#                                                    {
+#                                                     "term" : {"language_name" : "hindi"}
+#                                                     },
+#                                                    {
+#                                                     "term" : {"subcategory" : "Crop Management"}
+#                                                     }
+#                                            ]
+#                                    }
+                    }
+        }
+    result_list = []
+    try :
+        results = conn.search(q,indices=['test2'])
+        for r in range(0, len(results)):
+            result_list.append(results[r])
+        resp = json.dumps({"meta": {"limit": "12", "next": "/social/api/collectionsSearch/?limit=12&order_by=-likes&offset=12", "offset": "0", "previous": "null", "total_count": str(len(result_list))},"objects": result_list})
+        return HttpResponse(resp)
+    except Exception, ex:
+        return HttpResponse('1')

@@ -25,7 +25,7 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/collectionsSearch/');
+            this.base('api/elasticSearch/');
 
             this._filters = {};
 
