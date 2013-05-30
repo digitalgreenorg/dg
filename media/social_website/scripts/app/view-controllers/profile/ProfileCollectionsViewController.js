@@ -47,11 +47,20 @@ define(function(require) {
             var references = this._references;
             
             // data feeds
-            var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
+            
+            //change back to
+            // var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
+            // after user is added and recently viewed is recorded
+            var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/collectionsSearch');
+            //
             recentlyViewedDataFeed.addInputParam('userId', true);
             this._addCollectionsDataFeed('recent', recentlyViewedDataFeed);
 
-            var completedCollectionsDataFeed = new GenericCollectionsDataFeed('api/completedCollections');
+            //change back to
+            // var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
+            // after user is added and recently viewed is recorded
+            var completedCollectionsDataFeed = new GenericCollectionsDataFeed('api/collectionsSearch');
+            //
             completedCollectionsDataFeed.addInputParam('userId', true);
             this._addCollectionsDataFeed('completed', completedCollectionsDataFeed);
 
