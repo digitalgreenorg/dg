@@ -1,8 +1,17 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 'views/notification', 'indexeddb_backbone_config', 'configs', 'indexeddb-backbone','chosen','date_picker','time_picker'
-// Using the Require.js text! plugin, we are loaded raw text
-// which will be used as our views primary template
-// 'text!templates/project/list.html'
-], function($, pas, pass, pass, pass, notifs_view, indexeddb, all_configs) {
+define([
+    'jquery', 
+    'underscore', 
+    'layoutmanager', 
+    'form_field_validator', 
+    'syphon', 
+    'views/notification', 
+    'indexeddb_backbone_config', 
+    'configs', 
+    'indexeddb-backbone',
+    'chosen',
+    'date_picker',
+    'time_picker'
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({

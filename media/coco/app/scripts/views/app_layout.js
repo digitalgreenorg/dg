@@ -1,19 +1,13 @@
 define([
-  'jquery',
-  'underscore',
-  'backbone',
-  'views/header',
-  'views/dashboard',
-  'views/list',
-  'views/form_controller',
-'views/status',
-'layoutmanager'      
-  ], function($, underscore, Session, HeaderView, DashboardView, ListView, FormControllerView, StatusView){
+    'views/dashboard',
+    'views/list',
+    'views/form_controller',
+    'views/status',
+    'layoutmanager'      
+  ], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager){
                   
-    var AppLayout = Backbone.View.extend({
+    var AppLayout = Backbone.Layout.extend({
       template: "#page_layout",
-      manage : true,
-      
       initialize: function() {
           console.log("initilizing app layout");
           curr_list_view = null;

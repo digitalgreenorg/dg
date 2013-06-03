@@ -1,5 +1,16 @@
-define(['jquery', 'underscore', 'backbone', 'configs', 'indexeddb_backbone_config', 'views/form', 'indexeddb-backbone','collections/upload_collection','views/upload', 'views/incremental_download','views/notification'],
- function($, pass, pass, configs, indexeddb, Form, pass, upload_collection, UploadView,IncDownloadView, notifs_view) {
+define([
+    'jquery', 
+    'underscore', 
+    'configs', 
+    'indexeddb_backbone_config', 
+    'collections/upload_collection',
+    'views/upload', 
+    'views/incremental_download',
+    'views/notification',
+    'layoutmanager'      
+    
+    ],
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",

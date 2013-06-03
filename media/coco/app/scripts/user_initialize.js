@@ -1,6 +1,5 @@
 define([
-  'jquery',
-  'underscore',
+    'jquery',
   'form_field_validator'
   ], function(){
     

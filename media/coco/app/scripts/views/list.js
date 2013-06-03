@@ -1,15 +1,15 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
   'datatable',
-  'views/list_item',
-  'indexeddb_backbone_config'
+  'indexeddb_backbone_config',
+  'layoutmanager',
+  'indexeddb-backbone'      
   
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pass,pass,pass,ListItemView,indexeddb){
+], function($, pass, pass, indexeddb, layoutmanager){
     
     var ListView = Backbone.Layout.extend({
         

@@ -1,13 +1,14 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'layoutmanager',
     'indexeddb_backbone_config',
     'views/full_download',
     'configs',
     'collections/upload_collection',
-    'views/notification'                
-], function($,p,pass,indexeddb,FullDownloadView, configs, upload_collection, notifs_view){
+    'views/notification',
+    'indexeddb-backbone'                
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view){
     
     var StatusView = Backbone.Layout.extend({
         template: "#sync_status_template",

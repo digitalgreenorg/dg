@@ -1,12 +1,13 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
+  'layoutmanager',
   'indexeddb_backbone_config',
   'configs',
-  'collections/upload_collection',
-  'online_to_offline'      
-], function($,pas,pass,indexeddb, all_configs,upload_collection, OnlineToOffline){
+  'online_to_offline',
+  'indexeddb-backbone',
+  'bootstrapjs'                            
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, OnlineToOffline){
     
     var IncrementalDownloadView = Backbone.Layout.extend({
         

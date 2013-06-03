@@ -1,18 +1,19 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
-  'indexeddb_backbone_config',
+  'layoutmanager',
   'configs',
   'views/form',
   'collections/upload_collection',
   'offline_to_online',
   'offline_utils',
-  'online_utils'                            
+  'online_utils',
+  'indexeddb-backbone',
+  'bootstrapjs'                            
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pas,pass,indexeddb, configs, Form, upload_collection, OfflineToOnline, Offline, Online){
+], function(jquery,underscore,layoutmanager, configs, Form, upload_collection, OfflineToOnline, Offline, Online){
     
     var UploadView = Backbone.Layout.extend({
         

@@ -1,9 +1,17 @@
-define(['jquery', 'underscore', 'backbone', 'form_field_validator', 'syphon', 
-    'views/notification', 'indexeddb_backbone_config', 'configs', 'views/form', 'collections/upload_collection', 'offline_to_online', 'offline_utils', 'online_utils'
-// Using the Require.js text! plugin, we are loaded raw text
-// which will be used as our views primary template
-// 'text!templates/project/list.html'
-], function($, pas, pass, pass, pass, notifs_view, indexeddb, configs, Form, upload_collection, OfflineToOnline, Offline, Online) {
+define([
+    'jquery', 
+    'underscore', 
+    'layoutmanager',
+    'views/notification', 
+    'indexeddb_backbone_config', 
+    'configs', 
+    'views/form', 
+    'collections/upload_collection', 
+    'offline_to_online', 
+    'offline_utils', 
+    'online_utils',
+    'indexeddb-backbone'
+    ], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, OfflineToOnline, Offline, Online) {
 
     // FormController: Brings up the Add/Edit form
     

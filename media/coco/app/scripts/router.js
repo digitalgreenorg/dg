@@ -5,9 +5,7 @@ define([
   'backbone',
   'views/app_layout',
   'configs',
-  'layoutmanager'
-  
-], function($, _, Session, AppLayout,configs){
+], function(jquery, underscore, backbone, AppLayout, configs){
   
     var AppRouter = Backbone.Router.extend({
         routes: {

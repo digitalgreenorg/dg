@@ -1,11 +1,8 @@
 require.config({
-  shim: {
-  },
             
   
   paths: {
     'hm': 'libs/hm',
-    'esprima': 'libs/esprima',
     'jquery': 'libs/jquery.min',
     'underscore': 'libs/backbone/underscore-min',
     'backbone': 'libs/backbone/backbone-min',
@@ -20,11 +17,12 @@ require.config({
     'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',    
   },
   
-  shims:{
+  shim:{
       'backbone': {
                       //These script dependencies should be loaded before loading
                       //backbone.js
                       deps: ['underscore', 'jquery'], // here I would like to load the already loaded library
+                      exports: 'Backbone' 
                           }   , 
       'indexeddb-backbone': {
                       //These script dependencies should be loaded before loading
@@ -45,10 +43,32 @@ require.config({
                     //These script dependencies should be loaded before loading
                     //backbone.js
                     deps: ['jquery'], // here I would like to load the already loaded library
-                    export: "_"    
+                    exports: "_"
                         },    
-                              
-                                                    
+    'datatable': {
+                    deps:["jquery"]
+                },
+                                          
+     'form_field_validator': {
+                 deps:["jquery"]
+     }  ,
+     
+     'syphon': {
+                 deps:["jquery", "backbone"]
+     },
+     
+     'bootstrapjs': {
+                 deps:["jquery"]
+     },
+     'chosen': {
+                 deps:["jquery"]
+     },                                            
+     'date_picker': {
+                 deps:["jquery"]
+     },                                            
+     'time_picker': {
+                 deps:["jquery"]
+     },                                            
 
                   
   }

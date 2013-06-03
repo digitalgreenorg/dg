@@ -8,11 +8,12 @@ external code which flushes the database before calling this module.
 define([
   'jquery',
   'underscore',
-  'backbone',
+  'layoutmanager',
   'indexeddb_backbone_config',
   'configs',
-  'offline_utils'
-], function(j,u,pass,indexeddb, all_configs, Offline){
+  'offline_utils',
+  'bootstrapjs'                            
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, Offline){
     
     
     //clears objectstores - meta_data, uploadqueue, all config-defined objectstores

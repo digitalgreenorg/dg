@@ -1,12 +1,12 @@
 define([
   'jquery',
-  'underscore',
   'backbone',
-  'indexeddb_backbone_config'      
+  'indexeddb_backbone_config',
+  'indexeddb-backbone'      
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($,pass,pass,indexeddb){
+], function(jquery, backbone, indexeddb){
     
     var generic_model_offline = Backbone.Model.extend({
         database: indexeddb,
