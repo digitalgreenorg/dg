@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     (r'^api/', include(partner_resource.urls)),
     (r'^api/', include(interests_resource.urls)),
     (r'^api/', include(comment_resource.urls)),
+    (r'^api/', include(partnerfarmer_resource.urls)),
+    
 #    (r'', include(signin_resource.urls)),
 #    (r'', include(usercollectionhistory_resource.urls)),
 #    (r'', include(videolike_resource.urls)),

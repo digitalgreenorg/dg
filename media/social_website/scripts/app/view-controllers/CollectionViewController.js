@@ -307,7 +307,6 @@ define(function(require) {
 
             var $currentTarget = jQuery(e.currentTarget);
             var pageIndex = $currentTarget.data('pageIndex');
-            alert(pageIndex);
 
             // if we're already viewing the page clicked, no need to continue
             if (pageIndex == this._state.currentPageNumber) {

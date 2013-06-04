@@ -44,7 +44,7 @@ define(function(require) {
             // implement functionality for allowing partial page retrieval for the last
             // page in a set since each page (m) may not have a number of total entries
             // equal to n * m
-            this.addInputParam('count', true, 10, true);
+            this.addInputParam('limit', true, 10, true);
         },
 
         _processData: function(unprocessedData) {
@@ -55,21 +55,21 @@ define(function(require) {
             var collectionsModel = dataModel.get('collections');
 
             // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.requestParameters.limit;
-            var page = unprocessedData.requestParameters.offset;
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
 
             // store total count
-            dataModel.set('totalCount', unprocessedData.totalCount);
+            dataModel.set('total_count', unprocessedData.meta.total_count);
 
             // import collections from data
-            var collectionsToAdd = unprocessedData.collections;
+            var collectionsToAdd = unprocessedData.objects;
             var startingCacheId = page * countPerPage;
 
             collectionsModel.addSubset(collectionsToAdd, startingCacheId);
         },
 
         getTotalCount: function() {
-            return this._dataModel.get('totalCount');
+            return this._dataModel.get('total_count');
         },
 
         checkHaveAllCollections: function() {

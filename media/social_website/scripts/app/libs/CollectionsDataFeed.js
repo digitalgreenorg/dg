@@ -163,18 +163,17 @@ define(function(require) {
 
 					var collections = this._dataModel.get('collections')
 							.getSubset(page * countPerPage, countPerPage);
-					
-					if(this._dataModel.get('collections')._data.length==0 && this.ajaxed)
-                    {
+
+					if (this._dataModel.get('collections')._data.length == 0
+							&& this.ajaxed) {
 						// Yash
-						 this.ajaxed = false;
-                         return false;   
-                    }
+						this.ajaxed = false;
+						return false;
+					}
 					if (!collections) {
 						this.fetch(page, countPerPage);
 						return false;
-					}
-					else {
+					} else {
 						// Yash
 						this.ajaxed = false;
 					}

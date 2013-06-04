@@ -93,6 +93,7 @@ define(function(require) {
             state.videoUID = this._references.$videoTarget.data('videoUid');
 
             state.updateVideoWatchedTimeInterval = undefined;
+            this._references.videosCarousel.moveToSlide(parseInt((location.search.split('&')[1].split('=')[1]-1)/5),{stopAutoPlay: false});
         },
 
         _initVideoStats: function() {
