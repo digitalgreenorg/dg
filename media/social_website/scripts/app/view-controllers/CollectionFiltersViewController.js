@@ -252,6 +252,10 @@ define(function(require) {
             // }
 
             // local references
+        	//remove once the discrepancy bw language/language_name is solved
+        	if(categoryId=='language__name'){
+        		categoryId='language';
+        	}
             var filterCategoryData = this._state.filterData.categories[categoryId];
             var filterOptionData = filterCategoryData.options[optionId];
 

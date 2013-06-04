@@ -1,169 +1,188 @@
 define(function(require) {
-    'use strict';
-    
-    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
-    var DataModel = require('app/libs/DataModel');
-    var Util = require('framework/Util');
+	'use strict';
 
-    var CollectionsDataFeed = DigitalGreenDataFeed.extend({
+	var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+	var DataModel = require('app/libs/DataModel');
+	var Util = require('framework/Util');
 
-        _filters: undefined,
+	var CollectionsDataFeed = DigitalGreenDataFeed
+			.extend({
 
-        /*
-        Input params:
+				_filters : undefined,
 
-        searchString {string}
-        filters {Object}
-        orderBy {string}
-        page {Number}
-        count {Number}
-        relativeUserId {string} (optional) -- is this still needed?
+				/*
+				 * Input params:
+				 * 
+				 * searchString {string} filters {Object} orderBy {string} page
+				 * {Number} count {Number} relativeUserId {string} (optional) --
+				 * is this still needed?
+				 * 
+				 * Output params: collections {Collection[]} totalCount {Number}
+				 */
 
-        Output params:
-        collections {Collection[]}
-        totalCount {Number}
-        */
+				constructor : function() {
+					this.base('api/elasticSearch/');
 
-        constructor: function() {
-            this.base('api/collectionsSearch/');
+					this._filters = {};
 
-            this._filters = {};
+					var dataModel = this._dataModel;
 
-            var dataModel = this._dataModel;
+					// prepare data model
+					var collectionsSubModel = dataModel.addSubModel(
+							'collections', true);
 
-            // prepare data model
-            var collectionsSubModel = dataModel.addSubModel('collections', true);
+					// set up input params
+					this.addInputParam('offset', true, 0, true);
+					this.addInputParam('limit', true, 0, true);
+					this.addInputParam('filters', false, null, true,
+							collectionsSubModel);
+					this.addInputParam('order_by', false, null, true,
+							collectionsSubModel);
+					this.addInputParamCacheClear('language__name',
+							collectionsSubModel);
+				},
 
-            // set up input params
-            this.addInputParam('offset', true, 0, true);
-            this.addInputParam('limit', true, 12, true);
-            this.addInputParam('filters', false, null, true, collectionsSubModel);
-            this.addInputParam('order_by', false, null, true, collectionsSubModel);
-            this.addInputParamCacheClear('language__name', collectionsSubModel);
-        },
+				fetch : function(page, countPerPage) {
+					if (page == undefined) {
+						page = 0;
+					}
 
-        fetch: function(page, countPerPage) {
-            if (page == undefined) {
-                page = 0;
-            }
+					if (countPerPage == undefined) {
+						countPerPage = 12;
+					}
 
-            if (countPerPage == undefined) {
-                countPerPage = 12;
-            }
+					this.setInputParam('offset', page * countPerPage, true);
+					this.setInputParam('limit', countPerPage, true);
 
-            this.setInputParam('offset', page*countPerPage, true);
-            this.setInputParam('limit', countPerPage, true);
+					// perform the fetch
+					this.base();
+				},
 
-            // perform the fetch
-            this.base();
-        },
+				_processData : function(unprocessedData) {
+					this.base(unprocessedData);
 
-        _processData: function(unprocessedData) {
-            this.base(unprocessedData);
-            
-            // local references
-            var dataModel = this._dataModel;
-            var collectionsModel = dataModel.get('collections');
+					// local references
+					var dataModel = this._dataModel;
+					var collectionsModel = dataModel.get('collections');
 
-            // gather count and page for caching and saving purposes
-            var countPerPage = unprocessedData.meta.limit;
-            var page = unprocessedData.meta.offset/unprocessedData.meta.limit;
+					// gather count and page for caching and saving purposes
+					var countPerPage = unprocessedData.meta.limit;
+					var page = unprocessedData.meta.offset
+							/ unprocessedData.meta.limit;
 
-            // store total count
-            dataModel.set('totalCount', unprocessedData.meta.total_count);
+					// store total count
+					dataModel.set('totalCount',
+							unprocessedData.meta.total_count);
 
-            // import collections from data
-            var collectionsToAdd = unprocessedData.objects;
-            var startingCacheId = page * countPerPage;
-            
-            collectionsModel.addSubset(collectionsToAdd, startingCacheId);
-        },
+					// import collections from data
+					var collectionsToAdd = unprocessedData.objects;
+					var startingCacheId = page * countPerPage;
 
-        /**
-         * Sets the status and value of a filter
-         * @param {Boolean} filterParam The filter parameter
-         * @param {Boolean} filterValue The filter value
-         * @param {Boolean} active Whether or not the filter is active
-         * @return {boolean} true if a filter was changed, else false
-         */
-        setFilterStatus: function(filterParam, filterValue, active) {
+					collectionsModel.addSubset(collectionsToAdd,
+							startingCacheId);
+				},
 
-            var filters = this._filters;
-            if (filters[filterParam] == undefined) {
-                filters[filterParam] = [];
-            }
+				/**
+				 * Sets the status and value of a filter
+				 * 
+				 * @param {Boolean}
+				 *            filterParam The filter parameter
+				 * @param {Boolean}
+				 *            filterValue The filter value
+				 * @param {Boolean}
+				 *            active Whether or not the filter is active
+				 * @return {boolean} true if a filter was changed, else false
+				 */
+				setFilterStatus : function(filterParam, filterValue, active) {
 
-            var filterIndex = filters[filterParam].indexOf(filterValue);
-            var filterPresent = (filterIndex != -1);
+					var filters = this._filters;
+					if (filters[filterParam] == undefined) {
+						filters[filterParam] = [];
+					}
 
-            if ((active && filterPresent) || !active && !filterPresent) {
-                return false;
-            }
+					var filterIndex = filters[filterParam].indexOf(filterValue);
+					var filterPresent = (filterIndex != -1);
 
-            // if we get here, a filter has changed
-            // update accordingly
+					if ((active && filterPresent) || !active && !filterPresent) {
+						return false;
+					}
 
-            if (active) {
-                filters[filterParam].push(filterValue);
-            } else {
-                filters[filterParam].splice(filterIndex, 1);
-            }
+					// if we get here, a filter has changed
+					// update accordingly
 
-            // we now clone our filters object to not only reduce cross class
-            // referencing to this object, but also to trigger the datafeed
-            // to clear the cache since the reference will be changing
+					if (active) {
+						filters[filterParam].push(filterValue);
+					} else {
+						filters[filterParam].splice(filterIndex, 1);
+					}
 
-            var newFilters = Util.Object.clone(filters);
-            this.setInputParam('filters', newFilters);
+					// we now clone our filters object to not only reduce cross
+					// class
+					// referencing to this object, but also to trigger the
+					// datafeed
+					// to clear the cache since the reference will be changing
 
-            return true;
-        },
+					var newFilters = Util.Object.clone(filters);
+					this.setInputParam('filters', newFilters);
+					return true;
+				},
 
-        /**
-         * Clears the search filters
-         * @return {boolean} true if a filter was changed, else false
-         */
-        clearFilters: function() {
+				/**
+				 * Clears the search filters
+				 * 
+				 * @return {boolean} true if a filter was changed, else false
+				 */
+				clearFilters : function() {
 
-            var filterExisted = false;
+					var filterExisted = false;
 
-            var filters = this._filters;
-            var filterKey;
-            for (filterKey in filters) {
-                var currentFilter = filters[filterKey];
-                var len = currentFilter.length;
-                if (len > 0) {
-                    filterExisted = true;
-                    break;
-                }
-            }
+					var filters = this._filters;
+					var filterKey;
+					for (filterKey in filters) {
+						var currentFilter = filters[filterKey];
+						var len = currentFilter.length;
+						if (len > 0) {
+							filterExisted = true;
+							break;
+						}
+					}
 
-            this._filters = {};
+					this._filters = {};
 
-            return filterExisted;
-        },
+					return filterExisted;
+				},
 
-        getTotalCount: function() {
-            return this._dataModel.get('totalCount');
-        },
+				getTotalCount : function() {
+					return this._dataModel.get('totalCount');
+				},
 
-        getCollections: function() {
+				getCollections : function() {
 
-            var page = this.getInputParam('offset');
-            var countPerPage = this.getInputParam('limit');
+					var page = this.getInputParam('offset');
+					var countPerPage = this.getInputParam('limit');
 
-            var collections = this._dataModel.get('collections').getSubset(page * countPerPage, countPerPage);
+					var collections = this._dataModel.get('collections')
+							.getSubset(page * countPerPage, countPerPage);
 
-            if (!collections) {
-                this.fetch(page, countPerPage);
-                return false;
-            }
+					if (this._dataModel.get('collections')._data.length == 0
+							&& this.ajaxed) {
+						// Yash
+						this.ajaxed = false;
+						return false;
+					}
+					if (!collections) {
+						this.fetch(page, countPerPage);
+						return false;
+					} else {
+						// Yash
+						this.ajaxed = false;
+					}
 
-            return collections;
-        }
+					return collections;
+				}
 
-    });
+			});
 
-    return CollectionsDataFeed;
+	return CollectionsDataFeed;
 
 });

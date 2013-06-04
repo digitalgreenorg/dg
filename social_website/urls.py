@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
-from views import social_home, collection_view, partner_view
+from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch
 from static_site_views import home
 from django.conf import settings
 from social_website.api import VideoResource, LanguageResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, InterestsResource, CommentResource, PartnerFarmerResource
@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     (r'^api/', include(partner_resource.urls)),
     (r'^api/', include(interests_resource.urls)),
     (r'^api/', include(comment_resource.urls)),
+    (r'^api/', include(partnerfarmer_resource.urls)),
+    
 #    (r'', include(signin_resource.urls)),
 #    (r'', include(usercollectionhistory_resource.urls)),
 #    (r'', include(videolike_resource.urls)),
@@ -50,4 +52,8 @@ urlpatterns = patterns('',
     url(r'^connect/$', partner_view,name='connect'),
     url(r'^tools/$', direct_to_template, {'template': 'home.html', 'extra_context': {'header': {'jsController':'Tools', 'currentPage':'Tools', 'loggedIn':False}}},name='tools'),
     (r'^$',social_home),
+    (r'^api/searchCompletions.php?$',searchCompletions),
+    (r'^api/searchFilters.php',searchFilters),
+    (r'^api/elasticSearch/$',elasticSearch),
+    
 )

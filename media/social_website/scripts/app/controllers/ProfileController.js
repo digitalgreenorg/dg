@@ -17,7 +17,6 @@ define(function(require) {
     var ProfileCollectionsViewController = require('app/view-controllers/profile/ProfileCollectionsViewController');
     var ActivitiesViewController = require('app/view-controllers/profile/ActivitiesViewController');
     var PartnerFarmersViewController = require('app/view-controllers/PartnerFarmersViewController');
-
     var ProfileController = DigitalGreenPageController.extend({
 
         /**
@@ -38,9 +37,9 @@ define(function(require) {
             var $profileWrapper = jQuery('.js-profile-wrapper');
             references.profileCollectionsViewController = new ProfileCollectionsViewController($profileWrapper);
 
-            var $activitiesContainer = jQuery('.js-activities-container');
-            references.activitiesViewController = new ActivitiesViewController($activitiesContainer);
-
+            // TODO var $activitiesContainer = jQuery('.js-activities-container');
+            // TODO references.activitiesViewController = new ActivitiesViewController($activitiesContainer);
+            
             var $partnerFarmersCarouselContainer = jQuery(".js-partner-farmers-carousel-container");
             references.partnerFarmersViewController = new PartnerFarmersViewController($partnerFarmersCarouselContainer);
         },
