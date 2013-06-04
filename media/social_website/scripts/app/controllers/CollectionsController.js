@@ -11,9 +11,9 @@ define(function(require) {
     'use strict';
 
     var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
-    var CollectionViewController = require('app/view-controllers/CollectionViewController');
-    var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
     var CollectionFiltersViewController = require('app/view-controllers/CollectionFiltersViewController');
+    var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
+    var CollectionViewController = require('app/view-controllers/CollectionViewController');
     var jQuery = require('jquery');
 
     var CollectionsController = DigitalGreenPageController.extend({
@@ -48,9 +48,9 @@ define(function(require) {
             var $filtersWrapper = jQuery('.js-filters-wrapper');
 
             // helpers
+            references.collectionFiltersViewController = new CollectionFiltersViewController($filtersWrapper);
             references.collectionViewController = new CollectionViewController($collectionsContainer);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
-            references.collectionFiltersViewController = new CollectionFiltersViewController($filtersWrapper);
         },
 
         _initEvents: function() {
@@ -58,6 +58,10 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
+            
+         // filters changed
+            boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
+            references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
 
             // collections updated
             boundFunctions.onCollectionDataProcessed = this._onCollectionDataProcessed.bind(this);
@@ -66,10 +70,6 @@ define(function(require) {
             // order changed
             boundFunctions.onOrderChanged = this._onOrderChanged.bind(this);
             references.collectionMostFiltersViewController.on('orderChanged', boundFunctions.onOrderChanged);
-
-            // filters changed
-            boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
-            references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
 
             // filters cleared
             boundFunctions.onFiltersCleared = this._onFiltersCleared.bind(this);

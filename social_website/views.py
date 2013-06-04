@@ -50,7 +50,6 @@ def partner_view(request):
 def searchCompletions(request):
     searchString = request.GET.get('searchString')
     maxCount = int(request.GET.get('maxCount'))
-    print maxCount
     q = {
     "match" : { "searchTerm" : {
                          "query" : searchString,
@@ -62,9 +61,8 @@ def searchCompletions(request):
     try :
         conn = ES(['127.0.0.1:9200'])
         results = conn.search(q,indices=['test-index'])
-        print len(results)
     except Exception, ex:
-        print ex
+        pass
     i = 0
     for r in range(0, maxCount - 1):
         result_list.append(results[r])
@@ -103,32 +101,52 @@ def searchFilters(request):
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 
+def create_query(params):
+    language = params.getlist('filters[language][]', None)
+    subcategory = params.getlist('filters[subcategory][]', None)
+    category = params.getlist('filters[category][]', None)
+    partner = params.getlist('filters[partner][]', None)
+    state = params.getlist('filters[state][]', None)
+    topic = params.getlist('filters[topic][]', None)
+    query = []
+    if language:
+        query.append({"terms":{"language_name" : language}})
+    if subcategory:
+        query.append({"terms":{"subcategory" : subcategory}})
+    if category:
+        query.append({"terms":{"category" : category}})
+    if partner:
+        query.append({"terms":{"partner" : partner}})
+    if state:
+        query.append({"terms":{"state" : state}})
+    if topic:
+        query.append({"terms":{"topic" : topic}})
+    return query
+
 def elasticSearch(request):
+    params = request.GET
+    query = create_query(params)
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices="test2"
     conn.refresh("test2")
-    q = {"filtered":{
-                     "query" : {
-                        "match_all" : {}
-                        },
-#                        "filter" : {
-#                                    "and": [
-#                                                    {
-#                                                     "term" : {"language_name" : "hindi"}
-#                                                     },
-#                                                    {
-#                                                     "term" : {"subcategory" : "Crop Management"}
-#                                                     }
-#                                            ]
-#                                    }
-                    }
-        }
+    if query != []:
+        q = {"filtered":{
+                         "query" : {
+                                    "match_all" : {}
+                                    },
+                                    "filter" : {
+                                                "and": query
+                                                }
+                         }
+            }
+    else:           
+        q = {"match_all" : {}}     # no filters
     result_list = []
     try :
         results = conn.search(q,indices=['test2'])
         for r in range(0, len(results)):
             result_list.append(results[r])
-        resp = json.dumps({"meta": {"limit": "12", "next": "/social/api/collectionsSearch/?limit=12&order_by=-likes&offset=12", "offset": "0", "previous": "null", "total_count": str(len(result_list))},"objects": result_list})
+        resp = json.dumps({"meta": {"limit": "12", "next": "", "offset": "0", "previous": "null", "total_count": str(len(result_list))},"objects": result_list})
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('1')
