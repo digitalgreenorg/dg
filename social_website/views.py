@@ -61,13 +61,13 @@ def collection_view(request):
             if '' in tag_list:
                 tag_list.remove('')
             video_dict={
-                'videoID':videoID,
-                'title':vid.title,
-                'description':vid.description,
-                'youtubeID':vid.youtubeID,
-                'tags':vid.tags,
-                'date':vid.date,
-                'tags':tag_list
+                'videoID' : videoID,
+                'title' : vid.title,
+                'description' : vid.description,
+                'youtubeID' : vid.youtubeID,
+                'tags' : vid.tags,
+                'date' : vid.date,
+                'tags' : tag_list
                 }
         i=i+1
         time=time+vid.duration
@@ -110,6 +110,7 @@ def partner_view(request):
          partner_uid=id
     partner=Partner.objects.get(uid=id)
     partner_dict={
+        'uid':partner.uid,
         'name':partner.name,
         'joinyear':partner.joinDate.year,
         'description':partner.description,
