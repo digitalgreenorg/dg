@@ -43,8 +43,8 @@ def social_home(request):
     return render_to_response('home.html' , context,context_instance = RequestContext(request))
 
 def collection_view(request):
-    id = request.GET.get('id', None)
-    videoID= request.GET.get('video', None)
+    id = request.GET.get('id', 1)
+    videoID= request.GET.get('video', 1)
     if id:
          collection_uid=id
     collection=Collection.objects.get(uid=id)
