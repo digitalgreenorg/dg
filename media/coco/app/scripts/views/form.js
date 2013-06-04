@@ -7,11 +7,12 @@ define([
     'views/notification', 
     'indexeddb_backbone_config', 
     'configs', 
+    'offline_utils', 
     'indexeddb-backbone',
     'chosen',
     'date_picker',
     'time_picker'
-], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs) {
+], function(jquery, underscore, layoutmanager, pass, pass, notifs_view, indexeddb, all_configs, Offline) {
 
 
     var ShowAddEditFormView = Backbone.Layout.extend({
@@ -42,15 +43,6 @@ define([
             this.final_json = null;
             
             
-            // Creating the offline models for the entity in consideration 
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: this.view_configs.entity_name,
-            }); 
-            
-            this.offline_model = new generic_model_offline();
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
             // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
             // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
             json = null;
@@ -64,9 +56,6 @@ define([
                 this.edit_id = this.model_json.id;
             } else if (params.model_id) {
 
-                this.offline_model.set({
-                    id: params.model_id
-                });
                 this.edit_case_id = true;
                 this.edit_case = true;
                 this.edit_id = params.model_id;
@@ -257,22 +246,18 @@ define([
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
-                console.log("FORM: EDIT: fetching this model - "+JSON.stringify(this.offline_model.toJSON()));
-                this.offline_model.fetch({
-                    success: function(model) {
+                Offline.fetch_object(this.view_configs.entity_name, this.edit_id)
+                    .done(function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();
                         that.normalize_json(that.model_json);
                         that.fill_form();
-                    },
-                    error: function() {
+                    })
+                    .fail(function() {
                         //ToDO: error handling
                         console.log("ERROR: EDIT: Edit model could not be fetched!");
                         alert("ERROR: EDIT: Edit model could not be fetched!");
-                    }
-
-                });
-                
+                    });
                 if(this.inline)
                 {
                     //TODO: fetching the whole collection. Can this be more effifcient by fetching just the relevant models? Done this way because the foreign field in model is a object and am not yet able to specify a condition on such fields using the I-B adapter.
