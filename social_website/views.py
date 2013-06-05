@@ -100,7 +100,7 @@ def collection_view(request):
         'collection':collection_dict,
         'videos':video_info,
         'video':video_dict,
-        'slides':range((len(videos)+1)/5)
+        'slides':range(((len(videos)-1)/5)+1)
         }
     return render_to_response('collections-view.html' , context,context_instance = RequestContext(request))
 
