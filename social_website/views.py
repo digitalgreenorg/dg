@@ -61,7 +61,8 @@ def collection_view(request):
             if '' in tag_list:
                 tag_list.remove('')
             video_dict={
-                'videoID' : videoID,
+                'uid' : vid.uid,
+                'videoID' : int(videoID),
                 'title' : vid.title,
                 'description' : vid.description,
                 'youtubeID' : vid.youtubeID,
