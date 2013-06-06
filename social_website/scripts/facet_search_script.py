@@ -11,15 +11,8 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 import datetime
 from time import mktime
-import json
+import json, urllib2
 
-class MyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return int(mktime(obj.timetuple()))
-
-        return json.JSONEncoder.default(self, obj)
-    
 conn = ES(['127.0.0.1:9200'])
 try:
     conn.delete_index("test2")
@@ -30,27 +23,30 @@ except Exception, ex:
 mappings ={
           "test2":{
                  "properties":{
-                               "type" : {
-                                         "type" : "string"
-                                         },
-                               "targetURL" : {
-                                        "type" : "string"
-                                        } ,     
-                               "title":{
-                                             "type":"string",
-                                            },
                                "subcategory" : {
                                                 "type" : "string",
-                                                "tokenizer" : "keyword",
                                                 "analyzer" : "keyword"
-                                        
-                                       },
+                                                },
+                               "category" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
+                               "topic" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
                                "language_name" : {
                                                 "type" : "string",
-                                                
                                                 "analyzer" : "keyword"
-                                        
-                                       }
+                                                },
+                               "partner_name" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
+                               "state" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
                    }
            }
         }
@@ -85,6 +81,7 @@ for obj in Collection.objects.all():
                        "language" : language,
                        "language_name" : obj.language.name, # to search using elastic for the time being
                        "partner" : partner, 
+                       "partner_name" : obj.partner.name,
                        "state" : obj.state,
                        "category" : obj.category,
                        "subcategory" : obj.subcategory, 
@@ -98,23 +95,34 @@ for obj in Collection.objects.all():
                        "videos" : vid_data,
                        })    
     conn.index(data, "test2","test2",i+1)
-#    conn.index({"name":"data1", "value":"value1"}, "test-index", "test-type2", i+1, parent=i+1)
     i+= 1
     
-conn.default_indices="test2"
-conn.refresh("test2")
-q = {"match_all" : {}}
+#===============================================================================
+# conn.default_indices="test2"
+# conn.refresh("test2")
+# q ={"query": {"filtered":{
+#                         "query" : {
+#                                    "match_all" : {}
+#                                    },
+#                                    "filter" : {
+#                                                "and":[
+#                                                       {"terms" : {"partner_name" : ["PRADAN"]}}
+#                                                       ]
+#                                                }
+#                }
+#            },
+# "facets" : {"facet" : {"terms": {
+#                                  "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
+#                                  "size" : 500
+#                                  }
+#                        }
+#            },
+# "size" : 500
+# }
+# query = json.dumps(q)
+# response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+# result = json.loads(response.read())
+# data = json.dumps({"facets" : result['facets']['facet']['terms']})
+#===============================================================================
 
-     
-
-#q = {"term": {"subcategory" : "crop management"}}
-try :
-    results = conn.search(q,indices=['test2'])
-    print len(results)
-except Exception, ex:
-    print ex
-print type(results)
-for r in results:
-    print r 
-    print r._meta.score
     
