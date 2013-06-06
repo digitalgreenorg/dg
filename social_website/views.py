@@ -46,8 +46,8 @@ def social_home(request):
     return render_to_response('home.html' , context,context_instance = RequestContext(request))
 
 def collection_view(request):
-    id = request.GET.get('id', None)
-    videoID= request.GET.get('video', None)
+    id = request.GET.get('id', 1)
+    videoID= request.GET.get('video', 1)
     if id:
          collection_uid=id
     collection=Collection.objects.get(uid=id)
@@ -64,13 +64,14 @@ def collection_view(request):
             if '' in tag_list:
                 tag_list.remove('')
             video_dict={
-                'videoID':videoID,
-                'title':vid.title,
-                'description':vid.description,
-                'youtubeID':vid.youtubeID,
-                'tags':vid.tags,
-                'date':vid.date,
-                'tags':tag_list
+                'uid' : vid.uid,
+                'videoID' : int(videoID),
+                'title' : vid.title,
+                'description' : vid.description,
+                'youtubeID' : vid.youtubeID,
+                'tags' : vid.tags,
+                'date' : vid.date,
+                'tags' : tag_list
                 }
         i=i+1
         time=time+vid.duration
@@ -103,7 +104,7 @@ def collection_view(request):
         'collection':collection_dict,
         'videos':video_info,
         'video':video_dict,
-        'slides':range((len(videos)+1)/5)
+        'slides':range(((len(videos)-1)/5)+1)
         }
     return render_to_response('collections-view.html' , context,context_instance = RequestContext(request))
 
@@ -113,6 +114,7 @@ def partner_view(request):
          partner_uid=id
     partner=Partner.objects.get(uid=id)
     partner_dict={
+        'uid':partner.uid,
         'name':partner.name,
         'joinyear':partner.joinDate.year,
         'description':partner.description,
