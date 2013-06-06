@@ -231,6 +231,8 @@ def create_query(params):
 def elasticSearch(request):
     params = request.GET
     query = create_query(params)
+    order_by = params.get('order_by')
+    order_by = order_by[1:] #removing '-' since it will always be '-'
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices="test2"
     conn.refresh("test2")
@@ -246,25 +248,32 @@ def elasticSearch(request):
                                   }
                       },
                                 
-                       "facets" : {"facet" : {
-                                              "terms": {
-                                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
-                                                        "size" : MAX_RESULT_SIZE
-                                                        }
+            "facets" : {"facet" : {
+                                    "terms": {
+                                              "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
+                                              "size" : MAX_RESULT_SIZE
                                               }
-                                   },
+                                   }
+                        },
+            "sort" : {
+                      order_by : {"order" : "desc"}
+                      },
+            
             "size" : MAX_RESULT_SIZE
             }
     else:           
         q = {"query": 
                     {"match_all" : {}},
-                    "facets" : {"facet" : {
-                                              "terms": {
-                                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
-                                                        "size" : MAX_RESULT_SIZE
-                                                        }
-                                              }
-                                   },
+            "facets" : {"facet" : {
+                                   "terms": {
+                                            "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
+                                            "size" : MAX_RESULT_SIZE
+                                            }
+                                   }
+                        },
+             "sort" : {
+                      order_by : {"order" : "desc"}
+                      },
              "size" : MAX_RESULT_SIZE
              }
     result_list = []
