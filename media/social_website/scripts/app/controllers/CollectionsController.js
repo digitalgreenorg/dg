@@ -77,6 +77,16 @@ define(function(require) {
         },
 
         _onCollectionDataProcessed: function(broadcastData) {
+        	var set_filters = this._references.collectionFiltersViewController._references.dataFeed;
+        	var filter_object = this._references.collectionViewController._references.dataFeed._state.inputParams.filters.value;
+        	var facets = this._references.collectionViewController._references.dataFeed._dataModel._data.facets;
+        	if (filter_object){
+        	set_filters.addInputParam('filters', true, 0, true);
+        	set_filters.setInputParam('filters', filter_object, true);
+        	}
+        	set_filters.addInputParam('facets', true, 0, true);
+        	set_filters.setInputParam('facets', facets, true);
+        	this._references.collectionFiltersViewController._fetchFilters();
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
         },
 

@@ -77,6 +77,11 @@ define(function(require) {
 					// import collections from data
 					var collectionsToAdd = unprocessedData.objects;
 					var startingCacheId = page * countPerPage;
+					
+					//facets
+					var facets = unprocessedData.facets;
+					dataModel.set('facets',
+							unprocessedData.facets);
 
 					collectionsModel.addSubset(collectionsToAdd,
 							startingCacheId);
