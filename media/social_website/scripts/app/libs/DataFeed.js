@@ -231,12 +231,13 @@ define(function(require) {
             }
 
             var feedURL = this._config.feedURL;
-
+            
             
             var inputParamData = this._getAjaxInputParamData();
 
             Util.Object.extend(inputParamData, overrideData);
-
+            // Shrey
+            this.ajaxed = true;
             $.ajax({
                 type: 'GET',
                 dataType: 'json',

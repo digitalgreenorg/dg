@@ -11,9 +11,9 @@ define(function(require) {
     'use strict';
 
     var DigitalGreenPageController = require('app/controllers/DigitalGreenPageController');
-    var CollectionViewController = require('app/view-controllers/CollectionViewController');
-    var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
     var CollectionFiltersViewController = require('app/view-controllers/CollectionFiltersViewController');
+    var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
+    var CollectionViewController = require('app/view-controllers/CollectionViewController');
     var jQuery = require('jquery');
 
     var CollectionsController = DigitalGreenPageController.extend({
@@ -48,9 +48,9 @@ define(function(require) {
             var $filtersWrapper = jQuery('.js-filters-wrapper');
 
             // helpers
+            references.collectionFiltersViewController = new CollectionFiltersViewController($filtersWrapper);
             references.collectionViewController = new CollectionViewController($collectionsContainer);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
-            references.collectionFiltersViewController = new CollectionFiltersViewController($filtersWrapper);
         },
 
         _initEvents: function() {
@@ -58,6 +58,10 @@ define(function(require) {
 
             var references = this._references;
             var boundFunctions = this._boundFunctions;
+            
+         // filters changed
+            boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
+            references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
 
             // collections updated
             boundFunctions.onCollectionDataProcessed = this._onCollectionDataProcessed.bind(this);
@@ -67,16 +71,22 @@ define(function(require) {
             boundFunctions.onOrderChanged = this._onOrderChanged.bind(this);
             references.collectionMostFiltersViewController.on('orderChanged', boundFunctions.onOrderChanged);
 
-            // filters changed
-            boundFunctions.onFilterChanged = this._onFilterChanged.bind(this);
-            references.collectionFiltersViewController.on('filterChanged', boundFunctions.onFilterChanged);
-
             // filters cleared
             boundFunctions.onFiltersCleared = this._onFiltersCleared.bind(this);
             references.collectionFiltersViewController.on('filtersCleared', boundFunctions.onFiltersCleared);
         },
 
         _onCollectionDataProcessed: function(broadcastData) {
+        	var set_filters = this._references.collectionFiltersViewController._references.dataFeed;
+        	var filter_object = this._references.collectionViewController._references.dataFeed._state.inputParams.filters.value;
+        	var facets = this._references.collectionViewController._references.dataFeed._dataModel._data.facets;
+        	if (filter_object){
+        	set_filters.addInputParam('filters', true, 0, true);
+        	set_filters.setInputParam('filters', filter_object, true);
+        	}
+        	set_filters.addInputParam('facets', true, 0, true);
+        	set_filters.setInputParam('facets', facets, true);
+        	this._references.collectionFiltersViewController._fetchFilters();
             this._references.collectionFiltersViewController.updateTotalCount(broadcastData.totalCount);
         },
 
