@@ -270,7 +270,15 @@
     <tr>
     <td><%= id %></td>
     <td><%= name %></td>
-    <td> <%= gender %></td>
+    <td> 
+		<% 
+			var villages="";
+			$.each(assigned_villages, function(index,val) {
+				villages = villages + val.name +"; ";
+     		});
+		%>
+	<%= villages %>
+	</td>
     <td>
 	<a href="#mediator/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
 	</td>
@@ -527,6 +535,8 @@
        <th>Id</th>
 	   <th>Date</th>
 	   <th>Person</th>
+	   <th>Group</th>
+	   <th>Village</th>
        <th>Video</th>
        <th></th>
 	   
@@ -537,6 +547,8 @@
     <td><%= id %></td>
     <td><%= date_of_adoption %></td>
     <td> <%= person.person_name %></td>
+	<td> <%= group.group_name %></td>
+	<td> <%= village.village_name %></td>
     <td> <%= video.title %></td>
     <td>
 	<a href="#adoption/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
