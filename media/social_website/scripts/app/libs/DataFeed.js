@@ -236,8 +236,6 @@ define(function(require) {
             var inputParamData = this._getAjaxInputParamData();
 
             Util.Object.extend(inputParamData, overrideData);
-            // Shrey
-            this.ajaxed = true;
             $.ajax({
                 type: 'GET',
                 dataType: 'json',

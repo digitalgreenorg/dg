@@ -99,7 +99,11 @@ define(function(require) {
         },
 
         _onFiltersCleared: function() {
+            this._references.collectionViewController._references.dataFeed.setInputParam('filters',0,true)
+            this._references.collectionFiltersViewController._references.dataFeed.setInputParam('filters',0,true)
+            this._references.collectionViewController._references.dataFeed._fetch()
             this._references.collectionViewController.clearFilters();
+            
         },
 
         _getCollections: function() {
