@@ -11,8 +11,9 @@ import ast, urllib2
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
 def social_home(request):
-    language=Language.objects.all().values_list('name',flat=True)
-    language=list(language)
+    language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
+    language=list(set(language))
+    language = sorted(language) # setting them in alphabetical order
     featured_collection=Collection.objects.get(uid=1)
     time=0
     vid_thumbnails=[]
@@ -212,7 +213,7 @@ def searchFilters(request):
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 
-def create_query(params):
+def create_query(params, language_name):
     language = params.getlist('filters[language][]', None)
     subcategory = params.getlist('filters[subcategory][]', None)
     category = params.getlist('filters[category][]', None)
@@ -222,6 +223,8 @@ def create_query(params):
     query = []
     if language:
         query.append({"terms":{"language_name" : language}})
+    elif language_name:
+        query.append({"terms":{"language_name" : [language_name]}})
     if subcategory:
         query.append({"terms":{"subcategory" : subcategory}})
     if category:
@@ -236,7 +239,10 @@ def create_query(params):
 
 def elasticSearch(request):
     params = request.GET
-    query = create_query(params)
+    language_name = params.get('language__name', None)
+    if language_name == 'All Languages':
+        language_name = None
+    query = create_query(params, language_name)
     order_by = params.get('order_by')
     order_by = order_by[1:] #removing '-' since it will always be '-'
     conn = ES(['127.0.0.1:9200'])
