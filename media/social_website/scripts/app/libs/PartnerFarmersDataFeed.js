@@ -45,7 +45,7 @@ define(function(require) {
             if (countPerPage == undefined) {
                 countPerPage = 12;
             }
-            this.setInputParam('uid',location.search.split('=')[1],true);
+            this.setInputParam('uid',$(".js-partner-farmers-pages-container").attr('data-partnerID'));
             this.setInputParam('offset', page, true);
             this.setInputParam('limit', countPerPage, true);
 

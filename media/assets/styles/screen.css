@@ -1220,6 +1220,12 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     display: none;
 }
 
+.like {
+    background: url(../images/icon-sprite.png) no-repeat -89px -259px;
+    padding-left: 13px;
+    padding-right: 6px;
+}
+
 .view {
     background: url(../images/icon-sprite.png) no-repeat -78px -85px;
     padding-left: 26px;
