@@ -4,7 +4,7 @@ site.addsitedir('/home/ubuntu/.virtualenv/dg_/lib/python2.7/site-packages/')
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
-import json
+import json, urllib2
 from pyes import *
 from social_website.models import Collection
 
@@ -14,90 +14,92 @@ try:
     print "Previous index deleted"
 except Exception, ex:
     print "No Previous index"
+settings = {
+            "analysis":{
+               "filter":{
+                  "name_ngrams":{
+                     "side":"front",
+                     "max_gram":20,
+                     "min_gram":2,
+                     "type":"edgeNGram"
+                  }
+               },
+               "analyzer":{
+                  "full_name":{
+                     "filter":[
+                        "standard",
+                        "lowercase",
+                        "asciifolding"
+                     ],
+                     "type":"custom",
+                     "tokenizer":"standard"
+                  },
+                  "partial_name":{
+                     "filter":[
+                        "standard",
+                        "lowercase",
+                        "asciifolding",
+                        "name_ngrams"
+                     ],
+                     "type":"custom",
+                     "tokenizer":"standard"
+                  }
+               }
+            }
+         }
 
-mappings ={
-           "analysis":{
-                       "filter":{
-                                 "name_ngrams":{
-                                                "side":"front",
-                                                "max_gram":20,
-                                                "min_gram":2,
-                                                "type":"edgeNGram"
-                                                }
-                                 },
-                       "analyzer":{
-                                   "full_name":{
-                                                "filter":[
-                                                          "standard",
-                                                          "lowercase",
-                                                          "asciifolding"
-                                                          ],
-                                                "type":"custom",
-                                                "tokenizer":"standard"
-                                                },
-                                   "partial_name":{
-                                                   "filter":[
-                                                             "standard",
-                                                             "lowercase",
-                                                             "asciifolding",
-                                                             "name_ngrams"
-                                                             ],
-                                                   "type":"custom",
-                                                   "tokenizer":"standard"
-                                                   }
-                                   }
-                       },
-           "mapping":{ 
-           "text_index":{
-                 "properties":{
-                               "type" : {
-                                         "type" : "string"
-                                         },
-                               "targetURL" : {
-                                        "type" : "string"
-                                        } ,     
-                               "searchTerm":{
-                                       "fields":{
-                                                 "text":{
-                                                         "type":"string",
-                                                         "analyzer":"full_name"
-                                                         },
-                                                 "partial":{
-                                                            "search_analyzer":"full_name",
-                                                            "index_analyzer":"partial_name",
-                                                            "type":"string"
-                                                            }
-                                                 },
-                                       "type":"multi_field"
-                                       }
-                               }
-                 }
-           }
+mappings = {
+      "test-index":{
+        "properties":{
+            "searchTerm":{
+               "fields":{
+                  "searchTerm":{
+                     "type":"string",
+                     "analyzer":"full_name"
+                  },
+                  "partial":{
+                     "search_analyzer":"full_name",
+                     "index_analyzer":"partial_name",
+                     "type":"string"
+                  }
+               },
+               "type":"multi_field"
+            }
+         }
+      }
 }
-conn.indices.create_index("test-index")
+        
+conn.indices.create_index("test-index", settings = settings)
 
-conn.indices.put_mapping("text_index",mapping = mappings, indices = ["test-index"])
+conn.indices.put_mapping(doc_type = "test-index", mapping = mappings, indices = ["test-index"])
 
-# putting in the data
+#putting in the data
 i = 0
 print Collection.objects.all().count()
 for collection in Collection.objects.all():
-    data = json.dumps({"searchTerm":collection.title,"targetURL":"","type":"Collection"})
+    data = json.dumps({"searchTerm":collection.title + " in " + collection.state})
     conn.index(data, "test-index", "test-index",i+1)
-#    conn.index({"name":"data1", "value":"value1"}, "test-index", "test-type2", i+1, parent=i+1)
     i+= 1
     print i
+
     
+#################  QUERY  ###########################
 conn.default_indices="test-index"
 conn.refresh("test-index")
-q = { "term":{"searchTerm" : "seed treatment"}}
-try :
-    results = conn.search(q,indices=['test-index'])
-    print len(results)
-except Exception, ex:
-    print ex
-print type(results)
-for r in results:
-    print r 
-    print r._meta.score
+q = {"query" : {
+                "query_string" :{
+                                 "fields" : ["searchTerm.partial"],
+                                 "query" : "madhy"
+                                 }
+                },
+     "size" : 10
+     }
+                                  
+query = json.dumps(q)
+response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
+result = json.loads(response.read())
+result_list = []
+for res in result['hits']['hits']:
+    result_list.append(res['_source'])
+
     

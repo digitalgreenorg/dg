@@ -11,8 +11,9 @@ import ast, urllib2
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
 def social_home(request):
-    language=Language.objects.all().values_list('name',flat=True)
-    language=list(language)
+    language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
+    language=list(set(language))
+    language = sorted(language) # setting them in alphabetical order
     featured_collection=Collection.objects.get(uid=1)
     time=0
     vid_thumbnails=[]
@@ -135,24 +136,30 @@ def partner_view(request):
 def searchCompletions(request):
     searchString = request.GET.get('searchString')
     maxCount = int(request.GET.get('maxCount'))
-    q = {
-    "match" : { "searchTerm" : {
-                         "query" : searchString,
-                         "type": "phrase"
-                         }
-              }
-    }
-    result_list = []
-    try :
-        conn = ES(['127.0.0.1:9200'])
-        results = conn.search(q,indices=['test-index'])
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices="test-index"
+    conn.refresh("test-index")
+    q = {"query" : {
+                    "query_string" :{
+                                    "fields" : ["searchTerm.partial"],
+                                    "query" : searchString
+                                    }
+                    },
+         "size" : maxCount
+        }
+    try:
+        query = json.dumps(q)
+        response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
+        result = json.loads(response.read())
+        result_list = []
+        for res in result['hits']['hits']:
+            result_list.append(res['_source'])
+        if len(result_list) == 0:
+            result_list.append({"searchTerm" : "No Results"})    # for now just displaying no results when nothing is found in completion
+        resp = json.dumps({"responseCode":"OK","requestParameters":{"searchString":searchString,"maxCount":unicode(maxCount)},"completions": result_list, "totalCount": unicode(maxCount)})
+        return HttpResponse(resp)
     except Exception, ex:
-        pass
-    i = 0
-    for r in range(0, maxCount - 1):
-        result_list.append(results[r])
-    resp = json.dumps({"responseCode":"OK","requestParameters":{"searchString":searchString,"maxCount":unicode(maxCount)},"completions": result_list, "totalCount": unicode(maxCount)})
-    return HttpResponse(resp)
+        return HttpResponse('0')
 
 def make_sub_filter(filters, field, active_filter_list, facet_dict):
     kwargs = {}
@@ -208,7 +215,7 @@ def searchFilters(request):
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 
-def create_query(params):
+def create_query(params, language_name):
     language = params.getlist('filters[language][]', None)
     subcategory = params.getlist('filters[subcategory][]', None)
     category = params.getlist('filters[category][]', None)
@@ -218,6 +225,8 @@ def create_query(params):
     query = []
     if language:
         query.append({"terms":{"language_name" : language}})
+    elif language_name:
+        query.append({"terms":{"language_name" : [language_name]}})
     if subcategory:
         query.append({"terms":{"subcategory" : subcategory}})
     if category:
@@ -232,7 +241,10 @@ def create_query(params):
 
 def elasticSearch(request):
     params = request.GET
-    query = create_query(params)
+    language_name = params.get('language__name', None)
+    if language_name == 'All Languages':
+        language_name = None
+    query = create_query(params, language_name)
     order_by = params.get('order_by')
     order_by = order_by[1:] #removing '-' since it will always be '-'
     conn = ES(['127.0.0.1:9200'])
