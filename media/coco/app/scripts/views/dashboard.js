@@ -7,10 +7,11 @@ define([
     'views/upload', 
     'views/incremental_download',
     'views/notification',
-    'layoutmanager'      
-    
+    'layoutmanager',      
+    'models/user_model',
+    'auth'
     ],
- function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager) {
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -18,6 +19,7 @@ define([
             // "click button#download": "Download",
             "click #sync": "sync",
             "click #inc_download": "inc_download",
+            "click #logout": "logout"
         },
         error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
         success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
@@ -27,10 +29,18 @@ define([
             this.upload_v = null;
             this.inc_download_v = null;
             this.background_download();
+            _(this).bindAll('render');
+            User.on('change',this.render);
         },
-
+        serialize: function(){
+            var username =  User.get("username");
+            return {
+                username:username
+            }
+        },
         afterRender: function() { /* Work with the View after render. */
             // this.collection.fetch();
+            console.log("rendering dashboard");
             for (var member in configs) {
                 // console.log(configs[member]);
                 if(member=="misc")
@@ -48,7 +58,7 @@ define([
                     {
                         $('#dashboard_items')
                             .append(this.item_template({
-                            name: member,
+                            name: member+"/list",
                             title: configs[member]["page_header"]
                         }));
                     }
@@ -187,7 +197,12 @@ define([
             return navigator.onLine;
         },               
 
-        
+        logout: function(){
+            Auth.logout()
+                .always(function(){
+                    window.Router.navigate('login', {trigger:true});
+                });
+        }
     });
 
 

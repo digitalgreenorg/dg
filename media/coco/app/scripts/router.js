@@ -5,36 +5,69 @@ define([
   'backbone',
   'views/app_layout',
   'configs',
-], function(jquery, underscore, backbone, AppLayout, configs){
+  'auth'
+], function(jquery, underscore, backbone, AppLayout, configs, Auth){
   
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "showDashboard",
-            ":entity": "list",
+            ":entity/list": "list",
             ":entity/add": "addPerson",
-            ":entity/edit/:id": "editPerson"
+            ":entity/edit/:id": "editPerson",
+            "login": "login"
         },
         showDashboard: function() {
             console.log("ROUTER: dashboard url caught");
-            
-            this.app_v.render_dashboard();
+            this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_dashboard();
+                });
         },
         list: function(entity) {
             console.log("ROUTER: list "+entity+" url caught");
-            this.app_v.render_list_view({view_configs:this.configs[entity],router:this});
+            this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_list_view({view_configs:configs[entity],router:window.Router});
+                });
         },
         addPerson: function(entity) {
             console.log("ROUTER: add "+entity+" url caught");
-            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, null);
+            this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, null);
+                });
         },
         editPerson: function(entity,id) {
             console.log("ROUTER: edit "+entity+" url caught id = " + id);
-            this.app_v.render_add_edit_view({view_configs:this.configs[entity],router:this}, parseInt(id));
+            this.check_login_wrapper()
+                .done(function(){
+                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, parseInt(id));
+                });
+        },
+        login: function(){
+            AppLayout.render_login(this);
+        },
+                
+        initialize: function(){
+            // this.app_v = app_v;
+            // this.configs = configs;
+            // this.bind( "route", this.check_login)
         },
         
-        initialize: function(app_v, configs){
-            this.app_v = app_v;
-            this.configs = configs;
+        check_login_wrapper: function(){
+            var dfd = new $.Deferred();
+            console.log("Authenticating before routing");
+            Auth.check_login()
+                .fail(function(err){
+                    console.log("UnAuthenticated");
+                    dfd.reject();
+                    window.Router.navigate("login",{trigger:true});
+                })
+                .done(function(){
+                    console.log("Authenticated");
+                    dfd.resolve();
+                });
+            return dfd;    
         }
 
     });
@@ -46,10 +79,11 @@ define([
 
     // Render the Layout.
     AppLayout.render();
-    var app_router = new AppRouter(AppLayout,configs);
-    
+    var app_router = new AppRouter();
+    window.Router = app_router;
     Backbone.history.start();
   };
+  
   return {
     initialize: initialize
   };
