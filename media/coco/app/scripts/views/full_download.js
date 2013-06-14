@@ -21,7 +21,11 @@ define([
     //fills the last_downlaoded timestamp in meta_data
     var FullDownloadView = Backbone.Layout.extend({
         template: "#download_template",
-
+        
+        internet_connected : function(){
+            return navigator.onLine;
+        },
+        
         initialize: function(){
             _(this).bindAll('stop_download');
         },
@@ -57,6 +61,11 @@ define([
         initialize_download: function(){
             var dfd = new $.Deferred();
             
+            if(!this.internet_connected())
+            {
+                dfd.reject("Can't download database. Internet is not connected");
+                return dfd;
+            }
             //intialize UI objects
             this.$('#full_download_modal').modal({
                 keyboard: false,
