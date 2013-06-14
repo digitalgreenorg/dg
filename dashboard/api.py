@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from tastypie import fields
-from tastypie.authentication import BasicAuthentication, Authentication
+from tastypie.authentication import Authentication, SessionAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
@@ -275,7 +275,7 @@ class MediatorResource(ModelResource):
     class Meta:
         queryset = Animator.objects.all()
         resource_name = 'mediator'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('assigned_villages__in')
         #authorization = Authorization()
         validation = MediatorFormValidation(form_class=AnimatorForm)
@@ -362,7 +362,7 @@ class VillageResource(ModelResource):
     class Meta:
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('id__in')
         max_limit = None
 
@@ -384,7 +384,7 @@ class VideoResource(ModelResource):
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = DjangoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
@@ -466,7 +466,7 @@ class PersonGroupsResource(ModelResource):
     class Meta:
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         #authorization = Authorization()
         
@@ -506,7 +506,7 @@ class ScreeningResource(ModelResource):
     class Meta:
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
@@ -674,7 +674,7 @@ class PersonResource(ModelResource):
     class Meta:
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
@@ -732,7 +732,7 @@ class PersonAdoptVideoResource(ModelResource):
     class Meta:
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'adoption'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
@@ -797,7 +797,7 @@ class FieldOfficerResource(ModelResource):
     class Meta:
         queryset = FieldOfficer.objects.all()
         resource_name = 'field_officer'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = Authorization()
       
 # class BlockResource(ModelResource):
@@ -805,7 +805,7 @@ class FieldOfficerResource(ModelResource):
 #     class Meta:
 #         queryset = Block.objects.all()
 #         resource_name = 'block'
-#         authentication = BasicAuthentication()
+#         authentication = SessionAuthentication()
 #         authorization = DjangoAuthorization()
 #         ordering = ["start_date","block_name","district"]
 #         filtering = {
@@ -820,7 +820,7 @@ class PartnersResource(ModelResource):
     class Meta:
         queryset = Partners.objects.all()
         resource_name = 'partner'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = Authorization()
         
 
@@ -828,7 +828,7 @@ class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
         resource_name = 'language'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = Authorization()
         
 
@@ -836,7 +836,7 @@ class PersonMeetingAttendanceResource(ModelResource):
     class Meta:
         queryset = PersonMeetingAttendance.objects.all()
         resource_name = 'pma'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = Authorization()
 
 class NOT_AVAILABLE:

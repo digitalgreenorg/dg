@@ -3,8 +3,9 @@ define([
     'views/list',
     'views/form_controller',
     'views/status',
-    'layoutmanager'      
-  ], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager){
+    'layoutmanager',  
+    'views/login'    
+  ], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView){
                   
     var AppLayout = Backbone.Layout.extend({
       template: "#page_layout",
@@ -30,6 +31,12 @@ define([
 //               $("#side_panel").show();
 //           });
 //       },
+      render_login: function(router){
+          var l_view = new LoginView(router);
+          this.setView("#content", l_view);
+          // l_view.render();
+          
+      },    
           
       render_dashboard: function() {
           // $(this.el)

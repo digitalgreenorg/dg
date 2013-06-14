@@ -143,7 +143,9 @@
 <script  type="text/template" id="dashboard">
             <div id="coco_sidebar" class="">
                 <div id="coco_userinfo">
-                    Hi Sreenivas! <a href="#/logout">Log out</a>
+                <%if(typeof(username)!=undefined){%>
+                    Hi <%=username%>! <a id="logout">Log out</a>
+                <%}%>    
                 </div>
                 <div id="coco_brand">
                     <a href="#">COCO</a>
@@ -1205,13 +1207,41 @@
                                                     
 </form>                                                        </script>
    
+<script type="text/template" id="login">
+
+<div id="login_modal" class="modal hide fade" >
+  <div class="modal-header">
+    <h3>Login</h3>
+  </div>
+  <div class="modal-body">
+  <span class="text-error" id="error_msg"></span>
+  <form action="">
+    <fieldset>
+      <div class="clearfix">
+      <%if(typeof(username)=="undefined"){%>
+        <input id="username" type="text" placeholder="Username">
+      <%}else{%>    
+        <input id="username" type="text" placeholder="Username" value="<%= username%>" disabled>
+      <%}%>
+      </div>
+      <div class="clearfix">
+        <input id="password" type="password" placeholder="Password">
+      </div>
+      <button id= "login_button" class="btn primary" type="button">Sign in</button>
+    </fieldset>
+  </form>
+  </div>
+</div>
+
+
+</script>
    
    
 </head>
 
 <body>
 	
-    
+     {% csrf_token %}
     <div id = "notifications">
         
     </div>

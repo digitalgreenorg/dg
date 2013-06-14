@@ -7,6 +7,7 @@ define([
   
   
 var idb = {
+    nolog: true,
     id: "offline-database",
     description: "The offline database for COCO",
     migrations: [{
@@ -39,6 +40,12 @@ var idb = {
             });      
             full_download_info_store.createIndex("downloadedIndex", ["entity_name", "offset", "limit"], { unique: true });
 
+            var user_store = transaction.db.createObjectStore("user", {
+              autoIncrement: true,keyPath: "id"
+            });   
+            user_store.createIndex("userIndex", "key", { unique: true })
+               
+            
             console.log("indexeddb database created");
             next();
         }
