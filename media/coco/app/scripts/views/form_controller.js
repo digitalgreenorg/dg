@@ -70,9 +70,9 @@ define([
                 delete this.form.final_json.inlines;
             }
             
-            this.form.offline_model.set(this.form.final_json);
+            // this.form.offline_model.set(this.form.final_json);
             var that = this; // Please change to form_controller or something else which makes the content clear.
-            this.offline_m = this.form.offline_model; // Remove this line
+            // this.offline_m = this.form.offline_model; // Remove this line
             if(that.is_uploadqueue_empty() && that.is_internet_connected())
             {
                 console.log("FORMCONTROLLER: the uploadqueue is empty and internet connected");
