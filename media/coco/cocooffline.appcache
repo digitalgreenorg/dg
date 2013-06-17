@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2012-11-1 v1.0.0
+# 2012-11-1 v1.0.7
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css
@@ -9,6 +9,7 @@ CACHE:
 /media/coco/app/styles/css/coco.css
 /media/coco/app/styles/css/datepicker.css
 /media/coco/app/styles/css/bootstrap-timepicker.css
+/media/coco/app/scripts/libs/chosen/chosen.css
 
 
 /media/coco/dist/scripts/main.js
