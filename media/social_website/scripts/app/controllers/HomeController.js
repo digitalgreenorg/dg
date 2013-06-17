@@ -73,7 +73,8 @@ define(function(require) {
             var $newsFeedContainer = jQuery(".js-news-feed-wrapper");
 
             // helpers
-            references.collectionViewController = new CollectionViewController($collectionsContainer);
+            var $languageCookie = Util.Cookie.get('language__name');
+            references.collectionViewController = new CollectionViewController($collectionsContainer, $languageCookie);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
             references.newsFeedViewController = new NewsFeedViewController($newsFeedContainer);
 

@@ -288,9 +288,7 @@ define(function(require) {
 
         _onDataProcessed: function() {
             this._state.filterData = this._references.dataFeed.getSearchFilters();
-
-            this._indicateCurrentLanguageSelection();
-
+            //this._indicateCurrentLanguageSelection();
             this._renderFilters();
         },
 
