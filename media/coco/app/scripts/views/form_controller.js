@@ -51,11 +51,9 @@ define([
             
 
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
             
         json_converted: function(something){
-            console.log("Gotcha B****: conv json");
+            console.log("Gotcha B****: copv json");
             console.log(something);
             this.after_offline_to_online_success(something.on_json, something.off_json)
         },    
@@ -123,10 +121,10 @@ define([
                         {
                             success:function(u_model){
                                 console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                $(notifs_view.el)
-                                    .append(that.success_notif_template({
-                                    msg: "Success! Model saved offline and added to uploadqueue"
-                                }));
+                                notifs_view.add_alert({
+									notif_type: "success",
+									message: "Model saved offline and added to upload queue"
+								});
                                 if(that.form.inline)
                                     {
                                         console.log("FORMCONTROLLER: saving inlines");
@@ -142,10 +140,11 @@ define([
                 })
                 .fail(function(error){
                     that.form.show_errors(error);
-                    $(notifs_view.el)
-                        .append(that.error_notif_template({
-                        msg: "Error saving the model offline"
-                    }));
+                   
+					notifs_view.add_alert({
+						notif_type: "error",
+						message: "Error saving the model offline"
+					});
                 });
         },
         
@@ -248,10 +247,12 @@ define([
                     Offline.save(null, that.form.entity_name, off_json)
                         .done(function(off_m){
                             console.log("SAVED IN OFFLINE - "+JSON.stringify(off_m.toJSON()));
-                            $(notifs_view.el)
-                                .append(that.success_notif_template({
-                                msg: "Successfully saved online and offline"
-                            }));
+                            
+							notifs_view.add_alert({
+									notif_type: "success",
+									message: "Successfully saved online and offline"
+							});
+								
                             if(that.form.inline)
                                 {
                                     console.log("FORMCONTROLLER: saving inlines");
@@ -260,19 +261,24 @@ define([
                         })
                         .fail(function(error){
                             that.form.show_errors(error);
-                            $(notifs_view.el)
-                                .append(that.error_notif_template({
-                                msg: "Error saving the model offline"
-                            }));
+                            
+							notifs_view.add_alert({
+								notif_type: "error",
+								message: "Error saving the model offline"
+							});
+							
                         });
                 })
                 .fail(function(xhr){
                     that.form.show_errors(xhr.responseText);
-                    $(notifs_view.el)
-                        .append(that.error_notif_template({
-                        msg: "Error saving the model on server"
-                    }));                           
-                });
+                    
+					notifs_view.add_alert({
+						notif_type: "error",
+						message: "Error saving the model on server"
+					});
+				});
+				
+				 
         },        
         
         //form.inline obj, 
