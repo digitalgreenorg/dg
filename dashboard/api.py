@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from tastypie import fields
-from tastypie.authentication import Authentication, SessionAuthentication
+from tastypie.authentication import Authentication, SessionAuthentication, BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
@@ -147,7 +147,7 @@ class NotFound(TastypieError):
     """
     pass
 
-def obj_create(self, bundle, request=None, **kwargs):
+def obj_create(self, bundle, **kwargs):
         """
         Overriding Tastypie implementation of ``obj_create` because tastypie is calling save of foreign key values on adding new resource`.
         """
@@ -159,17 +159,17 @@ def obj_create(self, bundle, request=None, **kwargs):
         bundle = self.full_hydrate(bundle)
 
         # Save the main object.
-        bundle.obj.user_created_id = request.user.id
+        bundle.obj.user_created_id = bundle.request.user.id
         bundle.obj.save()
 
         return bundle
 
-def obj_update(self, bundle, request=None, **kwargs):
+def obj_update(self, bundle, **kwargs):
         if not bundle.obj or not bundle.obj.pk:
             # Attempt to hydrate data from kwargs before doing a lookup for the object.
             # This step is needed so certain values (like datetime) will pass model validation.
             try:
-                bundle.obj = self.get_object_list(request).model()
+                bundle.obj = self.get_object_list(bundle.request).model()
                 bundle.data.update(kwargs)
                 bundle = self.full_hydrate(bundle)
                 lookup_kwargs = kwargs.copy()
@@ -188,15 +188,15 @@ def obj_update(self, bundle, request=None, **kwargs):
                 lookup_kwargs = kwargs
 
             try:
-                bundle.obj = self.obj_get(request, **lookup_kwargs)
+                bundle.obj = self.obj_get(bundle.request, **lookup_kwargs)
             except ObjectDoesNotExist:
                 raise NotFound("A model instance matching the provided arguments could not be found.")
 
         bundle = self.full_hydrate(bundle)
 
         # Save the main object.
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
+        if bundle.request.user:
+            bundle.obj.user_modified_id = bundle.request.user.id
         bundle.obj.save()        
         
         return bundle
@@ -255,17 +255,24 @@ def get_user_districts(request):
                 districts = District.objects.filter(district_name = user_permission.district_operated)
         return districts
 
-class VillageLevelAuthorization(DjangoAuthorization):
+class VillageLevelAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
-    def apply_limits(self, request, object_list):
-        villages = get_user_villages(request)
+    
+    def read_list(self, object_list, bundle):
+        villages = get_user_villages(bundle.request)
         kwargs = {}
         kwargs[self.village_field] = villages
-        # params = {
-        #             village_field: villages,
-        #         }
         return object_list.filter(**kwargs).distinct()
+
+class VideoAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        districts = get_user_districts(bundle.request)
+        screened_vids = list(Screening.objects.filter(village__block__district__in=districts).distinct().values_list('videoes_screened__id',flat=True))
+        produced_vids = list(Video.objects.filter(village__block__district__in = districts).values_list('id', flat=True))
+        #doing set of two lists avoid merging duplicates in the final merged list
+        vids = list(set(screened_vids + produced_vids))
+        return object_list.filter(id__in= vids)
 
 class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
@@ -284,7 +291,6 @@ class MediatorResource(ModelResource):
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
 
     def dehydrate_assigned_villages(self, bundle):
-        print 'in dehrate assigned villages'
         v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
         vil_list=[]
         for i in v_field:
@@ -384,8 +390,8 @@ class VideoResource(ModelResource):
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
-        authentication = SessionAuthentication()
-        authorization = DjangoAuthorization()
+        authentication = BasicAuthentication()
+        authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
         excludes = ['viewers','time_created', 'time_modified', 'duration' ]
