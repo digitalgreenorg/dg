@@ -1884,6 +1884,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     position: absolute;
     top: 0;
     left: 0;
+    height: 424px;
+    width: 1024px;
 }
 
 .slide-callToAction {
