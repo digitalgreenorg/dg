@@ -15,7 +15,7 @@ define(function(require) {
     var SearchFiltersDataFeed = DigitalGreenDataFeed.extend({
 
         constructor: function() {
-            this.base('api/searchFilters.php');
+            this.base('api/searchFilters');
         },
 
         _initConfig: function() {

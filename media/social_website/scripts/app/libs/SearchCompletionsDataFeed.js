@@ -26,7 +26,7 @@ define(function(require) {
         */
 
         constructor: function() {
-            this.base('api/searchCompletions.php');
+            this.base('api/searchCompletions');
 
             // prepare data model
             this._dataModel.addSubModel('searchCompletions', true);
