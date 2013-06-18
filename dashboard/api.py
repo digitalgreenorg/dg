@@ -297,10 +297,10 @@ class MediatorResource(ModelResource):
             vil_list.append({"id":i.id, "name":i.village_name})
         return vil_list
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = obj_create(self, bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
+    def obj_create(self, bundle, **kwargs):
+        bundle = obj_create(self, bundle, **kwargs)
+        if bundle.request.user:
+            bundle.obj.user_created_id = bundle.request.user.id
             bundle.obj.save()
         vil_list = bundle.data.get('assigned_villages')
         for vil in vil_list:
@@ -310,11 +310,11 @@ class MediatorResource(ModelResource):
     
         return bundle
 
-    def obj_update(self, bundle, request=None, **kwargs):
+    def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
+        bundle = obj_update(self, bundle, **kwargs)
+        if bundle.request.user:
+            bundle.obj.user_modified_id = bundle.request.user.id
             bundle.obj.save()
         
         mediator_id = bundle.data.get('id')
@@ -518,11 +518,11 @@ class ScreeningResource(ModelResource):
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = obj_create(self, bundle, request, **kwargs)
+    def obj_create(self, bundle, **kwargs):
+        bundle = obj_create(self, bundle, **kwargs)
         user_id = None
-        if request.user:
-            user_id =  request.user.id
+        if bundle.request.user:
+            user_id =  bundle.request.user.id
         screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
@@ -534,12 +534,12 @@ class ScreeningResource(ModelResource):
     
         return bundle
 
-    def obj_update(self, bundle, request=None, **kwargs):
+    def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, request, **kwargs)
+        bundle = obj_update(self, bundle, **kwargs)
         user_id = None
-        if request.user:
-            user_id =  request.user.id
+        if bundle.request.user:
+            user_id =  bundle.request.user.id
         
         screening_id = bundle.data.get('id')
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
@@ -584,18 +584,6 @@ class ScreeningResource(ModelResource):
                               'interested': pma[0]['interested'], 'expressed_question': pma[0]['expressed_question']})
             
         return pma_list
-    
-    
-#    def obj_create(self, bundle, request=None, **kwargs):
-#        bundle = super(MediatorResource, self).obj_create(
-#            bundle)
-#        vil_list = bundle.data.get('assigned_villages')
-#        for vil in vil_list:
-#            vil = Village.objects.get(id = int(vil.split('/')[-2]))
-#            u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
-#            u.save()
-#    
-#        return bundle
     
     def hydrate_videoes_screened(self, bundle):
         print 'in hydrate videoes'
