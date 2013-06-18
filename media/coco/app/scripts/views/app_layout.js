@@ -13,8 +13,13 @@ define([
           console.log("initilizing app layout");
           curr_list_view = null;
           current_add_edit_view = null;
-          this.setView("#side_panel", new DashboardView());
-                
+      },
+      
+      afterRender: function(){
+          console.log("app layout rendered");
+          var dashboard_view = new DashboardView();
+          this.setView("#side_panel", dashboard_view);
+          dashboard_view.render();
       },
       
       // hide_side_panel: function(){
@@ -45,9 +50,8 @@ define([
           //     .append(header.render("<li class='active' >Dashboard</li>")
           //     .el);
           // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
-          var s_view = new StatusView()
+          var s_view = new StatusView();
           this.setView("#content", s_view);
-          s_view.render();
           
           //         
           // $(this.el)

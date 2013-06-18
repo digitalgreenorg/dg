@@ -73,12 +73,7 @@ define([
     });
   
   var initialize = function(){
-    
-    // var app_v = new AppView();
-    $("#app").empty().append(AppLayout.el);
-
-    // Render the Layout.
-    AppLayout.render();
+    console.log("Initializing router");
     var app_router = new AppRouter();
     window.Router = app_router;
     Backbone.history.start();

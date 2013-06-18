@@ -1,7 +1,8 @@
 define([
   'router', // Request router.js,
-  'user_initialize'      
-  ], function(Router, UserInitialize){
+  'user_initialize',
+  'views/app_layout',
+  ], function(Router, UserInitialize, AppLayout){
   
   var framework_initialize = function(){
       $.ajaxSetup({
@@ -17,7 +18,27 @@ define([
                   window.Router.navigate("login",{trigger:true});
               }
           }
-      });      
+      });
+      
+      window.addEventListener('load', function(e) {
+          window.applicationCache.addEventListener('updateready', function(e) {
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+              // Browser downloaded a new app cache.
+              // Swap it in and reload the page to get the new hotness.
+              window.applicationCache.swapCache();
+              if (confirm('A new version of this site is available. Load it?')) {
+                window.location.reload();
+              }
+            } else {
+              // Manifest didn't changed. Nothing new to server.
+            }
+          }, false);
+      }, false);
+      
+      $(function(){
+          $("#app").empty().append(AppLayout.el);
+          AppLayout.render();
+      });
   };
   
   var get_csrf = function(){
