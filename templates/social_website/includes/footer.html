@@ -57,11 +57,11 @@
 		//	});
 		var video_player = {
             ytplayer: null,
-    		init: function initialize_player() {
+    		init: function initialize_player(videoid) {
     			this.ytplayer = new YT.Player('player', {
     			    height: '424',
     			    width: '1024',
-    			    videoId: 'l-wNFTfC-_A',
+    			    videoId: videoid,
     			    events: {
     				    'onReady': this.onPlayerReady,
     				    'onStateChange': this.onPlayerStateChange
