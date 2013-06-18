@@ -23,8 +23,7 @@ define([
                 upload_collection: upload_collection.toJSON()
             }
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
+       
         timestamp: null,
         upload_entries: null,
         fill_status: function(){
@@ -85,17 +84,19 @@ define([
             this.full_download_v.start_full_download()
                 .done(function(){
                     that.fill_status();
-                    $(notifs_view.el)
-                        .append(that.success_notif_template({
-                        msg: "Successfully downloaded the database."
-                    }));
-                    dfd.resolve();
+                
+                    notifs_view.add_alert({
+						notif_type: "success",
+						message: "Successfully downloaded the database"
+					});
+					dfd.resolve();
                 })
                 .fail(function(error){
-                    $(notifs_view.el)
-                        .append(that.error_notif_template({
-                        msg: "Failed to download the database - "+error
-                    }));
+                    
+					notifs_view.add_alert({
+						notif_type: "error",
+						message: "Failed to download the database : "+error
+					});
                    dfd.reject(); 
                 });
             return dfd;

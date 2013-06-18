@@ -21,8 +21,7 @@ define([
             "click #inc_download": "inc_download",
             "click #logout": "logout"
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template').html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template').html()),
+        
         item_template: _.template($("#dashboard_item_template")
             .html()),
         initialize: function() {
@@ -97,37 +96,41 @@ define([
             this.upload()
                 .done(function(){
                     console.log("UPLOAD FINISHED");
-                    $(notifs_view.el)
-                        .append(that.success_notif_template({
-                        msg: "Upload successfully finished."
-                    }));
+                    notifs_view.add_alert({
+						notif_type: "success",
+						message: "Upload successfully finished"
+						});
                 })
                 .fail(function(error){
                     console.log("ERROR IN UPLOAD");
                     console.log(error);
-                    $(notifs_view.el)
-                        .append(that.success_notif_template({
-                        msg: "Sync Incomplete. Failed to finish Upload : "+error
-                    }));
+                   
+					notifs_view.add_alert({
+						notif_type: "error",
+						message: "Sync Incomplete. Failed to finish upload : "+error
+					});
                 })
                 .always(function(){
                     that.inc_download({background:false})
                         .done(function(){
                             console.log("INC DOWNLOAD FINISHED");
                             that.sync_in_progress = false;
-                            $(notifs_view.el)
-                                .append(that.success_notif_template({
-                                msg: "Incremental download successfully finished."
-                            }));
+                            
+							notifs_view.add_alert({
+								notif_type: "success",
+								message: "Incremental download successfully finished"
+							});
                         })
                         .fail(function(error){
                             console.log("ERROR IN INC DOWNLOAD");
                             console.log(error);
                             that.sync_in_progress = false;
-                            $(notifs_view.el)
-                                .append(that.error_notif_template({
-                                msg: "Sync Incomplete. Failed to do Incremental Download : "+error
-                            }));
+                            
+							notifs_view.add_alert({
+								notif_type: "error",
+								message: "Sync Incomplete. Failed to do Incremental Download: "+error
+							});
+							
                         });
                 });
         },

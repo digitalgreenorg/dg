@@ -43,19 +43,21 @@ define([
                 this.model.destroy({
                     error: function() {
                         console.log("error deleting a model");
-                        $(notifs_view.el)
-                            .append(context.error_notif_template({
-                            msg: "Failed to Delete the " + context.options.view_configs.page_header
-                        }));
+                        
+						notifs_view.add_alert({
+						notif_type: "error",
+						message: "Failed to Delete the "+ context.options.view_configs.page_header
+						});
 
 
                     },
                     success: function() {
                         console.log("deleted a model");
-                        $(notifs_view.el)
-                            .append(context.success_notif_template({
-                            msg: "Deleted the " + context.options.view_configs.page_header
-                        }));
+                       
+						notifs_view.add_alert({
+						notif_type: "success",
+						message: "Deleted the " + context.options.view_configs.page_header
+						});
 
                     }
                 });
