@@ -48,8 +48,9 @@ define(function(require) {
             var $filtersWrapper = jQuery('.js-filters-wrapper');
 
             // helpers
+            var $languageCookie = -1
             references.collectionFiltersViewController = new CollectionFiltersViewController($filtersWrapper);
-            references.collectionViewController = new CollectionViewController($collectionsContainer);
+            references.collectionViewController = new CollectionViewController($collectionsContainer, $languageCookie);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
         },
 
