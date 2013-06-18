@@ -31,6 +31,12 @@
 	right: 10px;
 }
 
+#loaderimg{
+	left: 50%;
+	top: 50%;
+	position: fixed;
+}
+
 div.dataTables_length label {
     width: 460px;
     float: left;

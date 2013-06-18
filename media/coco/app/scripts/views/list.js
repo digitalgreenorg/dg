@@ -40,6 +40,7 @@ define([
         
         afterRender: function() {
             /* Work with the View after render. */
+			$("#loaderimg").show();
             this.collection.fetch();
         },
 
@@ -54,6 +55,7 @@ define([
                 tbody.append(this.item_template(model.toJSON()));
             }, this);
             this.$('#list_table').append(tbody);
+			$("#loaderimg").hide();
             
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");
