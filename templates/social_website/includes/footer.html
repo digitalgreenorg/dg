@@ -55,17 +55,24 @@
 		//		alert(data);
 			  //$('#tw-followers').html(count(data.ids)+" <span>Followers</span>")
 		//	});
-		function hide_this() {
+		function hide_this(currentPage) {
 			$(".delete").hide();
 			$("#video-img").append("<div id='player'></div>");
-			initialize_player();
+			initialize_player(currentPage);
 		}
 		var player;
-		function initialize_player() {
+		function initialize_player(currentPage) {
+			var id = "";
+			if(currentPage == 'About'){
+				id = "gJo2P3vrWJU"
+			}
+			else{
+				id = "l-wNFTfC-_A"
+			}
 			player = new YT.Player('player', {
 			height: '424',
 			width: '1024',
-			videoId: 'l-wNFTfC-_A',
+			videoId: id, 
 			events: {
 				'onReady': onPlayerReady,
 				'onStateChange': onPlayerStateChange
