@@ -115,6 +115,9 @@ define([
                 var generic_collection_offline = Backbone.Collection.extend({
                     database: indexeddb,
                     storeName: all_configs[f_entity].entity_name,
+                    comparator: function(model){
+                        return model.get(all_configs[this.storeName].sort_field)
+                    }
                 });
                 this.f_index.push(f_entity);    
                 this.f_colls.push(new generic_collection_offline());

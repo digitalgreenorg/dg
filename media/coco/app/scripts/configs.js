@@ -6,7 +6,8 @@ function() {
         'list_item_template_name': 'village_list_item_template',
         'rest_api_url': '/api/v1/village/',
         'entity_name': 'village',
-        'dashboard_display': {listing: false, add: false}
+        'dashboard_display': {listing: false, add: false},
+        'sort_field' : 'village_name'
     };
     // var video_list_view_configs = {
 //         'page_header': 'Video',
@@ -30,6 +31,7 @@ function() {
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
         'unique_togther_fields':['name', 'gender'],
+        'sort_field' : 'name',
         'foreign_entities':{
             'village': {
                 "assigned_villages" : {'placeholder':'id_ass_villages','name_field':'village_name'},        //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
@@ -96,6 +98,7 @@ function() {
         'rest_api_url': '/api/v1/video/',
         'entity_name': 'video',
         'unique_togther_fields':['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'sort_field' : 'title',
         'foreign_entities':{
             'mediator': {
                 "facilitator" : {'placeholder':'id_facilitator','name_field':'name'},        
@@ -214,6 +217,7 @@ function() {
         'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
+        'sort_field' : 'language_name',
         'foreign_entities':{},
         'form_field_validation': {
         },
@@ -231,6 +235,7 @@ function() {
       'entity_name': 'group',
       'inc_table_name': 'persongroups',
       'unique_togther_fields':['group_name', 'village.id'],
+      'sort_field' : 'group_name',
       'foreign_entities':{
           'village': {
               'village': {'placeholder':'id_village','name_field':'village_name'},
@@ -563,6 +568,7 @@ function() {
             }
          },
         'unique_togther_fields':['person_name', 'father_name', 'village.id', 'group.id'],
+        'sort_field' : 'person_name',
         'form_field_validation': {
         	ignore: [],
 			rules: {

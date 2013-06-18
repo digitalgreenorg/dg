@@ -390,7 +390,7 @@ class VideoResource(ModelResource):
     class Meta:
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
-        authentication = BasicAuthentication()
+        authentication = SessionAuthentication()
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
