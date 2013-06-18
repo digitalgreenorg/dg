@@ -290,7 +290,7 @@ body {
 }
 
 .header-wrapper {
-    margin-bottom: -6px;
+    margin-bottom: -6px; /* Equivalent to height: 68px; */
 }
 
 .inner-wrapper {
@@ -1869,6 +1869,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 /* Slide Show */
 
+.main-carousel-video-player {
+    margin-top:-6px;
+    display:none;
+}
+
 .slide {
     position: relative;
     height: 424px;
@@ -2792,12 +2797,18 @@ textarea.comment-text {
     background-position: -83px -616px;
 }
 
-.play_button {
+.play-button {
 	background: url(../images/arrow-slideshow.png) no-repeat right 0;
-    height: 28px;
+    height: 39px;
+    width: 28px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    z-index: 1000;
+    
 }
 
-.play_button:hover {
+.play-button:hover {
 	background-position: right -50px;
     color: #49cd34;
 }
