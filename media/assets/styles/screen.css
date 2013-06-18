@@ -290,7 +290,7 @@ body {
 }
 
 .header-wrapper {
-    margin-bottom: -6px; /* Equivalent to height: 68px; */
+    margin-bottom: -7px; /* -6px Equivalent to height: 68px; */
 
 }
 
@@ -1871,7 +1871,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 /* Slide Show */
 
 .main-carousel-video-player {
-    margin-top:-6px;
+    margin-top:-7px;
     display:none;
 }
 
