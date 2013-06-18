@@ -257,9 +257,14 @@ define(function(require) {
         		categoryId='language';
         	}
             var filterCategoryData = this._state.filterData.categories[categoryId];
-            var filterOptionData = filterCategoryData.options[optionId];
-
-
+            var filterOptionData;
+        	for (i=0; i < filterCategoryData.options.length; i++){
+        		if (filterCategoryData.options[i].title == optionId){
+        			filterOptionData = this._state.filterData.categories[categoryId].options[i];
+        		}
+        	}
+        	
+            
             // update value
             filterOptionData.filterActive = value;
             
@@ -270,7 +275,12 @@ define(function(require) {
         },
 
         _getFilterStatus: function(categoryId, optionId) {
-            return this._state.filterData.categories[categoryId].options[optionId].filterActive;
+        	for (i=0; i < this._state.filterData.categories[categoryId].options.length; i++){
+        		if (this._state.filterData.categories[categoryId].options[i].title == optionId){
+        			return this._state.filterData.categories[categoryId].options[i].filterActive
+        		}
+        	}
+            
         },
 
         _findFilterElementById: function(categoryId, optionId) {

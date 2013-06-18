@@ -55,40 +55,35 @@
 		//		alert(data);
 			  //$('#tw-followers').html(count(data.ids)+" <span>Followers</span>")
 		//	});
-		function hide_this(currentPage) {
-			$(".delete").hide();
-			$("#video-img").append("<div id='player'></div>");
-			initialize_player(currentPage);
-		}
-		var player;
-		function initialize_player(currentPage) {
-			var id = "";
-			if(currentPage == 'About'){
-				id = "gJo2P3vrWJU"
-			}
-			else{
-				id = "l-wNFTfC-_A"
-			}
-			player = new YT.Player('player', {
-			height: '424',
-			width: '1024',
-			videoId: id, 
-			events: {
-				'onReady': onPlayerReady,
-				'onStateChange': onPlayerStateChange
-			}
-			});
-		}
-		function onPlayerReady(event) {
-			event.target.playVideo();
-		}
-		function onPlayerStateChange(event) {        
-			if(event.data === 0) {            
-				player.destroy();
-				$(".delete").show();			
-			}
-		}
-	
+		var video_player = {
+            ytplayer: null,
+    		init: function initialize_player() {
+    			this.ytplayer = new YT.Player('player', {
+    			    height: '424',
+    			    width: '1024',
+    			    videoId: 'l-wNFTfC-_A',
+    			    events: {
+    				    'onReady': this.onPlayerReady,
+    				    'onStateChange': this.onPlayerStateChange
+                    }
+    			});
+    			$("#video-img > div").not("#player").each(function(index, ele){$(ele).hide();});
+                $("#player").show();
+    		},
+            
+    		onPlayerReady: function onPlayerReady(event) {
+    			event.target.playVideo();
+    		},
+            
+    		onPlayerStateChange: function onPlayerStateChange(event) {        
+    			if(event.data === 0) {  
+                    video_player.ytplayer.destroy();
+                    $("#player").hide();          
+    				$("#video-img > div").not("#player").each(function(index, ele){$(ele).show();});			
+    			}
+    		}
+		};
+        
 		</script>
     </body>
 </html>
