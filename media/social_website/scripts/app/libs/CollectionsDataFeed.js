@@ -20,7 +20,7 @@ define(function(require) {
 				 * Output params: collections {Collection[]} totalCount {Number}
 				 */
 
-				constructor : function() {
+				constructor : function($language) {
 					this.base('api/elasticSearch/');
 
 					this._filters = {};
@@ -38,8 +38,11 @@ define(function(require) {
 							collectionsSubModel);
 					this.addInputParam('order_by', false, null, true,
 							collectionsSubModel);
+					//this.addInputParam('language__name', false, null, true)
+					if ($language != -1){
 					this.addInputParamCacheClear('language__name',
 							collectionsSubModel);
+						}
 				},
 
 				fetch : function(page, countPerPage) {
@@ -53,6 +56,7 @@ define(function(require) {
 
 					this.setInputParam('offset', page * countPerPage, true);
 					this.setInputParam('limit', countPerPage, true);
+				
 
 					// perform the fetch
 					this.base();
@@ -169,19 +173,11 @@ define(function(require) {
 					var collections = this._dataModel.get('collections')
 							.getSubset(page * countPerPage, countPerPage);
 
-					if (this._dataModel.get('collections')._data.length == 0
-							&& this.ajaxed) {
-						// Yash
-						this.ajaxed = false;
-						return false;
-					}
+					
 					if (!collections) {
 						this.fetch(page, countPerPage);
 						return false;
-					} else {
-						// Yash
-						this.ajaxed = false;
-					}
+					} 
 
 					return collections;
 				}

@@ -28,8 +28,8 @@ define(function(require) {
          * Controller constructor
          * @return {Controller} this
          */
-        constructor: function($referenceBase) {
-            this.base($referenceBase);
+        constructor: function($referenceBase, $language) {
+            this.base($referenceBase, $language);
 
             return this;
         },
@@ -43,12 +43,12 @@ define(function(require) {
             config.containerOpenHeight = 213;
         },
 
-        _initReferences: function($referenceBase) {
+        _initReferences: function($referenceBase, $language) {
             this.base();
 
             var references = this._references;
 
-            references.dataFeed = new CollectionsDataFeed();
+            references.dataFeed = new CollectionsDataFeed($language);
 
             references.$collectionsWrapper = $referenceBase;
             references.$loadingIndicator = $referenceBase.find('.js-loading-indicator');
