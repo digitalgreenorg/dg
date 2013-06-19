@@ -52,8 +52,8 @@ urlpatterns = patterns('',
     url(r'^connect/$', partner_view,name='connect'),
     url(r'^tools/$', direct_to_template, {'template': 'home.html', 'extra_context': {'header': {'jsController':'Tools', 'currentPage':'Tools', 'loggedIn':False}}},name='tools'),
     (r'^$',social_home),
-    (r'^api/searchCompletions.php?$',searchCompletions),
-    (r'^api/searchFilters.php',searchFilters),
+    (r'^api/searchCompletions?$',searchCompletions),
+    (r'^api/searchFilters$',searchFilters),
     (r'^api/elasticSearch/$',elasticSearch),
     
 )

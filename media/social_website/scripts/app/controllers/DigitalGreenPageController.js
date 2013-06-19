@@ -42,7 +42,7 @@ define(function(require) {
             } else {
                 // on pages with no select box, we have to manually trigger the language changed event
                 // on initial load to get the information out
-                globalEventManager.trigger('languageChanged', languageCookie);
+                //globalEventManager.trigger('languageChanged', languageCookie);
             }
         },
 

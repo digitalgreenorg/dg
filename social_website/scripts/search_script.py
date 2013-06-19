@@ -6,8 +6,9 @@ import settings
 setup_environ(settings)
 import json, urllib2
 from pyes import *
-from social_website.models import Collection
+from social_website.models import Collection, Video
 
+BASE_URL = 'http://test.digitalgreen.org/'
 conn = ES(['127.0.0.1:9200'])
 try:
     conn.delete_index("test-index")
@@ -32,7 +33,7 @@ settings = {
                         "asciifolding"
                      ],
                      "type":"custom",
-                     "tokenizer":"standard"
+                     "tokenizer":"keyword"
                   },
                   "partial_name":{
                      "filter":[
@@ -75,31 +76,50 @@ conn.indices.put_mapping(doc_type = "test-index", mapping = mappings, indices = 
 
 #putting in the data
 i = 0
-print Collection.objects.all().count()
-for collection in Collection.objects.all():
-    data = json.dumps({"searchTerm":collection.title + " in " + collection.state})
-    conn.index(data, "test-index", "test-index",i+1)
-    i+= 1
-    print i
+for video in Video.objects.all():
+    if len(video.video_collections.all()):
+        collection = video.video_collections.all()[0]  # choosing the first collection
+        for index, vid in enumerate(collection.videos.all()):
+            if vid.uid == video.uid:
+                vid_id = index+1 
+        url = BASE_URL + "social/collections/?id=" + str(collection.uid) + "&video=" + str(vid_id) 
+        data = json.dumps({"searchTerm":video.title, 
+                           "targetURL" : url,
+                           "type" : "Video"})
+        conn.index(data, "test-index", "test-index",i+1)
+        i+= 1
+print i 
+        
 
     
 #################  QUERY  ###########################
-conn.default_indices="test-index"
-conn.refresh("test-index")
-q = {"query" : {
-                "query_string" :{
-                                 "fields" : ["searchTerm.partial"],
-                                 "query" : "madhy"
-                                 }
-                },
-     "size" : 10
-     }
-                                  
-query = json.dumps(q)
-response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
-result = json.loads(response.read())
-result_list = []
-for res in result['hits']['hits']:
-    result_list.append(res['_source'])
+#===============================================================================
+# conn.default_indices="test-index"
+# conn.refresh("test-index")
+# q = {"query" : {
+#                "query_string" :{
+#                                 "fields" : ["searchTerm.partial"],
+#                                 "query" : "see"
+#                                 }
+#                },
+#     "facets" : {
+#                 "facet" : {
+#                            "terms" : { "fields"  : ["searchTerm"] }
+#                            }
+#                 },
+#     "size" : 10
+#     }
+#                                  
+# query = json.dumps(q)
+# response = urllib2.urlopen('http://localhost:9200/test-index/_search',query)
+# result = json.loads(response.read())
+# print result
+# result_list = []
+# for res in result['hits']['hits']:
+#    result_list.append(res['_source'])
+# print len(result_list)
+# facets = json.dumps(result['facets']['facet']['terms'])
+# print facets
+#===============================================================================
 
     

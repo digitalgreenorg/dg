@@ -33,7 +33,7 @@ define(function(require) {
         _initConfig: function() {
             this.base();
 
-            this._config.searchInputChangeRefreshDelay = 1000;
+            this._config.searchInputChangeRefreshDelay = 10; //  was initially 1000
         },
 
         _initReferences: function($referenceBase) {
