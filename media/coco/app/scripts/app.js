@@ -35,10 +35,8 @@ define([
           }, false);
       }, false);
       
-      $(function(){
-          $("#app").empty().append(AppLayout.el);
-          AppLayout.render();
-      });
+      $("#app").empty().append(AppLayout.el);
+      AppLayout.render();
   };
   
   var get_csrf = function(){
@@ -51,10 +49,13 @@ define([
   };
 
   // runs the initiaize of framweork, user and then start router  
+  //wait till dom is ready
   var initialize = function(){
-    framework_initialize();
-    UserInitialize.run();
-    Router.initialize();
+      $(function(){
+          framework_initialize();
+          UserInitialize.run();
+          Router.initialize();
+      });
   };
 
   return {
