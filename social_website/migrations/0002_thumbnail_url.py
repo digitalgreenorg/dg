@@ -10,7 +10,7 @@ class Migration(DataMigration):
         "Write your forwards methods here."
         for video in orm['social_website.Video'].objects.all():
             if(video.youtubeID != ""):
-                video.thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/" + video.uid + ".jpg"
+                video.thumbnailURL = "http://s3.amazonaws.com/video_thumbnail/raw/" + video.uid + ".jpg"
                 video.save()
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
 
