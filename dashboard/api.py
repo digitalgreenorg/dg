@@ -188,7 +188,7 @@ def obj_update(self, bundle, **kwargs):
                 lookup_kwargs = kwargs
 
             try:
-                bundle.obj = self.obj_get(bundle.request, **lookup_kwargs)
+                bundle.obj = self.obj_get(bundle, **lookup_kwargs)
             except ObjectDoesNotExist:
                 raise NotFound("A model instance matching the provided arguments could not be found.")
 
@@ -280,6 +280,7 @@ class MediatorResource(ModelResource):
     partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
     
     class Meta:
+        max_limit = None
         queryset = Animator.objects.all()
         resource_name = 'mediator'
         authentication = SessionAuthentication()
@@ -366,6 +367,7 @@ class VillageResource(ModelResource):
     country_name = fields.CharField('block__district__state__country__country_name')
     
     class Meta:
+        max_limit = None
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
         authentication = SessionAuthentication()
@@ -388,6 +390,7 @@ class VideoResource(ModelResource):
     obj_update = obj_update
     
     class Meta:
+        max_limit = None
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
@@ -470,6 +473,7 @@ class PersonGroupsResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
     class Meta:
+        max_limit = None
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
@@ -510,6 +514,7 @@ class ScreeningResource(ModelResource):
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
 
     class Meta:
+        max_limit = None
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
@@ -666,6 +671,7 @@ class PersonResource(ModelResource):
     videos_seen = fields.DictField(null=True)
     
     class Meta:
+        max_limit = None
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
         authentication = SessionAuthentication()
@@ -724,6 +730,7 @@ class PersonAdoptVideoResource(ModelResource):
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
+        max_limit = None
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
@@ -789,6 +796,7 @@ class PersonAdoptVideoResource(ModelResource):
 
 class FieldOfficerResource(ModelResource):
     class Meta:
+        max_limit = None
         queryset = FieldOfficer.objects.all()
         resource_name = 'field_officer'
         authentication = SessionAuthentication()
@@ -812,6 +820,7 @@ class FieldOfficerResource(ModelResource):
 
 class PartnersResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = Partners.objects.all()
         resource_name = 'partner'
         authentication = SessionAuthentication()
@@ -820,6 +829,7 @@ class PartnersResource(ModelResource):
 
 class LanguageResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = Language.objects.all()
         resource_name = 'language'
         authentication = SessionAuthentication()
@@ -828,6 +838,7 @@ class LanguageResource(ModelResource):
 
 class PersonMeetingAttendanceResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = PersonMeetingAttendance.objects.all()
         resource_name = 'pma'
         authentication = SessionAuthentication()
