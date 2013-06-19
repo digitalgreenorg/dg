@@ -50,7 +50,8 @@ define([
       },
       
       //fetches u,p from dom  and asks auth module to login
-      attempt_login: function(){
+      attempt_login: function(e){
+		  e.preventDefault();
           console.log("login attempted");
           var username = this.$('#username').val();
           var password = this.$('#password').val();
