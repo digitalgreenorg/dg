@@ -8,7 +8,7 @@ import json, urllib2
 from pyes import *
 from social_website.models import Collection, Video, Partner
 
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = 'http://test.digitalgreen.org/'
 conn = ES(['127.0.0.1:9200'])
 try:
     conn.delete_index("test-index")
