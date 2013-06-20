@@ -6,9 +6,9 @@ import settings
 setup_environ(settings)
 import json, urllib2
 from pyes import *
-from social_website.models import Collection, Video
+from social_website.models import Collection, Video, Partner
 
-BASE_URL = 'http://test.digitalgreen.org/'
+BASE_URL = 'http://127.0.0.1:8000/'
 conn = ES(['127.0.0.1:9200'])
 try:
     conn.delete_index("test-index")
@@ -74,7 +74,7 @@ conn.indices.create_index("test-index", settings = settings)
 
 conn.indices.put_mapping(doc_type = "test-index", mapping = mappings, indices = ["test-index"])
 
-#putting in the data
+# Video
 i = 0
 for video in Video.objects.all():
     if len(video.video_collections.all()):
@@ -85,12 +85,20 @@ for video in Video.objects.all():
         url = BASE_URL + "social/collections/?id=" + str(collection.uid) + "&video=" + str(vid_id) 
         data = json.dumps({"searchTerm":video.title, 
                            "targetURL" : url,
-                           "type" : "Video"})
+                           "type" : "Videos"})
         conn.index(data, "test-index", "test-index",i+1)
         i+= 1
 print i 
         
-
+# Partner
+for partner in Partner.objects.all():
+    url = BASE_URL  + "social/connect/?id=" + str(partner.uid)
+    data = json.dumps({"searchTerm" : partner.name,
+                       "targetURL" : url, 
+                       "type" : "Partners"}) 
+    conn.index(data, "test-index", "test-index",i+1)
+    i+= 1
+print i
     
 #################  QUERY  ###########################
 #===============================================================================
