@@ -11,14 +11,11 @@ def crop_thumbnail (img, ratio, filename):
     lower = height
     
     if (width > height):
-        print("here 1")
         new_width = (float) (ratio[0] * height) / ratio[1]
         if (new_width < width):
-            print ("here 2")
             left = (width - new_width)/2.0
             right = right -  (width - new_width) / 2.0
         else:
-            print("here 3")
             new_height = (float) (ratio[1] * width) / ratio[0]
             upper = (height - new_height) / 2.0
             lower = lower - (height - new_height) / 2.0
@@ -47,9 +44,13 @@ for file in files_list:
         width, height = img.size
         if ((float (width) / height) != 16.0/9 ):
             crop_thumbnail(img, (16, 9), (dir + '//16//' +file))
+        else:
+            img.save(dir + '//6//' +file)
          
         if ((float (width) / height) != 4.0/3 ):
             crop_thumbnail(img, (4, 3),(dir + '//4//' +file))
+        else:
+            img.save(dir + '//4//' +file)
     except:
         continue
 
