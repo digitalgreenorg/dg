@@ -102,18 +102,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #'django.contrib.sites',
     'django.contrib.admindocs',
-    'haystack',
     'dashboard',
     #'debug_toolbar',
     'output',
-    'raven.contrib.django',
     'django.contrib.humanize',
     'south',
     'farmerbook',
     'video_practice_map',
     'path',
     'fbconnect',
-    'tastypie'
+    'tastypie',
 )
 
 LOGGING = {
