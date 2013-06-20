@@ -62,7 +62,8 @@ define([
                   that.router.navigate("", {trigger:true});
               })
               .fail(function(error){
-                  that.$('#error_msg').html(error);
+			      $("#password").val('');
+				  that.$('#error_msg').html(error);
               });
       },
       
