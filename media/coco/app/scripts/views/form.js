@@ -579,7 +579,13 @@ define([
             else{
                 console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);
-                $f_el.html('');
+                if($f_el.is('select[multiple]'))
+                    $f_el.html('');    
+                else
+                    $f_el.html(options_inner_template({
+                            id: "",
+                            name: "------------"
+                    }));
                 $.each(model_array,function(index, f_model){
                     var f_json = f_model; 
                     if(f_model instanceof Backbone.Model)
