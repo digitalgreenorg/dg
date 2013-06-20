@@ -265,7 +265,7 @@ define(function(require) {
                 slideVideos = [];
                 for (j = 0; j < videosPerDrawer && j + i < len; j++) {
                     var currentVideo = videos[i + j];
-                    currentVideo._videoIndex = j + 1;
+                    currentVideo._videoIndex = j + i + 1;
                     slideVideos.push(currentVideo);
                 }
                 carouselSlides.push({
@@ -359,15 +359,14 @@ define(function(require) {
             }
                         
             // to check if the collection clicked is the same which has the carousel open
-            //var visible = this._references.$collectionsContainer.find('.js-video-container').find('.open').find('.js-video-drawer').filter(function() {
-            //	   return $(this).css('visibility') == 'visible';});
             var visible;
-       
+            // TODO use container already open
             this._references.$collectionsContainer.find('.js-video-container').each(function() {
             	if($(this).hasClass('open')) {
             	visible = $(this).find('.js-video-drawer').filter(function() {
-                    return $(this).css('visibility') == 'visible';});
-            }
+                    return $(this).css('visibility') == 'visible';
+                    });
+            	}
             });
             
            if(collectionItemIndex==visible.data('parentCollectionItemIndex')){
