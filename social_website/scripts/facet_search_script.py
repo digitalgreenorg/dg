@@ -63,16 +63,19 @@ for obj in Collection.objects.all():
     vid_data = []
     likes = views = adoptions = 0
     for vid in obj.videos.all():
-        vid_data.append({"title" : vid.title, "subtopic" : vid.subtopic, 
-                         "description" : vid.description,"duration" : vid.duration, 
-                         "thumbnailURL" : vid.thumbnailURL, "youtubeID" : vid.youtubeID})
+        vid_data.append({"title" : vid.title, 
+                         "subtopic" : vid.subtopic, 
+                         "description" : vid.description,
+                         "duration" : vid.duration, 
+                         "thumbnailURL" : vid.thumbnailURL, 
+                         "youtubeID" : vid.youtubeID})
         likes += vid.onlineLikes + vid.offlineLikes
         views += vid.onlineViews + vid.offlineViews
         adoptions += vid.adoptions
     country = model_to_dict(obj.country)
     language = model_to_dict(obj.language)
-    partner = model_to_dict(obj.partner)
-    partner["joinDate"] = partner["joinDate"].strftime("%Y-%m-%d %H:%M:%S")
+    partner = model_to_dict(obj.partner, fields = ['name'])
+#    partner["joinDate"] = partner["joinDate"].strftime("%Y-%m-%d %H:%M:%S")
     
     video = json.dumps(vid_data)
     data = json.dumps({"title" : obj.title,
@@ -96,7 +99,6 @@ for obj in Collection.objects.all():
                        })    
     conn.index(data, "test2","test2",i+1)
     i+= 1
-    
 #===============================================================================
 # conn.default_indices="test2"
 # conn.refresh("test2")
