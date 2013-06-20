@@ -18,10 +18,6 @@ define([
           this.router = router;
           _(this).bindAll('render');
           var that = this;
-          this.$('#login_modal').modal({
-              keyboard: false,
-              backdrop: "static",
-          });
           User.fetch({
               success: function(model){
                   console.log("USERMODEL : successfully fetched");
@@ -46,6 +42,10 @@ define([
       
       afterRender: function(){
           console.log("rendered login view");
+          this.$('#login_modal').modal({
+              keyboard: false,
+              backdrop: "static",
+          });
           this.$('#login_modal').modal('show');
       },
       

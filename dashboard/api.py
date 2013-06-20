@@ -188,7 +188,7 @@ def obj_update(self, bundle, **kwargs):
                 lookup_kwargs = kwargs
 
             try:
-                bundle.obj = self.obj_get(bundle.request, **lookup_kwargs)
+                bundle.obj = self.obj_get(bundle, **lookup_kwargs)
             except ObjectDoesNotExist:
                 raise NotFound("A model instance matching the provided arguments could not be found.")
 
@@ -280,6 +280,7 @@ class MediatorResource(ModelResource):
     partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
     
     class Meta:
+        max_limit = None
         queryset = Animator.objects.all()
         resource_name = 'mediator'
         authentication = SessionAuthentication()
@@ -297,10 +298,10 @@ class MediatorResource(ModelResource):
             vil_list.append({"id":i.id, "name":i.village_name})
         return vil_list
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = obj_create(self, bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_created_id = request.user.id
+    def obj_create(self, bundle, **kwargs):
+        bundle = obj_create(self, bundle, **kwargs)
+        if bundle.request.user:
+            bundle.obj.user_created_id = bundle.request.user.id
             bundle.obj.save()
         vil_list = bundle.data.get('assigned_villages')
         for vil in vil_list:
@@ -310,11 +311,11 @@ class MediatorResource(ModelResource):
     
         return bundle
 
-    def obj_update(self, bundle, request=None, **kwargs):
+    def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, request, **kwargs)
-        if request.user:
-            bundle.obj.user_modified_id = request.user.id
+        bundle = obj_update(self, bundle, **kwargs)
+        if bundle.request.user:
+            bundle.obj.user_modified_id = bundle.request.user.id
             bundle.obj.save()
         
         mediator_id = bundle.data.get('id')
@@ -366,6 +367,7 @@ class VillageResource(ModelResource):
     country_name = fields.CharField('block__district__state__country__country_name')
     
     class Meta:
+        max_limit = None
         queryset = Village.objects.select_related('block__district__state__country').all()
         resource_name = 'village'
         authentication = SessionAuthentication()
@@ -388,6 +390,7 @@ class VideoResource(ModelResource):
     obj_update = obj_update
     
     class Meta:
+        max_limit = None
         queryset = Video.objects.select_related('village').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
@@ -470,6 +473,7 @@ class PersonGroupsResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
     class Meta:
+        max_limit = None
         queryset = PersonGroups.objects.select_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
@@ -510,6 +514,7 @@ class ScreeningResource(ModelResource):
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
 
     class Meta:
+        max_limit = None
         queryset = Screening.objects.select_related('village').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
@@ -518,11 +523,11 @@ class ScreeningResource(ModelResource):
         always_return_data = True
         excludes = ['time_created', 'time_modified']
     
-    def obj_create(self, bundle, request=None, **kwargs):
-        bundle = obj_create(self, bundle, request, **kwargs)
+    def obj_create(self, bundle, **kwargs):
+        bundle = obj_create(self, bundle, **kwargs)
         user_id = None
-        if request.user:
-            user_id =  request.user.id
+        if bundle.request.user:
+            user_id =  bundle.request.user.id
         screening_id  = getattr(bundle.obj,'id')
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
@@ -534,12 +539,12 @@ class ScreeningResource(ModelResource):
     
         return bundle
 
-    def obj_update(self, bundle, request=None, **kwargs):
+    def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, request, **kwargs)
+        bundle = obj_update(self, bundle, **kwargs)
         user_id = None
-        if request.user:
-            user_id =  request.user.id
+        if bundle.request.user:
+            user_id =  bundle.request.user.id
         
         screening_id = bundle.data.get('id')
         del_objs = PersonMeetingAttendance.objects.filter(screening__id=screening_id).delete()
@@ -584,18 +589,6 @@ class ScreeningResource(ModelResource):
                               'interested': pma[0]['interested'], 'expressed_question': pma[0]['expressed_question']})
             
         return pma_list
-    
-    
-#    def obj_create(self, bundle, request=None, **kwargs):
-#        bundle = super(MediatorResource, self).obj_create(
-#            bundle)
-#        vil_list = bundle.data.get('assigned_villages')
-#        for vil in vil_list:
-#            vil = Village.objects.get(id = int(vil.split('/')[-2]))
-#            u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
-#            u.save()
-#    
-#        return bundle
     
     def hydrate_videoes_screened(self, bundle):
         print 'in hydrate videoes'
@@ -678,6 +671,7 @@ class PersonResource(ModelResource):
     videos_seen = fields.DictField(null=True)
     
     class Meta:
+        max_limit = None
         queryset = Person.objects.select_related('village','group').all()
         resource_name = 'person'
         authentication = SessionAuthentication()
@@ -736,6 +730,7 @@ class PersonAdoptVideoResource(ModelResource):
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
+        max_limit = None
         queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
@@ -801,6 +796,7 @@ class PersonAdoptVideoResource(ModelResource):
 
 class FieldOfficerResource(ModelResource):
     class Meta:
+        max_limit = None
         queryset = FieldOfficer.objects.all()
         resource_name = 'field_officer'
         authentication = SessionAuthentication()
@@ -824,6 +820,7 @@ class FieldOfficerResource(ModelResource):
 
 class PartnersResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = Partners.objects.all()
         resource_name = 'partner'
         authentication = SessionAuthentication()
@@ -832,6 +829,7 @@ class PartnersResource(ModelResource):
 
 class LanguageResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = Language.objects.all()
         resource_name = 'language'
         authentication = SessionAuthentication()
@@ -840,6 +838,7 @@ class LanguageResource(ModelResource):
 
 class PersonMeetingAttendanceResource(ModelResource):    
     class Meta:
+        max_limit = None
         queryset = PersonMeetingAttendance.objects.all()
         resource_name = 'pma'
         authentication = SessionAuthentication()
