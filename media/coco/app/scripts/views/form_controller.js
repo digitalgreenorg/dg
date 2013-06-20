@@ -48,12 +48,15 @@ define([
             this.setView("#form", new Form(this.params));
         },
         
+        /*Called when form view sends save_clicked event. 
+        Identifies type of final_json and saves it
+        After Save is finished calls an after_save function
+        */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
             e.stopPropagation();
-            this.form = e.context;
+            this.form = e.context;  //event contains the form view object itself
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
-            
             //separate inlines from final json
             if(this.form.inline)
             {
@@ -64,102 +67,88 @@ define([
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             
             var that = this; 
-            if(that.is_uploadqueue_empty() && that.is_internet_connected())
+            var save_complete_dfds = [];    //stores state of all objects bieng saved in this form
+            if(this.form.bulk)
             {
-                console.log("FORMCONTROLLER: the uploadqueue is empty and internet connected");
-                if(this.form.bulk)
-                {
-                    $.each(this.form.final_json.bulk, function(ind, obj){
-                        OfflineToOnline.convert(obj, that.form.bulk.foreign_fields)
-                            .done(function(on_off_jsons){
-                                that.save_when_online(on_off_jsons)
-                                    .done(function(msg){
-                                        notifs_view.add_alert({
-                                            notif_type: "success",
-                                            message: msg
-                                        });
-                                    })
-                                    .fail(function(error){
-                                        notifs_view.add_alert({
-                                            notif_type: "error",
-                                            message: error
-                                        });
-                                    });
-                            })
-                            .fail(function(){
-                                notifs_view.add_alert({
-                                    notif_type: "error",
-                                    message: "Failed to save form. OfflineToOnline Failed."
-                                });
-                            });
-                    });
-                }
-                else
-                {
-                    OfflineToOnline.convert(this.form.final_json,this.form.foreign_entities)
-                        .done(function(on_off_jsons){
-                            that.save_when_online(on_off_jsons)
-                                .done(function(msg){
-                                    notifs_view.add_alert({
-                                        notif_type: "success",
-                                        message: msg
-                                    });
-                                    that.after_save_finished(that.form.entity_name);
-                                })
-                                .fail(function(error){
-                                    notifs_view.add_alert({
-                                        notif_type: "error",
-                                        message: error
-                                    });    
-                                });                            
-                        })
-                        .fail(function(){
-                            notifs_view.add_alert({
-                                notif_type: "error",
-                                message: "Failed to save form. OfflineToOnline Failed."
-                            });
-                        });
-                }
-            }
-            else
-            {
-                if(this.form.bulk)
-                {
-                    $.each(this.form.final_json.bulk, function(ind, obj){
-                        that.save_when_offline(that.form.entity_name, obj)
-                            .done(function(msg){
-                                notifs_view.add_alert({
-                                    notif_type: "success",
-                                    message: msg
-                                });
-                            })
-                            .fail(function(err){
-                                notifs_view.add_alert({
-                                    notif_type: "success",
-                                    message: err
-                                });
-                            });
-                    });
-                }
-                else
-                {
-                    this.save_when_offline(this.form.entity_name, this.form.final_json)
+                $.each(this.form.final_json.bulk, function(ind, obj){
+                    var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
+                    save_object_dfd
                         .done(function(msg){
                             notifs_view.add_alert({
                                 notif_type: "success",
                                 message: msg
                             });
-                            that.after_save_finished(that.form.entity_name);
                         })
-                        .fail(function(err){
+                        .fail(function(error){
                             notifs_view.add_alert({
                                 notif_type: "error",
-                                message: err
-                            });
+                                message: error
+                            });    
                         });
-                }
+                    save_complete_dfds.push(save_object_dfd);
+                });
             }
+            else
+            {
+                var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_fields, this.form.entity_name);
+                save_object_dfd
+                    .done(function(msg){
+                        notifs_view.add_alert({
+                            notif_type: "success",
+                            message: msg
+                        });
+                    })
+                    .fail(function(error){
+                        notifs_view.add_alert({
+                            notif_type: "error",
+                            message: error
+                        });    
+                    });
+                save_complete_dfds.push(save_object_dfd);                                
+            }
+            
+            //When all objects in form are saved, go to new add form
+            $.when.apply($,save_complete_dfds)
+                .done(function(){
+                    that.after_save(that.form.entity_name);
+                })
         },
+        
+        save_object: function(json, foreign_entities, entity_name){
+            //TODO: check mode and call corresponding func
+            var dfd = new $.Deferred();
+            var that =  this;
+            if(this.is_uploadqueue_empty() && this.is_internet_connected())
+            {
+                //Online mode
+                OfflineToOnline.convert(json, foreign_entities)
+                    .done(function(on_off_jsons){
+                        that.save_when_online(on_off_jsons)
+                            .done(function(msg){
+                                dfd.resolve(msg);
+                            })
+                            .fail(function(error){
+                                dfd.reject(error);
+                            });                            
+                    })
+                    .fail(function(){
+                        return dfd.reject("Failed to save "+entity_name+". OfflineToOnline Failed.");
+                    });
+            }
+            else
+            {
+                //Offline mode
+                this.save_when_offline(entity_name, json)
+                    .done(function(msg){
+                        return dfd.resolve(msg);
+                    })
+                    .fail(function(err){
+                        return dfd.reject(err);
+                    });
+            }
+            return dfd.promise();
+        },
+        
         
         save_when_offline: function(entity_name, off_json){
             var dfd = new $.Deferred();
@@ -187,18 +176,18 @@ define([
                                     console.log("FORMCONTROLLER: saving inlines");
                                     that.process_inlines_offline(that.form, off_m.toJSON(), that.inline_models);
                                 }
-                                return dfd.resolve("Saved Offline and in Uploadqueue");    
+                                return dfd.resolve("Saved "+entity_name+" (Local, Uploadqueue)");    
                             },
                             error: function(error){
                                 console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+error);
                                 //TODO: should delete the model from offline db as well?
-                                return dfd.reject("Error saving the "+that.form.entity_name+" (Uploadqueue)");
+                                return dfd.reject("Error saving the "+entity_name+" (Uploadqueue)");
                             }    
                     });
                 })
                 .fail(function(error){
                     that.form.show_errors(error);
-                    return dfd.reject("Error saving the "+that.form.entity_name+" (Local)");
+                    return dfd.reject("Error saving the "+entity_name+" (Local)");
                 });
                 
             return dfd.promise();    
@@ -311,7 +300,7 @@ define([
                                 console.log("FORMCONTROLLER: saving inlines");
                                 that.process_inlines(that.form, off_m.toJSON(), on_m.toJSON(), that.inline_models);
                             }
-                            return dfd.resolve(that.form.entity_name + " Saved (Server, Local)");    
+                            return dfd.resolve("Saved "+that.form.entity_name + " (Server, Local)");    
                         })
                         .fail(function(error){
                             that.form.show_errors(error);
@@ -426,7 +415,7 @@ define([
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save_finished: function(entity_name){
+        after_save: function(entity_name){
             window.Router.navigate('person/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
