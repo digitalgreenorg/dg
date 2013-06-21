@@ -1784,6 +1784,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .vidDrawer-video .vidDrawer-image {
     position: relative;
+    width: 155px;
+    height: 95px;
 }
 
 .vidDrawer-video .overlay {
@@ -1801,7 +1803,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .vidDrawer-video .overlay.now-playing {
     font-size: 14px;
     line-height: 100px;
-    height: 95px;
     text-transform: uppercase;
     background: rgba(0, 0, 0, 0.5);
 }

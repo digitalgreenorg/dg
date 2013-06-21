@@ -14,7 +14,8 @@ def social_home(request):
     language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
     language=list(set(language))
     language = sorted(language) # setting them in alphabetical order
-    featured_collection=Collection.objects.get(uid=1)
+    fcollection_uid=34
+    featured_collection=Collection.objects.get(uid=fcollection_uid)
     time=0
     vid_thumbnails=[]
     for vid in featured_collection.videos.all():
@@ -33,7 +34,8 @@ def social_home(request):
         'partner_name':featured_collection.partner.name,
         'partner_logo':featured_collection.partner.logoURL,
         'video_count':featured_collection.videos.all().count(),
-        'duration':str(datetime.timedelta(seconds=time))
+        'duration':str(datetime.timedelta(seconds=time)),
+        'link':'/social/collections/?id='+ str(fcollection_uid)+'&video=1'
         }
     context= {
         'header': {
