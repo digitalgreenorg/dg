@@ -9,6 +9,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/chosen/chosen.css">
+	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
@@ -285,7 +286,7 @@
 		<% 
 			var villages="";
 			$.each(assigned_villages, function(index,val) {
-				villages = villages + val.name +"; ";
+				villages = villages + val.village_name +"; ";
      		});
 		%>
 	<%= villages %>
@@ -423,7 +424,6 @@
                 	<label class="control-label">Videos Screened*</label>
                 	<div class="controls"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chzn-select">
-                        <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
                 </div>
