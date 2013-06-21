@@ -7347,7 +7347,7 @@ define('views/incremental_download',[
         },    
         
         get_online_id: function(obj){
-            return obj.fields.model_id;
+            return parseInt(obj.fields.model_id);
         },
         
         get_foreign_field_desc: function(obj){
@@ -7581,6 +7581,10 @@ define('views/incremental_download',[
         
         finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
+            
+            //possible if timestamp of last object in incd was not present or no objects were returned
+            if(!last_object_timestamp)
+                last_object_timestamp = this.start_timestamp;
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
             var generic_model_offline = Backbone.Model.extend({
