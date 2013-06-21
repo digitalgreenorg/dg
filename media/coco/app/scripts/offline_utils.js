@@ -43,9 +43,9 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                     off_model.save(json,{
                         success: function(model){
                             //TODO: If edit case, do label changes here?
-                            return dfd.resolve(model);
+                            return dfd.resolve(off_model);
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log(error);
                             return dfd.reject("Error saving object in offline - "+error.srcElement.error.name);
                         }
@@ -70,7 +70,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                         success: function(off_model){
                             dfd.resolve(off_model);
                         },
-                        error: function(error){
+                        error: function(model, error){
                             dfd.reject("Error fetching object from offline - "+error);
                         }
                     });

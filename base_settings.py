@@ -110,3 +110,6 @@ INSTALLED_APPS = (
     'tastypie',
 )
 
+SESSION_COOKIE_HTTPONLY = False
+
+
