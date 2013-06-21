@@ -48,7 +48,7 @@ define([
                     that.render().done(function(){console.log("finished after download render");});    
                     
                 },
-                error: function(error){
+                error: function(model, error){
                     console.log("STATUS: error while fetching last_downloaded from meta_data objectStore");
                     console.log(error);
                     if(error == "Not Found")

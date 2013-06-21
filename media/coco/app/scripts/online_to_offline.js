@@ -100,7 +100,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
                     // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: object after converting" + JSON.stringify(obj));
                     return dfd.resolve();
                 },
-                error: function(error) {
+                error: function(model, error) {
                     // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                     //TODO: OOPS! What should be done now????
                     // console.log(error);

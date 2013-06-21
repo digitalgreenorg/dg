@@ -390,7 +390,7 @@ define([
                 success: function(){
                     return dfd.resolve();
                 },
-                error: function(error){
+                error: function(model,error){
                     if(error.srcElement.error.name=="ConstraintError")
                     {
                         return dfd.resolve();
@@ -421,13 +421,13 @@ define([
                             console.log(JSON.stringify(model.toJSON()));
                             dfd.resolve();
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
                             dfd.reject("error updating last_full_download in meta_data objectStore");
                         }
                     });
                 },
-                error: function(error){
+                error: function(model, error){
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
@@ -438,7 +438,7 @@ define([
                                     console.log(JSON.stringify(model.toJSON()));
                                     dfd.resolve();
                                 },
-                                error: function(error){
+                                error: function(model,error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
                                     dfd.reject("error creating last_full_download in meta_data objectStore");
