@@ -80,7 +80,7 @@ define([
             var dfd = new $.Deferred();
             var that = this;        
             this.initialize_inc_download(options);    
-            console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
+            console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
             this.getIncObjects()
                 .done(function(objects){
@@ -121,7 +121,10 @@ define([
             this.start_timestamp = new Date();
             this.get_last_download_timestamp()
                 .done(function(timestamp){
-                    $.get("/get_log/",{timestamp:timestamp})
+                    console.log("Timestamp for inc download - "+timestamp);
+                    $.get(all_configs.misc.inc_download_url,{
+                        timestamp:timestamp
+                    }, function(){},"json")
                         .fail(function(){ 
                             dfd.reject("Incremental download objects fetch failed!");
                         })

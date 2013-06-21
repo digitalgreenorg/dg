@@ -676,7 +676,8 @@ function() {
     
     var misc = {
         download_chunk_size : 2000,
-        background_download_interval:5*60*1000
+        background_download_interval:5*60*1000,
+        inc_download_url: "/get_log/"
     };
     
     return {
@@ -6687,7 +6688,7 @@ define('views/upload',[
               
         start_upload: function() {
             var dfd = new $.Deferred();
-            console.log("UPLOAD: start the fuckin upload");
+            console.log("UPLOAD: start the upload");
             var that = this;
             this.initialize_upload();
             this.get_uploadq()
@@ -7171,7 +7172,7 @@ define('views/incremental_download',[
             var dfd = new $.Deferred();
             var that = this;        
             this.initialize_inc_download(options);    
-            console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
+            console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
             this.getIncObjects()
                 .done(function(objects){
@@ -7212,7 +7213,10 @@ define('views/incremental_download',[
             this.start_timestamp = new Date();
             this.get_last_download_timestamp()
                 .done(function(timestamp){
-                    $.get("/get_log/",{timestamp:timestamp})
+                    console.log("Timestamp for inc download - "+timestamp);
+                    $.get(all_configs.misc.inc_download_url,{
+                        timestamp:timestamp
+                    }, function(){},"json")
                         .fail(function(){ 
                             dfd.reject("Incremental download objects fetch failed!");
                         })
@@ -8134,7 +8138,9 @@ define('views/dashboard',[
             var that = this;
             console.log("Going for background inc download");
             var call_again = function(){
-                setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+                setTimeout(function(){
+                    that.background_download();
+                }, configs.misc.background_download_interval);
             };
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)

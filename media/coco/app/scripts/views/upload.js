@@ -65,7 +65,7 @@ define([
               
         start_upload: function() {
             var dfd = new $.Deferred();
-            console.log("UPLOAD: start the fuckin upload");
+            console.log("UPLOAD: start the upload");
             var that = this;
             this.initialize_upload();
             this.get_uploadq()
