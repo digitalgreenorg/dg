@@ -33,7 +33,6 @@ class ModelFormValidation(FormValidation):
         if uri is None:
             return None
         
-        print 'in person form validation 1'
         converted = []
         if type(uri) == type(dict()):
             converted.append(uri.get('id'))
@@ -44,7 +43,6 @@ class ModelFormValidation(FormValidation):
             return converted
 
     def is_valid(self, bundle, request=None):
-        print 'in person form validation'
         data = bundle.data
         # Ensure we get a bound Form, regardless of the state of the bundle.
         if data is None:
@@ -103,7 +101,6 @@ class MediatorFormValidation(FormValidation):
             return converted
 
     def is_valid(self, bundle, request=None):
-        print 'in mediator form validation'
         partner_id = get_user_partner_id(request)
         if partner_id:
             bundle.data['partner'] ={'id':partner_id, 'partner_name':''} #"/api/v1/partner/"+str(partner_id)+"/"
