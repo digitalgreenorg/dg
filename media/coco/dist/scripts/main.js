@@ -5687,10 +5687,15 @@ define('views/form',[
             $(".chzn-container").css('float', 'left');
             $(".chzn-container").css('margin-bottom','20px');
             $(".control-group").css('clear', 'both');
-            
+			
+			var eDate = new Date();
+			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			
             $(".date-picker")
                 .datepicker({
-                    format: 'yyyy-mm-dd'
+                    format: 'yyyy-mm-dd',
+					startDate: '2009-01-01',
+					endDate: enddate,
                 }).on('changeDate', function(ev){
                     $(this).datepicker('hide');
                 });
@@ -6515,7 +6520,7 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                     // console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: object after converting" + JSON.stringify(obj));
                     return dfd.resolve();
                 },
-                error: function(error) {
+                error: function(model, error) {
                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                     //TODO: OOPS! What should be done now????
                     console.log(error);
@@ -7061,7 +7066,7 @@ define('online_to_offline',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                     // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: object after converting" + JSON.stringify(obj));
                     return dfd.resolve();
                 },
-                error: function(error) {
+                error: function(model, error) {
                     // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                     //TODO: OOPS! What should be done now????
                     // console.log(error);
@@ -7235,7 +7240,7 @@ define('views/incremental_download',[
                     var timestamp = model.get('timestamp');
                     dfd.resolve(timestamp);
                 },
-                error: function(error){
+                error: function(model,error){
                     that.meta_model.clear();
                     that.meta_model.set({key: "last_full_download"});
                     that.meta_model.fetch({
@@ -7246,7 +7251,7 @@ define('views/incremental_download',[
                             timestamp = timestamp.replace("Z","");
                             dfd.resolve(timestamp);
                         },
-                        error: function(error){
+                        error: function(model,error){
                             dfd.reject("Neither inc download has happened before nor full download.");
                         }        
                     });
@@ -7503,7 +7508,7 @@ define('views/incremental_download',[
                     // console.log(off_model);
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     // console.log("offline model could not be fetched - "+error);
                     dfd.reject(error);
                 }    
@@ -7541,7 +7546,7 @@ define('views/incremental_download',[
                 success: function(off_model){
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     // console.log(error);
                     dfd.reject(error);
                 }    
@@ -7563,7 +7568,7 @@ define('views/incremental_download',[
                     // console.log(online_id);
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     dfd.reject("ERRO EDITING model in IDB: ");
                 }    
             });
@@ -7591,14 +7596,14 @@ define('views/incremental_download',[
                             console.log(JSON.stringify(model.toJSON()));
                             dfd.resolve();
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_inc_download in meta_data objectStore");  
                             console.log(error);
                             dfd.reject(error);  
                         }
                     });
                 },
-                error: function(error){
+                error: function(model,error){
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_inc_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
@@ -7609,7 +7614,7 @@ define('views/incremental_download',[
                                     console.log(JSON.stringify(model.toJSON()));
                                     dfd.resolve();
                                 },
-                                error: function(error){
+                                error: function(model,error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_inc_download in meta_data objectStore : ");
                                     console.log(error);   
                                     dfd.reject(error); 
@@ -8003,9 +8008,31 @@ define('views/dashboard',[
                             .append("<li><i class='icon-white icon-plus-sign'></li>");
                     }
                 }
-                    
+				}
+				/*
+				window.addEventListener("offline", function(e) {
+					$('#online').hide();
+					$('#offline').show();
+					alert("offline");
+				}, false);
 
-            }
+				window.addEventListener("online", function(e) {
+					$('#offline').hide();
+					$('#online').show();
+					alert("online");
+				}, false);
+				*/
+				if (User.isOnline()){
+					console.log("USER ONLINE");
+					$('#offline').hide();
+					$('#online').show();
+				}
+				else {
+					console.log("USER OFFLINE")
+					$('#online').hide();
+					$('#offline').show();
+				}
+
         },
         
         sync: function(){
@@ -9234,7 +9261,7 @@ define('views/full_download',[
                 success: function(){
                     return dfd.resolve();
                 },
-                error: function(error){
+                error: function(model,error){
                     if(error.srcElement.error.name=="ConstraintError")
                     {
                         return dfd.resolve();
@@ -9265,13 +9292,13 @@ define('views/full_download',[
                             console.log(JSON.stringify(model.toJSON()));
                             dfd.resolve();
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
                             dfd.reject("error updating last_full_download in meta_data objectStore");
                         }
                     });
                 },
-                error: function(error){
+                error: function(model, error){
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
@@ -9282,7 +9309,7 @@ define('views/full_download',[
                                     console.log(JSON.stringify(model.toJSON()));
                                     dfd.resolve();
                                 },
-                                error: function(error){
+                                error: function(model,error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
                                     dfd.reject("error creating last_full_download in meta_data objectStore");
@@ -9353,7 +9380,7 @@ define('views/status',[
                     that.render().done(function(){console.log("finished after download render");});    
                     
                 },
-                error: function(error){
+                error: function(model, error){
                     console.log("STATUS: error while fetching last_downloaded from meta_data objectStore");
                     console.log(error);
                     if(error == "Not Found")
