@@ -141,27 +141,37 @@
 </script>
 
 <script  type="text/template" id="dashboard">
-            <div id="coco_sidebar" class="">
-                <div id="coco_userinfo">
-                <%if(typeof(username)!=undefined){%>
+    <div id="coco_sidebar" class="coco_sidebar affix">
+		<table border = '0'>
+			<tr>
+				<td><div>
+					<img id= "online" src="/media/coco/app/images/online.png" title= "Online"/>
+					<img id= "offline" src="/media/coco/app/images/offline.png" title= "Offline"/>
+				</div></td>
+				<td>
+					<div id="coco_userinfo">
+					<%if(typeof(username)!=undefined){%>
                     Hi <%=username%>! <a id="logout">Log out</a>
-                <%}%>    
-                </div>
+					<%}%>
+					</div>
+				</td>
+			</tr>
+		</table>
                 <div id="coco_brand">
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
                     <div class="span1 btn pull-left" id= "sync">Sync</div>
-                    <div class="btn pull-right" href="#"><i class="icon-wrench"></i></div>
+                    <!--div class="btn pull-right" href="#"><i class="icon-wrench"></i></div-->
                 </div>
                 <div id="coco_nav" class="pull-left">
-                    <ul id = "dashboard_items" class="nav nav-stacked">
+                    <ul id = "dashboard_items" class="nav nav-list">
                         
                     </ul>
                 </div>
                 
                 <div id="coco_nav_add" class="pull-right">
-                    <ul id = "dashboard_items_add" class="nav nav-stacked">
+                    <ul id = "dashboard_items_add" class="nav nav-list">
                         
                     </ul>
                 </div>
@@ -171,8 +181,8 @@
 </script>
 
    <script type="text/template" id="page_layout">
-   <div id = "side_panel" class="span2 well" style = "height:100%"></div>
-   <div id = "content" class="span10" style="padding-top:20px;padding-bottom:20px;"></div>
+   <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
+   <div id = "content" class="span10" ></div>
    		
    </script>
    
