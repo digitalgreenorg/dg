@@ -89,6 +89,7 @@ class MediatorFormValidation(FormValidation):
             return None
         
         # convert everything to lists
+        print 'in mediator form validation'
         converted = []
         if type(uri) == type(dict()):
             converted.append(uri.get('id'))
@@ -295,7 +296,7 @@ class MediatorResource(ModelResource):
         v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
         vil_list=[]
         for i in v_field:
-            vil_list.append({"id":i.id, "name":i.village_name})
+            vil_list.append({"id":i.id, "village_name":i.village_name})
         return vil_list
     
     def obj_create(self, bundle, **kwargs):
@@ -343,6 +344,12 @@ class MediatorResource(ModelResource):
         for i in v_field:
             label = label + i.village_name + ","
         return "("+ label +")"
+    
+    def hydrate_partner(self, bundle):
+        partner_id = get_user_partner_id(bundle.request)
+        if partner_id:
+            bundle.data['partner'] ="/api/v1/partner/"+str(partner_id)+"/"
+        return bundle
     
     def hydrate_assigned_villages(self, bundle):
         m2m_list = bundle.data.get('assigned_villages')
