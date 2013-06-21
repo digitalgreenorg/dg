@@ -20,20 +20,7 @@ define([
           }
       });
       
-      window.addEventListener('load', function(e) {
-          window.applicationCache.addEventListener('updateready', function(e) {
-            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-              // Browser downloaded a new app cache.
-              // Swap it in and reload the page to get the new hotness.
-              window.applicationCache.swapCache();
-              if (confirm('A new version of this site is available. Load it?')) {
-                window.location.reload();
-              }
-            } else {
-              // Manifest didn't changed. Nothing new to server.
-            }
-          }, false);
-      }, false);
+      
       
       $("#app").empty().append(AppLayout.el);
       AppLayout.render();
@@ -47,10 +34,28 @@ define([
       // these HTTP methods do not require CSRF protection
       return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
   };
+  
+  var update_appcache = function(){
+      $(window).load(function(){
+          window.applicationCache.addEventListener('updateready', function(e) {
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+              // Browser downloaded a new app cache.
+              // Swap it in and reload the page to get the new hotness.
+              window.applicationCache.swapCache();
+              if (confirm('A new version of this site is available. Load it?')) {
+                window.location.reload();
+              }
+            } else {
+              // Manifest didn't changed. Nothing new to server.
+            }
+          }, false);
+      });
+  };
 
   // runs the initiaize of framweork, user and then start router  
   //wait till dom is ready
   var initialize = function(){
+      update_appcache();
       $(function(){
           framework_initialize();
           UserInitialize.run();
