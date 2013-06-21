@@ -75,9 +75,31 @@ define([
                             .append("<li><i class='icon-white icon-plus-sign'></li>");
                     }
                 }
-                    
+				}
+				/*
+				window.addEventListener("offline", function(e) {
+					$('#online').hide();
+					$('#offline').show();
+					alert("offline");
+				}, false);
 
-            }
+				window.addEventListener("online", function(e) {
+					$('#offline').hide();
+					$('#online').show();
+					alert("online");
+				}, false);
+				*/
+				if (User.isOnline()){
+					console.log("USER ONLINE");
+					$('#offline').hide();
+					$('#online').show();
+				}
+				else {
+					console.log("USER OFFLINE")
+					$('#online').hide();
+					$('#offline').show();
+				}
+
         },
         
         sync: function(){
