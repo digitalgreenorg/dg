@@ -1753,7 +1753,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .vidDrawer > li img {
-    max-width: 152px;
+    width: 152px;
+    height: 86px;
     /*height: 93px;*/
     border: 1px solid #d3d2ce;
 }
