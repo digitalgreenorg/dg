@@ -248,6 +248,8 @@ def elasticSearch(request):
         language_name = None
     query = create_query(params, language_name)
     order_by = params.get('order_by')
+    offset = int(params.get('offset'))
+    limit = int(params.get('limit'))
     order_by = order_by[1:] #removing '-' since it will always be '-'
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices="test2"
@@ -300,7 +302,7 @@ def elasticSearch(request):
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
-        resp = json.dumps({"meta": {"limit": "12", "next": "", "offset": "0", "previous": "null", "total_count": str(len(result_list))},"objects": result_list, "facets" : facets})
+        resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
