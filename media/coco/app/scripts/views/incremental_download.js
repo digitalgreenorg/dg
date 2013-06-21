@@ -149,7 +149,7 @@ define([
                     var timestamp = model.get('timestamp');
                     dfd.resolve(timestamp);
                 },
-                error: function(error){
+                error: function(model,error){
                     that.meta_model.clear();
                     that.meta_model.set({key: "last_full_download"});
                     that.meta_model.fetch({
@@ -160,7 +160,7 @@ define([
                             timestamp = timestamp.replace("Z","");
                             dfd.resolve(timestamp);
                         },
-                        error: function(error){
+                        error: function(model,error){
                             dfd.reject("Neither inc download has happened before nor full download.");
                         }        
                     });
@@ -417,7 +417,7 @@ define([
                     // console.log(off_model);
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     // console.log("offline model could not be fetched - "+error);
                     dfd.reject(error);
                 }    
@@ -455,7 +455,7 @@ define([
                 success: function(off_model){
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     // console.log(error);
                     dfd.reject(error);
                 }    
@@ -477,7 +477,7 @@ define([
                     // console.log(online_id);
                     dfd.resolve(off_model);
                 },
-                error: function(error){
+                error: function(model,error){
                     dfd.reject("ERRO EDITING model in IDB: ");
                 }    
             });
@@ -505,14 +505,14 @@ define([
                             console.log(JSON.stringify(model.toJSON()));
                             dfd.resolve();
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_inc_download in meta_data objectStore");  
                             console.log(error);
                             dfd.reject(error);  
                         }
                     });
                 },
-                error: function(error){
+                error: function(model,error){
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_inc_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
@@ -523,7 +523,7 @@ define([
                                     console.log(JSON.stringify(model.toJSON()));
                                     dfd.resolve();
                                 },
-                                error: function(error){
+                                error: function(model,error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_inc_download in meta_data objectStore : ");
                                     console.log(error);   
                                     dfd.reject(error); 
