@@ -9,9 +9,10 @@ define([
     'views/notification',
     'layoutmanager',      
     'models/user_model',
-    'auth'
+    'auth',
+	'collections/upload_collection'
     ],
- function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth, upload_collection) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -21,22 +22,28 @@ define([
             "click #inc_download": "inc_download",
             "click #logout": "logout"
         },
-        
+		
         item_template: _.template($("#dashboard_item_template")
             .html()),
+			
+		upload_entries: null,
+		
         initialize: function() {
             this.upload_v = null;
             this.inc_download_v = null;
             this.background_download();
             _(this).bindAll('render');
             User.on('change',this.render);
+			this.upload_entries = upload_collection.length;
         },
         serialize: function(){
             var username =  User.get("username");
             return {
-                username:username
+                username:username,
+				upload_entries : this.upload_entries
             }
         },
+		
         afterRender: function() { /* Work with the View after render. */
             // this.collection.fetch();
             console.log("rendering dashboard");
@@ -76,19 +83,19 @@ define([
                     }
                 }
 				}
-				/*
+				
 				window.addEventListener("offline", function(e) {
 					$('#online').hide();
 					$('#offline').show();
-					alert("offline");
+					//alert("offline");
 				}, false);
 
 				window.addEventListener("online", function(e) {
 					$('#offline').hide();
 					$('#online').show();
-					alert("online");
+					//alert("online");
 				}, false);
-				*/
+				
 				if (User.isOnline()){
 					console.log("USER ONLINE");
 					$('#offline').hide();

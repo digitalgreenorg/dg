@@ -145,8 +145,8 @@
 		<table border = '0'>
 			<tr>
 				<td><div>
-					<img id= "online" src="/media/coco/app/images/online.png" title= "Online"/>
-					<img id= "offline" src="/media/coco/app/images/offline.png" title= "Offline"/>
+					<img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
+					<img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
 				</div></td>
 				<td>
 					<div id="coco_userinfo">
@@ -161,8 +161,9 @@
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
-                    <div class="span1 btn pull-left" id= "sync">Sync</div>
-                    <!--div class="btn pull-right" href="#"><i class="icon-wrench"></i></div-->
+                    <div class="span1 btn pull-left" id= "sync">Sync
+					<span class="badge"><%=upload_entries%></span>
+					</div>
                 </div>
                 <div id="coco_nav" class="pull-left">
                     <ul id = "dashboard_items" class="nav nav-list">
