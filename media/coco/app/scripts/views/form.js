@@ -306,10 +306,15 @@ define([
             $(".chzn-container").css('float', 'left');
             $(".chzn-container").css('margin-bottom','20px');
             $(".control-group").css('clear', 'both');
-            
+			
+			var eDate = new Date();
+			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			
             $(".date-picker")
                 .datepicker({
-                    format: 'yyyy-mm-dd'
+                    format: 'yyyy-mm-dd',
+					startDate: '2009-01-01',
+					endDate: enddate,
                 }).on('changeDate', function(ev){
                     $(this).datepicker('hide');
                 });
