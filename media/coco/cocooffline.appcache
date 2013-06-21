@@ -29,6 +29,8 @@ CACHE:
 /media/coco/app/scripts/libs/datatablejs_media/images/sort_desc.png
 /media/coco/app/scripts/libs/datatablejs_media/images/Sorting%20icons.psd
 /media/coco/app/images/loading_text.gif
+/media/coco/app/images/offline.png
+/media/coco/app/images/online.png
  
 NETWORK:
 /api/v1/
