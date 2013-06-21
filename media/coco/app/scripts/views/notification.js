@@ -20,14 +20,14 @@ define([
 			if (notif_type === "success"){
 				template = this.success_notif_template({msg: message});
 				alert_class = ".alert-success";
-				timeout = 4000;
+				timeout = 10000;
 				
 			}
 			else
 			{
 				template = this.error_notif_template({msg: message});
 				alert_class = ".alert-error";
-				timeout = 7000;
+				timeout = 20000;
 				
 			}
 			$(this.el).append(template);

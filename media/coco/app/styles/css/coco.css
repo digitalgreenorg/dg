@@ -10,6 +10,12 @@
 	position:fixed;
 }
 
+legend{
+	font-size: 24px;
+	font-family: source_sans_prolight, arial, helvetica, sans-serif;
+	color: #8f8e8d;
+}
+
 #coco_content {
     padding-top: 20px;
 }
@@ -17,6 +23,7 @@
 #online{
 	width: 10px;
 	margin-right: 3px;
+	margin-left: 15px;
 	position: relative;
 	display: none;
 }
@@ -24,6 +31,7 @@
 #offline{
 	width: 10px;
 	margin-right: 3px;
+	margin-left: 15px;
 	position:relative;
 	display: none;
 }
@@ -38,6 +46,7 @@
 
 #coco_userinfo {
     font-size: 11px;
+	margin-left: 5px;
 }
 
 #coco_sync {
@@ -50,7 +59,7 @@
 }
 
 #notifications{
-	width: 300px;
+	width: 400px;
 	position:fixed;
 	right: 10px;
 	font-size:12px;
