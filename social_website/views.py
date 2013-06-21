@@ -191,6 +191,7 @@ def searchFilters(request):
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
     topic = params.getlist('filters[topic][]', None)
+    subject = params.getlist('filters[subject][]', None)
     
     filters = {}
     filters['language'] = {}
@@ -213,6 +214,7 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'subcategory', subcategory, facet_dict)
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
+    filters = make_sub_filter(filters, 'subject', subject, facet_dict)
 
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
@@ -224,6 +226,7 @@ def create_query(params, language_name):
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
     topic = params.getlist('filters[topic][]', None)
+    subject = params.getlist('filters[subject][]', None)
     query = []
     if language:
         query.append({"terms":{"language_name" : language}})
@@ -239,6 +242,8 @@ def create_query(params, language_name):
         query.append({"terms":{"state" : state}})
     if topic:
         query.append({"terms":{"topic" : topic}})
+    if subject:
+        query.append({"terms":{"subject" : subject}})
     return query
 
 def elasticSearch(request):
@@ -268,7 +273,7 @@ def elasticSearch(request):
                                 
             "facets" : {"facet" : {
                                     "terms": {
-                                              "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
+                                              "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
                                               "size" : MAX_RESULT_SIZE
                                               }
                                    }
@@ -284,7 +289,7 @@ def elasticSearch(request):
                     {"match_all" : {}},
             "facets" : {"facet" : {
                                    "terms": {
-                                            "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
+                                            "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
                                             "size" : MAX_RESULT_SIZE
                                             }
                                    }

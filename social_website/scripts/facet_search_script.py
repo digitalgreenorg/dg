@@ -35,6 +35,11 @@ mappings ={
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
                                                 },
+                               "subject" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
+                               
                                "language_name" : {
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
