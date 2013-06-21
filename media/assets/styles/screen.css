@@ -2419,6 +2419,11 @@ textarea.comment-text {
     margin-right: 20px;
 }
 
+.comment-avatar-thumbnail{
+	height: 75px;
+	width: 75px;
+	
+}
 .commentLeft-border {
     padding-bottom: 30px;
     border-bottom: 1px solid #b3b2b1;

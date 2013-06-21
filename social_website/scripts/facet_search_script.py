@@ -1,6 +1,6 @@
 import site, sys
-sys.path.append('/home/ubuntu/code/dg_test')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_/lib/python2.7/site-packages/')
+sys.path.append('C:\Users\Tanmay\Documents\DIGITAL GREEN\dg')
+site.addsitedir('C:\Python27\Lib\site-packages')
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
