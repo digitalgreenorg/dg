@@ -1,29 +1,3 @@
-/**
- * @summary     IndexedDB Backbone adpater
- 
- 
- * @description Paginate, search and sort HTML tables
- * @version     1.9.4
- * @file        jquery.dataTables.js
- * @author      Allan Jardine (www.sprymedia.co.uk)
- * @contact     www.sprymedia.co.uk/contact
- *
- * @copyright Copyright 2008-2012 Allan Jardine, all rights reserved.
- *
- * This source file is free software, under either the GPL v2 license or a
- * BSD style license, available at:
- *   http://datatables.net/license_gpl2
- *   http://datatables.net/license_bsd
- * 
- * This source file is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- * 
- * For details please refer to: http://www.datatables.net
- */
-
-
-
 (function () { /*global _: false, Backbone: false */
     // Generate four random hex digits.
     function S4() {
@@ -35,31 +9,27 @@
         return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
     }
 
+    var Backbone, _;
     if(typeof exports !== 'undefined'){
         _ = require('underscore');
         Backbone = require('backbone');
+    } else {
+        _ = window._;
+        Backbone = window.Backbone;
     }
-    
-    
+
+
      // Naming is a mess!
      var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB ;
-     var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction; // No prefix in moz
+     var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || { READ_WRITE: "readwrite" }; // No prefix in moz
      var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange ; // No prefix in moz
 
-     /* Horrible Hack to prevent ' Expected an identifier and instead saw 'continue' (a reserved word).'*/
-     // if (window.indexedDB) {
-     //          indexedDB.prototype._continue =  indexedDB.prototype.continue;
-     //      } else if (window.webkitIDBRequest) {
-         webkitIDBRequest.prototype._continue = webkitIDBRequest.prototype.continue;
-     // }
-
-     window.indexedDB = indexedDB;
      window.IDBCursor = window.IDBCursor || window.webkitIDBCursor ||  window.mozIDBCursor ||  window.msIDBCursor ;
-    
+
 
     // Driver object
     // That's the interesting part.
-    // There is a driver for each schema provided. The schema is a te combination of name (for the database), a version as well as migrations to reach that 
+    // There is a driver for each schema provided. The schema is a te combination of name (for the database), a version as well as migrations to reach that
     // version of the database.
     function Driver(schema, ready, nolog) {
         this.schema         = schema;
@@ -70,12 +40,13 @@
         this.nolog          = nolog;
         this.supportOnUpgradeNeeded = false;
         var lastMigrationPathVersion = _.last(this.schema.migrations).version;
-        if (!this.nolog) debugLog("Indexeddb: opening database " + this.schema.id + " in version #" + lastMigrationPathVersion);
+        if (!this.nolog) debugLog("opening database " + this.schema.id + " in version #" + lastMigrationPathVersion);
         this.dbRequest      = indexedDB.open(this.schema.id,lastMigrationPathVersion); //schema version need to be an unsigned long
 
         this.launchMigrationPath = function(dbVersion) {
+            var transaction = this.dbRequest.transaction || versionRequest.result;
             var clonedMigrations = _.clone(schema.migrations);
-            this.migrate(clonedMigrations, dbVersion, {
+            this.migrate(transaction, clonedMigrations, dbVersion, {
                 success: function () {
                     this.ready();
                 }.bind(this),
@@ -86,30 +57,22 @@
         };
 
         this.dbRequest.onblocked = function(event){
-            console.log("Indexeddb: blocked: open database");
             if (!this.nolog) debugLog("blocked");
         }
 
         this.dbRequest.onsuccess = function (e) {
-            console.log("Indexeddb: success: open database");
             this.db = e.target.result; // Attach the connection ot the queue.
-            var currentIntDBVersion = (parseInt(this.db.version) ||  0); // we need convert beacuse chrome store in integer and ie10 DP4+ in int;
-            console.log("Indexeddb: current db version = "+currentIntDBVersion);
-                
             if(!this.supportOnUpgradeNeeded)
             {
-                console.log("Indexeddb: onupgradeneeded not supported");
-                
+                var currentIntDBVersion = (parseInt(this.db.version) ||  0); // we need convert beacuse chrome store in integer and ie10 DP4+ in int;
                 var lastMigrationInt = (parseInt(lastMigrationPathVersion) || 0);  // And make sure we compare numbers with numbers.
 
                 if (currentIntDBVersion === lastMigrationInt) { //if support new event onupgradeneeded will trigger the ready function
                     // No migration to perform!
-                    console.log("Indexeddb: No upgrade needed: open database ");
-                    
+
                     this.ready();
                 } else if (currentIntDBVersion < lastMigrationInt ) {
                     // We need to migrate up to the current migration defined in the database
-                    console.log("Indexeddb: upgrade needed: open database ");
                     this.launchMigrationPath(currentIntDBVersion);
                 } else {
                     // Looks like the IndexedDB is at a higher version than the current driver schema.
@@ -122,20 +85,17 @@
 
         this.dbRequest.onerror = function (e) {
             // Failed to open the database
-            console.log("Indexeddb: error:open database");
-            this.error = "Couldn't connect to the database"
+            this.error = "Couldn't not connect to the database"
         }.bind(this);
 
         this.dbRequest.onabort = function (e) {
             // Failed to open the database
-            console.log("Indexeddb: abort: open database");
             this.error = "Connection to the database aborted"
         }.bind(this);
 
 
 
         this.dbRequest.onupgradeneeded = function(iDBVersionChangeEvent){
-            console.log("Indexeddb: upgradeneeded: open database");
             this.db =iDBVersionChangeEvent.target.transaction.db;
 
             this.supportOnUpgradeNeeded = true;
@@ -172,14 +132,8 @@
         },
 
         // Performs all the migrations to reach the right version of the database.
-        migrate: function (migrations, version, options) {
-            if (!this.nolog) debugLog("Starting migrations from " + version);
-            this._migrate_next(migrations, version, options);
-        },
-
-        // Performs the next migrations. This method is private and should probably not be called.
-        _migrate_next: function (migrations, version, options) {
-            if (!this.nolog) debugLog("_migrate_next begin version from #" + version);
+        migrate: function (transaction, migrations, version, options) {
+            if (!this.nolog) debugLog("migrate begin version from #" + version);
             var that = this;
             var migration = migrations.shift();
             if (migration) {
@@ -196,22 +150,19 @@
                         };
                     }
                     // First, let's run the before script
-                    if (!this.nolog) debugLog("_migrate_next begin before version #" + migration.version);
+                    if (!this.nolog) debugLog("migrate begin before version #" + migration.version);
                     migration.before(function () {
-                        if (!this.nolog) debugLog("_migrate_next done before version #" + migration.version);
+                        if (!this.nolog) debugLog("migrate done before version #" + migration.version);
 
                         var continueMigration = function (e) {
-                            if (!this.nolog) debugLog("_migrate_next continueMigration version #" + migration.version);
-
-                            var transaction = this.dbRequest.transaction || versionRequest.result;
-                            if (!this.nolog) debugLog("_migrate_next begin migrate version #" + migration.version);
+                            if (!this.nolog) debugLog("migrate begin migrate version #" + migration.version);
 
                             migration.migrate(transaction, function () {
-                                if (!this.nolog) debugLog("_migrate_next done migrate version #" + migration.version);
+                                if (!this.nolog) debugLog("migrate done migrate version #" + migration.version);
                                 // Migration successfully appliedn let's go to the next one!
-                                if (!this.nolog) debugLog("_migrate_next begin after version #" + migration.version);
+                                if (!this.nolog) debugLog("migrate begin after version #" + migration.version);
                                 migration.after(function () {
-                                    if (!this.nolog) debugLog("_migrate_next done after version #" + migration.version);
+                                    if (!this.nolog) debugLog("migrate done after version #" + migration.version);
                                     if (!this.nolog) debugLog("Migrated to " + migration.version);
 
                                     //last modification occurred, need finish
@@ -222,9 +173,9 @@
                                             options.success();
                                         }
                                         else{*/
-                                            if (!this.nolog) debugLog("_migrate_next setting transaction.oncomplete to finish  version #" + migration.version);
+                                            if (!this.nolog) debugLog("migrate setting transaction.oncomplete to finish  version #" + migration.version);
                                             transaction.oncomplete = function() {
-                                                if (!that.nolog) debugLog("_migrate_next done transaction.oncomplete version #" + migration.version);
+                                                if (!that.nolog) debugLog("migrate done transaction.oncomplete version #" + migration.version);
 
                                                 if (!that.nolog) debugLog("Done migrating");
                                                 // No more migration
@@ -234,11 +185,8 @@
                                     }
                                     else
                                     {
-                                        if (!this.nolog) debugLog("_migrate_next setting transaction.oncomplete to recursive _migrate_next  version #" + migration.version);
-                                        transaction.oncomplete = function() {
-                                           if (!this.nolog) debugLog("_migrate_next end from version #" + version + " to " + migration.version);
-                                           that._migrate_next(migrations, version, options);
-                                       }
+                                        if (!this.nolog) debugLog("migrate end from version #" + version + " to " + migration.version);
+                                            that.migrate(transaction, migrations, version, options);
                                     }
 
                                 }.bind(this));
@@ -246,7 +194,7 @@
                         }.bind(this);
 
                         if(!this.supportOnUpgradeNeeded){
-                            if (!this.nolog) debugLog("_migrate_next begin setVersion version #" + migration.version);
+                            if (!this.nolog) debugLog("migrate begin setVersion version #" + migration.version);
                             var versionRequest = this.db.setVersion(migration.version);
                             versionRequest.onsuccess = continueMigration;
                             versionRequest.onerror = options.error;
@@ -259,7 +207,7 @@
                 } else {
                     // No need to apply this migration
                     if (!this.nolog) debugLog("Skipping migration " + migration.version);
-                    this._migrate_next(migrations, version, options);
+                    this.migrate(transaction, migrations, version, options);
                 }
             }
         },
@@ -282,7 +230,11 @@
                 this.update(storeName, object, options); // We may want to check that this is not a collection. TOFIX
                 break;
             case "delete":
-                this.delete(storeName, object, options); // We may want to check that this is not a collection. TOFIX
+                if (object.id || object.cid) {
+                    this.delete(storeName, object, options);
+                } else {
+                    this.clear(storeName, object, options);
+                }
                 break;
             default:
                 // Hum what?
@@ -292,61 +244,62 @@
         // Writes the json to the storeName in db. It is a create operations, which means it will fail if the key already exists
         // options are just success and error callbacks.
         create: function (storeName, object, options) {
-            var writeTransaction = this.db.transaction([storeName], "readwrite");
+            var writeTransaction = this.db.transaction([storeName], 'readwrite');
             //this._track_transaction(writeTransaction);
             var store = writeTransaction.objectStore(storeName);
             var json = object.toJSON();
             var writeRequest;
-            // console.log(json);
-            // if (!json.id) json.id = guid();
 
-            // if (!store.keyPath)
-//               writeRequest = store.add(json, json.id);
-//             else
-              writeRequest = store.add(json);
+            if (json.id === undefined && !store.autoIncrement) json.id = guid();
 
-            writeRequest.onerror = function (e) {
+            writeTransaction.onerror = function (e) {
                 options.error(e);
             };
-            writeRequest.onsuccess = function (e) {
-                // console.log(e.target.result);
-                if(!json.id) json.id = e.target.result;
-                options.success(object,json,options);
+            writeTransaction.oncomplete = function (e) {
+                options.success(json);
             };
+
+            if (!store.keyPath)
+                writeRequest = store.add(json, json.id);
+            else
+                writeRequest = store.add(json);
+            
+            writeRequest.onsuccess = function (e) {
+                if(!json.id) json.id = e.target.result;
+            };    
         },
-        
+
         // Writes the json to the storeName in db. It is an update operation, which means it will overwrite the value if the key already exist
         // options are just success and error callbacks.
         update: function (storeName, object, options) {
-            var writeTransaction = this.db.transaction([storeName], "readwrite");
+            var writeTransaction = this.db.transaction([storeName], 'readwrite');
             //this._track_transaction(writeTransaction);
             var store = writeTransaction.objectStore(storeName);
             var json = object.toJSON();
             var writeRequest;
 
-            // if (!json.id) json.id = guid();
+            if (!json.id) json.id = guid();
 
-            // if (!store.keyPath)
-//               writeRequest = store.put(json, json.id);
-//             else
+            if (!store.keyPath)
+              writeRequest = store.put(json, json.id);
+            else
               writeRequest = store.put(json);
 
             writeRequest.onerror = function (e) {
                 options.error(e);
             };
-            writeRequest.onsuccess = function (e) {
-                options.success(object,json,options);
+            writeTransaction.oncomplete = function (e) {
+                options.success(json);
             };
         },
 
-        // Reads from storeName in db with json.id if it's there of with any json.xxxx as long as xxx is an index in storeName 
+        // Reads from storeName in db with json.id if it's there of with any json.xxxx as long as xxx is an index in storeName
         read: function (storeName, object, options) {
             var readTransaction = this.db.transaction([storeName], "readonly");
             this._track_transaction(readTransaction);
 
             var store = readTransaction.objectStore(storeName);
             var json = object.toJSON();
-
 
             var getRequest = null;
             if (json.id) {
@@ -363,7 +316,7 @@
             if (getRequest) {
                 getRequest.onsuccess = function (event) {
                     if (event.target.result) {
-                        options.success(object,event.target.result,options);
+                        options.success(event.target.result);
                     } else {
                         options.error("Not Found");
                     }
@@ -378,18 +331,35 @@
 
         // Deletes the json.id key and value in storeName from db.
         delete: function (storeName, object, options) {
-            var deleteTransaction = this.db.transaction([storeName], "readwrite");
+            var deleteTransaction = this.db.transaction([storeName], 'readwrite');
             //this._track_transaction(deleteTransaction);
 
             var store = deleteTransaction.objectStore(storeName);
             var json = object.toJSON();
 
             var deleteRequest = store.delete(json.id);
-            deleteRequest.onsuccess = function (event) {
-                options.success(object,null,options);
+
+            deleteTransaction.oncomplete = function (event) {
+                options.success(null);
             };
             deleteRequest.onerror = function (event) {
                 options.error("Not Deleted");
+            };
+        },
+
+        // Clears all records for storeName from db.
+        clear: function (storeName, object, options) {
+            var deleteTransaction = this.db.transaction([storeName], "readwrite");
+            //this._track_transaction(deleteTransaction);
+
+            var store = deleteTransaction.objectStore(storeName);
+
+            var deleteRequest = store.clear();
+            deleteRequest.onsuccess = function (event) {
+                options.success(null);
+            };
+            deleteRequest.onerror = function (event) {
+                options.error("Not Cleared");
             };
         },
 
@@ -424,10 +394,10 @@
 
                             if (options.conditions[index.keyPath][0] > options.conditions[index.keyPath][1]) {
                                 // Looks like we want the DESC order
-                                readCursor = index.openCursor(bounds, window.IDBCursor.PREV);
+                                readCursor = index.openCursor(bounds, window.IDBCursor.PREV || "prev");
                             } else {
                                 // We want ASC order
-                                readCursor = index.openCursor(bounds, window.IDBCursor.NEXT);
+                                readCursor = index.openCursor(bounds, window.IDBCursor.NEXT || "next");
                             }
                         } else if (options.conditions[index.keyPath] != undefined) {
                             bounds = IDBKeyRange.only(options.conditions[index.keyPath]);
@@ -442,9 +412,9 @@
                     upper = options.range[0] > options.range[1] ? options.range[0] : options.range[1];
                     bounds = IDBKeyRange.bound(lower, upper);
                     if (options.range[0] > options.range[1]) {
-                        readCursor = store.openCursor(bounds, window.IDBCursor.PREV);
+                        readCursor = store.openCursor(bounds, window.IDBCursor.PREV || "prev");
                     } else {
-                        readCursor = store.openCursor(bounds, window.IDBCursor.NEXT);
+                        readCursor = store.openCursor(bounds, window.IDBCursor.NEXT || "next");
                     }
                 } else {
                     readCursor = store.openCursor();
@@ -466,7 +436,7 @@
                             // We need to indicate that we're done. But, how?
                             collection.trigger("reset");
                         } else {
-                            options.success(collection,elements,options); // We're done. No more elements.
+                            options.success(elements); // We're done. No more elements.
                         }
                     }
                     else {
@@ -549,7 +519,7 @@
         }
     };
 
-    // Method used by Backbone for sync of data with data store. It was initially designed to work with "server side" APIs, This wrapper makes 
+    // Method used by Backbone for sync of data with data store. It was initially designed to work with "server side" APIs, This wrapper makes
     // it work with the local indexedDB stuff. It uses the schema attribute provided by the object.
     // The wrapper keeps an active Executuon Queue for each "schema", and executes querues agains it, based on the object type (collection or
     // single model), but also the method... etc.
@@ -567,6 +537,11 @@
             return;
         }
 
+        // If a model or a collection does not define a database, fall back on ajaxSync
+        if (typeof object.database === 'undefined' && typeof Backbone.ajaxSync === 'function'){
+            return Backbone.ajaxSync(method, object, options);
+        }
+
         var schema = object.database;
         if (Databases[schema.id]) {
             if(Databases[schema.id].version != _.last(schema.migrations).version){
@@ -575,18 +550,45 @@
             }
         }
 
+        var promise;
+        var noop = function() {};
+
+        if (typeof($) != 'undefined' && $.Deferred) {
+            var dfd = $.Deferred();
+            var resolve = dfd.resolve;
+            var reject = dfd.reject;
+
+            promise = dfd.promise();
+        } else {
+            var resolve = noop;
+            var reject = noop;
+        }
+
+        var success = options.success;
+        options.success = function(resp) {
+            resolve();
+            if (success) success(resp);
+            object.trigger('sync', object, resp, options);
+        };
+
+        var error = options.error;
+        options.error = function(resp) {
+            reject();
+            if (error) error(resp);
+            object.trigger('error', object, resp, options);
+        };
+
         var next = function(){
             Databases[schema.id].execute([method, object, options]);
         };
 
         if (!Databases[schema.id]) {
               Databases[schema.id] = new ExecutionQueue(schema,next,schema.nolog);
-            }else
-        {
+        } else {
             next();
         }
 
-
+    	return promise;
     };
 
     if(typeof exports == 'undefined'){
@@ -597,6 +599,6 @@
         exports.sync = sync;
         exports.debugLog = debugLog;
     }
-    
+
     //window.addEventListener("unload",function(){Backbone.sync("closeall")})
 })();

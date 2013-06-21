@@ -121,11 +121,6 @@ define([
                 });
                 this.f_index.push(f_entity);    
                 this.f_colls.push(new generic_collection_offline());
-                // Reset is called when a collection has finished fetching.
-                // We are binding the reset of the last added collection to render_foreign_entity
-                _.last(this.f_colls)
-                    .bind('reset', this.render_foreign_entity);
-                
                 /*
                 this.f_colls.push(new generic_collection_offline().bind);
                 
@@ -214,8 +209,8 @@ define([
             
             
             
-
-
+            
+            var that = this;
             // fetching all foreign collections
             //TODO: handle error callback
             for (var i = 0; i < this.f_colls.length; i++) {
@@ -223,6 +218,7 @@ define([
                     success: function(collection) {
                         console.log("ADD/EDIT: a foreign coll fetched - "+collection.storeName);
                         // render foreign collection is called automatically on successful fetch
+                        that.render_foreign_entity(collection,null);
                     },
                     error: function() {
                         //ToDO: error handling
