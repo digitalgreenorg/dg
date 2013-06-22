@@ -391,7 +391,7 @@ define([
                     Online.save(null,form.inline.entity,on_ijson)
                         .done(function(on_in_model){
                             console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                            off_ijson.online_id = on_in_model.get("id");
+                            off_ijson.online_id = parseInt(on_in_model.get("id"));
                             Offline.save(null,form.inline.entity,off_ijson)
                                 .done(function(off_in_model){
                                     console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
