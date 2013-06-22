@@ -32,6 +32,8 @@ define(function(require) {
 							'collections', true);
 
 					// set up input params
+					
+					this.addInputParam('searchString',false, 0, true)
 					this.addInputParam('offset', true, 0, true);
 					this.addInputParam('limit', true, 0, true);
 					this.addInputParam('filters', false, null, true,
@@ -56,6 +58,8 @@ define(function(require) {
 
 					this.setInputParam('offset', page * countPerPage, true);
 					this.setInputParam('limit', countPerPage, true);
+					this.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
+					
 				
 
 					// perform the fetch
@@ -165,7 +169,7 @@ define(function(require) {
 					return this._dataModel.get('totalCount');
 				},
 
-				getCollections : function() {
+				getCollections : function(searchString) {
 
 					var page = this.getInputParam('offset');
 					var countPerPage = this.getInputParam('limit');
@@ -175,7 +179,7 @@ define(function(require) {
 
 					
 					if (!collections) {
-						this.fetch(page, countPerPage);
+						this.fetch(page, countPerPage, searchString);
 						return false;
 					} 
 

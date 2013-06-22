@@ -214,10 +214,16 @@ define(function(require) {
 
         _selectItem: function() {
             var $currentActive = this._references.$searchItemsContainer.find('.js-search-completion-item.hover');
+            if ($currentActive.length==0){
+            	var searchString = this._references.dataFeed._state.inputParams.searchString.value
+            	currentURL = "http://127.0.0.1:8000/social/discover/?searchString=" + searchString;
+            }
+            else{
             var currentURL = $currentActive.attr('href');
 
             if (!currentURL) {
                 return;
+            }
             }
 
             window.location.href = currentURL;
@@ -290,7 +296,7 @@ define(function(require) {
 
         _onSearchItemMouseEnter: function(e) {
             this._references.$searchItemsContainer.find('.js-search-completion-item.hover').removeClass('hover');
-
+            
             var $currentTarget = jQuery(e.currentTarget);
             $currentTarget.addClass('hover');
         },

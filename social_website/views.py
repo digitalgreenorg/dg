@@ -135,6 +135,18 @@ def partner_view(request):
         }
     return render_to_response('profile.html' , context,context_instance = RequestContext(request))
 
+def search_view(request):
+    searchString = request.GET.get('searchString')
+    context= {
+              'header': {
+                         'jsController':'Collections',
+                         'loggedIn'    : False
+                         },
+              'searchString': searchString
+        }
+    return render_to_response('collections.html', context, context_instance=RequestContext(request))
+    
+
 def searchCompletions(request):
     searchString = request.GET.get('searchString')
     maxCount = int(request.GET.get('maxCount'))
@@ -249,9 +261,37 @@ def create_query(params, language_name):
 def elasticSearch(request):
     params = request.GET
     language_name = params.get('language__name', None)
+    searchString = params.get('searchString', None)
+    query = []
     if language_name == 'All Languages':
         language_name = None
-    query = create_query(params, language_name)
+    if searchString:
+        q = {"query": 
+                    {
+                         "match" : {
+                                     "_all" : {
+                                               "query" : searchString,
+                                               "analyzer" : "Language"
+                                               }
+                                    }
+                                              #"fields" : ["title","videos","language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"],
+                                              #"analyzer" : "partial_name"
+#                                              "max_query_terms" : 12
+                         },
+                        "facets" : {"facet" : {
+                                               "terms": {
+                                                         "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+                                                         "size" : MAX_RESULT_SIZE
+                                                         }
+                                               }
+                                    },
+                "sort" : {
+                          "_score" : { }
+                          },
+                "size" : MAX_RESULT_SIZE
+                 }
+    else: 
+        query = create_query(params, language_name)
     order_by = params.get('order_by')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
@@ -284,7 +324,7 @@ def elasticSearch(request):
             
             "size" : MAX_RESULT_SIZE
             }
-    else:           
+    elif query == [] and not searchString:           
         q = {"query": 
                     {"match_all" : {}},
             "facets" : {"facet" : {
@@ -311,3 +351,34 @@ def elasticSearch(request):
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
+    
+##def searchResultsView(request):
+#    searchString = request.GET.get('searchString')
+#    conn = ES(['127.0.0.1:9200'])
+#    conn.default_indices="test2"
+#    conn.refresh("test2")
+#    q = {"query": 
+#                {"match_all" : {}},
+#        "facets" : {"facet" : {
+#                                "terms": {
+#                                          "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+#                                          "size" : MAX_RESULT_SIZE
+#                                        }
+#                               }
+#                    },
+#             "size" : MAX_RESULT_SIZE
+#        }
+#    result_list = []
+#    try :
+#        query = json.dumps(q)
+#        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+#        result = json.loads(response.read())
+#        for res in result['hits']['hits']:
+#            result_list.append(res['_source'])
+#        facets = json.dumps(result['facets']['facet']['terms'])
+#        resp = json.dumps({"meta": { "next": "", "previous": "null", "total_count": str(len(result_list))},"objects": result_list, "facets" : facets})
+#        return HttpResponse(resp)
+#    except Exception, ex:
+#        return HttpResponse('0')
+    
+    
