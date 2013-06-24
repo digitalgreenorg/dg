@@ -83,34 +83,30 @@ class MediatorFormValidation(FormValidation):
         """
     
     def uri_to_pk(self, uri):
-        """
-        Returns the integer PK part of a URI.
+            """
+                Returns the integer PK part of a URI.
+                
+                Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+                returns the URI unmodified.
+                
+                Also handles lists of URIs
+                """
+            
+            if uri is None:
+                return None
+            
+            # convert everything to lists
+            print 'in mediator form validation'
+            converted = []
+            if type(uri) == type(dict()):
+                converted.append(uri.get('id'))
+                return uri.get('id')
+            elif type(uri) == type(list()):
+                for item in uri:
+                    print item.get('id')
+                    converted.append(item.get('id'))
+                return converted
 
-        Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
-        returns the URI unmodified.
-
-        Also handles lists of URIs
-        """
-
-        if uri is None:
-            return None
-
-        # convert everything to lists
-        multiple = not isinstance(uri, basestring)
-        uris = uri if multiple else [uri]
-
-        # handle all passed URIs
-        converted = []
-        for one_uri in uris:
-            try:
-                # hopefully /api/v1/<resource_name>/<pk>/
-                converted.append(int(one_uri.split('/')[-2]))
-            except (IndexError, ValueError):
-                raise ValueError(
-                    "URI %s could not be converted to PK integer." % one_uri)
-
-        # convert back to original format
-        return converted if multiple else converted[0]
 
     def is_valid(self, bundle, request=None):
         partner_id = get_user_partner_id(request)
