@@ -504,6 +504,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select  name="expressed_adoption_video" class="chzn-select">
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -700,6 +701,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select" required>
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 

@@ -102,6 +102,16 @@ table {
   margin-bottom: 3px;
 }
 
+.chzn-container{
+    float:left;
+    margin-bottom:20px;
+}
+
+.control-group{
+    clear:both;
+}
+
+
 @media (min-width: 1200px) and (max-width: 1240px) {
 	  .span10 {
 	    width:900px;

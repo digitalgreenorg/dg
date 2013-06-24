@@ -436,6 +436,7 @@ function() {
         'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
         form_field_validation:{
+            ignore: [],
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')

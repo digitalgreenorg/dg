@@ -451,6 +451,7 @@ function() {
         'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
         form_field_validation:{
+            ignore: [],
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -5685,9 +5686,6 @@ define('views/form',[
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $(".chzn-select").chosen({'search_contains':true});
-            $(".chzn-container").css('float', 'left');
-            $(".chzn-container").css('margin-bottom','20px');
-            $(".control-group").css('clear', 'both');
 			
 			var eDate = new Date();
 			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
@@ -8126,7 +8124,6 @@ define('views/dashboard',[
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            // this.setView("#upload_modal_ph",this.upload_v);
             //inserting into body bcoz can't insert into fixed positioned dom elements
             $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
@@ -8151,9 +8148,7 @@ define('views/dashboard',[
             {
                 return dfd.resolve();
             }
-            // this.setView("#upload_modal_ph",this.inc_download_v);
             $(this.inc_download_v.el).appendTo('body');     
-            // this.inc_download_v.render();
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     return dfd.resolve();
