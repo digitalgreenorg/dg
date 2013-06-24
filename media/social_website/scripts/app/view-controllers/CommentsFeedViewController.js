@@ -107,7 +107,7 @@ define(function(require) {
             }
             
             var dataFeed = this._references.dataFeed;
-            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('offset', page*commentsPerPage, true)
             dataFeed.setInputParam('limit', commentsPerPage, true);
 
             var commentsArray = dataFeed.getComments();
@@ -137,7 +137,9 @@ define(function(require) {
 
         _renderComments: function(commentsArray) {
 
-            var userID = jQuery('body').data('userId');
+            // Commenting user and changing to farmer for every comment
+        	//var userID = jQuery('body').data('userId');
+        	
             
             var renderCommentsArray = [];
 
@@ -147,7 +149,11 @@ define(function(require) {
             var repliesLength;
             for (; i < len; i++) {
                 var currentCommentsItemData = Util.Object.clone(commentsArray[i], true);
-                currentCommentsItemData._repliesPlural = currentCommentsItemData.replies.length != 1;
+                var farmer = currentCommentsItemData.farmer;
+                
+                //commenting replies amd like comment code
+                
+                /*currentCommentsItemData._repliesPlural = currentCommentsItemData.replies.length != 1;
                 currentCommentsItemData._formattedLikedCount = Util.integerCommaFormat(currentCommentsItemData.likedCount);
                 currentCommentsItemData._likesPlural = currentCommentsItemData.likedCount != 1;
                 currentCommentsItemData._replied = false;
@@ -166,6 +172,7 @@ define(function(require) {
                     currentReply._formattedLikedCount = Util.integerCommaFormat(currentReply.likedCount);
                     currentReply._likesPlural = currentReply.likedCount != 1;
                 }
+                */
 
                 renderCommentsArray.push(currentCommentsItemData);
             }

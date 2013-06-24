@@ -1,15 +1,15 @@
 {{#comments}}
 <li class="js-comment">
     <div class="media">
-        {{#user.avatarURL}}
+        {{#farmer.thumbnailURL}}
         <div class="img comment-left-img">
-            <img src="{{user.avatarURL}}" alt="" />
+            <img class="comment-avatar-thumbnail" src="{{farmer.thumbnailURL}}"  alt="" />
         </div>
-        {{/user.avatarURL}}
+        {{/farmer.thumbnailURL}}
         <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
             <div class="comment-left-carat">
                 <div class="comment-hd">
-                    <h3 class="copy"><span class="hdg-bold">{{user.name}}</span>, <span class="copy-lt">{{user.country.countryName}}</span></h3>
+                    <h3 class="copy"><span class="hdg-bold">{{farmer.name}}</span>, <span class="copy-lt">{{farmer.country}}</span></h3>
                 </div>
                 <div class="comment-bd">
                     <p class="copy layout-vr-sm">{{text}}</p>
