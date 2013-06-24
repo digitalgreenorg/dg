@@ -48,26 +48,34 @@ define([
         
         //initializes the global vars used, ui
         initialize_inc_download: function(options){
+            var dfd = new $.Deferred();
             this.in_progress = true;
             this.user_interrupt = false;
             var that = this;
             if(!(options.background))
             {
-                this.template = incremental_download_template;
+                this.template = "#incremental_download_template";
                 this.render()
                     .done(function(){
                         that.$('#incremental_download_modal').modal({
                             keyboard: false,
                             backdrop: "static",
                         });
+                        that.$('#incremental_download_modal').on('shown', function () {
+                            dfd.resolve();
+                        });
                         that.$('#incremental_download_modal').modal('show');                    
                     });
             }
             else
             {
-                this.template = incremental_download_background_template;
-                this.render();
+                this.template = "#incremental_download_background_template";
+                this.render()
+                    .done(function(){
+                        dfd.resolve();
+                    });
             }
+            return dfd.promise();
         },
         
         tear_down: function(){
@@ -79,39 +87,41 @@ define([
         start_incremental_download: function(options) {
             var dfd = new $.Deferred();
             var that = this;        
-            this.initialize_inc_download(options);    
-            console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
+            console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
-            this.getIncObjects()
-                .done(function(objects){
-                    that.iterate_incd_objects(objects)
-                        .done(function(last_object_timestamp){
-                            that.finish_download(last_object_timestamp)
-                                .done(function(){
-                                    that.tear_down();
-                                    dfd.resolve();
+            this.initialize_inc_download(options) //does not rejects dfd...may not resolve either!
+                .done(function(){
+                    that.getIncObjects()
+                        .done(function(objects){
+                            that.iterate_incd_objects(objects)
+                                .done(function(last_object_timestamp){
+                                    that.finish_download(last_object_timestamp)
+                                        .done(function(){
+                                            that.tear_down();
+                                            dfd.resolve();
+                                        })
+                                        .fail(function(error){
+                                            that.tear_down();
+                                            dfd.reject(error);
+                                        });
                                 })
                                 .fail(function(error){
-                                    that.tear_down();
-                                    dfd.reject(error);
+                                    //when user interrupts
+                                    if(error.last_object_timestamp)
+                                    {
+                                        that.finish_download(error.last_object_timestamp)
+                                            .always(function(){
+                                                that.tear_down();
+                                                dfd.reject(error.err_msg);
+                                            });
+                                    }
+                                    dfd.reject(error.err_msg)
                                 });
                         })
                         .fail(function(error){
-                            //when user interrupts
-                            if(error.last_object_timestamp)
-                            {
-                                that.finish_download(error.last_object_timestamp)
-                                    .always(function(){
-                                        that.tear_down();
-                                        dfd.reject(error.err_msg);
-                                    });
-                            }
-                            dfd.reject(error.err_msg)
+                            that.tear_down();
+                            dfd.reject(error);
                         });
-                })
-                .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
                 });
             return dfd;    
         },
@@ -121,7 +131,10 @@ define([
             this.start_timestamp = new Date();
             this.get_last_download_timestamp()
                 .done(function(timestamp){
-                    $.get("/get_log/",{timestamp:timestamp})
+                    console.log("Timestamp for inc download - "+timestamp);
+                    $.get(all_configs.misc.inc_download_url,{
+                        timestamp:timestamp
+                    }, function(){},"json")
                         .fail(function(){ 
                             dfd.reject("Incremental download objects fetch failed!");
                         })
@@ -252,7 +265,7 @@ define([
         },    
         
         get_online_id: function(obj){
-            return obj.fields.model_id;
+            return parseInt(obj.fields.model_id);
         },
         
         get_foreign_field_desc: function(obj){
@@ -486,6 +499,10 @@ define([
         
         finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
+            
+            //possible if timestamp of last object in incd was not present or no objects were returned
+            if(!last_object_timestamp)
+                last_object_timestamp = this.start_timestamp;
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
             var generic_model_offline = Backbone.Model.extend({

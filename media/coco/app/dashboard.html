@@ -177,8 +177,6 @@
                     </ul>
                 </div>
             </div>
-            
-            <div id = "upload_modal_ph"></div>
 </script>
 
    <script type="text/template" id="page_layout">
@@ -507,6 +505,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select  name="expressed_adoption_video" class="chzn-select">
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -703,6 +702,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select" required>
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -825,7 +825,9 @@
         
             <div class="form-actions">
               <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-              <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+              <%if(button2){%>
+                  <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+              <%}%>
             </div>
         </form>
         </div>

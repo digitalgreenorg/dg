@@ -451,6 +451,7 @@ function() {
         'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
         form_field_validation:{
+            ignore: [],
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -676,7 +677,8 @@ function() {
     
     var misc = {
         download_chunk_size : 2000,
-        background_download_interval:5*60*1000
+        background_download_interval:5*60*1000,
+        inc_download_url: "/get_log/"
     };
     
     return {
@@ -5684,9 +5686,6 @@ define('views/form',[
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $(".chzn-select").chosen({'search_contains':true});
-            $(".chzn-container").css('float', 'left');
-            $(".chzn-container").css('margin-bottom','20px');
-            $(".control-group").css('clear', 'both');
 			
 			var eDate = new Date();
 			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
@@ -6470,10 +6469,7 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is expanded");
                                 $.each(online_json[element],function(index,object){
                                     var field_object = object[field];
-                                    if(field_object[id_field])
-                                    {
-                                        field_dfds.push(that.convert_object(field_object,field_desc));
-                                    }
+                                    field_dfds.push(that.convert_object(field_object,field_desc));
                                 });
                             }
                         }
@@ -6503,6 +6499,8 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
         
         convert_object: function(obj, field_desc){
             var dfd = new $.Deferred();
+            if(!obj[field_desc.id_attribute])
+                return dfd.resolve();
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: field_desc.entity_name,
@@ -6680,31 +6678,44 @@ define('views/upload',[
         },
         
         tear_down: function(){
-            $('#upload_modal').modal('hide'); 
-            // this.remove();   
+            var dfd = new $.Deferred();
             this.in_progress = false; 
+            //modal takes time to hide. Need to get the correct point of time when upload has finished.
+            var that = this;
+            $('#upload_modal').on('hidden', function () {
+              that.remove();   
+              dfd.resolve();
+            });
+            $('#upload_modal').modal('hide'); 
+            return dfd.promise();
         },
               
         start_upload: function() {
             var dfd = new $.Deferred();
-            console.log("UPLOAD: start the fuckin upload");
+            console.log("UPLOAD: start the upload");
             var that = this;
             this.initialize_upload();
             this.get_uploadq()
                 .done(function(collection){
                     that.iterate_uploadq(collection)
                         .done(function(){
-                            that.tear_down();
-                            dfd.resolve();
+                            that.tear_down() //tear down does not rejects dfd....it may not resolve also!
+                                .done(function(){
+                                    dfd.resolve();
+                                });
                         })
                         .fail(function(error){
-                            that.tear_down();
-                            dfd.reject(error);
+                            that.tear_down()
+                                .done(function(){
+                                    dfd.reject(error);
+                                });
                         });
                 })
                 .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
+                    that.tear_down()
+                        .done(function(){
+                            dfd.reject(error);
+                        });
                 });
             return dfd;
         },
@@ -7139,26 +7150,34 @@ define('views/incremental_download',[
         
         //initializes the global vars used, ui
         initialize_inc_download: function(options){
+            var dfd = new $.Deferred();
             this.in_progress = true;
             this.user_interrupt = false;
             var that = this;
             if(!(options.background))
             {
-                this.template = incremental_download_template;
+                this.template = "#incremental_download_template";
                 this.render()
                     .done(function(){
                         that.$('#incremental_download_modal').modal({
                             keyboard: false,
                             backdrop: "static",
                         });
+                        that.$('#incremental_download_modal').on('shown', function () {
+                            dfd.resolve();
+                        });
                         that.$('#incremental_download_modal').modal('show');                    
                     });
             }
             else
             {
-                this.template = incremental_download_background_template;
-                this.render();
+                this.template = "#incremental_download_background_template";
+                this.render()
+                    .done(function(){
+                        dfd.resolve();
+                    });
             }
+            return dfd.promise();
         },
         
         tear_down: function(){
@@ -7170,39 +7189,41 @@ define('views/incremental_download',[
         start_incremental_download: function(options) {
             var dfd = new $.Deferred();
             var that = this;        
-            this.initialize_inc_download(options);    
-            console.log("INCREMENTAL DOWNLOAD: start the fuckin incremental_download");
+            console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
-            this.getIncObjects()
-                .done(function(objects){
-                    that.iterate_incd_objects(objects)
-                        .done(function(last_object_timestamp){
-                            that.finish_download(last_object_timestamp)
-                                .done(function(){
-                                    that.tear_down();
-                                    dfd.resolve();
+            this.initialize_inc_download(options) //does not rejects dfd...may not resolve either!
+                .done(function(){
+                    that.getIncObjects()
+                        .done(function(objects){
+                            that.iterate_incd_objects(objects)
+                                .done(function(last_object_timestamp){
+                                    that.finish_download(last_object_timestamp)
+                                        .done(function(){
+                                            that.tear_down();
+                                            dfd.resolve();
+                                        })
+                                        .fail(function(error){
+                                            that.tear_down();
+                                            dfd.reject(error);
+                                        });
                                 })
                                 .fail(function(error){
-                                    that.tear_down();
-                                    dfd.reject(error);
+                                    //when user interrupts
+                                    if(error.last_object_timestamp)
+                                    {
+                                        that.finish_download(error.last_object_timestamp)
+                                            .always(function(){
+                                                that.tear_down();
+                                                dfd.reject(error.err_msg);
+                                            });
+                                    }
+                                    dfd.reject(error.err_msg)
                                 });
                         })
                         .fail(function(error){
-                            //when user interrupts
-                            if(error.last_object_timestamp)
-                            {
-                                that.finish_download(error.last_object_timestamp)
-                                    .always(function(){
-                                        that.tear_down();
-                                        dfd.reject(error.err_msg);
-                                    });
-                            }
-                            dfd.reject(error.err_msg)
+                            that.tear_down();
+                            dfd.reject(error);
                         });
-                })
-                .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
                 });
             return dfd;    
         },
@@ -7212,7 +7233,10 @@ define('views/incremental_download',[
             this.start_timestamp = new Date();
             this.get_last_download_timestamp()
                 .done(function(timestamp){
-                    $.get("/get_log/",{timestamp:timestamp})
+                    console.log("Timestamp for inc download - "+timestamp);
+                    $.get(all_configs.misc.inc_download_url,{
+                        timestamp:timestamp
+                    }, function(){},"json")
                         .fail(function(){ 
                             dfd.reject("Incremental download objects fetch failed!");
                         })
@@ -7343,7 +7367,7 @@ define('views/incremental_download',[
         },    
         
         get_online_id: function(obj){
-            return obj.fields.model_id;
+            return parseInt(obj.fields.model_id);
         },
         
         get_foreign_field_desc: function(obj){
@@ -7577,6 +7601,10 @@ define('views/incremental_download',[
         
         finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
+            
+            //possible if timestamp of last object in incd was not present or no objects were returned
+            if(!last_object_timestamp)
+                last_object_timestamp = this.start_timestamp;
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
             var generic_model_offline = Backbone.Model.extend({
@@ -8095,7 +8123,8 @@ define('views/dashboard',[
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            this.setView("#upload_modal_ph",this.upload_v);
+            //inserting into body bcoz can't insert into fixed positioned dom elements
+            $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
@@ -8118,8 +8147,7 @@ define('views/dashboard',[
             {
                 return dfd.resolve();
             }
-            this.setView("#upload_modal_ph",this.inc_download_v);
-            this.inc_download_v.render();
+            $(this.inc_download_v.el).appendTo('body');     
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     return dfd.resolve();
@@ -8134,7 +8162,9 @@ define('views/dashboard',[
             var that = this;
             console.log("Going for background inc download");
             var call_again = function(){
-                setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+                setTimeout(function(){
+                    that.background_download();
+                }, configs.misc.background_download_interval);
             };
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)
@@ -8820,7 +8850,7 @@ define('views/form_controller',[
                     Online.save(null,form.inline.entity,on_ijson)
                         .done(function(on_in_model){
                             console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                            off_ijson.online_id = on_in_model.get("id");
+                            off_ijson.online_id = parseInt(on_in_model.get("id"));
                             Offline.save(null,form.inline.entity,off_ijson)
                                 .done(function(off_in_model){
                                     console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
@@ -9614,8 +9644,8 @@ define('views/app_layout',[
           {
               this.formcontroller_v = new FormControllerView({
                             serialize: {
-                                button1: "Save",
-                                button2: "Save and Add Another"
+                                button1: "Save and Add Another",
+                                button2: null
                             },
                             initialize: params,
                             model_id: data,
@@ -9627,8 +9657,8 @@ define('views/app_layout',[
           {
               this.formcontroller_v.params = {
                             serialize: {
-                                button1: "Save",
-                                button2: "Save and Add Another"
+                                button1: "Save and Add Another",
+                                button2: null
                             },
                             initialize: params,
                             model_id: data,
@@ -9637,8 +9667,8 @@ define('views/app_layout',[
                         };
             this.formcontroller_v.options = {
                           serialize: {
-                              button1: "Save",
-                              button2: "Save and Add Another"
+                              button1: "Save and Add Another",
+                              button2: null
                           },
                           initialize: params,
                           model_id: data,

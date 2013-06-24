@@ -299,9 +299,6 @@ define([
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $(".chzn-select").chosen({'search_contains':true});
-            $(".chzn-container").css('float', 'left');
-            $(".chzn-container").css('margin-bottom','20px');
-            $(".control-group").css('clear', 'both');
 			
 			var eDate = new Date();
 			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();

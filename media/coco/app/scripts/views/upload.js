@@ -58,31 +58,44 @@ define([
         },
         
         tear_down: function(){
-            $('#upload_modal').modal('hide'); 
-            // this.remove();   
+            var dfd = new $.Deferred();
             this.in_progress = false; 
+            //modal takes time to hide. Need to get the correct point of time when upload has finished.
+            var that = this;
+            $('#upload_modal').on('hidden', function () {
+              that.remove();   
+              dfd.resolve();
+            });
+            $('#upload_modal').modal('hide'); 
+            return dfd.promise();
         },
               
         start_upload: function() {
             var dfd = new $.Deferred();
-            console.log("UPLOAD: start the fuckin upload");
+            console.log("UPLOAD: start the upload");
             var that = this;
             this.initialize_upload();
             this.get_uploadq()
                 .done(function(collection){
                     that.iterate_uploadq(collection)
                         .done(function(){
-                            that.tear_down();
-                            dfd.resolve();
+                            that.tear_down() //tear down does not rejects dfd....it may not resolve also!
+                                .done(function(){
+                                    dfd.resolve();
+                                });
                         })
                         .fail(function(error){
-                            that.tear_down();
-                            dfd.reject(error);
+                            that.tear_down()
+                                .done(function(){
+                                    dfd.reject(error);
+                                });
                         });
                 })
                 .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
+                    that.tear_down()
+                        .done(function(){
+                            dfd.reject(error);
+                        });
                 });
             return dfd;
         },
