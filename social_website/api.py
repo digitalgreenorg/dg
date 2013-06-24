@@ -84,9 +84,9 @@ class PartnerResource(BaseResource):
         excludes = ['videos', 'likes', 'views', 'adoptions', 'badges']
 
 class FarmerResource(BaseResource):
-    interests = fields.ManyToManyField(InterestsResource, 'interests', null=True)
-    dehydrate_interests = partial(many_to_many_to_subfield, field_name='interests',sub_field_names=['name'])
-    partner = fields.ForeignKey(PartnerResource, 'partner',full=True, null=True)
+    #interests = fields.ManyToManyField(InterestsResource, 'interests', null=True)
+    #dehydrate_interests = partial(many_to_many_to_subfield, field_name='interests',sub_field_names=['name'])
+    #partner = fields.ForeignKey(PartnerResource, 'partner',full=True, null=True)
     # M2M collections
     class Meta:
         queryset = Farmer.objects.all()
@@ -108,6 +108,11 @@ class VideoResource(BaseResource):
         queryset = Video.objects.all()
         resource_name = 'video'
         excludes = ['sector','subsector','topic','subtopic','subject','state']
+        filtering={
+                   'uid':ALL
+                   }
+
+        
     def dehydrate(self, bundle):
         bundle.data['tags'] = Video.objects.get(uid=bundle.data.get('uid')).sector+";"+Video.objects.get(uid=bundle.data.get('uid')).subsector+";"+Video.objects.get(uid=bundle.data.get('uid')).topic+";"+Video.objects.get(uid=bundle.data.get('uid')).subtopic+";"+Video.objects.get(uid=bundle.data.get('uid')).subject 
         return bundle
@@ -150,15 +155,15 @@ class ActivityResource(BaseResource):
 
 
 class CommentResource(BaseResource):
-    farmer = fields.ForeignKey(FarmerResource, 'farmerUID',full=True, null=True)
-    video = fields.ForeignKey(VideoResource, 'videoUID', null=True)
+    farmer = fields.ForeignKey(FarmerResource, 'farmer',full=True, null=True)
+    video = fields.ForeignKey(VideoResource, 'video', full=True, null=True)
     user = fields.ForeignKey('website.user_api.UserResource','user',null=True)
     activityURI = fields.ForeignKey(ActivityResource, 'activityURI', null=True)
     inReplyToCommentUID = fields.ForeignKey('website.api.CommentResource', 'inReplyToCommentUID', null=True)
     #in videoID out Comment
     #in activityID out Comment
     class Meta:
-        queryset = Comment.objects.all()
+        queryset = Comment.objects.order_by('-date').all()
         resource_name = 'comment'
         filtering={
                    'video':ALL_WITH_RELATIONS,

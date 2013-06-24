@@ -30,10 +30,11 @@ define(function(require) {
             this.base('api/comment/');
 
             // prepare data model
-            this._dataModel.addSubModel('comments', true);
+            this._dataModel.addSubModel('objects', true);
 
             this.addInputParam('offset', false, 0);
             this.addInputParam('limit', false, 10);
+            this.addInputParam('video__uid', false,jQuery('.featured-ft-videoDetails').attr('data-video-uid'));
         },
 
         fetch: function(page, countPerPage) {
@@ -47,6 +48,7 @@ define(function(require) {
 
             this.setInputParam('offset', page, true);
             this.setInputParam('limit', countPerPage, true);
+            this.setInputParam('video__uid', jQuery('.featured-ft-videoDetails').attr('data-video-uid') , true);
 
             // perform the fetch
             this.base();
@@ -57,7 +59,7 @@ define(function(require) {
             
             // local references
             var dataModel = this._dataModel;
-            var commentsModel = dataModel.get('comments');
+            var commentsModel = dataModel.get('objects');
 
             // gather count and page for caching and saving purposes
             var countPerPage = unprocessedData.meta.limit;
@@ -67,7 +69,7 @@ define(function(require) {
             dataModel.set('totalCount', unprocessedData.meta.total_count);
 
             // import comments from data
-            var commentsToAdd = unprocessedData.comments;
+            var commentsToAdd = unprocessedData.objects;
             var startingCacheId = page * countPerPage;
 
             commentsModel.addSubset(commentsToAdd, startingCacheId);
@@ -95,7 +97,7 @@ define(function(require) {
             var page = this.getInputParam('offset');
             var countPerPage = this.getInputParam('limit');
 
-            var comments = this._dataModel.get('comments').getSubset(page * countPerPage, countPerPage);
+            var comments = this._dataModel.get('objects').getSubset(page * countPerPage, countPerPage);
 
             if (!comments) {
                 this.fetch(page, countPerPage);
