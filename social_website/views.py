@@ -141,6 +141,7 @@ def search_view(request):
     context= {
               'header': {
                          'jsController':'Collections',
+                         'currentPage':'Discover',
                          'loggedIn'    : False
                          },
               'searchString': searchString
