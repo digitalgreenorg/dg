@@ -1,9 +1,10 @@
 import site, sys
 sys.path.append('/home/ubuntu/code/dg_test')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_/lib/python2.7/site-packages/')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_testbed/lib/python2.7/site-packages/')
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
+from settings import BASE_URL
 
 from pyes import *
 from social_website.models import Collection
@@ -12,6 +13,7 @@ from django.forms.models import model_to_dict
 import datetime
 from time import mktime
 import json, urllib2
+
 
 conn = ES(['127.0.0.1:9200'])
 try:
@@ -35,6 +37,11 @@ mappings ={
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
                                                 },
+                               "subject" : {
+                                                "type" : "string",
+                                                "analyzer" : "keyword"
+                                                },
+                               
                                "language_name" : {
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
@@ -46,6 +53,9 @@ mappings ={
                                "state" : {
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
+                                                },
+                               "videos" : {
+                                                "type" : "nested",
                                                 },
                    }
            }
@@ -62,13 +72,16 @@ print Collection.objects.all().count()
 for obj in Collection.objects.all():
     vid_data = []
     likes = views = adoptions = 0
-    for vid in obj.videos.all():
+    for index, vid in enumerate(obj.videos.all()):
+        vid_id = index+1 
+        url = BASE_URL + "social/collections/?id=" + str(obj.uid) + "&video=" + str(vid_id)
         vid_data.append({"title" : vid.title, 
                          "subtopic" : vid.subtopic, 
                          "description" : vid.description,
                          "duration" : vid.duration, 
                          "thumbnailURL" : vid.thumbnailURL, 
-                         "youtubeID" : vid.youtubeID})
+                         "youtubeID" : vid.youtubeID,
+                         "videoURL" : url})
         likes += vid.onlineLikes + vid.offlineLikes
         views += vid.onlineViews + vid.offlineViews
         adoptions += vid.adoptions
@@ -99,32 +112,32 @@ for obj in Collection.objects.all():
                        })    
     conn.index(data, "test2","test2",i+1)
     i+= 1
-#===============================================================================
-# conn.default_indices="test2"
-# conn.refresh("test2")
-# q ={"query": {"filtered":{
-#                         "query" : {
-#                                    "match_all" : {}
+#conn.default_indices="test2"
+#conn.refresh("test2")
+#query = {"query": 
+#                        {
+#                         "nested" : {
+#                                     "path" : "videos",
+#                                     "videos.title"  :{
+#                                                      "query" : "tomato",
+#                                                      "analyzer" : "pattern",
+#                                              "max_query_terms" : 12
+#                                              }
+#                                    }
+#                         },
+#                        "facets" : {"facet" : {
+#                                               "terms": {
+#                                                         "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+#                                                         "size" : 500
+#                                                         }
+#                                               }
 #                                    },
-#                                    "filter" : {
-#                                                "and":[
-#                                                       {"terms" : {"partner_name" : ["PRADAN"]}}
-#                                                       ]
-#                                                }
-#                }
-#            },
-# "facets" : {"facet" : {"terms": {
-#                                  "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
-#                                  "size" : 500
-#                                  }
-#                        }
-#            },
-# "size" : 500
-# }
-# query = json.dumps(q)
-# response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
-# result = json.loads(response.read())
-# data = json.dumps({"facets" : result['facets']['facet']['terms']})
-#===============================================================================
+#                 "size" : 500
+#                 }
+#query = json.dumps(query)
+#response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+#result = json.loads(response.read())
+#print result
+#data = json.dumps({"facets" : result['facets']['facet']['terms']})
 
     

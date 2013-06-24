@@ -7,7 +7,10 @@
  * @requires jQuery
  */
 $(document).ready(function(){
-	var c=document.getElementById("myCanvas");
+	// Fixed image will be used instead of creating canvas for featured collection
+	// 
+	
+	/*var c=document.getElementById("myCanvas");
 	var ctx=c.getContext("2d");
 	var img=$(".mosaic").each(function(){
 		if(this.id==1){
@@ -26,7 +29,7 @@ $(document).ready(function(){
 			ctx.drawImage(this,100,50,100,200);
 			}
 			
-			});
+			});*/
 	});
 
 define(function(require) {

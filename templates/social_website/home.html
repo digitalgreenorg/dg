@@ -30,11 +30,9 @@
             <div class="featured layout-vr-xlg">
                 <div class="grid">
                     <div class="grid-col grid-size3of4">
-                    {% for img in featured_collection.thumbnail %}
-                    <img class="mosaic" id="{{forloop.counter}}" src="{{img}}" style="display:none;" >
-                    {% endfor %}
-                        <canvas id="myCanvas"  style="border:1px solid #d3d3d3;height:320px; width:'250px';">
-						<img src="{{ featured_collection.thumbnail_default}}" ></canvas>
+                    	<a href="{{featured_collection.link}}">
+                    		<img src="/media/assets/images/collage_border.jpg" width=642 height=321 alt="">
+                    	</a>
                     </div>
                     <div class="grid-col grid-size1of4">
                         <div class="grid-pad-lt-sm">
@@ -43,7 +41,9 @@
                             <h5 class="copy layout-vr-sm">{{ featured_collection.language}}</h5>
                             <p class="layout-vr-md"></p>
                             <div class="featured-logo copy layout-vr-md">
-                                <img class="" src="{{ featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
+                            	<a href={{featured_collection.partner_url}}>
+                            		<img class="" src="{{featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
+                               	</a>
                                 {{ featured_collection.partner_name}}
                             </div>
                             <div class="featured-ft">
