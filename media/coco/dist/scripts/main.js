@@ -9644,8 +9644,8 @@ define('views/app_layout',[
           {
               this.formcontroller_v = new FormControllerView({
                             serialize: {
-                                button1: "Save",
-                                button2: "Save and Add Another"
+                                button1: "Save and Add Another",
+                                button2: null
                             },
                             initialize: params,
                             model_id: data,
@@ -9657,8 +9657,8 @@ define('views/app_layout',[
           {
               this.formcontroller_v.params = {
                             serialize: {
-                                button1: "Save",
-                                button2: "Save and Add Another"
+                                button1: "Save and Add Another",
+                                button2: null
                             },
                             initialize: params,
                             model_id: data,
@@ -9667,8 +9667,8 @@ define('views/app_layout',[
                         };
             this.formcontroller_v.options = {
                           serialize: {
-                              button1: "Save",
-                              button2: "Save and Add Another"
+                              button1: "Save and Add Another",
+                              button2: null
                           },
                           initialize: params,
                           model_id: data,
