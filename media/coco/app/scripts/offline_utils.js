@@ -56,14 +56,15 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
         
         /*
         creates a offline model
-        sets the id
+        sets the key, value
         fetches it
         returns fetched model
+        Must have an index on key in IDB
         */
-        fetch_object: function(entity_name, id){
+        fetch_object: function(entity_name, key, value){
             var dfd = new $.Deferred();
             var off_model = this.create_b_model(entity_name);
-            off_model.set("id",id);
+            off_model.set(key, value);
             this.check_login_wrapper()
                 .done(function(){
                     off_model.fetch({
@@ -71,7 +72,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
-                            dfd.reject("Error fetching object from offline - "+error);
+                            dfd.reject(error);
                         }
                     });
                 })
@@ -132,7 +133,25 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                     window.Router.navigate("login",{trigger:true});
                 });  
             return dfd;    
-        }
+        },
+        
+        reset_database: function(){
+            var request = indexedDB.deleteDatabase("offline-database");
+            request.onerror = function(event) {
+                console.log(event);
+                console.log("RESET DATABASE:Error!");
+                alert("Error while resetting database! Refresh the page and try again.");
+            };
+            request.onsuccess = function(event) {
+                console.log("RESET DATABASE:Success!");
+                location.reload();
+            }
+            request.onblocked = function(event) {
+                console.log("RESET DATABASE:Blocked!");
+                location.reload();
+            };
+        }    
+        
         
     }
     

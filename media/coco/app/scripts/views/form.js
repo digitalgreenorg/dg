@@ -245,7 +245,7 @@ define([
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, this.edit_id)
+                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
                     .done(function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();

@@ -10,17 +10,17 @@ define([
   
     var AppRouter = Backbone.Router.extend({
         routes: {
-            "": "showDashboard",
+            "": "home",
             ":entity/list": "list",
             ":entity/add": "addPerson",
             ":entity/edit/:id": "editPerson",
             "login": "login"
         },
-        showDashboard: function() {
+        home: function() {
             console.log("ROUTER: dashboard url caught");
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_dashboard();
+                    AppLayout.render_home_view();
                 });
         },
         list: function(entity) {
