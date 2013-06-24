@@ -41,7 +41,9 @@
                             <h5 class="copy layout-vr-sm">{{ featured_collection.language}}</h5>
                             <p class="layout-vr-md"></p>
                             <div class="featured-logo copy layout-vr-md">
-                                <img class="" src="{{ featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
+                            	<a href={{featured_collection.partner_url}}>
+                            		<img class="" src="{{featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
+                               	</a>
                                 {{ featured_collection.partner_name}}
                             </div>
                             <div class="featured-ft">
