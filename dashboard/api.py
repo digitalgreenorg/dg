@@ -22,25 +22,33 @@ class ModelFormValidation(FormValidation):
     
     def uri_to_pk(self, uri):
         """
-            Returns the integer PK part of a URI.
-            
-            Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
-            returns the URI unmodified.
-            
-            Also handles lists of URIs
-            """
-        
+        Returns the integer PK part of a URI.
+
+        Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+        returns the URI unmodified.
+
+        Also handles lists of URIs
+        """
+
         if uri is None:
             return None
-        
+
+        # convert everything to lists
+        multiple = not isinstance(uri, basestring)
+        uris = uri if multiple else [uri]
+
+        # handle all passed URIs
         converted = []
-        if type(uri) == type(dict()):
-            converted.append(uri.get('id'))
-            return uri.get('id')
-        elif type(uri) == type(list()):
-            for item in uri:
-                converted.append(item.get('id'))
-            return converted
+        for one_uri in uris:
+            try:
+                # hopefully /api/v1/<resource_name>/<pk>/
+                converted.append(int(one_uri.split('/')[-2]))
+            except (IndexError, ValueError):
+                raise ValueError(
+                    "URI %s could not be converted to PK integer." % one_uri)
+
+        # convert back to original format
+        return converted if multiple else converted[0]
 
     def is_valid(self, bundle, request=None):
         data = bundle.data
@@ -58,7 +66,6 @@ class ModelFormValidation(FormValidation):
             if field in data:
                 data[field] = self.uri_to_pk(data[field])
         
-        print self.form_class
         # validate and return messages on error
         if request.method == "PUT":
             #Handles edit case
@@ -76,29 +83,30 @@ class MediatorFormValidation(FormValidation):
         """
     
     def uri_to_pk(self, uri):
-        """
-            Returns the integer PK part of a URI.
-            
-            Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
-            returns the URI unmodified.
-            
-            Also handles lists of URIs
             """
-        
-        if uri is None:
-            return None
-        
-        # convert everything to lists
-        print 'in mediator form validation'
-        converted = []
-        if type(uri) == type(dict()):
-            converted.append(uri.get('id'))
-            return uri.get('id')
-        elif type(uri) == type(list()):
-            for item in uri:
-                print item.get('id')
-                converted.append(item.get('id'))
-            return converted
+                Returns the integer PK part of a URI.
+                
+                Assumes ``/api/v1/resource/123/`` format. If conversion fails, this just
+                returns the URI unmodified.
+                
+                Also handles lists of URIs
+                """
+            
+            if uri is None:
+                return None
+            
+            # convert everything to lists
+            print 'in mediator form validation'
+            converted = []
+            if type(uri) == type(dict()):
+                converted.append(uri.get('id'))
+                return uri.get('id')
+            elif type(uri) == type(list()):
+                for item in uri:
+                    print item.get('id')
+                    converted.append(item.get('id'))
+                return converted
+
 
     def is_valid(self, bundle, request=None):
         partner_id = get_user_partner_id(request)
@@ -150,20 +158,17 @@ class NotFound(TastypieError):
 
 def obj_create(self, bundle, **kwargs):
         """
-        Overriding Tastypie implementation of ``obj_create` because tastypie is calling save of foreign key values on adding new resource`.
+        A ORM-specific implementation of ``obj_create``.
         """
         bundle.obj = self._meta.object_class()
 
         for key, value in kwargs.items():
             setattr(bundle.obj, key, value)
 
+        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
         bundle = self.full_hydrate(bundle)
-
-        # Save the main object.
         bundle.obj.user_created_id = bundle.request.user.id
-        bundle.obj.save()
-
-        return bundle
+        return self.save(bundle)
 
 def obj_update(self, bundle, **kwargs):
         if not bundle.obj or not bundle.obj.pk:
@@ -704,8 +709,6 @@ class PersonResource(ModelResource):
         return list(videos)
     
     def hydrate_village(self, bundle):
-        print 'in hydrate village'
-        print bundle
         village = bundle.data.get('village')
         if village and not hasattr(bundle,'village_flag'):
             try:
@@ -718,13 +721,14 @@ class PersonResource(ModelResource):
         return bundle
     
     def hydrate_group(self, bundle):
-        print 'in hydrate group'
-        print bundle
         group = bundle.data.get('group')
         if group and not hasattr(bundle,'group_flag'):
             try:
                 group_id = group.get('id')
-                bundle.data['group'] = "/api/v1/group/"+str(group_id)+"/"
+                if group_id:
+                    bundle.data['group'] = "/api/v1/group/"+str(group_id)+"/"
+                else:
+                    bundle.data['group'] = None
                 bundle.group_flag = True
             except:
                 print 'group id in video does not exist'

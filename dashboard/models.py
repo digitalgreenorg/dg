@@ -325,7 +325,7 @@ class Person(CocoModel):
     
     class Meta:
         db_table = u'person'
-        unique_together = ("person_name", "father_name", "group","village")
+        unique_together = ("person_name", "father_name", "village")
         
     # Called on any update/insert/delete of PersonMeetingAttendance/PersonShownInVideo
     @staticmethod
