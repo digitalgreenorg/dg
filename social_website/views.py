@@ -32,7 +32,7 @@ def social_home(request):
         'adoptions':featured_collection.adoptions,
         'language':featured_collection.language.name,
         'partner_name':featured_collection.partner.name,
-        'partner_logo':'/media/Output/Images/partner/pradan_logo1.png',
+        'partner_logo':featured_collection.partner.logoURL,
         'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
         'video_count':featured_collection.videos.all().count(),
         'duration':str(datetime.timedelta(seconds=time)),
@@ -126,7 +126,7 @@ def partner_view(request):
         'views':partner.views,
         'likes':partner.likes,
         'adoptions':partner.adoptions,
-        'logoURL':'/media/Output/Images/partner/pradan_logo1.png',
+        'logoURL':partner.logoURL,
         }
     context= {
         'header': {
