@@ -731,6 +731,12 @@ a {
     font-size: 40px;
 }
 
+.hdg-trunc {
+	white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
 /* ---------------------------------------------------------------------
  Copy
 ------------------------------------------------------------------------ */
@@ -1753,7 +1759,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .vidDrawer > li img {
-    max-width: 152px;
+    width: 152px;
+    height: 86px;
     /*height: 93px;*/
     border: 1px solid #d3d2ce;
 }
@@ -1778,6 +1785,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .vidDrawer-video .vidDrawer-image {
     position: relative;
+    width: 155px;
+    height: 95px;
 }
 
 .vidDrawer-video .overlay {
@@ -1795,7 +1804,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .vidDrawer-video .overlay.now-playing {
     font-size: 14px;
     line-height: 100px;
-    height: 95px;
     text-transform: uppercase;
     background: rgba(0, 0, 0, 0.5);
 }
@@ -2418,6 +2426,11 @@ textarea.comment-text {
     margin-right: 20px;
 }
 
+.comment-avatar-thumbnail{
+	height: 75px;
+	width: 75px;
+	
+}
 .commentLeft-border {
     padding-bottom: 30px;
     border-bottom: 1px solid #b3b2b1;

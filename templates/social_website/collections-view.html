@@ -12,7 +12,7 @@
                         </div>
                         <div class="grid-col grid-size1of3">
                             <div class="push-top-sm">
-                                <div class="featured-ft-videoDetails" data-collection-count='{{collection.video_count}}'  data-collection-id='{{collection.uid}}'>
+                                <div class="featured-ft-videoDetails" data-collection-count='{{collection.video_count}}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
                                        <li>{{ collection.video_count}} Videos</li>
                                        <li>{{ collection.duration}}</li>
@@ -123,7 +123,7 @@
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
                                             <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
                                                 <div class="vidDrawer-image">
-                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" height=95 width=155 alt="" /> </a>
+                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" class="vidDrawer-image" alt="" /> </a>
                                                   	<div class="overlay now-playing">
                                                         Now Playing
                                                     </div>
@@ -139,7 +139,7 @@
                                             <li class="vidDrawer-video show-progress js-vidDrawer-video">
                                             <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
                                                 <div class="vidDrawer-image">
-                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" height=95 width=155 alt="" /> </a>
+                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" class="vidDrawer-image" alt="" /> </a>
                                                     <!-- <div class="overlay progress">
                                                         <div class="progress-inner">
                                                             <span class="amount">48</span>

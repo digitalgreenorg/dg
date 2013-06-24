@@ -17,8 +17,8 @@ define(function(require) {
     require('libs/external/swfobject/swfobject');
 
     var VideoLikeDataFeed = require('app/libs/VideoLikeDataFeed');
-    var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
-    var TimeWatchedDataFeed = require('app/libs/TimeWatchedDataFeed');
+    //var CommentLikeDataFeed = require('app/libs/CommentLikeDataFeed');
+    //var TimeWatchedDataFeed = require('app/libs/TimeWatchedDataFeed');
 
     var CommentsFeedViewController = require('app/view-controllers/CommentsFeedViewController');
 
@@ -41,7 +41,7 @@ define(function(require) {
 
         _initConfig: function() {
             // how often we should update the server with video watched info in ms
-            this._config.updateVideoWatchedTimeDelay = 5000;
+    //        this._config.updateVideoWatchedTimeDelay = 5000;
         },
 
         _initReferences: function() {
@@ -53,8 +53,9 @@ define(function(require) {
             references.commentsFeedViewController = new CommentsFeedViewController(references.$commentsAreaWrapper);
 
             references.videoLikeDataFeed = new VideoLikeDataFeed();
-            references.commentLikeDataFeed = new CommentLikeDataFeed();
-            references.timeWatchedDataFeed = new TimeWatchedDataFeed();
+      // 	uncomment when comment-like and user time watched functionality is updated  
+      //      references.commentLikeDataFeed = new CommentLikeDataFeed();
+      //      references.timeWatchedDataFeed = new TimeWatchedDataFeed();
 
             references.$likeButton = jQuery('.js-like-button');
 
@@ -211,9 +212,10 @@ define(function(require) {
             // we use the current time as our indicator of how much of the video has been watched
             // NOTE: this will not account for seeking; if the user seeks to the end, it will appear
             // as if they watched the entire video
-            var timeWatched = this._references.videoPlayer.getCurrentTime();
-
-            this._references.timeWatchedDataFeed.fetch(videoUID, userID, Math.floor(timeWatched));
+            
+            //uncomment when functionality is available
+            //var timeWatched = this._references.videoPlayer.getCurrentTime();
+            //this._references.timeWatchedDataFeed.fetch(videoUID, userID, Math.floor(timeWatched));
         },
 
         _getComments: function() {

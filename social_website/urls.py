@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
-from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch
+from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch, search_view
 from static_site_views import home
 from django.conf import settings
 from social_website.api import VideoResource, LanguageResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, InterestsResource, CommentResource, PartnerFarmerResource
@@ -46,6 +46,7 @@ urlpatterns = patterns('',
 #urlpatterns = patterns('',   
     url(r'^main.js$', direct_to_template, {'template': 'main.js', 'mimetype':'text/javascript'}, name='mainjs'),
   #  (r'^$', direct_to_template, {'template': 'home.html', 'extra_context': {'header': {'jsController':'Home', 'loggedIn':False}}}),
+    url(r'^discover/?$',search_view, name='search'),
     url(r'^discover/$', direct_to_template, {'template': 'collections.html', 'extra_context': {'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}}, name='discover'),
     url(r'^collections/?$',collection_view, name='collections'),
     url(r'^about/$', direct_to_template, {'template': 'about.html', 'extra_context': {'header': {'jsController':'About', 'currentPage':'About', 'loggedIn':False}}},name='about'),
