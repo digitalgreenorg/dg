@@ -136,6 +136,18 @@ def partner_view(request):
         }
     return render_to_response('profile.html' , context,context_instance = RequestContext(request))
 
+def search_view(request):
+    searchString = request.GET.get('searchString')
+    context= {
+              'header': {
+                         'jsController':'Collections',
+                         'loggedIn'    : False
+                         },
+              'searchString': searchString
+        }
+    return render_to_response('collections.html', context, context_instance=RequestContext(request))
+    
+
 def searchCompletions(request):
     searchString = request.GET.get('searchString')
     maxCount = int(request.GET.get('maxCount'))
@@ -192,6 +204,7 @@ def searchFilters(request):
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
     topic = params.getlist('filters[topic][]', None)
+    subject = params.getlist('filters[subject][]', None)
     
     filters = {}
     filters['language'] = {}
@@ -214,6 +227,7 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'subcategory', subcategory, facet_dict)
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
+    filters = make_sub_filter(filters, 'subject', subject, facet_dict)
 
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
@@ -225,6 +239,7 @@ def create_query(params, language_name):
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
     topic = params.getlist('filters[topic][]', None)
+    subject = params.getlist('filters[subject][]', None)
     query = []
     if language:
         query.append({"terms":{"language_name" : language}})
@@ -240,14 +255,25 @@ def create_query(params, language_name):
         query.append({"terms":{"state" : state}})
     if topic:
         query.append({"terms":{"topic" : topic}})
+    if subject:
+        query.append({"terms":{"subject" : subject}})
     return query
 
 def elasticSearch(request):
     params = request.GET
     language_name = params.get('language__name', None)
+    searchString = params.get('searchString', 'None')
+    if searchString != 'None':
+        match_query = {"match" : {"_all":{"query":searchString}}}
+    else:
+        match_query = {"match_all" : {}}
+    query = []
+    filter = []
     if language_name == 'All Languages':
         language_name = None
     query = create_query(params, language_name)
+    if query:
+        filter = {"and" : query}
     order_by = params.get('order_by')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
@@ -255,46 +281,25 @@ def elasticSearch(request):
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices="test2"
     conn.refresh("test2")
-    if query != []:
-        q ={"query": {
-                      "filtered":{
-                                  "query" : {
-                                             "match_all" : {}
-                                             },
-                                  "filter" : {
-                                              "and":query
-                                            }
-                                  }
-                      },
-                                
-            "facets" : {"facet" : {
-                                    "terms": {
-                                              "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
-                                              "size" : MAX_RESULT_SIZE
-                                              }
-                                   }
-                        },
-            "sort" : {
-                      order_by : {"order" : "desc"}
-                      },
-            
-            "size" : MAX_RESULT_SIZE
-            }
-    else:           
-        q = {"query": 
-                    {"match_all" : {}},
-            "facets" : {"facet" : {
-                                   "terms": {
-                                            "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic"], 
-                                            "size" : MAX_RESULT_SIZE
-                                            }
-                                   }
-                        },
-             "sort" : {
-                      order_by : {"order" : "desc"}
-                      },
-             "size" : MAX_RESULT_SIZE
-             }
+    q ={"query": {
+                  "filtered":{
+                              "query" : match_query,
+                              "filter" : filter
+                              }
+                  },
+        "facets" : {
+                    "facet" :{
+                              "terms": {
+                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+                                        "size" : MAX_RESULT_SIZE
+                                        }
+                              }
+                    },
+        "sort" : {
+                  order_by : {"order" : "desc"}
+                  },
+        "size" : MAX_RESULT_SIZE
+        }
     result_list = []
     try :
         query = json.dumps(q)
