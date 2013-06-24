@@ -261,37 +261,18 @@ def create_query(params, language_name):
 def elasticSearch(request):
     params = request.GET
     language_name = params.get('language__name', None)
-    searchString = params.get('searchString', None)
+    searchString = params.get('searchString', 'None')
+    if searchString != 'None':
+        match_query = {"match" : {"_all":{"query":searchString}}}
+    else:
+        match_query = {"match_all" : {}}
     query = []
+    filter = []
     if language_name == 'All Languages':
         language_name = None
-    if searchString:
-        q = {"query": 
-                    {
-                         "match" : {
-                                     "_all" : {
-                                               "query" : searchString,
-                                               "analyzer" : "Language"
-                                               }
-                                    }
-                                              #"fields" : ["title","videos","language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"],
-                                              #"analyzer" : "partial_name"
-#                                              "max_query_terms" : 12
-                         },
-                        "facets" : {"facet" : {
-                                               "terms": {
-                                                         "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
-                                                         "size" : MAX_RESULT_SIZE
-                                                         }
-                                               }
-                                    },
-                "sort" : {
-                          "_score" : { }
-                          },
-                "size" : MAX_RESULT_SIZE
-                 }
-    else: 
-        query = create_query(params, language_name)
+    query = create_query(params, language_name)
+    if query:
+        filter = {"and" : query}
     order_by = params.get('order_by')
     offset = int(params.get('offset'))
     limit = int(params.get('limit'))
@@ -299,46 +280,25 @@ def elasticSearch(request):
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices="test2"
     conn.refresh("test2")
-    if query != []:
-        q ={"query": {
-                      "filtered":{
-                                  "query" : {
-                                             "match_all" : {}
-                                             },
-                                  "filter" : {
-                                              "and":query
-                                            }
-                                  }
-                      },
-                                
-            "facets" : {"facet" : {
-                                    "terms": {
-                                              "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
-                                              "size" : MAX_RESULT_SIZE
-                                              }
-                                   }
-                        },
-            "sort" : {
-                      order_by : {"order" : "desc"}
-                      },
-            
-            "size" : MAX_RESULT_SIZE
-            }
-    elif query == [] and not searchString:           
-        q = {"query": 
-                    {"match_all" : {}},
-            "facets" : {"facet" : {
-                                   "terms": {
-                                            "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
-                                            "size" : MAX_RESULT_SIZE
-                                            }
-                                   }
-                        },
-             "sort" : {
-                      order_by : {"order" : "desc"}
-                      },
-             "size" : MAX_RESULT_SIZE
-             }
+    q ={"query": {
+                  "filtered":{
+                              "query" : match_query,
+                              "filter" : filter
+                              }
+                  },
+        "facets" : {
+                    "facet" :{
+                              "terms": {
+                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+                                        "size" : MAX_RESULT_SIZE
+                                        }
+                              }
+                    },
+        "sort" : {
+                  order_by : {"order" : "desc"}
+                  },
+        "size" : MAX_RESULT_SIZE
+        }
     result_list = []
     try :
         query = json.dumps(q)
@@ -351,34 +311,3 @@ def elasticSearch(request):
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
-    
-##def searchResultsView(request):
-#    searchString = request.GET.get('searchString')
-#    conn = ES(['127.0.0.1:9200'])
-#    conn.default_indices="test2"
-#    conn.refresh("test2")
-#    q = {"query": 
-#                {"match_all" : {}},
-#        "facets" : {"facet" : {
-#                                "terms": {
-#                                          "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
-#                                          "size" : MAX_RESULT_SIZE
-#                                        }
-#                               }
-#                    },
-#             "size" : MAX_RESULT_SIZE
-#        }
-#    result_list = []
-#    try :
-#        query = json.dumps(q)
-#        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
-#        result = json.loads(response.read())
-#        for res in result['hits']['hits']:
-#            result_list.append(res['_source'])
-#        facets = json.dumps(result['facets']['facet']['terms'])
-#        resp = json.dumps({"meta": { "next": "", "previous": "null", "total_count": str(len(result_list))},"objects": result_list, "facets" : facets})
-#        return HttpResponse(resp)
-#    except Exception, ex:
-#        return HttpResponse('0')
-    
-    
