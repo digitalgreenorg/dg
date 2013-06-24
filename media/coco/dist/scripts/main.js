@@ -6681,9 +6681,16 @@ define('views/upload',[
         },
         
         tear_down: function(){
-            $('#upload_modal').modal('hide'); 
-            // this.remove();   
+            var dfd = new $.Deferred();
             this.in_progress = false; 
+            //modal takes time to hide. Need to get the correct point of time when upload has finished.
+            var that = this;
+            $('#upload_modal').on('hidden', function () {
+              that.remove();   
+              dfd.resolve();
+            });
+            $('#upload_modal').modal('hide'); 
+            return dfd.promise();
         },
               
         start_upload: function() {
@@ -6695,17 +6702,23 @@ define('views/upload',[
                 .done(function(collection){
                     that.iterate_uploadq(collection)
                         .done(function(){
-                            that.tear_down();
-                            dfd.resolve();
+                            that.tear_down() //tear down does not rejects dfd....it may not resolve also!
+                                .done(function(){
+                                    dfd.resolve();
+                                });
                         })
                         .fail(function(error){
-                            that.tear_down();
-                            dfd.reject(error);
+                            that.tear_down()
+                                .done(function(){
+                                    dfd.reject(error);
+                                });
                         });
                 })
                 .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
+                    that.tear_down()
+                        .done(function(){
+                            dfd.reject(error);
+                        });
                 });
             return dfd;
         },
@@ -7140,26 +7153,34 @@ define('views/incremental_download',[
         
         //initializes the global vars used, ui
         initialize_inc_download: function(options){
+            var dfd = new $.Deferred();
             this.in_progress = true;
             this.user_interrupt = false;
             var that = this;
             if(!(options.background))
             {
-                this.template = incremental_download_template;
+                this.template = "#incremental_download_template";
                 this.render()
                     .done(function(){
                         that.$('#incremental_download_modal').modal({
                             keyboard: false,
                             backdrop: "static",
                         });
+                        that.$('#incremental_download_modal').on('shown', function () {
+                            dfd.resolve();
+                        });
                         that.$('#incremental_download_modal').modal('show');                    
                     });
             }
             else
             {
-                this.template = incremental_download_background_template;
-                this.render();
+                this.template = "#incremental_download_background_template";
+                this.render()
+                    .done(function(){
+                        dfd.resolve();
+                    });
             }
+            return dfd.promise();
         },
         
         tear_down: function(){
@@ -7171,39 +7192,41 @@ define('views/incremental_download',[
         start_incremental_download: function(options) {
             var dfd = new $.Deferred();
             var that = this;        
-            this.initialize_inc_download(options);    
             console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
-            this.getIncObjects()
-                .done(function(objects){
-                    that.iterate_incd_objects(objects)
-                        .done(function(last_object_timestamp){
-                            that.finish_download(last_object_timestamp)
-                                .done(function(){
-                                    that.tear_down();
-                                    dfd.resolve();
+            this.initialize_inc_download(options) //does not rejects dfd...may not resolve either!
+                .done(function(){
+                    that.getIncObjects()
+                        .done(function(objects){
+                            that.iterate_incd_objects(objects)
+                                .done(function(last_object_timestamp){
+                                    that.finish_download(last_object_timestamp)
+                                        .done(function(){
+                                            that.tear_down();
+                                            dfd.resolve();
+                                        })
+                                        .fail(function(error){
+                                            that.tear_down();
+                                            dfd.reject(error);
+                                        });
                                 })
                                 .fail(function(error){
-                                    that.tear_down();
-                                    dfd.reject(error);
+                                    //when user interrupts
+                                    if(error.last_object_timestamp)
+                                    {
+                                        that.finish_download(error.last_object_timestamp)
+                                            .always(function(){
+                                                that.tear_down();
+                                                dfd.reject(error.err_msg);
+                                            });
+                                    }
+                                    dfd.reject(error.err_msg)
                                 });
                         })
                         .fail(function(error){
-                            //when user interrupts
-                            if(error.last_object_timestamp)
-                            {
-                                that.finish_download(error.last_object_timestamp)
-                                    .always(function(){
-                                        that.tear_down();
-                                        dfd.reject(error.err_msg);
-                                    });
-                            }
-                            dfd.reject(error.err_msg)
+                            that.tear_down();
+                            dfd.reject(error);
                         });
-                })
-                .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
                 });
             return dfd;    
         },
@@ -8103,7 +8126,9 @@ define('views/dashboard',[
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            this.setView("#upload_modal_ph",this.upload_v);
+            // this.setView("#upload_modal_ph",this.upload_v);
+            //inserting into body bcoz can't insert into fixed positioned dom elements
+            $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
@@ -8126,8 +8151,9 @@ define('views/dashboard',[
             {
                 return dfd.resolve();
             }
-            this.setView("#upload_modal_ph",this.inc_download_v);
-            this.inc_download_v.render();
+            // this.setView("#upload_modal_ph",this.inc_download_v);
+            $(this.inc_download_v.el).appendTo('body');     
+            // this.inc_download_v.render();
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     return dfd.resolve();

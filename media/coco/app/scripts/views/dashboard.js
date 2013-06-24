@@ -162,7 +162,8 @@ define([
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            this.setView("#upload_modal_ph",this.upload_v);
+            //inserting into body bcoz can't insert into fixed positioned dom elements
+            $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
@@ -185,8 +186,7 @@ define([
             {
                 return dfd.resolve();
             }
-            this.setView("#upload_modal_ph",this.inc_download_v);
-            this.inc_download_v.render();
+            $(this.inc_download_v.el).appendTo('body');     
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     return dfd.resolve();

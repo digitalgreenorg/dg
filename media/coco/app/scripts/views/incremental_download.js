@@ -48,26 +48,34 @@ define([
         
         //initializes the global vars used, ui
         initialize_inc_download: function(options){
+            var dfd = new $.Deferred();
             this.in_progress = true;
             this.user_interrupt = false;
             var that = this;
             if(!(options.background))
             {
-                this.template = incremental_download_template;
+                this.template = "#incremental_download_template";
                 this.render()
                     .done(function(){
                         that.$('#incremental_download_modal').modal({
                             keyboard: false,
                             backdrop: "static",
                         });
+                        that.$('#incremental_download_modal').on('shown', function () {
+                            dfd.resolve();
+                        });
                         that.$('#incremental_download_modal').modal('show');                    
                     });
             }
             else
             {
-                this.template = incremental_download_background_template;
-                this.render();
+                this.template = "#incremental_download_background_template";
+                this.render()
+                    .done(function(){
+                        dfd.resolve();
+                    });
             }
+            return dfd.promise();
         },
         
         tear_down: function(){
@@ -79,39 +87,41 @@ define([
         start_incremental_download: function(options) {
             var dfd = new $.Deferred();
             var that = this;        
-            this.initialize_inc_download(options);    
             console.log("INCREMENTAL DOWNLOAD: start the incremental_download");
             var that = this;
-            this.getIncObjects()
-                .done(function(objects){
-                    that.iterate_incd_objects(objects)
-                        .done(function(last_object_timestamp){
-                            that.finish_download(last_object_timestamp)
-                                .done(function(){
-                                    that.tear_down();
-                                    dfd.resolve();
+            this.initialize_inc_download(options) //does not rejects dfd...may not resolve either!
+                .done(function(){
+                    that.getIncObjects()
+                        .done(function(objects){
+                            that.iterate_incd_objects(objects)
+                                .done(function(last_object_timestamp){
+                                    that.finish_download(last_object_timestamp)
+                                        .done(function(){
+                                            that.tear_down();
+                                            dfd.resolve();
+                                        })
+                                        .fail(function(error){
+                                            that.tear_down();
+                                            dfd.reject(error);
+                                        });
                                 })
                                 .fail(function(error){
-                                    that.tear_down();
-                                    dfd.reject(error);
+                                    //when user interrupts
+                                    if(error.last_object_timestamp)
+                                    {
+                                        that.finish_download(error.last_object_timestamp)
+                                            .always(function(){
+                                                that.tear_down();
+                                                dfd.reject(error.err_msg);
+                                            });
+                                    }
+                                    dfd.reject(error.err_msg)
                                 });
                         })
                         .fail(function(error){
-                            //when user interrupts
-                            if(error.last_object_timestamp)
-                            {
-                                that.finish_download(error.last_object_timestamp)
-                                    .always(function(){
-                                        that.tear_down();
-                                        dfd.reject(error.err_msg);
-                                    });
-                            }
-                            dfd.reject(error.err_msg)
+                            that.tear_down();
+                            dfd.reject(error);
                         });
-                })
-                .fail(function(error){
-                    that.tear_down();
-                    dfd.reject(error);
                 });
             return dfd;    
         },
