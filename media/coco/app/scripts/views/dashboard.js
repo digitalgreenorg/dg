@@ -10,9 +10,8 @@ define([
     'layoutmanager',      
     'models/user_model',
     'auth',
-	'collections/upload_collection'
     ],
- function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth, upload_collection) {
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -84,31 +83,37 @@ define([
                 }
 				}
 				
-				window.addEventListener("offline", function(e) {
-					$('#online').hide();
-					$('#offline').show();
-					//alert("offline");
-				}, false);
+				upload_collection.on('all', function(){
+					$("#upload_num").html(function() {
+						return upload_collection.length;
+					});
+				});
+				
+				window.addEventListener("offline", this.user_offline);
 
-				window.addEventListener("online", function(e) {
-					$('#offline').hide();
-					$('#online').show();
-					//alert("online");
-				}, false);
+				window.addEventListener("online", this.user_online);
 				
 				if (User.isOnline()){
-					console.log("USER ONLINE");
-					$('#offline').hide();
-					$('#online').show();
+					this.user_online();
 				}
 				else {
-					console.log("USER OFFLINE")
-					$('#online').hide();
-					$('#offline').show();
+					this.user_offline();
 				}
 
         },
         
+		user_online: function(){
+			//document.getElementById('sync').disabled = false;
+			$('#offline').hide();
+			$('#online').show();
+		},
+		
+		user_offline: function(){
+			//document.getElementById('sync').disabled = true;
+			$('#online').hide();
+			$('#offline').show();
+		},
+		
         sync: function(){
             var that = this;
             //If background inc download is in progress, tel user to wait till its finished
