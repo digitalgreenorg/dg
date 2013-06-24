@@ -1,14 +1,14 @@
 import site, sys
-sys.path.append('C:\Users\Tanmay\Documents\DIGITAL GREEN\dg')
-site.addsitedir('C:\Python27\Lib\site-packages')
+sys.path.append('/home/ubuntu/code/dg_test')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_testbed/lib/python2.7/site-packages/')
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
 import json, urllib2
 from pyes import *
 from social_website.models import Collection, Video, Partner
+from settings import BASE_URL
 
-BASE_URL = 'http://test.digitalgreen.org/'
 conn = ES(['127.0.0.1:9200'])
 try:
     conn.delete_index("test-index")
