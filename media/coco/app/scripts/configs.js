@@ -604,8 +604,8 @@ function() {
         'page_header': 'Person',
         'list_table_header_template': 'person_table_template',
         'list_table_row_template': 'person_list_item_template',
-        'add_template_name': 'person_add_edit_template2',
-        'edit_template_name': 'person_add_edit_template2',
+        'add_template_name': 'person_add_edit_template',
+        'edit_template_name': 'person_add_edit_template',
         'rest_api_url': '/api/v1/person/',
         'entity_name': 'person',
         'foreign_entities': {
