@@ -220,7 +220,7 @@ define([
             
         upload_add_edit: function(up_model, dfd) {
             var that = this;
-            Offline.fetch_object(this.get_entity_name(up_model), this.get_offline_id(up_model))  
+            Offline.fetch_object(this.get_entity_name(up_model), "id", this.get_offline_id(up_model))  
                 .done(function(off_model){
                     console.log("Off model fetched - "+JSON.stringify(off_model.toJSON()));
                     OfflineToOnline.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model))

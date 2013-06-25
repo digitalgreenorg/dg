@@ -213,7 +213,7 @@ define([
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -346,7 +346,7 @@ define([
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to get the online_id and preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to get the online_id and preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -427,7 +427,7 @@ define([
         },
         
         after_save_finished: function(entity_name){
-            window.Router.navigate('person/add');
+            window.Router.navigate(entity_name+'/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
 

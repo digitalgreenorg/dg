@@ -15,6 +15,7 @@ define([
           current_add_edit_view = null;
       },
       
+      //when layout is rendered, put the dashboard in the side panel - constant across all routes
       afterRender: function(){
           console.log("app layout rendered");
           var dashboard_view = new DashboardView();
@@ -22,54 +23,21 @@ define([
           dashboard_view.render();
       },
       
-      // hide_side_panel: function(){
-//           console.log("HIDE SIDE PANEL");
-//           console.log($("#side_panel"));
-//           this.$("#side_panel").hide();
-//           $("#content").removeClass('span10');
-//           $("#content").addClass('span12');
-//           $("#content").prepend("<div><a id='right_arrow'><img style='width:30px;' src='/media/coco/app/images/right_arrow.png'/></a></div>");
-//           $("#right_arrow").click(function() {
-//               $("#content").removeClass('span12');
-//               $("#content").addClass('span10');
-//               $('#right_arrow').remove();
-//               $("#side_panel").show();
-//           });
-//       },
       render_login: function(router){
-          var l_view = new LoginView(router);
-          this.setView("#content", l_view);
-          // l_view.render();
-          
+          var login_view = new LoginView(router);
+          this.setView("#content", login_view);
       },    
           
-      render_dashboard: function() {
-          // $(this.el)
-          //     .html('');
-          // $(this.el)
-          //     .append(header.render("<li class='active' >Dashboard</li>")
-          //     .el);
-          // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
+      render_home_view: function() {
           var s_view = new StatusView();
           this.setView("#content", s_view);
-          
-          //         
-          // $(this.el)
-          //               .append(dashboard.render()
-          //               .el);
-          return this;
-                   
       },
+      
       render_list_view: function(params) {
-          // var bcrumb_template = _.template($('#list_breadcrumb').html());
-          // this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread:params.view_configs.page_header}) }}));
-          var that = this;
           var l_view = new ListView({initialize:params});
           this.setView("#content",l_view);
-          l_view.render();
-          
-          return this;
       },
+      
       render_add_edit_view: function(params, data) {
           // var add_or_edit = "add";
 //           if (data) add_or_edit = "edit";
