@@ -4,12 +4,12 @@ define([
   'datatable',
   'indexeddb_backbone_config',
   'layoutmanager',
+  'views/notification',
   'indexeddb-backbone'      
-  
-  // Using the Require.js text! plugin, we are loaded raw text
+ // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function($, pass, pass, indexeddb, layoutmanager){
+], function($, pass, pass, indexeddb, layoutmanager, notifs_view){
     
     var ListView = Backbone.Layout.extend({
         
@@ -17,7 +17,6 @@ define([
         
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
-            
             generic_collection = Backbone.Collection.extend({
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
@@ -27,27 +26,34 @@ define([
                 .html();
             this.item_template = _.template($('#' + params.initialize.view_configs.list_item_template_name)
             .html());
-            this.collection.bind('all', this.render_data, this);
-            this.datatable = null;
+            this.render();
         },
         
         serialize:function(){
           return { 
               header_name: this.view_configs.page_header, 
-              table_header:this.table_header
+              table_header: this.table_header
            };  
         },
         
         afterRender: function() {
             /* Work with the View after render. */
 			$("#loaderimg").show();
-            this.collection.fetch();
+            var that = this;
+            this.collection.fetch({
+                success: function(){
+                    that.render_data();
+                },
+                error: function(){
+                    notifs_view.add_alert({
+                        notif_type: "error",
+                        message: "Error reading data for listing."
+                    });
+                }
+            });
         },
 
         render_data: function() {
-            if (this.datatable) {
-                this.datatable.fnDestroy();
-            }
             console.log("in render_data...change in collection...rendering list view");
             tbody = $('<tbody>');
             tbody.html('');
@@ -56,6 +62,7 @@ define([
             }, this);
             this.$('#list_table').append(tbody);
 			$("#loaderimg").hide();
+            this.$('#list_table').dataTable();
             
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");
@@ -80,9 +87,6 @@ define([
             //             .el);
             //     }, this);
             ////////////
-            
-            this.datatable = this.$('#list_table')
-                .dataTable();
         },
         
     });

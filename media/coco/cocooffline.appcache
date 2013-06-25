@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2012-11-1 v1.0.8
+# 2012-11-1 v2.0.13
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css
@@ -29,6 +29,11 @@ CACHE:
 /media/coco/app/scripts/libs/datatablejs_media/images/sort_desc.png
 /media/coco/app/scripts/libs/datatablejs_media/images/Sorting%20icons.psd
 /media/coco/app/images/loading_text.gif
+/media/coco/app/scripts/libs/chosen/chosen-sprite.png 
+/media/coco/app/images/offline.png
+/media/coco/app/images/online.png
  
 NETWORK:
 /api/v1/
+*
+http://rpm-images.newrelic.com/42/eum/rum.js

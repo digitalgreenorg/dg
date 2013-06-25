@@ -50,10 +50,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
                                 console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is expanded");
                                 $.each(online_json[element],function(index,object){
                                     var field_object = object[field];
-                                    if(field_object[id_field])
-                                    {
-                                        field_dfds.push(that.convert_object(field_object,field_desc));
-                                    }
+                                    field_dfds.push(that.convert_object(field_object,field_desc));
                                 });
                             }
                         }
@@ -83,6 +80,8 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
         
         convert_object: function(obj, field_desc){
             var dfd = new $.Deferred();
+            if(!obj[field_desc.id_attribute])
+                return dfd.resolve();
             var generic_model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: field_desc.entity_name,
@@ -100,7 +99,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
                     // console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: object after converting" + JSON.stringify(obj));
                     return dfd.resolve();
                 },
-                error: function(error) {
+                error: function(model, error) {
                     console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                     //TODO: OOPS! What should be done now????
                     console.log(error);

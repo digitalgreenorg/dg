@@ -202,7 +202,7 @@ define([
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -335,7 +335,7 @@ define([
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to get the online_id and preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to get the online_id and preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -380,7 +380,7 @@ define([
                     Online.save(null,form.inline.entity,on_ijson)
                         .done(function(on_in_model){
                             console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                            off_ijson.online_id = on_in_model.get("id");
+                            off_ijson.online_id = parseInt(on_in_model.get("id"));
                             Offline.save(null,form.inline.entity,off_ijson)
                                 .done(function(off_in_model){
                                     console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
@@ -415,8 +415,8 @@ define([
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save: function(entity_name){
-            window.Router.navigate('person/add');
+        after_save_finished: function(entity_name){
+            window.Router.navigate(entity_name+'/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
 

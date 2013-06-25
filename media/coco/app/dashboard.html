@@ -9,7 +9,7 @@
 	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css">
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="/media/coco/app/scripts/libs/chosen/chosen.css">
-    <link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
+	<link rel="stylesheet"  href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap-responsive.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/datepicker.css">
 	<link rel="stylesheet"  href="/media/coco/app/styles/css/bootstrap-timepicker.css">
@@ -141,38 +141,47 @@
 </script>
 
 <script  type="text/template" id="dashboard">
-            <div id="coco_sidebar" class="">
-                <div id="coco_userinfo">
-                <%if(typeof(username)!=undefined){%>
+    <div id="coco_sidebar" class="coco_sidebar affix">
+		<table border = '0'>
+			<tr>
+				<td><div>
+					<img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
+					<img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
+				</div></td>
+				<td>
+					<div id="coco_userinfo">
+					<%if(typeof(username)!=undefined){%>
                     Hi <%=username%>! <a id="logout">Log out</a>
-                <%}%>    
-                </div>
+					<%}%>
+					</div>
+				</td>
+			</tr>
+		</table>
                 <div id="coco_brand">
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
-                    <div class="span1 btn pull-left" id= "sync">Sync</div>
-                    <div class="btn pull-right" href="#"><i class="icon-wrench"></i></div>
+                    <div class="span1 btn pull-left" id= "sync">Sync
+					<span class="badge" id="upload_num"><%=upload_entries%></span>
+					</div>
                 </div>
                 <div id="coco_nav" class="pull-left">
-                    <ul id = "dashboard_items" class="nav nav-stacked">
+                    <ul id = "dashboard_items" class="nav nav-list">
                         
                     </ul>
                 </div>
                 
                 <div id="coco_nav_add" class="pull-right">
-                    <ul id = "dashboard_items_add" class="nav nav-stacked">
+                    <ul id = "dashboard_items_add" class="nav nav-list">
                         
                     </ul>
                 </div>
             </div>
-            
-            <div id = "upload_modal_ph"></div>
 </script>
 
    <script type="text/template" id="page_layout">
-   <div id = "side_panel" class="span2 well" style = "height:100%"></div>
-   <div id = "content" class="span10" style="padding-top:20px;padding-bottom:20px;"></div>
+   <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
+   <div id = "content" class="span10" ></div>
    		
    </script>
    
@@ -192,10 +201,23 @@
    
 <script type="text/template" id="sync_status_template">
     <div id="modal"></div>
-   <div>Database first time downloaded at - <%=timestamp%>,</div><br>
-   <div>Last Synced at - </div><br>
-   <div>Entries to Download - </div><br>
-   <div class="row pull-left" style="margin-left:0px; margin-right:10px;"> Entries to Upload (<%=num_upload_entries%>)</div>
+	<div class="page-header">
+	<h1 style = "color:#0088cc"> Welcome to COCO! 
+	<br><small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small></br></h1>
+	</div>
+   
+	<div style = "margin-bottom:40px;"><ul>
+		<li> To get started, click on any link in the left sidebar.</li>
+		<li> To add some data, click on (+).</li>
+		<li>To view, sort and search through your data, click on the data link in the sidebar.</li>
+		<li> To sync data with our server, click on the Sync button.</li>
+		<li> While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.</li>
+		<li>Finally, do share your feedback with us.</li>
+	</ul></div>
+   
+   <div>Database last deleted and downloaded at <%=full_d_timestamp%></div><br>
+   <div>Database last synced at <%=inc_d_timestamp%></div><br>
+   <div class="row pull-left" style="margin-left:0px; margin-right:10px;"> Entries to upload (<%=num_upload_entries%>)</div>
   <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
@@ -232,7 +254,7 @@
       </div>
     <br>
     <br>    
-    <button id="reset_database" class="btn btn-large btn-primary">Reset Database</button>    
+    <button id="reset_database" class="btn btn-small btn-primary">Delete and Download Database</button>
 </script>
 
     
@@ -276,7 +298,7 @@
 		<% 
 			var villages="";
 			$.each(assigned_villages, function(index,val) {
-				villages = villages + val.name +"; ";
+				villages = villages + val.village_name +"; ";
      		});
 		%>
 	<%= villages %>
@@ -414,7 +436,6 @@
                 	<label class="control-label">Videos Screened*</label>
                 	<div class="controls"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chzn-select">
-                        <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
                 </div>
@@ -441,7 +462,7 @@
                                 Delete?
                             </th>
                             <th>
-                                Sr No.
+                                No.
                             </th>
                             <th>
                                 Person
@@ -497,6 +518,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select  name="expressed_adoption_video" class="chzn-select">
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -693,6 +715,7 @@
             <div class="control-group">
                 <div class="controls">
                     <select id = "video<%=index%>" name="video<%=index%>" class="chzn-select" required>
+                        <option value>--------</option>
                         <%if(typeof(videos_seen)!="undefined"){ _.each(videos_seen, function(vid) {
                             if(typeof(expressed_adoption_video)!="undefined" && vid.id == expressed_adoption_video.id){
                              %> 
@@ -815,7 +838,9 @@
         
             <div class="form-actions">
               <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-              <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+              <%if(button2){%>
+                  <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+              <%}%>
             </div>
         </form>
         </div>

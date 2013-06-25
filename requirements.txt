@@ -14,4 +14,4 @@ simplejson==2.4.0
 wadofstuff-django-serializers==1.1.0
 wsgiref==0.1.2
 yolk==0.4.1
-tastypie==0.9.15
+django-tastypie==0.9.15

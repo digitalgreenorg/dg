@@ -60,7 +60,10 @@ define([
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
-            
+            this.start_time = new Date();
+            //toJSON converts datetime to utc. so adding the offset before converting
+            this.start_time = new Date(this.start_time.getTime()-((this.start_time.getTimezoneOffset())*60000)).toJSON();
+            this.start_time = this.start_time.replace("Z", "");
             if(!this.internet_connected())
             {
                 dfd.reject("Can't download database. Internet is not connected");
@@ -390,7 +393,7 @@ define([
                 success: function(){
                     return dfd.resolve();
                 },
-                error: function(error){
+                error: function(model,error){
                     if(error.srcElement.error.name=="ConstraintError")
                     {
                         return dfd.resolve();
@@ -410,35 +413,36 @@ define([
             });
             var meta_model = new generic_model_offline();
             meta_model.set({key: "last_full_download"});
+            var that = this;
             meta_model.fetch({
                 success: function(model){
                     console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',new Date());
+                    model.set('timestamp',that.start_time);
                     model.save(null,{
                         success: function(){
                             console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
                             console.log(JSON.stringify(model.toJSON()));
                             dfd.resolve();
                         },
-                        error: function(error){
+                        error: function(model,error){
                             console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
                             dfd.reject("error updating last_full_download in meta_data objectStore");
                         }
                     });
                 },
-                error: function(error){
+                error: function(model, error){
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
-                            meta_model.set('timestamp',new Date());
+                            meta_model.set('timestamp',that.start_time);
                             meta_model.save(null,{
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
                                     console.log(JSON.stringify(model.toJSON()));
                                     dfd.resolve();
                                 },
-                                error: function(error){
+                                error: function(model,error){
                                     console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
                                     console.log(error);    
                                     dfd.reject("error creating last_full_download in meta_data objectStore");

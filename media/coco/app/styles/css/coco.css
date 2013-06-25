@@ -2,8 +2,42 @@
     font-weight:bold;
 }
 
+.alert {
+  margin-bottom: 3px;
+}
+
+.affix{
+	position:fixed;
+}
+
+legend{
+	font-size: 24px;
+	font-family: source_sans_prolight, arial, helvetica, sans-serif;
+	color: #8f8e8d;
+}
+
+h1 small{
+	font-size: 18px;
+}
+
 #coco_content {
     padding-top: 20px;
+}
+
+#online{
+	width: 10px;
+	margin-right: 3px;
+	margin-left: 15px;
+	position: relative;
+	display: none;
+}
+
+#offline{
+	width: 10px;
+	margin-right: 3px;
+	margin-left: 15px;
+	position:relative;
+	display: none;
 }
 
 #coco_brand {
@@ -11,14 +45,17 @@
     height: 50px;
     width: 100px;
     padding-top: 20px;
+	margin-left:25%;
 }
 
 #coco_userinfo {
-    font-size:11px;
+    font-size: 11px;
+	margin-left: 5px;
 }
 
 #coco_sync {
     margin-bottom:50px;
+	margin-left:4px;
 }
 
 #coco_nav_add {
@@ -26,15 +63,23 @@
 }
 
 #notifications{
-	width: 500px;
+	width: 400px;
 	position:fixed;
 	right: 10px;
+	font-size:12px;
 }
 
 #loaderimg{
 	left: 50%;
 	top: 50%;
 	position: fixed;
+}
+
+#content{
+	padding-top:20px;
+	padding-bottom:20px;
+	padding-right:50px;
+	padding-left:230px;
 }
 
 div.dataTables_length label {
@@ -69,3 +114,19 @@ table {
 .alert {
   margin-bottom: 3px;
 }
+
+.chzn-container{
+    float:left;
+    margin-bottom:20px;
+}
+
+.control-group{
+    clear:both;
+}
+
+
+@media (min-width: 1200px) and (max-width: 1240px) {
+	  .span10 {
+	    width:900px;
+	  }
+}	

@@ -9,7 +9,7 @@ define([
     'views/notification',
     'layoutmanager',      
     'models/user_model',
-    'auth'
+    'auth',
     ],
  function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
 
@@ -21,22 +21,28 @@ define([
             "click #inc_download": "inc_download",
             "click #logout": "logout"
         },
-        
+		
         item_template: _.template($("#dashboard_item_template")
             .html()),
+			
+		upload_entries: null,
+		
         initialize: function() {
             this.upload_v = null;
             this.inc_download_v = null;
             this.background_download();
             _(this).bindAll('render');
             User.on('change',this.render);
+			this.upload_entries = upload_collection.length;
         },
         serialize: function(){
             var username =  User.get("username");
             return {
-                username:username
+                username:username,
+				upload_entries : this.upload_entries
             }
         },
+		
         afterRender: function() { /* Work with the View after render. */
             // this.collection.fetch();
             console.log("rendering dashboard");
@@ -58,7 +64,7 @@ define([
                         $('#dashboard_items')
                             .append(this.item_template({
                             name: member+"/list",
-                            title: configs[member]["page_header"]
+                            title: configs[member]["page_header"]+'s'
                         }));
                     }
                     if(add)
@@ -75,11 +81,39 @@ define([
                             .append("<li><i class='icon-white icon-plus-sign'></li>");
                     }
                 }
-                    
+				}
+				
+				upload_collection.on('all', function(){
+					$("#upload_num").html(function() {
+						return upload_collection.length;
+					});
+				});
+				
+				window.addEventListener("offline", this.user_offline);
 
-            }
+				window.addEventListener("online", this.user_online);
+				
+				if (User.isOnline()){
+					this.user_online();
+				}
+				else {
+					this.user_offline();
+				}
+
         },
         
+		user_online: function(){
+			//document.getElementById('sync').disabled = false;
+			$('#offline').hide();
+			$('#online').show();
+		},
+		
+		user_offline: function(){
+			//document.getElementById('sync').disabled = true;
+			$('#online').hide();
+			$('#offline').show();
+		},
+		
         sync: function(){
             var that = this;
             //If background inc download is in progress, tel user to wait till its finished
@@ -140,7 +174,8 @@ define([
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            this.setView("#upload_modal_ph",this.upload_v);
+            //inserting into body bcoz can't insert into fixed positioned dom elements
+            $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
                 .done(function(){
@@ -163,8 +198,7 @@ define([
             {
                 return dfd.resolve();
             }
-            this.setView("#upload_modal_ph",this.inc_download_v);
-            this.inc_download_v.render();
+            $(this.inc_download_v.el).appendTo('body');     
             this.inc_download_v.start_incremental_download(options)
                 .done(function(){
                     return dfd.resolve();
@@ -179,7 +213,9 @@ define([
             var that = this;
             console.log("Going for background inc download");
             var call_again = function(){
-                setTimeout(function(){that.background_download();}, configs.misc.background_download_interval);
+                setTimeout(function(){
+                    that.background_download();
+                }, configs.misc.background_download_interval);
             };
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)

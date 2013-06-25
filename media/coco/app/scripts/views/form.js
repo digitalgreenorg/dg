@@ -121,11 +121,6 @@ define([
                 });
                 this.f_index.push(f_entity);    
                 this.f_colls.push(new generic_collection_offline());
-                // Reset is called when a collection has finished fetching.
-                // We are binding the reset of the last added collection to render_foreign_entity
-                _.last(this.f_colls)
-                    .bind('reset', this.render_foreign_entity);
-                
                 /*
                 this.f_colls.push(new generic_collection_offline().bind);
                 
@@ -214,8 +209,8 @@ define([
             
             
             
-
-
+            
+            var that = this;
             // fetching all foreign collections
             //TODO: handle error callback
             for (var i = 0; i < this.f_colls.length; i++) {
@@ -223,6 +218,7 @@ define([
                     success: function(collection) {
                         console.log("ADD/EDIT: a foreign coll fetched - "+collection.storeName);
                         // render foreign collection is called automatically on successful fetch
+                        that.render_foreign_entity(collection,null);
                     },
                     error: function() {
                         //ToDO: error handling
@@ -249,7 +245,7 @@ define([
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, this.edit_id)
+                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
                     .done(function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();
@@ -303,13 +299,15 @@ define([
                 .validate(validate_obj);
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $(".chzn-select").chosen({'search_contains':true});
-            $(".chzn-container").css('float', 'left');
-            $(".chzn-container").css('margin-bottom','20px');
-            $(".control-group").css('clear', 'both');
-            
+			
+			var eDate = new Date();
+			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			
             $(".date-picker")
                 .datepicker({
-                    format: 'yyyy-mm-dd'
+                    format: 'yyyy-mm-dd',
+					startDate: '2009-01-01',
+					endDate: enddate,
                 }).on('changeDate', function(ev){
                     $(this).datepicker('hide');
                 });
@@ -579,7 +577,13 @@ define([
             else{
                 console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);
-                $f_el.html('');
+                if($f_el.is('select[multiple]'))
+                    $f_el.html('');    
+                else
+                    $f_el.html(options_inner_template({
+                            id: "",
+                            name: "------------"
+                    }));
                 $.each(model_array,function(index, f_model){
                     var f_json = f_model; 
                     if(f_model instanceof Backbone.Model)

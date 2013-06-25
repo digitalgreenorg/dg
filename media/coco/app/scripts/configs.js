@@ -436,6 +436,7 @@ function() {
         'inc_table_name': 'personadoptpractice',
         'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
         form_field_validation:{
+            ignore: [],
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -661,7 +662,8 @@ function() {
     
     var misc = {
         download_chunk_size : 2000,
-        background_download_interval:5*60*1000
+        background_download_interval:5*60*1000,
+        inc_download_url: "/get_log/"
     };
     
     return {
