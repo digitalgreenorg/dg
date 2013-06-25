@@ -59,6 +59,7 @@ define(function(require) {
             // exit early if the filter hasn't changed
             // TODO: might we want the filter changing to be a toggle on/off?
             if (newFilterId == oldFilterId) {
+            	this.setActiveFilter('-_score');
                 return;
             }
 
