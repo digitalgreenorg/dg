@@ -989,37 +989,16 @@ define([
                 this.final_json = $.extend(this.model_json, this.final_json);
             }
 
-            ev_res = {
-                type: "upload_error_resolved",
-                context: this,
-                discard: false
-            };
-
-            ev_save = {
-                type: "save_clicked",
+            var ev_data = {
                 context: this,
             };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_save);
-            this.trigger("save_clicked",ev_res);
+            this.trigger("save_clicked",ev_data);
         },
 
         button2_clicked: function() {
-            ev_res = {
-                type: "upload_error_resolved",
+            var ev_data = {
                 context: this,
-                discard: true
             };
-
-            ev_button2 = {
-                type: "button2_clicked",
-                context: this,
-                discard: true
-            };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_button2);
             this.trigger("button2_clicked",ev_res);
         }
 

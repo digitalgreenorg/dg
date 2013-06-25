@@ -34,18 +34,16 @@ define([
                 .bindAll('on_save');
             _(this)
                 .bindAll('on_button2');
-            $(document)
-                .on("save_clicked", this.on_save);
-            $(document)
-                .on("button2_clicked", this.on_button2);
-             
 
         },
         template: "<div><div id = 'form'></div></div>",
         
         beforeRender: function() {
             // #form is the id of the element inside in template where the new view will be inserted.
-            this.setView("#form", new Form(this.params));
+            var form_v = new Form(this.params);
+            this.setView("#form", form_v);
+            this.listenTo(form_v, 'save_clicked', this.on_save);
+            this.listenTo(form_v, 'button2_clicked', this.on_button2);
         },
         
         /*Called when form view sends save_clicked event. 
@@ -54,7 +52,6 @@ define([
         */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
-            e.stopPropagation();
             this.form = e.context;  //event contains the form view object itself
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
             //separate inlines from final json
@@ -67,9 +64,10 @@ define([
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             
             var that = this; 
-            var save_complete_dfds = [];    //stores state of all objects bieng saved in this form
+            var save_complete_dfds = [];    //stores dfds of all objects bieng saved in this form
             if(this.form.bulk)
             {
+                /*Save each object in bulk form individually*/
                 $.each(this.form.final_json.bulk, function(ind, obj){
                     var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
                     save_object_dfd
@@ -107,7 +105,7 @@ define([
                 save_complete_dfds.push(save_object_dfd);                                
             }
             
-            //When all objects in form are saved, go to new add form
+            //When all objects in form are saved...
             $.when.apply($,save_complete_dfds)
                 .done(function(){
                     that.after_save(that.form.entity_name);
@@ -411,11 +409,10 @@ define([
             
 
         on_button2: function(e) {
-            e.stopPropagation();
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save_finished: function(entity_name){
+        after_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
