@@ -42,11 +42,9 @@ define([
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
                     that.full_download_timestamp = new Date(model.get('timestamp'));
-                    that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
                     Offline.fetch_object("meta_data", "key", "last_inc_download")
                         .done(function(model){
                             that.inc_download_timestamp = new Date(model.get('timestamp'));
-                            that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
                             that.render();
                         })
                         .fail(function(error){

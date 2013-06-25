@@ -7249,10 +7249,9 @@ define('views/incremental_download',[
 
         getIncObjects: function(){
             var dfd = new $.Deferred();
-            this.start_timestamp = new Date();
-            //toJSON converts datetime to utc. so adding the offset before converting
-            this.start_timestamp = new Date(this.start_timestamp.getTime()-((this.start_timestamp.getTimezoneOffset())*60000)).toJSON();
-            this.start_timestamp = this.start_timestamp.replace("Z", "");
+            /*Recording the time when the request for update was sent, to update last_inc_downloaded ts if required.
+            Django complains when Z is present in ts bcoz timezone capab is off*/
+            this.start_timestamp = new Date().toJSON().replace("Z", "");
             this.get_last_download_timestamp()
                 .done(function(timestamp){
                     console.log("Timestamp for inc download - "+timestamp);
@@ -8986,10 +8985,8 @@ define('views/full_download',[
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
-            this.start_time = new Date();
-            //toJSON converts datetime to utc. so adding the offset before converting
-            this.start_time = new Date(this.start_time.getTime()-((this.start_time.getTimezoneOffset())*60000)).toJSON();
-            this.start_time = this.start_time.replace("Z", "");
+            //Django complains when Z is present in timestamp bcoz timezone capab is off
+            this.start_time = new Date().toJSON().replace("Z", "");
             if(!this.internet_connected())
             {
                 dfd.reject("Can't download database. Internet is not connected");
@@ -9433,11 +9430,9 @@ define('views/status',[
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
                     that.full_download_timestamp = new Date(model.get('timestamp'));
-                    that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
                     Offline.fetch_object("meta_data", "key", "last_inc_download")
                         .done(function(model){
                             that.inc_download_timestamp = new Date(model.get('timestamp'));
-                            that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
                             that.render();
                         })
                         .fail(function(error){

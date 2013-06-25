@@ -128,10 +128,9 @@ define([
 
         getIncObjects: function(){
             var dfd = new $.Deferred();
-            this.start_timestamp = new Date();
-            //toJSON converts datetime to utc. so adding the offset before converting
-            this.start_timestamp = new Date(this.start_timestamp.getTime()-((this.start_timestamp.getTimezoneOffset())*60000)).toJSON();
-            this.start_timestamp = this.start_timestamp.replace("Z", "");
+            /*Recording the time when the request for update was sent, to update last_inc_downloaded ts if required.
+            Django complains when Z is present in ts bcoz timezone capab is off*/
+            this.start_timestamp = new Date().toJSON().replace("Z", "");
             this.get_last_download_timestamp()
                 .done(function(timestamp){
                     console.log("Timestamp for inc download - "+timestamp);
