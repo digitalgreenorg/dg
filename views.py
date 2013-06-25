@@ -2434,7 +2434,7 @@ def screenings_in_village(request, village_id):
             persons_in_village = village.person_set.all().order_by('father_name').order_by('person_name')
             data['person_list'] = [{'value':"", 'string':"---------"}]
             for person in persons_in_village:
-                data['person_list'].append({'value':person.id, 'string':str(person)})
+                data['person_list'].append({'value':person.id, 'string':unicode(person)})
             data['video_list'] = []
             videos = village.screening_set.values_list('videoes_screened__id','videoes_screened__title').distinct()
             for video in videos:
