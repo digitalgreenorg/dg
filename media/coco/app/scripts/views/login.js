@@ -13,9 +13,8 @@ define([
           'click #login_button': 'attempt_login'                  
       },
       
-      initialize: function(router){
+      initialize: function(){
           console.log("Initializing login view");
-          this.router = router;
           _(this).bindAll('render');
           var that = this;
           User.fetch({
@@ -59,7 +58,9 @@ define([
           Auth.login(username, password)
               .done(function(){
                   that.scrap_view();
-                  that.router.navigate("", {trigger:true});
+                  window.Router.navigate("", {
+                      trigger:true
+                  });
               })
               .fail(function(error){
 			      $("#password").val('');

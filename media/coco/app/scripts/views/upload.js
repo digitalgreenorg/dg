@@ -276,11 +276,7 @@ define([
                     button1: "Save again",
                     button2: "Discard"
                 },
-                initialize: {
-                    view_configs: configs[entity_name],
-                    router: null
-                },
-                model_id: null,
+                entity_name: entity_name,
                 model_json: json
             });
             p.render();

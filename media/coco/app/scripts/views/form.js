@@ -21,11 +21,10 @@ define([
             // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template')
+        template : '#form_template',         
+        options_inner_template : _.template($('#options_template')
             .html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template')
-            .html()),
-        template : '#form_template',                
+               
         serialize: function(){
             s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
@@ -35,11 +34,8 @@ define([
         initialize: function(params) {
             console.log("ADD/EDIT: params to add/edit view: ");
             console.log(params);
-            this.view_configs = params.initialize.view_configs;
-            this.appRouter = params.initialize.router;
-            options_inner_template = _.template($('#options_template')
-                .html());
-            this.entity_name = this.view_configs.entity_name;
+            this.entity_name = params.entity_name;
+            this.entity_config = all_configs[this.entity_name];
             this.final_json = null;
             
             
@@ -60,43 +56,42 @@ define([
                 this.edit_case = true;
                 this.edit_id = params.model_id;
             }
-            // No need for two variables. One is sufficient.
             if(this.edit_case)
                 this.action = "E"
             else
                 this.action = "A"            
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             if(this.edit_case)
             {
-                this.form_template = $('#' + this.view_configs.edit_template_name).html();
-                if(this.view_configs.edit)
+                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                if(this.entity_config.edit)
                 {
-                    this.foreign_entities = this.view_configs.edit.foreign_entities;
-                    this.inline = this.view_configs.edit.inline;
-                    this.bulk = this.view_configs.edit.bulk;
+                    this.foreign_entities = this.entity_config.edit.foreign_entities;
+                    this.inline = this.entity_config.edit.inline;
+                    this.bulk = this.entity_config.edit.bulk;
                 }
                 else
                 {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.foreign_entities;
+                    this.inline = this.entity_config.inline;
+                    this.bulk = this.entity_config.bulk;
                 }
             }
             else
             {
-                this.form_template = $('#' + this.view_configs.add_template_name).html();
-                if(this.view_configs.add)
+                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                if(this.entity_config.add)
                 {
-                    this.foreign_entities = this.view_configs.add.foreign_entities;
-                    this.inline = this.view_configs.add.inline;
-                    this.bulk = this.view_configs.add.bulk;
+                    this.foreign_entities = this.entity_config.add.foreign_entities;
+                    this.inline = this.entity_config.add.inline;
+                    this.bulk = this.entity_config.add.bulk;
                 }
                 else
                 {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.foreign_entities;
+                    this.inline = this.entity_config.inline;
+                    this.bulk = this.entity_config.bulk;
                 }
             }
 
@@ -245,7 +240,7 @@ define([
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
+                Offline.fetch_object(this.entity_config.entity_name, "id", this.edit_id)
                     .done(function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();
@@ -290,7 +285,7 @@ define([
 
             // call validator on the form
             var context = this;
-            var validate_obj = $.extend(this.view_configs.form_field_validation,{
+            var validate_obj = $.extend(this.entity_config.form_field_validation,{
                     "submitHandler" : function() {
                     context.save();
                 }
@@ -500,6 +495,7 @@ define([
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
             // this.num_f_elems--; 
             var filter = f_entity_desc.filter;
+            var that = this;
             if(filter)
             {
                 // console.log("FILTERING FOREIGN ENTITY!");
@@ -580,7 +576,7 @@ define([
                 if($f_el.is('select[multiple]'))
                     $f_el.html('');    
                 else
-                    $f_el.html(options_inner_template({
+                    $f_el.html(this.options_inner_template({
                             id: "",
                             name: "------------"
                     }));
@@ -588,7 +584,7 @@ define([
                     var f_json = f_model; 
                     if(f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(options_inner_template({
+                    $f_el.append(that.options_inner_template({
                         id: parseInt(f_json["id"]),
                         name: f_json[f_entity_desc.name_field]
                     }));    

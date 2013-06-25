@@ -25,20 +25,20 @@ define([
     var FormControllerView = Backbone.Layout.extend({
 
         initialize: function(params) {
-            console.log("FORMCONTROLLER: initializing a new object");
+            console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
-            console.log(this.params);
-            console.log("FORMCONTROLLER: upload_collection recvd - ")
-            console.log(upload_collection.models);   
-            _(this)
-                .bindAll('on_save');
-            _(this)
-                .bindAll('on_button2');
-
+            _.bindAll(this);
         },
         template: "<div><div id = 'form'></div></div>",
-        
+
         beforeRender: function() {
+            console.log(this.params);
+            this.params = $.extend(this.params,{
+                serialize: {
+                    button1: "Save and Add Another",
+                    button2: null
+                }
+            });
             // #form is the id of the element inside in template where the new view will be inserted.
             var form_v = new Form(this.params);
             this.setView("#form", form_v);
