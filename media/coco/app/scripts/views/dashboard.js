@@ -110,6 +110,7 @@ define([
 		
 		user_offline: function(){
 			//document.getElementById('sync').disabled = true;
+			//$('input[type="btn"]').attr('disabled','disabled');
 			$('#online').hide();
 			$('#offline').show();
 		},
@@ -132,7 +133,7 @@ define([
                     console.log("UPLOAD FINISHED");
                     notifs_view.add_alert({
 						notif_type: "success",
-						message: "Upload successfully finished"
+						message: "Sync successfully finished"
 						});
                 })
                 .fail(function(error){

@@ -123,8 +123,10 @@
         <div id="d_status">
             <table class="table" style="width:100%">
                 <%$.each(all_configs, function(key,val) {
-                    if(key!="misc"){%> 
-        			    <tr id="<%=key%>"><td><%= key %></td><td class="status">In Progress</td></tr>
+                    if(key!="misc"){
+					var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
+					%>
+				    <tr id="<%=key%>"><td><%= keyCap %></td><td class="status">In Progress</td></tr>
                 <%}});%>
             </table>   
         </div>
@@ -161,18 +163,18 @@
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
-                    <div class="span1 btn pull-left" id= "sync">Sync
+                    <div class="span1 btn pull-left" id= "sync" title= "Click to sync your database with the server">Sync
 					<span class="badge" id="upload_num"><%=upload_entries%></span>
 					</div>
                 </div>
                 <div id="coco_nav" class="pull-left">
-                    <ul id = "dashboard_items" class="nav nav-list">
+                    <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
                         
                     </ul>
                 </div>
                 
                 <div id="coco_nav_add" class="pull-right">
-                    <ul id = "dashboard_items_add" class="nav nav-list">
+                    <ul id = "dashboard_items_add" class="nav nav-list" title= "Click to add data">
                         
                     </ul>
                 </div>
@@ -254,7 +256,7 @@
       </div>
     <br>
     <br>    
-    <button id="reset_database" class="btn btn-small btn-primary">Delete and Download Database</button>
+    <button id="reset_database" class="btn btn-small btn-primary" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
 </script>
 
     
