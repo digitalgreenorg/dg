@@ -129,6 +129,9 @@ define([
         getIncObjects: function(){
             var dfd = new $.Deferred();
             this.start_timestamp = new Date();
+            //toJSON converts datetime to utc. so adding the offset before converting
+            this.start_timestamp = new Date(this.start_timestamp.getTime()-((this.start_timestamp.getTimezoneOffset())*60000)).toJSON();
+            this.start_timestamp = this.start_timestamp.replace("Z", "");
             this.get_last_download_timestamp()
                 .done(function(timestamp){
                     console.log("Timestamp for inc download - "+timestamp);
@@ -168,9 +171,6 @@ define([
                     that.meta_model.fetch({
                         success: function(model){
                             var timestamp = model.get('timestamp');
-                            timestamp = timestamp.toJSON();
-                            timestamp = timestamp.replace("T"," ");
-                            timestamp = timestamp.replace("Z","");
                             dfd.resolve(timestamp);
                         },
                         error: function(model,error){

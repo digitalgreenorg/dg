@@ -4026,14 +4026,15 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
         
         /*
         creates a offline model
-        sets the id
+        sets the key, value
         fetches it
         returns fetched model
+        Must have an index on key in IDB
         */
-        fetch_object: function(entity_name, id){
+        fetch_object: function(entity_name, key, value){
             var dfd = new $.Deferred();
             var off_model = this.create_b_model(entity_name);
-            off_model.set("id",id);
+            off_model.set(key, value);
             this.check_login_wrapper()
                 .done(function(){
                     off_model.fetch({
@@ -4041,7 +4042,7 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
-                            dfd.reject("Error fetching object from offline - "+error);
+                            dfd.reject(error);
                         }
                     });
                 })
@@ -4102,7 +4103,25 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                     window.Router.navigate("login",{trigger:true});
                 });  
             return dfd;    
-        }
+        },
+        
+        reset_database: function(){
+            var request = indexedDB.deleteDatabase("offline-database");
+            request.onerror = function(event) {
+                console.log(event);
+                console.log("RESET DATABASE:Error!");
+                alert("Error while resetting database! Refresh the page and try again.");
+            };
+            request.onsuccess = function(event) {
+                console.log("RESET DATABASE:Success!");
+                location.reload();
+            }
+            request.onblocked = function(event) {
+                console.log("RESET DATABASE:Blocked!");
+                location.reload();
+            };
+        }    
+        
         
     }
     
@@ -5632,7 +5651,7 @@ define('views/form',[
                 this.fill_form();           //TODO: does it needs to be normalised first ?
 
             } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, this.edit_id)
+                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
                     .done(function(model) {
                         console.log("EDIT: edit model fetched");
                         that.model_json = model.toJSON();
@@ -6840,7 +6859,7 @@ define('views/upload',[
             
         upload_add_edit: function(up_model, dfd) {
             var that = this;
-            Offline.fetch_object(this.get_entity_name(up_model), this.get_offline_id(up_model))  
+            Offline.fetch_object(this.get_entity_name(up_model), "id", this.get_offline_id(up_model))  
                 .done(function(off_model){
                     console.log("Off model fetched - "+JSON.stringify(off_model.toJSON()));
                     OfflineToOnline.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model))
@@ -7231,6 +7250,9 @@ define('views/incremental_download',[
         getIncObjects: function(){
             var dfd = new $.Deferred();
             this.start_timestamp = new Date();
+            //toJSON converts datetime to utc. so adding the offset before converting
+            this.start_timestamp = new Date(this.start_timestamp.getTime()-((this.start_timestamp.getTimezoneOffset())*60000)).toJSON();
+            this.start_timestamp = this.start_timestamp.replace("Z", "");
             this.get_last_download_timestamp()
                 .done(function(timestamp){
                     console.log("Timestamp for inc download - "+timestamp);
@@ -7270,9 +7292,6 @@ define('views/incremental_download',[
                     that.meta_model.fetch({
                         success: function(model){
                             var timestamp = model.get('timestamp');
-                            timestamp = timestamp.toJSON();
-                            timestamp = timestamp.replace("T"," ");
-                            timestamp = timestamp.replace("Z","");
                             dfd.resolve(timestamp);
                         },
                         error: function(model,error){
@@ -8372,9 +8391,9 @@ define('views/list',[
   'datatable',
   'indexeddb_backbone_config',
   'layoutmanager',
-  'indexeddb-backbone',      
-  'views/notification'
-  // Using the Require.js text! plugin, we are loaded raw text
+  'views/notification',
+  'indexeddb-backbone'      
+ // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
 ], function($, pass, pass, indexeddb, layoutmanager, notifs_view){
@@ -8385,7 +8404,6 @@ define('views/list',[
         
         initialize: function(params) {
             this.view_configs = params.initialize.view_configs;
-            
             generic_collection = Backbone.Collection.extend({
                 database: indexeddb,
                 storeName: this.view_configs.entity_name,
@@ -8395,13 +8413,13 @@ define('views/list',[
                 .html();
             this.item_template = _.template($('#' + params.initialize.view_configs.list_item_template_name)
             .html());
-            this.datatable = null;
+            this.render();
         },
         
         serialize:function(){
           return { 
               header_name: this.view_configs.page_header, 
-              table_header:this.table_header
+              table_header: this.table_header
            };  
         },
         
@@ -8423,9 +8441,6 @@ define('views/list',[
         },
 
         render_data: function() {
-            if (this.datatable) {
-                this.datatable.fnDestroy();
-            }
             console.log("in render_data...change in collection...rendering list view");
             tbody = $('<tbody>');
             tbody.html('');
@@ -8434,6 +8449,7 @@ define('views/list',[
             }, this);
             this.$('#list_table').append(tbody);
 			$("#loaderimg").hide();
+            this.$('#list_table').dataTable();
             
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");
@@ -8458,9 +8474,6 @@ define('views/list',[
             //             .el);
             //     }, this);
             ////////////
-            
-            this.datatable = this.$('#list_table')
-                .dataTable();
         },
         
     });
@@ -8684,7 +8697,7 @@ define('views/form_controller',[
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -8817,7 +8830,7 @@ define('views/form_controller',[
             $.each(inlines,function(index, ijson){
                 if(ijson.id)
                 {
-                    Offline.fetch_object(form.inline.entity, ijson.id)  //just to get the online_id and preserve videos_seen
+                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to get the online_id and preserve videos_seen
                         .done(function(off_in_model){
                             var prev_json = off_in_model.toJSON();
                             var off_ijson = $.extend(prev_json, ijson);
@@ -8898,7 +8911,7 @@ define('views/form_controller',[
         },
         
         after_save_finished: function(entity_name){
-            window.Router.navigate('person/add');
+            window.Router.navigate(entity_name+'/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
 
@@ -8973,7 +8986,10 @@ define('views/full_download',[
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
-            
+            this.start_time = new Date();
+            //toJSON converts datetime to utc. so adding the offset before converting
+            this.start_time = new Date(this.start_time.getTime()-((this.start_time.getTimezoneOffset())*60000)).toJSON();
+            this.start_time = this.start_time.replace("Z", "");
             if(!this.internet_connected())
             {
                 dfd.reject("Can't download database. Internet is not connected");
@@ -9111,7 +9127,7 @@ define('views/full_download',[
                     that.fetch_status[entity_name]["total"] = total_num_objects;
                     that.fetch_status[entity_name]["downloaded"] = 0;
                     that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
-                    that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
+                    that.chunk_it_fetch_it_save_it(entity_name, 200)
                         .done(function(){
                             console.log("FINISHED DOWNLOADING - " + entity_name);
                             that.increment_pb();
@@ -9323,11 +9339,12 @@ define('views/full_download',[
             });
             var meta_model = new generic_model_offline();
             meta_model.set({key: "last_full_download"});
+            var that = this;
             meta_model.fetch({
                 success: function(model){
                     console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',new Date());
+                    model.set('timestamp',that.start_time);
                     model.save(null,{
                         success: function(){
                             console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
@@ -9344,7 +9361,7 @@ define('views/full_download',[
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
-                            meta_model.set('timestamp',new Date());
+                            meta_model.set('timestamp',that.start_time);
                             meta_model.save(null,{
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
@@ -9381,72 +9398,73 @@ define('views/status',[
     'configs',
     'collections/upload_collection',
     'views/notification',
-    'indexeddb-backbone'                
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view){
+    'offline_utils',                
+    'indexeddb-backbone'
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline){
     
     var StatusView = Backbone.Layout.extend({
         template: "#sync_status_template",
+        timestamp: null,
+        upload_entries: null,
         events: {
             "click button#download": "download",
             "click button#reset_database": "reset"
         },
+        
+        initialize: function(){
+            _(this).bindAll('fill_status');
+            // upload_collection.on("all",this.fill_status);
+            this.fill_status();
+        },
+        
         serialize: function(){
             return {
-                timestamp: this.timestamp,
+                timestamp: this.full_download_timestamp,
                 num_upload_entries: this.upload_entries,
                 upload_collection: upload_collection.toJSON()
             }
         },
        
-        timestamp: null,
-        upload_entries: null,
         fill_status: function(){
             var that = this;
-            // this.template = "#sync_status_template";
             that.upload_entries =  upload_collection.length;
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_full_download"});
-            meta_model.fetch({
-                success: function(model){
-                    console.log("STATUS: last_downloaded fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    that.timestamp = model.get('timestamp');
-                    //TODO: set template when db is populated
-                    // that.template = "#sync_status_template";
-                    console.log(that.template);
-                    // that.render();
-                    that.render().done(function(){console.log("finished after download render");});    
-                    
-                },
-                error: function(model, error){
+            var f_d_dfd = Offline.fetch_object("meta_data", "key", "last_full_download");
+            f_d_dfd
+                .done(function(model){
+                    that.full_download_timestamp = new Date(model.get('timestamp'));
+                    that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
+                    that.render();
+                })
+                .fail(function(error){
                     console.log("STATUS: error while fetching last_downloaded from meta_data objectStore");
                     console.log(error);
                     if(error == "Not Found")
                         {
+                            that.full_download_timestamp = "Never";
                             //Start download automatically
-                           // that.template = "#first_time_status";
-                           // that.template = "#first_time_status";
-                           that.render()
+                            that.render()
                                .done(function(){
                                    that.download();
                                });
-                           // that.download();
                         }    
-                }        
-            });
-        },                        
-        initialize: function(){
-            _(this).bindAll('fill_status');
-            // upload_collection.bind('reset',this.fill_status);   
-//             upload_collection.bind('remove',this.fill_status);   
+                });
+            // var inc_d_dfd = Offline.fetch_object("meta_data", "key", "last_inc_download");
+            // inc_d_dfd
+            //     .done(function(model){
+            //         that.inc_download_timestamp = new Date(model.get('timestamp'));
+            //         that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
+            //         that.render();
+            //     })
+            //     .fail(function(error){
+            //         that.inc_download_timestamp = "Never";
+            //        that.render()
+            //            .done(function(){
+            //                that.download();
+            //            });
+            //     });
             
-            this.fill_status();
-            
-        },
+        },     
+                           
         download: function(){
             var dfd = new $.Deferred();
             if(!this.full_download_v)
@@ -9477,20 +9495,7 @@ define('views/status',[
         },
         
         reset: function(){
-            var request = indexedDB.deleteDatabase("offline-database");
-            request.onerror = function(event) {
-                console.log(event);
-                console.log("RESET DATABASE:Error!");
-                alert("Error while resetting database! Refresh the page and try again.");
-            };
-            request.onsuccess = function(event) {
-                console.log("RESET DATABASE:Success!");
-                location.reload();
-            }
-            request.onblocked = function(event) {
-                console.log("RESET DATABASE:Blocked!");
-                location.reload();
-            };
+            Offline.reset_database();
         }    
     
           
@@ -9590,6 +9595,7 @@ define('views/app_layout',[
           current_add_edit_view = null;
       },
       
+      //when layout is rendered, put the dashboard in the side panel - constant across all routes
       afterRender: function(){
           console.log("app layout rendered");
           var dashboard_view = new DashboardView();
@@ -9597,54 +9603,21 @@ define('views/app_layout',[
           dashboard_view.render();
       },
       
-      // hide_side_panel: function(){
-//           console.log("HIDE SIDE PANEL");
-//           console.log($("#side_panel"));
-//           this.$("#side_panel").hide();
-//           $("#content").removeClass('span10');
-//           $("#content").addClass('span12');
-//           $("#content").prepend("<div><a id='right_arrow'><img style='width:30px;' src='/media/coco/app/images/right_arrow.png'/></a></div>");
-//           $("#right_arrow").click(function() {
-//               $("#content").removeClass('span12');
-//               $("#content").addClass('span10');
-//               $('#right_arrow').remove();
-//               $("#side_panel").show();
-//           });
-//       },
       render_login: function(router){
-          var l_view = new LoginView(router);
-          this.setView("#content", l_view);
-          // l_view.render();
-          
+          var login_view = new LoginView(router);
+          this.setView("#content", login_view);
       },    
           
-      render_dashboard: function() {
-          // $(this.el)
-          //     .html('');
-          // $(this.el)
-          //     .append(header.render("<li class='active' >Dashboard</li>")
-          //     .el);
-          // this.setView("#header", new HeaderView({serialize: { breadcrumb: $('#dashboard_breadcrumb').html() }}));
+      render_home_view: function() {
           var s_view = new StatusView();
           this.setView("#content", s_view);
-          
-          //         
-          // $(this.el)
-          //               .append(dashboard.render()
-          //               .el);
-          return this;
-                   
       },
+      
       render_list_view: function(params) {
-          // var bcrumb_template = _.template($('#list_breadcrumb').html());
-          // this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread:params.view_configs.page_header}) }}));
-          var that = this;
           var l_view = new ListView({initialize:params});
           this.setView("#content",l_view);
-          l_view.render();
-          
-          return this;
       },
+      
       render_add_edit_view: function(params, data) {
           // var add_or_edit = "add";
 //           if (data) add_or_edit = "edit";
@@ -9710,17 +9683,17 @@ define('router',[
   
     var AppRouter = Backbone.Router.extend({
         routes: {
-            "": "showDashboard",
+            "": "home",
             ":entity/list": "list",
             ":entity/add": "addPerson",
             ":entity/edit/:id": "editPerson",
             "login": "login"
         },
-        showDashboard: function() {
+        home: function() {
             console.log("ROUTER: dashboard url caught");
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_dashboard();
+                    AppLayout.render_home_view();
                 });
         },
         list: function(entity) {

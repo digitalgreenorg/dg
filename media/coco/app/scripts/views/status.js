@@ -22,13 +22,13 @@ define([
         
         initialize: function(){
             _(this).bindAll('fill_status');
-            upload_collection.on("all",this.fill_status);
+            // upload_collection.on("all",this.fill_status);
             this.fill_status();
         },
         
         serialize: function(){
             return {
-                timestamp: this.timestamp,
+                timestamp: this.full_download_timestamp,
                 num_upload_entries: this.upload_entries,
                 upload_collection: upload_collection.toJSON()
             }
@@ -37,11 +37,11 @@ define([
         fill_status: function(){
             var that = this;
             that.upload_entries =  upload_collection.length;
-            Offline.fetch_object("meta_data", "key", "last_full_download")
+            var f_d_dfd = Offline.fetch_object("meta_data", "key", "last_full_download");
+            f_d_dfd
                 .done(function(model){
-                    console.log("STATUS: last_downloaded fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    that.timestamp = model.get('timestamp');
+                    that.full_download_timestamp = new Date(model.get('timestamp'));
+                    that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
                     that.render();
                 })
                 .fail(function(error){
@@ -49,13 +49,29 @@ define([
                     console.log(error);
                     if(error == "Not Found")
                         {
+                            that.full_download_timestamp = "Never";
                             //Start download automatically
-                           that.render()
+                            that.render()
                                .done(function(){
                                    that.download();
                                });
                         }    
                 });
+            // var inc_d_dfd = Offline.fetch_object("meta_data", "key", "last_inc_download");
+            // inc_d_dfd
+            //     .done(function(model){
+            //         that.inc_download_timestamp = new Date(model.get('timestamp'));
+            //         that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
+            //         that.render();
+            //     })
+            //     .fail(function(error){
+            //         that.inc_download_timestamp = "Never";
+            //        that.render()
+            //            .done(function(){
+            //                that.download();
+            //            });
+            //     });
+            
         },     
                            
         download: function(){
