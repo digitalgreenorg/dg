@@ -7,11 +7,11 @@ define([
     'configs', 
     'views/form', 
     'collections/upload_collection', 
-    'offline_to_online', 
+    'convert_namespace', 
     'offline_utils', 
     'online_utils',
     'indexeddb-backbone'
-    ], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, OfflineToOnline, Offline, Online) {
+    ], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
 
     // FormController: Brings up the Add/Edit form
     
@@ -88,7 +88,7 @@ define([
             }
             else
             {
-                var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_fields, this.form.entity_name);
+                var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_entities, this.form.entity_name);
                 save_object_dfd
                     .done(function(msg){
                         notifs_view.add_alert({
@@ -119,7 +119,7 @@ define([
             if(this.is_uploadqueue_empty() && this.is_internet_connected())
             {
                 //Online mode
-                OfflineToOnline.convert(json, foreign_entities)
+                ConvertNamespace.convert(json, foreign_entities, "offlinetoonline")
                     .done(function(on_off_jsons){
                         that.save_when_online(on_off_jsons)
                             .done(function(msg){
@@ -130,7 +130,7 @@ define([
                             });                            
                     })
                     .fail(function(){
-                        return dfd.reject("Failed to save "+entity_name+". OfflineToOnline Failed.");
+                        return dfd.reject("Failed to save "+entity_name+". ConvertNamespace Failed.");
                     });
             }
             else

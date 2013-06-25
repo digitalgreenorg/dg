@@ -4,10 +4,10 @@ define([
   'layoutmanager',
   'indexeddb_backbone_config',
   'configs',
-  'online_to_offline',
+  'convert_namespace',
   'indexeddb-backbone',
   'bootstrapjs'                            
-], function(jquery,underscore,layoutmanager,indexeddb, all_configs, OnlineToOffline){
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace){
     
     var IncrementalDownloadView = Backbone.Layout.extend({
         
@@ -327,7 +327,7 @@ define([
                     {
                         that.fetch_from_online(that.get_online_id(incd_o))
                             .done(function(on_model){
-                                OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
+                                ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
                                     .done(function(on_off_obj){
                                         that.add_offline(on_off_obj.off_json)
                                             .done(function(off_model){
@@ -342,7 +342,7 @@ define([
                                             });    
                                     })
                                     .fail(function(error){
-                                        // console.log("INCD:ADD: Not saving object to offlinedb coz onlineTOoffline failed");
+                                        // console.log("INCD:ADD: Not saving object to offlinedb coz ConvertNamespace failed");
                                         dfd.reject(error);
                                     });    
                             })
@@ -365,7 +365,7 @@ define([
                 .done(function(off_model){
                     that.fetch_from_online(that.get_online_id(incd_o))
                         .done(function(on_model){
-                            OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
+                            ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
                                 .done(function(on_off_obj){
                                     that.edit_offline(off_model, on_off_obj.off_json)
                                         .done(function(off_model){
@@ -379,7 +379,7 @@ define([
                                         });    
                                 })
                                 .fail(function(error){
-                                    // console.log("INCD:EDIT: Not saving object to offlinedb coz onlineTOoffline failed");
+                                    // console.log("INCD:EDIT: Not saving object to offlinedb coz ConvertNamespace failed");
                                     dfd.reject(error);
                                 });    
                         })
