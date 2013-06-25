@@ -58,8 +58,9 @@ define(function(require) {
 
 					this.setInputParam('offset', page * countPerPage, true);
 					this.setInputParam('limit', countPerPage, true);
-					this.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
-					
+					if ($(".js-collections-wrapper").attr('data-searchstring') != undefined){
+						this.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
+					}
 				
 
 					// perform the fetch
