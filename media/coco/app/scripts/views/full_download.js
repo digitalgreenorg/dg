@@ -60,10 +60,8 @@ define([
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
-            this.start_time = new Date();
-            //toJSON converts datetime to utc. so adding the offset before converting
-            this.start_time = new Date(this.start_time.getTime()-((this.start_time.getTimezoneOffset())*60000)).toJSON();
-            this.start_time = this.start_time.replace("Z", "");
+            //Django complains when Z is present in timestamp bcoz timezone capab is off
+            this.start_time = new Date().toJSON().replace("Z", "");
             if(!this.internet_connected())
             {
                 dfd.reject("Can't download database. Internet is not connected");
