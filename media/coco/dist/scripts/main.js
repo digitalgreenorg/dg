@@ -9127,7 +9127,7 @@ define('views/full_download',[
                     that.fetch_status[entity_name]["total"] = total_num_objects;
                     that.fetch_status[entity_name]["downloaded"] = 0;
                     that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
-                    that.chunk_it_fetch_it_save_it(entity_name, 200)
+                    that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
                         .done(function(){
                             console.log("FINISHED DOWNLOADING - " + entity_name);
                             that.increment_pb();
@@ -9419,7 +9419,8 @@ define('views/status',[
         
         serialize: function(){
             return {
-                timestamp: this.full_download_timestamp,
+                full_d_timestamp: this.full_download_timestamp,
+                inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
                 upload_collection: upload_collection.toJSON()
             }
@@ -9428,11 +9429,21 @@ define('views/status',[
         fill_status: function(){
             var that = this;
             that.upload_entries =  upload_collection.length;
-            var f_d_dfd = Offline.fetch_object("meta_data", "key", "last_full_download");
-            f_d_dfd
+            
+            Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
                     that.full_download_timestamp = new Date(model.get('timestamp'));
                     that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
+                    Offline.fetch_object("meta_data", "key", "last_inc_download")
+                        .done(function(model){
+                            that.inc_download_timestamp = new Date(model.get('timestamp'));
+                            that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
+                            that.render();
+                        })
+                        .fail(function(error){
+                            that.inc_download_timestamp = "Never";
+                            that.render();
+                        });
                     that.render();
                 })
                 .fail(function(error){
@@ -9448,20 +9459,7 @@ define('views/status',[
                                });
                         }    
                 });
-            // var inc_d_dfd = Offline.fetch_object("meta_data", "key", "last_inc_download");
-            // inc_d_dfd
-            //     .done(function(model){
-            //         that.inc_download_timestamp = new Date(model.get('timestamp'));
-            //         that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
-            //         that.render();
-            //     })
-            //     .fail(function(error){
-            //         that.inc_download_timestamp = "Never";
-            //        that.render()
-            //            .done(function(){
-            //                that.download();
-            //            });
-            //     });
+                
             
         },     
                            

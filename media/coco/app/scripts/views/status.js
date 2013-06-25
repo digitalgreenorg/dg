@@ -28,7 +28,8 @@ define([
         
         serialize: function(){
             return {
-                timestamp: this.full_download_timestamp,
+                full_d_timestamp: this.full_download_timestamp,
+                inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
                 upload_collection: upload_collection.toJSON()
             }
@@ -37,11 +38,21 @@ define([
         fill_status: function(){
             var that = this;
             that.upload_entries =  upload_collection.length;
-            var f_d_dfd = Offline.fetch_object("meta_data", "key", "last_full_download");
-            f_d_dfd
+            
+            Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
                     that.full_download_timestamp = new Date(model.get('timestamp'));
                     that.full_download_timestamp = new Date(that.full_download_timestamp.getTime()+(that.full_download_timestamp.getTimezoneOffset())*60000).toString();
+                    Offline.fetch_object("meta_data", "key", "last_inc_download")
+                        .done(function(model){
+                            that.inc_download_timestamp = new Date(model.get('timestamp'));
+                            that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
+                            that.render();
+                        })
+                        .fail(function(error){
+                            that.inc_download_timestamp = "Never";
+                            that.render();
+                        });
                     that.render();
                 })
                 .fail(function(error){
@@ -57,20 +68,7 @@ define([
                                });
                         }    
                 });
-            // var inc_d_dfd = Offline.fetch_object("meta_data", "key", "last_inc_download");
-            // inc_d_dfd
-            //     .done(function(model){
-            //         that.inc_download_timestamp = new Date(model.get('timestamp'));
-            //         that.inc_download_timestamp = new Date(that.inc_download_timestamp.getTime()+(that.inc_download_timestamp.getTimezoneOffset())*60000).toString();
-            //         that.render();
-            //     })
-            //     .fail(function(error){
-            //         that.inc_download_timestamp = "Never";
-            //        that.render()
-            //            .done(function(){
-            //                that.download();
-            //            });
-            //     });
+                
             
         },     
                            
