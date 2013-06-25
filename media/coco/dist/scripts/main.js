@@ -8025,7 +8025,7 @@ define('views/dashboard',[
                         $('#dashboard_items')
                             .append(this.item_template({
                             name: member+"/list",
-                            title: configs[member]["page_header"]
+                            title: configs[member]["page_header"]+'s'
                         }));
                     }
                     if(add)
