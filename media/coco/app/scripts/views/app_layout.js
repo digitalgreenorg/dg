@@ -37,7 +37,7 @@ define(['views/dashboard', 'views/list', 'views/form_controller', 'views/status'
                 model_id: id,
             });
             this.setView("#content", formcontroller_view);
-            formcontroller_view.render();
+            formcontroller_view.render();  //bcoz Its afterRender assumes its elements are in DOM
         }
 
     });

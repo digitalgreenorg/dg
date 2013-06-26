@@ -28,9 +28,11 @@ define([
             console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
             _.bindAll(this);
+            // this.render();
         },
         template: "<div><div id = 'form'></div></div>",
 
+        //setting up the form view
         beforeRender: function() {
             console.log(this.params);
             this.params = $.extend(this.params,{
@@ -277,7 +279,7 @@ define([
             var off_json = on_off_jsons.off_json
             console.log("FORMCONTROLLER: Got this json to save online - "+JSON.stringify(on_json));
             var that = this;
-            if(that.form.action == "A")
+            if(!that.form.edit_case)
                 {
                     delete on_json.id;
                 }
