@@ -27,18 +27,15 @@ def save_log(sender, **kwargs ):
     except Exception, ex:
         user = None
     try:
-        try:
-            instance.get_village()
-        except Exception as e:
-            print type(e), e
-        
-        log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner(),instance_json = json_str)
-        log.save()
-        ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-        if previous_time_stamp > log.timestamp:
-            raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-    except Exception as ex:
-        print ex
+        instance.get_village()
+    except Exception as e:
+        print type(e), e
+    
+    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner(),instance_json = json_str)
+    log.save()
+    ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
+    if previous_time_stamp > log.timestamp:
+        raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
     
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
