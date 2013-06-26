@@ -16,6 +16,10 @@ legend{
 	color: #8f8e8d;
 }
 
+h1 small{
+	font-size: 18px;
+}
+
 #coco_content {
     padding-top: 20px;
 }

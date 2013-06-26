@@ -128,7 +128,9 @@ define([
 
         getIncObjects: function(){
             var dfd = new $.Deferred();
-            this.start_timestamp = new Date();
+            /*Recording the time when the request for update was sent, to update last_inc_downloaded ts if required.
+            Django complains when Z is present in ts bcoz timezone capab is off*/
+            this.start_timestamp = new Date().toJSON().replace("Z", "");
             this.get_last_download_timestamp()
                 .done(function(timestamp){
                     console.log("Timestamp for inc download - "+timestamp);
@@ -168,9 +170,6 @@ define([
                     that.meta_model.fetch({
                         success: function(model){
                             var timestamp = model.get('timestamp');
-                            timestamp = timestamp.toJSON();
-                            timestamp = timestamp.replace("T"," ");
-                            timestamp = timestamp.replace("Z","");
                             dfd.resolve(timestamp);
                         },
                         error: function(model,error){

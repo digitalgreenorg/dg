@@ -60,7 +60,8 @@ define([
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
-            
+            //Django complains when Z is present in timestamp bcoz timezone capab is off
+            this.start_time = new Date().toJSON().replace("Z", "");
             if(!this.internet_connected())
             {
                 dfd.reject("Can't download database. Internet is not connected");
@@ -410,11 +411,12 @@ define([
             });
             var meta_model = new generic_model_offline();
             meta_model.set({key: "last_full_download"});
+            var that = this;
             meta_model.fetch({
                 success: function(model){
                     console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
                     console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',new Date());
+                    model.set('timestamp',that.start_time);
                     model.save(null,{
                         success: function(){
                             console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
@@ -431,7 +433,7 @@ define([
                     console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
                     if(error == "Not Found")
                         {
-                            meta_model.set('timestamp',new Date());
+                            meta_model.set('timestamp',that.start_time);
                             meta_model.save(null,{
                                 success: function(model){
                                     console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
