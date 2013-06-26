@@ -256,6 +256,7 @@ define(function(require) {
         	if(categoryId=='language__name'){
         		categoryId='language';
         	}
+        	var i;
             var filterCategoryData = this._state.filterData.categories[categoryId];
             var filterOptionData;
         	for (i=0; i < filterCategoryData.options.length; i++){
@@ -275,6 +276,7 @@ define(function(require) {
         },
 
         _getFilterStatus: function(categoryId, optionId) {
+        	var i;
         	for (i=0; i < this._state.filterData.categories[categoryId].options.length; i++){
         		if (this._state.filterData.categories[categoryId].options[i].title == optionId){
         			return this._state.filterData.categories[categoryId].options[i].filterActive
