@@ -1,4 +1,4 @@
-import cjson
+import simplejson as cjson
 import datetime
 import operator
 import re

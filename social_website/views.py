@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
 from django.shortcuts import *
 from social_website.models import Language, Collection, Partner
 from pyes import *
-import ast, urllib2
+import ast, json, urllib2
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
@@ -313,3 +313,18 @@ def elasticSearch(request):
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
+    
+
+def footer_view(request):
+    response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
+    data = data = json.loads(res.read())
+    footer_dict={
+        'likes':data['likes'],
+        }
+    context= {
+        'header': {
+            'jsController':'Footer',
+            'loggedIn':False},
+        'footer_dict':footer_dict
+        }
+    return render_to_response('footer.html' , context,context_instance = RequestContext(request))
