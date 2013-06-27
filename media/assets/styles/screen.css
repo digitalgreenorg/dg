@@ -833,13 +833,13 @@ a {
     margin-top: 10px;
 }
 
-/* .v-list > li {
+.v-list-custom > li {
     font-weight: bold;
     background: url(../images/list-bg-black.png) no-repeat 0 2px;
     padding-left: 10px;
     margin-bottom: 8px;
     display: block;
-} */
+}
 .v-list-md > * + * {
     margin-top: 13px;
 }
