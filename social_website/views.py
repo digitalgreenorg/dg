@@ -110,10 +110,11 @@ def collection_view(request):
                               "filter" :{
                                           "and": [
                                                   {"terms" : {"subject" : [collection.subject]}},
-                                                  {"terms" : {"topic" : [collection.topic]}}
-                                                  ]
-                                         }
-                              },
+                                                  {"terms" : {"topic" : [collection.topic]}},
+                                                  {"not" : {"term" : {"uid" : collection.uid}}},   
+                                                  ],
+                                        }
+                              }
                   }
         }
     try :
