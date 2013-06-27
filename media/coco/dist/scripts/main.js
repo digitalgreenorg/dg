@@ -147,6 +147,7 @@ function() {
                 },
                 video_production_end_date: {
                     required: true,
+					dateOrder: {video_production_start_date : "video_production_start_date"}
                     // validateDate: true
                 },
                 language: "required",
@@ -161,7 +162,9 @@ function() {
                 farmers_shown: "required",
                 actors: "required",
                 video_suitable_for: "required",
-                approval_date: {
+
+				approval_date: {
+					dateOrder: {video_production_start_date : "video_production_end_date"}
                     // validateDate: true
                 },
                 youtubeid: {
@@ -182,7 +185,8 @@ function() {
                 },
                 video_production_end_date: {
                     required: 'Enter Video Production End Date',
-                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd"
+                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd",
+					dateOrder: "End date should be later than start date"
                 },
                 language: "Enter Language",
                 summary: {
@@ -197,7 +201,8 @@ function() {
                 actors: "Enter Actors",
                 video_suitable_for: "Enter Video Suitable For",
                 approval_date: {
-                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd"
+                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd",
+					dateOrder: "Approval date should be later than end date"
                 },
                 youtubeid: {
                     maxlength: "youtubeid should be not more than 20 characters"
@@ -396,7 +401,8 @@ function() {
 				},
 				end_time: {
 					required: true,
-					validateTime: true
+					validateTime: true,
+					startBeforeEnd: {start_time : "start_time_picker"}
 				},
 				animator:"required",
 				village:"required",
@@ -415,6 +421,7 @@ function() {
 				end_time: {
 					required: 'Enter Video Production End Date',
 					validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
+					startBeforeEnd: 'End time should be later than start time',
 				},
 				animator: "Enter Animator",
 				village:"Enter Village",
@@ -8089,6 +8096,7 @@ define('views/dashboard',[
 		
 		user_offline: function(){
 			//document.getElementById('sync').disabled = true;
+			//$('input[type="btn"]').attr('disabled','disabled');
 			$('#online').hide();
 			$('#offline').show();
 		},
@@ -8111,7 +8119,7 @@ define('views/dashboard',[
                     console.log("UPLOAD FINISHED");
                     notifs_view.add_alert({
 						notif_type: "success",
-						message: "Upload successfully finished"
+						message: "Sync successfully finished"
 						});
                 })
                 .fail(function(error){
@@ -8978,7 +8986,7 @@ define('views/full_download',[
         },
 
         /* 
-        TODO Checks if their is already a full downloaded database, alert user thar this db should be removed before proceeding 
+        TODO Checks if there is already a full downloaded database, alert user that this db should be removed before proceeding 
         Initializes UI and objects used for progress bar. 
         Fetches the full_download_info objectStore collection to resume download, if that's the case
         TODO Stores the start time for download
@@ -9764,6 +9772,12 @@ define('user_initialize',[
         $.validator.addMethod('validateTime',
             validateTime, 'Enter the time in the format of hh:mm in 24 hours format'
         );
+		$.validator.addMethod('startBeforeEnd',
+            startBeforeEnd, 'End time should be later than start time'
+        );
+		$.validator.addMethod('dateOrder',
+            dateOrder, 'End date should be later than start date'
+        );
     }  
     
     function validateUniCodeChars(value) {
@@ -9815,10 +9829,38 @@ define('user_initialize',[
     	}
     	return check;
     }
-    
+
+	function dateOrder(value, element, options){
+		var check = false;
+		var start = $('#'+options.video_production_start_date).val();
+		console.log("START DATE = " + start + ' END = ' + value);
+
+		startDate = start.split('-');
+		endDate = value.split('-');
+
+		if(endDate[0]>=startDate[0] && endDate[1]>=startDate[1] && endDate[2]>=startDate[2]){
+			check = true;
+		}
+		return check;
+	}
+
+	function startBeforeEnd(value, element, options){
+		var check = false;
+		var start = $('#'+options.start_time).val();
+		var end = value;
+		if(start < end){
+			check = true;
+		}
+		else{
+			check = false;
+		}
+		return check;
+	}
     return {
         run: run
     };
+
+
 });
 
 define('app',[
