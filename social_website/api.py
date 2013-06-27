@@ -5,11 +5,15 @@ from functools import partial
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from django.http import HttpResponse
-
+from functools import partial
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
-    sub_fields = getattr(bundle.obj, field_name).values_list(*sub_field_names,flat=True)
-    return sub_fields
+    sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
+    return list(sub_fields)
+
+#def many_to_many_to_subfield(bundle, field_name, sub_field_names):
+#    sub_fields = getattr(bundle.obj, field_name).values_list(*sub_field_names,flat=True)
+#    return sub_fields
 
 def many_to_many_to_subfield_rev(bundle, field_name, sub_field_names):
     print bundle.data
@@ -93,7 +97,8 @@ class FarmerResource(BaseResource):
         resource_name = 'farmer'
 
 class PartnerFarmerResource(BaseResource):
-    farmer = fields.ToManyField('social_website.api.FarmerResource', 'farmer_set',full=True)
+    farmer = fields.ToManyField('social_website.api.FarmerResource', 'farmer_set', full=True)
+    dehydrate_farmer = partial(many_to_many_to_subfield, field_name='farmer_set',sub_field_names=['uid','name','thumbnailURL'])
     class Meta:
         queryset = Partner.objects.all()
         resource_name = 'partnerFarmers'
