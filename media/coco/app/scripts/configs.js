@@ -132,6 +132,7 @@ function() {
                 },
                 video_production_end_date: {
                     required: true,
+					dateOrder: {video_production_start_date : "video_production_start_date"}
                     // validateDate: true
                 },
                 language: "required",
@@ -146,7 +147,9 @@ function() {
                 farmers_shown: "required",
                 actors: "required",
                 video_suitable_for: "required",
-                approval_date: {
+
+				approval_date: {
+					dateOrder: {video_production_start_date : "video_production_end_date"}
                     // validateDate: true
                 },
                 youtubeid: {
@@ -167,7 +170,8 @@ function() {
                 },
                 video_production_end_date: {
                     required: 'Enter Video Production End Date',
-                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd"
+                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd",
+					dateOrder: "End date should be later than start date"
                 },
                 language: "Enter Language",
                 summary: {
@@ -182,7 +186,8 @@ function() {
                 actors: "Enter Actors",
                 video_suitable_for: "Enter Video Suitable For",
                 approval_date: {
-                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd"
+                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd",
+					dateOrder: "Approval date should be later than end date"
                 },
                 youtubeid: {
                     maxlength: "youtubeid should be not more than 20 characters"
@@ -381,7 +386,8 @@ function() {
 				},
 				end_time: {
 					required: true,
-					validateTime: true
+					validateTime: true,
+					startBeforeEnd: {start_time : "start_time_picker"}
 				},
 				animator:"required",
 				village:"required",
@@ -400,6 +406,7 @@ function() {
 				end_time: {
 					required: 'Enter Video Production End Date',
 					validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
+					startBeforeEnd: 'End time should be later than start time',
 				},
 				animator: "Enter Animator",
 				village:"Enter Village",

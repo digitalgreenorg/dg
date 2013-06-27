@@ -126,13 +126,13 @@
                     if(key!="misc"){
 					var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
 					%>
-				    <tr id="<%=key%>"><td><%= keyCap %></td><td class="status">In Progress</td></tr>
+				    <tr id="<%=key%>"><td><%= keyCap %>s</td><td class="status">In Progress</td></tr>
                 <%}});%>
             </table>   
         </div>
       </div>
       <div class="modal-footer">
-        <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Stop It!</button>
+        <button id = "stop_full_download" type="button" class="btn btn-danger" disabled>Pause download</button>
       </div>
     </div>
 </script>
@@ -204,25 +204,59 @@
 <script type="text/template" id="sync_status_template">
     <div id="modal"></div>
 	<div class="page-header">
-	<h1 style = "color:#0088cc"> Welcome to COCO! 
+	<h1 style = "color:#0088cc;"> Welcome to COCO!
 	<br><small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small></br></h1>
 	</div>
+
+		<div class="media">
+			<a class="pull-left">
+			<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
+			</a>
+			<div class="media-body">
+			<h5 class="media-heading">Add data</h5>
+			To add some data, click on (+) sign next to the type of data that you want to add.
+			</div>
+		</div>
+
+		<div class="media">
+			<a class="pull-left">
+			<img class="media-object" src="/media/coco/app/images/table.png" style = "width:70px;">
+			</a>
+			<div class="media-body">
+			<h5 class="media-heading">View Data</h5>
+			To view, sort and search through your data, click on the data link in the sidebar.
+			</div>
+		</div>
+
+		<div class="media">
+			<a class="pull-left">
+			<img class="media-object" src="/media/coco/app/images/sync.png" style = "width:70px;">
+			</a>
+			<div class="media-body">
+			<h5 class="media-heading"> Sync data</h5>
+			To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server,
+			you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.
+			The number in the button shows how many entries are yet to be uploaded.
+			</div>
+		</div>
+
+		<div class="media">
+			<a class="pull-left">
+			<img class="media-object" src="/media/coco/app/images/fb.png" style = "width:70px;">
+			</a>
+			<div class="media-body">
+			<h5 class="media-heading"> We value your feedback</h5>
+			Do share your feedback by mailing us at system@digitalgreen.org
+			</div>
+		</div>
+
    
-	<div style = "margin-bottom:40px;"><ul>
-		<li> To get started, click on any link in the left sidebar.</li>
-		<li> To add some data, click on (+).</li>
-		<li>To view, sort and search through your data, click on the data link in the sidebar.</li>
-		<li> To sync data with our server, click on the Sync button.</li>
-		<li> While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.</li>
-		<li>Finally, do share your feedback with us.</li>
-	</ul></div>
-   
-   <div>Database last deleted and downloaded at <%=full_d_timestamp%></div><br>
-   <div>Database last synced at <%=inc_d_timestamp%></div><br>
-   <div class="row pull-left" style="margin-left:0px; margin-right:10px;"> Entries to upload (<%=num_upload_entries%>)</div>
+   <div style = "color:#999999; margin-top:25px;"><b>Database last deleted and downloaded at </b><%=full_d_timestamp%></div><br>
+   <div style = "color:#999999; margin-top:-15px;"><b>Database last synced at </b><%=inc_d_timestamp%></div><br>
+   <div class="row pull-left" style="margin-left:0px; margin-right:10px; margin-top:-15px;color:#999999;"><b>Entries to upload(<%=num_upload_entries%>)</div></b>
   <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
     <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style = "margin-top:-20px;">
         <i class="icon-chevron-down"></i>
       </a>
     </div>

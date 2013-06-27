@@ -13,6 +13,12 @@ define([
         $.validator.addMethod('validateTime',
             validateTime, 'Enter the time in the format of hh:mm in 24 hours format'
         );
+		$.validator.addMethod('startBeforeEnd',
+            startBeforeEnd, 'End time should be later than start time'
+        );
+		$.validator.addMethod('dateOrder',
+            dateOrder, 'End date should be later than start date'
+        );
     }  
     
     function validateUniCodeChars(value) {
@@ -64,8 +70,36 @@ define([
     	}
     	return check;
     }
-    
+
+	function dateOrder(value, element, options){
+		var check = false;
+		var start = $('#'+options.video_production_start_date).val();
+		console.log("START DATE = " + start + ' END = ' + value);
+
+		startDate = start.split('-');
+		endDate = value.split('-');
+
+		if(endDate[0]>=startDate[0] && endDate[1]>=startDate[1] && endDate[2]>=startDate[2]){
+			check = true;
+		}
+		return check;
+	}
+
+	function startBeforeEnd(value, element, options){
+		var check = false;
+		var start = $('#'+options.start_time).val();
+		var end = value;
+		if(start < end){
+			check = true;
+		}
+		else{
+			check = false;
+		}
+		return check;
+	}
     return {
         run: run
     };
+
+
 });

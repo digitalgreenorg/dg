@@ -10,16 +10,6 @@
 	position:fixed;
 }
 
-legend{
-	font-size: 24px;
-	font-family: source_sans_prolight, arial, helvetica, sans-serif;
-	color: #8f8e8d;
-}
-
-h1 small{
-	font-size: 18px;
-}
-
 #coco_content {
     padding-top: 20px;
 }
@@ -109,6 +99,16 @@ table {
     clear: both;
 }
 
+legend{
+	font-size: 24px;
+	font-family: source_sans_prolight, arial, helvetica, sans-serif;
+	color: #8f8e8d;
+}
+
+h1 small{
+	font-size: 18px;
+}
+
 .alert {
   margin-bottom: 3px;
 }
@@ -120,6 +120,10 @@ table {
 
 .control-group{
     clear:both;
+}
+
+.media-heading{
+	color: #0088cc;
 }
 
 

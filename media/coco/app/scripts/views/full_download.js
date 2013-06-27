@@ -53,7 +53,7 @@ define([
         },
 
         /* 
-        TODO Checks if their is already a full downloaded database, alert user thar this db should be removed before proceeding 
+        TODO Checks if there is already a full downloaded database, alert user that this db should be removed before proceeding 
         Initializes UI and objects used for progress bar. 
         Fetches the full_download_info objectStore collection to resume download, if that's the case
         TODO Stores the start time for download
