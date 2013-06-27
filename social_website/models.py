@@ -154,5 +154,9 @@ class VideoWatchRecord(models.Model):
     user = models.ForeignKey(User,related_name='user_watchrecord')
     timeWatched = models.BigIntegerField()
 
-    
-    
+class FeaturedCollection(models.Model):
+    uid = models.CharField(max_length=5,primary_key = True)
+    language = models.ForeignKey(Language,null= True, blank=True)
+    collection = models.CharField(max_length=20)
+    collageURL = models.URLField(max_length=200)
+        
