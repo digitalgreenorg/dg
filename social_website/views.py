@@ -105,16 +105,14 @@ def collection_view(request):
     conn.default_indices="test2"
     conn.refresh("test2")
     q ={"query": {
-                  "filtered":{
-                              "query" : {"match_all" : {}},
-                              "filter" :{
-                                          "and": [
-                                                  {"terms" : {"subject" : [collection.subject]}},
-                                                  {"terms" : {"topic" : [collection.topic]}},
-                                                  {"not" : {"term" : {"uid" : collection.uid}}},   
-                                                  ],
-                                        }
-                              }
+                        "bool" : {
+                                  "must_not" : {"term" : { "uid" : collection.uid }},
+                            "should" : [
+                                        {"terms" : { "subject" : [collection.subject] }},
+                                        {"terms" : { "topic" : [collection.topic] }},
+                                        ],
+                            "minimum_should_match" : 1,
+                                }
                   }
         }
     try :
