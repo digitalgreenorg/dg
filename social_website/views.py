@@ -81,7 +81,7 @@ def collection_view(request):
         time=time+vid.duration
         online_likes=online_likes+vid.onlineLikes
         online_views=online_views+vid.onlineViews
-        video_info.append([vid.title,vid.thumbnailURL,str(datetime.timedelta(seconds=vid.duration))[2:]])
+        video_info.append([vid.title,vid.thumbnailURL16by9,str(datetime.timedelta(seconds=vid.duration))[2:]])
     collection_dict={
         'uid':collection.uid,
         'title':collection.title,
