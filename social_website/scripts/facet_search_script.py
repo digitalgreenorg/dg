@@ -72,6 +72,7 @@ print Collection.objects.all().count()
 for obj in Collection.objects.all():
     vid_data = []
     likes = views = adoptions = 0
+    time = 0
     for index, vid in enumerate(obj.videos.all()):
         vid_id = index+1 
         url = BASE_URL + "social/collections/?id=" + str(obj.uid) + "&video=" + str(vid_id)
@@ -82,6 +83,7 @@ for obj in Collection.objects.all():
                          "thumbnailURL" : vid.thumbnailURL, 
                          "youtubeID" : vid.youtubeID,
                          "videoURL" : url})
+        time += vid.duration
         likes += vid.onlineLikes + vid.offlineLikes
         views += vid.onlineViews + vid.offlineViews
         adoptions += vid.adoptions
@@ -109,6 +111,7 @@ for obj in Collection.objects.all():
                        "thumbnailURL" : obj.thumbnailURL,
                        "uid" : obj.uid,
                        "videos" : vid_data,
+                       "duration" : time
                        })    
     conn.index(data, "test2","test2",i+1)
     i+= 1

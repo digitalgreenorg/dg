@@ -100,6 +100,41 @@ def collection_view(request):
         'partner_collections':collection.partner.collectionCount,
         'partner_year':collection.partner.joinDate.year
         }
+    related_collection_dict = []
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices="test2"
+    conn.refresh("test2")
+    q ={"query": {
+                  "filtered":{
+                              "query" : {"match_all" : {}},
+                              "filter" :{
+                                          "and": [
+                                                  {"terms" : {"subject" : [collection.subject]}},
+                                                  {"terms" : {"topic" : [collection.topic]}}
+                                                  ]
+                                         }
+                              },
+                  }
+        }
+    try :
+        query = json.dumps(q)
+        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+        result = json.loads(response.read())
+        for res in result['hits']['hits']:
+            related_collection_dict.append({"uid" : res['_source']['uid'], 
+                                            "title" : res['_source']['title'], 
+                                            "partner" : res['_source']['partner']['name'],
+                                            "language" : res['_source']['language']['name'],
+                                            "state" : res['_source']['state'],
+                                            "thumbnailURL" : res['_source']['thumbnailURL'],
+                                            "likes" : res['_source']['likes'],
+                                            "views" : res['_source']['views'],
+                                            "adoptions" : res['_source']['adoptions'],
+                                            "duration" : str(datetime.timedelta(seconds=res['_source']['duration'])),
+                                            "vid_count" : len(res['_source']['videos']),
+                                            })
+    except Exception, ex:
+        pass
     context= {
         'header': {
             'jsController':'ViewCollections',
@@ -108,7 +143,8 @@ def collection_view(request):
         'collection':collection_dict,
         'videos':video_info,
         'video':video_dict,
-        'slides':range(((len(videos)-1)/5)+1)
+        'slides':range(((len(videos)-1)/5)+1),
+        'related_collections' : related_collection_dict[:4], # restricting to 4 related collections for now
         }
     return render_to_response('collections-view.html' , context,context_instance = RequestContext(request))
 
