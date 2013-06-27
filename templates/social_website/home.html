@@ -1,7 +1,7 @@
 {% include "includes/header.html" %}
     {% include "includes/partials/mainCarousel.html" %}
     {% include "includes/partials/search.html" %}
-
+	{% load app_tags %}
     <section id="main" role="main" class="wrapper">
         <div class="inner-wrapper">
             <header class="grid">
@@ -54,9 +54,9 @@
                                    </ul>
                                 </div>
                                 <ul class="h-list h-list-sm copy-sm copy-dk vid-cat-list-dk">
-                                    <li class="like"><span class="text-hide">Likes</span>   {{ featured_collection.likes}}</li>
-                                    <li class="view"><span class="text-hide">Viewed</span> {{ featured_collection.views}}</li>
-                                    <li class="check"><span class="text-hide">Adopted</span> {{ featured_collection.adoptions}}</li>
+                                    <li class="like"><span class="text-hide">Likes</span>   {{ featured_collection.likes|custom_truncate_number}}</li>
+                                    <li class="view"><span class="text-hide">Viewed</span> {{ featured_collection.views|custom_truncate_number}}</li>
+                                    <li class="check"><span class="text-hide">Adopted</span> {{ featured_collection.adoptions|custom_truncate_number}}</li>
                                 </ul>
                             </div>
                         </div>

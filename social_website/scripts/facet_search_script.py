@@ -80,7 +80,7 @@ for obj in Collection.objects.all():
                          "subtopic" : vid.subtopic, 
                          "description" : vid.description,
                          "duration" : vid.duration, 
-                         "thumbnailURL" : vid.thumbnailURL, 
+                         "thumbnailURL" : vid.thumbnailURL16by9, 
                          "youtubeID" : vid.youtubeID,
                          "videoURL" : url})
         time += vid.duration
