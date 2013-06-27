@@ -243,126 +243,45 @@
                             <h2 class="hdg-a hdg-source-lt layout-vr-sm">Related Collections</h2>
                             <div class="boxPlain">
                                 <ul class="v-list-lg">
+                                {% for related in related_collections %}
                                     <li>
                                         <div class="vid-cat-selected">
                                             <div class="vid-cat">
-                                                <img src="http://placehold.it/217x124" />
+                                            <a href="/social/collections/?id={{related.uid}}&video=1">
+                                                <img height=124  width=217 src={{related.thumbnailURL}} />
+                                              </a>
                                                 <div class="vid-flag">
                                                     <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>12 Videos</li>
-                                                        <li>1:20:13</li>
+                                                        <li>{{related.vid_count}} Videos</li>
+                                                        <li>{{related.duration}}</li>
                                                     </ul>
                                                 </div>
                                                 <div class="vid-cat-inner">
                                                     <div class="vid-cat-hd">
-                                                        <h3 class="hdg-green hdg-f hdg-bold">Veri Composting in Southwest Region</h3>
+                                                        <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
                                                     </div>
                                                     <div class="vid-cat-bd">
-                                                        <p class="copy copy-sm layout-vr-tiny">Village X | Language</p>
-                                                        <p class="copy copy-sm">By: ASA</p>
+                                                        <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
+                                                        <p class="copy copy-sm">By: {{related.partner}}</p>
                                                     </div>
                                                     <div class="vid-cat-ft">
                                                         <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
-                                                            <li class="like"><span class="text-hide">Likes</span> 10,000</li>
-                                                            <li class="view"><span class="text-hide">Viewed</span> 6,018</li>
-                                                            <li class="check"><span class="text-hide">Adopted</span> 4, 020</li>
+                                                            <li class="like"><span class="text-hide">Likes</span> {{related.likes}}</li>
+                                                            <li class="view"><span class="text-hide">Viewed</span> {{related.views}}</li>
+                                                            <li class="check"><span class="text-hide">Adopted</span> {{related.adoptions}}</li>
                                                         </ul>
                                                     </div>
                                                 </div> <!-- End .vid-inner -->
                                             </div> <!-- End .vid-cat -->
                                         </div>
                                     </li>
-                                    <li>
-                                        <div class="vid-cat-selected">
-                                            <div class="vid-cat">
-                                                <img src="http://placehold.it/217x124" />
-                                                <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>12 Videos</li>
-                                                        <li>1:20:13</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="vid-cat-inner">
-                                                    <div class="vid-cat-hd">
-                                                        <h3 class="hdg-green hdg-f hdg-bold">Veri Composting in Southwest Region</h3>
-                                                    </div>
-                                                    <div class="vid-cat-bd">
-                                                        <p class="copy copy-sm layout-vr-tiny">Village X | Language</p>
-                                                        <p class="copy copy-sm">By: ASA</p>
-                                                    </div>
-                                                    <div class="vid-cat-ft">
-                                                        <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
-                                                            <li class="like"><span class="text-hide">Likes</span> 10,000</li>
-                                                            <li class="view"><span class="text-hide">Viewed</span> 6,018</li>
-                                                            <li class="check"><span class="text-hide">Adopted</span> 4, 020</li>
-                                                        </ul>
-                                                    </div>
-                                                </div> <!-- End .vid-inner -->
-                                            </div> <!-- End .vid-cat -->
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="vid-cat-selected">
-                                            <div class="vid-cat">
-                                                <img src="http://placehold.it/217x124" />
-                                                <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>12 Videos</li>
-                                                        <li>1:20:13</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="vid-cat-inner">
-                                                    <div class="vid-cat-hd">
-                                                        <h3 class="hdg-green hdg-f hdg-bold">Veri Composting in Southwest Region</h3>
-                                                    </div>
-                                                    <div class="vid-cat-bd">
-                                                        <p class="copy copy-sm layout-vr-tiny">Village X | Language</p>
-                                                        <p class="copy copy-sm">By: ASA</p>
-                                                    </div>
-                                                    <div class="vid-cat-ft">
-                                                        <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
-                                                            <li class="like"><span class="text-hide">Likes</span> 10,000</li>
-                                                            <li class="view"><span class="text-hide">Viewed</span> 6,018</li>
-                                                            <li class="check"><span class="text-hide">Adopted</span> 4, 020</li>
-                                                        </ul>
-                                                    </div>
-                                                </div> <!-- End .vid-inner -->
-                                            </div> <!-- End .vid-cat -->
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="vid-cat-selected">
-                                            <div class="vid-cat">
-                                                <img src="http://placehold.it/217x124" />
-                                                <div class="vid-flag">
-                                                    <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
-                                                        <li>12 Videos</li>
-                                                        <li>1:20:13</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="vid-cat-inner">
-                                                    <div class="vid-cat-hd">
-                                                        <h3 class="hdg-green hdg-f hdg-bold">Veri Composting in Southwest Region</h3>
-                                                    </div>
-                                                    <div class="vid-cat-bd">
-                                                        <p class="copy copy-sm layout-vr-tiny">Village X | Language</p>
-                                                        <p class="copy copy-sm">By: ASA</p>
-                                                    </div>
-                                                    <div class="vid-cat-ft">
-                                                        <ul class="h-list h-list-sm copy-sm copy-lt vid-cat-list">
-                                                            <li class="like"><span class="text-hide">Likes</span> 10,000</li>
-                                                            <li class="view"><span class="text-hide">Viewed</span> 6,018</li>
-                                                            <li class="check"><span class="text-hide">Adopted</span> 4, 020</li>
-                                                        </ul>
-                                                    </div>
-                                                </div> <!-- End .vid-inner -->
-                                            </div> <!-- End .vid-cat -->
-                                        </div>
-                                    </li>
+                                    {% endfor %}
                                 </ul>
+                                <!-- Uncomment when show more is implemented
                                 <div class="centered push-top-md">
                                     <a class="btn" href="#">Show More</a>
                                 </div>
+                                -->
                             </div> <!-- End .boxplain -->
                         </div> <!-- End .grid-pad-lt -->
                     </div> <!-- End .grid-size1of3 -->
