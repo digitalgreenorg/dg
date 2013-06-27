@@ -51,6 +51,8 @@ class Video(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
     title = models.CharField(max_length=100)
     thumbnailURL = models.URLField(max_length=200)
+    thumbnailURL16by9 = models.URLField(max_length=200)
+    thumbnailURL4by3 = models.URLField(max_length=200)
     description = models.TextField(blank=True)
     youtubeID = models.CharField(max_length=20, )
     duration = models.IntegerField(null=True, blank=True)
