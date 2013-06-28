@@ -55,17 +55,17 @@ function() {
             },
             messages: {
                 name: {
-                    required: 'Enter Mediator Name',
-                    minlength: 'Mediator Name  should be atleast 2 characters',
-                    maxlength: 'Mediator Name should be atmax 100 characters',
-                    allowedChar: 'Mediator name should only contain alphabets and local language characters'
+                    required: 'Mediator name is required',
+                    minlength: 'Mediator name should contain at least 2 characters',
+                    maxlength: 'Mediator name should contain at most 100 characters',
+                    allowedChar: 'Mediator name should contain only english and local language characters'
                 },
-                gender: "Enter Gender",
+                gender: "Gender is required",
                 phone_no: {
-                    digits: 'phone number should contain only digits',
-                    maxlength: "phone number should not contain more than 10 digits"
+                    digits: 'Phone number should contain only digits',
+                    maxlength: "Phone number should not contain more than 10 digits"
                 },
-                assigned_villages: "Enter Assigned Villages",
+                assigned_villages: "Assigned villages are required",
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -158,39 +158,39 @@ function() {
             },
             messages: {
                 title: {
-                    required: 'Enter Video Title',
-                    minlength: 'Video title should be atleast 2 characters',
-                    maxlength: 'Video title should be atmax 200 characters',
+                    required: 'Video title is required',
+                    minlength: 'Video title should contain at least 2 characters',
+                    maxlength: 'Video title should contain at most 200 characters',
                     // allowedChar: 'Video title should only contain alphabets and local language characters'
                 },
-                video_type: "Enter Video Type",
+                video_type: "Video type is required",
                 video_production_start_date: {
-                    required: 'Enter Video Production Start Date',
-                    validateDate: "Enter Video Production Start Date in the form of yyyy-mm-dd"
+                    required: 'Video production start date is required',
+                    validateDate: "Enter video production start date in the form of YYYY-MM-DD"
                 },
                 video_production_end_date: {
-                    required: 'Enter Video Production End Date',
-                    validateDate: "Enter Video Production End Date in the form of yyyy-mm-dd",
+                    required: 'Video production end date is required',
+                    validateDate: "Enter video production end date in the form of YYYY-MM-DD",
 					dateOrder: "End date should be later than start date"
                 },
-                language: "Enter Language",
+                language: "Language is required",
                 summary: {
-                    minlength: "summary should be atleast 2 characters",
-                    maxlength: "summary should be atmax 500 characters",
+                    minlength: "Summary should contain at least 2 characters",
+                    maxlength: "Summary should contain at most 500 characters",
                     // allowedChar: "summary should not contain special characters"
                 },
-                village: "Enter Village",
-                facilitator: "Enter Facilitator",
-                cameraoperator: "Enter Camera Operator",
-                farmers_shown: "Enter Persons Shown",
-                actors: "Enter Actors",
-                video_suitable_for: "Enter Video Suitable For",
+                village: "Village is required",
+                facilitator: "Facilitator is required",
+                cameraoperator: "Camera operator is required",
+                farmers_shown: "Persons shown are required",
+                actors: "Actors are required",
+                video_suitable_for: "Video suitable for is required",
                 approval_date: {
-                    validateDate: "Enter Approval Date in the form of yyyy-mm-dd",
+                    validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
 					dateOrder: "Approval date should be later than end date"
                 },
                 youtubeid: {
-                    maxlength: "youtubeid should be not more than 20 characters"
+                    maxlength: "YoutubeID should contain at most 20 characters"
                 }
             },
 
@@ -262,12 +262,12 @@ function() {
             },
             messages: {
                 name: {
-                    required: 'Enter group Name',
-                    minlength: 'Group Name  should be atleast 2 characters',
-                    maxlength: 'Group Name should be atmax 100 characters',
-                    allowedChar: 'Group name should only contain alphabets and local language characters'
+                    required: 'Group name is required',
+                    minlength: 'Group name  should contain at least 2 characters',
+                    maxlength: 'Group name should contain at most 100 characters',
+                    allowedChar: 'Group name should contain only english and local language characters'
                 },
-                village: "Enter village"
+                village: "Village is required"
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -387,7 +387,7 @@ function() {
 				end_time: {
 					required: true,
 					validateTime: true,
-					startBeforeEnd: {start_time : "start_time_picker"}
+					timeOrder: {start_time : "start_time_picker"}
 				},
 				animator:"required",
 				village:"required",
@@ -396,21 +396,21 @@ function() {
 			},
 			messages: {
 				date: {
-					required: 'Enter Screening Date',
-					validateDate: 'Enter Screening Date in the form of yyyy-mm-dd',
+					required: 'Screening date is required',
+					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
 				},
 				start_time: {
-					required: 'Enter Video Production Start Date',
-					validateTime: 'Enter the start time in the form of hh:mm  Use 24 hour format',
+					required: 'Video production start date is required',
+					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
 				},
 				end_time: {
-					required: 'Enter Video Production End Date',
-					validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
-					startBeforeEnd: 'End time should be later than start time',
+					required: 'Video production end date is required',
+					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
+					timeOrder: 'End time should be later than start time',
 				},
-				animator: "Enter Animator",
-				village:"Enter Village",
-				videoes_screened:"Enter Videos Screened",
+				animator: "Animator is required",
+				village:"Village is required",
+				videoes_screened:"Videos screened is required",
 			},
 			
 			highlight: function(element, errorClass, validClass) {
@@ -609,28 +609,28 @@ function() {
 			},
 			messages: {
 				person_name: {
-					required: 'Enter person Name',
-					minlength: 'Person Name  should be atleast 2 characters',
-					maxlength: 'Person Name should be atmax 100 characters',
-					allowedChar: 'Person name should only contain alphabets and local language characters'
+					required: 'Person name is required',
+					minlength: 'Person name  should conatin at least 2 characters',
+					maxlength: 'Person Name should contain at most 100 characters',
+					allowedChar: 'Person name should contain only english and local language characters'
 				},
 				father_name: {
-					required: 'Father Name is required',
-					minlength: "Father Name  should be atleast 2 characters",
-					maxlength: 'Father Name should be atmax 100 characters',
-					allowedChar: 'Father name should only contain alphabets and local language characters'
+					required: "Father's name is required",
+					minlength: "Father's name should contain at least 2 characters",
+					maxlength: "Father's name should contain at most 100 characters",
+					allowedChar: "Father's name should contain only english and local language characters"
 				},
 				age: {
-					digits: "Age should contain digits only",
+					digits: "Age should contain only digits",
 					min:"Age should not be less than 1 year",
 					max:"Age should not be more than 100 years"
 				},
 				phone_number_person: {
-					digits: 'phone number should contain only digits',
-					maxlength: "phone number should not contain more than 10 digits"
+					digits: 'Phone number should contain digits only',
+					maxlength: "Phone number should not contain more than 10 digits"
 				},
 				village: {
-					required: "Please enter village"
+					required: "Village is required"
 				}
 			},
 			
