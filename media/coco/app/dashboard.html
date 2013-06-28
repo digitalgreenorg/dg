@@ -332,10 +332,11 @@
     <td><%= name %></td>
     <td> 
 		<% 
-			var villages="";
+			var villages=[];
 			$.each(assigned_villages, function(index,val) {
-				villages = villages + val.village_name +"; ";
+				villages.push(val.village_name.trim());
      		});
+			villages.sort();
 		%>
 	<%= villages %>
 	</td>
