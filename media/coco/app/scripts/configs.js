@@ -8,7 +8,7 @@ function() {
         //for - accessing this object 
         
         'rest_api_url': '/api/v1/village/',
-        //string - the url to fetch objects of this entity type
+        //string - the rest url for this entity
     
         'dashboard_display': {
             listing: false,         //whether to provide listing option for this entity on dashboard
@@ -37,9 +37,9 @@ function() {
                     'name_field': 'string - the attribute name in f_entity's json which needs to be shown in its dropdown',
                     
                     'dependency': [{    // whether this elements's dropdown depends on value of other form elements
-                        'source_entity': 'village', // entity name of source element
                         'source_form_element': 'village',   // attribute name of source element in json
                         'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
+                        'src_attr' : //to compare dep_attr of dependent element with a particular attribute in source f_entity
                     }],
                     
                     'filter': { //whether to filter the objects of foreign entity before rendering into dropdown
@@ -47,29 +47,7 @@ function() {
                         value: null     //desired value of the attr
                     },
     
-                    id_field: "person_id", // the name of id field for this f_entity in denormalised json     
-    
-                    //would not use options template to render its objects - would use the specfied template    
-                    // won't be denormalised, wud be converted offline to online, 
-                    //any field to be denormalised or converted offline to online can be declared - 
-                    //this shd be clubbed and put as foreign entity of expanded.   
-                    'expanded': { 
-                        template: 'person_pma_template', // the template to use instead of options
-                        placeholder: 'pmas',    // the id of placeholder in form's HTML
-                        TODO: the following two should be merged and converted to same format as foreign_entities
-                        denormalize: { // any field in expanded template to be denormalised     
-                            "expressed_adoption_video": {
-                                name_field: 'title' //used as key for name in denormalised object
-                            }
-                        },
-                        foreign_fields: { // any more field in expanded template for offline to online conv
-                            "expressed_adoption_video": {
-                                entity_name: "video"  //the entity_name for this f_entity element
-                            }
-                        },
-                        extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
-                    }
-                    
+                    id_field: "person_id", // the name of id field for this f_entity in denormalised json                         
                 }
             },
     
@@ -77,7 +55,6 @@ function() {
                 attribute_name:{    //the attribute name of this foreign element in json
                     
                     'dependency': [{    // whether this elements's dropdown depends on value of other form elements
-                        'source_entity': 'village', // entity name of source element
                         'source_form_element': 'village',   // attribute name of source element in json
                         'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
                     }],
@@ -479,7 +456,6 @@ function() {
                     'placeholder': 'id_animator',
                     'name_field': 'name',
                     'dependency': [{
-                        'source_entity': 'village',
                         'source_form_element': 'village',
                         'dep_attr': 'assigned_villages'
                     }]
@@ -490,7 +466,6 @@ function() {
                     'placeholder': 'id_group',
                     'name_field': 'group_name',
                     'dependency': [{
-                        'source_entity': 'village',
                         'source_form_element': 'village',
                         'dep_attr': 'village'
                     }]
@@ -501,7 +476,6 @@ function() {
                     'placeholder': 'id_person',
                     'name_field': 'person_name',
                     'dependency': [{
-                        'source_entity': 'village',
                         'source_form_element': 'village',
                         'dep_attr': 'village'
                     }],
@@ -512,11 +486,9 @@ function() {
                 },
                 farmers_attendance: {
                     dependency: [{
-                        'source_entity': 'group',
                         'source_form_element': 'farmer_groups_targeted',
                         'dep_attr': 'group'
                     }, {
-                        'source_entity': 'person',
                         'source_form_element': 'person',
                         'dep_attr': 'id'
                     }],
@@ -639,7 +611,6 @@ function() {
                         'placeholder': 'id_group',
                         'name_field': 'group_name',
                         'dependency': [{
-                            'source_entity': 'village',
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }]
@@ -650,7 +621,6 @@ function() {
                         'placeholder': 'id_person',
                         'name_field': 'person_name',
                         'dependency': [{
-                            'source_entity': 'village',
                             'source_form_element': 'village',
                             'dep_attr': 'village'
                         }],
@@ -662,11 +632,9 @@ function() {
                     farmers_attendance: {
                         only_render: true,
                         dependency: [{
-                            'source_entity': 'group',
                             'source_form_element': 'group',
                             'dep_attr': 'group'
                         }, {
-                            'source_entity': 'person',
                             'source_form_element': 'float_person',
                             'dep_attr': 'id'
                         }],
@@ -718,10 +686,9 @@ function() {
                         // 'sub_attr': 'videos_seen',
                         'name_field': 'title',
                         'dependency': [{
-                            'source_entity': 'person',
                             'source_form_element': 'person',
                             'dep_attr': 'id',
-                            'rev_sub_attr': 'videos_seen',
+                            'src_attr': 'videos_seen',
                         }]
                     }
                 }
