@@ -14,17 +14,17 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             return new model_offline();
         },
         
-        create_b_collection: function(entity_name){
+        create_b_collection: function(entity_name, options){
             var model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: entity_name,
             });
-
-            var collection_offline = Backbone.Collection.extend({
+            options = $.extend({
                 model: model_offline,
                 database: indexeddb,
                 storeName: entity_name,
-            });
+            },options);
+            var collection_offline = Backbone.Collection.extend(options);
             return new collection_offline();
         },
     

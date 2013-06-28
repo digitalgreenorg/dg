@@ -5,7 +5,7 @@ define([
   'configs',
   'views/form',
   'collections/upload_collection',
-  'offline_to_online',
+  'convert_namespace',
   'offline_utils',
   'online_utils',
   'indexeddb-backbone',
@@ -13,7 +13,7 @@ define([
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function(jquery,underscore,layoutmanager, configs, Form, upload_collection, OfflineToOnline, Offline, Online){
+], function(jquery,underscore,layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online){
     
     var UploadView = Backbone.Layout.extend({
         
@@ -178,7 +178,7 @@ define([
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
                         //object to be uploaded doesn't exists in offline anymore
-                        //offlineTOonline failed
+                        //ConvertNamespace failed
                         //online_id couldn't be injected
                         //The object discarded in upload error form could not be deleted
                     })
@@ -223,7 +223,7 @@ define([
             Offline.fetch_object(this.get_entity_name(up_model), "id", this.get_offline_id(up_model))  
                 .done(function(off_model){
                     console.log("Off model fetched - "+JSON.stringify(off_model.toJSON()));
-                    OfflineToOnline.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model))
+                    ConvertNamespace.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model), "offlinetoonline")
                         .done(function(on_off_obj){
                             if(that.get_action(up_model) == "A")
                                 {
@@ -255,7 +255,7 @@ define([
                                 });    
                         })
                         .fail(function(error){
-                            console.log("UPLOAD: Not uploading object coz offlineTOonline failed");
+                            console.log("UPLOAD: Not uploading object coz ConvertNamespace failed");
                             dfd.reject(error);
                         });    
                 })
@@ -276,11 +276,7 @@ define([
                     button1: "Save again",
                     button2: "Discard"
                 },
-                initialize: {
-                    view_configs: configs[entity_name],
-                    router: null
-                },
-                model_id: null,
+                entity_name: entity_name,
                 model_json: json
             });
             p.render();
