@@ -31,14 +31,14 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>DPIP</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/DPIP_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/dpip_logo1.PNG</IMAGESRC>
 		<DESC>The District Poverty Initiatives Project (DPIP) is an ambitious project of the Government of Madhya Pradesh for the alleviation of poverty in the State. The State Government is committed to reforms in governance and improved access to social services for the poor and the vulnerable. Digital Green is working with DPIP in the Indian state of Madhya Pradesh.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.dpipmp.mp.gov.in/english/PatG.htm</REFERENCE>
 	</TEAM>
 	<TEAM>
 		<TITLE>ICRISAT</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/ICRISAT_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/icrisat_logo1.PNG</IMAGESRC>
 		<DESC>The International Crops Research Institute for the Semi-Arid Tropics (ICRISAT) is a non-profit, non-political organization, headquartered in Hyderabad, Andhra Pradesh, India that conducts agricultural research for development in Asia and sub-Saharan Africa with a wide array of partners throughout the world. Digital Green is working with ICRISAT in 2 districts of Karnataka state in India.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.icrisat.org/ </REFERENCE>
@@ -46,7 +46,7 @@
 	
 	<TEAM>
 		<TITLE>International Development Enterprises</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/IDE_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/ide_logo1.PNG</IMAGESRC>
 		<DESC>iDE is an international nonprofit organization which creates income and livelihood opportunities poor rural households primarily by providing agricultural water access for small farmers in eleven countries in Africa, Asia, and Latin America. Digital Green is currently working with iDE on promoting low-cost irritation technologies and agronomic practices in 7 districts of the Oromia region in Ethiopia. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.ideorg.org </REFERENCE>
@@ -54,7 +54,7 @@
 	
 	<TEAM>
 		<TITLE>Oxfam America</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/OXFAM AMERICA_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/oxfam america_logo1.PNG</IMAGESRC>
 		<DESC>Oxfam America (OA) is the global organization of the international Oxfam confederation and works in 90 countries working to create lasting solutions to poverty, hunger, and social injustice. Digital Green is currently working with OA as part of a partnership with Sasakawa Africa Association, in collaboration with the Ethiopian Ministry of Agriculture in 3 districts in Ethiopia.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.oxfamamerica.org </REFERENCE>
@@ -62,7 +62,7 @@
 	
 	<TEAM>
 		<TITLE>Program for Appropriate Technology in Health</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/PATH_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/path_logo1.PNG</IMAGESRC>
 		<DESC>PATH is an international nonprofit organization that transforms global health by developing and delivering high-impact, low-cost health solutions such as lifesaving vaccines and collaborative programs with communities in more than 70 countries. Digital Green is currently working with PATH on promoting reproductive and child health behaviors in Uttar Pradesh, India. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.path.org </REFERENCE>
@@ -91,7 +91,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>Sasakawa Africa Association</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/SAA_logo.PNG</IMAGESRC>    
+		<IMAGESRC>/media/Output/Images/partner/saa_logo1.PNG</IMAGESRC>    
     	<DESC>Sasakawa Africa Association (SAA) is an international agricultural development organization with agricultural programs in 14 sub-Saharan countries to improve the productivity and profitability of smallholder farmers by encouraging the adoption of higher-yielding varieties and enhanced production practices. Digital Green is currently working with SAA as part of a partnership with Oxfam America, in collaboration with the Ethiopian Ministry of Agriculture in 3 districts in Ethiopia.   </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.saa-safe.org/</REFERENCE>	
@@ -105,7 +105,7 @@
 	</TEAM>
 	<TEAM>
 		<TITLE>SPRING</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/spring_logo.PNG</IMAGESRC>
+		<IMAGESRC>/media/Output/Images/partner/spring_logo1.PNG</IMAGESRC>
 		<DESC>SPRING is a United States Agency for International Development (USAID)-funded five-year project. SPRING's focus is the reduction of anemia and stunting among women and young children through the expansion of effective social and behavior change communication (SBCC) and nutrition-sensitive programs at scale. Digital Green is working with SPRING in the Indian state of Odisha.</DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.spring-nutrition.org/</REFERENCE>
@@ -119,14 +119,14 @@
 	</TEAM>	
 	<TEAM>
 		<TITLE>Vodafone Foundation India</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/vodafone_logo.PNG</IMAGESRC>    
+		<IMAGESRC>/media/Output/Images/partner/vodafone_logo1.PNG</IMAGESRC>    
     	<DESC>Vodafone Foundation in India is combining skills, resources and funding to build a brighter future for people who are currently unable to fulfill their potential. The Foundation seeks to: empower women so that they can compete on an equal footing, to reach rural areas and support the people living there, and to provide new opportunities for education.  Digital Green is working with the Vodafone Foundation in Karnataka state in India.  </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://www.vodafone-foundation.in/</REFERENCE>	
 	</TEAM>
 	<TEAM>
 		<TITLE>World Cocoa Foundation</TITLE>
-		<IMAGESRC>/media/Output/Images/partner/WCF_logo.PNG</IMAGESRC>    
+		<IMAGESRC>/media/Output/Images/partner/wcf_logo1.PNG</IMAGESRC>    
     	<DESC>The World Cocoa Foundation (WCF) is an international organization committed to ensuring cocoa sustainability through agricultural and environmental stewardship, and development. Digital Green currently works with WCF in 2 districts of the Ashanti region in Ghana to promote agricultural elated messaging to cocoa farmers. </DESC>
 		<COMPANY>Digital Green</COMPANY>
 		<REFERENCE>http://worldcocoafoundation.org</REFERENCE>	
