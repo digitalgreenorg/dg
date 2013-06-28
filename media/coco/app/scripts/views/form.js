@@ -21,116 +21,97 @@ define([
             // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template')
+        template : '#form_template',         
+        options_inner_template : _.template($('#options_template')
             .html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template')
-            .html()),
-        template : '#form_template',                
+        
+        //would be called when render is called       
         serialize: function(){
-            s_passed = this.options.serialize;
+            var s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
             s_passed["inline"] = (this.inline) ? true: false;
             return s_passed;
         },
-        initialize: function(params) {
-            console.log("ADD/EDIT: params to add/edit view: ");
-            console.log(params);
-            this.view_configs = params.initialize.view_configs;
-            this.appRouter = params.initialize.router;
-            options_inner_template = _.template($('#options_template')
-                .html());
-            this.entity_name = this.view_configs.entity_name;
-            this.final_json = null;
-            
-            
-            // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
-            // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
-            json = null;
+        
+        /* 
+        Identifies the action of this form - add/ edit_id/ edit_json  
+        Sets the result on the view object 
+        this.edit_case_id, this.edit_case_json, this.edit_case
+        */
+        identify_form_action: function(params){
+            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(TODO: can be add too if json is missing id?).
             this.edit_case = false;
             this.edit_id = null;
-            // Edit case: we receive json from Upload
             if (params.model_json) {
                 this.edit_case_json = true; // edit_case_upload
                 this.model_json = params.model_json;
                 this.edit_case = true;
                 this.edit_id = this.model_json.id;
             } else if (params.model_id) {
-
                 this.edit_case_id = true;
                 this.edit_case = true;
                 this.edit_id = params.model_id;
             }
-            // No need for two variables. One is sufficient.
-            if(this.edit_case)
-                this.action = "E"
-            else
-                this.action = "A"            
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+        },
+        
+        /*
+        Reads entity_config and sets basic properties on view object for easy access
+        */
+        identify_form_config: function(params){
+            this.entity_name = params.entity_name;
+            this.entity_config = all_configs[this.entity_name];
+            //default locations - 
+            this.foreign_entities = this.entity_config.foreign_entities;
+            this.inline = this.entity_config.inline;
+            this.bulk = this.entity_config.bulk;
             if(this.edit_case)
             {
-                this.form_template = $('#' + this.view_configs.edit_template_name).html();
-                if(this.view_configs.edit)
+                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                if(this.entity_config.edit)
                 {
-                    this.foreign_entities = this.view_configs.edit.foreign_entities;
-                    this.inline = this.view_configs.edit.inline;
-                    this.bulk = this.view_configs.edit.bulk;
-                }
-                else
-                {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.edit.foreign_entities;
+                    this.inline = this.entity_config.edit.inline;
+                    this.bulk = this.entity_config.edit.bulk;
                 }
             }
             else
             {
-                this.form_template = $('#' + this.view_configs.add_template_name).html();
-                if(this.view_configs.add)
+                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                if(this.entity_config.add)
                 {
-                    this.foreign_entities = this.view_configs.add.foreign_entities;
-                    this.inline = this.view_configs.add.inline;
-                    this.bulk = this.view_configs.add.bulk;
-                }
-                else
-                {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.add.foreign_entities;
+                    this.inline = this.entity_config.add.inline;
+                    this.bulk = this.entity_config.add.bulk;
                 }
             }
-
-            // Get foreign entities, create their offline collection to be fetched afterRender, bind them to render_foreign_entity
-            this.f_colls = new Array();
-            _(this)
-                .bindAll('render_foreign_entity');
-            _(this).bindAll('fill_dep_entity');
-            this.f_index = [];
-            this.num_f_elems = 0;
-            this.dependencies = {}; 
-            this.element_entity_map={};
-            this.foreign_elements_rendered = {};
-            this.num_sources = {};
-            for (f_entity in this.foreign_entities) {
-                var generic_collection_offline = Backbone.Collection.extend({
-                    database: indexeddb,
-                    storeName: all_configs[f_entity].entity_name,
+        },
+        
+        /*
+        Relies on view object's context 
+        Gets foreign entities, create their offline collection to be fetched in afterRender
+        Sets up datastructures to setup in-form change events
+        Shamelessly polluting the view object
+        */
+        setup_foreign_elements: function(){
+            this.f_colls = []; //stores the foreign entities' collections
+            //TODO: get rid of this
+            this.f_index = []; //stores the index of an entity to access its collection in f_colls
+            this.source_dependents_map = {}; //stores the dependency mapping between form elements
+            this.element_entity_map={}; //stores the mapping between foreign element and their entity
+            this.foreign_elements_rendered = {};  //stores whether a foreign element has been rendered
+            this.num_sources = {};  //stores the number of sources for a dependent element
+            //create a collection for each distinct entity, put them in this.f_colls, remem their index in f_colls using f_index
+            for(f_entity in this.foreign_entities){
+                var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function(model){
                         return model.get(all_configs[this.storeName].sort_field)
                     }
                 });
-                this.f_index.push(f_entity);    
-                this.f_colls.push(new generic_collection_offline());
-                /*
-                this.f_colls.push(new generic_collection_offline().bind);
-                
-                var f_collection = new generic_collection_offline();
-                f_collection.bind
-                f_colls.push(f_collection);
-                */
-                for(element in this.foreign_entities[f_entity])
+                this.f_index.push(f_entity);
+                this.f_colls.push(f_collection);
+                //create entity_map, dependency map, foreign_elements_rendered, for each foreign element
+                for(var element in this.foreign_entities[f_entity])
                 {
-                    this.num_f_elems++; // total num of f elems
                     this.element_entity_map[element] = f_entity; //created mapping of element - entity
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
@@ -144,50 +125,127 @@ define([
                         var f_ens = this.foreign_entities;
                         var that = this;
                         $.each(dependency,function(index,dep){
-                            var source_entity = dep.source_entity;
                             var source_elm = dep.source_form_element;
-                            var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-                            if(source_elm_id in that.dependencies)
-                                {
-                                    that.dependencies[source_elm_id].push(element);
-                                }    
+                            if(source_elm in that.source_dependents_map)
+                            {
+                                that.source_dependents_map[source_elm].push(element);
+                            }    
                             else{
-                                that.dependencies[source_elm_id] = [];
-                                that.dependencies[source_elm_id].push(element);
+                                that.source_dependents_map[source_elm] = [];
+                                that.source_dependents_map[source_elm].push(element);
                             }
                         });
-                        // console.log("FORM: dependency exists ");
-//                         var f_ens = this.foreign_entities;
-//                         var source_entity = f_ens[f_entity][element].dependency.source_entity;
-//                         var source_elm = f_ens[f_entity][element].dependency.source_form_element;
-//                         var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-//                         var that = this;
-//                         if(source_elm_id in this.dependencies)
-//                             {
-//                                 this.dependencies[source_elm_id].push(element);
-//                             }    
-//                         else{
-//                             this.dependencies[source_elm_id] = [];
-//                             this.dependencies[source_elm_id].push(element);
-//                             // var that = this;
-//                             // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
-//                         }
-                        console.log("dependencies = "+JSON.stringify(this.dependencies));    
+                        console.log("source_dependents_map = "+JSON.stringify(this.source_dependents_map));    
                     }
                     
                 }
             }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            
-            
-            _(this)
-                .bindAll('save');
-
         },
+        
+        /*
+        params = {
+            serialiaze:{
+                button1: "...",     //name of first button, not shown if ==""
+                button2: "..."      //name of sec button, not shown if =="" 
+            },
+            entity_name:,           //name of entity to be added/edited
+            model_id:,              //id of model if edit case
+            model_json:,            //json of model to be shown in edit form - used when json!= json(model_id)
+        }
+        */
+        initialize: function(params) {
+            console.log("ADD/EDIT: params to add/edit view: ");
+            console.log(params);
+            this.final_json = null;
+            _.bindAll(this);
+            
+            //read entity_config and sets main properties on view object for easy access
+            this.identify_form_config(params);
 
+            //sets this.edit_case, this.edit_case_id, this.edit_case_json
+            this.identify_form_action(params);  
+
+            //reads this.foreign_entities and setsup the collections, source_dependents_map
+            this.setup_foreign_elements();
+        },
+        
         afterRender: function() {
+            var that = this;
+            
+            //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
+            this.disable_foreign_elements();
+
+            //start in-form change events
+            this.start_change_events();
+            
+            //fetch all foreign collections and render them when all are fetched
+            this.fetch_and_render_foreign_entities();
+
+            //if edit case - fill form with the model    
+            if(this.edit_case)
+                this.render_edit_model();
+
+            //if inline case - render inlines
+            if(this.inline)
+                this.render_inlines();
+            
+            // call validator on the form
+            this.initiate_form_field_validation();
+            
+            this.initiate_form_widgets();
+        },
+        
+        //fetches all foreign collections and renders them when all are fetched
+        fetch_and_render_foreign_entities: function(){
+            var for_entities_fetch_dfds = [] 
+            for (var i = 0; i < this.f_colls.length; i++) {
+                console.log("fetching f coll");
+                var f_dfd = this.f_colls[i].fetch();
+                for_entities_fetch_dfds.push(f_dfd);    
+            }
+            $.when.apply($,for_entities_fetch_dfds)
+                .done(this.render_non_dep_for_elements)
+                .fail(function(){
+                    //TODO: handle error callback
+                    alert("Atleast one foreign entity could not be fetched!");
+                })
+        },
+        
+        //fill non-dependent foreign elements - dependent gets filled on change events
+        render_non_dep_for_elements: function(){
+            console.log("Rendering non dependent f elements");
+            _.each(this.element_entity_map, function(entity,element){
+                if(!this.foreign_entities[entity][element]["dependency"])
+                    this.render_foreign_element(element, this.get_collection_of_element(element).toArray());    
+            }, this);
+        },
+        
+        // fetch offline model and inlines and render them into form
+        render_edit_model: function(){
+            var that = this;
+            if (this.edit_case_json) {
+                this.normalize_json(this.model_json);
+                this.fill_form();           
+            } 
+            else if (this.edit_case_id) 
+            {
+                Offline.fetch_object(this.entity_config.entity_name, "id", this.edit_id)
+                    .done(function(model) {
+                        console.log("EDIT: edit model fetched");
+                        that.model_json = model.toJSON();
+                        that.normalize_json(that.model_json);
+                        that.fill_form();
+                    })
+                    .fail(function() {
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    });
+            }
+        },
+        
+        //disable dropdowns of all foreign elements
+        disable_foreign_elements: function(){
             for (f_entity in this.foreign_entities) {
                 for(element in this.foreign_entities[f_entity])
                 {
@@ -197,158 +255,62 @@ define([
                     }
                 }
             }
-            
-            //render empty inlines - add case done
-            if(this.inline)
-            {
-                this.$('#inline_header').html($('#'+this.inline.header).html());
-                if(!this.edit_case)
-                    this.append_new_inlines();    
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
-            
-            
-            
-            var that = this;
-            // fetching all foreign collections
-            //TODO: handle error callback
-            for (var i = 0; i < this.f_colls.length; i++) {
-                this.f_colls[i].fetch({
-                    success: function(collection) {
-                        console.log("ADD/EDIT: a foreign coll fetched - "+collection.storeName);
-                        // render foreign collection is called automatically on successful fetch
-                        that.render_foreign_entity(collection,null);
-                    },
-                    error: function() {
-                        //ToDO: error handling
-                        console.log("ERROR: ADD/EDIT: a foreign collection could not be fetched!");
-                    }
-                });
-            }
-            // this.dependencies = {}; 
-//             this.element_entity_map={};
-            this.num_initial_f_entities = 0;
-            var that = this;
-            for(el_id in this.dependencies)
-            {
-                console.log("creating changeevent for - "+el_id);
-                this.$('#'+el_id).change(this.fill_dep_entity);
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            // fetching offline model and inlines
-            var that = this;
-            if (this.edit_case_json) {
-                that.normalize_json(this.model_json);
-                this.fill_form();           //TODO: does it needs to be normalised first ?
-
-            } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
-                    .done(function(model) {
-                        console.log("EDIT: edit model fetched");
-                        that.model_json = model.toJSON();
-                        that.normalize_json(that.model_json);
-                        that.fill_form();
-                    })
-                    .fail(function() {
-                        //ToDO: error handling
-                        console.log("ERROR: EDIT: Edit model could not be fetched!");
-                        alert("ERROR: EDIT: Edit model could not be fetched!");
-                    });
-                if(this.inline)
-                {
-                    //TODO: fetching the whole collection. Can this be more effifcient by fetching just the relevant models? Done this way because the foreign field in model is a object and am not yet able to specify a condition on such fields using the I-B adapter.
-                    console.log("FORM:EDIT: Fteching inline collection");
-                    var generic_offline_collection = Backbone.Collection.extend({
-                        database: indexeddb,
-                        storeName: this.inline.entity,
-                    });
-                    this.inline_collection = new generic_offline_collection();
-                    this.inline_collection.fetch({
-                        success: function(collection){
-                            console.log("FORM: EDIT: Inline collection fetched! - "+ collection.storeName);
-                            // var inl_models =  collection.where({
-//                                 that.inline.foreign_attribute.inline_attribute.id : that.edit_id
-//                             });
-                            var inl_models = collection.filter(function(model){
-                               return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
-                            });
-                            console.log(inl_models);
-                            that.fill_inlines(inl_models);
-                        },
-                        error: function(){
-                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
-                            //TODO: error handling
-                        }        
-                    });
-                }
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            // call validator on the form
-            var context = this;
-            var validate_obj = $.extend(this.view_configs.form_field_validation,{
-                    "submitHandler" : function() {
-                    context.save();
-                }
-            });
-            this.$('form')
-                .validate(validate_obj);
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $(".chzn-select").chosen({'search_contains':true});
-			
-			var eDate = new Date();
-			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
-			
-            $(".date-picker")
-                .datepicker({
-                    format: 'yyyy-mm-dd',
-					startDate: '2009-01-01',
-					endDate: enddate,
-                }).on('changeDate', function(ev){
-                    $(this).datepicker('hide');
-                });
-            $(".time-picker")
-                .timepicker({
-                    minuteStep: 1,
-                    defaultTime: false,
-                    showMeridian: false
-                });                
-            return this;
         },
         
-        append_new_inlines: function(){
+        //render header, empty inlines if add case
+        render_inlines: function(){
+            var that = this;
+            this.$('#inline_header').html($('#'+this.inline.header).html());
+            //if add case put in empty inlines, edit case would get handled when model is being put it
+            if(!this.edit_case)
+                this.append_new_inlines(this.inline.default_num_rows);
+            else if(this.edit_case_id)
+            {
+                console.log("FORM:EDIT: Fteching inline collection");
+                Offline.fetch_collection(this.inline.entity)
+                    .done(function(collection){
+                        var inl_models = collection.filter(function(model){
+                           return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
+                        });
+                        console.log(inl_models);
+                        that.fill_inlines(inl_models);
+                    })
+                    .fail(function(){
+                        console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                    });
+            }
+            //not showing the inlines in case of edit_case_json            
+        },
+        
+        append_new_inlines: function(num_rows){
             var inline_t  = _.template($('#'+this.inline.template).html());
-            // var inline_t = $('#'+this.inline.template).html();
-            for(var i=0;i<this.inline.num_rows;i++)
+            //TODO: gotta start index from the last index already in dom for 'add more rows feature' 
+            for(var i=0;i<num_rows;i++)
             {
                 var tr = $(inline_t({index:i}));
-                this.$('#inline_body').append(tr);    
-                $(tr).on('change', this.switch_validation_for_inlines);
+                this.$('#inline_body').append(tr);
+                tr.on('change', this.switch_validation_for_inlines);
             }
         },
         
-        switch_validation_for_inlines: function(){
-            console.log("tr chenaged");
+        // to prevent validation of empty inline rows
+        switch_validation_for_inlines: function(ev){
+            var elem = ev.delegateTarget;   //get the changed row
             var empty = true;
-            $(this).find(':input').each(function() {
-                console.log($(this).val());
+            $(elem).find(':input').each(function() {
                 if($(this).val())
                     empty = false;
             });
             if(!empty)
             {
-                $(this).find(':input').each(function() {
-                    $(this).removeClass("donotvalidate")
+                $(elem).find(':input').each(function() {
+                    $(this).removeClass("donotvalidate");
                 });
             }
             else
             {
-                $(this).find(':input').each(function() {
-                    $(this).addClass("donotvalidate")
+                $(elem).find(':input').each(function() {
+                    $(this).addClass("donotvalidate");
                 });
             }
         },
@@ -363,11 +325,11 @@ define([
                 var filled_tr = that.fill_form_elements($(tr), model.toJSON());
                 $(filled_tr).find(':input').removeClass("donotvalidate");
                 that.$('#inline_body').append(filled_tr);
-                $(filled_tr).on('change', that.check_tr);
+                $(filled_tr).on('change', that.switch_validation_for_inlines);
             });
         },    
-
-        // takes a jquery object containgg form elements.Fills all input and select elements with the corrsponding value in json    
+        
+        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json  
         fill_form_elements: function(container, o_json){
             container.attr("model_id", o_json.id);
             container.find(':input').each(function() {
@@ -389,198 +351,233 @@ define([
             });
             return container;
         },
-        
-        fill_dep_entity: function(ev){
-            var source = $(ev.target).attr("id");
-            console.log("FILLING DEP ENTITIES OF -"+source);
-            for(var i=0; i<this.dependencies[source].length;i++)
+
+        start_change_events: function(){
+            for(element in this.source_dependents_map)
             {
-                //Fully Reset the dependent select element by looking at all its sources.
-                var element = this.dependencies[source][i];
-                var entity = this.element_entity_map[element];
-                var index = this.f_index.indexOf(entity);
-                var collection = this.f_colls[index];
-                var dependencies = this.foreign_entities[entity][element].dependency;
-                var final_models = [];
-                // console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
-                var that = this;
-                $.each(dependencies, function(index, dep_desc){
-                    if(collection.length)
-                    {
-                        var dep_attr = dep_desc.dep_attr;
-                        var source_form_element = dep_desc.source_form_element;
-                        var source_entity = dep_desc.source_entity;
-                        var source_placeholder = that.foreign_entities[source_entity][source_form_element].placeholder;
-                        var curr_value = $('#'+source_placeholder).val();
-                        var filtered_models = [];
-                        if(!curr_value)
-                        {
-                            return;
-                        }
-                        if(!(curr_value instanceof Array))
-                        {
-                            v = curr_value;
-                            curr_value = [];
-                            curr_value.push(parseInt(v));
-                        }
-                        else{
-                            $.each(curr_value, function(index,val){
-                                curr_value[index] = parseInt(val);
-                            });
-                        }
-                        if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
-                        {
-                            // console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
-                            filtered_models = collection.filter(function(model){
-                               var exists = false;
-                               $.each(model.get(dep_desc.dep_attr),function(index, object){
-                                    if(!($.inArray( object.id, curr_value)==-1))
-                                        exists = true;
-                               });
-                               return exists;
-                            });
-                        
-                        }
-                        else{
-                            // console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
-                            filtered_models = collection.filter(function(model){
-                                var compare = null;
-                                if(typeof model.get(dep_desc.dep_attr) == "object")
-                                    compare = model.get(dep_desc.dep_attr).id; 
-                                else
-                                    compare = model.get(dep_desc.dep_attr)
-                                if(dep_desc.rev_sub_attr)
-                                    {
-                                        var src_entity = dep_desc.source_entity;
-                                        var index = that.f_index.indexOf(src_entity);
-                                        var s_collection = that.f_colls[index];
-                                        var s_model = s_collection.get(curr_value[0]);
-                                        // console.log(s_model);
-                                        var exists = false;
-                                        if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
-                                        {
-                                            $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
-                                                console.log(src_compare+ " "+ compare);
-                                                if(typeof src_compare == "object")
-                                                {
-                                                    if(compare == src_compare.id)
-                                                        exists = true;
-                                                }
-                                                else
-                                                {
-                                                    if(compare == src_compare)
-                                                        exists = true;
-                                                }
-                                            });
-                                        }
-                                        return exists;
-                                    }        
-                                else
-                                    {
-                                        if(!($.inArray(compare, curr_value)==-1))
-                                            exists = true;
-                                        else
-                                            exists = false;
-                                        return exists;
-                                    }            
-                            });
-                        }
-                    }
-                    final_models = final_models.concat(filtered_models);
-                });
-                that.fill_foreign_entity(element, final_models);
-                
+                console.log("creating changeevent for - "+element);
+                this.$('[name='+element+']').change(this.render_dep_for_elements);
             }
+        },
+        
+        initiate_form_field_validation: function(){
+            var that = this;
+            var validate_obj = $.extend(this.entity_config.form_field_validation,{
+                "submitHandler" : function() {
+                     that.save();
+                 }
+            });
+            this.$('form')
+                .validate(validate_obj);
+        },
+        
+        initiate_form_widgets: function(){
+            $(".chzn-select").chosen({'search_contains':true});
+			
+			var eDate = new Date();
+			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			$(".date-picker")
+                .datepicker({
+                    format: 'yyyy-mm-dd',
+					startDate: '2009-01-01',
+					endDate: enddate,
+                }).on('changeDate', function(ev){
+                    $(this).datepicker('hide');
+                });
             
+            $(".time-picker")
+                .timepicker({
+                    minuteStep: 1,
+                    defaultTime: false,
+                    showMeridian: false
+                });                
+        },
+        
+        get_collection_of_element : function(element){
+            var entity = this.element_entity_map[element];  
+            var index = this.f_index.indexOf(entity);   
+            return this.f_colls[index];   
+        },
+        
+        get_sources_of_element: function(element){
+            var entity = this.element_entity_map[element];  
+            return this.foreign_entities[entity][element].dependency;
+        },
+        
+        get_curr_value_of_element: function(element){
+            return $('[name='+element+']').val();
+        },
+        
+        render_dep_for_elements: function(ev){
+            var source = $(ev.target).attr("name"); //source changed
+            console.log("FILLING DEP ENTITIES OF -"+source);
+            // Iterate over its dependents
+            _.each(this.source_dependents_map[source], function(dep_el){
+                var filtered_models = this.filter_dep_for_element(dep_el);
+                this.render_foreign_element(dep_el, filtered_models);
+            }, this);
         },    
+        
+        // Fully Reset the dependent foreign element by looking at all its sources.  
+        filter_dep_for_element: function(element){
+            //get dependent element's entity's collection - to be filtered
+            var dep_collection = this.get_collection_of_element(element);   
+            var all_sources = this.get_sources_of_element(element);   // get all sources of this element - to filter by
+            var final_models = [];  //model array to be finally inserted into dom
+            var that = this;
+            
+            if(!dep_collection.length)
+                return [];
+                
+            $.each(all_sources, function(index, dep_desc){
+                var dep_attr = dep_desc.dep_attr;
+                var source_form_element = dep_desc.source_form_element;
+                var filtered_models = [];
+                
+                //LIMITS: source can't be an expanded right now, bcoz won't get its value
+                var source_curr_value = that.get_curr_value_of_element(source_form_element);   
+                if(!source_curr_value)
+                    return;
+                else if(!(source_curr_value instanceof Array))  
+                {
+                    //if source is single select - convert its value to array - like a multiselect
+                    var temp = source_curr_value;
+                    source_curr_value = [];    
+                    source_curr_value.push((temp));
+                }
+                
+                // many-to-many relation between source and dependent
+                if(dep_collection.at(0).get(dep_desc.dep_attr) instanceof Array)
+                {
+                    filtered_models = dep_collection.filter(function(model){
+                       var exists = false;
+                       //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                       $.each(model.get(dep_desc.dep_attr),function(index, object){
+                            if($.inArray(String(object.id), source_curr_value)>-1)
+                                exists = true;
+                       });
+                       return exists;
+                    });
+                }
+                else
+                {
+                    filtered_models = dep_collection.filter(function(model){
+                        var exists = false;
+                        var compare = null;
+                        if(typeof model.get(dep_desc.dep_attr) == "object")
+                            compare = model.get(dep_desc.dep_attr).id; 
+                        else
+                            compare = model.get(dep_desc.dep_attr)
+                            
+                        if(dep_desc.src_attr&&dep_desc.src_attr!="id")
+                        {
+                            var s_collection = that.get_collection_of_element(source_form_element);
+                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                            if(s_model.get(dep_desc.src_attr) instanceof Array)
+                            {
+                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare){
+                                    if(compare == src_compare.id)
+                                        exists = true;
+                                });
+                            }
+                            return exists;
+                        }        
+                        else
+                        {
+                            if(!($.inArray(String(compare), source_curr_value)==-1))
+                                exists = true;
+                            return exists;
+                        }            
+                    });
+                }
+                final_models = final_models.concat(filtered_models);
+            });
+            return final_models;
+        },
           
-        fill_foreign_entity: function(element, model_array){
+        filter_model_array: function(model_array, filter){
+            var filter_attr = filter.attr;
+            var filter_value = filter.value;
+            filtered = [];
+            $.each(model_array, function(index, obj){
+                //TODO: assumed to be an object
+                if(obj.get(filter_attr).id == filter_value)
+                {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+          
+        render_foreign_element: function(element, model_array){
             console.log("FILLING FOREIGN ENTITY - "+element);
+            var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
-            // this.num_f_elems--; 
-            var filter = f_entity_desc.filter;
-            if(filter)
+            
+            //if any defined, filter the model array before putting into dom 
+            if(f_entity_desc.filter)
             {
-                // console.log("FILTERING FOREIGN ENTITY!");
-                var filter_attr = filter.attr;
-                var filter_value = filter.value;
-                filtered = [];
-                $.each(model_array, function(index, obj){
-                    if(obj.get(filter_attr).id == filter_value)
-                    {
-                        filtered.push(obj);
-                    }
-                });
-                model_array = filtered;
+                model_array = this.filter_model_array(model_array, f_entity_desc.filter);
             }
-            if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+            
+            if(f_entity_desc.expanded)
             {
-                console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
-                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                $f_el.html('');
-                var id_field = "id"
-                if(f_entity_desc.id_field)
-                     id_field = f_entity_desc.id_field;
-                var entity = this.element_entity_map[element];
-                var index = this.f_index.indexOf(entity);
-                var collection = this.f_colls[index];
+                if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+                {
+                    console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
+                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                    $f_el.html('');
+                    var id_field = "id"
+                    if(f_entity_desc.id_field)
+                         id_field = f_entity_desc.id_field;
+                    var entity = this.element_entity_map[element];
+                    var index = this.f_index.indexOf(entity);
+                    var collection = this.f_colls[index];
                 
-                $.each(this.model_json[element], function(index, f_json){
-                    // console.log(f_json[id_field]);
-                    // console.log(collection);
-                    model = collection.get(f_json[id_field]);
-                    if(model)
-                    {
-                        var t_json = model.toJSON();
+                    $.each(this.model_json[element], function(index, f_json){
+                        model = collection.get(f_json[id_field]);
+                        if(model)
+                        {
+                            var t_json = model.toJSON();
+                            t_json["index"] = index; 
+                            $.each(f_entity_desc.expanded.extra_fields, function(index,field){
+                                t_json[field] = f_json[field];
+                            });
+                            console.log(t_json);
+                            $f_el.append(expanded_template(t_json));    
+                        }
+                    });
+                    this.initiate_form_widgets();
+                    this.expanded = element;
+                    if(this.num_sources[element]<=0)
+                        this.foreign_elements_rendered[element] = true;
+                }
+                else if(f_entity_desc.expanded)
+                {
+                    console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
+                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                    $f_el.html('');
+                    $.each(model_array,function(index, f_model){
+                        var t_json = f_model.toJSON();
                         t_json["index"] = index; 
-                        $.each(f_entity_desc.expanded.extra_fields, function(index,field){
-                            t_json[field] = f_json[field];
-                        });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));    
-                    }
-                });
-                $(".chzn-select").chosen();
-                $(".date-picker")
-                    .datepicker({
-                        format: 'yyyy-mm-dd'
-                    }).on('changeDate', function(ev){
-                        $(this).datepicker('hide');
                     });
-                this.expanded = element;
-                if(this.num_sources[element]<=0)
-                    this.foreign_elements_rendered[element] = true;
+                    this.expanded = element;
+                    this.initiate_form_widgets();
+                }    
             }
-            else if(f_entity_desc.expanded)
+            else
             {
-                console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
-                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                $f_el.html('');
-                $.each(model_array,function(index, f_model){
-                    var t_json = f_model.toJSON();
-                    t_json["index"] = index; 
-                    $f_el.append(expanded_template(t_json));    
-                });
-                this.expanded = element;
-                $(".chzn-select").chosen();
-                $(".date-picker")
-                    .datepicker({
-                        format: 'yyyy-mm-dd'
-                    }).on('changeDate', function(ev){
-                        $(this).datepicker('hide');
-                    });
-                // this.foreign_elements_rendered[element] = true;
-            }
-            else{
                 console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if($f_el.is('select[multiple]'))
                     $f_el.html('');    
                 else
-                    $f_el.html(options_inner_template({
+                    $f_el.html(this.options_inner_template({
                             id: "",
                             name: "------------"
                     }));
@@ -588,73 +585,32 @@ define([
                     var f_json = f_model; 
                     if(f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(options_inner_template({
+                    $f_el.append(that.options_inner_template({
                         id: parseInt(f_json["id"]),
                         name: f_json[f_entity_desc.name_field]
                     }));    
                 });
-                // console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
-                 $f_el.prop("disabled", false);
-                 $f_el.trigger("liszt:updated");
-            }
-            // if(this.edit_case && this.num_f_elems>=0)
-//             {
-//                 console.log("SYPHONING");
-//                 Backbone.Syphon.deserialize(this, this.model_json);
-//             }
-            if(this.edit_case && !this.foreign_elements_rendered[element] &&!f_entity_desc.expanded)
-            {
-                var t_json = {};
-                t_json[element] = this.model_json[element]
-                    
-                // t_json = {t_json};
-                // Backbone.Syphon.deserialize(this, t_json);
-                // console.log("FORM: putting in value of -"+element);
-                this.$('form [name='+element+']').val(this.model_json[element]).change();
-                this.$('form [name='+element+']').trigger("liszt:updated");
-                if(this.num_sources[element]<=0)
-                    this.foreign_elements_rendered[element] = true;
+                $f_el.prop("disabled", false);
+                $f_el.trigger("liszt:updated");
+
+                if(this.edit_case && !this.foreign_elements_rendered[element])
+                {
+                    this.$('form [name='+element+']').val(this.model_json[element]).change();
+                    this.$('form [name='+element+']').trigger("liszt:updated");
+                    if(this.num_sources[element]<=0)
+                        this.foreign_elements_rendered[element] = true;
+                }
             }
         },
                         
-        render_foreign_entity: function(collection, options) {
-            console.log(this.num_f_elems);
-            // console.log("ADD/EDIT: rendering foreign entity");
-            for(element in this.foreign_entities[collection.storeName])
-            {
-                this.num_f_elems--; 
-                
-            }
-            
-            if(this.num_f_elems==0)
-            {
-                for(element in this.foreign_elements_rendered)
-                {
-                    var entity = this.element_entity_map[element];
-                    if(this.foreign_entities[entity][element]["dependency"])
-                    {
-                
-                    }
-                    else{
-                        var index = this.f_index.indexOf(entity);
-                        var collection1 = this.f_colls[index];
-                        this.fill_foreign_entity(element, collection1.toArray());
-                    }
-                }
-            }   
-        },
-
         normalize_json: function(d_json){
             console.log("FORM: Before Normalised json = "+JSON.stringify(d_json));      
             var f_entities = this.foreign_entities;
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
-                    if(this.foreign_entities[member][element].expanded)
+                    if((element in d_json)&&!(f_entities[member][element].expanded)) 
                     {
-                        
-                    }
-                    else if (element in d_json) {
                         if (d_json[element] instanceof Array) {
                             var el_array = [];
                             $.each(d_json[element],function(index,object){
@@ -670,7 +626,6 @@ define([
             }
             console.log("FORM: Normalised json = "+JSON.stringify(d_json));      
             return d_json;
-            
         },
             
         denormalize_json: function(n_json){
@@ -989,37 +944,16 @@ define([
                 this.final_json = $.extend(this.model_json, this.final_json);
             }
 
-            ev_res = {
-                type: "upload_error_resolved",
-                context: this,
-                discard: false
-            };
-
-            ev_save = {
-                type: "save_clicked",
+            var ev_data = {
                 context: this,
             };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_save);
-            this.trigger("save_clicked",ev_res);
+            this.trigger("save_clicked",ev_data);
         },
 
         button2_clicked: function() {
-            ev_res = {
-                type: "upload_error_resolved",
+            var ev_data = {
                 context: this,
-                discard: true
             };
-
-            ev_button2 = {
-                type: "button2_clicked",
-                context: this,
-                discard: true
-            };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_button2);
             this.trigger("button2_clicked",ev_res);
         }
 

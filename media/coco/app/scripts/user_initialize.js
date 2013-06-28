@@ -1,6 +1,6 @@
 define([
     'jquery',
-  'form_field_validator'
+    'form_field_validator'
   ], function(){
     
     var run = function(){

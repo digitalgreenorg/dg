@@ -21,6 +21,9 @@
 	<meta name="robots" content="NONE,NOARCHIVE">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+                                        <!--Core Framework templates end here -->    
+    <!--Page layout, full download, incremental download, background inc download, upload, notifications, status, dashboard,    form page, list page, login, select-options template, -->            
+
 <script type="text/template" id="header">
 <div class="page-header" style="margin-bottom:0px;">
     <h1 ><a href="#">COCO</a></h1>
@@ -29,7 +32,6 @@
     </ul>
 </div>
 </script>
-
 <script type="text/template" id="error_notifcation_template" >
     <div class="alert alert-error">
       <a class="close" data-dismiss="alert">×</a>
@@ -48,7 +50,6 @@
       <strong>Info! </strong><%= msg%>
     </div>
 </script>
-
 <script type="text/template" id="upload_template">
     <div id="upload_modal" class="modal hide fade" >
       <div class="modal-header">
@@ -75,7 +76,6 @@
       </div>
     </div>
 </script>
-
 <script type="text/template" id="incremental_download_template">
     <div id="incremental_download_modal" class="modal hide fade" >
       <div class="modal-header">
@@ -97,7 +97,6 @@
       </div>
     </div>
 </script>
-
 <script type="text/template" id="incremental_download_background_template">
 <div class="row">
     <div id="incremental_download_back" style="position:fixed;bottom:0px;z-index:10000" class="span2">
@@ -110,7 +109,6 @@
     </div>
 </div>    
 </script>
-
 <script type="text/template" id="download_template">
     <div id="full_download_modal" class="modal hide fade" ><div class="modal-header">
         <h3>Download</h3>
@@ -136,12 +134,9 @@
       </div>
     </div>
 </script>
-   
-
 <script type="text/template" id="dashboard_item_template">
         <li><a href="#<%= name%>"><%= title%></a></li>
 </script>
-
 <script  type="text/template" id="dashboard">
     <div id="coco_sidebar" class="coco_sidebar affix">
 		<table border = '0'>
@@ -180,34 +175,16 @@
                 </div>
             </div>
 </script>
-
-   <script type="text/template" id="page_layout">
-   <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
-   <div id = "content" class="span10" ></div>
-   		
-   </script>
-   
-   <script type="text/template" id="status">
-        
-   </script>
-   
-   <script type="text/template" id="first_time_status">
-       Welcome to COCO. 
-       <br>
-       COCO has not been yet setup on this system. Before anything, you need to download data. Click on the download button.
-       <button id="download" class="btn btn-large btn-primary" style="margin-left:20px;margin-top:10px;">Download</button>
-        <div id = "download_modal">
-    
-        </div>    
-   </script>
-   
-<script type="text/template" id="sync_status_template">
+<script type="text/template" id="page_layout">
+    <div id = "side_panel" class="span2 well affix" style = "height:100%; margin-left:0px;"></div>
+    <div id = "content" class="span10" ></div>
+</script>
+<script type="text/template" id="status">
     <div id="modal"></div>
 	<div class="page-header">
 	<h1 style = "color:#0088cc;"> Welcome to COCO!
 	<br><small>COCO helps you to seamlessly enter data in conditions of intermittent connectivity.</small></br></h1>
 	</div>
-
 		<div class="media">
 			<a class="pull-left">
 			<img class="media-object" src="/media/coco/app/images/add.png" style = "width:70px;">
@@ -292,32 +269,102 @@
     <br>    
     <button id="reset_database" class="btn btn-small btn-primary" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
 </script>
-
+<script type="text/template" id="form_template">
+    <div id = "form_div">
+        <div id = "form_header">
     
-<script type="text/template" id="person_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Father Name</th>
-       <th>Village</th>
-       <th>Group</th>
-       <th></th>
-	   </tr>
+        </div>
+        <div id = "form_errors" style = "color:red">
+    
+        </div>
+        <div id = "model_form">
+        <form id="person_form" class="">
+                        
+            <%=form_template%>
+        
+            <% if (inline == true) { %>
+                <table id= "inline" class="table">
+                    <thead id ="inline_header">
+                    </thead>
+                    <tbody id= "inline_body">
+        
+                    </tbody>
+                </table>
+            <% } %>
+        
+            <div class="form-actions">
+              <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
+              <%if(button2){%>
+                  <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+              <%}%>
+            </div>
+        </form>
+        </div>
+	
+    </div>
 </script>
-<script type="text/template" id="village_table_template">
-       <tr>
-       <th>Id</th>
-	   <th>Name</th>
-	   <th>Block Name</th>
-       <th>Start Date</th>
-       <th>State</th>
-       <th></th>
-	   </tr>
+<script type="text/template" id="dashboard_breadcrumb">
+	<li class='active' >Dashboard</li>
+</script>
+<script type="text/template" id="list_breadcrumb">
+	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
+</script>
+<script type="text/template" id="add_edit_breadcrumb">
+<li><a href="#">Dashboard</a> <span class="divider">/</span></li>
+<li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>
+<li class="active"><%=add_or_edit%></li>
+</script>
+<script  type="text/template" id="list_view_template">
+    <div id="legend">
+    	<legend class=""><%= page_header %></legend>
+    </div>
+	<div >
+       <table id= "list_table" class="table table-striped display">
+           <thead>
+               <%= table_header%>
+           </thead>
+       </table>
+	</div>
+	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
+</script>
+<script type="text/template" id="options_template">
+    <option value=<%=id%>><%=name%></option> 
+</script>
+<script type="text/template" id="login">
+
+<div id="login_modal" class="modal hide fade" >
+  <div class="modal-header">
+    <h3>Login</h3>
+  </div>
+  <div class="modal-body">
+  <span class="text-error" id="error_msg"></span>
+  <form action="">
+    <fieldset>
+      <div class="clearfix">
+      <%if(typeof(username)=="undefined"){%>
+        <input id="username" type="text" placeholder="Username">
+      <%}else{%>    
+        <input id="username" type="text" placeholder="Username" value="<%= username%>" disabled>
+      <%}%>
+      </div>
+      <div class="clearfix">
+        <input id="password" type="password" placeholder="Password">
+      </div>
+      <button id= "login_button" class="btn primary" type="submit">Sign in</button>
+    </fieldset>
+  </form>
+  </div>
+</div>
+
+
 </script>
 
 
+                                <!--Core Framework templates end here -->    
 
-<!--///////////////////////////////////////////////////// MEDIATOR TEMPLATES START //////////////////////////////////////////////-->
+
+<!--///////////////////////////////////////////////////// MEDIATOR TEMPLATES START ///////////////////////////////////////////-->
+
 <script type="text/template" id="mediator_table_template">
        <tr>
        <th>Id</th>
@@ -382,9 +429,9 @@
 
 </script>
 
-<!--//////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
+<!--/////////////////////////////////////////////////// MEDIATOR TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--/////////////////////////////////////////////////// SCREENING TEMPLATES START //////////////////////////////////////////////-->
+<!--///////////////////////////////////////////////// SCREENING TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="screening_table_template">
        <tr>
        <th>Id</th>
@@ -518,8 +565,6 @@
                     </tbody>
                 </table>
             </fieldset>
-                        
-
 </script>
 
 <script type="text/template" id="person_pma_template">
@@ -587,9 +632,9 @@
     </tr>
 </script>
 
-<!--//////////////////////////////////////////////////// SCREENING TEMPLATES END //////////////////////////////////////////////-->
+<!--////////////////////////////////////////////////// SCREENING TEMPLATES END //////////////////////////////////////////////-->
 
-<!--/////////////////////////////////////////////////// ADOPTION TEMPLATES START //////////////////////////////////////////////-->
+<!--///////////////////////////////////////////////// ADOPTION TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="adoption_table_template">
        <tr>
        <th>Id</th>
@@ -699,30 +744,6 @@
     <tr> <th> Delete?</th><th> Sr No.</th><th> Person*</th><th> Video*</th><th> Date Of Adoption</th></tr>
 </script>
 
-<script type="text/template" id="adoption_inline2">
-    <tr id="row7">
-        <td><div class="control-group"><div class="controls">
-            <input type="text" id="person_row7" name="person_name" >
-        </div></div></td>
-        <td><div class="control-group"><div class="controls">
-            <input type="text" id="father_row7" name="father_name">
-        </div></div></td>
-        <td><div class="control-group"><div class="controls">
-            <input class="input-mini" type="text" id="age_row7" name="age" >
-        </div></div></td>
-        <td><div class="control-group"><div class="controls">
-            <select value = 'M' id="gender_row7" class="input-small" name="gender">
-    		<option value='' selected='selected'>---------</option> 
-    		<option value='M'>Male</option> 
-    		<option value='F'>Female</option>
-            </select>
-        </div></div></td>
-        <td><div class="control-group"><div class="controls">
-            <input id="phonenumber_row7" name="phone_no" type="text">
-        </div></div></td>
-    </tr>
-</script>
-
 <script type="text/template" id="adoption_inline">
     <tr id="row7" index = <%=index%> person_id = <%=id%> >
     <td>
@@ -774,9 +795,9 @@
     </tr>
 </script>
 
-<!--//////////////////////////////////////////////////// ADOPTION TEMPLATES END ///////////////////////////////////////////////-->
+<!--////////////////////////////////////////////////// ADOPTION TEMPLATES END ///////////////////////////////////////////////-->
 
-<!--///////////////////////////////////////////////////// GROUP TEMPLATES START //////////////////////////////////////////////-->
+<!--////////////////////////////////////////////////// GROUP TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="group_table_template">
        <tr>
        <th>Id</th>
@@ -849,40 +870,6 @@
 <!--//////////////////////////////////////////////////// GROUP TEMPLATES END ///////////////////////////////////////////////-->
 
 
-<script type="text/template" id="form_template">
-    <div id = "form_div">
-        <div id = "form_header">
-    
-        </div>
-        <div id = "form_errors" style = "color:red">
-    
-        </div>
-        <div id = "model_form">
-        <form id="person_form" class="">
-                        
-            <%=form_template%>
-        
-            <% if (inline == true) { %>
-                <table id= "inline" class="table">
-                    <thead id ="inline_header">
-                    </thead>
-                    <tbody id= "inline_body">
-        
-                    </tbody>
-                </table>
-            <% } %>
-        
-            <div class="form-actions">
-              <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-              <%if(button2){%>
-                  <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
-              <%}%>
-            </div>
-        </form>
-        </div>
-	
-    </div>
-</script>
 
 <!--///////////////////////////////////////////////////// VIDEO TEMPLATES START //////////////////////////////////////////////-->
 <script type="text/template" id="video_table_template">
@@ -1072,18 +1059,18 @@
 </script>
 <!--//////////////////////////////////////////////////// VIDEO TEMPLATES END ///////////////////////////////////////////////-->
 
-<script type="text/template" id="person_list_item_template">
-<tr>
-    <td><%= id %></td>
-    <td><%= person_name %></td>
-    <td> <%= father_name %></td>
-    <td> <%= village.village_name %></td>
-    <td> <%= group.group_name %></td>
-    <td>
-	<a href="#person/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
-    </td>
-</tr>
+<!--/////////////////////////////////////////////////// VILLAGE TEMPLATES START ////////////////////////////////////////////-->
+<script type="text/template" id="village_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Block Name</th>
+       <th>Start Date</th>
+       <th>State</th>
+       <th></th>
+	   </tr>
 </script>
+
 
 <script type="text/template" id="village_list_item_template">
 <tr>
@@ -1097,207 +1084,89 @@
     </td>
 </tr>
 </script>
+<!--//////////////////////////////////////////////////// VILLAGE TEMPLATES END ///////////////////////////////////////////////-->
 
-<script type="text/template" id="dashboard_breadcrumb">
-	<li class='active' >Dashboard</li>
-</script>
-<script type="text/template" id="list_breadcrumb">
-	<li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
-</script>
-<script type="text/template" id="add_edit_breadcrumb">
-<li><a href="#">Dashboard</a> <span class="divider">/</span></li>
-<li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>
-<li class="active"><%=add_or_edit%></li>
-</script>
-<!-- <div style= "float:left;">
-<input id ="search_box" style="margin:0px;" type="text" name="q" alt="Search" value="" maxlength="256" size="32" />
-<button id="search_button" class="btn" style="margin-left:10px;">Search</button>
-</div> -->
-<script  type="text/template" id="list_view_template">
-    <div id="legend">
-    	<legend class=""><%= header_name %></legend>
-    </div>
-	<div >
-       <table id= "list_table" class="table table-striped display">
-       <thead>
-       <%= table_header%>
-       </thead>
-	</div>
-	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
+<!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
+<script type="text/template" id="person_list_item_template">
+<tr>
+    <td><%= id %></td>
+    <td><%= person_name %></td>
+    <td> <%= father_name %></td>
+    <td> <%= village.village_name %></td>
+    <td> <%= group.group_name %></td>
+    <td>
+	<a href="#person/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+    </td>
+</tr>
 </script>
 
-	
-<script type="text/template" id="options_template">
-    <option value=<%=id%>><%=name%></option> 
-</script>
-
-<script type="text/template" id="person_add_edit_template2">
-                            <fieldset>
-                                <legend>Add Person</legend>
-                                <div class="control-group"> 
-                                	<label class="control-label">Name*</label>
-                                	<div class="controls">
-                                 	<input type="text" name="person_name" placeholder="Person Name">
-                                 	</div>
-                                 </div>
-                                 <div class="control-group"> 
-	                                 <label class="control-label">Father Name*</label>
-	                                 <div class="controls"> 
-	                                 	<input type="text" name="father_name" placeholder="Father Name">
-	                                 </div>
-                                 </div>
-                                 <div class="control-group"> 
-	                                 <label class="control-label">Village*</label>
-	                                 <div class="controls"> 
-	                                 <select id = "id_village" name="village" class="chzn-select">
-	                                    
-	                                </select>
-	                                </div>
-                                </div>
-                                <div class="control-group"> 
-	                                <label class="control-label">Gender*</label> 
-	                                <div class="controls">
-	                                <select name="gender">
-    									<option value='' selected='selected'>---------</option> 
-    									<option value='M'>Male</option> 
-    									<option value='F'>Female</option> 
-	                                </select>
-	                                </div>
-                                </div> 
-                                <div class="control-group">
-                                	<label class="control-label">Age</label>
-                                	<div class="controls"> 
-                                	<input class="input-mini" name="age" type="text" placeholder="Age">
-                                	</div>
-                                </div>
-                                <div class="control-group">
-	                                 <label class="control-label">Phone Number</label>
-	                                 <div class="controls">
-	                                 <input name="phone_no" type="text" placeholder="Phone Number">
-	                                 </div>
-                                 </div>
-								<div class="control-group"> 
-	                                 <label class="control-label">Group</label> 
-	                                 <div class="controls">
-	                                 <select id = "id_group" name="group" class="chzn-select">
-	                                    
-	                                </select>
-	                                </div>
-                                </div>
-                            </fieldset>
-                        
-
+<script type="text/template" id="person_table_template">
+       <tr>
+       <th>Id</th>
+	   <th>Name</th>
+	   <th>Father Name</th>
+       <th>Village</th>
+       <th>Group</th>
+       <th></th>
+	   </tr>
 </script>
 
 <script type="text/template" id="person_add_edit_template">
-<form id ="person_add_form" class="form-horizontal">
-								<div> 
-									<div > 
-										
-												<fieldset > 
-                                                        <legend>Add/Edit Person</legend>
-														<div class="control-group"> 
-															<label class="control-label"  for='id_person_name' >Person name:</label>
-                                                            <div class="controls">
-                                                            <input id='id_person_name' type='text'  name='person_name' class="required" maxlength='100' /> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label"  for='id_father_name'>Father name:</label>
-                                                            <div class="controls">
-                                                            <input id='id_father_name' type='text' name='father_name' maxlength='100' /> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label"  for='id_age'>Age:</label>
-                                                            <div class="controls">
-                                                            <input id='id_age' type='text' name='age' /> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label"  for='id_gender' >Gender:</label>
-                                                            <div class="controls">
-                                                            <select name='gender' id='id_gender' class="required"> 
-																<option value='' selected='selected'>---------</option> 
-																<option value='M'>Male</option> 
-																<option value='F'>Female</option> 
-															</select> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label"  for='id_phone_no'>Phone no:</label>
-                                                            <div class="controls">
-                                                            <input id='id_phone_no' type='text' name='phone_no' maxlength='100' /> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label"  for='id_address'>Address:</label>
-                                                            <div class="controls">
-                                                            <input id='id_address' type='text' name='address' maxlength='500' /> 
-                                                            </div>
-														</div> 
-														<div class="control-group"> 
-															<label class="control-label" for='id_land_holdings'>Land holdings(in acres):</label>
-                                                            <div class="controls">
-                                                            <input id='id_land_holdings' type='text' name='land_holdings' /> 
-                                                            </div>
-														</div> 
-													    <div class="control-group"> 
-    														<label class="control-label" for='id_village' >Village:</label> 
-    														<div class="controls">
-                                                            <select name='village' id='id_village' class="required" class="chzn-select">
-    														<option value='' selected='selected'>---------</option>
-    														</select>  
-                                                            </div>
-    												    </div> 
-											    		<div class="control-group"> 
-															<label class="control-label" for='id_group'>Group:</label>
-                                                            <div class="controls">
-                                                            <select name='group' id='id_group' class="chzn-select"> 
-															<option value='' selected='selected'>---------</option> 
-															</select> 
-                                                            </div>
-														</div> 
-    												</fieldset> 
-    												<div class="form-actions">
-                                                      <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
-                                                      <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
-                                                    </div>
-    									</div> 
-    								
-    								</div>
-                                                    
-</form>                                                        </script>
-   
-<script type="text/template" id="login">
-
-<div id="login_modal" class="modal hide fade" >
-  <div class="modal-header">
-    <h3>Login</h3>
-  </div>
-  <div class="modal-body">
-  <span class="text-error" id="error_msg"></span>
-  <form action="">
-    <fieldset>
-      <div class="clearfix">
-      <%if(typeof(username)=="undefined"){%>
-        <input id="username" type="text" placeholder="Username">
-      <%}else{%>    
-        <input id="username" type="text" placeholder="Username" value="<%= username%>" disabled>
-      <%}%>
-      </div>
-      <div class="clearfix">
-        <input id="password" type="password" placeholder="Password">
-      </div>
-      <button id= "login_button" class="btn primary" type="submit">Sign in</button>
-    </fieldset>
-  </form>
-  </div>
-</div>
-
-
+        <fieldset>
+            <legend>Add Person</legend>
+            <div class="control-group"> 
+            	<label class="control-label">Name*</label>
+            	<div class="controls">
+             	<input type="text" name="person_name" placeholder="Person Name">
+             	</div>
+             </div>
+             <div class="control-group"> 
+                 <label class="control-label">Father Name*</label>
+                 <div class="controls"> 
+                 	<input type="text" name="father_name" placeholder="Father Name">
+                 </div>
+             </div>
+             <div class="control-group"> 
+                 <label class="control-label">Village*</label>
+                 <div class="controls"> 
+                 <select id = "id_village" name="village" class="chzn-select">
+                    
+                </select>
+                </div>
+            </div>
+            <div class="control-group"> 
+                <label class="control-label">Gender*</label> 
+                <div class="controls">
+                <select name="gender">
+					<option value='' selected='selected'>---------</option> 
+					<option value='M'>Male</option> 
+					<option value='F'>Female</option> 
+                </select>
+                </div>
+            </div> 
+            <div class="control-group">
+            	<label class="control-label">Age</label>
+            	<div class="controls"> 
+            	<input class="input-mini" name="age" type="text" placeholder="Age">
+            	</div>
+            </div>
+            <div class="control-group">
+                 <label class="control-label">Phone Number</label>
+                 <div class="controls">
+                 <input name="phone_no" type="text" placeholder="Phone Number">
+                 </div>
+             </div>
+			<div class="control-group"> 
+                 <label class="control-label">Group</label> 
+                 <div class="controls">
+                 <select id = "id_group" name="group" class="chzn-select">
+                    
+                </select>
+                </div>
+            </div>
+        </fieldset>
 </script>
-   
+<!--//////////////////////////////////////////////////// PERSON TEMPLATES END ///////////////////////////////////////////////-->
    
 </head>
 

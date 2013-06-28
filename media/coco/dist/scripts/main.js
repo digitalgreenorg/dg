@@ -15,45 +15,156 @@ define("backbone", function(){});
 
 define('configs',[],
 function() {
+    
+    /*
+    var dummy_config = {
+        entity_name : 
+        //string = key of this object in all_config, name of objectstore in IDB
+        //for - accessing this object 
+        
+        'rest_api_url': '/api/v1/village/',
+        //string - the rest url for this entity
+    
+        'dashboard_display': {
+            listing: false,         //whether to provide listing option for this entity on dashboard
+            add: false              //whether to provide add option for this entity on dashboard
+        },
+    
+        -----------------------------------Listing configs---------------------------------
+        page_header: 'Village',  
+        //string = The name that needs to shown in headers 
+
+        list_table_header_template: 'village_table_template',  
+        //HTML template - The id of template used as coloumn headers in list page
+
+        list_table_row_template: 'village_list_item_template',  
+        //HTML template - The id of template used to create rows of list table. 
+        //This template is passed the model json.
+        -----------------------------------------------------------------------------------
+    
+        ----------------------------------Form configs-------------------------------------
+        foreign_entities: {
+            f_entity_name:{         //the entity_name of foreign element
+                attribute_name:{    //the attribute name of this foreign element in json
+                    
+                    'placeholder': 'string - the id of element in form's html where the dropdown of this f_entity is inserted',
+                    
+                    'name_field': 'string - the attribute name in f_entity's json which needs to be shown in its dropdown',
+                    
+                    'dependency': [{    // whether this elements's dropdown depends on value of other form elements
+                        'source_form_element': 'village',   // attribute name of source element in json
+                        'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
+                        'src_attr' : //to compare dep_attr of dependent element with a particular attribute in source f_entity
+                    }],
+                    
+                    'filter': { //whether to filter the objects of foreign entity before rendering into dropdown
+                        attr: 'group',  //the attribute name in f_entity's json to filter on
+                        value: null     //desired value of the attr
+                    },
+    
+                    id_field: "person_id", // the name of id field for this f_entity in denormalised json                         
+                }
+            },
+    
+            f_entity_name:{         //the entity_name of foreign element
+                attribute_name:{    //the attribute name of this foreign element in json
+                    
+                    'dependency': [{    // whether this elements's dropdown depends on value of other form elements
+                        'source_form_element': 'village',   // attribute name of source element in json
+                        'dep_attr': 'village'   //the attribute name in json of dependent f_entity which refers to source f_entity
+                    }],
+
+                    id_field: "person_id", // the name of id field for this f_entity in denormalised json     
+
+                    //would not use options template to render its objects - would use the specfied template    
+                    // won't be denormalised, wud be converted offline to online, 
+                    //any field to be denormalised or converted offline to online can be declared - 
+                    //this shd be clubbed and put as foreign entity of expanded.   
+                    'expanded': { 
+                        template: 'person_pma_template', // the template to use instead of options
+                        placeholder: 'pmas',    // the id of placeholder in form's HTML
+                        TODO: the following two should be merged and converted to same format as foreign_entities
+                        denormalize: { // any field in expanded template to be denormalised     
+                            "expressed_adoption_video": {
+                                name_field: 'title' //used as key for name in denormalised object
+                            }
+                        },
+                        foreign_fields: { // any more field in expanded template for offline to online conv
+                            "expressed_adoption_video": {
+                                entity_name: "video"  //the entity_name for this f_entity element
+                            }
+                        },
+                        extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                    }
+                }
+            }
+        },    
+        //object - describes the foreign keys in the json of this entity's model.
+        //To convert between online offline namespaces, denormalize-normalize json    
+    
+        inline: {
+            'entity': 'person',     //entity name of inline
+    
+            'default_num_rows': 10,         //default num of rows to show
+    
+            "template": "person_inline",    //id of template used to render inline
+            //Include any jquery validation desired inside html of rows 
+            //TODO: need to explain the <%index%> tags required in inlines
+    
+            "foreign_attribute": {
+                'host_attribute': ["id", "group_name"],
+                'inline_attribute': "group"
+            },
+            "header": "person_inline_header",
+            'borrow_attributes': [{
+                'host_attribute': 'village',
+                'inline_attribute': 'village'
+            }]
+        },      
+        //object - describes inlines to be included in this entity's form
+
+        bulk:{},     
+        //object - if multiple objects of this entity type can be saved through its add form, describe configs of object 
+        ------------------------------------------------------------------------------------
+    }
+    */
+    
+    // //This template would be passed the json of inline model and shall produce the desired row
+//     TODO: maybe instead of relying on users to use templating lang we should fill the rows ourselves in js code, like we are doing in form!
+
     var village_configs = {
         'page_header': 'Village',
-        'table_template_name': 'village_table_template',
-        'list_item_template_name': 'village_list_item_template',
+        'list_table_header_template': 'village_table_template', 
+        'list_table_row_template': 'village_list_item_template',
         'rest_api_url': '/api/v1/village/',
         'entity_name': 'village',
-        'dashboard_display': {listing: false, add: false},
-        'sort_field' : 'village_name'
+        'dashboard_display': {
+            listing: false,
+            add: false
+        },
+        'sort_field': 'village_name'
     };
-    // var video_list_view_configs = {
-//         'page_header': 'Video',
-//         'backbone_collection': video_collection.video_offline_collection,
-//         'table_template_name': 'video_table_template',
-//         'list_item_template_name': 'video_list_item_template'
-//     };
-//     var screening_list_view_configs = {
-//         'page_header': 'Screening',
-//         'backbone_collection': screening_collection.screening_offline_collection,
-//         'table_template_name': 'screening_table_template',
-//         'list_item_template_name': 'screening_list_item_template',
-//     };
 
     var mediator_configs = {
         'page_header': 'Mediator',
-        'table_template_name': 'mediator_table_template',
-        'list_item_template_name': 'mediator_list_item_template',
+        'list_table_header_template': 'mediator_table_template',
+        'list_table_row_template': 'mediator_list_item_template',
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields':['name', 'gender'],
-        'sort_field' : 'name',
-        'foreign_entities':{
+        'unique_togther_fields': ['name', 'gender'],
+        'sort_field': 'name',
+        'foreign_entities': {
             'village': {
-                "assigned_villages" : {'placeholder':'id_ass_villages','name_field':'village_name'},        //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+                "assigned_villages": {
+                    'placeholder': 'id_ass_villages',
+                    'name_field': 'village_name'
+                }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
             }
-         },
+        },
         'form_field_validation': {
-        	ignore: [],
+            ignore: [],
             rules: {
                 name: {
                     required: true,
@@ -103,37 +214,52 @@ function() {
         }
 
     };
-  
+
     var video_configs = {
         'page_header': 'Video',
-        'table_template_name': 'video_table_template',
-        'list_item_template_name': 'video_list_item_template',
+        'list_table_header_template': 'video_table_template',
+        'list_table_row_template': 'video_list_item_template',
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/api/v1/video/',
         'entity_name': 'video',
-        'unique_togther_fields':['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
-        'sort_field' : 'title',
-        'foreign_entities':{
+        'unique_togther_fields': ['title', 'video_production_start_date', 'video_production_end_date', 'village.id'],
+        'sort_field': 'title',
+        'foreign_entities': {
             'mediator': {
-                "facilitator" : {'placeholder':'id_facilitator','name_field':'name'},        
-                "cameraoperator" : {'placeholder':'id_cameraoperator','name_field':'name'},
+                "facilitator": {
+                    'placeholder': 'id_facilitator',
+                    'name_field': 'name'
+                },
+                "cameraoperator": {
+                    'placeholder': 'id_cameraoperator',
+                    'name_field': 'name'
+                },
             },
             'person': {
-                "farmers_shown" : {'placeholder':'id_farmers_shown','name_field':'person_name'},
+                "farmers_shown": {
+                    'placeholder': 'id_farmers_shown',
+                    'name_field': 'person_name'
+                },
             },
             'village': {
-                "village" : {'placeholder':'id_village','name_field':'village_name'},
+                "village": {
+                    'placeholder': 'id_village',
+                    'name_field': 'village_name'
+                },
             },
             'language': {
-                "language": {'placeholder':'id_language','name_field':'language_name'}
-            }                    
-                                
-                        
-         },
+                "language": {
+                    'placeholder': 'id_language',
+                    'name_field': 'language_name'
+                }
+            }
+
+
+        },
         'form_field_validation': {
-        	ignore: [],
-        	rules: {
+            ignore: [],
+            rules: {
                 title: {
                     required: true,
                     minlength: 2,
@@ -225,51 +351,67 @@ function() {
             },
             errorElement: "span",
             errorClass: "help-inline"
-            
+
         }
     };
-    
+
     var language_configs = {
         'page_header': 'Laguage',
-        'table_template_name': 'language_table_template',
-        'list_item_template_name': 'language_list_item_template',
+        'list_table_header_template': 'language_table_template',
+        'list_table_row_template': 'language_list_item_template',
         'add_template_name': 'language_add_edit_template',
         'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
-        'sort_field' : 'language_name',
-        'foreign_entities':{},
-        'form_field_validation': {
-        },
-        'dashboard_display': {listing: false, add: false}
+        'sort_field': 'language_name',
+        'foreign_entities': {},
+        'form_field_validation': {},
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
     };
-  
-  //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+
+    //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
     var group_configs = {
-      'page_header': 'Group',
-      'table_template_name': 'group_table_template',
-      'list_item_template_name': 'group_list_item_template',
-      'add_template_name': 'group_add_edit_template',
-      'edit_template_name': 'group_add_edit_template',
-      'rest_api_url': '/api/v1/group/',
-      'entity_name': 'group',
-      'inc_table_name': 'persongroups',
-      'unique_togther_fields':['group_name', 'village.id'],
-      'sort_field' : 'group_name',
-      'foreign_entities':{
-          'village': {
-              'village': {'placeholder':'id_village','name_field':'village_name'},
-          },
-      },
-      'inline':{
-          'entity': 'person', 'num_rows':10, "template": "person_inline", "foreign_attribute":{ 'host_attribute':["id","group_name"], 'inline_attribute': "group"}, "header" : "person_inline_header", 'borrow_attributes':[{'host_attribute':'village','inline_attribute':'village'}]
-      },
-      'form_field_validation': {
-            ignore: ".donotvalidate",  
+        'page_header': 'Group',
+        'list_table_header_template': 'group_table_template',
+        'list_table_row_template': 'group_list_item_template',
+        'add_template_name': 'group_add_edit_template',
+        'edit_template_name': 'group_add_edit_template',
+        'rest_api_url': '/api/v1/group/',
+        'entity_name': 'group',
+        'inc_table_name': 'persongroups',
+        'unique_togther_fields': ['group_name', 'village.id'],
+        'sort_field': 'group_name',
+        'foreign_entities': {
+            'village': {
+                'village': {
+                    'placeholder': 'id_village',
+                    'name_field': 'village_name'
+                },
+            },
+        },
+        'inline': {
+            'entity': 'person',
+            'default_num_rows': 10,
+            "template": "person_inline",
+            "foreign_attribute": {
+                'host_attribute': ["id", "group_name"],
+                'inline_attribute': "group"
+            },
+            "header": "person_inline_header",
+            'borrow_attributes': [{
+                'host_attribute': 'village',
+                'inline_attribute': 'village'
+            }]
+        },
+        'form_field_validation': {
+            ignore: ".donotvalidate",
             rules: {
                 group_name: {
                     required: true,
-                minlength: 2,
+                    minlength: 2,
                     maxlength: 100,
                     allowedChar: true
                 },
@@ -303,161 +445,160 @@ function() {
             errorClass: "help-inline",
         }
 
-        
+
     };
 
     var screening_configs = {
-      'page_header': 'Screening',
-      'table_template_name': 'screening_table_template',
-      'list_item_template_name': 'screening_list_item_template',
-      'add_template_name': 'screening_add_edit_template',
-      'edit_template_name': 'screening_add_edit_template',
-      'rest_api_url': '/api/v1/screening/',
-      'entity_name': 'screening',
-      download_chunk_size: 200,
-      'unique_togther_fields':['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
-      'foreign_entities':{
-          'village': {
-              'village': {'placeholder':'id_village','name_field':'village_name'},
-          },
-          'video': {
-              'videoes_screened': {'placeholder':'id_videoes_screened','name_field':'title'},
-          },
-          'mediator': {
-              'animator': {
-                  'placeholder':'id_animator',
-                  'name_field':'name',
-                  'dependency':[{
-                      'source_entity': 'village',
-                      'source_form_element': 'village',      
-                      'dep_attr': 'assigned_villages'      
-                  }]      
-              }
-          },
-          'group': {
-              farmer_groups_targeted:{
-                  'placeholder':'id_group',
-                  'name_field':'group_name',
-                  'dependency':[{
-                      'source_entity': 'village',
-                      'source_form_element': 'village',      
-                      'dep_attr': 'village'      
-                  }]      
-              }
-          },
-          'person': {
-              person:{
-                  'placeholder':'id_person',
-                  'name_field':'person_name',
-                  'dependency':[{
-                      'source_entity': 'village',
-                      'source_form_element': 'village',      
-                      'dep_attr': 'village'      
-                   }],
-                   'filter':{attr:'group',value:null }
-              },
-              farmers_attendance: {
-                   dependency: [
-                        {
-                           'source_entity': 'group',
-                           'source_form_element': 'farmer_groups_targeted',      
-                           'dep_attr': 'group'      
+        'page_header': 'Screening',
+        'list_table_header_template': 'screening_table_template',
+        'list_table_row_template': 'screening_list_item_template',
+        'add_template_name': 'screening_add_edit_template',
+        'edit_template_name': 'screening_add_edit_template',
+        'rest_api_url': '/api/v1/screening/',
+        'entity_name': 'screening',
+        download_chunk_size: 200,
+        'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        'foreign_entities': {
+            'village': {
+                'village': {
+                    'placeholder': 'id_village',
+                    'name_field': 'village_name'
+                },
+            },
+            'video': {
+                'videoes_screened': {
+                    'placeholder': 'id_videoes_screened',
+                    'name_field': 'title'
+                },
+            },
+            'mediator': {
+                'animator': {
+                    'placeholder': 'id_animator',
+                    'name_field': 'name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'assigned_villages'
+                    }]
+                }
+            },
+            'group': {
+                farmer_groups_targeted: {
+                    'placeholder': 'id_group',
+                    'name_field': 'group_name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
+                }
+            },
+            'person': {
+                person: {
+                    'placeholder': 'id_person',
+                    'name_field': 'person_name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }],
+                    'filter': {
+                        attr: 'group',
+                        value: null
+                    }
+                },
+                farmers_attendance: {
+                    dependency: [{
+                        'source_form_element': 'farmer_groups_targeted',
+                        'dep_attr': 'group'
+                    }, {
+                        'source_form_element': 'person',
+                        'dep_attr': 'id'
+                    }],
+                    id_field: "person_id", // for convert_namespace conversion      
+                    'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
+                        template: 'person_pma_template',
+                        placeholder: 'pmas',
+                        denormalize: { // any field in expanded template to be denormalised     
+                            "expressed_adoption_video": {
+                                name_field: 'title'
+                            }
                         },
-                        {
-                             'source_entity': 'person',
-                             'source_form_element': 'person',      
-                             'dep_attr': 'id'      
-                        }
-                   ],
-                  id_field : "person_id",                   // for offline_to_online conversion      
-                  'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
-                      template : 'person_pma_template',
-                      placeholder : 'pmas',
-                      denormalize: {                            // any field in expanded template to be denormalised     
-                          "expressed_adoption_video" :{ 
-                              name_field : 'title'
-                          }
-                      },
-                      foreign_fields:{                          // any more field in expanded template for offline to online conv
-                            "expressed_adoption_video" : {
+                        foreign_fields: { // any more field in expanded template for offline to online conv
+                            "expressed_adoption_video": {
                                 entity_name: "video"
-                            }  
-                      },
-                      extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]                    
-                  }          
-              }
-          }  
-      },
-      'form_field_validation': {
-    	  ignore: [],
-    	  rules: {
-				date: {
-					required: true,
-					validateDate: true
-				},
-				start_time: {
-					required: true,
-					validateTime: true
-				},
-				end_time: {
-					required: true,
-					validateTime: true,
-					startBeforeEnd: {start_time : "start_time_picker"}
-				},
-				animator:"required",
-				village:"required",
-				videoes_screened:"required",
-				
-			},
-			messages: {
-				date: {
-					required: 'Enter Screening Date',
-					validateDate: 'Enter Screening Date in the form of yyyy-mm-dd',
-				},
-				start_time: {
-					required: 'Enter Video Production Start Date',
-					validateTime: 'Enter the start time in the form of hh:mm  Use 24 hour format',
-				},
-				end_time: {
-					required: 'Enter Video Production End Date',
-					validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
-					startBeforeEnd: 'End time should be later than start time',
-				},
-				animator: "Enter Animator",
-				village:"Enter Village",
-				videoes_screened:"Enter Videos Screened",
-			},
-			
-			highlight: function(element, errorClass, validClass) {
-              $(element)
-                  .parent('div')
-                  .parent('div')
-                  .addClass("error");
+                            }
+                        },
+                        extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                    }
+                }
+            }
+        },
+        'form_field_validation': {
+            ignore: [],
+            rules: {
+                date: {
+                    required: true,
+                    validateDate: true
+                },
+                start_time: {
+                    required: true,
+                    validateTime: true
+                },
+                end_time: {
+                    required: true,
+                    validateTime: true
+                },
+                animator: "required",
+                village: "required",
+                videoes_screened: "required",
 
-          },
-          unhighlight: function(element, errorClass, validClass) {
-              $(element)
-                  .parent('div')
-                  .parent('div')
-                  .removeClass("error");
+            },
+            messages: {
+                date: {
+                    required: 'Enter Screening Date',
+                    validateDate: 'Enter Screening Date in the form of yyyy-mm-dd',
+                },
+                start_time: {
+                    required: 'Enter Video Production Start Date',
+                    validateTime: 'Enter the start time in the form of hh:mm  Use 24 hour format',
+                },
+                end_time: {
+                    required: 'Enter Video Production End Date',
+                    validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
+                },
+                animator: "Enter Animator",
+                village: "Enter Village",
+                videoes_screened: "Enter Videos Screened",
+            },
 
-          },
-          errorElement: "span",
-          errorClass: "help-inline"
-      }
+            highlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .addClass("error");
+
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element)
+                    .parent('div')
+                    .parent('div')
+                    .removeClass("error");
+
+            },
+            errorElement: "span",
+            errorClass: "help-inline"
+        }
     };
-    
+
     var adoption_configs = {
         'page_header': 'Adoption',
-        'table_template_name': 'adoption_table_template',
-        'list_item_template_name': 'adoption_list_item_template',
+        'list_table_header_template': 'adoption_table_template',
+        'list_table_row_template': 'adoption_list_item_template',
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/api/v1/adoption/',
         'entity_name': 'adoption',
         'inc_table_name': 'personadoptpractice',
-        'unique_togther_fields':['person.id', 'video.id', 'date_of_adoption'],    
-        form_field_validation:{
+        'unique_togther_fields': ['person.id', 'video.id', 'date_of_adoption'],
+        form_field_validation: {
             ignore: [],
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -477,179 +618,187 @@ function() {
             errorClass: "help-block",
             display: "block"
         },
-          add: {
-            'foreign_entities':{
+        add: {
+            'foreign_entities': {
                 'village': {
-                  'village': {'placeholder':'id_village','name_field':'village_name'},
+                    'village': {
+                        'placeholder': 'id_village',
+                        'name_field': 'village_name'
+                    },
                 },
                 'group': {
-                  'group': {
-                      'placeholder':'id_group',
-                      'name_field':'group_name',
-                      'dependency':[{
-                          'source_entity': 'village',
-                          'source_form_element': 'village',      
-                          'dep_attr': 'village'      
-                      }]   
-                  }
+                    'group': {
+                        'placeholder': 'id_group',
+                        'name_field': 'group_name',
+                        'dependency': [{
+                            'source_form_element': 'village',
+                            'dep_attr': 'village'
+                        }]
+                    }
                 },
                 'person': {
-                    float_person:{
-                        'placeholder':'id_person',
-                        'name_field':'person_name',
-                        'dependency':[{
-                            'source_entity': 'village',
-                            'source_form_element': 'village',      
-                            'dep_attr': 'village'      
-                         }],
-                         'filter':{attr:'group',value:null }
+                    float_person: {
+                        'placeholder': 'id_person',
+                        'name_field': 'person_name',
+                        'dependency': [{
+                            'source_form_element': 'village',
+                            'dep_attr': 'village'
+                        }],
+                        'filter': {
+                            attr: 'group',
+                            value: null
+                        }
                     },
                     farmers_attendance: {
                         only_render: true,
-                        dependency: [
-                             {
-                                'source_entity': 'group',
-                                'source_form_element': 'group',      
-                                'dep_attr': 'group'      
-                             },
-                             {
-                                  'source_entity': 'person',
-                                  'source_form_element': 'float_person',      
-                                  'dep_attr': 'id'      
-                             }
-                        ],
-                        id_field : "person_id",                   // for offline_to_online conversion      
-                        'expanded' : {                                // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
-                            template : 'adoption_inline',
-                            placeholder : 'bulk',
-                            denormalize: {                            // any field in expanded template to be denormalised     
-                                "expressed_adoption_video" :{ 
-                                    name_field : 'title'
+                        dependency: [{
+                            'source_form_element': 'group',
+                            'dep_attr': 'group'
+                        }, {
+                            'source_form_element': 'float_person',
+                            'dep_attr': 'id'
+                        }],
+                        id_field: "person_id", // for convert_namespace conversion      
+                        'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
+                            template: 'adoption_inline',
+                            placeholder: 'bulk',
+                            denormalize: { // any field in expanded template to be denormalised     
+                                "expressed_adoption_video": {
+                                    name_field: 'title'
                                 }
                             },
-                            foreign_fields:{                          // any more field in expanded template for offline to online conv
-                                  "expressed_adoption_video" : {
-                                      entity_name: "video"
-                                  }  
+                            foreign_fields: { // any more field in expanded template for offline to online conv
+                                "expressed_adoption_video": {
+                                    entity_name: "video"
+                                }
                             },
-                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]                    
-                        }          
+                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                        }
                     }
-                }    
+                }
             },
-            // 'inline':{
-//                 no_render : true, 'entity': 'adoption', 'num_rows':10, "template": "adoption_inline", "foreign_attribute":{ 'host_attribute':[], 'inline_attribute': null}, "header" : "adoption_inline_header", 'borrow_attributes':[]
-//             }
-            'bulk':{
-                foreign_fields:{                          // any more field in expanded template for offline to online conv
-                      "video" : {
-                          video:{'name_field':'title'}
-                      },
-                      "person" : {
-                          person:{'name_field':'person_name'}
-                      }            
+            'bulk': {
+                foreign_fields: { // any more field in expanded template for offline to online conv
+                    "video": {
+                        video: {
+                            'name_field': 'title'
+                        }
+                    },
+                    "person": {
+                        person: {
+                            'name_field': 'person_name'
+                        }
+                    }
                 },
-            }        
-          },
-          edit:{
-            'foreign_entities':{
+            }
+        },
+        edit: {
+            'foreign_entities': {
                 'person': {
-                  'person': {'placeholder':'id_person','name_field':'person_name'},
+                    'person': {
+                        'placeholder': 'id_person',
+                        'name_field': 'person_name'
+                    },
                 },
                 'video': {
                     'video': {
-                        'placeholder':'id_video',
+                        'placeholder': 'id_video',
                         // 'sub_attr': 'videos_seen',
-                        'name_field':'title',
-                        'dependency':[{
-                            'source_entity': 'person',
-                            'source_form_element': 'person',      
+                        'name_field': 'title',
+                        'dependency': [{
+                            'source_form_element': 'person',
                             'dep_attr': 'id',
-                            'rev_sub_attr': 'videos_seen',                
-                        }]   
-                    }      
-                }      
+                            'src_attr': 'videos_seen',
+                        }]
+                    }
+                }
             }
-         }    
-            
+        }
+
     };
-  
+
     var person_configs = {
         'page_header': 'Person',
-        'table_template_name': 'person_table_template',
-        'list_item_template_name': 'person_list_item_template',
-        'add_template_name': 'person_add_edit_template2',
-        'edit_template_name': 'person_add_edit_template2',
+        'list_table_header_template': 'person_table_template',
+        'list_table_row_template': 'person_list_item_template',
+        'add_template_name': 'person_add_edit_template',
+        'edit_template_name': 'person_add_edit_template',
         'rest_api_url': '/api/v1/person/',
         'entity_name': 'person',
-        'foreign_entities':{
+        'foreign_entities': {
             'village': {
-                'village': {'placeholder':'id_village','name_field':'village_name'},
+                'village': {
+                    'placeholder': 'id_village',
+                    'name_field': 'village_name'
+                },
             },
             'group': {
-                'group': {'placeholder':'id_group','name_field':'group_name'}
+                'group': {
+                    'placeholder': 'id_group',
+                    'name_field': 'group_name'
+                }
             }
-         },
-        'unique_togther_fields':['person_name', 'father_name', 'village.id', 'group.id'],
-        'sort_field' : 'person_name',
+        },
+        'unique_togther_fields': ['person_name', 'father_name', 'village.id', 'group.id'],
+        'sort_field': 'person_name',
         'form_field_validation': {
-        	ignore: [],
-			rules: {
-				person_name: {
-					required: true,
-					minlength: 2,
-					maxlength: 100,
+            ignore: [],
+            rules: {
+                person_name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 100,
                     // allowedChar:true
-				},
-				
-				father_name: {
-					required: true,
-					minlength: 2,
-					maxlength: 100,
+                },
+
+                father_name: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 100,
                     // allowedChar:true
-				},
-				age: {
-					digits: true,
-					min:1,
-					max:100
-				},
-				gender: "required",
-				phone_no: {
-					digits: true,
-					maxlength: 10
-				},
-				village: {
-					required: true
-				}
-			},
-			messages: {
-				person_name: {
-					required: 'Enter person Name',
-					minlength: 'Person Name  should be atleast 2 characters',
-					maxlength: 'Person Name should be atmax 100 characters',
-					allowedChar: 'Person name should only contain alphabets and local language characters'
-				},
-				father_name: {
-					required: 'Father Name is required',
-					minlength: "Father Name  should be atleast 2 characters",
-					maxlength: 'Father Name should be atmax 100 characters',
-					allowedChar: 'Father name should only contain alphabets and local language characters'
-				},
-				age: {
-					digits: "Age should contain digits only",
-					min:"Age should not be less than 1 year",
-					max:"Age should not be more than 100 years"
-				},
-				phone_number_person: {
-					digits: 'phone number should contain only digits',
-					maxlength: "phone number should not contain more than 10 digits"
-				},
-				village: {
-					required: "Please enter village"
-				}
-			},
-			
-			highlight: function(element, errorClass, validClass) {
+                },
+                age: {
+                    digits: true,
+                    min: 1,
+                    max: 100
+                },
+                gender: "required",
+                phone_no: {
+                    digits: true,
+                    maxlength: 10
+                },
+                village: {
+                    required: true
+                }
+            },
+            messages: {
+                person_name: {
+                    required: 'Enter person Name',
+                    minlength: 'Person Name  should be atleast 2 characters',
+                    maxlength: 'Person Name should be atmax 100 characters',
+                    allowedChar: 'Person name should only contain alphabets and local language characters'
+                },
+                father_name: {
+                    required: 'Father Name is required',
+                    minlength: "Father Name  should be atleast 2 characters",
+                    maxlength: 'Father Name should be atmax 100 characters',
+                    allowedChar: 'Father name should only contain alphabets and local language characters'
+                },
+                age: {
+                    digits: "Age should contain digits only",
+                    min: "Age should not be less than 1 year",
+                    max: "Age should not be more than 100 years"
+                },
+                phone_number_person: {
+                    digits: 'phone number should contain only digits',
+                    maxlength: "phone number should not contain more than 10 digits"
+                },
+                village: {
+                    required: "Please enter village"
+                }
+            },
+
+            highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
                     .parent('div')
@@ -665,29 +814,16 @@ function() {
             },
             errorElement: "span",
             errorClass: "help-inline"
-		}
-            
+        }
+
     };
-    
-    // var personadoptvideo_list_view_configs = {
-    //     'page_header': 'Adoption',
-    //     'backbone_collection': personadoptvideo_collection.personadoptvideo_offline_collection,
-    //     'table_template_name': 'personadoptvideo_table_template',
-    //     'list_item_template_name': 'personadoptvideo_list_item_template'
-    // };
-    // var animator_list_view_configs = {
-    //     'page_header': 'Animator',
-    //     'backbone_collection': animator_collection.animator_offline_collection,
-    //     'table_template_name': 'animator_table_template',
-    //     'list_item_template_name': 'animator_list_item_template'
-    // };
-    
+
     var misc = {
-        download_chunk_size : 2000,
-        background_download_interval:5*60*1000,
+        download_chunk_size: 2000,
+        background_download_interval: 5 * 60 * 1000,
         inc_download_url: "/get_log/"
     };
-    
+
     return {
         village: village_configs,
         mediator: mediator_configs,
@@ -697,7 +833,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
-        misc: misc            
+        misc: misc
     }
 
 });
@@ -1328,9 +1464,9 @@ return idb;
 
         var success = options.success;
         options.success = function(resp) {
-            resolve();
             if (success) success(resp);
             object.trigger('sync', object, resp, options);
+            resolve(object);
         };
 
         var error = options.error;
@@ -3991,17 +4127,17 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
             return new model_offline();
         },
         
-        create_b_collection: function(entity_name){
+        create_b_collection: function(entity_name, options){
             var model_offline = Backbone.Model.extend({
                 database: indexeddb,
                 storeName: entity_name,
             });
-
-            var collection_offline = Backbone.Collection.extend({
+            options = $.extend({
                 model: model_offline,
                 database: indexeddb,
                 storeName: entity_name,
-            });
+            },options);
+            var collection_offline = Backbone.Collection.extend(options);
             return new collection_offline();
         },
     
@@ -5434,116 +5570,97 @@ define('views/form',[
             // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
             'click #button2': 'button2_clicked'
         },
-        error_notif_template: _.template($('#' + 'error_notifcation_template')
+        template : '#form_template',         
+        options_inner_template : _.template($('#options_template')
             .html()),
-        success_notif_template: _.template($('#' + 'success_notifcation_template')
-            .html()),
-        template : '#form_template',                
+        
+        //would be called when render is called       
         serialize: function(){
-            s_passed = this.options.serialize;
+            var s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
             s_passed["inline"] = (this.inline) ? true: false;
             return s_passed;
         },
-        initialize: function(params) {
-            console.log("ADD/EDIT: params to add/edit view: ");
-            console.log(params);
-            this.view_configs = params.initialize.view_configs;
-            this.appRouter = params.initialize.router;
-            options_inner_template = _.template($('#options_template')
-                .html());
-            this.entity_name = this.view_configs.entity_name;
-            this.final_json = null;
-            
-            
-            // Edit or Add? If Edit, set id on offline model, bind it to fill_form. 
-            // There are two ways in which edit is true - when the ID is given, and the second is when an upload is edited on error.
-            json = null;
+        
+        /* 
+        Identifies the action of this form - add/ edit_id/ edit_json  
+        Sets the result on the view object 
+        this.edit_case_id, this.edit_case_json, this.edit_case
+        */
+        identify_form_action: function(params){
+            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(TODO: can be add too if json is missing id?).
             this.edit_case = false;
             this.edit_id = null;
-            // Edit case: we receive json from Upload
             if (params.model_json) {
                 this.edit_case_json = true; // edit_case_upload
                 this.model_json = params.model_json;
                 this.edit_case = true;
                 this.edit_id = this.model_json.id;
             } else if (params.model_id) {
-
                 this.edit_case_id = true;
                 this.edit_case = true;
                 this.edit_id = params.model_id;
             }
-            // No need for two variables. One is sufficient.
-            if(this.edit_case)
-                this.action = "E"
-            else
-                this.action = "A"            
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+        },
+        
+        /*
+        Reads entity_config and sets basic properties on view object for easy access
+        */
+        identify_form_config: function(params){
+            this.entity_name = params.entity_name;
+            this.entity_config = all_configs[this.entity_name];
+            //default locations - 
+            this.foreign_entities = this.entity_config.foreign_entities;
+            this.inline = this.entity_config.inline;
+            this.bulk = this.entity_config.bulk;
             if(this.edit_case)
             {
-                this.form_template = $('#' + this.view_configs.edit_template_name).html();
-                if(this.view_configs.edit)
+                this.form_template = $('#' + this.entity_config.edit_template_name).html();
+                if(this.entity_config.edit)
                 {
-                    this.foreign_entities = this.view_configs.edit.foreign_entities;
-                    this.inline = this.view_configs.edit.inline;
-                    this.bulk = this.view_configs.edit.bulk;
-                }
-                else
-                {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.edit.foreign_entities;
+                    this.inline = this.entity_config.edit.inline;
+                    this.bulk = this.entity_config.edit.bulk;
                 }
             }
             else
             {
-                this.form_template = $('#' + this.view_configs.add_template_name).html();
-                if(this.view_configs.add)
+                this.form_template = $('#' + this.entity_config.add_template_name).html();
+                if(this.entity_config.add)
                 {
-                    this.foreign_entities = this.view_configs.add.foreign_entities;
-                    this.inline = this.view_configs.add.inline;
-                    this.bulk = this.view_configs.add.bulk;
-                }
-                else
-                {
-                    this.foreign_entities = this.view_configs.foreign_entities;
-                    this.inline = this.view_configs.inline;
-                    this.bulk = this.view_configs.bulk;
+                    this.foreign_entities = this.entity_config.add.foreign_entities;
+                    this.inline = this.entity_config.add.inline;
+                    this.bulk = this.entity_config.add.bulk;
                 }
             }
-
-            // Get foreign entities, create their offline collection to be fetched afterRender, bind them to render_foreign_entity
-            this.f_colls = new Array();
-            _(this)
-                .bindAll('render_foreign_entity');
-            _(this).bindAll('fill_dep_entity');
-            this.f_index = [];
-            this.num_f_elems = 0;
-            this.dependencies = {}; 
-            this.element_entity_map={};
-            this.foreign_elements_rendered = {};
-            this.num_sources = {};
-            for (f_entity in this.foreign_entities) {
-                var generic_collection_offline = Backbone.Collection.extend({
-                    database: indexeddb,
-                    storeName: all_configs[f_entity].entity_name,
+        },
+        
+        /*
+        Relies on view object's context 
+        Gets foreign entities, create their offline collection to be fetched in afterRender
+        Sets up datastructures to setup in-form change events
+        Shamelessly polluting the view object
+        */
+        setup_foreign_elements: function(){
+            this.f_colls = []; //stores the foreign entities' collections
+            //TODO: get rid of this
+            this.f_index = []; //stores the index of an entity to access its collection in f_colls
+            this.source_dependents_map = {}; //stores the dependency mapping between form elements
+            this.element_entity_map={}; //stores the mapping between foreign element and their entity
+            this.foreign_elements_rendered = {};  //stores whether a foreign element has been rendered
+            this.num_sources = {};  //stores the number of sources for a dependent element
+            //create a collection for each distinct entity, put them in this.f_colls, remem their index in f_colls using f_index
+            for(f_entity in this.foreign_entities){
+                var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function(model){
                         return model.get(all_configs[this.storeName].sort_field)
                     }
                 });
-                this.f_index.push(f_entity);    
-                this.f_colls.push(new generic_collection_offline());
-                /*
-                this.f_colls.push(new generic_collection_offline().bind);
-                
-                var f_collection = new generic_collection_offline();
-                f_collection.bind
-                f_colls.push(f_collection);
-                */
-                for(element in this.foreign_entities[f_entity])
+                this.f_index.push(f_entity);
+                this.f_colls.push(f_collection);
+                //create entity_map, dependency map, foreign_elements_rendered, for each foreign element
+                for(var element in this.foreign_entities[f_entity])
                 {
-                    this.num_f_elems++; // total num of f elems
                     this.element_entity_map[element] = f_entity; //created mapping of element - entity
                     this.foreign_elements_rendered[element] = false;
                     // creating source - dependency mapping to be used for in-form events
@@ -5557,50 +5674,127 @@ define('views/form',[
                         var f_ens = this.foreign_entities;
                         var that = this;
                         $.each(dependency,function(index,dep){
-                            var source_entity = dep.source_entity;
                             var source_elm = dep.source_form_element;
-                            var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-                            if(source_elm_id in that.dependencies)
-                                {
-                                    that.dependencies[source_elm_id].push(element);
-                                }    
+                            if(source_elm in that.source_dependents_map)
+                            {
+                                that.source_dependents_map[source_elm].push(element);
+                            }    
                             else{
-                                that.dependencies[source_elm_id] = [];
-                                that.dependencies[source_elm_id].push(element);
+                                that.source_dependents_map[source_elm] = [];
+                                that.source_dependents_map[source_elm].push(element);
                             }
                         });
-                        // console.log("FORM: dependency exists ");
-//                         var f_ens = this.foreign_entities;
-//                         var source_entity = f_ens[f_entity][element].dependency.source_entity;
-//                         var source_elm = f_ens[f_entity][element].dependency.source_form_element;
-//                         var source_elm_id = f_ens[source_entity][source_elm].placeholder;
-//                         var that = this;
-//                         if(source_elm_id in this.dependencies)
-//                             {
-//                                 this.dependencies[source_elm_id].push(element);
-//                             }    
-//                         else{
-//                             this.dependencies[source_elm_id] = [];
-//                             this.dependencies[source_elm_id].push(element);
-//                             // var that = this;
-//                             // this.$el.$('#'+source_elm_id).change(that.fill_dep_entity);
-//                         }
-                        console.log("dependencies = "+JSON.stringify(this.dependencies));    
+                        console.log("source_dependents_map = "+JSON.stringify(this.source_dependents_map));    
                     }
                     
                 }
             }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            
-            
-            _(this)
-                .bindAll('save');
-
         },
+        
+        /*
+        params = {
+            serialiaze:{
+                button1: "...",     //name of first button, not shown if ==""
+                button2: "..."      //name of sec button, not shown if =="" 
+            },
+            entity_name:,           //name of entity to be added/edited
+            model_id:,              //id of model if edit case
+            model_json:,            //json of model to be shown in edit form - used when json!= json(model_id)
+        }
+        */
+        initialize: function(params) {
+            console.log("ADD/EDIT: params to add/edit view: ");
+            console.log(params);
+            this.final_json = null;
+            _.bindAll(this);
+            
+            //read entity_config and sets main properties on view object for easy access
+            this.identify_form_config(params);
 
+            //sets this.edit_case, this.edit_case_id, this.edit_case_json
+            this.identify_form_action(params);  
+
+            //reads this.foreign_entities and setsup the collections, source_dependents_map
+            this.setup_foreign_elements();
+        },
+        
         afterRender: function() {
+            var that = this;
+            
+            //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
+            this.disable_foreign_elements();
+
+            //start in-form change events
+            this.start_change_events();
+            
+            //fetch all foreign collections and render them when all are fetched
+            this.fetch_and_render_foreign_entities();
+
+            //if edit case - fill form with the model    
+            if(this.edit_case)
+                this.render_edit_model();
+
+            //if inline case - render inlines
+            if(this.inline)
+                this.render_inlines();
+            
+            // call validator on the form
+            this.initiate_form_field_validation();
+            
+            this.initiate_form_widgets();
+        },
+        
+        //fetches all foreign collections and renders them when all are fetched
+        fetch_and_render_foreign_entities: function(){
+            var for_entities_fetch_dfds = [] 
+            for (var i = 0; i < this.f_colls.length; i++) {
+                console.log("fetching f coll");
+                var f_dfd = this.f_colls[i].fetch();
+                for_entities_fetch_dfds.push(f_dfd);    
+            }
+            $.when.apply($,for_entities_fetch_dfds)
+                .done(this.render_non_dep_for_elements)
+                .fail(function(){
+                    //TODO: handle error callback
+                    alert("Atleast one foreign entity could not be fetched!");
+                })
+        },
+        
+        //fill non-dependent foreign elements - dependent gets filled on change events
+        render_non_dep_for_elements: function(){
+            console.log("Rendering non dependent f elements");
+            _.each(this.element_entity_map, function(entity,element){
+                if(!this.foreign_entities[entity][element]["dependency"])
+                    this.render_foreign_element(element, this.get_collection_of_element(element).toArray());    
+            }, this);
+        },
+        
+        // fetch offline model and inlines and render them into form
+        render_edit_model: function(){
+            var that = this;
+            if (this.edit_case_json) {
+                this.normalize_json(this.model_json);
+                this.fill_form();           
+            } 
+            else if (this.edit_case_id) 
+            {
+                Offline.fetch_object(this.entity_config.entity_name, "id", this.edit_id)
+                    .done(function(model) {
+                        console.log("EDIT: edit model fetched");
+                        that.model_json = model.toJSON();
+                        that.normalize_json(that.model_json);
+                        that.fill_form();
+                    })
+                    .fail(function() {
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    });
+            }
+        },
+        
+        //disable dropdowns of all foreign elements
+        disable_foreign_elements: function(){
             for (f_entity in this.foreign_entities) {
                 for(element in this.foreign_entities[f_entity])
                 {
@@ -5610,158 +5804,62 @@ define('views/form',[
                     }
                 }
             }
-            
-            //render empty inlines - add case done
-            if(this.inline)
-            {
-                this.$('#inline_header').html($('#'+this.inline.header).html());
-                if(!this.edit_case)
-                    this.append_new_inlines();    
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
-            
-            
-            
-            var that = this;
-            // fetching all foreign collections
-            //TODO: handle error callback
-            for (var i = 0; i < this.f_colls.length; i++) {
-                this.f_colls[i].fetch({
-                    success: function(collection) {
-                        console.log("ADD/EDIT: a foreign coll fetched - "+collection.storeName);
-                        // render foreign collection is called automatically on successful fetch
-                        that.render_foreign_entity(collection,null);
-                    },
-                    error: function() {
-                        //ToDO: error handling
-                        console.log("ERROR: ADD/EDIT: a foreign collection could not be fetched!");
-                    }
-                });
-            }
-            // this.dependencies = {}; 
-//             this.element_entity_map={};
-            this.num_initial_f_entities = 0;
-            var that = this;
-            for(el_id in this.dependencies)
-            {
-                console.log("creating changeevent for - "+el_id);
-                this.$('#'+el_id).change(this.fill_dep_entity);
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            // fetching offline model and inlines
-            var that = this;
-            if (this.edit_case_json) {
-                that.normalize_json(this.model_json);
-                this.fill_form();           //TODO: does it needs to be normalised first ?
-
-            } else if (this.edit_case_id) {
-                Offline.fetch_object(this.view_configs.entity_name, "id", this.edit_id)
-                    .done(function(model) {
-                        console.log("EDIT: edit model fetched");
-                        that.model_json = model.toJSON();
-                        that.normalize_json(that.model_json);
-                        that.fill_form();
-                    })
-                    .fail(function() {
-                        //ToDO: error handling
-                        console.log("ERROR: EDIT: Edit model could not be fetched!");
-                        alert("ERROR: EDIT: Edit model could not be fetched!");
-                    });
-                if(this.inline)
-                {
-                    //TODO: fetching the whole collection. Can this be more effifcient by fetching just the relevant models? Done this way because the foreign field in model is a object and am not yet able to specify a condition on such fields using the I-B adapter.
-                    console.log("FORM:EDIT: Fteching inline collection");
-                    var generic_offline_collection = Backbone.Collection.extend({
-                        database: indexeddb,
-                        storeName: this.inline.entity,
-                    });
-                    this.inline_collection = new generic_offline_collection();
-                    this.inline_collection.fetch({
-                        success: function(collection){
-                            console.log("FORM: EDIT: Inline collection fetched! - "+ collection.storeName);
-                            // var inl_models =  collection.where({
-//                                 that.inline.foreign_attribute.inline_attribute.id : that.edit_id
-//                             });
-                            var inl_models = collection.filter(function(model){
-                               return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
-                            });
-                            console.log(inl_models);
-                            that.fill_inlines(inl_models);
-                        },
-                        error: function(){
-                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
-                            //TODO: error handling
-                        }        
-                    });
-                }
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-            // call validator on the form
-            var context = this;
-            var validate_obj = $.extend(this.view_configs.form_field_validation,{
-                    "submitHandler" : function() {
-                    context.save();
-                }
-            });
-            this.$('form')
-                .validate(validate_obj);
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $(".chzn-select").chosen({'search_contains':true});
-			
-			var eDate = new Date();
-			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
-			
-            $(".date-picker")
-                .datepicker({
-                    format: 'yyyy-mm-dd',
-					startDate: '2009-01-01',
-					endDate: enddate,
-                }).on('changeDate', function(ev){
-                    $(this).datepicker('hide');
-                });
-            $(".time-picker")
-                .timepicker({
-                    minuteStep: 1,
-                    defaultTime: false,
-                    showMeridian: false
-                });                
-            return this;
         },
         
-        append_new_inlines: function(){
+        //render header, empty inlines if add case
+        render_inlines: function(){
+            var that = this;
+            this.$('#inline_header').html($('#'+this.inline.header).html());
+            //if add case put in empty inlines, edit case would get handled when model is being put it
+            if(!this.edit_case)
+                this.append_new_inlines(this.inline.default_num_rows);
+            else if(this.edit_case_id)
+            {
+                console.log("FORM:EDIT: Fteching inline collection");
+                Offline.fetch_collection(this.inline.entity)
+                    .done(function(collection){
+                        var inl_models = collection.filter(function(model){
+                           return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
+                        });
+                        console.log(inl_models);
+                        that.fill_inlines(inl_models);
+                    })
+                    .fail(function(){
+                        console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                    });
+            }
+            //not showing the inlines in case of edit_case_json            
+        },
+        
+        append_new_inlines: function(num_rows){
             var inline_t  = _.template($('#'+this.inline.template).html());
-            // var inline_t = $('#'+this.inline.template).html();
-            for(var i=0;i<this.inline.num_rows;i++)
+            //TODO: gotta start index from the last index already in dom for 'add more rows feature' 
+            for(var i=0;i<num_rows;i++)
             {
                 var tr = $(inline_t({index:i}));
-                this.$('#inline_body').append(tr);    
-                $(tr).on('change', this.switch_validation_for_inlines);
+                this.$('#inline_body').append(tr);
+                tr.on('change', this.switch_validation_for_inlines);
             }
         },
         
-        switch_validation_for_inlines: function(){
-            console.log("tr chenaged");
+        // to prevent validation of empty inline rows
+        switch_validation_for_inlines: function(ev){
+            var elem = ev.delegateTarget;   //get the changed row
             var empty = true;
-            $(this).find(':input').each(function() {
-                console.log($(this).val());
+            $(elem).find(':input').each(function() {
                 if($(this).val())
                     empty = false;
             });
             if(!empty)
             {
-                $(this).find(':input').each(function() {
-                    $(this).removeClass("donotvalidate")
+                $(elem).find(':input').each(function() {
+                    $(this).removeClass("donotvalidate");
                 });
             }
             else
             {
-                $(this).find(':input').each(function() {
-                    $(this).addClass("donotvalidate")
+                $(elem).find(':input').each(function() {
+                    $(this).addClass("donotvalidate");
                 });
             }
         },
@@ -5776,11 +5874,11 @@ define('views/form',[
                 var filled_tr = that.fill_form_elements($(tr), model.toJSON());
                 $(filled_tr).find(':input').removeClass("donotvalidate");
                 that.$('#inline_body').append(filled_tr);
-                $(filled_tr).on('change', that.check_tr);
+                $(filled_tr).on('change', that.switch_validation_for_inlines);
             });
         },    
-
-        // takes a jquery object containgg form elements.Fills all input and select elements with the corrsponding value in json    
+        
+        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json  
         fill_form_elements: function(container, o_json){
             container.attr("model_id", o_json.id);
             container.find(':input').each(function() {
@@ -5802,198 +5900,233 @@ define('views/form',[
             });
             return container;
         },
-        
-        fill_dep_entity: function(ev){
-            var source = $(ev.target).attr("id");
-            console.log("FILLING DEP ENTITIES OF -"+source);
-            for(var i=0; i<this.dependencies[source].length;i++)
+
+        start_change_events: function(){
+            for(element in this.source_dependents_map)
             {
-                //Fully Reset the dependent select element by looking at all its sources.
-                var element = this.dependencies[source][i];
-                var entity = this.element_entity_map[element];
-                var index = this.f_index.indexOf(entity);
-                var collection = this.f_colls[index];
-                var dependencies = this.foreign_entities[entity][element].dependency;
-                var final_models = [];
-                // console.log("FORM:FILLDEPENTITY: F Collection length - "+collection.length+" "+element);
-                var that = this;
-                $.each(dependencies, function(index, dep_desc){
-                    if(collection.length)
-                    {
-                        var dep_attr = dep_desc.dep_attr;
-                        var source_form_element = dep_desc.source_form_element;
-                        var source_entity = dep_desc.source_entity;
-                        var source_placeholder = that.foreign_entities[source_entity][source_form_element].placeholder;
-                        var curr_value = $('#'+source_placeholder).val();
-                        var filtered_models = [];
-                        if(!curr_value)
-                        {
-                            return;
-                        }
-                        if(!(curr_value instanceof Array))
-                        {
-                            v = curr_value;
-                            curr_value = [];
-                            curr_value.push(parseInt(v));
-                        }
-                        else{
-                            $.each(curr_value, function(index,val){
-                                curr_value[index] = parseInt(val);
-                            });
-                        }
-                        if(collection.at(0).get(dep_desc.dep_attr) instanceof Array)
-                        {
-                            // console.log("FORM: FILLDEPENTITY: The dep attribute is an array");
-                            filtered_models = collection.filter(function(model){
-                               var exists = false;
-                               $.each(model.get(dep_desc.dep_attr),function(index, object){
-                                    if(!($.inArray( object.id, curr_value)==-1))
-                                        exists = true;
-                               });
-                               return exists;
-                            });
-                        
-                        }
-                        else{
-                            // console.log("FORM: FILLDEPENTITY: The dep attribute is not an array");
-                            filtered_models = collection.filter(function(model){
-                                var compare = null;
-                                if(typeof model.get(dep_desc.dep_attr) == "object")
-                                    compare = model.get(dep_desc.dep_attr).id; 
-                                else
-                                    compare = model.get(dep_desc.dep_attr)
-                                if(dep_desc.rev_sub_attr)
-                                    {
-                                        var src_entity = dep_desc.source_entity;
-                                        var index = that.f_index.indexOf(src_entity);
-                                        var s_collection = that.f_colls[index];
-                                        var s_model = s_collection.get(curr_value[0]);
-                                        // console.log(s_model);
-                                        var exists = false;
-                                        if(s_model.get(dep_desc.rev_sub_attr) instanceof Array)
-                                        {
-                                            $.each(s_model.get(dep_desc.rev_sub_attr), function(index, src_compare){
-                                                console.log(src_compare+ " "+ compare);
-                                                if(typeof src_compare == "object")
-                                                {
-                                                    if(compare == src_compare.id)
-                                                        exists = true;
-                                                }
-                                                else
-                                                {
-                                                    if(compare == src_compare)
-                                                        exists = true;
-                                                }
-                                            });
-                                        }
-                                        return exists;
-                                    }        
-                                else
-                                    {
-                                        if(!($.inArray(compare, curr_value)==-1))
-                                            exists = true;
-                                        else
-                                            exists = false;
-                                        return exists;
-                                    }            
-                            });
-                        }
-                    }
-                    final_models = final_models.concat(filtered_models);
-                });
-                that.fill_foreign_entity(element, final_models);
-                
+                console.log("creating changeevent for - "+element);
+                this.$('[name='+element+']').change(this.render_dep_for_elements);
             }
+        },
+        
+        initiate_form_field_validation: function(){
+            var that = this;
+            var validate_obj = $.extend(this.entity_config.form_field_validation,{
+                "submitHandler" : function() {
+                     that.save();
+                 }
+            });
+            this.$('form')
+                .validate(validate_obj);
+        },
+        
+        initiate_form_widgets: function(){
+            $(".chzn-select").chosen({'search_contains':true});
+			
+			var eDate = new Date();
+			enddate = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			$(".date-picker")
+                .datepicker({
+                    format: 'yyyy-mm-dd',
+					startDate: '2009-01-01',
+					endDate: enddate,
+                }).on('changeDate', function(ev){
+                    $(this).datepicker('hide');
+                });
             
+            $(".time-picker")
+                .timepicker({
+                    minuteStep: 1,
+                    defaultTime: false,
+                    showMeridian: false
+                });                
+        },
+        
+        get_collection_of_element : function(element){
+            var entity = this.element_entity_map[element];  
+            var index = this.f_index.indexOf(entity);   
+            return this.f_colls[index];   
+        },
+        
+        get_sources_of_element: function(element){
+            var entity = this.element_entity_map[element];  
+            return this.foreign_entities[entity][element].dependency;
+        },
+        
+        get_curr_value_of_element: function(element){
+            return $('[name='+element+']').val();
+        },
+        
+        render_dep_for_elements: function(ev){
+            var source = $(ev.target).attr("name"); //source changed
+            console.log("FILLING DEP ENTITIES OF -"+source);
+            // Iterate over its dependents
+            _.each(this.source_dependents_map[source], function(dep_el){
+                var filtered_models = this.filter_dep_for_element(dep_el);
+                this.render_foreign_element(dep_el, filtered_models);
+            }, this);
         },    
+        
+        // Fully Reset the dependent foreign element by looking at all its sources.  
+        filter_dep_for_element: function(element){
+            //get dependent element's entity's collection - to be filtered
+            var dep_collection = this.get_collection_of_element(element);   
+            var all_sources = this.get_sources_of_element(element);   // get all sources of this element - to filter by
+            var final_models = [];  //model array to be finally inserted into dom
+            var that = this;
+            
+            if(!dep_collection.length)
+                return [];
+                
+            $.each(all_sources, function(index, dep_desc){
+                var dep_attr = dep_desc.dep_attr;
+                var source_form_element = dep_desc.source_form_element;
+                var filtered_models = [];
+                
+                //LIMITS: source can't be an expanded right now, bcoz won't get its value
+                var source_curr_value = that.get_curr_value_of_element(source_form_element);   
+                if(!source_curr_value)
+                    return;
+                else if(!(source_curr_value instanceof Array))  
+                {
+                    //if source is single select - convert its value to array - like a multiselect
+                    var temp = source_curr_value;
+                    source_curr_value = [];    
+                    source_curr_value.push((temp));
+                }
+                
+                // many-to-many relation between source and dependent
+                if(dep_collection.at(0).get(dep_desc.dep_attr) instanceof Array)
+                {
+                    filtered_models = dep_collection.filter(function(model){
+                       var exists = false;
+                       //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                       $.each(model.get(dep_desc.dep_attr),function(index, object){
+                            if($.inArray(String(object.id), source_curr_value)>-1)
+                                exists = true;
+                       });
+                       return exists;
+                    });
+                }
+                else
+                {
+                    filtered_models = dep_collection.filter(function(model){
+                        var exists = false;
+                        var compare = null;
+                        if(typeof model.get(dep_desc.dep_attr) == "object")
+                            compare = model.get(dep_desc.dep_attr).id; 
+                        else
+                            compare = model.get(dep_desc.dep_attr)
+                            
+                        if(dep_desc.src_attr&&dep_desc.src_attr!="id")
+                        {
+                            var s_collection = that.get_collection_of_element(source_form_element);
+                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                            if(s_model.get(dep_desc.src_attr) instanceof Array)
+                            {
+                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare){
+                                    if(compare == src_compare.id)
+                                        exists = true;
+                                });
+                            }
+                            return exists;
+                        }        
+                        else
+                        {
+                            if(!($.inArray(String(compare), source_curr_value)==-1))
+                                exists = true;
+                            return exists;
+                        }            
+                    });
+                }
+                final_models = final_models.concat(filtered_models);
+            });
+            return final_models;
+        },
           
-        fill_foreign_entity: function(element, model_array){
+        filter_model_array: function(model_array, filter){
+            var filter_attr = filter.attr;
+            var filter_value = filter.value;
+            filtered = [];
+            $.each(model_array, function(index, obj){
+                //TODO: assumed to be an object
+                if(obj.get(filter_attr).id == filter_value)
+                {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+          
+        render_foreign_element: function(element, model_array){
             console.log("FILLING FOREIGN ENTITY - "+element);
+            var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
-            // this.num_f_elems--; 
-            var filter = f_entity_desc.filter;
-            if(filter)
+            
+            //if any defined, filter the model array before putting into dom 
+            if(f_entity_desc.filter)
             {
-                // console.log("FILTERING FOREIGN ENTITY!");
-                var filter_attr = filter.attr;
-                var filter_value = filter.value;
-                filtered = [];
-                $.each(model_array, function(index, obj){
-                    if(obj.get(filter_attr).id == filter_value)
-                    {
-                        filtered.push(obj);
-                    }
-                });
-                model_array = filtered;
+                model_array = this.filter_model_array(model_array, f_entity_desc.filter);
             }
-            if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+            
+            if(f_entity_desc.expanded)
             {
-                console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
-                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                $f_el.html('');
-                var id_field = "id"
-                if(f_entity_desc.id_field)
-                     id_field = f_entity_desc.id_field;
-                var entity = this.element_entity_map[element];
-                var index = this.f_index.indexOf(entity);
-                var collection = this.f_colls[index];
+                if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+                {
+                    console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
+                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                    $f_el.html('');
+                    var id_field = "id"
+                    if(f_entity_desc.id_field)
+                         id_field = f_entity_desc.id_field;
+                    var entity = this.element_entity_map[element];
+                    var index = this.f_index.indexOf(entity);
+                    var collection = this.f_colls[index];
                 
-                $.each(this.model_json[element], function(index, f_json){
-                    // console.log(f_json[id_field]);
-                    // console.log(collection);
-                    model = collection.get(f_json[id_field]);
-                    if(model)
-                    {
-                        var t_json = model.toJSON();
+                    $.each(this.model_json[element], function(index, f_json){
+                        model = collection.get(f_json[id_field]);
+                        if(model)
+                        {
+                            var t_json = model.toJSON();
+                            t_json["index"] = index; 
+                            $.each(f_entity_desc.expanded.extra_fields, function(index,field){
+                                t_json[field] = f_json[field];
+                            });
+                            console.log(t_json);
+                            $f_el.append(expanded_template(t_json));    
+                        }
+                    });
+                    this.initiate_form_widgets();
+                    this.expanded = element;
+                    if(this.num_sources[element]<=0)
+                        this.foreign_elements_rendered[element] = true;
+                }
+                else if(f_entity_desc.expanded)
+                {
+                    console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
+                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                    $f_el.html('');
+                    $.each(model_array,function(index, f_model){
+                        var t_json = f_model.toJSON();
                         t_json["index"] = index; 
-                        $.each(f_entity_desc.expanded.extra_fields, function(index,field){
-                            t_json[field] = f_json[field];
-                        });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));    
-                    }
-                });
-                $(".chzn-select").chosen();
-                $(".date-picker")
-                    .datepicker({
-                        format: 'yyyy-mm-dd'
-                    }).on('changeDate', function(ev){
-                        $(this).datepicker('hide');
                     });
-                this.expanded = element;
-                if(this.num_sources[element]<=0)
-                    this.foreign_elements_rendered[element] = true;
+                    this.expanded = element;
+                    this.initiate_form_widgets();
+                }    
             }
-            else if(f_entity_desc.expanded)
+            else
             {
-                console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
-                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                $f_el.html('');
-                $.each(model_array,function(index, f_model){
-                    var t_json = f_model.toJSON();
-                    t_json["index"] = index; 
-                    $f_el.append(expanded_template(t_json));    
-                });
-                this.expanded = element;
-                $(".chzn-select").chosen();
-                $(".date-picker")
-                    .datepicker({
-                        format: 'yyyy-mm-dd'
-                    }).on('changeDate', function(ev){
-                        $(this).datepicker('hide');
-                    });
-                // this.foreign_elements_rendered[element] = true;
-            }
-            else{
                 console.log("NOT EXPANDED");
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if($f_el.is('select[multiple]'))
                     $f_el.html('');    
                 else
-                    $f_el.html(options_inner_template({
+                    $f_el.html(this.options_inner_template({
                             id: "",
                             name: "------------"
                     }));
@@ -6001,73 +6134,32 @@ define('views/form',[
                     var f_json = f_model; 
                     if(f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
-                    $f_el.append(options_inner_template({
+                    $f_el.append(that.options_inner_template({
                         id: parseInt(f_json["id"]),
                         name: f_json[f_entity_desc.name_field]
                     }));    
                 });
-                // console.log("ADD/EDIT: " + f_entity_desc.placeholder + " populated");
-                 $f_el.prop("disabled", false);
-                 $f_el.trigger("liszt:updated");
-            }
-            // if(this.edit_case && this.num_f_elems>=0)
-//             {
-//                 console.log("SYPHONING");
-//                 Backbone.Syphon.deserialize(this, this.model_json);
-//             }
-            if(this.edit_case && !this.foreign_elements_rendered[element] &&!f_entity_desc.expanded)
-            {
-                var t_json = {};
-                t_json[element] = this.model_json[element]
-                    
-                // t_json = {t_json};
-                // Backbone.Syphon.deserialize(this, t_json);
-                // console.log("FORM: putting in value of -"+element);
-                this.$('form [name='+element+']').val(this.model_json[element]).change();
-                this.$('form [name='+element+']').trigger("liszt:updated");
-                if(this.num_sources[element]<=0)
-                    this.foreign_elements_rendered[element] = true;
+                $f_el.prop("disabled", false);
+                $f_el.trigger("liszt:updated");
+
+                if(this.edit_case && !this.foreign_elements_rendered[element])
+                {
+                    this.$('form [name='+element+']').val(this.model_json[element]).change();
+                    this.$('form [name='+element+']').trigger("liszt:updated");
+                    if(this.num_sources[element]<=0)
+                        this.foreign_elements_rendered[element] = true;
+                }
             }
         },
                         
-        render_foreign_entity: function(collection, options) {
-            console.log(this.num_f_elems);
-            // console.log("ADD/EDIT: rendering foreign entity");
-            for(element in this.foreign_entities[collection.storeName])
-            {
-                this.num_f_elems--; 
-                
-            }
-            
-            if(this.num_f_elems==0)
-            {
-                for(element in this.foreign_elements_rendered)
-                {
-                    var entity = this.element_entity_map[element];
-                    if(this.foreign_entities[entity][element]["dependency"])
-                    {
-                
-                    }
-                    else{
-                        var index = this.f_index.indexOf(entity);
-                        var collection1 = this.f_colls[index];
-                        this.fill_foreign_entity(element, collection1.toArray());
-                    }
-                }
-            }   
-        },
-
         normalize_json: function(d_json){
             console.log("FORM: Before Normalised json = "+JSON.stringify(d_json));      
             var f_entities = this.foreign_entities;
             for (member in f_entities) {
                 for(element in f_entities[member])
                 {
-                    if(this.foreign_entities[member][element].expanded)
+                    if((element in d_json)&&!(f_entities[member][element].expanded)) 
                     {
-                        
-                    }
-                    else if (element in d_json) {
                         if (d_json[element] instanceof Array) {
                             var el_array = [];
                             $.each(d_json[element],function(index,object){
@@ -6083,7 +6175,6 @@ define('views/form',[
             }
             console.log("FORM: Normalised json = "+JSON.stringify(d_json));      
             return d_json;
-            
         },
             
         denormalize_json: function(n_json){
@@ -6402,37 +6493,16 @@ define('views/form',[
                 this.final_json = $.extend(this.model_json, this.final_json);
             }
 
-            ev_res = {
-                type: "upload_error_resolved",
-                context: this,
-                discard: false
-            };
-
-            ev_save = {
-                type: "save_clicked",
+            var ev_data = {
                 context: this,
             };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_save);
-            this.trigger("save_clicked",ev_res);
+            this.trigger("save_clicked",ev_data);
         },
 
         button2_clicked: function() {
-            ev_res = {
-                type: "upload_error_resolved",
+            var ev_data = {
                 context: this,
-                discard: true
             };
-
-            ev_button2 = {
-                type: "button2_clicked",
-                context: this,
-                discard: true
-            };
-
-            $.event.trigger(ev_res);
-            $.event.trigger(ev_button2);
             this.trigger("button2_clicked",ev_res);
         }
 
@@ -6443,17 +6513,28 @@ define('views/form',[
     return ShowAddEditFormView;
 });
 
-define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
+define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
 
 ], function($, configs, pa, indexeddb) {
-    var offline_to_online = {
-        
-        convert : function(json, f_entities) {
+    var convert_namespace = {
+        which_to_which: "offlinetoonline",
+        conv_dict : {
+            "onlinetooffline" : {
+                fetch_on : "online_id",
+                get_this : "id"
+            },
+            "offlinetoonline" : {
+                fetch_on : "id",
+                get_this : "online_id"
+            }
+        },
+        convert : function(json, f_entities, which_to_which) {
             var dfd = new $.Deferred();
+            this.which_to_which = which_to_which;
             var that = this;
-            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
+            console.log("FORMCONTROLLER:convert_namespace: foreign entities for the model under consideration" + JSON.stringify(f_entities));
             var online_json = $.extend(true, null, json); // making a deep copy of object json
-            console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: json before converting" + JSON.stringify(json));
+            // console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             var field_dfds = [];
             for (member in f_entities) {
                 for(element in f_entities[member])
@@ -6462,7 +6543,7 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                     if (!(element in online_json)) {
                         continue;
                     }
-                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: converting " + element + " offline to online.");
+                    // console.log("FORMCONTROLLER:convert_namespace: converting " + element + " offline to online.");
                     var id_field = "id";
                     if(f_entities[member][element].id_field)
                     {
@@ -6472,14 +6553,14 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                     
                     if(online_json[element] instanceof Array)   //multi-select dropdown
                     {
-                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is multiselect.");
+                        // console.log("FORMCONTROLLER:convert_namespace: This foreign element is multiselect.");
                         $.each(online_json[element],function(index,object){
                             field_dfds.push(that.convert_object(object,field_desc));
                         });
                     }
                     else   //single-select dropdown
                     {
-                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is single select.");
+                        // console.log("FORMCONTROLLER:convert_namespace: This foreign element is single select.");
                         field_dfds.push(that.convert_object(online_json[element],field_desc));
                     }
                 
@@ -6492,7 +6573,7 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                             {
                                 var entity = f_entities[member][element].expanded.foreign_fields[field].entity_name;
                                 field_desc = {entity_name: entity, id_attribute:"id"};
-                                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: This foreign element is expanded");
+                                // console.log("FORMCONTROLLER:convert_namespace: This foreign element is expanded");
                                 $.each(online_json[element],function(index,object){
                                     var field_object = object[field];
                                     field_dfds.push(that.convert_object(field_object,field_desc));
@@ -6507,17 +6588,17 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
             {
                 $.when.apply($,field_dfds)
                     .done(function(){
-                        console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Converted to this: "+JSON.stringify(online_json));
+                        // console.log("FORMCONTROLLER:convert_namespace: Converted to this: "+JSON.stringify(online_json));
                         return dfd.resolve( {on_json:online_json, off_json:json} );
                     })
                     .fail(function(){
-                        console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
+                        // console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
                         return dfd.reject();
                     });
             }
             else
             {
-                console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Nothing to convert.");
+                console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
                 return dfd.resolve( {on_json:online_json, off_json:json} );
             }
             return dfd.promise();
@@ -6533,22 +6614,22 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
                 // attribute: element    
             });
             var f_model = new generic_model_offline();
-            f_model.set("id", parseInt(obj[field_desc.id_attribute]));
+            f_model.set(this.conv_dict[this.which_to_which].fetch_on, parseInt(obj[field_desc.id_attribute]));
             var that = this;
-            console.log("Fetching ths model - ");
-            console.log(f_model);
+            // console.log("Fetching ths model - ");
+            // console.log(f_model);
             f_model.fetch({
                 success: function(model) {
-                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                    obj[field_desc.id_attribute] = model.get("online_id"); 
-                    // console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: object after converting" + JSON.stringify(obj));
+                    // console.log("FORMCONTROLLER:convert_namespace: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
+                    obj[field_desc.id_attribute] = model.get(that.conv_dict[that.which_to_which].get_this); 
+                    // console.log("FORMCONTROLLER:convert_namespace: object after converting" + JSON.stringify(obj));
                     return dfd.resolve();
                 },
                 error: function(model, error) {
-                    console.log("FORMCONTROLLER:OFFLINE_TO_ONLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
+                    // console.log("FORMCONTROLLER:convert_namespace: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
                     //TODO: OOPS! What should be done now????
-                    console.log(error);
-                    alert("unexpected error. check console log "+error);
+                    // console.log(error);
+                    // alert("unexpected error. check console log "+error);
                     return dfd.reject();
                     // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
                     // $(notifs_view.el)
@@ -6563,7 +6644,7 @@ define('offline_to_online',['jquery', 'configs', 'backbone', 'indexeddb_backbone
     }   
     
     
-    return offline_to_online;
+    return convert_namespace;
 
 });
 
@@ -6651,7 +6732,7 @@ define('views/upload',[
   'configs',
   'views/form',
   'collections/upload_collection',
-  'offline_to_online',
+  'convert_namespace',
   'offline_utils',
   'online_utils',
   'indexeddb-backbone',
@@ -6659,7 +6740,7 @@ define('views/upload',[
   // Using the Require.js text! plugin, we are loaded raw text
   // which will be used as our views primary template
   // 'text!templates/project/list.html'
-], function(jquery,underscore,layoutmanager, configs, Form, upload_collection, OfflineToOnline, Offline, Online){
+], function(jquery,underscore,layoutmanager, configs, Form, upload_collection, ConvertNamespace, Offline, Online){
     
     var UploadView = Backbone.Layout.extend({
         
@@ -6824,7 +6905,7 @@ define('views/upload',[
                         console.log("FAILED TO UPLOAD AN OBJECT: ");
                         console.log(error);
                         //object to be uploaded doesn't exists in offline anymore
-                        //offlineTOonline failed
+                        //ConvertNamespace failed
                         //online_id couldn't be injected
                         //The object discarded in upload error form could not be deleted
                     })
@@ -6869,7 +6950,7 @@ define('views/upload',[
             Offline.fetch_object(this.get_entity_name(up_model), "id", this.get_offline_id(up_model))  
                 .done(function(off_model){
                     console.log("Off model fetched - "+JSON.stringify(off_model.toJSON()));
-                    OfflineToOnline.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model))
+                    ConvertNamespace.convert(that.get_json(up_model), that.get_foreign_field_desc(up_model), "offlinetoonline")
                         .done(function(on_off_obj){
                             if(that.get_action(up_model) == "A")
                                 {
@@ -6901,7 +6982,7 @@ define('views/upload',[
                                 });    
                         })
                         .fail(function(error){
-                            console.log("UPLOAD: Not uploading object coz offlineTOonline failed");
+                            console.log("UPLOAD: Not uploading object coz ConvertNamespace failed");
                             dfd.reject(error);
                         });    
                 })
@@ -6922,11 +7003,7 @@ define('views/upload',[
                     button1: "Save again",
                     button2: "Discard"
                 },
-                initialize: {
-                    view_configs: configs[entity_name],
-                    router: null
-                },
-                model_id: null,
+                entity_name: entity_name,
                 model_json: json
             });
             p.render();
@@ -7001,141 +7078,16 @@ define('views/upload',[
   // Our module now returns our view
   return UploadView;
 });
-define('online_to_offline',['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
-
-], function($, configs, pa, indexeddb) {
-    var online_to_offline = {
-        
-        convert : function(json, f_entities) {
-            var dfd = new $.Deferred();
-            var that = this;
-            // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: foreign entities for the model under consideration" + JSON.stringify(f_entities));
-            var online_json = $.extend(true, null, json); // making a deep copy of object json
-            // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: json before converting" + JSON.stringify(json));
-            var field_dfds = [];
-            for (member in f_entities) {
-                for(element in f_entities[member])
-                {
-                    // If this foreign entity is not present in the current object, continue.
-                    if (!(element in online_json)) {
-                        continue;
-                    }
-                    // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: converting " + element + " offline to online.");
-                    var id_field = "id";
-                    if(f_entities[member][element].id_field)
-                    {
-                        id_field  = f_entities[member][element].id_field;
-                    }
-                    var field_desc = {entity_name:member, id_attribute:id_field};
-                    
-                    if(online_json[element] instanceof Array)   //multi-select dropdown
-                    {
-                        // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: This foreign element is multiselect.");
-                        $.each(online_json[element],function(index,object){
-                            field_dfds.push(that.convert_object(object,field_desc));
-                        });
-                    }
-                    else   //single-select dropdown
-                    {
-                        // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: This foreign element is single select.");
-                        field_dfds.push(that.convert_object(online_json[element],field_desc));
-                    }
-                
-                    if(f_entities[member][element].expanded&&!f_entities[member][element].only_render) //expandeds
-                    {
-                        if(f_entities[member][element].expanded.foreign_fields) //contains foreign fields
-                        {
-                            // TODO: proces these foreign fields
-                            for(field in f_entities[member][element].expanded.foreign_fields) //convert each field
-                            {
-                                var entity = f_entities[member][element].expanded.foreign_fields[field].entity_name;
-                                field_desc = {entity_name: entity, id_attribute:"id"};
-                                // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: This foreign element is expanded");
-                                $.each(online_json[element],function(index,object){
-                                    var field_object = object[field];
-                                    if(field_object[id_field])
-                                    {
-                                        field_dfds.push(that.convert_object(field_object,field_desc));
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            
-            if(field_dfds.length)
-            {
-                $.when.apply($,field_dfds)
-                    .done(function(){
-                        // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: Converted to this: "+JSON.stringify(online_json));
-                        return dfd.resolve( {on_json:json, off_json:online_json} );
-                    })
-                    .fail(function(error){
-                        // console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
-                        return dfd.reject("Atleast one of the foreign objects could not be resolved!");
-                    });
-            }
-            else
-            {
-                // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: Nothing to convert.");
-                return dfd.resolve( {on_json:json, off_json:online_json} );
-            }
-            return dfd.promise();
-        },
-        
-        convert_object: function(obj, field_desc){
-            var dfd = new $.Deferred();
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: field_desc.entity_name,
-                // attribute: element    
-            });
-            var f_model = new generic_model_offline();
-            f_model.set("online_id", parseInt(obj[field_desc.id_attribute]));
-            var that = this;
-            // console.log("Fetching ths model - ");
-            // console.log(f_model);
-            f_model.fetch({
-                success: function(model) {
-                    // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: The foreign entity with the key mentioned fetched from IDB- " + JSON.stringify(model.toJSON()));
-                    obj[field_desc.id_attribute] = model.get("id"); 
-                    // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: object after converting" + JSON.stringify(obj));
-                    return dfd.resolve();
-                },
-                error: function(model, error) {
-                    // console.log("FORMCONTROLLER:ONLINE_TO_OFFLINE: Unexpected Error : The foreign entity with the key mentioned does not exist anymore.");
-                    //TODO: OOPS! What should be done now????
-                    // console.log(error);
-                    // alert("unexpected error. check console log "+error);
-                    return dfd.reject(error);
-                    // that.form.show_errors("A foreign entity referenced does not exists in IDB. ")
-                    // $(notifs_view.el)
-//                         .append(that.error_notif_template({
-//                         msg: "A foreign entity referenced does not exists in IDB."
-//                     }));
-                }
-            });
-            return dfd.promise();
-        }    
-    
-    }   
-    
-    
-    return online_to_offline;
-
-});
-
 define('views/incremental_download',[
   'jquery',
   'underscore',
   'layoutmanager',
   'indexeddb_backbone_config',
   'configs',
-  'online_to_offline',
+  'convert_namespace',
   'indexeddb-backbone',
   'bootstrapjs'                            
-], function(jquery,underscore,layoutmanager,indexeddb, all_configs, OnlineToOffline){
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace){
     
     var IncrementalDownloadView = Backbone.Layout.extend({
         
@@ -7455,7 +7407,7 @@ define('views/incremental_download',[
                     {
                         that.fetch_from_online(that.get_online_id(incd_o))
                             .done(function(on_model){
-                                OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
+                                ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
                                     .done(function(on_off_obj){
                                         that.add_offline(on_off_obj.off_json)
                                             .done(function(off_model){
@@ -7470,7 +7422,7 @@ define('views/incremental_download',[
                                             });    
                                     })
                                     .fail(function(error){
-                                        // console.log("INCD:ADD: Not saving object to offlinedb coz onlineTOoffline failed");
+                                        // console.log("INCD:ADD: Not saving object to offlinedb coz ConvertNamespace failed");
                                         dfd.reject(error);
                                     });    
                             })
@@ -7493,7 +7445,7 @@ define('views/incremental_download',[
                 .done(function(off_model){
                     that.fetch_from_online(that.get_online_id(incd_o))
                         .done(function(on_model){
-                            OnlineToOffline.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o))
+                            ConvertNamespace.convert(on_model.toJSON(), that.get_foreign_field_desc(incd_o), "onlinetooffline")
                                 .done(function(on_off_obj){
                                     that.edit_offline(off_model, on_off_obj.off_json)
                                         .done(function(off_model){
@@ -7507,7 +7459,7 @@ define('views/incremental_download',[
                                         });    
                                 })
                                 .fail(function(error){
-                                    // console.log("INCD:EDIT: Not saving object to offlinedb coz onlineTOoffline failed");
+                                    // console.log("INCD:EDIT: Not saving object to offlinedb coz ConvertNamespace failed");
                                     dfd.reject(error);
                                 });    
                         })
@@ -8392,88 +8344,74 @@ h?1:e>h?-1:0},"date-pre":function(e){e=Date.parse(e);if(isNaN(e)||""===e)e=Date.
 for(var k=1;k<e.length;k++){h=e.charAt(k);if(-1=="0123456789.".indexOf(h))return null;if("."==h){if(j)return null;j=!0}}return"numeric"},function(e){var h=Date.parse(e);return null!==h&&!isNaN(h)||"string"===typeof e&&0===e.length?"date":null},function(e){return"string"===typeof e&&-1!=e.indexOf("<")&&-1!=e.indexOf(">")?"html":null}]);h.fn.DataTable=j;h.fn.dataTable=j;h.fn.dataTableSettings=j.settings;h.fn.dataTableExt=j.ext};"function"===typeof define&&define.amd?define('datatable',["jquery"],L):jQuery&&!jQuery.fn.dataTable&&
 L(jQuery)})(window,document);
 
-define('views/list',[
-  'jquery',
-  'underscore',
-  'datatable',
-  'indexeddb_backbone_config',
-  'layoutmanager',
-  'views/notification',
-  'indexeddb-backbone'      
- // Using the Require.js text! plugin, we are loaded raw text
-  // which will be used as our views primary template
-  // 'text!templates/project/list.html'
-], function($, pass, pass, indexeddb, layoutmanager, notifs_view){
-    
+define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layoutmanager', 'views/notification', 'configs', 'offline_utils', 'indexeddb-backbone'], function($, pass, pass, indexeddb, layoutmanager, notifs_view, all_configs, Offline) {
+
     var ListView = Backbone.Layout.extend({
-        
+
         template: "#list_view_template",
-        
+
         initialize: function(params) {
-            this.view_configs = params.initialize.view_configs;
-            generic_collection = Backbone.Collection.extend({
-                database: indexeddb,
-                storeName: this.view_configs.entity_name,
-            });
-            this.collection = new generic_collection();
-            this.table_header = $('#' + params.initialize.view_configs.table_template_name)
+            this.entity_config = all_configs[params.entity_name];
+            //TODO: if !entity_config, show 404 etc?
+            //TODO: instead of html of header, we can ask for coloumn headers as array
+            this.table_header = $('#' + this.entity_config.list_table_header_template)
                 .html();
-            this.item_template = _.template($('#' + params.initialize.view_configs.list_item_template_name)
-            .html());
+            this.row_template = _.template($('#' + this.entity_config.list_table_row_template)
+                .html());
+            _.bindAll(this); //now context of all fuctions in this view would always be view object
             this.render();
         },
-        
-        serialize:function(){
-          return { 
-              header_name: this.view_configs.page_header, 
-              table_header: this.table_header
-           };  
+
+        serialize: function() {
+            return {
+                page_header: this.entity_config.page_header,
+                table_header: this.table_header
+            };
         },
-        
+
         afterRender: function() {
-            /* Work with the View after render. */
-			$("#loaderimg").show();
-            var that = this;
-            this.collection.fetch({
-                success: function(){
-                    that.render_data();
-                },
-                error: function(){
-                    notifs_view.add_alert({
-                        notif_type: "error",
-                        message: "Error reading data for listing."
-                    });
-                }
+            $("#loaderimg")
+                .show();
+            Offline.fetch_collection(this.entity_config.entity_name)
+                .done(this.render_data)
+                .fail(function() {
+                notifs_view.add_alert({
+                    notif_type: "error",
+                    message: "Error reading data for listing."
+                });
             });
         },
 
-        render_data: function() {
+        render_data: function(entity_collection) {
             console.log("in render_data...change in collection...rendering list view");
             tbody = $('<tbody>');
             tbody.html('');
-            this.collection.each(function(model) {
-                tbody.append(this.item_template(model.toJSON()));
+            entity_collection.each(function(model) {
+                tbody.append(this.row_template(model.toJSON()));
             }, this);
-            this.$('#list_table').append(tbody);
-			$("#loaderimg").hide();
-            this.$('#list_table').dataTable();
-            
+            this.$('#list_table')
+                .append(tbody);
+            this.$('#list_table')
+                .dataTable();
+            $("#loaderimg")
+                .hide();
+
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");
             //     $tbody.html('');
             //     var all_items= '';
             //     this.collection.each(function(model) {
-            //         all_items+=(this.item_template(model.toJSON()));
+            //         all_items+=(this.row_template(model.toJSON()));
             //     }, this);
             //     // console.log(all_items);
             //     $tbody.html(all_items);
             ////////////
-            
+
             //alternate 2 - using a separate view for each row
             //     this.collection.each(function(model) {
             //         tbody.append(new ListItemView({
             //             model: model,
-            //             view_configs: this.view_configs,
+            //             entity_config: this.entity_config,
             //             appRouter: this.appRouter
             //             
             //         })
@@ -8482,13 +8420,11 @@ define('views/list',[
             //     }, this);
             ////////////
         },
-        
+
     });
-    
-    
-  // Our module now returns our view
-  return ListView;
+    return ListView;
 });
+
 define('views/form_controller',[
     'jquery', 
     'underscore', 
@@ -8498,11 +8434,11 @@ define('views/form_controller',[
     'configs', 
     'views/form', 
     'collections/upload_collection', 
-    'offline_to_online', 
+    'convert_namespace', 
     'offline_utils', 
     'online_utils',
     'indexeddb-backbone'
-    ], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, OfflineToOnline, Offline, Online) {
+    ], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
 
     // FormController: Brings up the Add/Edit form
     
@@ -8516,35 +8452,37 @@ define('views/form_controller',[
     var FormControllerView = Backbone.Layout.extend({
 
         initialize: function(params) {
-            console.log("FORMCONTROLLER: initializing a new object");
+            console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
-            console.log(this.params);
-            console.log("FORMCONTROLLER: upload_collection recvd - ")
-            console.log(upload_collection.models);   
-            _(this)
-                .bindAll('on_save');
-            _(this)
-                .bindAll('on_button2');
-            $(document)
-                .on("save_clicked", this.on_save);
-            $(document)
-                .on("button2_clicked", this.on_button2);
-             
-
+            _.bindAll(this);
+            // this.render();
         },
         template: "<div><div id = 'form'></div></div>",
-        
+
+        //setting up the form view
         beforeRender: function() {
+            console.log(this.params);
+            this.params = $.extend(this.params,{
+                serialize: {
+                    button1: "Save and Add Another",
+                    button2: null
+                }
+            });
             // #form is the id of the element inside in template where the new view will be inserted.
-            this.setView("#form", new Form(this.params));
+            var form_v = new Form(this.params);
+            this.setView("#form", form_v);
+            this.listenTo(form_v, 'save_clicked', this.on_save);
+            this.listenTo(form_v, 'button2_clicked', this.on_button2);
         },
         
+        /*Called when form view sends save_clicked event. 
+        Identifies type of final_json and saves it
+        After Save is finished calls an after_save function
+        */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
-            e.stopPropagation();
-            this.form = e.context;
+            this.form = e.context;  //event contains the form view object itself
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
-            
             //separate inlines from final json
             if(this.form.inline)
             {
@@ -8555,102 +8493,89 @@ define('views/form_controller',[
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             
             var that = this; 
-            if(that.is_uploadqueue_empty() && that.is_internet_connected())
+            var save_complete_dfds = [];    //stores dfds of all objects bieng saved in this form
+            if(this.form.bulk)
             {
-                console.log("FORMCONTROLLER: the uploadqueue is empty and internet connected");
-                if(this.form.bulk)
-                {
-                    $.each(this.form.final_json.bulk, function(ind, obj){
-                        OfflineToOnline.convert(obj, that.form.bulk.foreign_fields)
-                            .done(function(on_off_jsons){
-                                that.save_when_online(on_off_jsons)
-                                    .done(function(msg){
-                                        notifs_view.add_alert({
-                                            notif_type: "success",
-                                            message: msg
-                                        });
-                                    })
-                                    .fail(function(error){
-                                        notifs_view.add_alert({
-                                            notif_type: "error",
-                                            message: error
-                                        });
-                                    });
-                            })
-                            .fail(function(){
-                                notifs_view.add_alert({
-                                    notif_type: "error",
-                                    message: "Failed to save form. OfflineToOnline Failed."
-                                });
-                            });
-                    });
-                }
-                else
-                {
-                    OfflineToOnline.convert(this.form.final_json,this.form.foreign_entities)
-                        .done(function(on_off_jsons){
-                            that.save_when_online(on_off_jsons)
-                                .done(function(msg){
-                                    notifs_view.add_alert({
-                                        notif_type: "success",
-                                        message: msg
-                                    });
-                                    that.after_save_finished(that.form.entity_name);
-                                })
-                                .fail(function(error){
-                                    notifs_view.add_alert({
-                                        notif_type: "error",
-                                        message: error
-                                    });    
-                                });                            
-                        })
-                        .fail(function(){
-                            notifs_view.add_alert({
-                                notif_type: "error",
-                                message: "Failed to save form. OfflineToOnline Failed."
-                            });
-                        });
-                }
-            }
-            else
-            {
-                if(this.form.bulk)
-                {
-                    $.each(this.form.final_json.bulk, function(ind, obj){
-                        that.save_when_offline(that.form.entity_name, obj)
-                            .done(function(msg){
-                                notifs_view.add_alert({
-                                    notif_type: "success",
-                                    message: msg
-                                });
-                            })
-                            .fail(function(err){
-                                notifs_view.add_alert({
-                                    notif_type: "success",
-                                    message: err
-                                });
-                            });
-                    });
-                }
-                else
-                {
-                    this.save_when_offline(this.form.entity_name, this.form.final_json)
+                /*Save each object in bulk form individually*/
+                $.each(this.form.final_json.bulk, function(ind, obj){
+                    var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
+                    save_object_dfd
                         .done(function(msg){
                             notifs_view.add_alert({
                                 notif_type: "success",
                                 message: msg
                             });
-                            that.after_save_finished(that.form.entity_name);
                         })
-                        .fail(function(err){
+                        .fail(function(error){
                             notifs_view.add_alert({
                                 notif_type: "error",
-                                message: err
-                            });
+                                message: error
+                            });    
                         });
-                }
+                    save_complete_dfds.push(save_object_dfd);
+                });
             }
+            else
+            {
+                var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_entities, this.form.entity_name);
+                save_object_dfd
+                    .done(function(msg){
+                        notifs_view.add_alert({
+                            notif_type: "success",
+                            message: msg
+                        });
+                    })
+                    .fail(function(error){
+                        notifs_view.add_alert({
+                            notif_type: "error",
+                            message: error
+                        });    
+                    });
+                save_complete_dfds.push(save_object_dfd);                                
+            }
+            
+            //When all objects in form are saved...
+            $.when.apply($,save_complete_dfds)
+                .done(function(){
+                    that.after_save(that.form.entity_name);
+                })
         },
+        
+        save_object: function(json, foreign_entities, entity_name){
+            //TODO: check mode and call corresponding func
+            var dfd = new $.Deferred();
+            var that =  this;
+            if(this.is_uploadqueue_empty() && this.is_internet_connected())
+            {
+                //Online mode
+                ConvertNamespace.convert(json, foreign_entities, "offlinetoonline")
+                    .done(function(on_off_jsons){
+                        that.save_when_online(on_off_jsons)
+                            .done(function(msg){
+                                dfd.resolve(msg);
+                            })
+                            .fail(function(error){
+                                dfd.reject(error);
+                            });                            
+                    })
+                    .fail(function(){
+                        return dfd.reject("Failed to save "+entity_name+". ConvertNamespace Failed.");
+                    });
+            }
+            else
+            {
+                //Offline mode
+                this.save_when_offline(entity_name, json)
+                    .done(function(msg){
+                        return dfd.resolve(msg);
+                    })
+                    .fail(function(err){
+                        return dfd.reject(err);
+                    });
+            }
+            return dfd.promise();
+        },
+        
         
         save_when_offline: function(entity_name, off_json){
             var dfd = new $.Deferred();
@@ -8678,18 +8603,18 @@ define('views/form_controller',[
                                     console.log("FORMCONTROLLER: saving inlines");
                                     that.process_inlines_offline(that.form, off_m.toJSON(), that.inline_models);
                                 }
-                                return dfd.resolve("Saved Offline and in Uploadqueue");    
+                                return dfd.resolve("Saved "+entity_name+" (Local, Uploadqueue)");    
                             },
                             error: function(error){
                                 console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+error);
                                 //TODO: should delete the model from offline db as well?
-                                return dfd.reject("Error saving the "+that.form.entity_name+" (Uploadqueue)");
+                                return dfd.reject("Error saving the "+entity_name+" (Uploadqueue)");
                             }    
                     });
                 })
                 .fail(function(error){
                     that.form.show_errors(error);
-                    return dfd.reject("Error saving the "+that.form.entity_name+" (Local)");
+                    return dfd.reject("Error saving the "+entity_name+" (Local)");
                 });
                 
             return dfd.promise();    
@@ -8781,7 +8706,7 @@ define('views/form_controller',[
             var off_json = on_off_jsons.off_json
             console.log("FORMCONTROLLER: Got this json to save online - "+JSON.stringify(on_json));
             var that = this;
-            if(that.form.action == "A")
+            if(!that.form.edit_case)
                 {
                     delete on_json.id;
                 }
@@ -8802,7 +8727,7 @@ define('views/form_controller',[
                                 console.log("FORMCONTROLLER: saving inlines");
                                 that.process_inlines(that.form, off_m.toJSON(), on_m.toJSON(), that.inline_models);
                             }
-                            return dfd.resolve(that.form.entity_name + " Saved (Server, Local)");    
+                            return dfd.resolve("Saved "+that.form.entity_name + " (Server, Local)");    
                         })
                         .fail(function(error){
                             that.form.show_errors(error);
@@ -8913,11 +8838,10 @@ define('views/form_controller',[
             
 
         on_button2: function(e) {
-            e.stopPropagation();
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save_finished: function(entity_name){
+        after_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
@@ -9408,7 +9332,7 @@ define('views/status',[
 ], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline){
     
     var StatusView = Backbone.Layout.extend({
-        template: "#sync_status_template",
+        template: "#status",
         timestamp: null,
         upload_entries: null,
         events: {
@@ -9520,9 +9444,8 @@ define('views/login',[
           'click #login_button': 'attempt_login'                  
       },
       
-      initialize: function(router){
+      initialize: function(){
           console.log("Initializing login view");
-          this.router = router;
           _(this).bindAll('render');
           var that = this;
           User.fetch({
@@ -9566,7 +9489,9 @@ define('views/login',[
           Auth.login(username, password)
               .done(function(){
                   that.scrap_view();
-                  that.router.navigate("", {trigger:true});
+                  window.Router.navigate("", {
+                      trigger:true
+                  });
               })
               .fail(function(error){
 			      $("#password").val('');
@@ -9579,99 +9504,52 @@ define('views/login',[
   // Our module now returns our view
   return LoginView;
 });
-define('views/app_layout',[
-    'views/dashboard',
-    'views/list',
-    'views/form_controller',
-    'views/status',
-    'layoutmanager',  
-    'views/login'    
-  ], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView){
-                  
+define('views/app_layout',['views/dashboard', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login'], function(DashboardView, ListView, FormControllerView, StatusView, layoutmanager, LoginView) {
+
     var AppLayout = Backbone.Layout.extend({
-      template: "#page_layout",
-      initialize: function() {
-          console.log("initilizing app layout");
-          curr_list_view = null;
-          current_add_edit_view = null;
-      },
-      
-      //when layout is rendered, put the dashboard in the side panel - constant across all routes
-      afterRender: function(){
-          console.log("app layout rendered");
-          var dashboard_view = new DashboardView();
-          this.setView("#side_panel", dashboard_view);
-          dashboard_view.render();
-      },
-      
-      render_login: function(router){
-          var login_view = new LoginView(router);
-          this.setView("#content", login_view);
-      },    
-          
-      render_home_view: function() {
-          var s_view = new StatusView();
-          this.setView("#content", s_view);
-      },
-      
-      render_list_view: function(params) {
-          var l_view = new ListView({initialize:params});
-          this.setView("#content",l_view);
-      },
-      
-      render_add_edit_view: function(params, data) {
-          // var add_or_edit = "add";
-//           if (data) add_or_edit = "edit";
-          // var bcrumb_template = _.template($('#add_edit_breadcrumb').html());
-//           this.setView("#header", new HeaderView({serialize: { breadcrumb: bcrumb_template({bread1:params.view_configs.page_header.toLowerCase(),bread2:params.view_configs.page_header,add_or_edit:add_or_edit}) }}));
-          
-          
-          if(!this.formcontroller_v)
-          {
-              this.formcontroller_v = new FormControllerView({
-                            serialize: {
-                                button1: "Save and Add Another",
-                                button2: null
-                            },
-                            initialize: params,
-                            model_id: data,
-                            model_json: null
-          
-                        });
-          }
-          else
-          {
-              this.formcontroller_v.params = {
-                            serialize: {
-                                button1: "Save and Add Another",
-                                button2: null
-                            },
-                            initialize: params,
-                            model_id: data,
-                            model_json: null
-          
-                        };
-            this.formcontroller_v.options = {
-                          serialize: {
-                              button1: "Save and Add Another",
-                              button2: null
-                          },
-                          initialize: params,
-                          model_id: data,
-                          model_json: null
-          
-                      };            
-          }
-          var that = this;
-          this.setView("#content", this.formcontroller_v);
-          this.formcontroller_v.render();
-          
-          return this;
-      }
-   
+        template: "#page_layout",
+        initialize: function() {
+            console.log("initilizing app layout");
+        },
+
+        //when layout is rendered, put the dashboard in the side panel - constant across all routes
+        afterRender: function() {
+            console.log("app layout rendered");
+            var dashboard_view = new DashboardView();
+            this.setView("#side_panel", dashboard_view);
+            dashboard_view.render();
+        },
+
+        render_login: function() {
+            var login_view = new LoginView();
+            this.setView("#content", login_view);
+        },
+
+        render_home_view: function() {
+            var s_view = new StatusView();
+            this.setView("#content", s_view);
+        },
+
+        render_list_view: function(entity_name) {
+            var l_view = new ListView({
+                entity_name: entity_name
+            });
+            this.setView("#content", l_view);
+        },
+
+        render_add_edit_view: function(entity_name, id) {
+            var formcontroller_view = new FormControllerView({
+                entity_name: entity_name,
+                model_id: id,
+            });
+            this.setView("#content", formcontroller_view);
+            formcontroller_view.render();  //bcoz Its afterRender assumes its elements are in DOM
+        }
+
     });
-  return new AppLayout;
+    return new AppLayout;
 });
+
 // Filename: router.js
 define('router',[
   'jquery',
@@ -9691,43 +9569,33 @@ define('router',[
             "login": "login"
         },
         home: function() {
-            console.log("ROUTER: dashboard url caught");
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_home_view();
                 });
         },
-        list: function(entity) {
-            console.log("ROUTER: list "+entity+" url caught");
+        list: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_list_view({view_configs:configs[entity],router:window.Router});
+                    AppLayout.render_list_view(entity_name);
                 });
         },
-        addPerson: function(entity) {
-            console.log("ROUTER: add "+entity+" url caught");
+        addPerson: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, null);
+                    AppLayout.render_add_edit_view(entity_name, null);
                 });
         },
-        editPerson: function(entity,id) {
-            console.log("ROUTER: edit "+entity+" url caught id = " + id);
+        editPerson: function(entity_name, id) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, parseInt(id));
+                    AppLayout.render_add_edit_view(entity_name, parseInt(id));
                 });
         },
         login: function(){
-            AppLayout.render_login(this);
+            AppLayout.render_login();
         },
                 
-        initialize: function(){
-            // this.app_v = app_v;
-            // this.configs = configs;
-            // this.bind( "route", this.check_login)
-        },
-        
         check_login_wrapper: function(){
             var dfd = new $.Deferred();
             console.log("Authenticating before routing");
@@ -9735,7 +9603,9 @@ define('router',[
                 .fail(function(err){
                     console.log("UnAuthenticated");
                     dfd.reject();
-                    window.Router.navigate("login",{trigger:true});
+                    window.Router.navigate("login",{
+                        trigger:true
+                    });
                 })
                 .done(function(){
                     console.log("Authenticated");
@@ -9759,7 +9629,7 @@ define('router',[
 });
 define('user_initialize',[
     'jquery',
-  'form_field_validator'
+    'form_field_validator'
   ], function(){
     
     var run = function(){
@@ -9884,9 +9754,6 @@ define('app',[
               }
           }
       });
-      
-      
-      
       $("#app").empty().append(AppLayout.el);
       AppLayout.render();
   };
@@ -9921,6 +9788,7 @@ define('app',[
   //wait till dom is ready
   var initialize = function(){
       update_appcache();
+      //wait till dom is ready
       $(function(){
           framework_initialize();
           UserInitialize.run();

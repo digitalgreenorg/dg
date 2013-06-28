@@ -17,43 +17,33 @@ define([
             "login": "login"
         },
         home: function() {
-            console.log("ROUTER: dashboard url caught");
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_home_view();
                 });
         },
-        list: function(entity) {
-            console.log("ROUTER: list "+entity+" url caught");
+        list: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_list_view({view_configs:configs[entity],router:window.Router});
+                    AppLayout.render_list_view(entity_name);
                 });
         },
-        addPerson: function(entity) {
-            console.log("ROUTER: add "+entity+" url caught");
+        addPerson: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, null);
+                    AppLayout.render_add_edit_view(entity_name, null);
                 });
         },
-        editPerson: function(entity,id) {
-            console.log("ROUTER: edit "+entity+" url caught id = " + id);
+        editPerson: function(entity_name, id) {
             this.check_login_wrapper()
                 .done(function(){
-                    AppLayout.render_add_edit_view({view_configs:configs[entity],router:window.Router}, parseInt(id));
+                    AppLayout.render_add_edit_view(entity_name, parseInt(id));
                 });
         },
         login: function(){
-            AppLayout.render_login(this);
+            AppLayout.render_login();
         },
                 
-        initialize: function(){
-            // this.app_v = app_v;
-            // this.configs = configs;
-            // this.bind( "route", this.check_login)
-        },
-        
         check_login_wrapper: function(){
             var dfd = new $.Deferred();
             console.log("Authenticating before routing");
@@ -61,7 +51,9 @@ define([
                 .fail(function(err){
                     console.log("UnAuthenticated");
                     dfd.reject();
-                    window.Router.navigate("login",{trigger:true});
+                    window.Router.navigate("login",{
+                        trigger:true
+                    });
                 })
                 .done(function(){
                     console.log("Authenticated");

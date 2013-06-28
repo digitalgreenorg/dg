@@ -12,7 +12,7 @@ define([
 ], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline){
     
     var StatusView = Backbone.Layout.extend({
-        template: "#sync_status_template",
+        template: "#status",
         timestamp: null,
         upload_entries: null,
         events: {

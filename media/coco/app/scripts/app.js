@@ -19,9 +19,6 @@ define([
               }
           }
       });
-      
-      
-      
       $("#app").empty().append(AppLayout.el);
       AppLayout.render();
   };
@@ -56,6 +53,7 @@ define([
   //wait till dom is ready
   var initialize = function(){
       update_appcache();
+      //wait till dom is ready
       $(function(){
           framework_initialize();
           UserInitialize.run();
