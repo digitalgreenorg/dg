@@ -153,6 +153,15 @@ class VideoWatchRecord(models.Model):
     videoUID = models.ForeignKey(Video,related_name='video_watchrecord')
     user = models.ForeignKey(User,related_name='user_watchrecord')
     timeWatched = models.BigIntegerField()
+    
+class PersonVideoRecord(models.Model):
+    uid = models.CharField(max_length=20,primary_key = True)
+    PersonID = models.CharField(max_length=20)
+    VideoID = models.CharField(max_length=20)
+    views = models.PositiveSmallIntegerField(default = 0)
+    likes = models.BooleanField(default = False)
+    adopted = models.PositiveSmallIntegerField(default = 0)
+    
 
     
     
