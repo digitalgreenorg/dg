@@ -537,22 +537,23 @@ function() {
 
             },
             messages: {
-                date: {
-                    required: 'Enter Screening Date',
-                    validateDate: 'Enter Screening Date in the form of yyyy-mm-dd',
-                },
-                start_time: {
-                    required: 'Enter Video Production Start Date',
-                    validateTime: 'Enter the start time in the form of hh:mm  Use 24 hour format',
-                },
-                end_time: {
-                    required: 'Enter Video Production End Date',
-                    validateTime: 'Enter the end time in the form of hh:mm  Use 24 hour format',
-                },
-                animator: "Enter Animator",
-                village: "Enter Village",
-                videoes_screened: "Enter Videos Screened",
-            },
+				date: {
+					required: 'Screening date is required',
+					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
+				},
+				start_time: {
+					required: 'Video production start date is required',
+					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
+				},
+				end_time: {
+					required: 'Video production end date is required',
+					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
+					timeOrder: 'End time should be later than start time',
+				},
+				animator: "Animator is required",
+				village:"Village is required",
+				videoes_screened:"Videos screened is required",
+			},
 
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -757,31 +758,34 @@ function() {
                 }
             },
             messages: {
-                person_name: {
-                    required: 'Enter person Name',
-                    minlength: 'Person Name  should be atleast 2 characters',
-                    maxlength: 'Person Name should be atmax 100 characters',
-                    allowedChar: 'Person name should only contain alphabets and local language characters'
-                },
-                father_name: {
-                    required: 'Father Name is required',
-                    minlength: "Father Name  should be atleast 2 characters",
-                    maxlength: 'Father Name should be atmax 100 characters',
-                    allowedChar: 'Father name should only contain alphabets and local language characters'
-                },
-                age: {
-                    digits: "Age should contain digits only",
-                    min: "Age should not be less than 1 year",
-                    max: "Age should not be more than 100 years"
-                },
-                phone_number_person: {
-                    digits: 'phone number should contain only digits',
-                    maxlength: "phone number should not contain more than 10 digits"
-                },
-                village: {
-                    required: "Please enter village"
-                }
-            },
+				person_name: {
+					required: 'Person name is required',
+					minlength: 'Person name  should contain at least 2 characters',
+					maxlength: 'Person Name should contain at most 100 characters',
+					allowedChar: 'Person name should contain only english and local language characters'
+				},
+				father_name: {
+					required: "Father's name is required",
+					minlength: "Father's name should contain at least 2 characters",
+					maxlength: "Father's name should contain at most 100 characters",
+					allowedChar: "Father's name should contain only english and local language characters"
+				},
+				age: {
+					digits: "Age should contain only digits",
+					min:"Age should not be less than 1 year",
+					max:"Age should not be more than 100 years"
+				},
+				gender:{
+					required: "Gender is required"
+				},
+				phone_number_person: {
+					digits: 'Phone number should contain digits only',
+					maxlength: "Phone number should not contain more than 10 digits"
+				},
+				village: {
+					required: "Village is required"
+				}
+			},
 
             highlight: function(element, errorClass, validClass) {
                 $(element)
