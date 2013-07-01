@@ -39,7 +39,7 @@ define([
         this.edit_case_id, this.edit_case_json, this.edit_case
         */
         identify_form_action: function(params){
-            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(TODO: can be add too if json is missing id?).
+            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(LIMIT: can be add too if json is missing id?).
             this.edit_case = false;
             this.edit_id = null;
             if (params.model_json) {
@@ -55,9 +55,10 @@ define([
         },
         
         /*
+        Refactor possible
         Reads entity_config and sets basic properties on view object for easy access
         */
-        identify_form_config: function(params){
+        read_form_config: function(params){
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
@@ -127,9 +128,7 @@ define([
                         $.each(dependency,function(index,dep){
                             var source_elm = dep.source_form_element;
                             if(source_elm in that.source_dependents_map)
-                            {
                                 that.source_dependents_map[source_elm].push(element);
-                            }    
                             else{
                                 that.source_dependents_map[source_elm] = [];
                                 that.source_dependents_map[source_elm].push(element);
@@ -160,9 +159,9 @@ define([
             _.bindAll(this);
             
             //read entity_config and sets main properties on view object for easy access
-            this.identify_form_config(params);
+            this.read_form_config(params);
 
-            //sets this.edit_case, this.edit_case_id, this.edit_case_json
+            //sets this.edit_case, and  this.edit_case_id, or this.edit_case_json
             this.identify_form_action(params);  
 
             //reads this.foreign_entities and setsup the collections, source_dependents_map
@@ -518,57 +517,46 @@ define([
             
             //if any defined, filter the model array before putting into dom 
             if(f_entity_desc.filter)
-            {
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-            }
             
             if(f_entity_desc.expanded)
             {
-                if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                $f_el.html('');
+                this.expanded = element; //LIMIT: there can be only one expanded f element!
+                
+                //Its edit case and edit model is not yet rendered - so render it
+                if(this.edit_case && !this.foreign_elements_rendered[element])
                 {
-                    console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
-                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                    $f_el.html('');
                     var id_field = "id"
                     if(f_entity_desc.id_field)
-                         id_field = f_entity_desc.id_field;
-                    var entity = this.element_entity_map[element];
-                    var index = this.f_index.indexOf(entity);
-                    var collection = this.f_colls[index];
-                
+                        id_field = f_entity_desc.id_field;
+                        var collection = this.get_collection_of_element(element);                
                     $.each(this.model_json[element], function(index, f_json){
                         model = collection.get(f_json[id_field]);
-                        if(model)
-                        {
-                            var t_json = model.toJSON();
-                            t_json["index"] = index; 
-                            $.each(f_entity_desc.expanded.extra_fields, function(index,field){
-                                t_json[field] = f_json[field];
-                            });
-                            console.log(t_json);
-                            $f_el.append(expanded_template(t_json));    
-                        }
+                        if(!model)
+                            return;
+                        var t_json = model.toJSON();
+                        t_json["index"] = index; 
+                        $.each(f_entity_desc.expanded.extra_fields, function(index,field){
+                            t_json[field] = f_json[field];
+                        });
+                        console.log(t_json);
+                        $f_el.append(expanded_template(t_json));    
                     });
-                    this.initiate_form_widgets();
-                    this.expanded = element;
                     if(this.num_sources[element]<=0)
                         this.foreign_elements_rendered[element] = true;
                 }
-                else if(f_entity_desc.expanded)
+                else
                 {
-                    console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
-                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                    $f_el.html('');
                     $.each(model_array,function(index, f_model){
                         var t_json = f_model.toJSON();
                         t_json["index"] = index; 
                         $f_el.append(expanded_template(t_json));    
                     });
-                    this.expanded = element;
-                    this.initiate_form_widgets();
                 }    
+                this.initiate_form_widgets();
             }
             else
             {
@@ -578,8 +566,8 @@ define([
                     $f_el.html('');    
                 else
                     $f_el.html(this.options_inner_template({
-                            id: "",
-                            name: "------------"
+                        id: "",
+                        name: "------------"
                     }));
                 $.each(model_array,function(index, f_model){
                     var f_json = f_model; 
@@ -593,6 +581,7 @@ define([
                 $f_el.prop("disabled", false);
                 $f_el.trigger("liszt:updated");
 
+                //select the options selected in edit model
                 if(this.edit_case && !this.foreign_elements_rendered[element])
                 {
                     this.$('form [name='+element+']').val(this.model_json[element]).change();
@@ -767,22 +756,18 @@ define([
             console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
             
             for(member in object_json)
-                {   
-                    if(member == "")
-                        delete object_json[member];
-                    
-                    else if(object_json[member]===""||object_json[member]==null||object_json[member]==undefined)
+            {   
+                if(member == "")
+                    delete object_json[member];
+                else if(!object_json[member])
+                {
+                    object_json[member] = null
+                    if(this.$('[name='+member+']').is('select[multiple]'))
                     {
-                        object_json[member] = null
+                        object_json[member] = [];
                     }
-                    if(object_json[member]==null)
-                    {
-                        if(this.$('[name='+member+']').is('select[multiple]'))
-                        {
-                            object_json[member] = [];
-                        }
-                    }
-                }    
+                }
+            }    
             console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
                 
         },  
@@ -923,26 +908,21 @@ define([
             {
                 this.final_json= {};
                 this.parse_bulk(this.final_json);
-                console.log(JSON.stringify(this.final_json));
-                var that = this;
                 // $.each(this.final_json.bulk, function(index, obj){
-                    that.clean_json(this.final_json);
-                    that.denormalize_json(this.final_json);
                 // });
             }
             else
             {
                 this.final_json = Backbone.Syphon.serialize(this);
-                this.clean_json(this.final_json);
                 if(this.expanded)
-                {
                     this.parse_expanded(this.final_json);
-                }
-                this.denormalize_json(this.final_json);
                 if(this.inline)
                     this.parse_inlines(this.final_json);
-                this.final_json = $.extend(this.model_json, this.final_json);
             }
+
+            this.clean_json(this.final_json);
+            this.denormalize_json(this.final_json);
+            this.final_json = $.extend(this.model_json, this.final_json);
 
             var ev_data = {
                 context: this,
@@ -954,7 +934,7 @@ define([
             var ev_data = {
                 context: this,
             };
-            this.trigger("button2_clicked",ev_res);
+            this.trigger("button2_clicked",ev_data);
         }
 
 

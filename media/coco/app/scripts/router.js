@@ -12,8 +12,8 @@ define([
         routes: {
             "": "home",
             ":entity/list": "list",
-            ":entity/add": "addPerson",
-            ":entity/edit/:id": "editPerson",
+            ":entity/add": "add",
+            ":entity/edit/:id": "edit",
             "login": "login"
         },
         home: function() {
@@ -28,13 +28,13 @@ define([
                     AppLayout.render_list_view(entity_name);
                 });
         },
-        addPerson: function(entity_name) {
+        add: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, null);
                 });
         },
-        editPerson: function(entity_name, id) {
+        edit: function(entity_name, id) {
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, parseInt(id));
