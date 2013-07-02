@@ -33,7 +33,7 @@
     height: 50px;
     width: 100px;
     padding-top: 20px;
-	margin-left:25%;
+	margin-left:22%;
 }
 
 #coco_userinfo {
@@ -43,7 +43,8 @@
 
 #coco_sync {
     margin-bottom:50px;
-	margin-left:4px;
+	margin-left:22%;
+	width: 150px;
 }
 
 #coco_nav_add {
