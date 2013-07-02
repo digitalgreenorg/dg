@@ -137,15 +137,20 @@ def upload_file(file):
     register_openers()
 #    print 'uploading ' + file
     datagen, headers = multipart_encode({"xml_submission_file": open(file, "r")})
-    request = urllib2.Request("https://www.commcarehq.org/a/biharpilot/receiver", datagen, headers)
+    request = urllib2.Request("https://www.commcarehq.org/a/capilot/receiver", datagen, headers)
     response = urllib2.urlopen(request)
     return response.getcode()
 
 if __name__ == '__main__':
-#    user_id = '8a7cc079078e17fd20e068eb4bd05729'
-#    villages = [10000000021565,10000000021577]
-#    Person = get_model('dashboard','Person')
-#    person_list = Person.objects.filter(village__in = villages).values_list('id', flat=True)
-#    write_full_case_list(person_list,'joshin.xml',user_id)
-    upload_file('joshin.xml')
+    Person = get_model('dashboard','Person')
+    data = read_userfile('apca.json')
+    for row in data:
+        username = row['username']
+        print "creating xml for " + str(username)
+        filename = username + '.xml'
+        person_list = Person.objects.filter(village__in = row['villages']).values_list('id', flat=True)
+        write_full_case_list(person_list,filename,row['user_id'])
+        
+#        upload_file(filename)
+        
 

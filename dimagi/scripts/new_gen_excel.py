@@ -218,7 +218,7 @@ def write_distinct(vid_list, workbook):
         if vid_name:
             sheet.write(row, 0, str(id))
             sheet.write(row, 1, unicode(vid_name[0][0]))
-            sheet.write(row, 2, 'muzz')  # for testing 
+            sheet.write(row, 2, 'warangal')  # for testing 
             row += 1
     return sheet
     
@@ -271,14 +271,14 @@ def write_video_schedule_info(vid_dict, workbook):
 #            sheet.write(row, 1, vid_name[0][0])
             sheet.write(row, 1, record['low_val'])
             sheet.write(row, 2, record['high_val'])
-            sheet.write(row, 3, 'muzz')  # for testing 
+            sheet.write(row, 3, 'warangal')  # for testing 
             row += 1
         else:
             print str(record['id']) + " not found"
     return sheet
         
 from userfile_functions import read_userfile
-data = read_userfile('joshin.json')
+data = read_userfile('apca.json')
 cluster_village_dict = []
 mediator_dict = []
 for entry in data:
@@ -302,17 +302,17 @@ village_sheet = write_village_info(cluster_village_dict, workbook)
 mediator_sheet = write_mediator_info(mediator_dict, workbook)
 #video_schedule_dict, video_list = video_schedule.get_video_schedule()
 #print video_list
-video_list = Screening.objects.filter(village__block__district__state__state_name = 'Bihar').values_list('videoes_screened', flat=True)
+video_list = Screening.objects.filter(village__block__district__state__state_name = 'Andhra Pradesh').values_list('videoes_screened', flat=True)
 video_list = set(video_list)
 print video_list
 video_distinct_sheet = write_distinct(video_list,workbook)
 video_schedule_dict = []
-for id in [10000000021032,10000000021033,10000000021034,10000000021030,10000000020874,10000000021061]:
+for id in [10000000020194,10000000021136,10000000020757,10000000020480,10000000020752,10000000020198,10000000021065,10000000020190,]:
     video_schedule_dict.append({'id': id,
                                 'low_val': '2013-01-01',
                                 'high_val': '2013-12-31' })
 video_schedule_sheet = write_video_schedule_info(video_schedule_dict,workbook)
-workbook.save('trial-2-Fixtures_02_25.xls')
+workbook.save('trial-2-Fixtures_07_1.xls')
 
 
 
