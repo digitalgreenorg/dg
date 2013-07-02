@@ -18,7 +18,8 @@ define(function(require) {
     var CustomSelectBox = require('app/libs/CustomSelectBox');
 
     var SearchViewController = require('app/view-controllers/SearchViewController');
-
+    
+    var FeaturedCollectionViewController = require('app/view-controllers/FeaturedCollectionViewController');
 
     var DigitalGreenPageController = PageController.extend({
 
@@ -52,15 +53,19 @@ define(function(require) {
             var references = this._references;
 
             var $searchContainer = jQuery(".js-search-wrapper");
+            var $featuredCollectionsContainer = jQuery(".js-featured-collections-wrapper");
 
             // helpers
             //TODO: Not sure if we need to do much else than instantiate
             references.searchViewController = new SearchViewController($searchContainer);
+            references.FeaturedCollectionViewController = new FeaturedCollectionViewController($featuredCollectionsContainer);
         },
 
         _onOptionChanged: function(value) {
             Util.Cookie.set('language__name', value);
             globalEventManager.trigger('languageChanged', value);
+            this._references.FeaturedCollectionViewController.setInputParam('language__name',value );
+            this._references.FeaturedCollectionViewController.getFeaturedCollection(value);
         },
 
         /**

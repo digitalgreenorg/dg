@@ -4,7 +4,7 @@ from django.conf.urls.defaults import *
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
 from django.shortcuts import *
-from social_website.models import Language, Collection, Partner
+from social_website.models import Language, Collection, Partner, FeaturedCollection
 from pyes import *
 import ast, json, urllib2
 
@@ -44,7 +44,7 @@ def social_home(request):
              'loggedIn':False
              },
         'language':language,
-        'featured_collection':featured_collection_dict
+#         'featured_collection':featured_collection_dict
         }
     
     return render_to_response('home.html' , context,context_instance = RequestContext(request))
@@ -344,11 +344,40 @@ def elasticSearch(request):
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
+        
         resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
     
+def featuredCollection(request):
+    params = request.GET
+    language_name = params.get('language__name', None)
+    featured_collection = FeaturedCollection.objects.get(language__name=language_name)
+    collection_uid = featured_collection.collection
+    collage_url = featured_collection.collageURL
+    collection = Collection.objects.get(uid=collection_uid)
+    time=0
+    for vid in collection.videos.all():
+        time=time+vid.duration
+    featured_collection_dict={
+        'title':collection.title,
+        'state':collection.state,
+        'country':collection.country.countryName,
+        'likes':collection.likes,
+        'views':collection.views,
+        'adoptions':collection.adoptions,
+        'language':collection.language.name,
+        'partner_name':collection.partner.name,
+        'partner_logo':collection.partner.logoURL,
+        'partner_url':'/social/connect/?id='+str(collection.partner.uid),
+        'video_count':collection.videos.all().count(),
+        'link':'/social/collections/?id='+collection_uid +'&video=1',
+        'collageURL':collage_url,
+        'duration':str(datetime.timedelta(seconds=time)),
+        }
+    resp = json.dumps({"featured_collection":featured_collection_dict})
+    return HttpResponse(resp)
 
 def footer_view(request):
     response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
