@@ -8045,14 +8045,13 @@ define('views/dashboard',[
         },
         
 		user_online: function(){
-			//document.getElementById('sync').disabled = false;
+			$('#sync').removeAttr("disabled");
 			$('#offline').hide();
 			$('#online').show();
 		},
 		
 		user_offline: function(){
-			//document.getElementById('sync').disabled = true;
-			//$('input[type="btn"]').attr('disabled','disabled');
+			$('#sync').attr('disabled',true);
 			$('#online').hide();
 			$('#offline').show();
 		},
@@ -9712,11 +9711,22 @@ define('user_initialize',[
 		startDate = start.split('-');
 		endDate = value.split('-');
 
-		if(endDate[0]>=startDate[0] && endDate[1]>=startDate[1] && endDate[2]>=startDate[2]){
+		if(endDate[0]>startDate[0]){
 			check = true;
 		}
-		return check;
+		else if (endDate[0] === startDate[0]){
+			if(endDate[1]>startDate[1]){
+				check = true;
+			}
+			else if(endDate[1] === startDate[1]){
+				if(endDate[2] >= startDate[2]){
+					check = true;
+				}
+			}
+		}	
+		return check;	
 	}
+	
 
 	function timeOrder(value, element, options){
 		var check = false;
