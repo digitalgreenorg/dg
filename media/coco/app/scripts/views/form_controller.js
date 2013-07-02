@@ -41,14 +41,15 @@ define([
                     button2: null
                 }
             });
-            // #form is the id of the element inside in template where the new view will be inserted.
+            // #form is the id of the element inside template where the new view will be inserted.
             var form_v = new Form(this.params);
             this.setView("#form", form_v);
             this.listenTo(form_v, 'save_clicked', this.on_save);
             this.listenTo(form_v, 'button2_clicked', this.on_button2);
         },
         
-        /*Called when form view sends save_clicked event. 
+        /*
+        Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
         After Save is finished calls an after_save function
         */
@@ -56,66 +57,103 @@ define([
         on_save: function(e) {
             this.form = e.context;  //event contains the form view object itself
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
-            //separate inlines from final json
-            if(this.form.inline)
-            {
-                console.log("FORMCONTROLLER: separating inlines from final json");
-                this.inline_models = $.extend(null,this.form.final_json.inlines);
-                delete this.form.final_json.inlines;
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            
             var that = this; 
             var save_complete_dfds = [];    //stores dfds of all objects bieng saved in this form
+            
             if(this.form.bulk)
             {
                 /*Save each object in bulk form individually*/
                 $.each(this.form.final_json.bulk, function(ind, obj){
                     var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
                     save_object_dfd
-                        .done(function(msg){
-                            notifs_view.add_alert({
-                                notif_type: "success",
-                                message: msg
-                            });
-                        })
                         .fail(function(error){
-                            notifs_view.add_alert({
-                                notif_type: "error",
-                                message: error
-                            });    
+                            that.form.show_errors(error);
                         });
                     save_complete_dfds.push(save_object_dfd);
                 });
             }
-            else
-            {
+            else    //normal or inlines
+            {   
+                //separate inlines from final json
+                if(this.form.inline)
+                {
+                    console.log("FORMCONTROLLER: separating inlines from final json");
+                    this.inline_models = $.extend(null,this.form.final_json.inlines);
+                    delete this.form.final_json.inlines;
+                    var inlines_dfd = new $.Deferred();
+                    save_complete_dfds.push(inlines_dfd);
+                }
                 var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_entities, this.form.entity_name);
                 save_object_dfd
-                    .done(function(msg){
-                        notifs_view.add_alert({
-                            notif_type: "success",
-                            message: msg
-                        });
+                    .done(function(off_json){
+                        if(that.form.inline)
+                            that.save_inlines(that.inline_models, off_json, that.form.inline)
+                                .done(function(){
+                                    console.log("ALL INLINED SAVED");
+                                    inlines_dfd.resolve();
+                                })
+                                .fail(function(){
+                                    console.log("FAILED AT INLINES SAVE");
+                                    inlines_dfd.reject();
+                                });
                     })
                     .fail(function(error){
-                        notifs_view.add_alert({
-                            notif_type: "error",
-                            message: error
-                        });    
+                        that.form.show_errors(error);
                     });
                 save_complete_dfds.push(save_object_dfd);                                
             }
             
             //When all objects in form are saved...
-            $.when.apply($,save_complete_dfds)
+            $.when.apply(null, save_complete_dfds)
                 .done(function(){
+                    console.log("Everything saved");
                     that.after_save(that.form.entity_name);
                 })
         },
         
+        save_inlines: function(inlines, parent_off_json, inline_config){
+            var dfd = new $.Deferred();
+            console.log("Gotta save inlines now - ");
+            console.log(JSON.stringify(inlines));
+            console.log(JSON.stringify(parent_off_json));
+            this.complete_inlines(inlines, parent_off_json, inline_config); 
+            var inline_dfds = [];
+            _.each(inlines, function(inl, index){
+                var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
+                inline_dfds.push(inl_save_dfd);           
+            }, this);
+            $.when.apply($, inline_dfds)
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                    dfd.reject();
+                })
+            return dfd;
+        },
+        
+        //put in the borrowed attributes and the joining attribute in inlines
+        complete_inlines: function(inlines, parent_off_json, inline_config){
+            var host_attr_json = {};
+            host_attr_json[inline_config.joining_attribute.inline_attribute]={}
+            _.each(inline_config.joining_attribute.host_attribute, function(attr, index){
+               host_attr_json[inline_config.joining_attribute.inline_attribute][attr] = parent_off_json[attr];
+            }, this);
+            
+            var borr_json = {}
+            $.each(inline_config.borrow_attributes, function(index,b_attr){
+                borr_json[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
+            });
+            
+            _.each(inlines, function(inl, index){
+                console.log("inl before extension - "+JSON.stringify(inl));
+                $.extend(true, inl, host_attr_json);
+                $.extend(true, inl, borr_json);
+                console.log("inl after extension - "+JSON.stringify(inl));
+            });
+        },
+        
         save_object: function(json, foreign_entities, entity_name){
-            //TODO: check mode and call corresponding func
             var dfd = new $.Deferred();
             var that =  this;
             if(this.is_uploadqueue_empty() && this.is_internet_connected())
@@ -123,47 +161,64 @@ define([
                 //Online mode
                 ConvertNamespace.convert(json, foreign_entities, "offlinetoonline")
                     .done(function(on_off_jsons){
-                        that.save_when_online(on_off_jsons)
-                            .done(function(msg){
-                                dfd.resolve(msg);
+                        that.save_when_online(entity_name, on_off_jsons)
+                            .done(function(off_json){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
                             })
                             .fail(function(error){
+                                show_err_notif();
                                 dfd.reject(error);
                             });                            
                     })
-                    .fail(function(){
-                        return dfd.reject("Failed to save "+entity_name+". ConvertNamespace Failed.");
+                    .fail(function(error){
+                        show_err_notif();
+                        return dfd.reject(error);
                     });
             }
             else
             {
                 //Offline mode
                 this.save_when_offline(entity_name, json)
-                    .done(function(msg){
-                        return dfd.resolve(msg);
+                    .done(function(off_json){
+                        show_suc_notif();
+                        return dfd.resolve(off_json);
                     })
-                    .fail(function(err){
-                        return dfd.reject(err);
+                    .fail(function(error){
+                        show_err_notif();
+                        return dfd.reject(error);
                     });
             }
+            
+            function show_suc_notif(){
+                notifs_view.add_alert({
+                    notif_type: "success",
+                    message: "Saved "+entity_name
+                });
+            };
+            
+            function show_err_notif(){
+                notifs_view.add_alert({
+                    notif_type: "error",
+                    message: "Error saving "+entity_name
+                });    
+            };
+            
             return dfd.promise();
         },
-        
-        
+                
         save_when_offline: function(entity_name, off_json){
             var dfd = new $.Deferred();
-            var action = null;
+            var action, that = this;
             if(off_json.id)
                 action = "E"
             else
                 action = "A"
-            var that = this;    
             
             Offline.save(null, entity_name, off_json)
                 .done(function(off_m){
                     console.log("SAVED IN OFFLINE - "+JSON.stringify(off_m.toJSON()));
-                    upload_collection.create(
-                        {
+                    upload_collection.create({
                             data: off_m.toJSON(),
                             action: action,   
                             entity_name: entity_name        
@@ -171,232 +226,54 @@ define([
                         {
                             success:function(u_model){
                                 console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                if(that.form.inline)
-                                {
-                                    console.log("FORMCONTROLLER: saving inlines");
-                                    that.process_inlines_offline(that.form, off_m.toJSON(), that.inline_models);
-                                }
-                                return dfd.resolve("Saved "+entity_name+" (Local, Uploadqueue)");    
+                                return dfd.resolve(off_m.toJSON());    
                             },
                             error: function(error){
-                                console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+error);
+                                alert("Unexepected Error- error adding model to uploadqueue");
                                 //TODO: should delete the model from offline db as well?
-                                return dfd.reject("Error saving the "+entity_name+" (Uploadqueue)");
+                                return dfd.reject(error);
                             }    
                     });
                 })
                 .fail(function(error){
-                    that.form.show_errors(error);
-                    return dfd.reject("Error saving the "+entity_name+" (Local)");
+                    return dfd.reject(error);
                 });
                 
             return dfd.promise();    
         },
         
-        process_inlines_offline: function(form,parent_off_json,inlines){
-            console.log("FORMCONTROLLER: saving inlines when offline");
-            var for_attr_offline = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_offline[attr] = parent_off_json[attr];
-            });
-            $.each(inlines,function(index, ijson){
-                if(ijson.id)
-                {
-                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to preserve videos_seen
-                        .done(function(off_in_model){
-                            var prev_json = off_in_model.toJSON();
-                            var off_ijson = $.extend(prev_json, ijson);
-                            $.each(form.inline.borrow_attributes, function(index,b_attr){
-                                off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                            });
-                            off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                            Offline.save(off_in_model,form.inline.entity,off_ijson)
-                                .done(function(off_in_model){
-                                    console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                    upload_collection.create(
-                                        {
-                                            data: off_in_model.toJSON(),
-                                            action: "E",  
-                                            entity_name: form.inline.entity        
-                                        },
-                                        {
-                                            success:function(u_model){
-                                                console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                            },
-                                            error: function(u_model){
-                                                console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-        
-                                            }    
-                                        }
-                                    );  
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:FETCH: "+error);
-                        });
-                }
-                else
-                {
-                    var off_ijson = $.extend(null, ijson);
-                    $.each(form.inline.borrow_attributes, function(index,b_attr){
-                        off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                    });
-                    off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                    Offline.save(null,form.inline.entity,off_ijson)
-                        .done(function(off_in_model){
-                            console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                            upload_collection.create(
-                                {
-                                    data: off_in_model.toJSON(),
-                                    action: "A",   
-                                    entity_name: form.inline.entity        
-                                },
-                                {
-                                    success:function(u_model){
-                                        console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                    },
-                                    error: function(u_model){
-                                        console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-        
-                                    }    
-                                }
-                            );  
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                        });
-                }
-            });
-        },
-        
-        //add_edit, entityname, inlines?_inline_models    
-        save_when_online: function(on_off_jsons){ 
+        //save onlines then offline
+        save_when_online: function(entity_name, on_off_jsons){ 
             var dfd = new $.Deferred();
             var on_json = on_off_jsons.on_json;
             var off_json = on_off_jsons.off_json
             console.log("FORMCONTROLLER: Got this json to save online - "+JSON.stringify(on_json));
             var that = this;
-            if(!that.form.edit_case)
-                {
-                    delete on_json.id;
-                }
-                else
-                {
-                    on_json.id = parseInt(off_json.online_id); 
-                    delete on_json.online_id;
-                }
-            Online.save(null, that.form.entity_name, on_json)
+            //if edit case, substitute id with online id TODO: move it to convertnamespace?
+            if(off_json.id)
+            {
+                on_json.id = parseInt(off_json.online_id); 
+                delete on_json.online_id;
+            }
+            Online.save(null, entity_name, on_json)
                 .done(function(on_m){
                     console.log("SAVED IN ONLINE - "+JSON.stringify(on_m.toJSON()));
                     off_json.online_id  = parseInt(on_m.get("id"));
-                    Offline.save(null, that.form.entity_name, off_json)
+                    Offline.save(null, entity_name, off_json)
                         .done(function(off_m){
                             console.log("SAVED IN OFFLINE - "+JSON.stringify(off_m.toJSON()));
-                            if(that.form.inline)
-                            {
-                                console.log("FORMCONTROLLER: saving inlines");
-                                that.process_inlines(that.form, off_m.toJSON(), on_m.toJSON(), that.inline_models);
-                            }
-                            return dfd.resolve("Saved "+that.form.entity_name + " (Server, Local)");    
+                            return dfd.resolve(off_m.toJSON());    
                         })
                         .fail(function(error){
-                            that.form.show_errors(error);
                             //TODO: what to do abt the model just saved on server? 
-							return dfd.reject("Error saving the "+that.form.entity_name+" (Local)");
+							return dfd.reject(error);
                         });
                 })
                 .fail(function(xhr){
-                    that.form.show_errors(xhr.responseText);
-                    return dfd.reject("Error saving the "+that.form.entity_name+" (Server)");
+                    return dfd.reject(xhr.responseText);
 				});
 			return dfd.promise();	 
         },        
-        
-        //form.inline obj, 
-        process_inlines: function(form, parent_off_json, parent_on_json, inlines)
-        {
-            console.log("parent off json: "+JSON.stringify(parent_off_json));
-            console.log("parent on json: "+JSON.stringify(parent_on_json));
-            console.log("inlines: "+JSON.stringify(inlines));
-            ////////////////////creating foreign atrribute for inlines///////////////////
-            var for_attr_offline = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_offline[attr] = parent_off_json[attr];
-            });
-            var for_attr_online = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_online[attr] = parent_on_json[attr];
-            });
-            /////////////////////////////////////////////////////////////////////////////
-            
-            $.each(inlines,function(index, ijson){
-                if(ijson.id)
-                {
-                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to get the online_id and preserve videos_seen
-                        .done(function(off_in_model){
-                            var prev_json = off_in_model.toJSON();
-                            var off_ijson = $.extend(prev_json, ijson);
-                            var on_ijson = $.extend(true,null,off_ijson);
-                            $.each(form.inline.borrow_attributes, function(index,b_attr){
-                                off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                                on_ijson[b_attr.inline_attribute] = parent_on_json[b_attr.host_attribute];    
-                            });
-                            off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                            on_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_online;
-                            on_ijson.id = parseInt(on_ijson.online_id);
-                            delete on_ijson.online_id;
-                            Online.save(null,form.inline.entity,on_ijson)
-                                .done(function(on_in_model){
-                                    console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                                    Offline.save(off_in_model,form.inline.entity,off_ijson)
-                                        .done(function(off_in_model){
-                                            console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                        })
-                                        .fail(function(error){
-                                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                        });
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:ONLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:FETCH: "+error);
-                        });
-                }
-                else
-                {
-                    var off_ijson = $.extend(null, ijson);
-                    var on_ijson = $.extend(true, null, ijson);
-                    $.each(form.inline.borrow_attributes, function(index,b_attr){
-                        off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                        on_ijson[b_attr.inline_attribute] = parent_on_json[b_attr.host_attribute];    
-                    });
-                    off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                    on_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_online;
-                    Online.save(null,form.inline.entity,on_ijson)
-                        .done(function(on_in_model){
-                            console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                            off_ijson.online_id = parseInt(on_in_model.get("id"));
-                            Offline.save(null,form.inline.entity,off_ijson)
-                                .done(function(off_in_model){
-                                    console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:ONLINE: "+error);
-                        });
-                }
-            });
-                    
-            
-        },
         
         is_uploadqueue_empty : function(){
             console.log("FORMCONTROLLER: length of upload_collection - "+upload_collection.length);
@@ -408,7 +285,6 @@ define([
         is_internet_connected : function(){
             return navigator.onLine;
         },       
-            
 
         on_button2: function(e) {
             console.log("FORMCONTROLLER: Button 2 clicked on form");
@@ -416,7 +292,7 @@ define([
         
         after_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
-            window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
+            window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
 
 

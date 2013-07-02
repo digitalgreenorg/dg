@@ -268,8 +268,15 @@ define([
                 console.log("FORM:EDIT: Fteching inline collection");
                 Offline.fetch_collection(this.inline.entity)
                     .done(function(collection){
+                        // id-json dictionary of inline models - later used to extend the modified inlines
+                        that.inl_models_dict = {};
                         var inl_models = collection.filter(function(model){
-                           return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
+                            if(model.get(that.inline.joining_attribute.inline_attribute).id == that.edit_id)
+                            {
+                                that.inl_models_dict[model.get("id")] = model.toJSON();
+                                return true 
+                            }
+                            return false;    
                         });
                         console.log(inl_models);
                         that.fill_inlines(inl_models);
@@ -902,6 +909,18 @@ define([
             });
         },
         
+        //preserve the background fields - not entered through form
+        extend_edit_json: function(o_json){
+            o_json = $.extend(true, this.model_json, o_json);
+            if(this.inline)
+            {
+                _.each(o_json.inlines, function(inl, index){
+                    var old_json = this.inl_models_dict[inl.id];
+                    o_json.inlines[index] = $.extend(true, old_json, inl);
+                }, this);
+            }
+            return o_json;
+        },
         
         save: function() {
             if(this.bulk)
@@ -922,7 +941,8 @@ define([
 
             this.clean_json(this.final_json);
             this.denormalize_json(this.final_json);
-            this.final_json = $.extend(this.model_json, this.final_json);
+            if(this.edit_case)
+                this.final_json = this.extend_edit_json(this.final_json);
 
             var ev_data = {
                 context: this,

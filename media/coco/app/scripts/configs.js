@@ -381,7 +381,7 @@ function() {
             'entity': 'person',
             'default_num_rows': 10,
             "template": "person_inline",
-            "foreign_attribute": {
+            "joining_attribute": {
                 'host_attribute': ["id", "group_name"],
                 'inline_attribute': "group"
             },
@@ -389,7 +389,21 @@ function() {
             'borrow_attributes': [{
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
-            }]
+            }],
+            foreign_entities: {
+                village: {
+                    village: {
+                        placeholder: 'id_village',
+                        name_field: 'village_name'
+                    },
+                },
+                group: {
+                    group: {
+                        placeholder: 'id_group',
+                        name_field: 'group_name'
+                    }
+                }
+            }
         },
         'form_field_validation': {
             ignore: ".donotvalidate",
