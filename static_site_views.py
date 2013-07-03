@@ -1,11 +1,9 @@
 from dashboard.models import PersonAdoptPractice, Video 
-from django.db.models import Count
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
 from output.views.common import home_with_analytics
 from farmerbook import farmer_book_views
 from farmerbook.farmer_book_views import get_leaderboard_data
-import datetime
 #Mindless views for plain HTML pages on the main website
 
 def farmerfunda(request):
