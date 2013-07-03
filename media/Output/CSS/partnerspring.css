@@ -1,0 +1,125 @@
+/* CSS Document */
+
+/* Overwriting the base.css ids  */
+#navpanel 									{ width:960px; }
+#logosearchdiv								{ width:960px; }
+#maintitlediv								{ width:960px; }
+
+
+/* Video Thumbnail Image */
+.videothumbnail							    { width:90px; height:70px; }
+
+
+/* Video Navigation Control */
+#header										{ clear:both; width:960px; background-color:none; border-bottom: 0px solid #e2e2e2; height:105px; }
+#navdiv										{ width:980px; }
+#videologo									{ float:left; width:173px; height:90px; margin-top:7px; }	
+#videonav									{ margin-top:75px; float:right; color:White; }
+#navbottomdiv								{ margin-top:0px; clear:both; width:100%; height:20px; background:url("/media/Output/Images/navbottombg.png"); background-repeat:x-repeat; }
+
+.navquicklink								{ margin-left:0px; text-decoration:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:White;}	
+.navquicklink:hover							{ text-decoration:underline; color:#fbae0c; }
+
+								
+
+/* Body Content */
+#contentdiv									{ clear:both; width:960px; align:center; margin-bottom:20px; }
+#contentdivtitle							{ border-bottom:0px solid #ececec; width:952px; text-align:left; margin-top:40px; font-family: Arial,Helvetica,Sans-Serif; color:#5B6E1D; font-weight:bold; font-size:1.4em; }
+#partnertitle								{ border-bottom:0px solid #ececec; width:955px; text-align:left; margin-left:5px; margin-top:6px; font-family: Arial,Helvetica,Sans-Serif; color:Gray; font-weight:normal; font-size:0.7em; }
+#contentdivleft								{ float:left; width:700px; border-right:1px solid Gray; min-height:600px; margin-bottom:50px; }
+#novideoembed								{ margin:10px 5px; width:690px; background-color:Gray; }
+#novideoembeddesc							{ clear:both; margin:5px; height:50px; background-color:#f3f3f3; vertical-align:center; }
+#novideoembeddesc div						{ padding-top:15px; float:center; color:#3F3E3E; font-family:Arial,Helvetica,Sans-Serif; font-size:1.0em; font-weight:bold; }
+#videoembed									{ margin:5px; width:690px; }
+#videoembedtable							{ width:100%; height:400px; }
+
+
+/* top level data to project partner name and date */
+#videodatadiv0								{ padding-top:1px; padding-bottom:2px; margin-left:0px; width:690px; margin-top:0px; background-color:none; text-align:left; font-weight:normal; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; }
+
+
+/* First set of number data to show */
+#videodatadiv1 								{ margin-left:0px; width:690px; margin-top:15px;  }
+#videodatadiv1td							{ width:220px; height:30px; background-color:none; border:1px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; cursor:pointer; }
+.numberstyle								{ font-weight:bold; }
+.videodatadiv1tdspace						{ width:15px; background-color:none; }	
+
+#videodatadiv1div							{ position:relative; padding-top:0px;  }
+#videodatadiv1help							{ -moz-border-radius:4px; position:absolute; padding:2px; min-width:200px; top:-60px; left:0px; z-index:2; height:40px; background-color:#E7F7CF; display:none; border:2px solid #62980C; color:Black }
+
+
+/* Second set of data to project */
+#videodatadiv2 								{ margin-left:0px; width:690px; margin-top:25px; background-color:#ebebeb; border:1px solid #e2e2e2; }
+#videodatadiv2td							{ width:220px; border:0px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; cursor:pointer; }
+#videodatadiv2div							{ position:relative; margin-left:30px; display:block; width:150px; align:center; font-weight:bold; }
+.videodatadiv2tdspace						{ width:15px; height:40px; background-color:none; }
+.imgright									{ margin-top:-6px; float:right; margin-left:0px; }
+.divlinks									{ text-decoration:none; color:Gray; font-weight:bold; }
+
+#videodatadiv2td1							{ width:100%; border-top:5px solid #7f7f7f; background-color:White; }
+#videodatadiv2divdesc						{ margin-left:40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
+#videodatadiv2divdesctop					{ z-index:5; top:-11px; left:40px; width:12px; height:8px; position:absolute; background:url("/media/Output/Images/arrowhead3.png"); background-repeat:no-repeat; }
+#videoinfotable								{ width:100%; }
+.videoinfotd1span							{ width:100%; height:30px; font-weight:bold; }
+.videoinfotd1								{ width:55%; height:30px; font-weight:normal; }
+.videoinfotd2								{ width:45%; height:30px; font-weight:normal; }
+.videoinfotd3							    { width:100%; height:30px; background-color:#F4F4F4; cursor:pointer; padding-left:5px; }	
+.videodatadiv2td1							{ color:Black; }
+
+
+
+/* Third set of Data to project */
+#videodatadiv3 								{ width:690px; margin-top:25px; background-color:#f4f4f4; border:1px solid #e2e2e2; }
+#videodatadiv3td1							{ width:220px; height:40px; border:0px solid #e2e2e2; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
+#videodatadiv3td2							{ padding-left:10px; width:470px; height:40px; border-left:2px solid #e2e2e2; text-align:center; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:bold; }
+#videodatadiv3td3   						{ background-color:White; border-top:5px solid #e3e3e3; margin-left:0px; width:100%; color:#5B6E1D; position:relative; font-family:Arial,Helvetica,Sans-Serif; font-size:0.8em; font-weight:normal; }
+#videodatadiv3divdesc						{ margin:5px 0px 5px 30px; padding:5px; width:650px; color:#5B6E1D; position:relative; text-align:left; }
+#videodatadiv4divdesc						{ margin:5px 0px 5px 40px; padding:5px; width:640px; color:#5B6E1D; position:relative; text-align:left; }
+
+#bar_graph									{ width:670px; margin-left:10px; }
+
+
+/* Questions Asked */
+#questiontable								{ margin:0px; width:100%;  }
+#questiontabletd1							{ width:40%; text-align:left; background-color:none; color:#3F3E3E; padding-left:3px; padding-top:5px; border-bottom:0px solid #f3f3f3; }
+#questiontabletd2							{ width:60%; text-align:top-left; background-color:none; vertical-align:top; padding-left:3px; padding-top:5px; border-bottom:0px solid #f3f3f3; }
+#questiontabletd3div						{ height:2px; width:100%; margin-bottom:0px; margin-top:8px; background-color:none; }
+#questiontabletd3							{ width:100%; border-bottom:0px solid #f3f3f3;  }
+.smallfont									{ font-size:85%; color:Gray; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; }	
+.row1										{ background-color:#f1f1f1; }
+.row2										{ background-color:White; }
+
+
+
+#footerdivleft								{ width:960px; }
+#footerdivlicence							{ width:948px; }
+/*    COCO link     */
+a.exploredescmainlink1						{ float:left; margin-right:11px; text-decoration:none; font-size:13px; font-family:Sans-Serif; font-weight:normal; color:Gray; }
+a.exploredescmainlink1:hover				{ text-decoration:underline; color:#fbae0c; }
+a.exploredescmainlink1 img					{ float:left; display:block; border:none; margin-right:2px; }
+
+
+/* BODY CONTENT RIGHT   */
+#contentdivright							{ margin-left:5px; float:left; width:250px; background-color:none; border-left:0px solid #cfcfcf; min-height:600px; }	
+#contentdivrighttitle						{ text-align:left; width:100%; padding-left:0px; margin-bottom:5px; border-bottom:3px solid #f4f4f4; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:Gray; font-size:0.8em;  }		 
+#contentdivrightdesc						{ clear:both; margin-left:0px; width:250px; }	
+#contentdivrighttable						{ width:100%; margin-left:0px; }
+#contentdivrighttd							{ width:30px; height: 80px; border-bottom:1px solid #E2E2E2; }	
+#contentdivrighttddiv1						{ margin-top:6px; float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; }
+#contentdivrighttddiv2						{ margin-top:3px; float:left; margin-left:5px; width:155px; margin-bottom:10px; text-align:left; }
+#contentdivrighttddiv21						{ padding-bottom:2px; margin-top:0px; clear:both; width:100%; background-color:none; }
+#contentdivrighttddiv22						{ padding-top:2px; padding-bottom:2px; margin-top:0px; clear:both; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
+
+/* View More links */
+.videotitlelinks							{ text-decoration:none; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; font-weight:bold; color:#3F3E3E; }
+.videotitlelinks:hover						{ }
+
+/*list of videoes styling*/
+#content				{ margin-top:20px; float:left; margin-left:5px; width:620px; min-height:600px; margin-bottom:50px; }
+#contentdiv				{ clear:both; margin-top:6px; width:620px; }
+
+#contentdivrighttable		{ clear:both; width:100%; margin-top:8px; }
+#contentdivrighttddiv1		{ float:left; width:90px; background-color:none; height:70px; margin-bottom:10px; padding-top:5px; }
+#contentdivrighttddiv2		{ float:left; margin-left:10px; width:83.5%; margin-bottom:10px; text-align:left; }
+.contentdivrighttddiv21	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-family:Arial,Helvetica,Sans-Serif; }
+.contentdivrighttddiv22	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
