@@ -254,7 +254,7 @@ define([
                                     that.show_form(that.get_entity_name(up_model), on_off_obj.off_json, error.responseText);
                                 });    
                         })
-                        .fail(function(error){
+                        .fail(function(model, error){
                             console.log("UPLOAD: Not uploading object coz ConvertNamespace failed");
                             dfd.reject(error);
                         });    

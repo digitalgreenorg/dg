@@ -5,9 +5,10 @@ define([
   'indexeddb_backbone_config',
   'configs',
   'convert_namespace',
+  'offline_utils', 
   'indexeddb-backbone',
-  'bootstrapjs'                            
-], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace){
+  'bootstrapjs',
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace, Offline){
     
     var IncrementalDownloadView = Backbone.Layout.extend({
         
@@ -31,12 +32,7 @@ define([
         
         initialize: function(){
             console.log("UPLOAD: initializing new incremental_download view");
-            _(this)
-                .bindAll('iterate_incd_objects');
-            _(this)
-                .bindAll('pick_next');
-            _(this)
-                .bindAll('stop_inc_download');
+            _.bindAll(this);
             this.start_timestamp = null;
             this.in_progress = false;
         },  
@@ -152,32 +148,20 @@ define([
             
         get_last_download_timestamp: function(){
             var dfd = new $.Deferred();
-            var that = this;
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            this.meta_model = new generic_model_offline();
-            this.meta_model.set({key: "last_inc_download"});
-            this.meta_model.fetch({
-                success: function(model){
-                    var timestamp = model.get('timestamp');
-                    dfd.resolve(timestamp);
-                },
-                error: function(model,error){
-                    that.meta_model.clear();
-                    that.meta_model.set({key: "last_full_download"});
-                    that.meta_model.fetch({
-                        success: function(model){
-                            var timestamp = model.get('timestamp');
-                            dfd.resolve(timestamp);
-                        },
-                        error: function(model,error){
+            Offline.fetch_object("meta_data", "key", "last_inc_download")
+                .done(function(model){
+                    dfd.resolve(model.get('timestamp'));
+                })
+                .fail(function(model, error){
+                    Offline.fetch_object("meta_data", "key", "last_full_download")
+                        .done(function(model){
+                            dfd.resolve(model.get('timestamp'));
+                        })
+                        .fail(function(model, error){
                             dfd.reject("Neither inc download has happened before nor full download.");
-                        }        
-                    });
-                }        
-            });
+                        }); 
+                });
+            
             return dfd;    
         },
             
@@ -498,57 +482,31 @@ define([
         
         finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
-            
+            var that = this;
             //possible if timestamp of last object in incd was not present or no objects were returned
             if(!last_object_timestamp)
                 last_object_timestamp = this.start_timestamp;
-            console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
-            var that = this;
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_inc_download"});
-            meta_model.fetch({
-                success: function(model){
-                    console.log("DASHBOARD:DOWNLOAD: last_inc_download fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',last_object_timestamp);
-                    model.save(null,{
-                        success: function(){
-                            console.log("DASHBOARD:DOWNLOAD: last_inc_download updated in meta_data objectStore:");    
-                            console.log(JSON.stringify(model.toJSON()));
-                            dfd.resolve();
-                        },
-                        error: function(model,error){
-                            console.log("DASHBOARD:DOWNLOAD: error updating last_inc_download in meta_data objectStore");  
-                            console.log(error);
-                            dfd.reject(error);  
-                        }
-                    });
-                },
-                error: function(model,error){
-                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_inc_download from meta_data objectStore");
-                    if(error == "Not Found")
-                        {
-                            meta_model.set('timestamp',last_object_timestamp);
-                            meta_model.save(null,{
-                                success: function(model){
-                                    console.log("DASHBOARD:DOWNLOAD: last_inc_download created in meta_data objectStore:");    
-                                    console.log(JSON.stringify(model.toJSON()));
-                                    dfd.resolve();
-                                },
-                                error: function(model,error){
-                                    console.log("DASHBOARD:DOWNLOAD: error creating last_inc_download in meta_data objectStore : ");
-                                    console.log(error);   
-                                    dfd.reject(error); 
-                                }
-                            });
-                            
-                        }    
-                }        
-            });
+            
+            Offline.fetch_object("meta_data", "key", "last_inc_download")
+                .done(function(model){
+                    set_timestamp(model);
+                })
+                .fail(function(model, error){
+                    set_timestamp(model);
+                });
+            
+            function set_timestamp(model){
+                model.set('timestamp', last_object_timestamp);
+                model.save(null,{
+                    success: function(){
+                        dfd.resolve();
+                    },
+                    error: function(model,error){
+                        dfd.reject("error updating last_full_download in meta_data objectStore");
+                    }
+                });
+            };
+            
             return dfd;
         }
         

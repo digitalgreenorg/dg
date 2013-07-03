@@ -72,7 +72,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
-                            dfd.reject(error);
+                            dfd.reject(model, error);
                         }
                     });
                 })

@@ -60,45 +60,40 @@ define([
                 if(listing||add)
                 {
                     if(listing)
-                    {
                         $('#dashboard_items')
                             .append(this.item_template({
                             name: member+"/list",
                             title: configs[member]["page_header"]+'s'
                         }));
-                    }
+                    
                     if(add)
-                    {
                         $('#dashboard_items_add')
                             .append(this.item_template({
                             name: member+"/add",
                             title: '<i class="icon-plus-sign"></i>'
                         }));
-                    }
                     else
-                    {
                         $('#dashboard_items_add')
                             .append("<li><i class='icon-white icon-plus-sign'></li>");
-                    }
                 }
-				}
+            }
 				
-				upload_collection.on('all', function(){
-					$("#upload_num").html(function() {
-						return upload_collection.length;
-					});
+			upload_collection.on('all', function(){
+				$("#upload_num").html(function() {
+					return upload_collection.length;
 				});
-				
-				window.addEventListener("offline", this.user_offline);
+			});
+			
+			window.addEventListener("offline", this.user_offline);
 
-				window.addEventListener("online", this.user_online);
-				
-				if (User.isOnline()){
-					this.user_online();
-				}
-				else {
-					this.user_offline();
-				}
+			window.addEventListener("online", this.user_online);
+			
+			if (User.isOnline()){
+				this.user_online();
+			}
+			else {
+				this.user_offline();
+			}
 
         },
         
@@ -118,14 +113,10 @@ define([
         sync: function(){
             var that = this;
             //If background inc download is in progress, tel user to wait till its finished
-            //TODO: alterntely we can interrupt inc download and start with sync
-            if(this.inc_download_v)
+            if(this.inc_download_v && this.inc_download_v.in_progress)
             {
-                if(this.inc_download_v.in_progress)
-                {
-                    alert("Please wait till download is finished");
+                    alert("Please wait till background download is finished.");
                     return;
-                }
             }
             this.sync_in_progress = true;
             this.upload()
@@ -139,8 +130,7 @@ define([
                 .fail(function(error){
                     console.log("ERROR IN UPLOAD");
                     console.log(error);
-                   
-					notifs_view.add_alert({
+                   	notifs_view.add_alert({
 						notif_type: "error",
 						message: "Sync Incomplete. Failed to finish upload : "+error
 					});
@@ -175,7 +165,6 @@ define([
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            //inserting into body bcoz can't insert into fixed positioned dom elements
             $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
@@ -213,20 +202,19 @@ define([
         background_download: function(){
             var that = this;
             console.log("Going for background inc download");
+
             var call_again = function(){
                 setTimeout(function(){
                     that.background_download();
                 }, configs.misc.background_download_interval);
             };
+
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)
-            {
                 this.inc_download({background:true})
                     .always(call_again);
-            }
-            else{
+            else
                 call_again();
-            }
         },
         
         is_uploadqueue_empty : function(){
