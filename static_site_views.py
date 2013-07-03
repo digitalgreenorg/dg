@@ -186,12 +186,7 @@ def partnerexecutive(request):
 
 def partnerspring(request):
     ids = [6000017889,6000017713,6000017896,6000016589,6000008464,6000007313]
-    vids = []
-    for id in ids:
-        vids.append(Video.objects.select_related().get(pk=id))
-    for vid in vids:    
-        vid.adoptions = PersonAdoptPractice.objects.filter(video=vid.id).count()
-    
+    vids = list(Video.objects.filter(id__in = ids).select_related().annotate(adoptions=Count('personadoptpractice')))
     return render_to_response('base_partner_spring.html', dict(vids = vids))
 
 def partnerresearch(request):
