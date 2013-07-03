@@ -14,8 +14,8 @@ define(function(require) {
         
 
         Output params:
-        newsItems {Activity[]}
-        totalCount {Number}*/
+        featuredCollection {Activity[]}
+        */
         
 
         constructor: function() {
@@ -23,7 +23,6 @@ define(function(require) {
 
             // prepare data model
             this._dataModel.addSubModel('featuredCollection', true);
-
             this.addInputParam('language__name', false, Util.Cookie.get('language__name'));
         },
 
@@ -31,9 +30,7 @@ define(function(require) {
             if (language == undefined) {
                 language = Util.Cookie.get('language__name');  //set from cookie
             }
-
             this.setInputParam('language__name', language, true);
-
             // perform the fetch
             this.base();
         },
@@ -44,7 +41,7 @@ define(function(require) {
             // local references
             var dataModel = this._dataModel;
             var featuredCollectionModel = dataModel.get('featuredCollection');
-            featuredCollectionModel.set('1',unprocessedData.featured_collection);
+            featuredCollectionModel.set('1',unprocessedData.featured_collection);  //1 is the key with which this data will be fetched
         },
 
         setInputParam: function(key, value, disableCacheClearing) {
@@ -60,19 +57,15 @@ define(function(require) {
             this._dataModel.get('featuredCollection').clear();
         },
 
-        
-
         getFeaturedCollection: function() {
-
             var language = this.getInputParam('language__name');
             var featuredCollectionModel = this._dataModel.get('featuredCollection');
-            var featuredCollection = featuredCollectionModel.get('1');
+            var featuredCollection = featuredCollectionModel.get('1');  //1 was set in process data
 
             if (!featuredCollection) {
                 this.fetch(language);
                 return false;
             }
-            //this.fetch(language);
             return featuredCollection;
         }
 

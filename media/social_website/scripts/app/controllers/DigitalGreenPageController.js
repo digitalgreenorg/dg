@@ -59,6 +59,8 @@ define(function(require) {
             //TODO: Not sure if we need to do much else than instantiate
             references.searchViewController = new SearchViewController($searchContainer);
             references.FeaturedCollectionViewController = new FeaturedCollectionViewController($featuredCollectionsContainer);
+            this._references.FeaturedCollectionViewController.setInputParam('language__name','All Languages' );
+            this._references.FeaturedCollectionViewController.getFeaturedCollection('All Languages');
         },
 
         _onOptionChanged: function(value) {

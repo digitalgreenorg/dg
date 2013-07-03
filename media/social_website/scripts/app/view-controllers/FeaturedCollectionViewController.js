@@ -1,7 +1,6 @@
 /**
- * NewsFeedViewController Class File
+ * FeaturedCollectionViewController Class File
  *
- * @author dlakes
  * @version $Id$
  * @requires require.js
  * @requires jQuery
@@ -14,13 +13,10 @@ define(function(require) {
     var viewRenderer = require('framework/ViewRenderer');
     var Util = require('framework/Util');
     var jQuery = require('jquery');
-
-    var NCarousel = require('libs/NCarousel/NCarousel');
-
     var FeaturedCollectionDataFeed = require('app/libs/FeaturedCollectionDataFeed');
     var featuredCollectionTemplate = require('text!app/views/featured-collection.html');
 
-    var NewsFeedViewController = Controller.extend({
+    var FeaturedCollectionViewController = Controller.extend({
 
         /**
          * Controller constructor
@@ -28,73 +24,44 @@ define(function(require) {
          */
         constructor: function($referenceBase) {
             this.base($referenceBase);
-
             return this;
         },
 
         _initConfig: function() {
             this.base();
-
         },
 
         _initReferences: function($referenceBase) {
             this.base();
-
             var references = this._references;
-
             references.dataFeed = new FeaturedCollectionDataFeed();
-
-            //references.$newsItemsWrapper = $referenceBase;
-            //references.$newsItemsContainer = $referenceBase.find('.js-news-feed-container');
-            //references.$newsFeedShowMoreButton = $referenceBase.find(".js-news-feed-show-more-btn");
+            references.$featuredCollectionContainer = $referenceBase
         },
 
         _initState: function() {
             this.base();
-
             var state = this._state;
             state.currentLanguage = Util.Cookie.get('language__name');
         },
 
         _initEvents: function() {
             this.base();
-
             var boundFunctions = this._boundFunctions;
             var references = this._references;
-
             boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
             references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
-
-            //pulling more info
-            
         },
 
-        
-
-        
-
-        
-
         getFeaturedCollection: function(language) {
-
-            /*if (language == undefined) {
-                language = this.get;
-            } else {
-                this.setCurrentLanguage(language);
-            }*/
-
-                        
+            if (language == undefined) {
+                language = Util.Cookie.get('language__name');
+            }
             var dataFeed = this._references.dataFeed;
             dataFeed.setInputParam('language__name', language, true)
-           
-
             var featuredcollectionData = dataFeed.getFeaturedCollection();
-            
-
             if(featuredcollectionData == false){
                 return false;
             }
-
             this._renderFeaturedCollection(featuredcollectionData);
         },
 
@@ -103,33 +70,9 @@ define(function(require) {
         },
 
         _renderFeaturedCollection: function(featuredcollectionData) {
-
-            var renderData = {
-                featuredcollection: featuredcollectionData
-            };
-            var $featuredCollectionsContainer = jQuery(".js-featured-collections-wrapper");
-
             var renderedFeaturedCollection = viewRenderer.render( featuredCollectionTemplate,featuredcollectionData );
-            $featuredCollectionsContainer.html(renderedFeaturedCollection);
+            this._references.$featuredCollectionContainer.html(renderedFeaturedCollection);
         },
-
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-
-        
-
-        
 
         setInputParam: function(key, value, disableCacheClearing) {
             if (!this._references.dataFeed.setInputParam(key, value, disableCacheClearing)) {
@@ -148,5 +91,5 @@ define(function(require) {
         }
     });
 
-    return NewsFeedViewController;
+    return FeaturedCollectionViewController;
 });

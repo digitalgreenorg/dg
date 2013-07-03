@@ -14,30 +14,32 @@ def social_home(request):
     language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
     language=list(set(language))
     language = sorted(language) # setting them in alphabetical order
-    fcollection_uid=34
-    featured_collection=Collection.objects.get(uid=fcollection_uid)
-    time=0
-    vid_thumbnails=[]
-    for vid in featured_collection.videos.all():
-        time=time+vid.duration
-        vid_thumbnails.append(vid.thumbnailURL)
-    featured_collection_dict={
-        'thumbnail':vid_thumbnails[:5],
-        'thumbnail_default':vid_thumbnails[0],
-        'title':featured_collection.title,
-        'state':featured_collection.state,
-        'country':featured_collection.country.countryName,
-        'likes':featured_collection.likes,
-        'views':featured_collection.views,
-        'adoptions':featured_collection.adoptions,
-        'language':featured_collection.language.name,
-        'partner_name':featured_collection.partner.name,
-        'partner_logo':featured_collection.partner.logoURL,
-        'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
-        'video_count':featured_collection.videos.all().count(),
-        'duration':str(datetime.timedelta(seconds=time)),
-        'link':'/social/collections/?id='+ str(fcollection_uid)+'&video=1'
-        }
+    #===========================================================================
+    # fcollection_uid=34
+    # featured_collection=Collection.objects.get(uid=fcollection_uid)
+    # time=0
+    # vid_thumbnails=[]
+    # for vid in featured_collection.videos.all():
+    #     time=time+vid.duration
+    #     vid_thumbnails.append(vid.thumbnailURL)
+    # featured_collection_dict={
+    #     'thumbnail':vid_thumbnails[:5],
+    #     'thumbnail_default':vid_thumbnails[0],
+    #     'title':featured_collection.title,
+    #     'state':featured_collection.state,
+    #     'country':featured_collection.country.countryName,
+    #     'likes':featured_collection.likes,
+    #     'views':featured_collection.views,
+    #     'adoptions':featured_collection.adoptions,
+    #     'language':featured_collection.language.name,
+    #     'partner_name':featured_collection.partner.name,
+    #     'partner_logo':featured_collection.partner.logoURL,
+    #     'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
+    #     'video_count':featured_collection.videos.all().count(),
+    #     'duration':str(datetime.timedelta(seconds=time)),
+    #     'link':'/social/collections/?id='+ str(fcollection_uid)+'&video=1'
+    #     }
+    #===========================================================================
     context= {
         'header': {
             'jsController':'Home',
@@ -353,8 +355,11 @@ def elasticSearch(request):
 def featuredCollection(request):
     params = request.GET
     language_name = params.get('language__name', None)
+    if language_name == "All Languages":
+        language_name = 'Mundari'
     featured_collection = FeaturedCollection.objects.get(language__name=language_name)
     collection_uid = featured_collection.collection
+    #collection_uid = '34'
     collage_url = featured_collection.collageURL
     collection = Collection.objects.get(uid=collection_uid)
     time=0
