@@ -28,7 +28,7 @@
 
 .contenttd1div1lidiv2title a		{ font-size:1.2em; font-family:Georgia,'Times New Roman',Serif; color:#5B6E1D; font-weight:normal; text-decoration:none; }
 .contenttd1div1lidiv2title a:hover	{ text-decoration:underline; }
-
+.contenttd1div1lidiv2titlespring	{ clear:both; background-color:none; color:#5B6E1D; text-decoration:underline;}
 
 .contenttd1div2						{ float:left; width:85%; margin-top:0px; }
 .contenttd1div2title				{ float:none; width:100%; margin-top:0px; padding-left:0px; height:40px; }
