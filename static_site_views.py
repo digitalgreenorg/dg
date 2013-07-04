@@ -1,4 +1,5 @@
 from dashboard.models import PersonAdoptPractice, Video 
+from django.db.models import Count
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
 from output.views.common import home_with_analytics
@@ -184,9 +185,8 @@ def partnerexecutive(request):
 
 def partnerspring(request):
     ids = [6000017889,6000017713,6000017896,6000016589,6000008464,6000007313]
-    vids = list(Video.objects.filter(id__in = ids).select_related())
-    for vid in vids:    
-        vid.adoptions = PersonAdoptPractice.objects.filter(video=vid.id).count()
+    vids = []
+    vids = Video.objects.filter(id__in = ids).values('related_practice__practice_name','id','youtubeid','title','duration','video_production_end_date','viewers').annotate(adoptions=Count('personadoptpractice'))
     return render_to_response('base_partner_spring.html', dict(vids = vids))
 
 def partnerresearch(request):
