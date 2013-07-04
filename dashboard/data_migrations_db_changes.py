@@ -61,6 +61,7 @@ def clean_person_group_screening():
             make_unique[j].save()
     
     dup_list=Person.objects.values('person_name','father_name','village').annotate(sameper=Count('person_name')).filter(sameper__gt=1)
+    print 'person dup list before', len(dup_list)
     for i in dup_list:
         make_unique=Person.objects.filter(person_name=i['person_name'],father_name=i['father_name'],village=i['village'])
         for j in range(len(make_unique)):
@@ -77,7 +78,7 @@ def clean_person_group_screening():
                 make_unique[j].father_name=temp
                 make_unique[j].save()
     dup_list=Person.objects.values('person_name','father_name','village').annotate(sameper=Count('person_name')).filter(sameper__gt=1)
-    print len(dup_list)          
+    print 'person dup list after',len(dup_list)          
     scr_dupes=Screening.objects.values('village','date','start_time','end_time','animator').annotate(samescr=Count('village')).filter(samescr__gt=1)
     for i in scr_dupes:
         to_del=Screening.objects.filter(village=i['village'],date=i['date'],start_time=i['start_time'],end_time=i['end_time'],animator=i['animator'])
@@ -88,5 +89,7 @@ def clean_person_group_screening():
                 merge_screenings(to_del[0],j)
     if len(Screening.objects.values('village','date','start_time','end_time','animator').annotate(samescr=Count('village')).filter(samescr__gt=1))==0:
         print "Screening data cleaned successfully"
-            
+    
+    ###populate father_name with <person_name> since it is going to be required field
+    fath_null_list = Person.objects.filter(father_name='').update(father_name=F('person_name'))
             

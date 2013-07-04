@@ -3,96 +3,22 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from django.db.models import get_app, get_models
-from dashboard.models import *
-
-def get_user_id(model, obj):
-        user_id = None
-        db_table_name = model._meta.db_table
-        #print 'table name', db_table_name
-        if db_table_name == "person" or db_table_name == "person_groups" or db_table_name == "video" or db_table_name == "screening":
-            district_id = Block.objects.filter(village = obj.village).values_list('district__id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-               #print 'user id in func', user_id
-            else:
-                user_id = None
-        if db_table_name == "village":
-            #print 'in village', obj.id
-            district_id = Village.objects.filter(id = obj.id).values_list('block__district__id', flat=True)[0]
-            #print 'district id',district_id
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-               #print 'user id in func', user_id
-            else:
-                user_id = None
-        
-        if db_table_name == "animator":
-            village_ids = AnimatorAssignedVillage.objects.filter(animator__id = obj.id).values_list('village__id', flat=True)
-            if village_ids:
-                village_id = village_ids[0]
-            else:
-                village_id = None
-            district_id = Village.objects.filter(id = village_id).values_list('id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-            else:
-                user_id = None
-        if db_table_name == "person_adopt_practice":
-            village_ids = PersonAdoptPractice.objects.filter(person = obj.person).values_list('person__village__id', flat=True)
-            if village_ids:
-                village_id = village_ids[0]
-            else:
-                village_id = None
-            district_id = Village.objects.filter(id = village_id).values_list('block__district__id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-            else:
-                user_id = None
-            
-        return user_id
+from dashboard.data_migrations_db_changes import *
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        print 'forward done'
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-#        coco_model_list = ['person', 'village', 'person_groups', 'animator', 'animator_assigned_village', 'video', 'screening', 'person_adopt_practice']
-#        for model in get_models(get_app('dashboard')):
-#            if model._meta.db_table in coco_model_list:
-#                objs = model.objects.filter(user_created__isnull = True)
-#                print 'before', model._meta.db_table, objs.count()
-#                for obj in objs:
-#                    user_id = get_user_id(model, obj)
-#                    #print 'user id',user_id
-#                    #print obj.user_created
-#                    if not obj.user_created and user_id:
-#                        obj.user_created = User.objects.get(id = user_id)
-#                        obj.save()
-#                objs = model.objects.filter(user_created__isnull = True)
-#                print 'after',model._meta.db_table, objs.count()
-            #print model._meta.db_table, model.objects.all().count() # Get the name of the model in the database
-                
+        clean_person_group_screening()
+        vids=orm['dashboard.Video'].objects.all()
+        for i in vids:
+            if i.last_modified is not None:
+                i.time_modified=i.last_modified
+                i.save()
+
     def backwards(self, orm):
         "Write your backwards methods here."
-        raise RuntimeError("Cannot reverse this migration.")
 
     models = {
         'auth.group': {
