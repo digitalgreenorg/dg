@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
+from django.utils import timezone
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
 import sys, traceback
@@ -62,9 +63,9 @@ class ServerLog(models.Model):
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(class)s_created", editable = False, null=True, blank=True)
-    time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    time_created = models.DateTimeField(default=timezone.now, null=True, blank=True)
     user_modified = models.ForeignKey(User, related_name ="%(class)s_related_modified",editable = False, null=True, blank=True)
-    time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+    time_modified = models.DateTimeField(default=timezone.now, null=True, blank=True)
   
     class Meta:
         abstract = True

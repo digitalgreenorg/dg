@@ -98,14 +98,13 @@ define([
         },
         
 		user_online: function(){
-			//document.getElementById('sync').disabled = false;
+			$('#sync').removeAttr("disabled");
 			$('#offline').hide();
 			$('#online').show();
 		},
 		
 		user_offline: function(){
-			//document.getElementById('sync').disabled = true;
-			//$('input[type="btn"]').attr('disabled','disabled');
+			$('#sync').attr('disabled',true);
 			$('#online').hide();
 			$('#offline').show();
 		},

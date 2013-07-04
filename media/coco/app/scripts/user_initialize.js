@@ -8,13 +8,13 @@ define([
             validateUniCodeChars, 'Enter a string.'
         );
         $.validator.addMethod('validateDate',
-            validateDate, 'Enter the date in the format of yyyy-mm-dd.'
+            validateDate, 'Enter the date in the form of YYYY-MM-DD.'
         );
         $.validator.addMethod('validateTime',
-            validateTime, 'Enter the time in the format of hh:mm in 24 hours format'
+            validateTime, 'Enter the time in the form of HH:MM. Use 24 hour format'
         );
-		$.validator.addMethod('startBeforeEnd',
-            startBeforeEnd, 'End time should be later than start time'
+		$.validator.addMethod('timeOrder',
+            timeOrder, 'End time should be later than start time'
         );
 		$.validator.addMethod('dateOrder',
             dateOrder, 'End date should be later than start date'
@@ -79,13 +79,24 @@ define([
 		startDate = start.split('-');
 		endDate = value.split('-');
 
-		if(endDate[0]>=startDate[0] && endDate[1]>=startDate[1] && endDate[2]>=startDate[2]){
+		if(endDate[0]>startDate[0]){
 			check = true;
 		}
-		return check;
+		else if (endDate[0] === startDate[0]){
+			if(endDate[1]>startDate[1]){
+				check = true;
+			}
+			else if(endDate[1] === startDate[1]){
+				if(endDate[2] >= startDate[2]){
+					check = true;
+				}
+			}
+		}	
+		return check;	
 	}
+	
 
-	function startBeforeEnd(value, element, options){
+	function timeOrder(value, element, options){
 		var check = false;
 		var start = $('#'+options.start_time).val();
 		var end = value;

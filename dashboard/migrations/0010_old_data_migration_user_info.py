@@ -72,21 +72,22 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
+        print 'forward done'
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-        coco_model_list = ['person', 'village', 'person_groups', 'animator', 'animator_assigned_village', 'video', 'screening', 'person_adopt_practice']
-        for model in get_models(get_app('dashboard')):
-            if model._meta.db_table in coco_model_list:
-                objs = model.objects.filter(user_created__isnull = True)
-                print 'before', model._meta.db_table, objs.count()
-                for obj in objs:
-                    user_id = get_user_id(model, obj)
-                    #print 'user id',user_id
-                    #print obj.user_created
-                    if not obj.user_created and user_id:
-                        obj.user_created = User.objects.get(id = user_id)
-                        obj.save()
-                objs = model.objects.filter(user_created__isnull = True)
-                print 'after',model._meta.db_table, objs.count()
+#        coco_model_list = ['person', 'village', 'person_groups', 'animator', 'animator_assigned_village', 'video', 'screening', 'person_adopt_practice']
+#        for model in get_models(get_app('dashboard')):
+#            if model._meta.db_table in coco_model_list:
+#                objs = model.objects.filter(user_created__isnull = True)
+#                print 'before', model._meta.db_table, objs.count()
+#                for obj in objs:
+#                    user_id = get_user_id(model, obj)
+#                    #print 'user id',user_id
+#                    #print obj.user_created
+#                    if not obj.user_created and user_id:
+#                        obj.user_created = User.objects.get(id = user_id)
+#                        obj.save()
+#                objs = model.objects.filter(user_created__isnull = True)
+#                print 'after',model._meta.db_table, objs.count()
             #print model._meta.db_table, model.objects.all().count() # Get the name of the model in the database
                 
     def backwards(self, orm):

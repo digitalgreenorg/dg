@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML>
 <!-- manifest="/media/coco/cocooffline.appcache" -->
 <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us" manifest="/media/coco/cocooffline.appcache">
 <head>
@@ -158,9 +158,9 @@
                     <a href="#">COCO</a>
                 </div>
                 <div id="coco_sync" class="row">
-                    <div class="span1 btn pull-left" id= "sync" title= "Click to sync your database with the server">Sync
+                    <button class="btn pull-left" id= "sync">Sync
 					<span class="badge" id="upload_num"><%=upload_entries%></span>
-					</div>
+					</button>
                 </div>
                 <div id="coco_nav" class="pull-left">
                     <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
@@ -371,10 +371,11 @@
     <td><%= name %></td>
     <td> 
 		<% 
-			var villages="";
+			var villages=[];
 			$.each(assigned_villages, function(index,val) {
-				villages = villages + val.village_name +"; ";
+				villages.push(val.village_name.trim());
      		});
+			villages.sort();
 		%>
 	<%= villages %>
 	</td>
