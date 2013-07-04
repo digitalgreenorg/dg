@@ -396,7 +396,7 @@ function() {
             'entity': 'person',
             'default_num_rows': 10,
             "template": "person_inline",
-            "foreign_attribute": {
+            "joining_attribute": {
                 'host_attribute': ["id", "group_name"],
                 'inline_attribute': "group"
             },
@@ -404,7 +404,21 @@ function() {
             'borrow_attributes': [{
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
-            }]
+            }],
+            foreign_entities: {
+                village: {
+                    village: {
+                        placeholder: 'id_village',
+                        name_field: 'village_name'
+                    },
+                },
+                group: {
+                    group: {
+                        placeholder: 'id_group',
+                        name_field: 'group_name'
+                    }
+                }
+            }
         },
         'form_field_validation': {
             ignore: ".donotvalidate",
@@ -4164,7 +4178,12 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                         },
                         error: function(model,error){
                             console.log(error);
-                            return dfd.reject("Error saving object in offline - "+error.srcElement.error.name);
+                            //format error object to match the format of error sent by online save
+                            var err_json = {};
+                            err_json[entity_name] = {
+                                __all__: [error.target.error.name]
+                            }
+                            return dfd.reject(JSON.stringify(err_json));
                         }
                     });
                 })
@@ -4189,7 +4208,7 @@ define('offline_utils',['jquery', 'configs', 'backbone', 'indexeddb_backbone_con
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
-                            dfd.reject(error);
+                            dfd.reject(model, error);
                         }
                     });
                 })
@@ -5572,7 +5591,8 @@ define('views/form',[
 
         events: {
             // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
-            'click #button2': 'button2_clicked'
+            'click #button2': 'button2_clicked',
+            'click #add_rows': 'append_new_inlines'
         },
         template : '#form_template',         
         options_inner_template : _.template($('#options_template')
@@ -5583,6 +5603,7 @@ define('views/form',[
             var s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
             s_passed["inline"] = (this.inline) ? true: false;
+            s_passed["entity_name"] = this.entity_name;
             return s_passed;
         },
         
@@ -5592,7 +5613,7 @@ define('views/form',[
         this.edit_case_id, this.edit_case_json, this.edit_case
         */
         identify_form_action: function(params){
-            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(TODO: can be add too if json is missing id?).
+            // There are two ways in which edit is true - when the ID is given, and the second is when a json is given(LIMIT: can be add too if json is missing id?).
             this.edit_case = false;
             this.edit_id = null;
             if (params.model_json) {
@@ -5608,9 +5629,10 @@ define('views/form',[
         },
         
         /*
+        Refactor possible
         Reads entity_config and sets basic properties on view object for easy access
         */
-        identify_form_config: function(params){
+        read_form_config: function(params){
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
@@ -5680,9 +5702,7 @@ define('views/form',[
                         $.each(dependency,function(index,dep){
                             var source_elm = dep.source_form_element;
                             if(source_elm in that.source_dependents_map)
-                            {
                                 that.source_dependents_map[source_elm].push(element);
-                            }    
                             else{
                                 that.source_dependents_map[source_elm] = [];
                                 that.source_dependents_map[source_elm].push(element);
@@ -5713,9 +5733,9 @@ define('views/form',[
             _.bindAll(this);
             
             //read entity_config and sets main properties on view object for easy access
-            this.identify_form_config(params);
+            this.read_form_config(params);
 
-            //sets this.edit_case, this.edit_case_id, this.edit_case_json
+            //sets this.edit_case, and  this.edit_case_id, or this.edit_case_json
             this.identify_form_action(params);  
 
             //reads this.foreign_entities and setsup the collections, source_dependents_map
@@ -5822,8 +5842,15 @@ define('views/form',[
                 console.log("FORM:EDIT: Fteching inline collection");
                 Offline.fetch_collection(this.inline.entity)
                     .done(function(collection){
+                        // id-json dictionary of inline models - later used to extend the modified inlines
+                        that.inl_models_dict = {};
                         var inl_models = collection.filter(function(model){
-                           return model.get(that.inline.foreign_attribute.inline_attribute).id == that.edit_id;
+                            if(model.get(that.inline.joining_attribute.inline_attribute).id == that.edit_id)
+                            {
+                                that.inl_models_dict[model.get("id")] = model.toJSON();
+                                return true 
+                            }
+                            return false;    
                         });
                         console.log(inl_models);
                         that.fill_inlines(inl_models);
@@ -5837,12 +5864,22 @@ define('views/form',[
         
         append_new_inlines: function(num_rows){
             var inline_t  = _.template($('#'+this.inline.template).html());
-            //TODO: gotta start index from the last index already in dom for 'add more rows feature' 
-            for(var i=0;i<num_rows;i++)
+            if(typeof(num_rows)!="number")
+                num_rows = 5;
+            var start_index = get_index_to_start_from();
+            for(var i=start_index; i<start_index+num_rows; i++)
             {
                 var tr = $(inline_t({index:i}));
                 this.$('#inline_body').append(tr);
                 tr.on('change', this.switch_validation_for_inlines);
+            }
+            
+            function get_index_to_start_from(){
+                var all_present_inlines = this.$('#inline_body tr').not(".form_error");    
+                if(!all_present_inlines.length)
+                    return 1
+                var max_index = $(_.last(all_present_inlines)).attr("index");
+                return parseInt(max_index)+1;
             }
         },
         
@@ -6071,57 +6108,46 @@ define('views/form',[
             
             //if any defined, filter the model array before putting into dom 
             if(f_entity_desc.filter)
-            {
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-            }
             
             if(f_entity_desc.expanded)
             {
-                if(this.edit_case && f_entity_desc.expanded && !this.foreign_elements_rendered[element])
+                var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
+                $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
+                $f_el.html('');
+                this.expanded = element; //LIMIT: there can be only one expanded f element!
+                
+                //Its edit case and edit model is not yet rendered - so render it
+                if(this.edit_case && !this.foreign_elements_rendered[element])
                 {
-                    console.log("EDIt CASE, EXPANDED, Not Yet RENDERED");
-                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                    $f_el.html('');
                     var id_field = "id"
                     if(f_entity_desc.id_field)
-                         id_field = f_entity_desc.id_field;
-                    var entity = this.element_entity_map[element];
-                    var index = this.f_index.indexOf(entity);
-                    var collection = this.f_colls[index];
-                
+                        id_field = f_entity_desc.id_field;
+                        var collection = this.get_collection_of_element(element);                
                     $.each(this.model_json[element], function(index, f_json){
                         model = collection.get(f_json[id_field]);
-                        if(model)
-                        {
-                            var t_json = model.toJSON();
-                            t_json["index"] = index; 
-                            $.each(f_entity_desc.expanded.extra_fields, function(index,field){
-                                t_json[field] = f_json[field];
-                            });
-                            console.log(t_json);
-                            $f_el.append(expanded_template(t_json));    
-                        }
+                        if(!model)
+                            return;
+                        var t_json = model.toJSON();
+                        t_json["index"] = index; 
+                        $.each(f_entity_desc.expanded.extra_fields, function(index,field){
+                            t_json[field] = f_json[field];
+                        });
+                        console.log(t_json);
+                        $f_el.append(expanded_template(t_json));    
                     });
-                    this.initiate_form_widgets();
-                    this.expanded = element;
                     if(this.num_sources[element]<=0)
                         this.foreign_elements_rendered[element] = true;
                 }
-                else if(f_entity_desc.expanded)
+                else
                 {
-                    console.log("ADD CASE, EXPANDED, Not Yet RENDERED");
-                    var expanded_template  = _.template($('#'+f_entity_desc.expanded.template).html());
-                    $f_el = this.$('#' + f_entity_desc.expanded.placeholder);
-                    $f_el.html('');
                     $.each(model_array,function(index, f_model){
                         var t_json = f_model.toJSON();
                         t_json["index"] = index; 
                         $f_el.append(expanded_template(t_json));    
                     });
-                    this.expanded = element;
-                    this.initiate_form_widgets();
                 }    
+                this.initiate_form_widgets();
             }
             else
             {
@@ -6131,8 +6157,8 @@ define('views/form',[
                     $f_el.html('');    
                 else
                     $f_el.html(this.options_inner_template({
-                            id: "",
-                            name: "------------"
+                        id: "",
+                        name: "------------"
                     }));
                 $.each(model_array,function(index, f_model){
                     var f_json = f_model; 
@@ -6146,6 +6172,7 @@ define('views/form',[
                 $f_el.prop("disabled", false);
                 $f_el.trigger("liszt:updated");
 
+                //select the options selected in edit model
                 if(this.edit_case && !this.foreign_elements_rendered[element])
                 {
                     this.$('form [name='+element+']').val(this.model_json[element]).change();
@@ -6320,42 +6347,84 @@ define('views/form',[
             console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
             
             for(member in object_json)
-                {   
-                    if(member == "")
-                        delete object_json[member];
-                    
-                    else if(object_json[member]===""||object_json[member]==null||object_json[member]==undefined)
+            {   
+                if(member == "")
+                    delete object_json[member];
+                else if(!object_json[member])
+                {
+                    object_json[member] = null
+                    if(this.$('[name='+member+']').is('select[multiple]'))
                     {
-                        object_json[member] = null
+                        object_json[member] = [];
                     }
-                    if(object_json[member]==null)
-                    {
-                        if(this.$('[name='+member+']').is('select[multiple]'))
-                        {
-                            object_json[member] = [];
-                        }
-                    }
-                }    
+                }
+            }    
             console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
                 
         },  
         
-        show_errors: function(errors){
-            console.log("FORM: in show errors");
-            var error_str = "";
-            console.log("FORM: SHOWERROR: ");
-            this.$('#form_errors').html(errors);
+        
+        set_submit_button_state: function(state){
+            if(state=="disabled")
+                this.$(".action_button").attr("disabled",true);    
+            else
+                this.$(".action_button").button(state);    
+        },
+        //server err eg. - {"mediator": {"__all__": ["Animator with this Name, Gender and Partner already exists."]}}
+        show_errors: function(errors, disable_submit){
+            // used to clear form errors 
+            if(errors==null)
+            {
+                $('.form_error').remove();
+                $('.error').removeClass("error");
+                return;
+            }
+            
+            this.set_submit_button_state('reset');
+            if(disable_submit)
+                this.set_submit_button_state('disabled');
+            
+            
+            if(typeof(errors)!=="object")
+                errors = $.parseJSON(errors);
+            console.log("Showing this error");
+            console.log(errors);
+            _.each(errors, function(errors_obj, parent){
+                var parent_el = this.$('[name='+parent+']');
+                $.each(errors_obj, function(error_el_name, error_list){
+                    var error_ul = null;
+                    all_li = "<li>"+error_list.join("</li><li>")+"</li>";
+                    error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
+                    if(error_el_name=="__all__")
+                    {
+                        parent_el.before(error_ul);     //insert error message
+                        parent_el.addClass("error");    //highlight
+                    }
+                    else
+                    {
+                        //NOt Done
+                        var error_el = parent_el.find('[name='+error_el_name+']');
+                        error_el.after(error_ul);    //insert error message
+                        error_el
+                            .parent('div')
+                            .parent('div')
+                            .addClass("error");     //highlight
+                    }
+                });
+            }, this);
+            
         },        
         
         parse_inlines: function(raw_json){
             console.log("FORM: fetching inlines");
-            var all_inlines = $('#inline_body tr');    
+            var all_inlines = $('#inline_body tr').not(".form_error");    
             raw_json["inlines"] = [];
             var that = this;
             var inline_attrs = [];
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 var ignore = true;
+                inl_obj.index = $(inl).attr("index");
                 if($(inl).attr("model_id"))
                     inl_obj.id = parseInt($(inl).attr("model_id"));
                 $(inl).find(':input').each(function() {
@@ -6440,7 +6509,7 @@ define('views/form',[
         
         parse_bulk: function(raw_json){
             console.log("FORM: fetching bulks");
-            var all_inlines = $('#bulk tr');    
+            var all_inlines = $('#bulk tr').not(".form_error");    
             raw_json["bulk"] = [];
             var that = this;
             $.each(all_inlines,function(index, inl){
@@ -6470,33 +6539,43 @@ define('views/form',[
             });
         },
         
+        //preserve the background fields - not entered through form
+        extend_edit_json: function(o_json){
+            o_json = $.extend(true, this.model_json, o_json);
+            if(this.inline)
+            {
+                _.each(o_json.inlines, function(inl, index){
+                    var old_json = this.inl_models_dict[inl.id];
+                    o_json.inlines[index] = $.extend(true, old_json, inl);
+                }, this);
+            }
+            return o_json;
+        },
         
         save: function() {
+            this.show_errors(null);    //clear old errors
+            this.set_submit_button_state('loading'); //set state to loading
+            
             if(this.bulk)
             {
                 this.final_json= {};
                 this.parse_bulk(this.final_json);
-                console.log(JSON.stringify(this.final_json));
-                var that = this;
                 // $.each(this.final_json.bulk, function(index, obj){
-                    that.clean_json(this.final_json);
-                    that.denormalize_json(this.final_json);
                 // });
             }
             else
             {
                 this.final_json = Backbone.Syphon.serialize(this);
-                this.clean_json(this.final_json);
                 if(this.expanded)
-                {
                     this.parse_expanded(this.final_json);
-                }
-                this.denormalize_json(this.final_json);
                 if(this.inline)
                     this.parse_inlines(this.final_json);
-                this.final_json = $.extend(this.model_json, this.final_json);
             }
 
+            this.clean_json(this.final_json);
+            this.denormalize_json(this.final_json);
+            if(this.edit_case)
+                this.final_json = this.extend_edit_json(this.final_json);
             var ev_data = {
                 context: this,
             };
@@ -6507,7 +6586,7 @@ define('views/form',[
             var ev_data = {
                 context: this,
             };
-            this.trigger("button2_clicked",ev_res);
+            this.trigger("button2_clicked",ev_data);
         }
 
 
@@ -6985,7 +7064,7 @@ define('views/upload',[
                                     that.show_form(that.get_entity_name(up_model), on_off_obj.off_json, error.responseText);
                                 });    
                         })
-                        .fail(function(error){
+                        .fail(function(model, error){
                             console.log("UPLOAD: Not uploading object coz ConvertNamespace failed");
                             dfd.reject(error);
                         });    
@@ -7026,7 +7105,7 @@ define('views/upload',[
             Offline.save(null, this.get_entity_name(this.current_entry), after_upload_error_json)
                 .done(function(off_model){
                     that.$('#upload_form')
-                        .html("");
+                        .empty();
                     that.current_entry.set('data', after_upload_error_json);
                     that.upload_add_edit(that.current_entry, that.curr_entry_dfd);
                 })
@@ -7089,9 +7168,10 @@ define('views/incremental_download',[
   'indexeddb_backbone_config',
   'configs',
   'convert_namespace',
+  'offline_utils', 
   'indexeddb-backbone',
-  'bootstrapjs'                            
-], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace){
+  'bootstrapjs',
+], function(jquery,underscore,layoutmanager,indexeddb, all_configs, ConvertNamespace, Offline){
     
     var IncrementalDownloadView = Backbone.Layout.extend({
         
@@ -7115,12 +7195,7 @@ define('views/incremental_download',[
         
         initialize: function(){
             console.log("UPLOAD: initializing new incremental_download view");
-            _(this)
-                .bindAll('iterate_incd_objects');
-            _(this)
-                .bindAll('pick_next');
-            _(this)
-                .bindAll('stop_inc_download');
+            _.bindAll(this);
             this.start_timestamp = null;
             this.in_progress = false;
         },  
@@ -7236,32 +7311,20 @@ define('views/incremental_download',[
             
         get_last_download_timestamp: function(){
             var dfd = new $.Deferred();
-            var that = this;
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            this.meta_model = new generic_model_offline();
-            this.meta_model.set({key: "last_inc_download"});
-            this.meta_model.fetch({
-                success: function(model){
-                    var timestamp = model.get('timestamp');
-                    dfd.resolve(timestamp);
-                },
-                error: function(model,error){
-                    that.meta_model.clear();
-                    that.meta_model.set({key: "last_full_download"});
-                    that.meta_model.fetch({
-                        success: function(model){
-                            var timestamp = model.get('timestamp');
-                            dfd.resolve(timestamp);
-                        },
-                        error: function(model,error){
+            Offline.fetch_object("meta_data", "key", "last_inc_download")
+                .done(function(model){
+                    dfd.resolve(model.get('timestamp'));
+                })
+                .fail(function(model, error){
+                    Offline.fetch_object("meta_data", "key", "last_full_download")
+                        .done(function(model){
+                            dfd.resolve(model.get('timestamp'));
+                        })
+                        .fail(function(model, error){
                             dfd.reject("Neither inc download has happened before nor full download.");
-                        }        
-                    });
-                }        
-            });
+                        }); 
+                });
+            
             return dfd;    
         },
             
@@ -7582,57 +7645,31 @@ define('views/incremental_download',[
         
         finish_download: function(last_object_timestamp){
             var dfd = new $.Deferred();
-            
+            var that = this;
             //possible if timestamp of last object in incd was not present or no objects were returned
             if(!last_object_timestamp)
                 last_object_timestamp = this.start_timestamp;
-            console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
-            var that = this;
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_inc_download"});
-            meta_model.fetch({
-                success: function(model){
-                    console.log("DASHBOARD:DOWNLOAD: last_inc_download fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',last_object_timestamp);
-                    model.save(null,{
-                        success: function(){
-                            console.log("DASHBOARD:DOWNLOAD: last_inc_download updated in meta_data objectStore:");    
-                            console.log(JSON.stringify(model.toJSON()));
-                            dfd.resolve();
-                        },
-                        error: function(model,error){
-                            console.log("DASHBOARD:DOWNLOAD: error updating last_inc_download in meta_data objectStore");  
-                            console.log(error);
-                            dfd.reject(error);  
-                        }
-                    });
-                },
-                error: function(model,error){
-                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_inc_download from meta_data objectStore");
-                    if(error == "Not Found")
-                        {
-                            meta_model.set('timestamp',last_object_timestamp);
-                            meta_model.save(null,{
-                                success: function(model){
-                                    console.log("DASHBOARD:DOWNLOAD: last_inc_download created in meta_data objectStore:");    
-                                    console.log(JSON.stringify(model.toJSON()));
-                                    dfd.resolve();
-                                },
-                                error: function(model,error){
-                                    console.log("DASHBOARD:DOWNLOAD: error creating last_inc_download in meta_data objectStore : ");
-                                    console.log(error);   
-                                    dfd.reject(error); 
-                                }
-                            });
-                            
-                        }    
-                }        
-            });
+            
+            Offline.fetch_object("meta_data", "key", "last_inc_download")
+                .done(function(model){
+                    set_timestamp(model);
+                })
+                .fail(function(model, error){
+                    set_timestamp(model);
+                });
+            
+            function set_timestamp(model){
+                model.set('timestamp', last_object_timestamp);
+                model.save(null,{
+                    success: function(){
+                        dfd.resolve();
+                    },
+                    error: function(model,error){
+                        dfd.reject("error updating last_full_download in meta_data objectStore");
+                    }
+                });
+            };
+            
             return dfd;
         }
         
@@ -8002,45 +8039,40 @@ define('views/dashboard',[
                 if(listing||add)
                 {
                     if(listing)
-                    {
                         $('#dashboard_items')
                             .append(this.item_template({
                             name: member+"/list",
                             title: configs[member]["page_header"]+'s'
                         }));
-                    }
+                    
                     if(add)
-                    {
                         $('#dashboard_items_add')
                             .append(this.item_template({
                             name: member+"/add",
                             title: '<i class="icon-plus-sign"></i>'
                         }));
-                    }
                     else
-                    {
                         $('#dashboard_items_add')
                             .append("<li><i class='icon-white icon-plus-sign'></li>");
-                    }
                 }
-				}
+            }
 				
-				upload_collection.on('all', function(){
-					$("#upload_num").html(function() {
-						return upload_collection.length;
-					});
+			upload_collection.on('all', function(){
+				$("#upload_num").html(function() {
+					return upload_collection.length;
 				});
-				
-				window.addEventListener("offline", this.user_offline);
+			});
+			
+			window.addEventListener("offline", this.user_offline);
 
-				window.addEventListener("online", this.user_online);
-				
-				if (User.isOnline()){
-					this.user_online();
-				}
-				else {
-					this.user_offline();
-				}
+			window.addEventListener("online", this.user_online);
+			
+			if (User.isOnline()){
+				this.user_online();
+			}
+			else {
+				this.user_offline();
+			}
 
         },
         
@@ -8059,14 +8091,10 @@ define('views/dashboard',[
         sync: function(){
             var that = this;
             //If background inc download is in progress, tel user to wait till its finished
-            //TODO: alterntely we can interrupt inc download and start with sync
-            if(this.inc_download_v)
+            if(this.inc_download_v && this.inc_download_v.in_progress)
             {
-                if(this.inc_download_v.in_progress)
-                {
-                    alert("Please wait till download is finished");
+                    alert("Please wait till background download is finished.");
                     return;
-                }
             }
             this.sync_in_progress = true;
             this.upload()
@@ -8080,8 +8108,7 @@ define('views/dashboard',[
                 .fail(function(error){
                     console.log("ERROR IN UPLOAD");
                     console.log(error);
-                   
-					notifs_view.add_alert({
+                   	notifs_view.add_alert({
 						notif_type: "error",
 						message: "Sync Incomplete. Failed to finish upload : "+error
 					});
@@ -8116,7 +8143,6 @@ define('views/dashboard',[
             if(!this.upload_v){
                 this.upload_v = new UploadView();
             }
-            //inserting into body bcoz can't insert into fixed positioned dom elements
             $(this.upload_v.el).appendTo('body');
             this.upload_v.render();
             this.upload_v.start_upload()
@@ -8154,20 +8180,19 @@ define('views/dashboard',[
         background_download: function(){
             var that = this;
             console.log("Going for background inc download");
+
             var call_again = function(){
                 setTimeout(function(){
                     that.background_download();
                 }, configs.misc.background_download_interval);
             };
+
             //check if uploadqueue is empty and internet is connected - if both true do the background download
             if(this.is_uploadqueue_empty() && this.is_internet_connected() && !this.sync_in_progress)
-            {
                 this.inc_download({background:true})
                     .always(call_again);
-            }
-            else{
+            else
                 call_again();
-            }
         },
         
         is_uploadqueue_empty : function(){
@@ -8471,14 +8496,15 @@ define('views/form_controller',[
                     button2: null
                 }
             });
-            // #form is the id of the element inside in template where the new view will be inserted.
+            // #form is the id of the element inside template where the new view will be inserted.
             var form_v = new Form(this.params);
             this.setView("#form", form_v);
             this.listenTo(form_v, 'save_clicked', this.on_save);
             this.listenTo(form_v, 'button2_clicked', this.on_button2);
         },
         
-        /*Called when form view sends save_clicked event. 
+        /*
+        Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
         After Save is finished calls an after_save function
         */
@@ -8486,66 +8512,143 @@ define('views/form_controller',[
         on_save: function(e) {
             this.form = e.context;  //event contains the form view object itself
             console.log("FORMCONTROLLER: cleaned, denormalised json from form.js-"+JSON.stringify(this.form.final_json));
-            //separate inlines from final json
-            if(this.form.inline)
-            {
-                console.log("FORMCONTROLLER: separating inlines from final json");
-                this.inline_models = $.extend(null,this.form.final_json.inlines);
-                delete this.form.final_json.inlines;
-            }
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            
             var that = this; 
             var save_complete_dfds = [];    //stores dfds of all objects bieng saved in this form
+            
             if(this.form.bulk)
             {
                 /*Save each object in bulk form individually*/
                 $.each(this.form.final_json.bulk, function(ind, obj){
+                    var bulk_index = obj.index;
+                    delete obj.index;
                     var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
                     save_object_dfd
-                        .done(function(msg){
-                            notifs_view.add_alert({
-                                notif_type: "success",
-                                message: msg
-                            });
-                        })
                         .fail(function(error){
-                            notifs_view.add_alert({
-                                notif_type: "error",
-                                message: error
-                            });    
+                            that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
                         });
                     save_complete_dfds.push(save_object_dfd);
                 });
             }
-            else
-            {
+            else    //normal or inlines
+            {   
+                //separate inlines from final json
+                if(this.form.inline)
+                {
+                    console.log("FORMCONTROLLER: separating inlines from final json");
+                    this.inline_models = $.extend(null,this.form.final_json.inlines);
+                    delete this.form.final_json.inlines;
+                    var inlines_dfd = new $.Deferred();
+                    save_complete_dfds.push(inlines_dfd);
+                }
                 var save_object_dfd = this.save_object(this.form.final_json, this.form.foreign_entities, this.form.entity_name);
                 save_object_dfd
-                    .done(function(msg){
-                        notifs_view.add_alert({
-                            notif_type: "success",
-                            message: msg
-                        });
+                    .done(function(off_json){
+                        if(that.form.inline)
+                            that.save_inlines(that.inline_models, off_json, that.form.inline)
+                                .done(function(){
+                                    console.log("ALL INLINED SAVED");
+                                    inlines_dfd.resolve();
+                                })
+                                .fail(function(){
+                                    console.log("FAILED AT INLINES SAVE");
+                                    show_inline_error();
+                                    inlines_dfd.reject();
+                                });
                     })
                     .fail(function(error){
-                        notifs_view.add_alert({
-                            notif_type: "error",
-                            message: error
-                        });    
+                        that.form.show_errors(error);
                     });
                 save_complete_dfds.push(save_object_dfd);                                
             }
             
             //When all objects in form are saved...
-            $.when.apply($,save_complete_dfds)
+            $.when.apply(null, save_complete_dfds)
                 .done(function(){
+                    console.log("Everything saved");
                     that.after_save(that.form.entity_name);
                 })
+                .fail(function(){
+                    if(that.form.bulk)
+                        show_bulk_error();   
+                });
+            
+            //shown if any inline could not be saved
+            function show_inline_error(){
+                var err = {};
+                err[that.form.entity_name] = {
+                    __all__: ["Some "+that.form.inline.entity+" (in red below) could not be saved. To correct errors and try saving them again - go to list page and edit this "+that.form.entity_name]
+                };
+                that.form.show_errors(err, true);
+            }; 
+            
+            //shown if any bulk could not be saved
+            function show_bulk_error(){
+                var err = {};
+                err[that.form.entity_name] = {
+                    __all__: ["Some "+that.form.entity_name+" (in red below) could not be saved. To correct errors and try saving them again - open a new add form"]
+                };
+                that.form.show_errors(err, true);   
+            };
+        },
+        
+        //converts the error for an inline/bulk into a format which makes it show up at its own row
+        convert_to_row_error: function(error, row_entity_name, row_index){
+            error = $.parseJSON(error);
+            error["row"+row_index] = error[row_entity_name];
+            delete error[row_entity_name];
+            return error;
+        },
+        
+        save_inlines: function(inlines, parent_off_json, inline_config){
+            var dfd = new $.Deferred();
+            var that = this;
+            console.log("Gotta save inlines now - ");
+            console.log(JSON.stringify(inlines));
+            console.log(JSON.stringify(parent_off_json));
+            this.complete_inlines(inlines, parent_off_json, inline_config); 
+            var inline_dfds = [];
+            _.each(inlines, function(inl, index){
+                var inl_index = inl.index;
+                delete inl.index;
+                var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
+                inl_save_dfd
+                    .fail(function(error){
+                        that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                    });
+                inline_dfds.push(inl_save_dfd);           
+            }, this);
+            $.when.apply($, inline_dfds)
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                    dfd.reject();
+                })
+            return dfd;
+        },
+        
+        //put in the borrowed attributes and the joining attribute in inlines
+        complete_inlines: function(inlines, parent_off_json, inline_config){
+            var host_attr_json = {};
+            host_attr_json[inline_config.joining_attribute.inline_attribute]={}
+            _.each(inline_config.joining_attribute.host_attribute, function(attr, index){
+               host_attr_json[inline_config.joining_attribute.inline_attribute][attr] = parent_off_json[attr];
+            }, this);
+            
+            var borr_json = {}
+            $.each(inline_config.borrow_attributes, function(index,b_attr){
+                borr_json[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
+            });
+            
+            _.each(inlines, function(inl, index){
+                console.log("inl before extension - "+JSON.stringify(inl));
+                $.extend(true, inl, host_attr_json);
+                $.extend(true, inl, borr_json);
+                console.log("inl after extension - "+JSON.stringify(inl));
+            });
         },
         
         save_object: function(json, foreign_entities, entity_name){
-            //TODO: check mode and call corresponding func
             var dfd = new $.Deferred();
             var that =  this;
             if(this.is_uploadqueue_empty() && this.is_internet_connected())
@@ -8553,47 +8656,64 @@ define('views/form_controller',[
                 //Online mode
                 ConvertNamespace.convert(json, foreign_entities, "offlinetoonline")
                     .done(function(on_off_jsons){
-                        that.save_when_online(on_off_jsons)
-                            .done(function(msg){
-                                dfd.resolve(msg);
+                        that.save_when_online(entity_name, on_off_jsons)
+                            .done(function(off_json){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
                             })
                             .fail(function(error){
+                                show_err_notif();
                                 dfd.reject(error);
                             });                            
                     })
-                    .fail(function(){
-                        return dfd.reject("Failed to save "+entity_name+". ConvertNamespace Failed.");
+                    .fail(function(error){
+                        show_err_notif();
+                        return dfd.reject(error);
                     });
             }
             else
             {
                 //Offline mode
                 this.save_when_offline(entity_name, json)
-                    .done(function(msg){
-                        return dfd.resolve(msg);
+                    .done(function(off_json){
+                        show_suc_notif();
+                        return dfd.resolve(off_json);
                     })
-                    .fail(function(err){
-                        return dfd.reject(err);
+                    .fail(function(error){
+                        show_err_notif();
+                        return dfd.reject(error);
                     });
             }
+            
+            function show_suc_notif(){
+                notifs_view.add_alert({
+                    notif_type: "success",
+                    message: "Saved "+entity_name
+                });
+            };
+            
+            function show_err_notif(){
+                notifs_view.add_alert({
+                    notif_type: "error",
+                    message: "Error saving "+entity_name
+                });    
+            };
+            
             return dfd.promise();
         },
-        
-        
+                
         save_when_offline: function(entity_name, off_json){
             var dfd = new $.Deferred();
-            var action = null;
+            var action, that = this;
             if(off_json.id)
                 action = "E"
             else
                 action = "A"
-            var that = this;    
             
             Offline.save(null, entity_name, off_json)
                 .done(function(off_m){
                     console.log("SAVED IN OFFLINE - "+JSON.stringify(off_m.toJSON()));
-                    upload_collection.create(
-                        {
+                    upload_collection.create({
                             data: off_m.toJSON(),
                             action: action,   
                             entity_name: entity_name        
@@ -8601,232 +8721,54 @@ define('views/form_controller',[
                         {
                             success:function(u_model){
                                 console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                if(that.form.inline)
-                                {
-                                    console.log("FORMCONTROLLER: saving inlines");
-                                    that.process_inlines_offline(that.form, off_m.toJSON(), that.inline_models);
-                                }
-                                return dfd.resolve("Saved "+entity_name+" (Local, Uploadqueue)");    
+                                return dfd.resolve(off_m.toJSON());    
                             },
                             error: function(error){
-                                console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+error);
+                                alert("Unexepected Error- error adding model to uploadqueue");
                                 //TODO: should delete the model from offline db as well?
-                                return dfd.reject("Error saving the "+entity_name+" (Uploadqueue)");
+                                return dfd.reject(error);
                             }    
                     });
                 })
                 .fail(function(error){
-                    that.form.show_errors(error);
-                    return dfd.reject("Error saving the "+entity_name+" (Local)");
+                    return dfd.reject(error);
                 });
                 
             return dfd.promise();    
         },
         
-        process_inlines_offline: function(form,parent_off_json,inlines){
-            console.log("FORMCONTROLLER: saving inlines when offline");
-            var for_attr_offline = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_offline[attr] = parent_off_json[attr];
-            });
-            $.each(inlines,function(index, ijson){
-                if(ijson.id)
-                {
-                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to preserve videos_seen
-                        .done(function(off_in_model){
-                            var prev_json = off_in_model.toJSON();
-                            var off_ijson = $.extend(prev_json, ijson);
-                            $.each(form.inline.borrow_attributes, function(index,b_attr){
-                                off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                            });
-                            off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                            Offline.save(off_in_model,form.inline.entity,off_ijson)
-                                .done(function(off_in_model){
-                                    console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                    upload_collection.create(
-                                        {
-                                            data: off_in_model.toJSON(),
-                                            action: "E",  
-                                            entity_name: form.inline.entity        
-                                        },
-                                        {
-                                            success:function(u_model){
-                                                console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                            },
-                                            error: function(u_model){
-                                                console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-        
-                                            }    
-                                        }
-                                    );  
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:FETCH: "+error);
-                        });
-                }
-                else
-                {
-                    var off_ijson = $.extend(null, ijson);
-                    $.each(form.inline.borrow_attributes, function(index,b_attr){
-                        off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                    });
-                    off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                    Offline.save(null,form.inline.entity,off_ijson)
-                        .done(function(off_in_model){
-                            console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                            upload_collection.create(
-                                {
-                                    data: off_in_model.toJSON(),
-                                    action: "A",   
-                                    entity_name: form.inline.entity        
-                                },
-                                {
-                                    success:function(u_model){
-                                        console.log("FORMCNTROLLER: model added to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-                                    },
-                                    error: function(u_model){
-                                        console.log("FORMCNTROLLER: Unexepected Error- error adding model to uploadqueue - "+JSON.stringify(u_model.toJSON()));
-        
-                                    }    
-                                }
-                            );  
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                        });
-                }
-            });
-        },
-        
-        //add_edit, entityname, inlines?_inline_models    
-        save_when_online: function(on_off_jsons){ 
+        //save onlines then offline
+        save_when_online: function(entity_name, on_off_jsons){ 
             var dfd = new $.Deferred();
             var on_json = on_off_jsons.on_json;
             var off_json = on_off_jsons.off_json
             console.log("FORMCONTROLLER: Got this json to save online - "+JSON.stringify(on_json));
             var that = this;
-            if(!that.form.edit_case)
-                {
-                    delete on_json.id;
-                }
-                else
-                {
-                    on_json.id = parseInt(off_json.online_id); 
-                    delete on_json.online_id;
-                }
-            Online.save(null, that.form.entity_name, on_json)
+            //if edit case, substitute id with online id TODO: move it to convertnamespace?
+            if(off_json.id)
+            {
+                on_json.id = parseInt(off_json.online_id); 
+                delete on_json.online_id;
+            }
+            Online.save(null, entity_name, on_json)
                 .done(function(on_m){
                     console.log("SAVED IN ONLINE - "+JSON.stringify(on_m.toJSON()));
                     off_json.online_id  = parseInt(on_m.get("id"));
-                    Offline.save(null, that.form.entity_name, off_json)
+                    Offline.save(null, entity_name, off_json)
                         .done(function(off_m){
                             console.log("SAVED IN OFFLINE - "+JSON.stringify(off_m.toJSON()));
-                            if(that.form.inline)
-                            {
-                                console.log("FORMCONTROLLER: saving inlines");
-                                that.process_inlines(that.form, off_m.toJSON(), on_m.toJSON(), that.inline_models);
-                            }
-                            return dfd.resolve("Saved "+that.form.entity_name + " (Server, Local)");    
+                            return dfd.resolve(off_m.toJSON());    
                         })
                         .fail(function(error){
-                            that.form.show_errors(error);
                             //TODO: what to do abt the model just saved on server? 
-							return dfd.reject("Error saving the "+that.form.entity_name+" (Local)");
+							return dfd.reject(error);
                         });
                 })
                 .fail(function(xhr){
-                    that.form.show_errors(xhr.responseText);
-                    return dfd.reject("Error saving the "+that.form.entity_name+" (Server)");
+                    return dfd.reject(xhr.responseText);
 				});
 			return dfd.promise();	 
         },        
-        
-        //form.inline obj, 
-        process_inlines: function(form, parent_off_json, parent_on_json, inlines)
-        {
-            console.log("parent off json: "+JSON.stringify(parent_off_json));
-            console.log("parent on json: "+JSON.stringify(parent_on_json));
-            console.log("inlines: "+JSON.stringify(inlines));
-            ////////////////////creating foreign atrribute for inlines///////////////////
-            var for_attr_offline = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_offline[attr] = parent_off_json[attr];
-            });
-            var for_attr_online = {};
-            $.each(form.inline.foreign_attribute.host_attribute,function(index, attr){
-               for_attr_online[attr] = parent_on_json[attr];
-            });
-            /////////////////////////////////////////////////////////////////////////////
-            
-            $.each(inlines,function(index, ijson){
-                if(ijson.id)
-                {
-                    Offline.fetch_object(form.inline.entity, "id", ijson.id)  //just to get the online_id and preserve videos_seen
-                        .done(function(off_in_model){
-                            var prev_json = off_in_model.toJSON();
-                            var off_ijson = $.extend(prev_json, ijson);
-                            var on_ijson = $.extend(true,null,off_ijson);
-                            $.each(form.inline.borrow_attributes, function(index,b_attr){
-                                off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                                on_ijson[b_attr.inline_attribute] = parent_on_json[b_attr.host_attribute];    
-                            });
-                            off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                            on_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_online;
-                            on_ijson.id = parseInt(on_ijson.online_id);
-                            delete on_ijson.online_id;
-                            Online.save(null,form.inline.entity,on_ijson)
-                                .done(function(on_in_model){
-                                    console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                                    Offline.save(off_in_model,form.inline.entity,off_ijson)
-                                        .done(function(off_in_model){
-                                            console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                        })
-                                        .fail(function(error){
-                                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                        });
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:ONLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:FETCH: "+error);
-                        });
-                }
-                else
-                {
-                    var off_ijson = $.extend(null, ijson);
-                    var on_ijson = $.extend(true, null, ijson);
-                    $.each(form.inline.borrow_attributes, function(index,b_attr){
-                        off_ijson[b_attr.inline_attribute] = parent_off_json[b_attr.host_attribute];    
-                        on_ijson[b_attr.inline_attribute] = parent_on_json[b_attr.host_attribute];    
-                    });
-                    off_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_offline;
-                    on_ijson[form.inline.foreign_attribute.inline_attribute] = for_attr_online;
-                    Online.save(null,form.inline.entity,on_ijson)
-                        .done(function(on_in_model){
-                            console.log("INLINE saved in online - "+JSON.stringify(on_in_model.toJSON()));
-                            off_ijson.online_id = parseInt(on_in_model.get("id"));
-                            Offline.save(null,form.inline.entity,off_ijson)
-                                .done(function(off_in_model){
-                                    console.log("INLINE saved in offline - "+JSON.stringify(off_in_model.toJSON()));
-                                })
-                                .fail(function(error){
-                                    console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:OFFLINE: "+error);
-                                });
-                        })
-                        .fail(function(error){
-                            console.log("FORMCONTROLLER:EDIT:SAVE:INLINE:SAVE:ONLINE: "+error);
-                        });
-                }
-            });
-                    
-            
-        },
         
         is_uploadqueue_empty : function(){
             console.log("FORMCONTROLLER: length of upload_collection - "+upload_collection.length);
@@ -8838,7 +8780,6 @@ define('views/form_controller',[
         is_internet_connected : function(){
             return navigator.onLine;
         },       
-            
 
         on_button2: function(e) {
             console.log("FORMCONTROLLER: Button 2 clicked on form");
@@ -8846,7 +8787,7 @@ define('views/form_controller',[
         
         after_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
-            window.Router.addPerson(entity_name); //since may be already on the add page, therefore have to call this explicitly
+            window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
 
 
@@ -8887,7 +8828,7 @@ define('views/full_download',[
         },
         
         initialize: function(){
-            _(this).bindAll('stop_download');
+            _.bindAll(this);
         },
         
         serialize: function(){
@@ -8898,9 +8839,6 @@ define('views/full_download',[
         
         events:{
             'click #stop_full_download': 'stop_download'
-        },
-        
-        afterRender: function(){
         },
         
         stop_download: function(){
@@ -8914,9 +8852,10 @@ define('views/full_download',[
 
         /* 
         TODO Checks if there is already a full downloaded database, alert user that this db should be removed before proceeding 
-        Initializes UI and objects used for progress bar. 
-        Fetches the full_download_info objectStore collection to resume download, if that's the case
-        TODO Stores the start time for download
+        Checks internet connectivity
+        Initializes UI and objects used to update status. 
+        Fetches the full_download_info objectStore to resume download, if that's the case
+        Stores the start time for download
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
@@ -8933,9 +8872,7 @@ define('views/full_download',[
                 backdrop: "static",
             });
             this.$('#full_download_modal').modal('show');
-            var num_of_entities = Object.keys(all_configs).length; 
-            this.progress_bar_step = 100 / num_of_entities;
-            this.fetch_status = {};
+            this.download_status = {};
             /////////////////////////////////////////
             
             //every request made to server will be stored in this, - to abort if user chooses to stop download
@@ -8957,9 +8894,9 @@ define('views/full_download',[
         },
         
         remove_ui: function(){
-            this.$('#full_download_modal').modal('hide'); // calling remove without hiding modal causes modal's backdrop to remain
+            // calling remove without hiding modal causes modal's backdrop to remain
+            this.$('#full_download_modal').modal('hide'); 
             this.remove();
-            
         },
         
         start_full_download: function(){
@@ -8998,12 +8935,16 @@ define('views/full_download',[
             var dfd = new $.Deferred();
             this.$('#stop_full_download').prop("disabled", false);
             var entity_dfds = [];
+            
             for (var member in all_configs) {
                 if(member == "misc")
                     continue;
+                this.download_status[member] = {
+                    total:null,
+                    downloaded:0
+                };
                 var entity_dfd = this.start_full_download_for_entity(all_configs[member]["entity_name"]);
                 entity_dfds.push(entity_dfd);
-                this.fetch_status[member] = {};
             }
             
             $.when.apply($, entity_dfds)
@@ -9016,38 +8957,42 @@ define('views/full_download',[
             return dfd;    
         },
         
-        increment_pb: function() {
-            w = parseFloat(document.getElementById('pbar').style.width);
-            document.getElementById('pbar').style.width= (w + this.progress_bar_step) +'%';
+        update_pb_ui: function() {
+            //can't show progress bar untill total num of objects is known
+            var ready_to_show = true; 
+            var total = 0;
+            var downloaded = 0;
+            _.each(this.download_status, function(status, entity){
+                //if total objects for any entity are not yet known, then can't show the progress
+                if(status.total==null)
+                {
+                    ready_to_show = false;
+                    return;    
+                }
+                else
+                {
+                    total += status.total;
+                    downloaded += status.downloaded;
+                }
+            });
+            
+            if(!ready_to_show)
+                return;
+
+            var percent_complete = (downloaded/total)*100 +"%";
+            $('#pbar').css("width", percent_complete);
         },
         
-        update_status: function(entity_name, status){
-            $('#'+entity_name).find('.status').html(status);
-        },
-        
-        clear_object_store: function(entity_name){
-            var dfd = new $.Deferred();
-            console.log("clearing object store - "+entity_name);
-            var request = indexedDB.open("offline-database");
-            request.onerror = function(event) {
-                console.log("DASHBOARD:DOWNLOAD: Why didn't you allow my web app to use IndexedDB?!");
-                return dfd.reject();
-            };
-            request.onsuccess = function(event) {
-                var db = request.result;
-                var clearTransaction = db.transaction([entity_name], "readwrite");
-                var clearRequest = clearTransaction.objectStore(entity_name)
-                    .clear();
-                clearRequest.onsuccess = function(event) {
-                    console.log("DASHBOARD:DOWNLOAD: " + entity_name + ' objectstore cleared');
-                    return dfd.resolve();
-                };
-                clearRequest.onerror = function(event) {
-                    console.log("DASHBOARD:DOWNLOAD: Error while clearing objectstore - " + entity_name);
-                    return dfd.reject();
-                };
-            }    
-            return dfd;
+        update_status_ui: function(entity_name){
+            var downloaded = this.download_status[entity_name].downloaded;
+            var total = this.download_status[entity_name].total;
+            var s_text = "In Progress";
+            if(downloaded>=total)
+                s_text = "Done";
+            var s_num = String(downloaded)+"/"+String(total);    
+                
+            this.$('#'+entity_name).find('.status_text').html(s_text);
+            this.$('#'+entity_name).find('.status_numbers').html(s_num);
         },
         
         start_full_download_for_entity: function(entity_name){
@@ -9055,15 +9000,9 @@ define('views/full_download',[
             var that = this;
             that.get_num_of_objects_to_download(entity_name)
                 .done(function(total_num_objects){
-                    console.log("DASHBOARD:DOWNLOAD: Total num of objects for - "+entity_name+" - = "+total_num_objects);
-                    that.fetch_status[entity_name]["total"] = total_num_objects;
-                    that.fetch_status[entity_name]["downloaded"] = 0;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
                     that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
                         .done(function(){
                             console.log("FINISHED DOWNLOADING - " + entity_name);
-                            that.increment_pb();
-                            that.update_status(entity_name, "Done <span style='float:right'>"+that.fetch_status[entity_name]["downloaded"]+"/"+total_num_objects+"</span>");
                             return dfd.resolve();
                         })
                         .fail(function(error){
@@ -9082,13 +9021,8 @@ define('views/full_download',[
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: Fetching num of objects to download for - "+entity_name);
             var xhr = $.get(all_configs[entity_name].rest_api_url, {limit:1,offset:0}, function(data){
-                if(data){
-                    if(data.meta){
-                        return dfd.resolve(data.meta.total_count);
-                    }
-                    else
-                        return dfd.reject();
-                }
+                if(data && data.meta)
+                    return dfd.resolve(data.meta.total_count);
                 else
                     return dfd.reject();
             });
@@ -9096,17 +9030,27 @@ define('views/full_download',[
             return dfd;
         },
         
+        update_download_status: function(entity_name, key, increment){
+            var s_obj = this.download_status[entity_name];
+            if(!s_obj[key])
+                s_obj[key] = increment;
+            else
+                s_obj[key] += increment;
+                
+            this.update_status_ui(entity_name);
+            this.update_pb_ui();
+                    
+        },
+        
         chunk_it_fetch_it_save_it: function(entity_name, total_num_objects){
             var dfd = new $.Deferred();
-            var limit = 1500;
-            if(all_configs[entity_name].download_chunk_size)
-            {
+            this.update_download_status(entity_name, "total", total_num_objects);
+            
+            var limit = 1500; //default
+            if(all_configs[entity_name].download_chunk_size)    //entity specific option
                 limit = all_configs[entity_name].download_chunk_size;
-            }
-            else if(all_configs.misc.download_chunk_size)
-            {
+            else if(all_configs.misc.download_chunk_size)    // global option
                 limit = all_configs.misc.download_chunk_size;
-            }
             var num_chunks = Math.ceil(total_num_objects/ limit); 
             console.log("Num of chunks for - "+entity_name+" = "+num_chunks);
             var offset = 0;
@@ -9116,13 +9060,14 @@ define('views/full_download',[
             {
                 var chunk_dfd = this.process_chunk(entity_name, offset, limit);
                 chunk_dfd.done(function(num_objects_saved){
-                    that.fetch_status[entity_name]["downloaded"] += num_objects_saved;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+ that.fetch_status[entity_name]["downloaded"] +"/"+that.fetch_status[entity_name]["total"]+"</span>");
+                    that.update_download_status(entity_name, "downloaded", num_objects_saved);
                 });
                 chunk_dfds.push(chunk_dfd);
-                offset +=limit;
+                offset += limit;
             }
-            $.when.apply($,chunk_dfds)
+            
+            // when all chunks of this entity are downloaded...
+            $.when.apply($, chunk_dfds)
                 .done(function(){
                     return dfd.resolve();
                 })
@@ -9224,7 +9169,7 @@ define('views/full_download',[
         
         save_collection: function(entity_name, collection){
             var dfd = new $.Deferred();
-            objects = collection.toJSON();
+            var objects = collection.toJSON();
             var dfds = [];
             for (var i = 0; i < objects.length; i++) {
                 objects[i]['id'] = parseInt(objects[i]['id']);
@@ -9232,14 +9177,14 @@ define('views/full_download',[
                 var s_dfd = this.save_object(entity_name, objects[i]);
                 dfds.push(s_dfd);
             }
-            $.when.apply($,dfds)
+            $.when.apply($, dfds)
                 .done(function(){
                     return dfd.resolve();
                 })
                 .fail(function(error){
                     console.log(error);
                     return dfd.reject();
-                })
+                });
             return dfd;    
         },
         
@@ -9265,51 +9210,28 @@ define('views/full_download',[
         finish_download: function(){
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_full_download"});
             var that = this;
-            meta_model.fetch({
-                success: function(model){
-                    console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',that.start_time);
-                    model.save(null,{
-                        success: function(){
-                            console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
-                            console.log(JSON.stringify(model.toJSON()));
-                            dfd.resolve();
-                        },
-                        error: function(model,error){
-                            console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
-                            dfd.reject("error updating last_full_download in meta_data objectStore");
-                        }
-                    });
-                },
-                error: function(model, error){
-                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
-                    if(error == "Not Found")
-                        {
-                            meta_model.set('timestamp',that.start_time);
-                            meta_model.save(null,{
-                                success: function(model){
-                                    console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
-                                    console.log(JSON.stringify(model.toJSON()));
-                                    dfd.resolve();
-                                },
-                                error: function(model,error){
-                                    console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
-                                    console.log(error);    
-                                    dfd.reject("error creating last_full_download in meta_data objectStore");
-                                }
-                            });
-                            
-                        }    
-                }        
-            });
+            
+            Offline.fetch_object("meta_data", "key", "last_full_download")
+                .done(function(model){
+                    set_timestamp(model);
+                })
+                .fail(function(model, error){
+                    set_timestamp(model);
+                });
+            
+            function set_timestamp(model){
+                model.set('timestamp',that.start_time);
+                model.save(null,{
+                    success: function(){
+                        dfd.resolve();
+                    },
+                    error: function(model,error){
+                        dfd.reject("error updating last_full_download in meta_data objectStore");
+                    }
+                });
+            };
+            
             return dfd;
         }        
         
@@ -9318,7 +9240,6 @@ define('views/full_download',[
           
     });
     
-  // Our module now returns our view
   return FullDownloadView;
 });
 define('views/status',[
@@ -9370,13 +9291,13 @@ define('views/status',[
                             that.inc_download_timestamp = new Date(model.get('timestamp'));
                             that.render();
                         })
-                        .fail(function(error){
+                        .fail(function(model, error){
                             that.inc_download_timestamp = "Never";
                             that.render();
                         });
                     that.render();
                 })
-                .fail(function(error){
+                .fail(function(model, error){
                     console.log("STATUS: error while fetching last_downloaded from meta_data objectStore");
                     console.log(error);
                     if(error == "Not Found")
@@ -9486,6 +9407,7 @@ define('views/login',[
       attempt_login: function(e){
 		  e.preventDefault();
           console.log("login attempted");
+          this.set_login_button_state('loading');
           var username = this.$('#username').val();
           var password = this.$('#password').val();
           var that = this;
@@ -9499,7 +9421,15 @@ define('views/login',[
               .fail(function(error){
 			      $("#password").val('');
 				  that.$('#error_msg').html(error);
+                  that.set_login_button_state('reset');
               });
+      },
+      
+      set_login_button_state: function(state){
+          if(state=="disabled")
+              this.$("#login_button").attr("disabled",true);    
+          else
+              this.$("#login_button").button(state);    
       },
       
     });
@@ -9567,8 +9497,8 @@ define('router',[
         routes: {
             "": "home",
             ":entity/list": "list",
-            ":entity/add": "addPerson",
-            ":entity/edit/:id": "editPerson",
+            ":entity/add": "add",
+            ":entity/edit/:id": "edit",
             "login": "login"
         },
         home: function() {
@@ -9583,13 +9513,13 @@ define('router',[
                     AppLayout.render_list_view(entity_name);
                 });
         },
-        addPerson: function(entity_name) {
+        add: function(entity_name) {
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, null);
                 });
         },
-        editPerson: function(entity_name, id) {
+        edit: function(entity_name, id) {
             this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, parseInt(id));

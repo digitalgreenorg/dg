@@ -19,7 +19,8 @@ define([
 
         events: {
             // 'click #button1': 'save', // jQuery Validate handles this event. Below, we link the 
-            'click #button2': 'button2_clicked'
+            'click #button2': 'button2_clicked',
+            'click #add_rows': 'append_new_inlines'
         },
         template : '#form_template',         
         options_inner_template : _.template($('#options_template')
@@ -291,12 +292,22 @@ define([
         
         append_new_inlines: function(num_rows){
             var inline_t  = _.template($('#'+this.inline.template).html());
-            //TODO: gotta start index from the last index already in dom for 'add more rows feature' 
-            for(var i=0;i<num_rows;i++)
+            if(typeof(num_rows)!="number")
+                num_rows = 5;
+            var start_index = get_index_to_start_from();
+            for(var i=start_index; i<start_index+num_rows; i++)
             {
                 var tr = $(inline_t({index:i}));
                 this.$('#inline_body').append(tr);
                 tr.on('change', this.switch_validation_for_inlines);
+            }
+            
+            function get_index_to_start_from(){
+                var all_present_inlines = this.$('#inline_body tr').not(".form_error");    
+                if(!all_present_inlines.length)
+                    return 1
+                var max_index = $(_.last(all_present_inlines)).attr("index");
+                return parseInt(max_index)+1;
             }
         },
         
@@ -834,7 +845,7 @@ define([
         
         parse_inlines: function(raw_json){
             console.log("FORM: fetching inlines");
-            var all_inlines = $('#inline_body tr');    
+            var all_inlines = $('#inline_body tr').not(".form_error");    
             raw_json["inlines"] = [];
             var that = this;
             var inline_attrs = [];
