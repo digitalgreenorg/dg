@@ -124,7 +124,11 @@
                     if(key!="misc"){
 					var keyCap = key.charAt(0).toUpperCase() + key.slice(1);
 					%>
-				    <tr id="<%=key%>"><td><%= keyCap %>s</td><td class="status">In Progress</td></tr>
+				    <tr id="<%=key%>">
+                        <td><%= keyCap %>s</td>
+                        <td class="status_text">In Progress</td>
+                        <td class="status_numbers"></td>
+                    </tr>
                 <%}});%>
             </table>   
         </div>

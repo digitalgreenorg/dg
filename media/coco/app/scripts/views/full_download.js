@@ -71,10 +71,7 @@ define([
                 backdrop: "static",
             });
             this.$('#full_download_modal').modal('show');
-            //one of the config object is misc
-            var num_of_entities = Object.keys(all_configs).length-1; 
-            this.progress_bar_step = 100 / num_of_entities;
-            this.fetch_status = {};
+            this.download_status = {};
             /////////////////////////////////////////
             
             //every request made to server will be stored in this, - to abort if user chooses to stop download
@@ -141,7 +138,10 @@ define([
             for (var member in all_configs) {
                 if(member == "misc")
                     continue;
-                this.fetch_status[member] = {};
+                this.download_status[member] = {
+                    total:null,
+                    downloaded:0
+                };
                 var entity_dfd = this.start_full_download_for_entity(all_configs[member]["entity_name"]);
                 entity_dfds.push(entity_dfd);
             }
@@ -156,13 +156,42 @@ define([
             return dfd;    
         },
         
-        increment_pb: function() {
-            w = parseFloat(document.getElementById('pbar').style.width);
-            document.getElementById('pbar').style.width= (w + this.progress_bar_step) +'%';
+        update_pb_ui: function() {
+            //can't show progress bar untill total num of objects is known
+            var ready_to_show = true; 
+            var total = 0;
+            var downloaded = 0;
+            _.each(this.download_status, function(status, entity){
+                //if total objects for any entity are not yet known, then can't show the progress
+                if(status.total==null)
+                {
+                    ready_to_show = false;
+                    return;    
+                }
+                else
+                {
+                    total += status.total;
+                    downloaded += status.downloaded;
+                }
+            });
+            
+            if(!ready_to_show)
+                return;
+
+            var percent_complete = (downloaded/total)*100 +"%";
+            $('#pbar').css("width", percent_complete);
         },
         
-        update_status: function(entity_name, status){
-            $('#'+entity_name).find('.status').html(status);
+        update_status_ui: function(entity_name){
+            var downloaded = this.download_status[entity_name].downloaded;
+            var total = this.download_status[entity_name].total;
+            var s_text = "In Progress";
+            if(downloaded>=total)
+                s_text = "Done";
+            var s_num = String(downloaded)+"/"+String(total);    
+                
+            this.$('#'+entity_name).find('.status_text').html(s_text);
+            this.$('#'+entity_name).find('.status_numbers').html(s_num);
         },
         
         start_full_download_for_entity: function(entity_name){
@@ -170,15 +199,9 @@ define([
             var that = this;
             that.get_num_of_objects_to_download(entity_name)
                 .done(function(total_num_objects){
-                    console.log("DASHBOARD:DOWNLOAD: Total num of objects for - "+entity_name+" - = "+total_num_objects);
-                    that.fetch_status[entity_name]["total"] = total_num_objects;
-                    that.fetch_status[entity_name]["downloaded"] = 0;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
                     that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
                         .done(function(){
                             console.log("FINISHED DOWNLOADING - " + entity_name);
-                            that.increment_pb();
-                            that.update_status(entity_name, "Done <span style='float:right'>"+that.fetch_status[entity_name]["downloaded"]+"/"+total_num_objects+"</span>");
                             return dfd.resolve();
                         })
                         .fail(function(error){
@@ -206,8 +229,22 @@ define([
             return dfd;
         },
         
+        update_download_status: function(entity_name, key, increment){
+            var s_obj = this.download_status[entity_name];
+            if(!s_obj[key])
+                s_obj[key] = increment;
+            else
+                s_obj[key] += increment;
+                
+            this.update_status_ui(entity_name);
+            this.update_pb_ui();
+                    
+        },
+        
         chunk_it_fetch_it_save_it: function(entity_name, total_num_objects){
             var dfd = new $.Deferred();
+            this.update_download_status(entity_name, "total", total_num_objects);
+            
             var limit = 1500; //default
             if(all_configs[entity_name].download_chunk_size)    //entity specific option
                 limit = all_configs[entity_name].download_chunk_size;
@@ -222,8 +259,7 @@ define([
             {
                 var chunk_dfd = this.process_chunk(entity_name, offset, limit);
                 chunk_dfd.done(function(num_objects_saved){
-                    that.fetch_status[entity_name]["downloaded"] += num_objects_saved;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+ that.fetch_status[entity_name]["downloaded"] +"/"+that.fetch_status[entity_name]["total"]+"</span>");
+                    that.update_download_status(entity_name, "downloaded", num_objects_saved);
                 });
                 chunk_dfds.push(chunk_dfd);
                 offset += limit;
