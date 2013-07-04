@@ -780,18 +780,26 @@ define([
                 
         },  
         
+        
+        set_submit_button_state: function(state){
+            if(state=="disabled")
+                this.$(".action_button").attr("disabled",true);    
+            else
+                this.$(".action_button").button(state);    
+        },
         //server err eg. - {"mediator": {"__all__": ["Animator with this Name, Gender and Partner already exists."]}}
         show_errors: function(errors, disable_submit){
-            // clear form errors 
+            // used to clear form errors 
             if(errors==null)
             {
                 $('.form_error').remove();
                 $('.error').removeClass("error");
                 return;
             }
-
+            
+            this.set_submit_button_state('reset');
             if(disable_submit)
-                this.$(".action_button").attr("disabled",true);    
+                this.set_submit_button_state('disabled');
             
             
             if(typeof(errors)!=="object")
@@ -963,6 +971,7 @@ define([
         
         save: function() {
             this.show_errors(null);    //clear old errors
+            this.set_submit_button_state('loading'); //set state to loading
             
             if(this.bulk)
             {

@@ -286,7 +286,7 @@
             <% } %>
         
             <div class="form-actions">
-              <button id='button1' type="submit" class="btn btn-primary action_button"><%=button1%></button>
+              <button id='button1' type="submit" class="btn btn-primary action_button" data-loading-text="Saving..."><%=button1%></button>
               <%if(button2){%>
                   <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
               <%}%>
@@ -342,7 +342,7 @@
       <div class="clearfix">
         <input id="password" type="password" placeholder="Password">
       </div>
-      <button id= "login_button" class="btn primary" type="submit">Sign in</button>
+      <button id= "login_button" class="btn primary" type="submit" data-loading-text="Logging In...">Sign in</button>
     </fieldset>
   </form>
   </div>
