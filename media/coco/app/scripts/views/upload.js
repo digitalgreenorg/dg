@@ -295,7 +295,7 @@ define([
             Offline.save(null, this.get_entity_name(this.current_entry), after_upload_error_json)
                 .done(function(off_model){
                     that.$('#upload_form')
-                        .html("");
+                        .empty();
                     that.current_entry.set('data', after_upload_error_json);
                     that.upload_add_edit(that.current_entry, that.curr_entry_dfd);
                 })

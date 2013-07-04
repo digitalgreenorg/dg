@@ -64,10 +64,12 @@ define([
             {
                 /*Save each object in bulk form individually*/
                 $.each(this.form.final_json.bulk, function(ind, obj){
+                    var bulk_index = obj.index;
+                    delete obj.index;
                     var save_object_dfd = that.save_object(obj, that.form.bulk.foreign_fields, that.form.entity_name);
                     save_object_dfd
                         .fail(function(error){
-                            that.form.show_errors(error);
+                            that.form.show_errors(that.convert_to_row_error(error, that.form.entity_name, bulk_index));
                         });
                     save_complete_dfds.push(save_object_dfd);
                 });
@@ -94,6 +96,7 @@ define([
                                 })
                                 .fail(function(){
                                     console.log("FAILED AT INLINES SAVE");
+                                    show_inline_error();
                                     inlines_dfd.reject();
                                 });
                     })
@@ -109,17 +112,54 @@ define([
                     console.log("Everything saved");
                     that.after_save(that.form.entity_name);
                 })
+                .fail(function(){
+                    if(that.form.bulk)
+                        show_bulk_error();   
+                });
+            
+            //shown if any inline could not be saved
+            function show_inline_error(){
+                var err = {};
+                err[that.form.entity_name] = {
+                    __all__: ["Some "+that.form.inline.entity+" (in red below) could not be saved. To correct errors and try saving them again - go to list page and edit this "+that.form.entity_name]
+                };
+                that.form.show_errors(err, true);
+            }; 
+            
+            //shown if any bulk could not be saved
+            function show_bulk_error(){
+                var err = {};
+                err[that.form.entity_name] = {
+                    __all__: ["Some "+that.form.entity_name+" (in red below) could not be saved. To correct errors and try saving them again - open a new add form"]
+                };
+                that.form.show_errors(err, true);   
+            };
+        },
+        
+        //converts the error for an inline/bulk into a format which makes it show up at its own row
+        convert_to_row_error: function(error, row_entity_name, row_index){
+            error = $.parseJSON(error);
+            error["row"+row_index] = error[row_entity_name];
+            delete error[row_entity_name];
+            return error;
         },
         
         save_inlines: function(inlines, parent_off_json, inline_config){
             var dfd = new $.Deferred();
+            var that = this;
             console.log("Gotta save inlines now - ");
             console.log(JSON.stringify(inlines));
             console.log(JSON.stringify(parent_off_json));
             this.complete_inlines(inlines, parent_off_json, inline_config); 
             var inline_dfds = [];
             _.each(inlines, function(inl, index){
+                var inl_index = inl.index;
+                delete inl.index;
                 var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
+                inl_save_dfd
+                    .fail(function(error){
+                        that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                    });
                 inline_dfds.push(inl_save_dfd);           
             }, this);
             $.when.apply($, inline_dfds)

@@ -30,6 +30,7 @@ define([
             var s_passed = this.options.serialize;
             s_passed["form_template"] = this.form_template;    
             s_passed["inline"] = (this.inline) ? true: false;
+            s_passed["entity_name"] = this.entity_name;
             return s_passed;
         },
         
@@ -779,11 +780,48 @@ define([
                 
         },  
         
-        show_errors: function(errors){
-            console.log("FORM: in show errors");
-            var error_str = "";
-            console.log("FORM: SHOWERROR: ");
-            this.$('#form_errors').html(errors);
+        //server err eg. - {"mediator": {"__all__": ["Animator with this Name, Gender and Partner already exists."]}}
+        show_errors: function(errors, disable_submit){
+            // clear form errors 
+            if(errors==null)
+            {
+                $('.form_error').remove();
+                $('.error').removeClass("error");
+                return;
+            }
+
+            if(disable_submit)
+                this.$(".action_button").attr("disabled",true);    
+            
+            
+            if(typeof(errors)!=="object")
+                errors = $.parseJSON(errors);
+            console.log("Showing this error");
+            console.log(errors);
+            _.each(errors, function(errors_obj, parent){
+                var parent_el = this.$('[name='+parent+']');
+                $.each(errors_obj, function(error_el_name, error_list){
+                    var error_ul = null;
+                    all_li = "<li>"+error_list.join("</li><li>")+"</li>";
+                    error_ul = "<tr class='form_error'><td colspan='100%'><ul>" + all_li + "</ul></td></tr>";
+                    if(error_el_name=="__all__")
+                    {
+                        parent_el.before(error_ul);     //insert error message
+                        parent_el.addClass("error");    //highlight
+                    }
+                    else
+                    {
+                        //NOt Done
+                        var error_el = parent_el.find('[name='+error_el_name+']');
+                        error_el.after(error_ul);    //insert error message
+                        error_el
+                            .parent('div')
+                            .parent('div')
+                            .addClass("error");     //highlight
+                    }
+                });
+            }, this);
+            
         },        
         
         parse_inlines: function(raw_json){
@@ -795,6 +833,7 @@ define([
             $.each(all_inlines,function(index, inl){
                 var inl_obj = {};
                 var ignore = true;
+                inl_obj.index = $(inl).attr("index");
                 if($(inl).attr("model_id"))
                     inl_obj.id = parseInt($(inl).attr("model_id"));
                 $(inl).find(':input').each(function() {
@@ -879,7 +918,7 @@ define([
         
         parse_bulk: function(raw_json){
             console.log("FORM: fetching bulks");
-            var all_inlines = $('#bulk tr');    
+            var all_inlines = $('#bulk tr').not(".form_error");    
             raw_json["bulk"] = [];
             var that = this;
             $.each(all_inlines,function(index, inl){
@@ -923,6 +962,8 @@ define([
         },
         
         save: function() {
+            this.show_errors(null);    //clear old errors
+            
             if(this.bulk)
             {
                 this.final_json= {};
@@ -943,7 +984,6 @@ define([
             this.denormalize_json(this.final_json);
             if(this.edit_case)
                 this.final_json = this.extend_edit_json(this.final_json);
-
             var ev_data = {
                 context: this,
             };

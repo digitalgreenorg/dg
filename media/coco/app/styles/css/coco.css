@@ -126,6 +126,11 @@ h1 small{
 	color: #0088cc;
 }
 
+.form_error{
+    color:red;
+    width: 100%;
+}
+
 
 @media (min-width: 1200px) and (max-width: 1240px) {
 	  .span10 {

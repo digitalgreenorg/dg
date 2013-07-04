@@ -271,14 +271,7 @@
 </script>
 <script type="text/template" id="form_template">
     <div id = "form_div">
-        <div id = "form_header">
-    
-        </div>
-        <div id = "form_errors" style = "color:red">
-    
-        </div>
-        <div id = "model_form">
-        <form id="person_form" class="">
+        <form name="<%=entity_name%>" class="">
                         
             <%=form_template%>
         
@@ -293,13 +286,12 @@
             <% } %>
         
             <div class="form-actions">
-              <button id='button1' type="submit" class="btn btn-primary"><%=button1%></button>
+              <button id='button1' type="submit" class="btn btn-primary action_button"><%=button1%></button>
               <%if(button2){%>
-                  <button id='button2' type= "button" class="btn btn-primary"><%=button2%></button>
+                  <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
               <%}%>
             </div>
         </form>
-        </div>
 	
     </div>
 </script>
@@ -745,7 +737,7 @@
 </script>
 
 <script type="text/template" id="adoption_inline">
-    <tr id="row7" index = <%=index%> person_id = <%=id%> >
+    <tr class="" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
     <td>
     <div class="control-group">
         <div class="controls">
@@ -840,7 +832,7 @@
 </script>
 
 <script type="text/template" id="person_inline">
-    <tr>
+    <tr index = <%=index%> name="row<%=index%>">
         <td><div class="control-group"><div class="controls">
             <input type="text" name="person_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate" >
         </div></div></td>
