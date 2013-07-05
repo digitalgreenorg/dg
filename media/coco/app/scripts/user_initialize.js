@@ -78,8 +78,8 @@ define([
 
 		startDate = start.split('-');
 		endDate = value.split('-');
-
-		if(endDate[0]>startDate[0]){
+		
+		if(endDate[0]>startDate[0] || String(endDate).length === 0){
 			check = true;
 		}
 		else if (endDate[0] === startDate[0]){
