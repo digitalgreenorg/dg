@@ -185,7 +185,6 @@ def partnerexecutive(request):
 
 def partnerspring(request):
     ids = [6000017889,6000017713,6000017896,6000016589,6000008464,6000007313]
-    vids = []
     vids = Video.objects.filter(id__in = ids).values('related_practice__practice_name','id','youtubeid','title','duration','video_production_end_date','viewers').annotate(adoptions=Count('personadoptpractice'))
     return render_to_response('base_partner_spring.html', dict(vids = vids))
 
