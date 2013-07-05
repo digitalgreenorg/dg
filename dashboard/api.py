@@ -760,7 +760,7 @@ class PersonAdoptVideoResource(ModelResource):
         authorization = VillageLevelAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
-        excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_modified']
+        excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_updated', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     obj_create = obj_create
