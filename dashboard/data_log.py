@@ -70,9 +70,9 @@ def send_updated_log(request):
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
     if timestamp:
         if partner_id:  
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id ).exclude(user_id = coco_user.id)
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
         else:
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages).exclude(user_id = coco_user.id)
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
     ####Not necessary..need to remove it..####
     else:
         if partner_id:
