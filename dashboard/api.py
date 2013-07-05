@@ -296,6 +296,7 @@ class MediatorResource(ModelResource):
         always_return_data = True
         excludes = ['total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
+    dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
 
     def dehydrate_assigned_villages(self, bundle):
         v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
@@ -385,6 +386,15 @@ class VillageResource(ModelResource):
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('id__in')
         max_limit = None
+
+class DistrictResource(ModelResource):
+    class Meta:
+        queryset = District.objects.all()
+        resource_name = 'district'
+        authentication = SessionAuthentication()
+        authorization = VillageLevelAuthorization('block__village__id__in')
+        max_limit = None
+
 
 class VideoResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
