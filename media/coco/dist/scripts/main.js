@@ -8024,8 +8024,9 @@ define('views/dashboard',[
     'layoutmanager',      
     'models/user_model',
     'auth',
+	'offline_utils',
     ],
- function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth, Offline) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -8108,7 +8109,18 @@ define('views/dashboard',[
 			else {
 				this.user_offline();
 			}
-
+			
+			Offline.fetch_object("meta_data", "key", "last_full_download")
+                .done(function(model){
+					$('.list_items').unbind('click', false);
+					$('.list_items').removeClass("disabled");
+					console.log("Dashboard links enabled");
+                })
+                .fail(function(model, error){
+					$('.list_items').bind('click', false);
+					$('.list_items').addClass("disabled");
+					console.log("Dashboard links disabled");
+                });
         },
         
 		user_online: function(){
@@ -9246,6 +9258,10 @@ define('views/full_download',[
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
+			
+			$('.list_items').unbind('click', false);
+			$('.list_items').removeClass("disabled");
+			console.log("Dashboard links enabled");
             
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
