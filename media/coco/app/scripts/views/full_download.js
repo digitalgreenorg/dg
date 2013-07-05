@@ -27,7 +27,7 @@ define([
         },
         
         initialize: function(){
-            _(this).bindAll('stop_download');
+            _.bindAll(this);
         },
         
         serialize: function(){
@@ -38,9 +38,6 @@ define([
         
         events:{
             'click #stop_full_download': 'stop_download'
-        },
-        
-        afterRender: function(){
         },
         
         stop_download: function(){
@@ -54,9 +51,10 @@ define([
 
         /* 
         TODO Checks if there is already a full downloaded database, alert user that this db should be removed before proceeding 
-        Initializes UI and objects used for progress bar. 
-        Fetches the full_download_info objectStore collection to resume download, if that's the case
-        TODO Stores the start time for download
+        Checks internet connectivity
+        Initializes UI and objects used to update status. 
+        Fetches the full_download_info objectStore to resume download, if that's the case
+        Stores the start time for download
         */    
         initialize_download: function(){
             var dfd = new $.Deferred();
@@ -73,9 +71,7 @@ define([
                 backdrop: "static",
             });
             this.$('#full_download_modal').modal('show');
-            var num_of_entities = Object.keys(all_configs).length; 
-            this.progress_bar_step = 100 / num_of_entities;
-            this.fetch_status = {};
+            this.download_status = {};
             /////////////////////////////////////////
             
             //every request made to server will be stored in this, - to abort if user chooses to stop download
@@ -97,9 +93,9 @@ define([
         },
         
         remove_ui: function(){
-            this.$('#full_download_modal').modal('hide'); // calling remove without hiding modal causes modal's backdrop to remain
+            // calling remove without hiding modal causes modal's backdrop to remain
+            this.$('#full_download_modal').modal('hide'); 
             this.remove();
-            
         },
         
         start_full_download: function(){
@@ -138,12 +134,16 @@ define([
             var dfd = new $.Deferred();
             this.$('#stop_full_download').prop("disabled", false);
             var entity_dfds = [];
+            
             for (var member in all_configs) {
                 if(member == "misc")
                     continue;
+                this.download_status[member] = {
+                    total:null,
+                    downloaded:0
+                };
                 var entity_dfd = this.start_full_download_for_entity(all_configs[member]["entity_name"]);
                 entity_dfds.push(entity_dfd);
-                this.fetch_status[member] = {};
             }
             
             $.when.apply($, entity_dfds)
@@ -156,38 +156,42 @@ define([
             return dfd;    
         },
         
-        increment_pb: function() {
-            w = parseFloat(document.getElementById('pbar').style.width);
-            document.getElementById('pbar').style.width= (w + this.progress_bar_step) +'%';
+        update_pb_ui: function() {
+            //can't show progress bar untill total num of objects is known
+            var ready_to_show = true; 
+            var total = 0;
+            var downloaded = 0;
+            _.each(this.download_status, function(status, entity){
+                //if total objects for any entity are not yet known, then can't show the progress
+                if(status.total==null)
+                {
+                    ready_to_show = false;
+                    return;    
+                }
+                else
+                {
+                    total += status.total;
+                    downloaded += status.downloaded;
+                }
+            });
+            
+            if(!ready_to_show)
+                return;
+
+            var percent_complete = (downloaded/total)*100 +"%";
+            $('#pbar').css("width", percent_complete);
         },
         
-        update_status: function(entity_name, status){
-            $('#'+entity_name).find('.status').html(status);
-        },
-        
-        clear_object_store: function(entity_name){
-            var dfd = new $.Deferred();
-            console.log("clearing object store - "+entity_name);
-            var request = indexedDB.open("offline-database");
-            request.onerror = function(event) {
-                console.log("DASHBOARD:DOWNLOAD: Why didn't you allow my web app to use IndexedDB?!");
-                return dfd.reject();
-            };
-            request.onsuccess = function(event) {
-                var db = request.result;
-                var clearTransaction = db.transaction([entity_name], "readwrite");
-                var clearRequest = clearTransaction.objectStore(entity_name)
-                    .clear();
-                clearRequest.onsuccess = function(event) {
-                    console.log("DASHBOARD:DOWNLOAD: " + entity_name + ' objectstore cleared');
-                    return dfd.resolve();
-                };
-                clearRequest.onerror = function(event) {
-                    console.log("DASHBOARD:DOWNLOAD: Error while clearing objectstore - " + entity_name);
-                    return dfd.reject();
-                };
-            }    
-            return dfd;
+        update_status_ui: function(entity_name){
+            var downloaded = this.download_status[entity_name].downloaded;
+            var total = this.download_status[entity_name].total;
+            var s_text = "In Progress";
+            if(downloaded>=total)
+                s_text = "Done";
+            var s_num = String(downloaded)+"/"+String(total);    
+                
+            this.$('#'+entity_name).find('.status_text').html(s_text);
+            this.$('#'+entity_name).find('.status_numbers').html(s_num);
         },
         
         start_full_download_for_entity: function(entity_name){
@@ -195,15 +199,9 @@ define([
             var that = this;
             that.get_num_of_objects_to_download(entity_name)
                 .done(function(total_num_objects){
-                    console.log("DASHBOARD:DOWNLOAD: Total num of objects for - "+entity_name+" - = "+total_num_objects);
-                    that.fetch_status[entity_name]["total"] = total_num_objects;
-                    that.fetch_status[entity_name]["downloaded"] = 0;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+"0/"+total_num_objects+"</span>");
                     that.chunk_it_fetch_it_save_it(entity_name, total_num_objects)
                         .done(function(){
                             console.log("FINISHED DOWNLOADING - " + entity_name);
-                            that.increment_pb();
-                            that.update_status(entity_name, "Done <span style='float:right'>"+that.fetch_status[entity_name]["downloaded"]+"/"+total_num_objects+"</span>");
                             return dfd.resolve();
                         })
                         .fail(function(error){
@@ -222,13 +220,8 @@ define([
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: Fetching num of objects to download for - "+entity_name);
             var xhr = $.get(all_configs[entity_name].rest_api_url, {limit:1,offset:0}, function(data){
-                if(data){
-                    if(data.meta){
-                        return dfd.resolve(data.meta.total_count);
-                    }
-                    else
-                        return dfd.reject();
-                }
+                if(data && data.meta)
+                    return dfd.resolve(data.meta.total_count);
                 else
                     return dfd.reject();
             });
@@ -236,17 +229,27 @@ define([
             return dfd;
         },
         
+        update_download_status: function(entity_name, key, increment){
+            var s_obj = this.download_status[entity_name];
+            if(!s_obj[key])
+                s_obj[key] = increment;
+            else
+                s_obj[key] += increment;
+                
+            this.update_status_ui(entity_name);
+            this.update_pb_ui();
+                    
+        },
+        
         chunk_it_fetch_it_save_it: function(entity_name, total_num_objects){
             var dfd = new $.Deferred();
-            var limit = 1500;
-            if(all_configs[entity_name].download_chunk_size)
-            {
+            this.update_download_status(entity_name, "total", total_num_objects);
+            
+            var limit = 1500; //default
+            if(all_configs[entity_name].download_chunk_size)    //entity specific option
                 limit = all_configs[entity_name].download_chunk_size;
-            }
-            else if(all_configs.misc.download_chunk_size)
-            {
+            else if(all_configs.misc.download_chunk_size)    // global option
                 limit = all_configs.misc.download_chunk_size;
-            }
             var num_chunks = Math.ceil(total_num_objects/ limit); 
             console.log("Num of chunks for - "+entity_name+" = "+num_chunks);
             var offset = 0;
@@ -256,13 +259,14 @@ define([
             {
                 var chunk_dfd = this.process_chunk(entity_name, offset, limit);
                 chunk_dfd.done(function(num_objects_saved){
-                    that.fetch_status[entity_name]["downloaded"] += num_objects_saved;
-                    that.update_status(entity_name, "In progress <span style='float:right'>"+ that.fetch_status[entity_name]["downloaded"] +"/"+that.fetch_status[entity_name]["total"]+"</span>");
+                    that.update_download_status(entity_name, "downloaded", num_objects_saved);
                 });
                 chunk_dfds.push(chunk_dfd);
-                offset +=limit;
+                offset += limit;
             }
-            $.when.apply($,chunk_dfds)
+            
+            // when all chunks of this entity are downloaded...
+            $.when.apply($, chunk_dfds)
                 .done(function(){
                     return dfd.resolve();
                 })
@@ -364,7 +368,7 @@ define([
         
         save_collection: function(entity_name, collection){
             var dfd = new $.Deferred();
-            objects = collection.toJSON();
+            var objects = collection.toJSON();
             var dfds = [];
             for (var i = 0; i < objects.length; i++) {
                 objects[i]['id'] = parseInt(objects[i]['id']);
@@ -372,14 +376,14 @@ define([
                 var s_dfd = this.save_object(entity_name, objects[i]);
                 dfds.push(s_dfd);
             }
-            $.when.apply($,dfds)
+            $.when.apply($, dfds)
                 .done(function(){
                     return dfd.resolve();
                 })
                 .fail(function(error){
                     console.log(error);
                     return dfd.reject();
-                })
+                });
             return dfd;    
         },
         
@@ -405,51 +409,28 @@ define([
         finish_download: function(){
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
-            var generic_model_offline = Backbone.Model.extend({
-                database: indexeddb,
-                storeName: "meta_data",
-            });
-            var meta_model = new generic_model_offline();
-            meta_model.set({key: "last_full_download"});
             var that = this;
-            meta_model.fetch({
-                success: function(model){
-                    console.log("DASHBOARD:DOWNLOAD: last_full_download fetched from meta_data objectStore:");
-                    console.log(JSON.stringify(model.toJSON()));
-                    model.set('timestamp',that.start_time);
-                    model.save(null,{
-                        success: function(){
-                            console.log("DASHBOARD:DOWNLOAD: last_full_download updated in meta_data objectStore:");    
-                            console.log(JSON.stringify(model.toJSON()));
-                            dfd.resolve();
-                        },
-                        error: function(model,error){
-                            console.log("DASHBOARD:DOWNLOAD: error updating last_full_download in meta_data objectStore");    
-                            dfd.reject("error updating last_full_download in meta_data objectStore");
-                        }
-                    });
-                },
-                error: function(model, error){
-                    console.log("DASHBOARD:DOWNLOAD: error while fetching last_full_download from meta_data objectStore");
-                    if(error == "Not Found")
-                        {
-                            meta_model.set('timestamp',that.start_time);
-                            meta_model.save(null,{
-                                success: function(model){
-                                    console.log("DASHBOARD:DOWNLOAD: last_full_download created in meta_data objectStore:");    
-                                    console.log(JSON.stringify(model.toJSON()));
-                                    dfd.resolve();
-                                },
-                                error: function(model,error){
-                                    console.log("DASHBOARD:DOWNLOAD: error creating last_full_download in meta_data objectStore : ");
-                                    console.log(error);    
-                                    dfd.reject("error creating last_full_download in meta_data objectStore");
-                                }
-                            });
-                            
-                        }    
-                }        
-            });
+            
+            Offline.fetch_object("meta_data", "key", "last_full_download")
+                .done(function(model){
+                    set_timestamp(model);
+                })
+                .fail(function(model, error){
+                    set_timestamp(model);
+                });
+            
+            function set_timestamp(model){
+                model.set('timestamp',that.start_time);
+                model.save(null,{
+                    success: function(){
+                        dfd.resolve();
+                    },
+                    error: function(model,error){
+                        dfd.reject("error updating last_full_download in meta_data objectStore");
+                    }
+                });
+            };
+            
             return dfd;
         }        
         
@@ -458,6 +439,5 @@ define([
           
     });
     
-  // Our module now returns our view
   return FullDownloadView;
 });

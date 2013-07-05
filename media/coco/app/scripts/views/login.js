@@ -52,6 +52,7 @@ define([
       attempt_login: function(e){
 		  e.preventDefault();
           console.log("login attempted");
+          this.set_login_button_state('loading');
           var username = this.$('#username').val();
           var password = this.$('#password').val();
           var that = this;
@@ -65,7 +66,15 @@ define([
               .fail(function(error){
 			      $("#password").val('');
 				  that.$('#error_msg').html(error);
+                  that.set_login_button_state('reset');
               });
+      },
+      
+      set_login_button_state: function(state){
+          if(state=="disabled")
+              this.$("#login_button").attr("disabled",true);    
+          else
+              this.$("#login_button").button(state);    
       },
       
     });

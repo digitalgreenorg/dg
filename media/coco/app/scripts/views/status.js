@@ -47,13 +47,13 @@ define([
                             that.inc_download_timestamp = new Date(model.get('timestamp'));
                             that.render();
                         })
-                        .fail(function(error){
+                        .fail(function(model, error){
                             that.inc_download_timestamp = "Never";
                             that.render();
                         });
                     that.render();
                 })
-                .fail(function(error){
+                .fail(function(model, error){
                     console.log("STATUS: error while fetching last_downloaded from meta_data objectStore");
                     console.log(error);
                     if(error == "Not Found")

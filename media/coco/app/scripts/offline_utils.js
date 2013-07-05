@@ -47,7 +47,12 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                         },
                         error: function(model,error){
                             console.log(error);
-                            return dfd.reject("Error saving object in offline - "+error.srcElement.error.name);
+                            //format error object to match the format of error sent by online save
+                            var err_json = {};
+                            err_json[entity_name] = {
+                                __all__: [error.target.error.name]
+                            }
+                            return dfd.reject(JSON.stringify(err_json));
                         }
                     });
                 })
@@ -72,7 +77,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
-                            dfd.reject(error);
+                            dfd.reject(model, error);
                         }
                     });
                 })
