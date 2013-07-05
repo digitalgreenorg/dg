@@ -7,11 +7,10 @@ from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
-from django.utils import timezone
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
 
-import sys, traceback
+import sys, traceback, datetime
 
 # Variables
 GENDER_CHOICES = (
@@ -113,7 +112,7 @@ EQUIPMENT_PURPOSE = (
     
 class ServerLog(models.Model):
     id = BigAutoField(primary_key=True)
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null = True)
     village = models.BigIntegerField(null = True)
     action = models.IntegerField()
