@@ -109,7 +109,7 @@ define([
                   offline_login(username, password)
                       .fail(function(error){
                           console.log("Offline login failed - "+error);
-                          if(error == "There is no database for offline use (Offline Backend)")
+                          if(error == "No user found")
                           {     
                               offline_register(username, password)
                                   .fail(function(error){
@@ -122,6 +122,8 @@ define([
                                       dfd.resolve();
                                   });      
                           }
+                          else
+                              dfd.reject(error);
                       })
                       .done(function(){
                           console.log("Login Successfull");
@@ -134,7 +136,10 @@ define([
           offline_login(username, password)
               .fail(function(error){
                   console.log("Offline login failed - "+error);
-                  dfd.reject(error);
+                  if(error == "No user found")
+                      dfd.reject("You need to be online till database has been downloaded.");
+                  else
+                      dfd.reject(error);
               })
               .done(function(){
                   console.log("Login Successfull");
@@ -165,7 +170,6 @@ define([
   //resolves if u, p matches the one stored in off db 
   var offline_login = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.login(username, password)
           .done(function(){
               dfd.resolve();
@@ -178,7 +182,6 @@ define([
   
   var offline_register = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.register(username, password)
           .done(function(){
               dfd.resolve();

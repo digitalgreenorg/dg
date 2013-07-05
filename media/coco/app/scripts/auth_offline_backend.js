@@ -43,7 +43,7 @@ define([
               }
           },
           error: function(){
-               return dfd.reject("There is no database for offline use (Offline Backend)");
+               return dfd.reject("No user found");
           }
       });
       return dfd.promise();
