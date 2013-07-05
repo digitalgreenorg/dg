@@ -1,3 +1,5 @@
+from dashboard.models import PersonAdoptPractice, Video 
+from django.db.models import Count
 from django.shortcuts import *
 from django.http import HttpResponseRedirect
 from output.views.common import home_with_analytics
@@ -180,6 +182,11 @@ def rfa(request):
 def partnerexecutive(request):
     
     return render_to_response('base_partnerexecutive.html')
+
+def partnerspring(request):
+    ids = [6000017889,6000017713,6000017896,6000016589,6000008464,6000007313]
+    vids = Video.objects.filter(id__in = ids).values('related_practice__practice_name','id','youtubeid','title','duration','video_production_end_date','viewers').annotate(adoptions=Count('personadoptpractice'))
+    return render_to_response('base_partner_spring.html', dict(vids = vids))
 
 def partnerresearch(request):
     

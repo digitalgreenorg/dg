@@ -50,6 +50,10 @@ select							{ margin-bottom:1px; padding:2px; width:96%; border-style:solid; si
 .searchresultdivrighttddiv21	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:bold; font-family:Arial,Helvetica,Sans-Serif; }
 .searchresultdivrighttddiv22	{ margin-top:0px; clear:both; padding-top:2px; padding-bottom:2px; width:100%; background-color:none; color:#3F3E3E; font-weight:normal; font-size:0.8em; font-family:Arial,Helvetica,Sans-Serif; }
 
+/* videos styling in spring partner page */
+#partner						{ margin-top:20px; float:left; margin-left:5px; width:620px; min-height:50px; margin-bottom:50px; }
+#partnerdiv						{ clear:both; margin-top:6px; width:620px; }
+#partnerdivrighttddiv2			{ float:left; margin-left:10px; width:83.5%; margin-bottom:10px; text-align:left; }
 
 
 /* Pagination */
