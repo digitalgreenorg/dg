@@ -118,7 +118,6 @@ class ServerLog(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
-    instance_json = models.CharField(max_length=1000, null=True, blank=True)
     
 #    def __unicode__(self):
 #        return self.entry_table
