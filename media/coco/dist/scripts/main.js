@@ -5742,12 +5742,12 @@ define('views/form',[
             console.log(params);
             this.final_json = null;
             _.bindAll(this);
-            
-            //read entity_config and sets main properties on view object for easy access
-            this.read_form_config(params);
 
             //sets this.edit_case, and  this.edit_case_id, or this.edit_case_json
             this.identify_form_action(params);  
+
+            //read entity_config and sets main properties on view object for easy access
+            this.read_form_config(params);
 
             //reads this.foreign_entities and setsup the collections, source_dependents_map
             this.setup_foreign_elements();
