@@ -284,7 +284,7 @@ class MediatorResource(ModelResource):
     mediator_label = fields.CharField()
     assigned_villages = fields.ListField()
     partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
-    
+    district = fields.ForeignKey('dashboard.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
         queryset = Animator.objects.all()

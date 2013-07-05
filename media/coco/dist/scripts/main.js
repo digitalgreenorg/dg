@@ -153,7 +153,7 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender'],
+        'unique_togther_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -161,6 +161,12 @@ function() {
                     'placeholder': 'id_ass_villages',
                     'name_field': 'village_name'
                 }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+            },
+            district: {
+                district :{
+                    placeholder : 'id_district',
+                    name_field : 'district_name' 
+                }
             }
         },
         'form_field_validation': {
@@ -178,6 +184,7 @@ function() {
                     maxlength: 10
                 },
                 assigned_villages: "required",
+                district: "required"
             },
             messages: {
                 name: {
@@ -192,6 +199,7 @@ function() {
                     maxlength: "Phone number should not contain more than 10 digits"
                 },
                 assigned_villages: "Assigned villages are required",
+                district: "District is required"
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -356,23 +364,25 @@ function() {
     };
 
     var language_configs = {
-        'page_header': 'Laguage',
-        'list_table_header_template': 'language_table_template',
-        'list_table_row_template': 'language_list_item_template',
-        'add_template_name': 'language_add_edit_template',
-        'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
-        'foreign_entities': {},
-        'form_field_validation': {},
         'dashboard_display': {
             listing: false,
             add: false
         }
     };
 
-    //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+    var district_configs = {
+        'rest_api_url': '/api/v1/district/',
+        'entity_name': 'district',
+        'sort_field': 'district_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var group_configs = {
         'page_header': 'Group',
         'list_table_header_template': 'group_table_template',
@@ -754,7 +764,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id', 'group.id'],
+        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
@@ -851,6 +861,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        district: district_configs,
         misc: misc
     }
 
@@ -4059,7 +4070,7 @@ define('auth_offline_backend',[
               }
           },
           error: function(){
-               return dfd.reject("There is no database for offline use (Offline Backend)");
+               return dfd.reject("No user found");
           }
       });
       return dfd.promise();
@@ -6343,27 +6354,6 @@ define('views/form',[
         },
         
             
-        clean_json: function(object_json){
-            console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
-            
-            for(member in object_json)
-            {   
-                if(member == "")
-                    delete object_json[member];
-                else if(!object_json[member])
-                {
-                    object_json[member] = null
-                    if(this.$('[name='+member+']').is('select[multiple]'))
-                    {
-                        object_json[member] = [];
-                    }
-                }
-            }    
-            console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
-                
-        },  
-        
-        
         set_submit_button_state: function(state){
             if(state=="disabled")
                 this.$(".action_button").attr("disabled",true);    
@@ -6551,6 +6541,48 @@ define('views/form',[
             }
             return o_json;
         },
+        
+        
+        clean_json: function(form_json){
+            console.log("FORM: Before cleaning json - "+JSON.stringify(form_json))
+            
+            if(this.bulk)
+            {
+                $.each(form_json.bulk, function(index, obj){
+                    clean_object(obj);
+                });
+            }
+            else
+            {
+                clean_object(form_json);
+                if(this.inline)
+                {
+                    $.each(form_json.inlines, function(index, obj){
+                        clean_object(obj);
+                    });
+                }
+            }
+            
+            function clean_object(obj)
+            {
+                for(member in obj)
+                {   
+                    if(member == "")
+                        delete obj[member];
+                    else if(!obj[member])
+                    {
+                        obj[member] = null
+                        if(this.$('[name='+member+']').is('select[multiple]'))
+                        {
+                            obj[member] = [];
+                        }
+                    }
+                }    
+            }    
+
+            console.log("FORM: After cleaning json - "+JSON.stringify(form_json))
+            
+        },  
         
         save: function() {
             this.show_errors(null);    //clear old errors
@@ -7890,7 +7922,7 @@ define('auth',[
                   offline_login(username, password)
                       .fail(function(error){
                           console.log("Offline login failed - "+error);
-                          if(error == "There is no database for offline use (Offline Backend)")
+                          if(error == "No user found")
                           {     
                               offline_register(username, password)
                                   .fail(function(error){
@@ -7903,6 +7935,8 @@ define('auth',[
                                       dfd.resolve();
                                   });      
                           }
+                          else
+                              dfd.reject(error);
                       })
                       .done(function(){
                           console.log("Login Successfull");
@@ -7915,7 +7949,10 @@ define('auth',[
           offline_login(username, password)
               .fail(function(error){
                   console.log("Offline login failed - "+error);
-                  dfd.reject(error);
+                  if(error == "No user found")
+                      dfd.reject("You need to be online till database has been downloaded.");
+                  else
+                      dfd.reject(error);
               })
               .done(function(){
                   console.log("Login Successfull");
@@ -7946,7 +7983,6 @@ define('auth',[
   //resolves if u, p matches the one stored in off db 
   var offline_login = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.login(username, password)
           .done(function(){
               dfd.resolve();
@@ -7959,7 +7995,6 @@ define('auth',[
   
   var offline_register = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.register(username, password)
           .done(function(){
               dfd.resolve();
@@ -9640,8 +9675,8 @@ define('user_initialize',[
 
 		startDate = start.split('-');
 		endDate = value.split('-');
-
-		if(endDate[0]>startDate[0]){
+		
+		if(endDate[0]>startDate[0] || String(endDate).length === 0){
 			check = true;
 		}
 		else if (endDate[0] === startDate[0]){

@@ -138,7 +138,7 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender'],
+        'unique_togther_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -146,6 +146,12 @@ function() {
                     'placeholder': 'id_ass_villages',
                     'name_field': 'village_name'
                 }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+            },
+            district: {
+                district :{
+                    placeholder : 'id_district',
+                    name_field : 'district_name' 
+                }
             }
         },
         'form_field_validation': {
@@ -163,6 +169,7 @@ function() {
                     maxlength: 10
                 },
                 assigned_villages: "required",
+                district: "required"
             },
             messages: {
                 name: {
@@ -177,6 +184,7 @@ function() {
                     maxlength: "Phone number should not contain more than 10 digits"
                 },
                 assigned_villages: "Assigned villages are required",
+                district: "District is required"
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -341,23 +349,25 @@ function() {
     };
 
     var language_configs = {
-        'page_header': 'Laguage',
-        'list_table_header_template': 'language_table_template',
-        'list_table_row_template': 'language_list_item_template',
-        'add_template_name': 'language_add_edit_template',
-        'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
-        'foreign_entities': {},
-        'form_field_validation': {},
         'dashboard_display': {
             listing: false,
             add: false
         }
     };
 
-    //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+    var district_configs = {
+        'rest_api_url': '/api/v1/district/',
+        'entity_name': 'district',
+        'sort_field': 'district_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var group_configs = {
         'page_header': 'Group',
         'list_table_header_template': 'group_table_template',
@@ -836,6 +846,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        district: district_configs,
         misc: misc
     }
 
