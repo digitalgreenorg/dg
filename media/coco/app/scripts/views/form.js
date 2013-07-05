@@ -771,27 +771,6 @@ define([
         },
         
             
-        clean_json: function(object_json){
-            console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
-            
-            for(member in object_json)
-            {   
-                if(member == "")
-                    delete object_json[member];
-                else if(!object_json[member])
-                {
-                    object_json[member] = null
-                    if(this.$('[name='+member+']').is('select[multiple]'))
-                    {
-                        object_json[member] = [];
-                    }
-                }
-            }    
-            console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
-                
-        },  
-        
-        
         set_submit_button_state: function(state){
             if(state=="disabled")
                 this.$(".action_button").attr("disabled",true);    
@@ -979,6 +958,48 @@ define([
             }
             return o_json;
         },
+        
+        
+        clean_json: function(form_json){
+            console.log("FORM: Before cleaning json - "+JSON.stringify(form_json))
+            
+            if(this.bulk)
+            {
+                $.each(form_json.bulk, function(index, obj){
+                    clean_object(obj);
+                });
+            }
+            else
+            {
+                clean_object(form_json);
+                if(this.inline)
+                {
+                    $.each(form_json.inlines, function(index, obj){
+                        clean_object(obj);
+                    });
+                }
+            }
+            
+            function clean_object(obj)
+            {
+                for(member in obj)
+                {   
+                    if(member == "")
+                        delete obj[member];
+                    else if(!obj[member])
+                    {
+                        obj[member] = null
+                        if(this.$('[name='+member+']').is('select[multiple]'))
+                        {
+                            obj[member] = [];
+                        }
+                    }
+                }    
+            }    
+
+            console.log("FORM: After cleaning json - "+JSON.stringify(form_json))
+            
+        },  
         
         save: function() {
             this.show_errors(null);    //clear old errors

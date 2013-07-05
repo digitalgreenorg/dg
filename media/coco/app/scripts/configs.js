@@ -739,7 +739,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id', 'group.id'],
+        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
