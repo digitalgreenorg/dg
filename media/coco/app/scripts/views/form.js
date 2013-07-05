@@ -948,12 +948,12 @@ define([
         
         //preserve the background fields - not entered through form
         extend_edit_json: function(o_json){
-            o_json = $.extend(true, this.model_json, o_json);
+            o_json = $.extend(this.model_json, o_json);
             if(this.inline)
             {
                 _.each(o_json.inlines, function(inl, index){
                     var old_json = this.inl_models_dict[inl.id];
-                    o_json.inlines[index] = $.extend(true, old_json, inl);
+                    o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
             return o_json;
