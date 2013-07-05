@@ -410,6 +410,10 @@ define([
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
+			
+			$('.list_items').unbind('click', false);
+			$('.list_items').removeClass("disabled");
+			console.log("Dashboard links enabled");
             
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
