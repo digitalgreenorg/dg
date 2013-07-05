@@ -294,7 +294,7 @@ class MediatorResource(ModelResource):
         #authorization = Authorization()
         validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
-        excludes = ['total_adoptions','time_created', 'time_modified' ]
+        excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
 
@@ -395,7 +395,6 @@ class DistrictResource(ModelResource):
         authorization = VillageLevelAuthorization('block__village__id__in')
         max_limit = None
 
-
 class VideoResource(ModelResource):
     village = fields.ForeignKey(VillageResource, 'village')
     cameraoperator = fields.ForeignKey(MediatorResource, 'cameraoperator')
@@ -419,7 +418,10 @@ class VideoResource(ModelResource):
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
-        excludes = ['viewers','time_created', 'time_modified', 'duration' ]
+        excludes = ['duration', 'picture_quality ', 'audio_quality', 'editing_quality', 'edit_start_date ', 'edit_start_date', 
+                    'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
+                    'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
+                    'last_modified', 'viewers','time_created', 'time_modified', 'duration' ]
     
     def apply_authorization_limits(self, request, object_list):
         districts = get_user_districts(request)
@@ -543,7 +545,7 @@ class ScreeningResource(ModelResource):
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ['location', 'target_person_attendance', 'target_audience_interest', 'target_adoptions', 'time_created', 'time_modified']
     
     def obj_create(self, bundle, **kwargs):
         bundle = obj_create(self, bundle, **kwargs)
@@ -846,7 +848,6 @@ class PartnersResource(ModelResource):
         resource_name = 'partner'
         authentication = SessionAuthentication()
         authorization = Authorization()
-        
 
 class LanguageResource(ModelResource):    
     class Meta:
@@ -855,7 +856,6 @@ class LanguageResource(ModelResource):
         resource_name = 'language'
         authentication = SessionAuthentication()
         authorization = Authorization()
-        
 
 class PersonMeetingAttendanceResource(ModelResource):    
     class Meta:
