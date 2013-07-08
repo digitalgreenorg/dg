@@ -287,11 +287,10 @@ class MediatorResource(ModelResource):
     district = fields.ForeignKey('dashboard.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
-        queryset = Animator.objects.all()
+        queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
         resource_name = 'mediator'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('assigned_villages__in')
-        #authorization = Authorization()
         validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
         excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
@@ -299,12 +298,13 @@ class MediatorResource(ModelResource):
     dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
 
     def dehydrate_assigned_villages(self, bundle):
-        v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
-        vil_list=[]
-        for i in v_field:
-            vil_list.append({"id":i.id, "village_name":i.village_name})
-        return vil_list
-    
+        return [{'id': vil.id, 'village_name': vil.village_name} for vil in bundle.obj.assigned_villages.all() ]
+
+    def dehydrate_mediator_label(self,bundle):
+        #for sending out label incase of dropdowns
+        label = ""
+        return ["("+ label + vil.village_name +")" for vil in bundle.obj.assigned_villages.all() ]
+            
     def obj_create(self, bundle, **kwargs):
         bundle = obj_create(self, bundle, **kwargs)
         if bundle.request.user:
@@ -343,14 +343,6 @@ class MediatorResource(ModelResource):
     
         return bundle
         
-    def dehydrate_mediator_label(self,bundle):
-        #for sending out label incase of dropdowns
-        v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
-        label = ""
-        for i in v_field:
-            label = label + i.village_name + ","
-        return "("+ label +")"
-    
     def hydrate_partner(self, bundle):
         partner_id = get_user_partner_id(bundle.request)
         if partner_id:
@@ -406,13 +398,12 @@ class VideoResource(ModelResource):
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_cameraoperator = partial(foreign_key_to_id, field_name='cameraoperator', sub_field_names=['id','name'])
     dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id','name'])
-    dehydrate_farmers_shown = partial(many_to_many_to_subfield, field_name='farmers_shown',sub_field_names=['id','person_name'])
     obj_create = obj_create
     obj_update = obj_update
     
     class Meta:
         max_limit = None
-        queryset = Video.objects.select_related('village').all()
+        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
         authorization = VideoAuthorization()
@@ -422,6 +413,10 @@ class VideoResource(ModelResource):
                     'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
                     'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
                     'last_modified', 'viewers','time_created', 'time_modified', 'duration' ]
+    
+    def dehydrate_farmers_shown(self, bundle):
+        return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
+
     
     def apply_authorization_limits(self, request, object_list):
         districts = get_user_districts(request)
@@ -498,7 +493,7 @@ class PersonGroupsResource(ModelResource):
     group_label = fields.CharField()
     class Meta:
         max_limit = None
-        queryset = PersonGroups.objects.select_related('village').all()
+        queryset = PersonGroups.objects.prefetch_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
@@ -539,7 +534,8 @@ class ScreeningResource(ModelResource):
 
     class Meta:
         max_limit = None
-        queryset = Screening.objects.select_related('village').all()
+        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
+                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
@@ -582,37 +578,19 @@ class ScreeningResource(ModelResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
-        v_field = getattr(bundle.obj, 'videoes_screened').all().distinct()
-        vid_list=[]
-        for i in v_field:
-            vid_list.append({"id":i.id, "title":i.title})
-        return vid_list
-    
+        return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+        
     def dehydrate_farmer_groups_targeted(self, bundle):
-        v_field = getattr(bundle.obj, 'farmer_groups_targeted').all().distinct()
-        group_list=[]
-        for i in v_field:
-            group_list.append({"id":i.id, "group_name":i.group_name})
-        return group_list
+        return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
     def dehydrate_farmers_attendance(self, bundle):
-        v_field = getattr(bundle.obj, 'farmers_attendance').all().select_related().distinct()
-        screening_id  = getattr(bundle.obj,'id')
-        pma_list=[]
-        for i in v_field:
-            pma = PersonMeetingAttendance.objects.filter(person__id = i.id, screening__id = screening_id).values('id',
-                                                                                           'person__id',
-                                                                                           'person__person_name',
-                                                                                           'expressed_adoption_video__id',
-                                                                                           'expressed_adoption_video__title',
-                                                                                           'interested', 
-                                                                                           'expressed_question')
-            if pma:
-                pma_list.append({'person_id':pma[0]['person__id'],'person_name':pma[0]['person__person_name'], 
-                             'expressed_adoption_video': {'id':pma[0]['expressed_adoption_video__id'], 'title':pma[0]['expressed_adoption_video__title']},
-                              'interested': pma[0]['interested'], 'expressed_question': pma[0]['expressed_question']})
-            
-        return pma_list
+        return [{'person_id':pma.person.id, 
+                 'person_name': pma.person.person_name, 
+                 'interested': pma.interested, 
+                 'expressed_question': pma.expressed_question, 
+                 'expressed_adoption_video': {'id': pma.expressed_adoption_video.id, 
+                                              'title': pma.expressed_adoption_video.title } if pma.expressed_adoption_video else {}
+                 }  for pma in bundle.obj.personmeetingattendance_set.all()]
     
     def hydrate_videoes_screened(self, bundle):
         print 'in hydrate videoes'
@@ -696,7 +674,7 @@ class PersonResource(ModelResource):
     
     class Meta:
         max_limit = None
-        queryset = Person.objects.select_related('village','group').all()
+        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
         resource_name = 'person'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
@@ -716,10 +694,9 @@ class PersonResource(ModelResource):
         return p_field+"("+v_field+","+f_field+")"
     
     def dehydrate_videos_seen(self, bundle):
-        person_id = getattr(bundle.obj, 'id')
-        videos = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().values('id','title')
-        return list(videos)
-    
+        return [[{'id': video.id, 'title': video.title} for video in pma.screening.videoes_screened.all()]
+                 for pma in bundle.obj.personmeetingattendance_set.all()]
+        
     def hydrate_village(self, bundle):
         village = bundle.data.get('village')
         if village and not hasattr(bundle,'village_flag'):
@@ -754,7 +731,7 @@ class PersonAdoptVideoResource(ModelResource):
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('person__village__in')
@@ -767,24 +744,10 @@ class PersonAdoptVideoResource(ModelResource):
     obj_update = obj_update
     
     def dehydrate_group(self, bundle):
-        person_id = getattr(bundle.obj, 'person').id
-        t_dict = {}
-        group = Person.objects.get(id = person_id).group
-        if group:
-            t_dict["id"] = group.id
-            t_dict["group_name"] = group.group_name
-        else:
-            t_dict["id"] = None
-            t_dict["group_name"] = None
-        return t_dict
-    
+        return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
+
     def dehydrate_village(self, bundle):
-        person_id = getattr(bundle.obj, 'person').id
-        t_dict = {}
-        village = Person.objects.get(id=person_id).village
-        t_dict["id"] = village.id
-        t_dict["village_name"] = village.village_name
-        return t_dict
+        return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
     
     def hydrate_video(self, bundle):
         print 'in hydrate video'
