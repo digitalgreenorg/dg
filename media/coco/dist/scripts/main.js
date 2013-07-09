@@ -153,7 +153,7 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender'],
+        'unique_togther_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -161,6 +161,12 @@ function() {
                     'placeholder': 'id_ass_villages',
                     'name_field': 'village_name'
                 }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+            },
+            district: {
+                district :{
+                    placeholder : 'id_district',
+                    name_field : 'district_name' 
+                }
             }
         },
         'form_field_validation': {
@@ -178,6 +184,7 @@ function() {
                     maxlength: 10
                 },
                 assigned_villages: "required",
+                district: "required"
             },
             messages: {
                 name: {
@@ -192,6 +199,7 @@ function() {
                     maxlength: "Phone number should not contain more than 10 digits"
                 },
                 assigned_villages: "Assigned villages are required",
+                district: "District is required"
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -356,23 +364,25 @@ function() {
     };
 
     var language_configs = {
-        'page_header': 'Laguage',
-        'list_table_header_template': 'language_table_template',
-        'list_table_row_template': 'language_list_item_template',
-        'add_template_name': 'language_add_edit_template',
-        'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
-        'foreign_entities': {},
-        'form_field_validation': {},
         'dashboard_display': {
             listing: false,
             add: false
         }
     };
 
-    //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+    var district_configs = {
+        'rest_api_url': '/api/v1/district/',
+        'entity_name': 'district',
+        'sort_field': 'district_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var group_configs = {
         'page_header': 'Group',
         'list_table_header_template': 'group_table_template',
@@ -405,7 +415,7 @@ function() {
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
             }],
-            foreign_entities: {
+            foreign_entities: { //used at convert_namespace only
                 village: {
                     village: {
                         placeholder: 'id_village',
@@ -470,7 +480,7 @@ function() {
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/api/v1/screening/',
         'entity_name': 'screening',
-        download_chunk_size: 200,
+        download_chunk_size: 1000,
         'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         'foreign_entities': {
             'village': {
@@ -676,24 +686,13 @@ function() {
                         id_field: "person_id", // for convert_namespace conversion      
                         'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template: 'adoption_inline',
-                            placeholder: 'bulk',
-                            denormalize: { // any field in expanded template to be denormalised     
-                                "expressed_adoption_video": {
-                                    name_field: 'title'
-                                }
-                            },
-                            foreign_fields: { // any more field in expanded template for offline to online conv
-                                "expressed_adoption_video": {
-                                    entity_name: "video"
-                                }
-                            },
-                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                            placeholder: 'bulk'
                         }
                     }
                 }
             },
             'bulk': {
-                foreign_fields: { // any more field in expanded template for offline to online conv
+                foreign_fields: { //foreign fields in the individual objects
                     "video": {
                         video: {
                             'name_field': 'title'
@@ -703,8 +702,19 @@ function() {
                         person: {
                             'name_field': 'person_name'
                         }
+                    },
+                    village: {
+                        village:{
+                            'name_field': 'village_name'
+                        }
+                    },
+                    group: {
+                        group:{
+                            'name_field': 'group_name'
+                        }
                     }
                 },
+                borrow_fields: ['village', 'group']
             }
         },
         edit: {
@@ -754,7 +764,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id', 'group.id'],
+        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
@@ -851,6 +861,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        district: district_configs,
         misc: misc
     }
 
@@ -4059,7 +4070,7 @@ define('auth_offline_backend',[
               }
           },
           error: function(){
-               return dfd.reject("There is no database for offline use (Offline Backend)");
+               return dfd.reject("No user found");
           }
       });
       return dfd.promise();
@@ -5731,12 +5742,12 @@ define('views/form',[
             console.log(params);
             this.final_json = null;
             _.bindAll(this);
-            
-            //read entity_config and sets main properties on view object for easy access
-            this.read_form_config(params);
 
             //sets this.edit_case, and  this.edit_case_id, or this.edit_case_json
             this.identify_form_action(params);  
+
+            //read entity_config and sets main properties on view object for easy access
+            this.read_form_config(params);
 
             //reads this.foreign_entities and setsup the collections, source_dependents_map
             this.setup_foreign_elements();
@@ -6247,46 +6258,43 @@ define('views/form',[
                         var that = this;
                         $.each(n_json.bulk, function(ind, obj){
                             var id = obj[element];
-                            var index = obj["index"];
-                            console.log("index = "+index);
-                            var tr_el = $('tr[index='+index+']');
-                            var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
-                            var label = null;
-                            var el_dict = {};
-                            if($(dom_el).is("select"))
+                            if($.inArray(element, that.bulk.borrow_fields)!=-1)
                             {
-                                label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
-                                el_dict["id"] = parseInt(id);
-                                el_dict[name_field] = label;   
-                                
+                                obj[element] = {};
+                                obj[element]["id"] = id;
+                                obj[element][name_field] = $('select[name='+element+'] option:selected').text();     
                             }
-                            else if($(dom_el).is("input"))
+                            else
                             {
-                                var index = that.f_index.indexOf(member);
-                                console.log(index);
+                                var index = obj["index"];
+                                console.log("index = "+index);
+                                var tr_el = $('tr[index='+index+']');
+                                var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
+                                var label = null;
+                                var el_dict = {};
+                                if($(dom_el).is("select"))
+                                {
+                                    label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
+                                    el_dict["id"] = parseInt(id);
+                                    el_dict[name_field] = label;   
+                                }
+                                else if($(dom_el).is("input"))
+                                {
+                                    var index = that.f_index.indexOf(member);
+                                    console.log(index);
                                 
-                                var collection1 = that.f_colls[index];
-                                console.log(element);
-                                console.log(collection1);
-                                var model = collection1.where({
-                                    id: parseInt(id)
-                                })[0];
-                                el_dict["id"] = parseInt(id);
-                                el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
+                                    var collection1 = that.f_colls[index];
+                                    console.log(element);
+                                    console.log(collection1);
+                                    var model = collection1.where({
+                                        id: parseInt(id)
+                                    })[0];
+                                    el_dict["id"] = parseInt(id);
+                                    el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
+                                }
+                                obj[element] = el_dict;
                             }
-                            // console.log((sel_el));
-                            // var label = $(sel_el)
-                            console.log(el_dict);          
-                            obj[element] = el_dict;
-                            console.log(JSON.stringify(obj));
-                            // delete obj["index"];
-                            console.log(JSON.stringify(obj));
-                            
-                                
                         });
-                        
-                        
-                        
                     }
                     else if (element in n_json) {
                         name_field = f_entities[member][element]["name_field"];
@@ -6309,7 +6317,7 @@ define('views/form',[
                             n_json[element] = el_array;
                         } else {
                             var id = parseInt(n_json[element]);
-                            if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                            if(id){ 
                                 // var entity = this.f_colls[c].where({
 //                                     id: id
 //                                 })[0];
@@ -6343,27 +6351,6 @@ define('views/form',[
         },
         
             
-        clean_json: function(object_json){
-            console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
-            
-            for(member in object_json)
-            {   
-                if(member == "")
-                    delete object_json[member];
-                else if(!object_json[member])
-                {
-                    object_json[member] = null
-                    if(this.$('[name='+member+']').is('select[multiple]'))
-                    {
-                        object_json[member] = [];
-                    }
-                }
-            }    
-            console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
-                
-        },  
-        
-        
         set_submit_button_state: function(state){
             if(state=="disabled")
                 this.$(".action_button").attr("disabled",true);    
@@ -6541,15 +6528,65 @@ define('views/form',[
         
         //preserve the background fields - not entered through form
         extend_edit_json: function(o_json){
-            o_json = $.extend(true, this.model_json, o_json);
+            o_json = $.extend(this.model_json, o_json);
             if(this.inline)
             {
                 _.each(o_json.inlines, function(inl, index){
                     var old_json = this.inl_models_dict[inl.id];
-                    o_json.inlines[index] = $.extend(true, old_json, inl);
+                    o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
             return o_json;
+        },
+        
+        
+        clean_json: function(form_json){
+            console.log("FORM: Before cleaning json - "+JSON.stringify(form_json))
+            
+            if(this.bulk)
+            {
+                $.each(form_json.bulk, function(index, obj){
+                    clean_object(obj);
+                });
+            }
+            else
+            {
+                clean_object(form_json);
+                if(this.inline)
+                {
+                    $.each(form_json.inlines, function(index, obj){
+                        clean_object(obj);
+                    });
+                }
+            }
+            
+            function clean_object(obj)
+            {
+                for(member in obj)
+                {   
+                    if(member == "")
+                        delete obj[member];
+                    else if(!obj[member])
+                    {
+                        obj[member] = null
+                        if(this.$('[name='+member+']').is('select[multiple]'))
+                        {
+                            obj[member] = [];
+                        }
+                    }
+                }    
+            }    
+
+            console.log("FORM: After cleaning json - "+JSON.stringify(form_json))
+            
+        },  
+        
+        include_borrowed_attributes: function(o_json, fields){
+            _.each(o_json.bulk, function(bulk, index){
+                _.each(fields, function(field, index){
+                    bulk[field] = parseInt(this.$('[name='+field+']').val());
+                }, this);
+            }, this);
         },
         
         save: function() {
@@ -6562,6 +6599,7 @@ define('views/form',[
                 this.parse_bulk(this.final_json);
                 // $.each(this.final_json.bulk, function(index, obj){
                 // });
+                this.include_borrowed_attributes(this.final_json, this.bulk.borrow_fields);
             }
             else
             {
@@ -7890,7 +7928,7 @@ define('auth',[
                   offline_login(username, password)
                       .fail(function(error){
                           console.log("Offline login failed - "+error);
-                          if(error == "There is no database for offline use (Offline Backend)")
+                          if(error == "No user found")
                           {     
                               offline_register(username, password)
                                   .fail(function(error){
@@ -7903,6 +7941,8 @@ define('auth',[
                                       dfd.resolve();
                                   });      
                           }
+                          else
+                              dfd.reject(error);
                       })
                       .done(function(){
                           console.log("Login Successfull");
@@ -7915,7 +7955,10 @@ define('auth',[
           offline_login(username, password)
               .fail(function(error){
                   console.log("Offline login failed - "+error);
-                  dfd.reject(error);
+                  if(error == "No user found")
+                      dfd.reject("You need to be online till database has been downloaded.");
+                  else
+                      dfd.reject(error);
               })
               .done(function(){
                   console.log("Login Successfull");
@@ -7946,7 +7989,6 @@ define('auth',[
   //resolves if u, p matches the one stored in off db 
   var offline_login = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.login(username, password)
           .done(function(){
               dfd.resolve();
@@ -7959,7 +8001,6 @@ define('auth',[
   
   var offline_register = function(username, password){
       var dfd = new $.Deferred();
-      var that = this;
       OfflineAuthBackend.register(username, password)
           .done(function(){
               dfd.resolve();
@@ -7989,8 +8030,9 @@ define('views/dashboard',[
     'layoutmanager',      
     'models/user_model',
     'auth',
+	'offline_utils',
     ],
- function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth) {
+ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager,User, Auth, Offline) {
 
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -8073,7 +8115,18 @@ define('views/dashboard',[
 			else {
 				this.user_offline();
 			}
-
+			
+			Offline.fetch_object("meta_data", "key", "last_full_download")
+                .done(function(model){
+					$('.list_items').unbind('click', false);
+					$('.list_items').removeClass("disabled");
+					console.log("Dashboard links enabled");
+                })
+                .fail(function(model, error){
+					$('.list_items').bind('click', false);
+					$('.list_items').addClass("disabled");
+					console.log("Dashboard links disabled");
+                });
         },
         
 		user_online: function(){
@@ -9211,6 +9264,10 @@ define('views/full_download',[
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
             var that = this;
+			
+			$('.list_items').unbind('click', false);
+			$('.list_items').removeClass("disabled");
+			console.log("Dashboard links enabled");
             
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
@@ -9640,8 +9697,8 @@ define('user_initialize',[
 
 		startDate = start.split('-');
 		endDate = value.split('-');
-
-		if(endDate[0]>startDate[0]){
+		
+		if(endDate[0]>startDate[0] || String(endDate).length === 0){
 			check = true;
 		}
 		else if (endDate[0] === startDate[0]){

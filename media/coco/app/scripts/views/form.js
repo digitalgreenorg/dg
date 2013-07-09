@@ -159,12 +159,12 @@ define([
             console.log(params);
             this.final_json = null;
             _.bindAll(this);
-            
-            //read entity_config and sets main properties on view object for easy access
-            this.read_form_config(params);
 
             //sets this.edit_case, and  this.edit_case_id, or this.edit_case_json
             this.identify_form_action(params);  
+
+            //read entity_config and sets main properties on view object for easy access
+            this.read_form_config(params);
 
             //reads this.foreign_entities and setsup the collections, source_dependents_map
             this.setup_foreign_elements();
@@ -676,46 +676,43 @@ define([
                         var that = this;
                         $.each(n_json.bulk, function(ind, obj){
                             var id = obj[element];
-                            var index = obj["index"];
-                            console.log("index = "+index);
-                            var tr_el = $('tr[index='+index+']');
-                            var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
-                            var label = null;
-                            var el_dict = {};
-                            if($(dom_el).is("select"))
+                            if($.inArray(element, that.bulk.borrow_fields)!=-1)
                             {
-                                label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
-                                el_dict["id"] = parseInt(id);
-                                el_dict[name_field] = label;   
-                                
+                                obj[element] = {};
+                                obj[element]["id"] = id;
+                                obj[element][name_field] = $('select[name='+element+'] option:selected').text();     
                             }
-                            else if($(dom_el).is("input"))
+                            else
                             {
-                                var index = that.f_index.indexOf(member);
-                                console.log(index);
+                                var index = obj["index"];
+                                console.log("index = "+index);
+                                var tr_el = $('tr[index='+index+']');
+                                var dom_el = $('tr[index='+index+']').find('[name='+element+index+']');
+                                var label = null;
+                                var el_dict = {};
+                                if($(dom_el).is("select"))
+                                {
+                                    label = $(tr_el).find('select[name='+element+index+'] option:selected').text();
+                                    el_dict["id"] = parseInt(id);
+                                    el_dict[name_field] = label;   
+                                }
+                                else if($(dom_el).is("input"))
+                                {
+                                    var index = that.f_index.indexOf(member);
+                                    console.log(index);
                                 
-                                var collection1 = that.f_colls[index];
-                                console.log(element);
-                                console.log(collection1);
-                                var model = collection1.where({
-                                    id: parseInt(id)
-                                })[0];
-                                el_dict["id"] = parseInt(id);
-                                el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
+                                    var collection1 = that.f_colls[index];
+                                    console.log(element);
+                                    console.log(collection1);
+                                    var model = collection1.where({
+                                        id: parseInt(id)
+                                    })[0];
+                                    el_dict["id"] = parseInt(id);
+                                    el_dict[name_field] = model.get(f_entities[member][element]["name_field"]);    
+                                }
+                                obj[element] = el_dict;
                             }
-                            // console.log((sel_el));
-                            // var label = $(sel_el)
-                            console.log(el_dict);          
-                            obj[element] = el_dict;
-                            console.log(JSON.stringify(obj));
-                            // delete obj["index"];
-                            console.log(JSON.stringify(obj));
-                            
-                                
                         });
-                        
-                        
-                        
                     }
                     else if (element in n_json) {
                         name_field = f_entities[member][element]["name_field"];
@@ -738,7 +735,7 @@ define([
                             n_json[element] = el_array;
                         } else {
                             var id = parseInt(n_json[element]);
-                            if((id != "")&&(id!=null)&&(id!=undefined)){ 
+                            if(id){ 
                                 // var entity = this.f_colls[c].where({
 //                                     id: id
 //                                 })[0];
@@ -772,27 +769,6 @@ define([
         },
         
             
-        clean_json: function(object_json){
-            console.log("FORM: Before cleaning json - "+JSON.stringify(object_json))
-            
-            for(member in object_json)
-            {   
-                if(member == "")
-                    delete object_json[member];
-                else if(!object_json[member])
-                {
-                    object_json[member] = null
-                    if(this.$('[name='+member+']').is('select[multiple]'))
-                    {
-                        object_json[member] = [];
-                    }
-                }
-            }    
-            console.log("FORM: After cleaning json - "+JSON.stringify(object_json))
-                
-        },  
-        
-        
         set_submit_button_state: function(state){
             if(state=="disabled")
                 this.$(".action_button").attr("disabled",true);    
@@ -970,15 +946,65 @@ define([
         
         //preserve the background fields - not entered through form
         extend_edit_json: function(o_json){
-            o_json = $.extend(true, this.model_json, o_json);
+            o_json = $.extend(this.model_json, o_json);
             if(this.inline)
             {
                 _.each(o_json.inlines, function(inl, index){
                     var old_json = this.inl_models_dict[inl.id];
-                    o_json.inlines[index] = $.extend(true, old_json, inl);
+                    o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
             return o_json;
+        },
+        
+        
+        clean_json: function(form_json){
+            console.log("FORM: Before cleaning json - "+JSON.stringify(form_json))
+            
+            if(this.bulk)
+            {
+                $.each(form_json.bulk, function(index, obj){
+                    clean_object(obj);
+                });
+            }
+            else
+            {
+                clean_object(form_json);
+                if(this.inline)
+                {
+                    $.each(form_json.inlines, function(index, obj){
+                        clean_object(obj);
+                    });
+                }
+            }
+            
+            function clean_object(obj)
+            {
+                for(member in obj)
+                {   
+                    if(member == "")
+                        delete obj[member];
+                    else if(!obj[member])
+                    {
+                        obj[member] = null
+                        if(this.$('[name='+member+']').is('select[multiple]'))
+                        {
+                            obj[member] = [];
+                        }
+                    }
+                }    
+            }    
+
+            console.log("FORM: After cleaning json - "+JSON.stringify(form_json))
+            
+        },  
+        
+        include_borrowed_attributes: function(o_json, fields){
+            _.each(o_json.bulk, function(bulk, index){
+                _.each(fields, function(field, index){
+                    bulk[field] = parseInt(this.$('[name='+field+']').val());
+                }, this);
+            }, this);
         },
         
         save: function() {
@@ -991,6 +1017,7 @@ define([
                 this.parse_bulk(this.final_json);
                 // $.each(this.final_json.bulk, function(index, obj){
                 // });
+                this.include_borrowed_attributes(this.final_json, this.bulk.borrow_fields);
             }
             else
             {
