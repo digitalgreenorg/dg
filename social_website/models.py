@@ -41,11 +41,6 @@ class Partner(models.Model):
     views = models.BigIntegerField(null=True, blank=True)
     likes = models.BigIntegerField(null=True, blank=True)
     adoptions = models.BigIntegerField(null=True, blank=True)
-
-    
-class Language(models.Model):
-    name = models.CharField(max_length=100)
-    
     
 class Video(models.Model):
     uid = models.CharField(max_length=20,primary_key = True)
@@ -71,18 +66,18 @@ class Video(models.Model):
     subtopic = models.CharField(max_length=500, blank=True)
     subject = models.CharField(max_length=500, blank=True)
     partner = models.ForeignKey(Partner,related_name='partner_videos')
-    language = models.ForeignKey(Language,max_length=20, related_name='language_videos')
+    language = models.CharField(max_length=20)
     state = models.CharField(max_length=50)
     
         
 class Collection(models.Model):
-    uid = models.CharField(max_length=20,primary_key = True)
+    uid = models.AutoField(primary_key = True)
     title = models.CharField(max_length=500)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
     country = models.ForeignKey(Country,related_name='related_collections')
     partner = models.ForeignKey(Partner,related_name='partner_collections')
-    language = models.ForeignKey(Language,max_length=20, related_name='language_collections')
+    language = models.CharField(max_length=20)
     videos = models.ManyToManyField(Video,related_name='video_collections')
     
     # INTERNAL FIELDS
@@ -155,11 +150,10 @@ class VideoWatchRecord(models.Model):
     timeWatched = models.BigIntegerField()
     
 class PersonVideoRecord(models.Model):
-    uid = models.CharField(max_length=20,primary_key = True)
-    PersonID = models.CharField(max_length=20)
-    VideoID = models.CharField(max_length=20)
+    personID = models.CharField(max_length=20)
+    videoID = models.CharField(max_length=20)
     views = models.PositiveSmallIntegerField(default = 0)
-    likes = models.BooleanField(default = False)
+    like = models.BooleanField(default = False)
     adopted = models.PositiveSmallIntegerField(default = 0)
     
 
