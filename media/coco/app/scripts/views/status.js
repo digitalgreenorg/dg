@@ -22,7 +22,7 @@ define([
         
         initialize: function(){
             _(this).bindAll('fill_status');
-            // upload_collection.on("all",this.fill_status);
+            //upload_collection.on("all",this.fill_status);
             this.fill_status();
         },
         

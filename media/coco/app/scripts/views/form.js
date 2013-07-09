@@ -576,6 +576,7 @@ define([
                     });
                 }    
                 this.initiate_form_widgets();
+				$('.inline_table').show();
             }
             else
             {
