@@ -400,7 +400,7 @@ function() {
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
             }],
-            foreign_entities: {
+            foreign_entities: { //used at convert_namespace only
                 village: {
                     village: {
                         placeholder: 'id_village',
@@ -671,24 +671,13 @@ function() {
                         id_field: "person_id", // for convert_namespace conversion      
                         'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template: 'adoption_inline',
-                            placeholder: 'bulk',
-                            denormalize: { // any field in expanded template to be denormalised     
-                                "expressed_adoption_video": {
-                                    name_field: 'title'
-                                }
-                            },
-                            foreign_fields: { // any more field in expanded template for offline to online conv
-                                "expressed_adoption_video": {
-                                    entity_name: "video"
-                                }
-                            },
-                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                            placeholder: 'bulk'
                         }
                     }
                 }
             },
             'bulk': {
-                foreign_fields: { // any more field in expanded template for offline to online conv
+                foreign_fields: { //foreign fields in the individual objects
                     "video": {
                         video: {
                             'name_field': 'title'
@@ -698,8 +687,19 @@ function() {
                         person: {
                             'name_field': 'person_name'
                         }
+                    },
+                    village: {
+                        village:{
+                            'name_field': 'village_name'
+                        }
+                    },
+                    group: {
+                        group:{
+                            'name_field': 'group_name'
+                        }
                     }
                 },
+                borrow_fields: ['village', 'group']
             }
         },
         edit: {
