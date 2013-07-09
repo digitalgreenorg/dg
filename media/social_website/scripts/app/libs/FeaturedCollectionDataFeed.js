@@ -1,36 +1,40 @@
+/**
+ * FeaturedCollectionViewController Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
 define(function(require) {
     'use strict';
 
     var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
     var DataModel = require('app/libs/DataModel');
-    var Util = require('framework/Util');
-
+    
     var FeaturedCollectionDataFeed = DigitalGreenDataFeed.extend({
 
-        
-        /*Input params:
+        /*
+         * Input params:
+         * language {string}
+         * 
+         * Output params: featuredCollection {FeaturedCollection}
+         * 
+         */
 
-        language {string}
-        
-
-        Output params:
-        featuredCollection {Activity[]}
-        */
-        
-
-        constructor: function() {
+        constructor: function($language) {
             this.base('api/featuredCollection/');
 
             // prepare data model
-            this._dataModel.addSubModel('featuredCollection', true);
-            this.addInputParam('language__name', false, Util.Cookie.get('language__name'));
+            var featuredCollectionsSubModel = this._dataModel.addSubModel('featuredCollection', true);
+            this.addInputParamCacheClear('language__name',
+            		featuredCollectionsSubModel);
         },
 
         fetch: function(language) {
-            if (language == undefined) {
-                language = Util.Cookie.get('language__name');  //set from cookie
-            }
             this.setInputParam('language__name', language, true);
+            
             // perform the fetch
             this.base();
         },
@@ -41,7 +45,8 @@ define(function(require) {
             // local references
             var dataModel = this._dataModel;
             var featuredCollectionModel = dataModel.get('featuredCollection');
-            featuredCollectionModel.set('1',unprocessedData.featured_collection);  //1 is the key with which this data will be fetched
+            
+            featuredCollectionModel.set('featuredCollectionObj', unprocessedData.featured_collection);
         },
 
         setInputParam: function(key, value, disableCacheClearing) {
@@ -60,7 +65,7 @@ define(function(require) {
         getFeaturedCollection: function() {
             var language = this.getInputParam('language__name');
             var featuredCollectionModel = this._dataModel.get('featuredCollection');
-            var featuredCollection = featuredCollectionModel.get('1');  //1 was set in process data
+            var featuredCollection = featuredCollectionModel.get('featuredCollectionObj');
 
             if (!featuredCollection) {
                 this.fetch(language);

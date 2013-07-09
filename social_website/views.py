@@ -353,35 +353,34 @@ def elasticSearch(request):
         return HttpResponse('0')
     
 def featuredCollection(request):
-    params = request.GET
-    language_name = params.get('language__name', None)
-    if language_name == "All Languages":
-        language_name = 'Mundari'
-    featured_collection = FeaturedCollection.objects.get(language__name=language_name)
+    language_name = request.GET.get('language__name', None)
+    try:
+        featured_collection = FeaturedCollection.objects.get(language__name=language_name)
+    except FeaturedCollection.DoesNotExist:
+        featured_collection = FeaturedCollection.objects.get(language__name="Mundari")
     collection_uid = featured_collection.collection
-    #collection_uid = '34'
     collage_url = featured_collection.collageURL
     collection = Collection.objects.get(uid=collection_uid)
-    time=0
-    for vid in collection.videos.all():
-        time=time+vid.duration
-    featured_collection_dict={
-        'title':collection.title,
-        'state':collection.state,
-        'country':collection.country.countryName,
-        'likes':collection.likes,
-        'views':collection.views,
-        'adoptions':collection.adoptions,
-        'language':collection.language.name,
-        'partner_name':collection.partner.name,
-        'partner_logo':collection.partner.logoURL,
-        'partner_url':'/social/connect/?id='+str(collection.partner.uid),
-        'video_count':collection.videos.all().count(),
-        'link':'/social/collections/?id='+collection_uid +'&video=1',
-        'collageURL':collage_url,
-        'duration':str(datetime.timedelta(seconds=time)),
-        }
-    resp = json.dumps({"featured_collection":featured_collection_dict})
+    time = 0
+    for video in collection.videos.all():
+        time = time + video.duration
+    featured_collection_dict = {
+        'title': collection.title,
+        'state': collection.state,
+        'country': collection.country.countryName,
+        'likes': collection.likes,
+        'views': collection.views,
+        'adoptions': collection.adoptions,
+        'language': collection.language.name,
+        'partner_name': collection.partner.name,
+        'partner_logo': collection.partner.logoURL,
+        'partner_url': '/social/connect/?id='+str(collection.partner.uid),
+        'video_count': collection.videos.all().count(),
+        'link': '/social/collections/?id='+collection_uid +'&video=1',
+        'collageURL': collage_url,
+        'duration': str(datetime.timedelta(seconds=time)),
+    }
+    resp = json.dumps({"featured_collection": featured_collection_dict})
     return HttpResponse(resp)
 
 def footer_view(request):
