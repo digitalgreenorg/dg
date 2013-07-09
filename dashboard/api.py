@@ -694,8 +694,7 @@ class PersonResource(ModelResource):
         return p_field+"("+v_field+","+f_field+")"
     
     def dehydrate_videos_seen(self, bundle):
-        return [[{'id': video.id, 'title': video.title} for video in pma.screening.videoes_screened.all()]
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+        return [{'id': video.id, 'title': video.title} for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all()]
         
     def hydrate_village(self, bundle):
         village = bundle.data.get('village')
