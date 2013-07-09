@@ -410,7 +410,7 @@ define([
             var dfd = new $.Deferred();
             console.log("DASHBOARD:DOWNLOAD: In finish download");
             var that = this;
-            //that.db_downloaded();
+            that.db_downloaded();
 			
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
