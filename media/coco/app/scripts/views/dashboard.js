@@ -96,17 +96,14 @@ define([
 			else {
 				this.user_offline();
 			}
-			
+			var that = this;
 			Offline.fetch_object("meta_data", "key", "last_full_download")
+				
                 .done(function(model){
-					$('.list_items').unbind('click', false);
-					$('.list_items').removeClass("disabled");
-					console.log("Dashboard links enabled");
+					that.db_downloaded();
                 })
                 .fail(function(model, error){
-					$('.list_items').bind('click', false);
-					$('.list_items').addClass("disabled");
-					console.log("Dashboard links disabled");
+					that.db_not_downloaded();
                 });
         },
         
@@ -120,6 +117,20 @@ define([
 			$('#sync').attr('disabled',true);
 			$('#online').hide();
 			$('#offline').show();
+		},
+		
+		db_downloaded: function(){
+			$('.list_items').unbind('click', false);
+			$('.list_items').removeClass("disabled");
+			console.log("Dashboard links enabled");
+			$("#helptext").hide();
+		},
+		
+		db_not_downloaded: function(){
+			$('.list_items').bind('click', false);
+			$('.list_items').addClass("disabled");
+			console.log("Dashboard links disabled");
+			$("#helptext").show();
 		},
 		
         sync: function(){

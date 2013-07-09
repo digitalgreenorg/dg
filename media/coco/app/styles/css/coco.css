@@ -51,6 +51,13 @@
     width:18px;
 }
 
+#helptext{
+	font-size:11px;
+	color:red;
+	margin-left:15px;
+	display:none;
+}
+
 #notifications{
 	width: 400px;
 	position:fixed;
