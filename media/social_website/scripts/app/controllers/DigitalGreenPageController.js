@@ -18,7 +18,7 @@ define(function(require) {
     var CustomSelectBox = require('app/libs/CustomSelectBox');
 
     var SearchViewController = require('app/view-controllers/SearchViewController');
-
+    
 
     var DigitalGreenPageController = PageController.extend({
 
@@ -52,7 +52,7 @@ define(function(require) {
             var references = this._references;
 
             var $searchContainer = jQuery(".js-search-wrapper");
-
+            
             // helpers
             //TODO: Not sure if we need to do much else than instantiate
             references.searchViewController = new SearchViewController($searchContainer);
