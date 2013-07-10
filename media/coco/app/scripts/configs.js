@@ -556,7 +556,8 @@ function() {
                 },
                 end_time: {
                     required: true,
-                    validateTime: true
+                    validateTime: true,
+					timeOrder: {start_time : "start_time"}
                 },
                 animator: "required",
                 village: "required",
@@ -569,11 +570,11 @@ function() {
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
 				},
 				start_time: {
-					required: 'Video production start date is required',
+					required: 'Screening start time is required',
 					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
 				},
 				end_time: {
-					required: 'Video production end date is required',
+					required: 'Screening end time is required',
 					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
