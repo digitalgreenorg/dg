@@ -152,7 +152,7 @@
 				<td>
 					<div id="coco_userinfo">
 					<%if(typeof(username)!=undefined){%>
-                    Hi <%=username%>! <a id="logout">Log out</a>
+                    Hi <%=username%>! <a id="logout" style="cursor:pointer">Log out</a>
 					<%}%>
 					</div>
 				</td>
@@ -166,6 +166,10 @@
 					<span class="badge" id="upload_num"><%=upload_entries%></span>
 					</button>
                 </div>
+				<p id="helptext">
+				Please download the database<br>
+				by clicking on the sync button
+				</p>
                 <div id="coco_nav" class="pull-left">
                     <ul id = "dashboard_items" class="nav nav-list" title= "Click to view, search or edit data">
                         
@@ -218,6 +222,7 @@
 			To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server,
 			you will get the opportunity to correct the data, or in case of duplicate entries, to discard it.
 			The number in the button shows how many entries are yet to be uploaded.
+			Clicking on the sync button will also download the database if it is not completely downloaded.
 			</div>
 		</div>
 
@@ -540,7 +545,7 @@
                 </div>
                     <br>
             </fieldset>
-            <fieldset>
+            <fieldset class = "inline_table">
             	<h5>Attendance</h5>
                 <table id="pma_table" class="table">
                     <thead>
@@ -716,7 +721,7 @@
                                 </div>
                                     <br>
                             </fieldset>
-                            <fieldset>
+                            <fieldset class = "inline_table">
                             	<h5>Adoptions</h5>
                                 <table id="adoptions_table" class="table">
                                     <thead>

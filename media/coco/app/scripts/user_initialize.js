@@ -74,7 +74,7 @@ define([
 	function dateOrder(value, element, options){
 		var check = false;
 		var start = $('#'+options.video_production_start_date).val();
-		console.log("START DATE = " + start + ' END = ' + value);
+		//console.log("START DATE = " + start + ' END = ' + value);
 
 		startDate = start.split('-');
 		endDate = value.split('-');

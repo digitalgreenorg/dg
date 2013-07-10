@@ -10,6 +10,10 @@
 	position:fixed;
 }
 
+.inline_table{
+	display:none;
+}
+
 #coco_content {
     padding-top: 20px;
 }
@@ -49,6 +53,13 @@
 
 #coco_nav_add {
     width:18px;
+}
+
+#helptext{
+	font-size:11px;
+	color:red;
+	margin-left:15px;
+	display:none;
 }
 
 #notifications{
