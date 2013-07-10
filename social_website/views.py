@@ -4,14 +4,14 @@ from django.conf.urls.defaults import *
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
 from django.shortcuts import *
-from social_website.models import Language, Collection, Partner
+from social_website.models import Collection, Partner
 from pyes import *
 import ast, json, urllib2
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
 def social_home(request):
-    language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
+    language=Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
     language=list(set(language))
     language = sorted(language) # setting them in alphabetical order
     fcollection_uid=34
@@ -30,7 +30,7 @@ def social_home(request):
         'likes':featured_collection.likes,
         'views':featured_collection.views,
         'adoptions':featured_collection.adoptions,
-        'language':featured_collection.language.name,
+        'language':featured_collection.language,
         'partner_name':featured_collection.partner.name,
         'partner_logo':featured_collection.partner.logoURL,
         'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
@@ -92,7 +92,7 @@ def collection_view(request):
         'online_views':online_views,
         'offline_views':collection.views-online_views,
         'adoptions':collection.adoptions,
-        'language':collection.language.name,
+        'language':collection.language,
         'partner_name':collection.partner.name,
         'partner_logo':collection.partner.logoURL,
         'video_count':collection.videos.all().count(),
@@ -123,7 +123,7 @@ def collection_view(request):
             related_collection_dict.append({"uid" : res['_source']['uid'], 
                                             "title" : res['_source']['title'], 
                                             "partner" : res['_source']['partner']['name'],
-                                            "language" : res['_source']['language']['name'],
+                                            "language" : res['_source']['language'],
                                             "state" : res['_source']['state'],
                                             "thumbnailURL" : res['_source']['thumbnailURL'],
                                             "likes" : res['_source']['likes'],
@@ -246,10 +246,10 @@ def searchFilters(request):
     filters['language'] = {}
     filters['language']['title'] = 'Language'
     filters['language']['options'] = []
-    for obj in Language.objects.all():
-        facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
+    for obj in set(Collection.objects.exclude(language=None).values_list('language')):
+        facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
         if facet_count:
-            filters['language']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in language, "count" : facet_count })
+            filters['language']['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in language, "count" : facet_count })
             
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'

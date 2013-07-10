@@ -3,15 +3,20 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from social_website.migration_functions import update_person_video_record
+from social_website.migration_functions import update_website_video, add_partner_info
+
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.all()[:20000]:
-            update_person_video_record(pma)
+        # Partner
+#        for partner in orm['dashboard.Partners'].objects.exclude(date_of_association=None):
+#            add_partner_info(partner)
             
-                
+        # Video
+        for vid in orm['dashboard.Video'].objects.all():
+            update_website_video(vid)
+
     def backwards(self, orm):
         "Write your backwards methods here."
 

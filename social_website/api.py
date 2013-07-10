@@ -1,6 +1,6 @@
 from tastypie.resources import ModelResource
 from tastypie import fields
-from social_website.models import Video, Language, Country, Farmer, Activity, Collection, Partner, Interests, Comment, ImageSpec
+from social_website.models import Video, Country, Farmer, Activity, Collection, Partner, Interests, Comment, ImageSpec
 from functools import partial
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
@@ -71,15 +71,15 @@ class ImageSpecResource(BaseResource):
     class Meta:
         queryset = ImageSpec.objects.all()
         resource_name = 'imagespec'
-
-class LanguageResource(BaseResource):
-    class Meta:
-        queryset = Language.objects.all()
-        resource_name = 'language'
-        include_resource_uri = False
-        filtering={
-                   'name':ALL
-                   }
+#
+#class LanguageResource(BaseResource):
+#    class Meta:
+#        queryset = Language.objects.all()
+#        resource_name = 'language'
+#        include_resource_uri = False
+#        filtering={
+#                   'name':ALL
+#                   }
         
 class PartnerResource(BaseResource):
     class Meta:
@@ -126,14 +126,14 @@ class CollectionResource(BaseCorsResource):
     country = fields.ForeignKey(CountryResource, 'country',full=True)
     videos = fields.ManyToManyField(VideoResource, 'videos',full=True)
     partner = fields.ForeignKey(PartnerResource, 'partner', full=True)
-    language = fields.ForeignKey(LanguageResource, 'language',full=True)
+#    language = fields.ForeignKey(LanguageResource, 'language',full=True)
     class Meta:
         queryset = Collection.objects.all()
         resource_name = 'collectionsSearch'
         excludes = ['category','subcategory','topic','subtopic','subject']
-        filtering={
-                   'language':ALL_WITH_RELATIONS
-                   }
+#        filtering={
+#                   'language':ALL_WITH_RELATIONS
+#                   }
         ordering={'likes','views','adoptions'}
         
     

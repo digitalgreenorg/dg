@@ -3,10 +3,9 @@ from django.views.generic.simple import direct_to_template
 from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch, search_view
 from static_site_views import home
 from django.conf import settings
-from social_website.api import VideoResource, LanguageResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, InterestsResource, CommentResource, PartnerFarmerResource
+from social_website.api import VideoResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, InterestsResource, CommentResource, PartnerFarmerResource
 
 video_resource = VideoResource()
-language_resource = LanguageResource()
 country_resource = CountryResource()
 farmer_resource = FarmerResource()
 activity_resource = ActivityResource()
@@ -25,7 +24,6 @@ partnerfarmer_resource = PartnerFarmerResource()
 
 urlpatterns = patterns('',
     (r'^api/', include(video_resource.urls)),
-    (r'^api/', include(language_resource.urls)),
     (r'^api/', include(country_resource.urls)),
     (r'^api/', include(farmer_resource.urls)),
     (r'^api/', include(activity_resource.urls)),

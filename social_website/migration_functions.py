@@ -1,5 +1,4 @@
-from social_website.models import  Collection, Country, Partner, PersonVideoRecord
-from social_website.models import Video
+from social_website.models import  Collection, Country, Partner, PersonVideoRecord, Video
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import Count, Sum
@@ -16,6 +15,9 @@ def add_partner_info(partner):
 
 def get_offline_stats(video_id):
     stats = PersonVideoRecord.objects.filter(videoID = video_id).aggregate(Sum('like'), Sum('views'), Sum('adopted'))
+    stats['like__sum'] = stats['like__sum'] if stats['like__sum'] is not None else 0
+    stats['views__sum'] = stats['views__sum'] if stats['views__sum'] is not None else 0
+    stats['adopted__sum'] = stats['adopted__sum'] if stats['adopted__sum'] is not None else 0 
     return stats
 
 def update_person_video_record(pma):
@@ -53,6 +55,16 @@ def get_online_stats(yt_entry):
     else:
         stats['likes'] = 0         
     return stats
+
+def populate_adoptions(pap):
+    person_id = pap.person.id
+    video_id = pap.video.id
+    try:
+        person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
+        person_vid_obj.adopted += 1
+        person_vid_obj.save()
+    except ObjectDoesNotExist:
+        pass
       
 def update_website_video(vid):
     from dashboard.models import Partners, Language
@@ -129,4 +141,21 @@ def create_collections():
         for video in videos:
             website_collection.videos.add(video)
         collection_counter += 1
+        
+def populate_collection_stats(collection):
+    stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
+    collection.likes = stats['offlineLikes__sum'] + stats['onlineLikes__sum']
+    collection.views = stats['offlineViews__sum'] + stats['onlineViews__sum']
+    collection.adoptions = stats['adoptions__sum']
+    collection.save()    
+    
+def populate_partner_stats(partner):
+    stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('offlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
+    if stats['uid__count'] > 0:                 #check if partner has at least one video
+        partner.videos = stats['uid__count']
+        partner.likes = stats['onlineLikes__sum'] + stats['offlineLikes__sum']
+        partner.views = stats['onlineViews__sum'] + stats['offlineViews__sum']
+        partner.adoptions = stats['adoptions__sum']
+    partner.collectionCount = Collection.objects.filter(partner = partner).count()
+    partner.save()
         

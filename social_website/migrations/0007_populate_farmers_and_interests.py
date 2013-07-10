@@ -3,17 +3,12 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from social_website.migration_functions import create_collections, populate_country
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Create country model in website
-        for country in orm['dashboard.Country'].objects.all():
-            populate_country(country)
-        
-        # Create collections
-        create_collections()
+        "Write your forwards methods here."
+        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
 
     def backwards(self, orm):
         "Write your backwards methods here."

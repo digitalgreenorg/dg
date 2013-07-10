@@ -3,15 +3,13 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from social_website.migration_functions import update_person_video_record
-
+from social_website.migration_functions import populate_adoptions
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.all()[:20000]:
-            update_person_video_record(pma)
+        for pap in orm['dashboard.PersonAdoptPractice'].objects.all()[:20000]:
+            populate_adoptions(pap)
             
-                
     def backwards(self, orm):
         "Write your backwards methods here."
 
@@ -677,7 +675,7 @@ class Migration(DataMigration):
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
+            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'videos': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'video_collections'", 'symmetrical': 'False', 'to': "orm['social_website.Video']"}),
             'views': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },

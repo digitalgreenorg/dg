@@ -3,19 +3,17 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from social_website.migration_functions import update_website_video, add_partner_info
-
+from social_website.migration_functions import create_collections, populate_country
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Partner
-        for partner in orm['dashboard.Partners'].objects.exclude(date_of_association=None):
-            add_partner_info(partner)
-            
-        # Video
-        for vid in orm['dashboard.Video'].objects.all():
-            update_website_video(vid)
+        # Create country model in website
+#        for country in orm['dashboard.Country'].objects.all():
+#            populate_country(country)
+        
+        # Create collections
+        create_collections()
 
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -682,7 +680,7 @@ class Migration(DataMigration):
             'thumbnailURL': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'topic': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
-            'uid': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
+            'uid': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'videos': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'video_collections'", 'symmetrical': 'False', 'to': "orm['social_website.Video']"}),
             'views': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
