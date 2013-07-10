@@ -971,6 +971,10 @@ class CocoUser(models.Model):
     user = models.OneToOneField(User)
     partner = BigForeignKey(Partners)
     villages = BigManyToManyField(Village)
+    
+    def get_villages(self):
+        return self.villages.all()
+
 
 class Rule(CocoModel):
     name = models.CharField(max_length=100);
