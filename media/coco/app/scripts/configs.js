@@ -232,7 +232,11 @@ function() {
             'person': {
                 "farmers_shown": {
                     'placeholder': 'id_farmers_shown',
-                    'name_field': 'person_name'
+                    'name_field': 'person_name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 },
             },
             'village': {
