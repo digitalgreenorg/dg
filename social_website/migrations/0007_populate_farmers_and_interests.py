@@ -3,13 +3,14 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from social_website.migration_functions import populate_farmers
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-
+        for person in orm['dashboard.Person'].objects.all()[:20000]:
+            populate_farmers(person)
+            
     def backwards(self, orm):
         "Write your backwards methods here."
 

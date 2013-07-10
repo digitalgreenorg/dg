@@ -1,11 +1,12 @@
-from social_website.models import  Collection, Country, Partner, PersonVideoRecord, Video
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import Count, Sum
 import gdata.youtube.service
+from social_website.models import  Collection, Country, Farmer, Partner, PersonVideoRecord, Video
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
+S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
 
 def add_partner_info(partner):
     website_partner = Partner(uid=str(partner.id), joinDate=partner.date_of_association, name=partner.partner_name,
@@ -159,3 +160,11 @@ def populate_partner_stats(partner):
     partner.collectionCount = Collection.objects.filter(partner = partner).count()
     partner.save()
         
+def populate_farmers(person):
+    group_name = person.group.group_name if person.group else '' 
+    partner = Partner.objects.get(uid = str(person.village.block.district.partner.id))
+    website_farmer = Farmer(uid = str(person.id), name=person.person_name, village = person.village.village_name, block = person.village.block.block_name, 
+                            district = person.village.block.district.district_name, state = person.village.block.district.state.state_name, 
+                            country = person.village.block.district.state.country.country_name, group=group_name, partner=partner,
+                            thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
+    website_farmer.save()
