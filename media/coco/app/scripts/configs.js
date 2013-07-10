@@ -530,9 +530,12 @@ function() {
                                 name_field: 'title'
                             }
                         },
-                        foreign_fields: { // any more field in expanded template for offline to online conv
-                            "expressed_adoption_video": {
-                                entity_name: "video"
+                        foreign_entities: { // any more field in expanded template for offline to online conv
+                            video:{
+                                "expressed_adoption_video": {
+                                    entity_name: "video",
+                                    name_field: 'title'
+                                }
                             }
                         },
                         extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
@@ -660,7 +663,6 @@ function() {
                         }
                     },
                     farmers_attendance: {
-                        only_render: true,
                         dependency: [{
                             'source_form_element': 'group',
                             'dep_attr': 'group'
