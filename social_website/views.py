@@ -4,47 +4,49 @@ from django.conf.urls.defaults import *
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseNotFound, QueryDict
 from django.shortcuts import *
-from social_website.models import Language, Collection, Partner
+from social_website.models import  Collection, Partner, FeaturedCollection
 from pyes import *
-import ast, urllib2
+import ast, json, urllib2
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
 
 def social_home(request):
-    language=Collection.objects.exclude(language = None).values_list('language__name',flat=True) # only using those languages that have collections 
+    language=Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
     language=list(set(language))
     language = sorted(language) # setting them in alphabetical order
-    fcollection_uid=34
-    featured_collection=Collection.objects.get(uid=fcollection_uid)
-    time=0
-    vid_thumbnails=[]
-    for vid in featured_collection.videos.all():
-        time=time+vid.duration
-        vid_thumbnails.append(vid.thumbnailURL)
-    featured_collection_dict={
-        'thumbnail':vid_thumbnails[:5],
-        'thumbnail_default':vid_thumbnails[0],
-        'title':featured_collection.title,
-        'state':featured_collection.state,
-        'country':featured_collection.country.countryName,
-        'likes':featured_collection.likes,
-        'views':featured_collection.views,
-        'adoptions':featured_collection.adoptions,
-        'language':featured_collection.language.name,
-        'partner_name':featured_collection.partner.name,
-        'partner_logo':featured_collection.partner.logoURL,
-        'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
-        'video_count':featured_collection.videos.all().count(),
-        'duration':str(datetime.timedelta(seconds=time)),
-        'link':'/social/collections/?id='+ str(fcollection_uid)+'&video=1'
-        }
+    #===========================================================================
+    # fcollection_uid=34
+    # featured_collection=Collection.objects.get(uid=fcollection_uid)
+    # time=0
+    # vid_thumbnails=[]
+    # for vid in featured_collection.videos.all():
+    #     time=time+vid.duration
+    #     vid_thumbnails.append(vid.thumbnailURL)
+    # featured_collection_dict={
+    #     'thumbnail':vid_thumbnails[:5],
+    #     'thumbnail_default':vid_thumbnails[0],
+    #     'title':featured_collection.title,
+    #     'state':featured_collection.state,
+    #     'country':featured_collection.country.countryName,
+    #     'likes':featured_collection.likes,
+    #     'views':featured_collection.views,
+    #     'adoptions':featured_collection.adoptions,
+    #     'language':featured_collection.language.name,
+    #     'partner_name':featured_collection.partner.name,
+    #     'partner_logo':featured_collection.partner.logoURL,
+    #     'partner_url':'/social/connect/?id='+str(featured_collection.partner.uid),
+    #     'video_count':featured_collection.videos.all().count(),
+    #     'duration':str(datetime.timedelta(seconds=time)),
+    #     'link':'/social/collections/?id='+ str(fcollection_uid)+'&video=1'
+    #     }
+    #===========================================================================
     context= {
         'header': {
             'jsController':'Home',
              'loggedIn':False
              },
         'language':language,
-        'featured_collection':featured_collection_dict
+#         'featured_collection':featured_collection_dict
         }
     
     return render_to_response('home.html' , context,context_instance = RequestContext(request))
@@ -53,7 +55,7 @@ def collection_view(request):
     id = request.GET.get('id', 1)
     videoID= request.GET.get('video', 1)
     if id:
-         collection_uid=id
+        collection_uid=id
     collection=Collection.objects.get(uid=id)
     time=0
     online_likes=0
@@ -81,7 +83,7 @@ def collection_view(request):
         time=time+vid.duration
         online_likes=online_likes+vid.onlineLikes
         online_views=online_views+vid.onlineViews
-        video_info.append([vid.title,vid.thumbnailURL,str(datetime.timedelta(seconds=vid.duration))[2:]])
+        video_info.append([vid.title,vid.thumbnailURL16by9,str(datetime.timedelta(seconds=vid.duration))[2:]])
     collection_dict={
         'uid':collection.uid,
         'title':collection.title,
@@ -92,7 +94,7 @@ def collection_view(request):
         'online_views':online_views,
         'offline_views':collection.views-online_views,
         'adoptions':collection.adoptions,
-        'language':collection.language.name,
+        'language':collection.language,
         'partner_name':collection.partner.name,
         'partner_logo':collection.partner.logoURL,
         'video_count':collection.videos.all().count(),
@@ -100,6 +102,40 @@ def collection_view(request):
         'partner_collections':collection.partner.collectionCount,
         'partner_year':collection.partner.joinDate.year
         }
+    related_collection_dict = []
+    conn = ES(['127.0.0.1:9200'])
+    conn.default_indices="test2"
+    conn.refresh("test2")
+    q ={"query": {
+                        "bool" : {
+                                  "must_not" : {"term" : { "uid" : collection.uid }},
+                            "should" : [
+                                        {"terms" : { "subject" : [collection.subject] }},
+                                        {"terms" : { "topic" : [collection.topic] }},
+                                        ],
+                            "minimum_should_match" : 1,
+                                }
+                  }
+        }
+    try :
+        query = json.dumps(q)
+        response = urllib2.urlopen('http://localhost:9200/test2/_search',query)
+        result = json.loads(response.read())
+        for res in result['hits']['hits']:
+            related_collection_dict.append({"uid" : res['_source']['uid'], 
+                                            "title" : res['_source']['title'], 
+                                            "partner" : res['_source']['partner']['name'],
+                                            "language" : res['_source']['language'],
+                                            "state" : res['_source']['state'],
+                                            "thumbnailURL" : res['_source']['thumbnailURL'],
+                                            "likes" : res['_source']['likes'],
+                                            "views" : res['_source']['views'],
+                                            "adoptions" : res['_source']['adoptions'],
+                                            "duration" : str(datetime.timedelta(seconds=res['_source']['duration'])),
+                                            "vid_count" : len(res['_source']['videos']),
+                                            })
+    except Exception, ex:
+        pass
     context= {
         'header': {
             'jsController':'ViewCollections',
@@ -108,7 +144,8 @@ def collection_view(request):
         'collection':collection_dict,
         'videos':video_info,
         'video':video_dict,
-        'slides':range(((len(videos)-1)/5)+1)
+        'slides':range(((len(videos)-1)/5)+1),
+        'related_collections' : related_collection_dict[:4], # restricting to 4 related collections for now
         }
     return render_to_response('collections-view.html' , context,context_instance = RequestContext(request))
 
@@ -198,7 +235,7 @@ def searchFilters(request):
         facets = ast.literal_eval(facets)
         for row in facets:
             facet_dict[row['term']] = int(row['count']) 
-        
+            
     language = params.getlist('filters[language][]', None)
     subcategory = params.getlist('filters[subcategory][]', None)
     category = params.getlist('filters[category][]', None)
@@ -208,13 +245,13 @@ def searchFilters(request):
     subject = params.getlist('filters[subject][]', None)
     
     filters = {}
-    filters['language'] = {}
-    filters['language']['title'] = 'Language'
-    filters['language']['options'] = []
-    for obj in Language.objects.all():
-        facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
-        if facet_count:
-            filters['language']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in language, "count" : facet_count })
+#    filters['language'] = {}
+#    filters['language']['title'] = 'Language'
+#    filters['language']['options'] = []
+#    for obj in set(Collection.objects.exclude(language=None).values_list('language')):
+#        facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
+#        if facet_count:
+#            filters['language']['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in language, "count" : facet_count })
             
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
@@ -229,8 +266,10 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
     filters = make_sub_filter(filters, 'subject', subject, facet_dict)
+    filters = make_sub_filter(filters, 'language', language, facet_dict)
 
     data = json.dumps({"categories" : filters})
+    print data
     return HttpResponse(data)
 
 def create_query(params, language_name):
@@ -243,9 +282,9 @@ def create_query(params, language_name):
     subject = params.getlist('filters[subject][]', None)
     query = []
     if language:
-        query.append({"terms":{"language_name" : language}})
+        query.append({"terms":{"language" : language}})
     elif language_name:
-        query.append({"terms":{"language_name" : [language_name]}})
+        query.append({"terms":{"language" : [language_name]}})
     if subcategory:
         query.append({"terms":{"subcategory" : subcategory}})
     if category:
@@ -291,7 +330,7 @@ def elasticSearch(request):
         "facets" : {
                     "facet" :{
                               "terms": {
-                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+                                        "fields" : ["language", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
                                         "size" : MAX_RESULT_SIZE
                                         }
                               }
@@ -309,7 +348,53 @@ def elasticSearch(request):
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
         facets = json.dumps(result['facets']['facet']['terms'])
+        
         resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": str(len(result_list))},"objects": result_list[offset:offset+limit], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
         return HttpResponse('0')
+    
+def featuredCollection(request):
+    language_name = request.GET.get('language__name', None)
+    try:
+        featured_collection = FeaturedCollection.objects.get(language__name=language_name)
+    except FeaturedCollection.DoesNotExist:
+        featured_collection = FeaturedCollection.objects.get(language__name="Mundari")
+    collection_uid = featured_collection.collection
+    collage_url = featured_collection.collageURL
+    collection = Collection.objects.get(uid=collection_uid)
+    time = 0
+    for video in collection.videos.all():
+        time = time + video.duration
+    featured_collection_dict = {
+        'title': collection.title,
+        'state': collection.state,
+        'country': collection.country.countryName,
+        'likes': collection.likes,
+        'views': collection.views,
+        'adoptions': collection.adoptions,
+        'language': collection.language.name,
+        'partner_name': collection.partner.name,
+        'partner_logo': collection.partner.logoURL,
+        'partner_url': '/social/connect/?id='+str(collection.partner.uid),
+        'video_count': collection.videos.all().count(),
+        'link': '/social/collections/?id='+collection_uid +'&video=1',
+        'collageURL': collage_url,
+        'duration': str(datetime.timedelta(seconds=time)),
+    }
+    resp = json.dumps({"featured_collection": featured_collection_dict})
+    return HttpResponse(resp)
+
+def footer_view(request):
+    response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
+    data = data = json.loads(response.read())
+    footer_dict={
+        'likes':data['likes'],
+        }
+    context= {
+        'header': {
+            'jsController':'Footer',
+            'loggedIn':False},
+        'footer_dict':footer_dict
+        }
+    return render_to_response('footer.html' , context,context_instance = RequestContext(request))

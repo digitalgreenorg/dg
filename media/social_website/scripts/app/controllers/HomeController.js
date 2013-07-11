@@ -39,6 +39,7 @@ define(function(require) {
     var CollectionViewController = require('app/view-controllers/CollectionViewController');
     var CollectionMostFiltersViewController = require('app/view-controllers/CollectionMostFiltersViewController');
     var NewsFeedViewController = require('app/view-controllers/news/NewsFeedViewController');
+    var FeaturedCollectionViewController = require('app/view-controllers/FeaturedCollectionViewController');
     var jQuery = require('jquery');
 
     var NCarousel = require('libs/NCarousel/NCarousel');
@@ -63,6 +64,7 @@ define(function(require) {
             references.collectionMostFiltersViewController.setActiveFilter('-likes');
             
             this._getNewsFeed();
+            this._getFeaturedCollection();
 
             return this;
         },
@@ -74,12 +76,14 @@ define(function(require) {
 
             var $collectionsContainer = jQuery('.js-collections-wrapper');
             var $newsFeedContainer = jQuery(".js-news-feed-wrapper");
+            var $featuredCollectionContainer = jQuery(".js-featured-collection-wrapper");
 
             // helpers
             var $languageCookie = Util.Cookie.get('language__name');
             references.collectionViewController = new CollectionViewController($collectionsContainer, $languageCookie);
             references.collectionMostFiltersViewController = new CollectionMostFiltersViewController($collectionsContainer);
             references.newsFeedViewController = new NewsFeedViewController($newsFeedContainer);
+            references.FeaturedCollectionViewController = new FeaturedCollectionViewController($featuredCollectionContainer, $languageCookie);
 
             // dom elements
             references.$mainCarouselWrapper = jQuery('#main-carousel');
@@ -116,6 +120,9 @@ define(function(require) {
             this._references.newsFeedViewController.getNewsItems();
         },
 
+        _getFeaturedCollection: function() {
+        	this._references.FeaturedCollectionViewController.getFeaturedCollection();
+        },
         _onNewsFeedUpdated: function (broadcastData){
             this._references.newsFeedViewController.updateTotalCount(broadcastData.totalCount);
             this._references.newsFeedViewController.addToCurrentCount(broadcastData.addedCount);

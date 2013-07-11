@@ -1,7 +1,7 @@
 {% include "includes/header.html" %}
     {% include "includes/partials/mainCarousel.html" %}
     {% include "includes/partials/search.html" %}
-
+	{% load app_tags %}
     <section id="main" role="main" class="wrapper">
         <div class="inner-wrapper">
             <header class="grid">
@@ -28,39 +28,7 @@
                 </div>
             </header>
             <div class="featured layout-vr-xlg">
-                <div class="grid">
-                    <div class="grid-col grid-size3of4">
-                    	<a href="{{featured_collection.link}}">
-                    		<img src="/media/assets/images/collage_border.jpg" width=642 height=321 alt="">
-                    	</a>
-                    </div>
-                    <div class="grid-col grid-size1of4">
-                        <div class="grid-pad-lt-sm">
-                           <h3 class="hdg-green hdg-c layout-vr-sm">{{ featured_collection.title}}</h3>
-                            <h4 class="copy hdg-bold"> {{ featured_collection.state}}, {{ featured_collection.country}}</h4>
-                            <h5 class="copy layout-vr-sm">{{ featured_collection.language}}</h5>
-                            <p class="layout-vr-md"></p>
-                            <div class="featured-logo copy layout-vr-md">
-                            	<a href={{featured_collection.partner_url}}>
-                            		<img class="" src="{{featured_collection.partner_logo}}" height=41 width=39 alt="" /> 
-                               	</a>
-                                {{ featured_collection.partner_name}}
-                            </div>
-                            <div class="featured-ft">
-                                <div class="featured-ft-videoDetails">
-                                   <ul class="h-list h-list-sm h-list-divided copy copy-white">
-                                       <li>{{ featured_collection.video_count}} Videos</li>
-                                       <li>{{ featured_collection.duration}}</li>
-                                   </ul>
-                                </div>
-                                <ul class="h-list h-list-sm copy-sm copy-dk vid-cat-list-dk">
-                                    <li class="like"><span class="text-hide">Likes</span>   {{ featured_collection.likes}}</li>
-                                    <li class="view"><span class="text-hide">Viewed</span> {{ featured_collection.views}}</li>
-                                    <li class="check"><span class="text-hide">Adopted</span> {{ featured_collection.adoptions}}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                <div class="grid js-featured-collection-wrapper">
                 </div>
             </div> <!-- End .featured -->
         </div> <!-- End .inner-wrapper -->
