@@ -88,7 +88,6 @@ for obj in Collection.objects.all():
         views += vid.onlineViews + vid.offlineViews
         adoptions += vid.adoptions
     country = model_to_dict(obj.country)
-    language = model_to_dict(obj.language)
     partner = model_to_dict(obj.partner, fields = ['name'])
 #    partner["joinDate"] = partner["joinDate"].strftime("%Y-%m-%d %H:%M:%S")
     
@@ -96,8 +95,7 @@ for obj in Collection.objects.all():
     data = json.dumps({"title" : obj.title,
                        "country" : country,
                        "url" : "", 
-                       "language" : language,
-                       "language_name" : obj.language.name, # to search using elastic for the time being
+                       "language" : obj.language,
                        "partner" : partner, 
                        "partner_name" : obj.partner.name,
                        "state" : obj.state,

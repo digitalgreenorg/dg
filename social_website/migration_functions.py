@@ -1,17 +1,15 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.loading import get_model
 from django.db.models import Count, Sum
 import gdata.youtube.service
-from social_website.models import  Collection, Country, Farmer, Partner, PersonVideoRecord, Video
+from social_website.models import  Collection, Partner, Person, PersonVideoRecord, Video
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg_farmerbook/2/"
 
 def add_partner_info(partner):
-    website_partner = Partner(uid=str(partner.id), joinDate=partner.date_of_association, name=partner.partner_name,
-                              logoURL = '', description = '', # add after description and logo in dashboard have been made
-                              collectionCount = 0, videos = 0, views = 0,likes = 0, adoptions = 0) # since default=0 is not given
+    website_partner = Partner(coco_id = str(partner.id), joinDate = partner.date_of_association, name = partner.partner_name,
+                              logoURL = '', description = '')
     website_partner.save()
 
 def get_offline_stats(video_id):
@@ -22,16 +20,15 @@ def get_offline_stats(video_id):
     return stats
 
 def update_person_video_record(pma):
-    from dashboard.models import PersonMeetingAttendance
-    person_video_list = PersonMeetingAttendance.objects.filter(id = pma.id).values_list('person', 'screening__videoes_screened','interested')
-    for person, video, interested in person_video_list:
+    videos = [video for video in pma.screening.videoes_screened.all()]
+    for video in videos:
         try:
-            person_video_obj = PersonVideoRecord.objects.get(personID = person, videoID= video)
+            person_video_obj = PersonVideoRecord.objects.get(personID = pma.person_id, videoID = video.id)
             person_video_obj.views += 1
-            if interested:
+            if pma.interested:
                 person_video_obj.like = 1
         except ObjectDoesNotExist:
-            person_video_obj = PersonVideoRecord(personID = person, videoID = video, like = interested, views = 1)
+            person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, like = pma.interested, views = 1)
         person_video_obj.save()
   
 def check_video_youtube_id(vid):
@@ -59,7 +56,9 @@ def get_online_stats(yt_entry):
 
 def populate_adoptions(pap):
     person_id = pap.person.id
+    print person_id
     video_id = pap.video.id
+    print video_id
     try:
         person_vid_obj = PersonVideoRecord.objects.get(personID = person_id, videoID = video_id)
         person_vid_obj.adopted += 1
@@ -68,10 +67,9 @@ def populate_adoptions(pap):
         pass
       
 def update_website_video(vid):
-    from dashboard.models import Partners, Language
     yt_entry = check_video_youtube_id(vid)
     if yt_entry: 
-        partner = Partner.objects.get(uid = str(vid.village.block.district.partner.id))
+        partner = Partner.objects.get(coco_id = str(vid.village.block.district.partner.id))
         language  = vid.language.language_name
         state = vid.village.block.district.state.state_name
         date = vid.video_production_end_date
@@ -86,62 +84,50 @@ def update_website_video(vid):
         else:
             sector = subsector = topic = subtopic = subject = ''
         thumbnailURL = S3_VIDEO_BUCKET + str(vid.id) + '.jpg'
-        website_vid = Video(uid = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
-                            sector = sector, subsector = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                            thumbnailURL = thumbnailURL, thumbnailURL16by9 = '',thumbnailURL4by3 = '',
+        website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+                            category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
+                            thumbnailURL = thumbnailURL, thumbnailURL16by9 = '',
                             language = language, partner = partner, state = state,
                             offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                             onlineLikes = online_stats['likes'], duration = online_stats['duration'], onlineViews = online_stats['views'],
                             )
         website_vid.save()
         
-def get_collection_pracs(videos,field1,field2,field3,field4):
+def get_collection_pracs(videos,field1,field2,field3,field4,field5):
     pracs = {}
-    pracs[field1] = videos[0].sector if len(set(videos.values_list(field1)))==1 else ''
-    pracs[field2] = videos[0].subsector if len(set(videos.values_list(field2)))==1 else ''
-    pracs[field3] = videos[0].subtopic if len(set(videos.values_list(field3)))==1 else ''
-    pracs[field4] = videos[0].subject if len(set(videos.values_list(field4)))==1 else ''
+    pracs[field1] = videos[0].category if len(set(videos.values_list(field1)))==1 else ''
+    pracs[field2] = videos[0].subcategory if len(set(videos.values_list(field2)))==1 else ''
+    pracs[field3] = videos[0].topic if len(set(videos.values_list(field3)))==1 else ''
+    pracs[field4] = videos[0].subtopic if len(set(videos.values_list(field4)))==1 else ''
+    pracs[field5] = videos[0].subject if len(set(videos.values_list(field5)))==1 else ''
     return pracs
-    
-def populate_country(country):
-        website_country = Country(countryName = country.country_name)
-        website_country.save()
         
 def create_collections():
-    from dashboard.models import Partners
-    collection_counter = 1 #remove when collection id is Autofield
-    
     ####### COLLECTIONS BASED ON TOPIC ##############################
     collection_combinations = Video.objects.exclude(topic = '').values_list('partner_id','language','topic','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
     for partner, language, topic, state, count in collection_combinations:
         videos = Video.objects.filter(partner_id = partner, language = language ,topic = topic, state = state)
-        collection_pracs = get_collection_pracs(videos,'sector','subsector','subtopic','subject')
-        country = Country.objects.get(countryName = Partners.objects.get(id = partner).district_set.all()[0].state.country.country_name) 
-        website_collection = Collection(uid = str(collection_counter), #remove when uid is AutoField
-                                        state = state, country = country, partner = Partner.objects.get(uid=partner), language = language,
-                                        category = collection_pracs['sector'], subcategory = collection_pracs['subsector'], topic = topic, 
+        collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
+        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+                                        category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = topic, 
                                         subtopic = collection_pracs['subtopic'],  subject = collection_pracs['subject'],
                                         title = videos[0].topic, thumbnailURL = '') # update thumbnail with Aadish's migration
         website_collection.save()
         for video in videos:
             website_collection.videos.add(video)
-        collection_counter += 1
     
     ####### COLLECTIONS BASED ON SUBJECT #############################    
     collection_combinations = Video.objects.exclude(subject = '').values_list('partner_id','language','subject','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
     for partner, language, subject, state, count in collection_combinations:
         videos = Video.objects.filter(partner_id = partner, language = language, subject = subject, state = state)
-        collection_pracs = get_collection_pracs(videos,'sector','subsector','topic','subtopic',)
-        country = Country.objects.get(countryName = Partners.objects.get(id = partner).district_set.all()[0].state.country.country_name) 
-        website_collection = Collection(uid = str(collection_counter), #remove when uid is AutoField
-                                        state = state, country = country, partner = Partner.objects.get(uid=partner), language = language,
-                                        category = collection_pracs['sector'], subcategory = collection_pracs['subsector'], topic = collection_pracs['topic'], 
+        collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
+        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+                                        category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = collection_pracs['topic'], 
                                         subtopic = collection_pracs['subtopic'],  subject = subject,
                                         title = videos[0].subject, thumbnailURL = '') # update thumbnail with Aadish's migration
         website_collection.save()
         for video in videos:
             website_collection.videos.add(video)
-        collection_counter += 1
         
 def populate_collection_stats(collection):
     stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
@@ -161,10 +147,7 @@ def populate_partner_stats(partner):
     partner.save()
         
 def populate_farmers(person):
-    group_name = person.group.group_name if person.group else '' 
-    partner = Partner.objects.get(uid = str(person.village.block.district.partner.id))
-    website_farmer = Farmer(uid = str(person.id), name=person.person_name, village = person.village.village_name, block = person.village.block.block_name, 
-                            district = person.village.block.district.district_name, state = person.village.block.district.state.state_name, 
-                            country = person.village.block.district.state.country.country_name, group=group_name, partner=partner,
+    partner = Partner.objects.get(coco_id = str(person.village.block.district.partner.id))
+    website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                             thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
     website_farmer.save()

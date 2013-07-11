@@ -235,7 +235,7 @@ def searchFilters(request):
         facets = ast.literal_eval(facets)
         for row in facets:
             facet_dict[row['term']] = int(row['count']) 
-        
+            
     language = params.getlist('filters[language][]', None)
     subcategory = params.getlist('filters[subcategory][]', None)
     category = params.getlist('filters[category][]', None)
@@ -245,13 +245,13 @@ def searchFilters(request):
     subject = params.getlist('filters[subject][]', None)
     
     filters = {}
-    filters['language'] = {}
-    filters['language']['title'] = 'Language'
-    filters['language']['options'] = []
-    for obj in set(Collection.objects.exclude(language=None).values_list('language')):
-        facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
-        if facet_count:
-            filters['language']['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in language, "count" : facet_count })
+#    filters['language'] = {}
+#    filters['language']['title'] = 'Language'
+#    filters['language']['options'] = []
+#    for obj in set(Collection.objects.exclude(language=None).values_list('language')):
+#        facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
+#        if facet_count:
+#            filters['language']['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in language, "count" : facet_count })
             
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
@@ -266,8 +266,10 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
     filters = make_sub_filter(filters, 'subject', subject, facet_dict)
+    filters = make_sub_filter(filters, 'language', language, facet_dict)
 
     data = json.dumps({"categories" : filters})
+    print data
     return HttpResponse(data)
 
 def create_query(params, language_name):
@@ -280,9 +282,9 @@ def create_query(params, language_name):
     subject = params.getlist('filters[subject][]', None)
     query = []
     if language:
-        query.append({"terms":{"language_name" : language}})
+        query.append({"terms":{"language" : language}})
     elif language_name:
-        query.append({"terms":{"language_name" : [language_name]}})
+        query.append({"terms":{"language" : [language_name]}})
     if subcategory:
         query.append({"terms":{"subcategory" : subcategory}})
     if category:
@@ -328,7 +330,7 @@ def elasticSearch(request):
         "facets" : {
                     "facet" :{
                               "terms": {
-                                        "fields" : ["language_name", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
+                                        "fields" : ["language", "partner_name", "state", "category", "subcategory" , "topic", "subject"], 
                                         "size" : MAX_RESULT_SIZE
                                         }
                               }
