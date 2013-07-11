@@ -3,15 +3,13 @@ from django.views.generic.simple import direct_to_template
 from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch, search_view, featuredCollection
 from static_site_views import home
 from django.conf import settings
-from social_website.api import VideoResource, CountryResource, FarmerResource, ActivityResource, CollectionResource, PartnerResource, InterestsResource, CommentResource, PartnerFarmerResource
+from social_website.api import VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
 
 video_resource = VideoResource()
-country_resource = CountryResource()
-farmer_resource = FarmerResource()
+farmer_resource = PersonResource()
 activity_resource = ActivityResource()
 collection_resource = CollectionResource()
 partner_resource = PartnerResource()
-interests_resource = InterestsResource()
 comment_resource = CommentResource()
 partnerfarmer_resource = PartnerFarmerResource()
 
@@ -24,12 +22,10 @@ partnerfarmer_resource = PartnerFarmerResource()
 
 urlpatterns = patterns('',
     (r'^api/', include(video_resource.urls)),
-    (r'^api/', include(country_resource.urls)),
     (r'^api/', include(farmer_resource.urls)),
     (r'^api/', include(activity_resource.urls)),
     (r'^api/', include(collection_resource.urls)),
     (r'^api/', include(partner_resource.urls)),
-    (r'^api/', include(interests_resource.urls)),
     (r'^api/', include(comment_resource.urls)),
     (r'^api/', include(partnerfarmer_resource.urls)),
     
