@@ -49,6 +49,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 .dataTable();
             $("#loaderimg")
                 .hide();
+			$("#sort-helptext").show();
 
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");

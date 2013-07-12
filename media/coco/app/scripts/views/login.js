@@ -4,13 +4,15 @@ define([
     'backbone',
     'layoutmanager',
     'models/user_model',
-    'auth'  
-], function(jquery, underscore, backbone, layoutmanager, User, Auth){
+    'auth',
+	'offline_utils'
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline){
     
     var LoginView = Backbone.Layout.extend({
       template: "#login",
       events:{
-          'click #login_button': 'attempt_login'                  
+          'click #login_button': 'attempt_login',
+		  'click #change_user' : 'change_user'		  
       },
       
       initialize: function(){
@@ -76,6 +78,13 @@ define([
           else
               this.$("#login_button").button(state);    
       },
+	  
+	  change_user: function(){
+		var val = confirm("Your current database will be deleted and a new database will be downloaded");
+		if (val==true){
+			Offline.reset_database();
+		}
+	  }
       
     });
     

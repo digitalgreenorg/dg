@@ -94,6 +94,12 @@
 	padding-left:230px;
 }
 
+#change_user{
+	font-size: 12px;
+	cursor: pointer;
+	margin-top:10px;
+}
+
 div.dataTables_length label {
     width: 460px;
     float: left;

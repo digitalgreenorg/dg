@@ -327,7 +327,12 @@
        </table>
 	</div>
 	<div id="loaderimg"><img src="/media/coco/app/images/loading_text.gif" /></div>
+
+	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic display:none;">
+	For multiple column sorting, press and hold the shift key while sorting each column.
+	</p>
 </script>
+
 <script type="text/template" id="options_template">
     <option value=<%=id%>><%=name%></option> 
 </script>
@@ -352,6 +357,7 @@
         <input id="password" type="password" placeholder="Password">
       </div>
       <button id= "login_button" class="btn primary" type="submit" data-loading-text="Logging In...">Sign in</button>
+	  <br><a id="change_user">Sign in as a different user</a>
     </fieldset>
   </form>
   </div>
