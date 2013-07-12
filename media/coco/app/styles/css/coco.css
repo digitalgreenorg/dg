@@ -14,6 +14,16 @@
 	display:none;
 }
 
+.notbold{
+	font-weight: normal !important;
+}
+
+.bold-helptext{
+	font-size:12px;
+	color:grey;
+	font-style: italic;
+}
+
 #coco_content {
     padding-top: 20px;
 }
@@ -41,8 +51,10 @@
 }
 
 #coco_userinfo {
+	width: 10em;
     font-size: 11px;
 	margin-left: 5px;
+	word-wrap: break-word;
 }
 
 #coco_sync {
@@ -112,7 +124,7 @@ table {
 }
 
 legend{
-	font-size: 24px;
+	font-size: 26px;
 	font-family: source_sans_prolight, arial, helvetica, sans-serif;
 	color: #8f8e8d;
 }

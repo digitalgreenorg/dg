@@ -274,8 +274,7 @@
 		</table>
       </div>
       </div>
-    <br>
-    <br>    
+	</div>
     <button id="reset_database" class="btn btn-small btn-primary" title= "Delete your database and download fresh database from server">Delete and Download Database</button>
 </script>
 <script type="text/template" id="form_template">
@@ -390,21 +389,22 @@
 	<%= villages %>
 	</td>
     <td>
-	<a href="#mediator/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil"></i></a>
+	<a href="#mediator/edit/<%= id %>" class="edit" title="Edit this entry"><i class="icon-pencil" title="Edit entry"></i></a>
 	</td>
     </tr>
 </script>
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset>
         <legend>Add Mediator</legend>
+		<p class="bold-helptext"> All fields in bold are required</p>
         <div class="control-group"> 
-        	<label class="control-label">Name*</label>
+		<label class="control-label"><b>Name</b></label>
         	<div class="controls">
          	<input type="text" name="name" placeholder="Name">
          	</div>
          </div>
          <div class="control-group"> 
-            <label class="control-label">Gender*</label> 
+            <label class="control-label"><b>Gender</b></label>
             <div class="controls">
             <select name="gender">
     			<option value='' selected='selected'>---------</option> 
@@ -414,7 +414,7 @@
             </div>
          </div> 
          <div class="control-group"> 
-             <label class="control-label">Assigned Villages*</label>
+             <label class="control-label"><b>Assigned Villages</b></label>
              <div class="controls"> 
              <select id = "id_ass_villages" name="assigned_villages" class = "chzn-select" multiple>
             
@@ -422,7 +422,7 @@
             </div>
         </div>
         <div class="control-group"> 
-            <label class="control-label">District*</label>
+            <label class="control-label"><b>District</b></label>
             <div class="controls"> 
                 <select id = "id_district" name="district" class = "chzn-select">
            
@@ -485,15 +485,16 @@
 <script type="text/template" id="screening_add_edit_template">
             <fieldset>
                 <legend>Add Screening</legend>
+				<p class="bold-helptext"> All fields in bold are required</p>
                 <div class="control-group"> 
-                	<label class="control-label">Date*</label>
+			<label class="control-label"><b>Date</b></label>
                 	<div class="controls">
                  	<input class="date-picker input-small" id="date" type="text" placeholder="Date" name="date">  
                  	</div>
                  	<span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                  </div>
                  <div class="control-group ">
-                 	<label class="control-label">Start Time*</label>
+			<label class="control-label"><b>Start Time</b></label>
                  	<div class="controls input-append bootstrap-timepicker">
 				<input class="time-picker input-mini" id="start_time" type="text" placeholder="hh:mm" name="start_time">
                  		<span class="add-on"><i class="icon-time"></i></span>
@@ -501,7 +502,7 @@
                  	<span class="help-block">Time should be in the format of hh:mm in 24 hours format</span>
                  </div>
                  <div class="control-group "> 
-                 	<label class="control-label">End Time*</label>
+			<label class="control-label"><b>End Time</b></label>
                  	<div class="controls input-append bootstrap-timepicker"> 
                  		<input class="time-picker input-mini" id="end_time_picker" type="text" placeholder="hh:mm" name="end_time">
                  		<span class="add-on"><i class="icon-time"></i></span>
@@ -509,7 +510,7 @@
                  	<span class="help-block">Time should be in the format of hh:mm in 24 hours format</span>
                  </div>
                  <div class="control-group">
-                	<label class="control-label">Village*</label>
+			<label class="control-label"><b>Village</b></label>
                 	<div class="controls"> 
                 	<select name="village" id="id_village" class="chzn-select" placeholder="Enter animator to enable">
                     <option value='' selected='selected'>---------</option> 
@@ -517,7 +518,7 @@
                 	</div>
                 </div>
                 <div class="control-group">
-                 	<label class="control-label">Mediator*</label>
+			<label class="control-label"><b>Mediator</b></label>
                  	<div class="controls"> 
                  	<select name="animator" id="id_animator" class="chzn-select">
                        <option value='' selected='selected'>---------</option> 
@@ -525,14 +526,14 @@
                	    </div>
                </div>
                <div class="control-group"> 
-                	<label class="control-label">Videos Screened*</label>
+			<label class="control-label"><b>Videos Screened</b></label>
                 	<div class="controls"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chzn-select">
                         </select> 
                     </div>
                 </div>
                 <div class="control-group">
-                	<label>Groups Attended*</label>
+			<label><b>Groups Attended</b></label>
                     <div class="controls">
                         <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chzn-select"></select> 
                     </div>
@@ -550,22 +551,22 @@
                 <table id="pma_table" class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th class="notbold">
                                 Delete?
                             </th>
-                            <th>
+                            <th class="notbold">
                                 No.
                             </th>
-                            <th>
+                            <th class="notbold">
                                 Person
                             </th>
-                            <th>
+                            <th class="notbold">
                                 Expressed Adopted Video
                             </th>
-                            <th>
+                            <th class="notbold">
                                 Question Asked
                             </th>
-                            <th>
+                            <th class="notbold">
                                 Interested?
                             </th>
                         </tr>
@@ -673,7 +674,7 @@
         <fieldset>
                 <legend>Edit Adoption</legend>
                 <div class="control-group">
-                	<label class="control-label">Person*</label>
+			<label class="control-label"><b>Person</b></label>
                 	<div class="controls"> 
                 	<select name="person" id="id_person" class="chzn-select">
                     <option value="">---------- </option>
@@ -681,13 +682,13 @@
                     </div>
                 </div>
                 <div class="control-group">
-                	<label>Video*</label>
+			<label><b>Video</b></label>
                     <div class="controls">
                         <select name="video" id="id_video" class="chzn-select"></select>
                     </div>
                 </div>
                 <div class="control-group"> 
-                	<label class="control-label">Date*</label>
+			<label class="control-label"><b>Date</b></label>
                 	<div class="controls">
                         <input class="input-small date-picker" id="date" type="text" placeholder="Date" name="date_of_adoption">  
                  	</div>
@@ -699,8 +700,9 @@
 <script type="text/template" id="adoption_add_template">
                             <fieldset>
                                 <legend>Add Adoption</legend>
+								<p class="bold-helptext"> All fields in bold are required</p>
                                 <div class="control-group">
-                                	<label class="control-label">Village*</label>
+					<label class="control-label"><b>Village</b></label>
                                 	<div class="controls"> 
                                 	<select name="village" id="id_village" class="chzn-select">
                                     <option value="">---------- </option>
@@ -708,7 +710,7 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                	<label>Groups Attended*</label>
+					<label><b>Groups Attended</b></label>
 	                                <div class="controls">
 	                                    <select name="group" id="id_group" multiple="multiple" class="chzn-select"></select>
 	                                </div>
@@ -726,10 +728,10 @@
                                 <table id="adoptions_table" class="table">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class= "notbold">
                                                 Delete?
                                             </th>
-                                            <th>
+                                            <th class = "notbold">
                                                 Sr No.
                                             </th>
                                             <th>
@@ -750,7 +752,7 @@
 </script>
 
 <script type="text/template" id="adoption_inline_header">
-    <tr> <th> Delete?</th><th> Sr No.</th><th> Person*</th><th> Video*</th><th> Date Of Adoption</th></tr>
+    <tr> <th> Delete?</th><th> Sr No.</th><th> Person*</th><th>Video</th><th> Date Of Adoption</th></tr>
 </script>
 
 <script type="text/template" id="adoption_inline">
@@ -828,14 +830,15 @@
 <script type="text/template" id="group_add_edit_template">
                             <fieldset>
                                 <legend>Add Group</legend>
+								<p class="bold-helptext"> All fields in bold are required</p>
                                 <div class="control-group"> 
-                                	<label class="control-label">Name*</label>
+					<label class="control-label"><b>Name</b></label>
                                 	<div class="controls">
                                  	<input type="text" name="group_name" placeholder="Name">
                                  	</div>
                                  </div>
                                  <div class="control-group"> 
-	                                 <label class="control-label">Village*</label>
+	                                 <label class="control-label"><b>Village</b></label>
 	                                 <div class="controls"> 
 	                                 <select id = "id_village" name="village" class="chzn-select">
                                         <option value='' selected='selected'>---------</option> 
@@ -873,7 +876,7 @@
 </script>  
 
 <script type="text/template" id="person_inline_header">
-<tr> <th> Person Name*</th><th> Father Name*</th><th> Age</th><th> Gender*</th><th> Phone No</th></tr>
+<tr> <th> Person Name</th><th> Father Name</th><th class = "notbold"> Age</th><th> Gender</th><th class="notbold"> Phone No</th></tr>
 </script>
 
 <!--//////////////////////////////////////////////////// GROUP TEMPLATES END ///////////////////////////////////////////////-->
@@ -906,14 +909,15 @@
 <script type="text/template" id="video_add_edit_template">
                             <fieldset>
                                 <legend>Add Video</legend>
+								<p class="bold-helptext"> All fields in bold are required</p>
                                 <div class="control-group"> 
-                                	<label class="control-label">Title*</label>
+					<label class="control-label"><b>Title</b></label>
                                 	<div class="controls">
                                  	<input type="text" name="title" placeholder="Title">
                                  	</div>
                                  </div>
                                  <div class="control-group"> 
- 	                                <label class="control-label">Video Type*</label> 
+	                                <label class="control-label"><b>Video Type</b></label>
  	                                <div class="controls">
  	                                <select name="video_type">
                                         <option value="" selected="selected">
@@ -939,14 +943,14 @@
  	                                </div>
                                  </div> 
                                  <div class="control-group">
-                                     <label class="control-label">Production Start Date*</label>
+                                     <label class="control-label"><b>Production Start Date</b></label>
                                      <div class="controls">
                                          <input class="date-picker input-small" id="video_production_start_date" name="video_production_start_date" type="text" placeholder="Start date">
                                      </div>
                                      <span class="help-block">Date should be in the format of yyyy-mm-dd</span>
                                  </div>
                                  <div class="control-group">
-                                     <label class="control-label">Production End Date*</label>
+                                     <label class="control-label"><b>Production End Date</b></label>
                                      <div class="controls">
                                          <input class="date-picker input-small" id="video_production_end_date" name="video_production_end_date" type="text" placeholder="End date">
                                      </div>
@@ -954,7 +958,7 @@
                                  </div>
                                  
                                  <div class="control-group">
-                                             <label class="control-label">Language*</label>
+                                             <label class="control-label"><b>Language</b></label>
                                              <div class="controls">
                                                  <select id = "id_language" name="language">
                                                      <option selected="selected" value="">
@@ -971,7 +975,7 @@
                                  </div>
                              </div>
                              <div class="control-group">
-                                 <label class="control-label">Village*</label>
+                                 <label class="control-label"><b>Village</b></label>
                                  <div class="controls">
                                      <select id = "id_village" name="village" class="chzn-select">
                                      	<option value="">---------- </option>
@@ -979,7 +983,7 @@
                                  </div>
                              </div>
                              <div class="control-group">
-                                 <label class="control-label">Facilitator*</label>
+                                 <label class="control-label"><b>Facilitator</b></label>
                                  <div class="controls">
                                      <select id = "id_facilitator" name="facilitator" class="chzn-select">
                                          <option selected="selected" value="">
@@ -989,7 +993,7 @@
                                  </div>
                              </div>                     
                              <div class="control-group">
-                                 <label class="control-label">Camera Operator*</label>
+                                 <label class="control-label"><b>Camera Operator</b></label>
                                  <div class="controls">
                                      <select id = "id_cameraoperator" name="cameraoperator" class="chzn-select">
                                          <option selected="selected" value="">
@@ -1000,13 +1004,13 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Persons Shown*</label>
+                                <label class="control-label"><b>Persons Shown</b></label>
                                 <div class="controls">
                                     <select size="20" multiple="multiple" class="input-xlarge chzn-select" id = "id_farmers_shown" name="farmers_shown" >                              </select>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Actors*</label>
+                                    <label class="control-label"><b>Actors</b></label>
                                     <div class="controls">
                                         <select class="input-medium" name="actors">
                                             <option value="" selected="selected">
@@ -1025,7 +1029,7 @@
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label">Video Suitable For*</label>
+                                    <label class="control-label"><b>Video Suitable For</b></label>
                                     <div class="controls">
                                         <select name="video_suitable_for">
                                             <option value="" selected="selected">
@@ -1123,20 +1127,21 @@
 <script type="text/template" id="person_add_edit_template">
         <fieldset>
             <legend>Add Person</legend>
+			<p class="bold-helptext"> All fields in bold are required</p>
             <div class="control-group"> 
-            	<label class="control-label">Name*</label>
+		<label class="control-label"><b>Name</b></label>
             	<div class="controls">
              	<input type="text" name="person_name" placeholder="Person Name">
              	</div>
              </div>
              <div class="control-group"> 
-                 <label class="control-label">Father Name*</label>
+                 <label class="control-label"><b>Father Name</b></label>
                  <div class="controls"> 
                  	<input type="text" name="father_name" placeholder="Father Name">
                  </div>
              </div>
              <div class="control-group"> 
-                 <label class="control-label">Village*</label>
+                 <label class="control-label"><b>Village</b></label>
                  <div class="controls"> 
                  <select id = "id_village" name="village" class="chzn-select">
                     
@@ -1144,7 +1149,7 @@
                 </div>
             </div>
             <div class="control-group"> 
-                <label class="control-label">Gender*</label> 
+                <label class="control-label"><b>Gender</b></label>
                 <div class="controls">
                 <select name="gender">
 					<option value='' selected='selected'>---------</option> 
