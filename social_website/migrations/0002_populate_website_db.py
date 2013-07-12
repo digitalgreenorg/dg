@@ -10,9 +10,9 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         # Fill up the PersonVideoRecord
-        for pma in orm['dashboard.PersonMeetingAttendance'].objects.all().prefetch_related('screening__videoes_screened'):
+        for pma in orm['dashboard.PersonMeetingAttendance'].objects.prefetch_related('screening__videoes_screened').all()[:50000]:
             update_person_video_record(pma)
-        for pap in orm['dashboard.PersonAdoptPractice'].objects.all().prefetch_related('person', 'video'):
+        for pap in orm['dashboard.PersonAdoptPractice'].objects.prefetch_related('person', 'video').all()[:20000]:
             populate_adoptions(pap)
         
         # Initial Partner information
@@ -20,9 +20,9 @@ class Migration(DataMigration):
             add_partner_info(partner)
         
         # Videos migrations    
-        for vid in orm['dashboard.Video'].objects.all().prefetch_related('language','village__block__district__partner','related_practice__practice_sector',
-                                                                         'related_practice__practice_subsector','related_practice__practice_topic',
-                                                                         'related_practice__practice_subtopic','related_practice__practice_subject'):
+        for vid in orm['dashboard.Video'].objects.prefetch_related('language','village__block__district__partner','related_practice__practice_sector',
+                                                                    'related_practice__practice_subsector','related_practice__practice_topic',
+                                                                    'related_practice__practice_subtopic','related_practice__practice_subject').all():
             update_website_video(vid)    
             
 #       # Generate collections from Video     
