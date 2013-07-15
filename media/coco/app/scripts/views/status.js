@@ -31,6 +31,7 @@ define([
                 full_d_timestamp: this.full_download_timestamp,
                 inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
+				db_version: this.db_version,
                 upload_collection: upload_collection.toJSON()
             }
         },
@@ -38,6 +39,7 @@ define([
         fill_status: function(){
             var that = this;
             that.upload_entries =  upload_collection.length;
+			that.db_version = indexeddb.migrations[0].version;
             
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){

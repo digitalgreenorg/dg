@@ -145,14 +145,14 @@
     <div id="coco_sidebar" class="coco_sidebar affix">
 		<table border = '0'>
 			<tr>
-				<td><div>
+				<td style="vertical-align:top;"><div>
 					<img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
 					<img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
 				</div></td>
 				<td>
 					<div id="coco_userinfo">
 					<%if(typeof(username)!=undefined){%>
-                    Hi <%=username%>! <a id="logout" style="cursor:pointer">Log out</a>
+                    Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
 					<%}%>
 					</div>
 				</td>
@@ -239,6 +239,7 @@
    
    <div style = "color:#999999; margin-top:25px;"><b>Database last deleted and downloaded at </b><%=full_d_timestamp%></div><br>
    <div style = "color:#999999; margin-top:-15px;"><b>Database last synced at </b><%=inc_d_timestamp%></div><br>
+   <div style = "color:#999999; margin-top:-15px;"><b>Current database version</b> <%=db_version%></div><br>
    <div class="row pull-left" style="margin-left:0px; margin-right:10px; margin-top:-15px;color:#999999;"><b>Entries to upload </div></b>
   <div class="accordion" style="margin-left:0px; margin-right:0px; margin-top:-8px;">
     <div class="accordion-heading">
