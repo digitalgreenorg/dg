@@ -1,6 +1,6 @@
 {% include "includes/header.html" %}
-        {% include "includes/partials/search.html" %}
-         {% load app_tags %}
+{% include "includes/partials/search.html" %}
+{% load app_tags %}
         
         <section class="gradientBg">
             <div id="main" role="main" class="wrapper">
@@ -12,10 +12,10 @@
                         </div>
                         <div class="grid-col grid-size1of3">
                             <div class="push-top-sm">
-                                <div class="featured-ft-videoDetails" data-collection-count='{{collection.video_count}}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
+                                <div class="featured-ft-videoDetails" data-collection-count='{{ collection.videos|length }}' data-video-uid='{{video.uid}}' data-collection-id='{{collection.uid}}'>
                                     <ul class="h-list h-list-sm h-list-divided copy copy-white">
-                                       <li>{{ collection.video_count}} Videos</li>
-                                       <li>{{ collection.duration}}</li>
+                                       <li>{{ collection.videos.all|length }} Videos</li>
+                                       <li>{{ duration|seconds_to_duration }}</li>
                                    </ul>
                                 </div>
                             </div>
@@ -32,15 +32,15 @@
                         <div class="bd">
                             <div class="media">
                                 <div class="img">
-                                    <img src="{{ featured_collection.partner_logo}}" alt="" />
+                                    <img src="{{ collection.partner.logoURL }}" alt="" />
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner_name}}</h2>
-                                    <p class="copy layout-vr-tiny">Member since {{ collection.partner_year}}</p>
-                                    <a class="hdg-bold copy" href="#">{{ collection.partner_collections}} Collections</a>
+                                    <h2 class="copy hdg-bold layout-vr-tiny">{{ collection.partner.name }}</h2>
+                                    <p class="copy layout-vr-tiny">Member since {{ collection.partner.joinDate.year }}</p>
+                                    <a class="hdg-bold copy" href="#">{{ collection.partner.collection_count }} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
-                            <h3 class="copy hdg-bold layout-vr-tiny">{{ collection.state}}, {{ collection.country}}</h3>
+                            <h3 class="copy hdg-bold layout-vr-tiny">{{ collection.state}}</h3>
                             <h3 class="copy layout-vr-md">{{ collection.language}}</h3>
                             
                             <!-- Collection Stats -->
@@ -62,7 +62,7 @@
                                     <div class="stat-bar-container">
                                         <div class="left-value js-left-value"></div>
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="{{collection.online_views}}" data-right-value="{{collection.offline_views}}">
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineViews}}" data-right-value="{{video.offlineViews}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="left-stat-label">Online Views</div>
@@ -75,7 +75,7 @@
                                     <div class="stat-bar-container">
                                         <div class="left-value js-left-value"></div>
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="{{collection.online_likes}}" data-right-value="{{collection.offline_likes}}">
+                                        <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
                                         <div class="left-stat-label">Online Likes</div>
@@ -114,51 +114,28 @@
                                     {% for i in slides %}
                                     <li>
                                         <ul class="h-list h-list-xlg clearfix">
-                                            {% for j in videos %}
+                                        {% for video in collection.videos.all %}
                                             {% if forloop.counter <= forloop.parentloop.counter|custom_multiply and forloop.counter > forloop.parentloop.counter|add:'-1'|custom_multiply    %}
                                             <!-- The "show-playing" and "show-progress" classes toggle display of the respective overlays -->
-                                            <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->
-                                            <!-- <li class="vidDrawer-video show-playing js-vidDrawer-video"> -->
-                                            {% if forloop.counter == video.videoID %}
+                                            <!-- <li class="vidDrawer-video show-playing show-progress js-vidDrawer-video"> -->                                            
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
-                                            <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
                                                 <div class="vidDrawer-image">
-                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" class="vidDrawer-image" alt="" /> </a>
+                                                    <a href="/social/collections/?id={{ collection.uid }}&video={{forloop.counter}}" ><img src="{{ video.thumbnailURL16by9 }}" class="vidDrawer-image" alt="video.title" /> </a>
+                                                  	{% if forloop.counter == video_index %}
                                                   	<div class="overlay now-playing">
                                                         Now Playing
                                                     </div>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="vidDrawer-flag copy-white">
-                                                    {{j.2}}
+                                                    {{ video.duration|seconds_to_duration }}
                                                 </div>
                                                 <div class="vidDrawer-hd copy-dk">
-                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{j.0}}</span>
-                                                </div>
-                                            </li>
-                                            {% else %}
-                                            <li class="vidDrawer-video show-progress js-vidDrawer-video">
-                                            <!-- <li class="vidDrawer-video js-vidDrawer-video"> -->
-                                                <div class="vidDrawer-image">
-                                                    <a href="/social/collections/?id={{collection.uid}}&video={{forloop.counter}}" ><img src="{{j.1}}" class="vidDrawer-image" alt="" /> </a>
-                                                    <!-- <div class="overlay progress">
-                                                        <div class="progress-inner">
-                                                            <span class="amount">48</span>
-                                                            <span class="percent">%</span>
-                                                            <div class="watched">watched</div>
-                                                        </div>
-                                                    </div>
-                                                    -->
-                                                </div>
-                                                <div class="vidDrawer-flag copy-white">
-                                                    {{j.2}}
-                                                </div>
-                                                <div class="vidDrawer-hd copy-dk">
-                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{j.0}}</span>
+                                                    {{forloop.counter}}. <span class="copy-extra-lt">{{ video.title }}</span>
                                                 </div>
                                             </li>
                                             {% endif %}
-                                            {% endif %}
-                                            {% endfor %}
+                                     	{% endfor %}
                                         </ul>
                                     </li>
                                     {% endfor %}
@@ -174,13 +151,13 @@
                         </div>
                     </div>
                     <div class="layout-vr-lg">
-                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{video.videoID}}. {{video.title}}</h2>
-                        <p class="copy copy-lt layout-vr-sm">{{video.date}}</p>
-                        <p class="copy copy-margin">{{video.description}}</p>
+                        <h2 class="hdg-e hdg-black hdg-bold layout-vr-sm">{{ video.title }}</h2>
+                        <p class="copy copy-lt layout-vr-sm">{{ video.date }}</p>
+                        <p class="copy copy-margin">{{ video.description }}</p>
                         <h3 class="tag">Tag</h3>
                         <ul class="h-list h-list-sm push-top-tiny">
-                        	{% for tag in video.tags %}
-                            <li><a href="#">{{tag}}{% if not forloop.last %}, {% endif %}</a></li>
+                        	{% for tag in tags %}
+                            <li>{{tag}}{% if not forloop.last %},{% endif %}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -253,7 +230,7 @@
                                                 <div class="vid-flag">
                                                     <ul class="copy-sm copy-white h-list h-list-sm h-list-divided">
                                                         <li>{{related.vid_count}} Videos</li>
-                                                        <li>{{related.duration}}</li>
+                                                        <li>{{related.duration|seconds_to_duration}}</li>
                                                     </ul>
                                                 </div>
                                                 <div class="vid-cat-inner">

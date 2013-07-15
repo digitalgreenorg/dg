@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
-from views import social_home, collection_view, partner_view, searchCompletions, searchFilters, elasticSearch, search_view, featuredCollection
+from views import social_home, collection_view, partner_view, searchFilters, search_view, featuredCollection
+from elastic_search import get_collections_from_elasticsearch, searchCompletions
 from static_site_views import home
 from django.conf import settings
 from social_website.api import VideoResource, PersonResource, ActivityResource, CollectionResource, PartnerResource, CommentResource, PartnerFarmerResource
@@ -59,7 +60,7 @@ urlpatterns = patterns('',
     (r'^$',social_home),
     (r'^api/searchCompletions?$',searchCompletions),
     (r'^api/searchFilters$',searchFilters),
-    (r'^api/elasticSearch/$',elasticSearch),
+    (r'^api/elasticSearch/$',get_collections_from_elasticsearch),
     (r'^api/featuredCollection/$',featuredCollection),
     
 )

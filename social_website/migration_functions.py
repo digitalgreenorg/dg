@@ -143,7 +143,7 @@ def populate_partner_stats(partner):
         partner.likes = stats['onlineLikes__sum'] + stats['offlineLikes__sum']
         partner.views = stats['onlineViews__sum'] + stats['offlineViews__sum']
         partner.adoptions = stats['adoptions__sum']
-    partner.collectionCount = Collection.objects.filter(partner = partner).count()
+    partner.collection_count = Collection.objects.filter(partner = partner).count()
     partner.save()
         
 def populate_farmers(person):
