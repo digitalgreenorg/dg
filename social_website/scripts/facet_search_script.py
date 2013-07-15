@@ -42,11 +42,11 @@ mappings ={
                                                 "analyzer" : "keyword"
                                                 },
                                
-                               "language_name" : {
+                               "language" : {
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
                                                 },
-                               "partner_name" : {
+                               "partner" : {
                                                 "type" : "string",
                                                 "analyzer" : "keyword"
                                                 },
@@ -71,41 +71,34 @@ i = 0
 print Collection.objects.all().count()
 for obj in Collection.objects.all():
     vid_data = []
-    likes = views = adoptions = 0
     time = 0
     for index, vid in enumerate(obj.videos.all()):
         vid_id = index+1 
         url = BASE_URL + "social/collections/?id=" + str(obj.uid) + "&video=" + str(vid_id)
         vid_data.append({"title" : vid.title, 
-                         "subtopic" : vid.subtopic, 
+                         "subcategory" : vid.subcategory, 
                          "description" : vid.description,
                          "duration" : vid.duration, 
                          "thumbnailURL" : vid.thumbnailURL16by9, 
                          "youtubeID" : vid.youtubeID,
                          "videoURL" : url})
         time += vid.duration
-        likes += vid.onlineLikes + vid.offlineLikes
-        views += vid.onlineViews + vid.offlineViews
-        adoptions += vid.adoptions
-    country = model_to_dict(obj.country)
     partner = model_to_dict(obj.partner, fields = ['name'])
 #    partner["joinDate"] = partner["joinDate"].strftime("%Y-%m-%d %H:%M:%S")
     
     video = json.dumps(vid_data)
     data = json.dumps({"title" : obj.title,
-                       "country" : country,
                        "url" : "", 
                        "language" : obj.language,
-                       "partner" : partner, 
-                       "partner_name" : obj.partner.name,
+                       "partner" : obj.partner.name,
                        "state" : obj.state,
                        "category" : obj.category,
                        "subcategory" : obj.subcategory, 
                        "topic": obj.topic, 
                        "subject" : obj.subject, 
-                       "likes" : likes, 
-                       "views" : views, 
-                       "adoptions" : adoptions,
+                       "likes" : obj.likes, 
+                       "views" : obj.views, 
+                       "adoptions" : obj.adoptions,
                        "thumbnailURL" : obj.thumbnailURL,
                        "uid" : obj.uid,
                        "videos" : vid_data,
