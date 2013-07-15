@@ -36,7 +36,7 @@ class Migration(DataMigration):
                             'Thethi': 89,
                             }
         for key in featured_collection_dict:
-            collection = orm['social_website.FeaturedCollection'].objects.get(uid = featured_collection_dict[key])
+            collection = orm['social_website.Collection'].objects.get(uid = featured_collection_dict[key])
             fc_object = orm['social_website.FeaturedCollection'](collection = collection,
                                                                  collageURL='/media/assets/images/Collage/Collection ' + collection.language + '.jpg')
             fc_object.save()
