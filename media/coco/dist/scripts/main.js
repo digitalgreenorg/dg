@@ -5697,7 +5697,7 @@ define('views/form',[
             for(f_entity in this.foreign_entities){
                 var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function(model){
-                        return model.get(all_configs[this.storeName].sort_field)
+                        return model.get(all_configs[this.storeName].sort_field).toLowerCase();
                     }
                 });
                 this.f_index.push(f_entity);
@@ -8966,6 +8966,7 @@ define('views/list',['jquery', 'underscore', 'datatable', 'indexeddb_backbone_co
                 .dataTable();
             $("#loaderimg")
                 .hide();
+			$("#sort-helptext").show();
 
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");
@@ -9375,6 +9376,7 @@ define('views/status',[
                 full_d_timestamp: this.full_download_timestamp,
                 inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
+				db_version: this.db_version,
                 upload_collection: upload_collection.toJSON()
             }
         },
@@ -9382,6 +9384,7 @@ define('views/status',[
         fill_status: function(){
             var that = this;
             that.upload_entries =  upload_collection.length;
+			that.db_version = indexeddb.migrations[0].version;
             
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
@@ -9459,13 +9462,15 @@ define('views/login',[
     'backbone',
     'layoutmanager',
     'models/user_model',
-    'auth'  
-], function(jquery, underscore, backbone, layoutmanager, User, Auth){
+    'auth',
+	'offline_utils'
+], function(jquery, underscore, backbone, layoutmanager, User, Auth, Offline){
     
     var LoginView = Backbone.Layout.extend({
       template: "#login",
       events:{
-          'click #login_button': 'attempt_login'                  
+          'click #login_button': 'attempt_login',
+		  'click #change_user' : 'change_user'		  
       },
       
       initialize: function(){
@@ -9531,6 +9536,13 @@ define('views/login',[
           else
               this.$("#login_button").button(state);    
       },
+	  
+	  change_user: function(){
+		var val = confirm("Your current database will be deleted and a new database will be downloaded");
+		if (val==true){
+			Offline.reset_database();
+		}
+	  }
       
     });
     
