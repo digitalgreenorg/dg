@@ -25,7 +25,7 @@ class Migration(DataMigration):
                                                                     'related_practice__practice_subtopic','related_practice__practice_subject').all():
             update_website_video(vid)    
             
-#       # Generate collections from Video     
+        # Generate collections from Video     
         create_collections()
         
         # Fill up Collection stats based on videos in them
@@ -37,9 +37,9 @@ class Migration(DataMigration):
             populate_partner_stats(partner)
         
         # Person table migration    
-        for person in orm['dashboard.Person'].objects.all():
+        for person in orm['dashboard.Person'].objects.filter(image_exists = True):
             populate_farmers(person)
-#        
+        
     def backwards(self, orm):
         "Write your backwards methods here."
 
