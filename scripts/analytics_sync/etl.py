@@ -7,8 +7,9 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 from django.core.management import setup_environ
-sys.path.append('/home/ubuntu/code/dg_git')
-site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
+
+sys.path.append('/home/ubuntu/code/dg_test')
+site.addsitedir('/home/ubuntu/.virtualenv/dg_testbed/lib/python2.7/site-packages/')
 
 import settings
 setup_environ(settings)
@@ -37,7 +38,7 @@ class AnalyticsSync():
         import subprocess
         import MySQLdb
         #Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'digitalgreen', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
+        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass, 'cocotestbed', os.path.join(DIR_PATH,'create_schema.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not recreate schema")
         print "Recreated schema"

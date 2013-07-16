@@ -10,8 +10,10 @@ from static_site_views import *
 from path.views import page, update
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from dashboard.data_log_website import update_website
 from dashboard.data_log import send_updated_log
 admin.autodiscover()
+from website.views import get_search_completion, get_search_collection
 
 urlpatterns = patterns('',
     (r'^coco/', redirect_url),
@@ -144,7 +146,6 @@ urlpatterns = patterns('',
     (r'^$',home),
     (r'^farmerbook/$', farmer_book_views.get_home_page),
     (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
-    (r'^trial/?$', farmer_book_views.get_admin_panel),
     (r'^getvillagepage/?$', farmer_book_views.get_village_page),
     (r'^getserviceproviderpage/?$', farmer_book_views.get_csp_page),
     (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
@@ -152,15 +153,12 @@ urlpatterns = patterns('',
     (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    (r'^videotask/', include('video_practice_map.urls')),
+    (r'^fbconnect/', include('fbconnect.urls')),
     (r'^videotask/', include('video_practice_map.urls')),    
     (r'^home/?$',home),
-    (r'^wondervillage/?$',wondervillage),
-    (r'^wondervillagegame/?$',wondervillagegame),
     (r'^annualreports/?$',annualreports),
     (r'^featuredfarmer/?$',featuredfarmer),
-    (r'^melissaho/?$',melissaho),
-    (r'^aishwaryaratan/?$',aishwaryaratan),
-    (r'^srikantvasan/?$',srikantvasan),
     (r'^videopage/?$',videopage),
     (r'^searchvideo_result/?$',searchvideo_result),
     (r'^aboutus/?$',aboutus),
@@ -266,7 +264,7 @@ urlpatterns = patterns('',
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^social/', include('social_website.urls')),
     (r'^get_log/?$',send_updated_log),
-     
+    (r'^dimagi/', include('dimagi.urls')),
 )
 
 # Static files serving locally

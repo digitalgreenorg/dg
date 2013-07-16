@@ -448,14 +448,14 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
                     dic[y][int(item['MONTH'])] = item['count']
     else:
         return HttpResponse(json.dumps([['Name','Value']]));
-
+    
     if(not(setting_from_date and setting_to_date)):
         setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
         setting_to_date = str(datetime.date.today());
     setting_from_date = MyDate(* [int(x) for x in reversed(setting_from_date.split('-')[:2])])
     setting_to_date = MyDate(* [int(x) for x in reversed(setting_to_date.split('-')[:2])])
     data = [['Jan'],['Feb'],['Mar'],['Apr'],['May'],['Jun'],['Jul'],['Aug'],['Sep'],['Oct'],['Nov'],['Dec']]
-
+    
     if(setting_from_date.y != setting_to_date.y):
         loop_from = MyDate(1,setting_from_date.y)
         loop_to = MyDate(12, setting_to_date.y)
@@ -467,6 +467,5 @@ def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
         value = dic[loop_from.y][loop_from.m] if loop_from.y in dic and loop_from.m in dic[loop_from.y] else 0
         data[loop_from.m - 1].append(float(value))
         loop_from.addMonth(1)
-    header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
+        header = ["Month"] + map(str,range(setting_from_date.y, setting_to_date.y + 1))
     return HttpResponse(json.dumps([header] + filter(lambda x: len(x) > 1, data)))
-    

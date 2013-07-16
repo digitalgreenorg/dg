@@ -40,4 +40,3 @@ def get_fbappid_server_url(request):
         facebook_app_id = 422365627816558
         server_url = "http://127.0.0.1:8000"
     return {'facebook_app_id': facebook_app_id, 'server_url': server_url}
-    

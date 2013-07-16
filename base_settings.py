@@ -63,8 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware'
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -95,8 +94,11 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.admindocs',
     'dashboard',
-    #'debug_toolbar',
     'output',
+    'debug_toolbar',
+    'dimagi',
+    #'debug_toolbar',
+    #'debug_toolbar',
     'raven.contrib.django',
     'django.contrib.humanize',
     'south',
@@ -104,6 +106,7 @@ INSTALLED_APPS = (
     'video_practice_map',
     'path',
     'fbconnect',
+    'tastypie',
     'social_website',
 )
 

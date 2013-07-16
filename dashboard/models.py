@@ -9,6 +9,7 @@ from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
+from dimagi.scripts.update_functions import update_case
 import sys, traceback
 
 # Variables
@@ -119,6 +120,7 @@ class ServerLog(models.Model):
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
     instance_json = models.CharField(max_length=1000, null=True, blank=True)
+post_save.connect(update_case, sender = ServerLog)
     
 #    def __unicode__(self):
 #        return self.entry_table
@@ -277,6 +279,8 @@ class Partners(CocoModel):
     date_of_association = models.DateField(null=True, db_column='DATE_OF_ASSOCIATION', blank=True)
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
+    description = models.TextField(blank=True)
+    logoURL = models.URLField(max_length=200, blank=True)
 
     class Meta:
         db_table = u'partners'
@@ -892,6 +896,12 @@ class PersonMeetingAttendance(CocoModel):
     interested = models.BooleanField(db_column="INTERESTED", db_index=True)
     expressed_question = models.CharField(max_length=500,db_column='EXPRESSED_QUESTION', blank=True)
     expressed_adoption_video = BigForeignKey(Video,related_name='expressed_adoption_video',db_column='EXPRESSED_ADOPTION_VIDEO',null=True, blank=True)
+    
+    def get_village(self):
+        return self.person.village.id
+    def get_partner(self):
+        return self.person.village.block.district.partner.id
+    
     class Meta:
         db_table = u'person_meeting_attendance'
     
@@ -901,6 +911,9 @@ post_delete.connect(Person.date_of_joining_handler, sender = PersonMeetingAttend
 pre_delete.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
 pre_save.connect(Person.date_of_joining_handler, sender = PersonMeetingAttendance)
 pre_save.connect(Video.update_viewer_count, sender = PersonMeetingAttendance)
+post_save.connect(save_log, sender = PersonMeetingAttendance)
+pre_delete.connect(delete_log, sender = PersonMeetingAttendance)
+
 
 class Equipment(CocoModel):
     id = BigAutoField(primary_key = True)
