@@ -49,25 +49,16 @@ def collection_view(request):
 
 def partner_view(request):
     id = request.GET.get('id', None)
-    if id:
-         partner_uid=id
-    partner=Partner.objects.get(uid=id)
-    partner_dict={
-        'uid':partner.uid,
-        'name':partner.name,
-        'joinyear':partner.joinDate.year,
-        'description':partner.description,
-        'videos':partner.videos,
-        'views':partner.views,
-        'likes':partner.likes,
-        'adoptions':partner.adoptions,
-        'logoURL':partner.logoURL,
-        }
+    try:
+        partner = Partner.objects.get(uid=int(id))
+    except Partner.DoesNotExist:
+        partner = Partner.objects.all()[0]
+
     context= {
         'header': {
             'jsController':'Profile',
             'loggedIn':False},
-        'partner':partner_dict
+        'partner': partner
         }
     return render_to_response('profile.html' , context,context_instance = RequestContext(request))
 

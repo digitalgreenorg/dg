@@ -65,12 +65,12 @@ class PersonResource(BaseResource):
         resource_name = 'person'
 
 class PartnerFarmerResource(BaseResource):
-    farmer = fields.ToManyField('social_website.api.FarmerResource', 'farmer_set', full=True)
-    dehydrate_farmer = partial(many_to_many_to_subfield, field_name='farmer_set',sub_field_names=['uid','name','thumbnailURL'])
+    farmer = fields.ToManyField('social_website.api.PersonResource', 'person_set', full=True)
+    dehydrate_farmer = partial(many_to_many_to_subfield, field_name='person_set',sub_field_names=['uid','name','thumbnailURL'])
     class Meta:
         queryset = Partner.objects.all()
         resource_name = 'partnerFarmers'
-        fields=['farmer','name','uid']
+        fields=['person','name','uid']
         filtering={
                    'uid':ALL
                    }

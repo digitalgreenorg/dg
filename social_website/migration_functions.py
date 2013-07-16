@@ -139,7 +139,7 @@ def populate_collection_stats(collection):
 def populate_partner_stats(partner):
     stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('offlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
     if stats['uid__count'] > 0:                 #check if partner has at least one video
-        partner.videos = stats['uid__count']
+        partner.video_count = stats['uid__count']
         partner.likes = stats['onlineLikes__sum'] + stats['offlineLikes__sum']
         partner.views = stats['onlineViews__sum'] + stats['offlineViews__sum']
         partner.adoptions = stats['adoptions__sum']
