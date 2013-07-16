@@ -80,7 +80,7 @@ define([
                 if(this.form.inline)
                 {
                     console.log("FORMCONTROLLER: separating inlines from final json");
-                    this.inline_models = $.extend(null,this.form.final_json.inlines);
+                    this.inline_models = this.form.final_json.inlines;
                     delete this.form.final_json.inlines;
                     var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
@@ -147,29 +147,35 @@ define([
         save_inlines: function(inlines, parent_off_json, inline_config){
             var dfd = new $.Deferred();
             var that = this;
-            console.log("Gotta save inlines now - ");
-            console.log(JSON.stringify(inlines));
-            console.log(JSON.stringify(parent_off_json));
             this.complete_inlines(inlines, parent_off_json, inline_config); 
-            var inline_dfds = [];
-            _.each(inlines, function(inl, index){
+            iterate_inlines();
+            return dfd;
+            
+            function iterate_inlines(){
+                if(!inlines.length)
+                    return dfd.resolve();
+                save_inline(inlines.shift())    
+                    .done(function(){
+                        iterate_inlines();
+                    })
+                    .fail(function(){
+                        dfd.reject();
+                    });
+            };
+            function save_inline(inl){
+                var inl_dfd = $.Deferred();
                 var inl_index = inl.index;
                 delete inl.index;
-                var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
-                inl_save_dfd
+                that.save_object(inl, inline_config.foreign_entities, inline_config.entity)
                     .fail(function(error){
                         that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                        return inl_dfd.reject();
+                    })
+                    .done(function(){
+                       return inl_dfd.resolve(); 
                     });
-                inline_dfds.push(inl_save_dfd);           
-            }, this);
-            $.when.apply($, inline_dfds)
-                .done(function(){
-                    dfd.resolve(arguments);
-                })
-                .fail(function(){
-                    dfd.reject();
-                })
-            return dfd;
+                return inl_dfd.promise();
+            };
         },
         
         //put in the borrowed attributes and the joining attribute in inlines
