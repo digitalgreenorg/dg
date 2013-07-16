@@ -24,8 +24,8 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
         },
 
         afterRender: function() {
-            $("#loaderimg")
-                .show();
+            //$("#loaderimg")
+                //.show();
             Offline.fetch_collection(this.entity_config.entity_name)
                 .done(this.render_data)
                 .fail(function() {
@@ -49,6 +49,7 @@ define(['jquery', 'underscore', 'datatable', 'indexeddb_backbone_config', 'layou
                 .dataTable();
             $("#loaderimg")
                 .hide();
+			$("#sort-helptext").show();
 
             //alternate 1 - using raw string to build table rows
             //     $tbody = this.$("tbody");

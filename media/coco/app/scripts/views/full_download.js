@@ -408,9 +408,10 @@ define([
                         
         finish_download: function(){
             var dfd = new $.Deferred();
-            console.log("DASHBOARD:DOWNLOAD: In finish downlaod");
+            console.log("DASHBOARD:DOWNLOAD: In finish download");
             var that = this;
-            
+            that.db_downloaded();
+			
             Offline.fetch_object("meta_data", "key", "last_full_download")
                 .done(function(model){
                     set_timestamp(model);
@@ -432,7 +433,14 @@ define([
             };
             
             return dfd;
-        }        
+        },
+
+		db_downloaded: function(){
+			$('.list_items').unbind('click', false);
+			$('.list_items').removeClass("disabled");
+			console.log("Dashboard links enabled");
+			$("#helptext").hide();
+		}
         
                 
     

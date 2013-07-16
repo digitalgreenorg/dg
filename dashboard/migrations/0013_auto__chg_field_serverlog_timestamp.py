@@ -1,98 +1,21 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from django.db.models import get_app, get_models
-from dashboard.models import *
 
-def get_user_id(model, obj):
-        user_id = None
-        db_table_name = model._meta.db_table
-        #print 'table name', db_table_name
-        if db_table_name == "person" or db_table_name == "person_groups" or db_table_name == "video" or db_table_name == "screening":
-            district_id = Block.objects.filter(village = obj.village).values_list('district__id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-               #print 'user id in func', user_id
-            else:
-                user_id = None
-        if db_table_name == "village":
-            #print 'in village', obj.id
-            district_id = Village.objects.filter(id = obj.id).values_list('block__district__id', flat=True)[0]
-            #print 'district id',district_id
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-               #print 'user id in func', user_id
-            else:
-                user_id = None
-        
-        if db_table_name == "animator":
-            village_ids = AnimatorAssignedVillage.objects.filter(animator__id = obj.id).values_list('village__id', flat=True)
-            if village_ids:
-                village_id = village_ids[0]
-            else:
-                village_id = None
-            district_id = Village.objects.filter(id = village_id).values_list('id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-            else:
-                user_id = None
-        if db_table_name == "person_adopt_practice":
-            village_ids = PersonAdoptPractice.objects.filter(person = obj.person).values_list('person__village__id', flat=True)
-            if village_ids:
-                village_id = village_ids[0]
-            else:
-                village_id = None
-            district_id = Village.objects.filter(id = village_id).values_list('block__district__id', flat=True)[0]
-            if district_id:
-               user_ids = UserPermission.objects.filter(district_operated__id = district_id).values_list('username__id', flat=True)
-               if user_ids:
-                   user_id = user_ids[0]
-               else:
-                    user_id = None
-            else:
-                user_id = None
-            
-        return user_id
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        print 'forward done'
-        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
-#        coco_model_list = ['person', 'village', 'person_groups', 'animator', 'animator_assigned_village', 'video', 'screening', 'person_adopt_practice']
-#        for model in get_models(get_app('dashboard')):
-#            if model._meta.db_table in coco_model_list:
-#                objs = model.objects.filter(user_created__isnull = True)
-#                print 'before', model._meta.db_table, objs.count()
-#                for obj in objs:
-#                    user_id = get_user_id(model, obj)
-#                    #print 'user id',user_id
-#                    #print obj.user_created
-#                    if not obj.user_created and user_id:
-#                        obj.user_created = User.objects.get(id = user_id)
-#                        obj.save()
-#                objs = model.objects.filter(user_created__isnull = True)
-#                print 'after',model._meta.db_table, objs.count()
-            #print model._meta.db_table, model.objects.all().count() # Get the name of the model in the database
-                
+
+        # Changing field 'ServerLog.timestamp'
+        db.alter_column('dashboard_serverlog', 'timestamp', self.gf('django.db.models.fields.DateTimeField')())
+
     def backwards(self, orm):
-        "Write your backwards methods here."
-        raise RuntimeError("Cannot reverse this migration.")
+
+        # Changing field 'ServerLog.timestamp'
+        db.alter_column('dashboard_serverlog', 'timestamp', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
 
     models = {
         'auth.group': {
@@ -132,12 +55,13 @@ class Migration(DataMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'dashboard.animator': {
-            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'village'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
+            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'district'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_villages'", 'to': "orm['dashboard.Village']", 'through': "orm['dashboard.AnimatorAssignedVillage']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
             'camera_operator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CAMERA_OPERATOR_FLAG'", 'blank': 'True'}),
             'csp_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CSP_FLAG'", 'blank': 'True'}),
+            'district': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.District']", 'null': 'True', 'blank': 'True'}),
             'facilitator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'FACILITATOR_FLAG'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
@@ -149,7 +73,7 @@ class Migration(DataMigration):
             'total_adoptions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'db_column': "'home_village_id'"})
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'null': 'True', 'db_column': "'home_village_id'", 'blank': 'True'})
         },
         'dashboard.animatorassignedvillage': {
             'Meta': {'object_name': 'AnimatorAssignedVillage', 'db_table': "u'animator_assigned_village'"},
@@ -354,7 +278,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partners_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.person': {
-            'Meta': {'unique_together': "(('person_name', 'father_name', 'group', 'village'),)", 'object_name': 'Person', 'db_table': "u'person'"},
+            'Meta': {'unique_together': "(('person_name', 'father_name', 'village'),)", 'object_name': 'Person', 'db_table': "u'person'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'date_of_joining': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -531,7 +455,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'rule_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.screening': {
-            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'location', 'village'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
+            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'animator', 'village'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
             'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
             'end_time': ('django.db.models.fields.TimeField', [], {'db_column': "'END_TIME'"}),
@@ -556,10 +480,9 @@ class Migration(DataMigration):
             'action': ('django.db.models.fields.IntegerField', [], {}),
             'entry_table': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'instance_json': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
             'model_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
             'partner': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
-            'timestamp': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'timestamp': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
             'village': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'})
         },
@@ -668,7 +591,7 @@ class Migration(DataMigration):
             'related_practice': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),
             'remarks': ('django.db.models.fields.TextField', [], {'db_column': "'REMARKS'", 'blank': 'True'}),
             'reviewer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Reviewer']", 'null': 'True', 'blank': 'True'}),
-            'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'db_column': "'STORYBASE'"}),
+            'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'db_column': "'STORYBASE'", 'blank': 'True'}),
             'storyboard_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'STORYBOARD_FILENAME'", 'blank': 'True'}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'}),
             'supplementary_video_produced': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'null': 'True', 'blank': 'True'}),
@@ -726,4 +649,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['dashboard']
-    symmetrical = True

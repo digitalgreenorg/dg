@@ -20,6 +20,7 @@ v1_api.register(MediatorResource())
 v1_api.register(PersonResource())
 v1_api.register(PersonAdoptVideoResource())
 v1_api.register(LanguageResource())
+v1_api.register(DistrictResource())
 v1_api.register(PersonMeetingAttendanceResource())
 
 urlpatterns = patterns('',

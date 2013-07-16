@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from dashboard.data_migrations_db_changes import *
 
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        clean_person_group_screening()
-        vids=Video.objects.all()
-        for i in vids:
-            if i.last_modified is not None:
-                i.time_modified=i.last_modified
-                i.save()
+        # Removing unique constraint on 'Animator', fields ['gender', 'village', 'name', 'partner']
+        #db.delete_unique(u'animator', ['GENDER', 'home_village_id', 'NAME', 'partner_id'])
 
-        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
+        # Adding unique constraint on 'Animator', fields ['gender', 'name', 'district', 'partner']
+        db.create_unique(u'animator', ['GENDER', 'NAME', 'district_id', 'partner_id'])
+
 
     def backwards(self, orm):
-        pass
+        # Removing unique constraint on 'Animator', fields ['gender', 'name', 'district', 'partner']
+        db.delete_unique(u'animator', ['GENDER', 'NAME', 'district_id', 'partner_id'])
+
+        # Adding unique constraint on 'Animator', fields ['gender', 'village', 'name', 'partner']
+        db.create_unique(u'animator', ['GENDER', 'home_village_id', 'NAME', 'partner_id'])
+
 
     models = {
         'auth.group': {
@@ -59,12 +61,13 @@ class Migration(DataMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'dashboard.animator': {
-            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'village'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
+            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'district'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_villages'", 'to': "orm['dashboard.Village']", 'through': "orm['dashboard.AnimatorAssignedVillage']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
             'camera_operator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CAMERA_OPERATOR_FLAG'", 'blank': 'True'}),
             'csp_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CSP_FLAG'", 'blank': 'True'}),
+            'district': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.District']", 'null': 'True', 'blank': 'True'}),
             'facilitator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'FACILITATOR_FLAG'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
@@ -76,7 +79,7 @@ class Migration(DataMigration):
             'total_adoptions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'db_column': "'home_village_id'"})
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'null': 'True', 'db_column': "'home_village_id'", 'blank': 'True'})
         },
         'dashboard.animatorassignedvillage': {
             'Meta': {'object_name': 'AnimatorAssignedVillage', 'db_table': "u'animator_assigned_village'"},
@@ -111,6 +114,13 @@ class Migration(DataMigration):
             'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'block_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'block_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.cocouser': {
+            'Meta': {'object_name': 'CocoUser'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'villages': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Village']", 'symmetrical': 'False'})
         },
         'dashboard.country': {
             'Meta': {'object_name': 'Country', 'db_table': "u'country'"},
@@ -274,7 +284,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partners_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.person': {
-            'Meta': {'unique_together': "(('person_name', 'father_name', 'group', 'village'),)", 'object_name': 'Person', 'db_table': "u'person'"},
+            'Meta': {'unique_together': "(('person_name', 'father_name', 'village'),)", 'object_name': 'Person', 'db_table': "u'person'"},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
             'date_of_joining': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -451,7 +461,7 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'rule_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.screening': {
-            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'location', 'village'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
+            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'animator', 'village'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
             'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
             'end_time': ('django.db.models.fields.TimeField', [], {'db_column': "'END_TIME'"}),
@@ -470,6 +480,18 @@ class Migration(DataMigration):
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'screening_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'videoes_screened': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Video']", 'symmetrical': 'False'}),
             'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
+        },
+        'dashboard.serverlog': {
+            'Meta': {'object_name': 'ServerLog'},
+            'action': ('django.db.models.fields.IntegerField', [], {}),
+            'entry_table': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'instance_json': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
+            'model_id': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
+            'partner': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'}),
+            'timestamp': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
+            'village': ('django.db.models.fields.BigIntegerField', [], {'null': 'True'})
         },
         'dashboard.state': {
             'Meta': {'object_name': 'State', 'db_table': "u'state'"},
@@ -576,7 +598,7 @@ class Migration(DataMigration):
             'related_practice': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),
             'remarks': ('django.db.models.fields.TextField', [], {'db_column': "'REMARKS'", 'blank': 'True'}),
             'reviewer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Reviewer']", 'null': 'True', 'blank': 'True'}),
-            'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'db_column': "'STORYBASE'"}),
+            'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'db_column': "'STORYBASE'", 'blank': 'True'}),
             'storyboard_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'STORYBOARD_FILENAME'", 'blank': 'True'}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'}),
             'supplementary_video_produced': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'null': 'True', 'blank': 'True'}),
@@ -634,4 +656,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['dashboard']
-    symmetrical = True

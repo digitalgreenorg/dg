@@ -18,9 +18,6 @@ def save_log(sender, **kwargs ):
     action  = kwargs["created"]
     sender = sender.__name__    # get the name of the table which sent the request
     model_dict = model_to_dict(instance)
-    data = serializers.serialize('json', [instance,])
-    struct = json.loads(data)
-    json_str = json.dumps(struct[0])
     previous_time_stamp = get_latest_timestamp()
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
@@ -31,7 +28,8 @@ def save_log(sender, **kwargs ):
     except Exception as e:
         print type(e), e
     
-    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, model_id = instance.id, partner = instance.get_partner(),instance_json = json_str)
+    log = ServerLog(village = instance.get_village(), user = user, action = action, entry_table = sender, 
+                    model_id = instance.id, partner = instance.get_partner())
     log.save()
     ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
     if previous_time_stamp > log.timestamp:
@@ -72,9 +70,9 @@ def send_updated_log(request):
         villages = CocoUserVillages.objects.filter(cocouser_id = coco_user.id).values_list('village_id', flat = True)
     if timestamp:
         if partner_id:  
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id ).exclude(user_id = coco_user.id)
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages, partner = partner_id )
         else:
-            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages).exclude(user_id = coco_user.id)
+            rows = ServerLog.objects.filter(timestamp__gte = timestamp, village__in = villages)
     ####Not necessary..need to remove it..####
     else:
         if partner_id:

@@ -8,368 +8,38 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Removing unique constraint on 'Screening', fields ['date', 'start_time', 'village', 'end_time', 'location']
+        #db.delete_unique(u'screening', ['DATE', 'START_TIME', 'village_id', 'END_TIME', 'LOCATION'])
+
         # Removing unique constraint on 'Person', fields ['group', 'father_name', 'person_name', 'village']
         #db.delete_unique(u'person', ['group_id', 'FATHER_NAME', 'PERSON_NAME', 'village_id'])
 
-
-        # Changing field 'Person.time_modified'
-        db.alter_column(u'person', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Person.time_created'
-        db.alter_column(u'person', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
         # Adding unique constraint on 'Person', fields ['father_name', 'person_name', 'village']
         #db.create_unique(u'person', ['FATHER_NAME', 'PERSON_NAME', 'village_id'])
 
 
-        # Changing field 'DevelopmentManager.time_modified'
-        db.alter_column(u'development_manager', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
+        # Changing field 'Video.storybase'
+        db.alter_column(u'video', 'STORYBASE', self.gf('django.db.models.fields.IntegerField')(max_length=1, null=True, db_column='STORYBASE'))
+        # Adding unique constraint on 'Screening', fields ['date', 'start_time', 'village', 'end_time', 'animator']
+        db.create_unique(u'screening', ['DATE', 'START_TIME', 'village_id', 'END_TIME', 'animator_id'])
 
-        # Changing field 'DevelopmentManager.time_created'
-        db.alter_column(u'development_manager', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'State.time_modified'
-        db.alter_column(u'state', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'State.time_created'
-        db.alter_column(u'state', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonAdoptPractice.time_modified'
-        db.alter_column(u'person_adopt_practice', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonAdoptPractice.time_created'
-        db.alter_column(u'person_adopt_practice', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Video.time_created'
-        db.alter_column(u'video', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Video.time_modified'
-        db.alter_column(u'video', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Animator.time_modified'
-        db.alter_column(u'animator', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Animator.time_created'
-        db.alter_column(u'animator', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Rule.time_created'
-        db.alter_column('dashboard_rule', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Rule.time_modified'
-        db.alter_column('dashboard_rule', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Partners.time_created'
-        db.alter_column(u'partners', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Partners.time_modified'
-        db.alter_column(u'partners', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSector.time_modified'
-        db.alter_column(u'practice_sector', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSector.time_created'
-        db.alter_column(u'practice_sector', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'UserPermission.time_modified'
-        db.alter_column('dashboard_userpermission', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'UserPermission.time_created'
-        db.alter_column('dashboard_userpermission', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Language.time_created'
-        db.alter_column(u'language', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Language.time_modified'
-        db.alter_column(u'language', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Error.time_modified'
-        db.alter_column('dashboard_error', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Error.time_created'
-        db.alter_column('dashboard_error', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Reviewer.time_modified'
-        db.alter_column(u'reviewer', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Reviewer.time_created'
-        db.alter_column(u'reviewer', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubtopic.time_modified'
-        db.alter_column(u'practice_subtopic', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubtopic.time_created'
-        db.alter_column(u'practice_subtopic', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubSector.time_modified'
-        db.alter_column(u'practice_subsector', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubSector.time_created'
-        db.alter_column(u'practice_subsector', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonGroups.time_modified'
-        db.alter_column(u'person_groups', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonGroups.time_created'
-        db.alter_column(u'person_groups', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'FieldOfficer.time_modified'
-        db.alter_column(u'field_officer', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'FieldOfficer.time_created'
-        db.alter_column(u'field_officer', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Region.time_created'
-        db.alter_column(u'region', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Region.time_modified'
-        db.alter_column(u'region', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Block.time_created'
-        db.alter_column(u'block', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Block.time_modified'
-        db.alter_column(u'block', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Village.time_modified'
-        db.alter_column(u'village', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Village.time_created'
-        db.alter_column(u'village', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Screening.time_modified'
-        db.alter_column(u'screening', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Screening.time_created'
-        db.alter_column(u'screening', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubject.time_modified'
-        db.alter_column(u'practice_subject', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeSubject.time_created'
-        db.alter_column(u'practice_subject', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'OfflineUser.time_created'
-        db.alter_column('dashboard_offlineuser', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'OfflineUser.time_modified'
-        db.alter_column('dashboard_offlineuser', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonMeetingAttendance.time_modified'
-        db.alter_column(u'person_meeting_attendance', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PersonMeetingAttendance.time_created'
-        db.alter_column(u'person_meeting_attendance', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'AnimatorAssignedVillage.time_modified'
-        db.alter_column(u'animator_assigned_village', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'AnimatorAssignedVillage.time_created'
-        db.alter_column(u'animator_assigned_village', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeTopic.time_modified'
-        db.alter_column(u'practice_topic', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'PracticeTopic.time_created'
-        db.alter_column(u'practice_topic', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Practices.time_modified'
-        db.alter_column(u'practices', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Practices.time_created'
-        db.alter_column(u'practices', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'District.time_created'
-        db.alter_column(u'district', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'District.time_modified'
-        db.alter_column(u'district', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Country.time_modified'
-        db.alter_column(u'country', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Country.time_created'
-        db.alter_column(u'country', 'time_created', self.gf('django.db.models.fields.DateTimeField')(null=True))
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Screening', fields ['date', 'start_time', 'village', 'end_time', 'animator']
+        db.delete_unique(u'screening', ['DATE', 'START_TIME', 'village_id', 'END_TIME', 'animator_id'])
+
         # Removing unique constraint on 'Person', fields ['father_name', 'person_name', 'village']
         db.delete_unique(u'person', ['FATHER_NAME', 'PERSON_NAME', 'village_id'])
 
-
-        # Changing field 'Person.time_modified'
-        db.alter_column(u'person', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Person.time_created'
-        db.alter_column(u'person', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
         # Adding unique constraint on 'Person', fields ['group', 'father_name', 'person_name', 'village']
-        #db.create_unique(u'person', ['group_id', 'FATHER_NAME', 'PERSON_NAME', 'village_id'])
+        db.create_unique(u'person', ['group_id', 'FATHER_NAME', 'PERSON_NAME', 'village_id'])
 
 
-        # Changing field 'DevelopmentManager.time_modified'
-        db.alter_column(u'development_manager', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
+        # Changing field 'Video.storybase'
+        db.alter_column(u'video', 'STORYBASE', self.gf('django.db.models.fields.IntegerField')(default=-1, max_length=1, db_column='STORYBASE'))
+        # Adding unique constraint on 'Screening', fields ['date', 'start_time', 'village', 'end_time', 'location']
+        db.create_unique(u'screening', ['DATE', 'START_TIME', 'village_id', 'END_TIME', 'LOCATION'])
 
-        # Changing field 'DevelopmentManager.time_created'
-        db.alter_column(u'development_manager', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'State.time_modified'
-        db.alter_column(u'state', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'State.time_created'
-        db.alter_column(u'state', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PersonAdoptPractice.time_modified'
-        db.alter_column(u'person_adopt_practice', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PersonAdoptPractice.time_created'
-        db.alter_column(u'person_adopt_practice', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Video.time_created'
-        db.alter_column(u'video', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Video.time_modified'
-        db.alter_column(u'video', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Animator.time_modified'
-        db.alter_column(u'animator', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Animator.time_created'
-        db.alter_column(u'animator', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Rule.time_created'
-        db.alter_column('dashboard_rule', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Rule.time_modified'
-        db.alter_column('dashboard_rule', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Partners.time_created'
-        db.alter_column(u'partners', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Partners.time_modified'
-        db.alter_column(u'partners', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeSector.time_modified'
-        db.alter_column(u'practice_sector', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeSector.time_created'
-        db.alter_column(u'practice_sector', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'UserPermission.time_modified'
-        db.alter_column('dashboard_userpermission', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'UserPermission.time_created'
-        db.alter_column('dashboard_userpermission', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Language.time_created'
-        db.alter_column(u'language', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Language.time_modified'
-        db.alter_column(u'language', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Error.time_modified'
-        db.alter_column('dashboard_error', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Error.time_created'
-        db.alter_column('dashboard_error', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Reviewer.time_modified'
-        db.alter_column(u'reviewer', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Reviewer.time_created'
-        db.alter_column(u'reviewer', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PracticeSubtopic.time_modified'
-        db.alter_column(u'practice_subtopic', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeSubtopic.time_created'
-        db.alter_column(u'practice_subtopic', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PracticeSubSector.time_modified'
-        db.alter_column(u'practice_subsector', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeSubSector.time_created'
-        db.alter_column(u'practice_subsector', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PersonGroups.time_modified'
-        db.alter_column(u'person_groups', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PersonGroups.time_created'
-        db.alter_column(u'person_groups', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'FieldOfficer.time_modified'
-        db.alter_column(u'field_officer', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'FieldOfficer.time_created'
-        db.alter_column(u'field_officer', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Region.time_created'
-        db.alter_column(u'region', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Region.time_modified'
-        db.alter_column(u'region', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Block.time_created'
-        db.alter_column(u'block', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Block.time_modified'
-        db.alter_column(u'block', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Village.time_modified'
-        db.alter_column(u'village', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Village.time_created'
-        db.alter_column(u'village', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Screening.time_modified'
-        db.alter_column(u'screening', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Screening.time_created'
-        db.alter_column(u'screening', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PracticeSubject.time_modified'
-        db.alter_column(u'practice_subject', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeSubject.time_created'
-        db.alter_column(u'practice_subject', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'OfflineUser.time_created'
-        db.alter_column('dashboard_offlineuser', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'OfflineUser.time_modified'
-        db.alter_column('dashboard_offlineuser', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PersonMeetingAttendance.time_modified'
-        db.alter_column(u'person_meeting_attendance', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PersonMeetingAttendance.time_created'
-        db.alter_column(u'person_meeting_attendance', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'AnimatorAssignedVillage.time_modified'
-        db.alter_column(u'animator_assigned_village', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'AnimatorAssignedVillage.time_created'
-        db.alter_column(u'animator_assigned_village', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'PracticeTopic.time_modified'
-        db.alter_column(u'practice_topic', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'PracticeTopic.time_created'
-        db.alter_column(u'practice_topic', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'Practices.time_modified'
-        db.alter_column(u'practices', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Practices.time_created'
-        db.alter_column(u'practices', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'District.time_created'
-        db.alter_column(u'district', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
-
-        # Changing field 'District.time_modified'
-        db.alter_column(u'district', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Country.time_modified'
-        db.alter_column(u'country', 'time_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
-
-        # Changing field 'Country.time_created'
-        db.alter_column(u'country', 'time_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
 
     models = {
         'auth.group': {
@@ -409,30 +79,47 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'dashboard.animator': {
-            'Meta': {'unique_together': "(('name', 'gender', 'partner'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
+            'Meta': {'unique_together': "(('name', 'gender', 'partner', 'village'),)", 'object_name': 'Animator', 'db_table': "u'animator'"},
+            'address': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'ADDRESS'", 'blank': 'True'}),
             'age': ('django.db.models.fields.IntegerField', [], {'max_length': '3', 'null': 'True', 'db_column': "'AGE'", 'blank': 'True'}),
-            'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_animators'", 'to': "orm['dashboard.Village']", 'through': "orm['dashboard.AnimatorAssignedVillage']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
+            'assigned_villages': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'assigned_villages'", 'to': "orm['dashboard.Village']", 'through': "orm['dashboard.AnimatorAssignedVillage']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
+            'camera_operator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CAMERA_OPERATOR_FLAG'", 'blank': 'True'}),
+            'csp_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CSP_FLAG'", 'blank': 'True'}),
+            'facilitator_flag': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'FACILITATOR_FLAG'", 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'GENDER'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
-            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']", 'blank': 'True'}),
+            'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'total_adoptions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_created'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animator_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'db_column': "'home_village_id'"})
         },
         'dashboard.animatorassignedvillage': {
             'Meta': {'object_name': 'AnimatorAssignedVillage', 'db_table': "u'animator_assigned_village'"},
             'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animatorassignedvillage_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animatorassignedvillage_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
+        },
+        'dashboard.animatorsalarypermonth': {
+            'Meta': {'object_name': 'AnimatorSalaryPerMonth', 'db_table': "u'animator_salary_per_month'"},
+            'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']"}),
+            'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'pay_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'PAY_DATE'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'total_salary': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'TOTAL_SALARY'", 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animatorsalarypermonth_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'animatorsalarypermonth_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.block': {
             'Meta': {'object_name': 'Block', 'db_table': "u'block'"},
@@ -440,8 +127,8 @@ class Migration(SchemaMigration):
             'district': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.District']"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'block_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'block_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -457,8 +144,8 @@ class Migration(SchemaMigration):
             'country_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'COUNTRY_NAME'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'country_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'country_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -475,8 +162,8 @@ class Migration(SchemaMigration):
             'salary': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'SALARY'", 'blank': 'True'}),
             'speciality': ('django.db.models.fields.TextField', [], {'db_column': "'SPECIALITY'", 'blank': 'True'}),
             'start_day': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DAY'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'developmentmanager_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'developmentmanager_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -489,10 +176,44 @@ class Migration(SchemaMigration):
             'partner': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Partners']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.State']"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'district_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'district_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.equipment': {
+            'Meta': {'object_name': 'Equipment', 'db_table': "u'equipment_id'"},
+            'additional_accessories': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
+            'cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'COST'", 'blank': 'True'}),
+            'equipment_type': ('django.db.models.fields.IntegerField', [], {'db_column': "'EQUIPMENT_TYPE'"}),
+            'equipmentholder': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.EquipmentHolder']", 'null': 'True', 'blank': 'True'}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'installation_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'invoice_no': ('django.db.models.fields.CharField', [], {'max_length': '300', 'db_column': "'INVOICE_NO'"}),
+            'is_reserve': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'model_no': ('django.db.models.fields.CharField', [], {'max_length': '300', 'db_column': "'MODEL_NO'", 'blank': 'True'}),
+            'other_equipment': ('django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'db_column': "'OTHER_EQUIPMENT'", 'blank': 'True'}),
+            'procurement_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'PROCUREMENT_DATE'", 'blank': 'True'}),
+            'purpose': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'purpose'", 'blank': 'True'}),
+            'remarks': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'serial_no': ('django.db.models.fields.CharField', [], {'max_length': '300', 'db_column': "'SERIAL_NO'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'transfer_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'equipment_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'equipment_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']", 'null': 'True', 'blank': 'True'}),
+            'warranty_expiration_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'WARRANTY_EXPIRATION_DATE'", 'blank': 'True'})
+        },
+        'dashboard.equipmentholder': {
+            'Meta': {'object_name': 'EquipmentHolder', 'db_table': "u'equipment_holder'"},
+            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'object_id': ('dashboard.fields.fields.PositiveBigIntegerField', [], {}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'equipmentholder_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'equipmentholder_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.error': {
             'Meta': {'unique_together': "(('rule', 'content_type1', 'object_id1', 'content_type2', 'object_id2'),)", 'object_name': 'Error'},
@@ -504,8 +225,8 @@ class Migration(SchemaMigration):
             'object_id1': ('dashboard.fields.fields.PositiveBigIntegerField', [], {}),
             'object_id2': ('dashboard.fields.fields.PositiveBigIntegerField', [], {'null': 'True'}),
             'rule': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['dashboard.Rule']"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'error_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'error_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -519,8 +240,8 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
             'salary': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'SALARY'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fieldofficer_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fieldofficer_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -534,17 +255,35 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Language', 'db_table': "u'language'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'language_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'language_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'language_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.monthlycostpervillage': {
+            'Meta': {'object_name': 'MonthlyCostPerVillage', 'db_table': "u'monthly_cost_per_village'"},
+            'community_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'COMMUNITY_COST'", 'blank': 'True'}),
+            'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
+            'digitalgreen_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'DIGITALGREEN_COST'", 'blank': 'True'}),
+            'equipment_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'EQUIPMENT_COST'", 'blank': 'True'}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'labor_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LABOR_COST'", 'blank': 'True'}),
+            'miscellaneous_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'MISCELLANEOUS_COST'", 'blank': 'True'}),
+            'partners_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'PARTNERS_COST'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'total_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'TOTAL_COST'", 'blank': 'True'}),
+            'transportation_cost': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'TRANSPORTATION_COST'", 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'monthlycostpervillage_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'monthlycostpervillage_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
         },
         'dashboard.offlineuser': {
             'Meta': {'object_name': 'OfflineUser'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'offline_pk_id': ('dashboard.fields.fields.PositiveBigIntegerField', [], {}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'offlineuser_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'offlineuser_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
@@ -556,8 +295,8 @@ class Migration(SchemaMigration):
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'partner_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PARTNER_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partners_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partners_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -574,9 +313,9 @@ class Migration(SchemaMigration):
             'land_holdings': ('django.db.models.fields.FloatField', [], {'null': 'True', 'db_column': "'LAND_HOLDINGS'", 'blank': 'True'}),
             'person_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PERSON_NAME'"}),
             'phone_no': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'PHONE_NO'", 'blank': 'True'}),
-            'screenings_attended': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['dashboard.Screening']", 'null': "'False'", 'through': "orm['dashboard.PersonMeetingAttendance']", 'blank': "'False'"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'relations': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'rel'", 'to': "orm['dashboard.Person']", 'through': "orm['dashboard.PersonRelations']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'person_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'person_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
@@ -590,8 +329,9 @@ class Migration(SchemaMigration):
             'quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'QUALITY'", 'blank': 'True'}),
             'quantity': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'QUANTITY'", 'blank': 'True'}),
             'quantity_unit': ('django.db.models.fields.CharField', [], {'max_length': '150', 'db_column': "'QUANTITY_UNIT'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'personadoptpractice_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'personadoptpractice_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'video': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Video']"})
@@ -601,8 +341,8 @@ class Migration(SchemaMigration):
             'days': ('django.db.models.fields.CharField', [], {'max_length': '9', 'db_column': "'DAYS'", 'blank': 'True'}),
             'group_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'GROUP_NAME'"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'time_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_column': "'TIME_UPDATED'", 'blank': 'True'}),
             'timings': ('django.db.models.fields.TimeField', [], {'null': 'True', 'db_column': "'TIMINGS'", 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'persongroups_created'", 'null': 'True', 'to': "orm['auth.User']"}),
@@ -611,16 +351,23 @@ class Migration(SchemaMigration):
         },
         'dashboard.personmeetingattendance': {
             'Meta': {'object_name': 'PersonMeetingAttendance', 'db_table': "u'person_meeting_attendance'"},
-            'expressed_adoption_video': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'blank': 'True'}),
+            'expressed_adoption_video': ('dashboard.fields.related.BigForeignKey', [], {'blank': 'True', 'related_name': "'expressed_adoption_video'", 'null': 'True', 'db_column': "'EXPRESSED_ADOPTION_VIDEO'", 'to': "orm['dashboard.Video']"}),
             'expressed_question': ('django.db.models.fields.CharField', [], {'max_length': '500', 'db_column': "'EXPRESSED_QUESTION'", 'blank': 'True'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'interested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_column': "'INTERESTED'", 'db_index': 'True'}),
             'person': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Person']"}),
             'screening': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Screening']"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'personmeetingattendance_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'personmeetingattendance_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.personrelations': {
+            'Meta': {'object_name': 'PersonRelations', 'db_table': "u'person_relations'"},
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'person': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'person'", 'to': "orm['dashboard.Person']"}),
+            'relative': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'relative'", 'to': "orm['dashboard.Person']"}),
+            'type_of_relationship': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'TYPE_OF_RELATIONSHIP'"})
         },
         'dashboard.personshowninvideo': {
             'Meta': {'object_name': 'PersonShownInVideo', 'db_table': "u'video_farmers_shown'"},
@@ -637,9 +384,10 @@ class Migration(SchemaMigration):
             'practice_subsector': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubSector']", 'null': 'True'}),
             'practice_subtopic': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.PracticeSubtopic']", 'null': 'True'}),
             'practice_topic': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.PracticeTopic']", 'null': 'True'}),
+            'seasonality': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'db_column': "'SEASONALITY'"}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practices_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practices_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -647,8 +395,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'PracticeSector', 'db_table': "u'practice_sector'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesector_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesector_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -656,8 +404,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'PracticeSubject', 'db_table': "u'practice_subject'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubject_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubject_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -665,8 +413,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'PracticeSubSector', 'db_table': "u'practice_subsector'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubsector_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubsector_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -674,8 +422,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'PracticeSubtopic', 'db_table': "u'practice_subtopic'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubtopic_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicesubtopic_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -683,8 +431,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'PracticeTopic', 'db_table': "u'practice_topic'"},
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicetopic_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'practicetopic_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -693,18 +441,28 @@ class Migration(SchemaMigration):
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'region_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'REGION_NAME'"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'region_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'region_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.regiontest': {
+            'Meta': {'object_name': 'RegionTest', 'db_table': "u'region_test'"},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True', 'db_column': "'id'"}),
+            'region_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'REGION_NAME'"}),
+            'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'regiontest_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'regiontest_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.reviewer': {
             'Meta': {'object_name': 'Reviewer', 'db_table': "u'reviewer'"},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'object_id': ('dashboard.fields.fields.PositiveBigIntegerField', [], {}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'reviewer_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'reviewer_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
@@ -714,13 +472,13 @@ class Migration(SchemaMigration):
             'error_msg': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'rule_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'rule_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'dashboard.screening': {
-            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'village', 'animator'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
+            'Meta': {'unique_together': "(('date', 'start_time', 'end_time', 'animator', 'village'),)", 'object_name': 'Screening', 'db_table': "u'screening'"},
             'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']"}),
             'date': ('django.db.models.fields.DateField', [], {'db_column': "'DATE'"}),
             'end_time': ('django.db.models.fields.TimeField', [], {'db_column': "'END_TIME'"}),
@@ -728,9 +486,13 @@ class Migration(SchemaMigration):
             'farmers_attendance': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['dashboard.Person']", 'null': "'False'", 'through': "orm['dashboard.PersonMeetingAttendance']", 'blank': "'False'"}),
             'fieldofficer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.FieldOfficer']", 'null': 'True', 'blank': 'True'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'LOCATION'", 'blank': 'True'}),
             'start_time': ('django.db.models.fields.TimeField', [], {'db_column': "'START_TIME'"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'target_adoptions': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_ADOPTIONS'", 'blank': 'True'}),
+            'target_audience_interest': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_AUDIENCE_INTEREST'", 'blank': 'True'}),
+            'target_person_attendance': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'TARGET_PERSON_ATTENDANCE'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'screening_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'screening_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'videoes_screened': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Video']", 'symmetrical': 'False'}),
@@ -755,10 +517,69 @@ class Migration(SchemaMigration):
             'region': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Region']"}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
             'state_name': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '100', 'db_column': "'STATE_NAME'"}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'state_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'state_related_modified'", 'null': 'True', 'to': "orm['auth.User']"})
+        },
+        'dashboard.target': {
+            'Meta': {'unique_together': "(('district', 'month_year'),)", 'object_name': 'Target'},
+            'adoption_per_dissemination': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'avg_attendance_per_dissemination': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'challenges': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'clusters_identification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'crp_refresher_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'crp_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'csp_identification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'csp_refresher_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'csp_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'dg_concept_sharing': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'dissemination_set_deployment': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'disseminations': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'district': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.District']"}),
+            'editor_refresher_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'editor_training': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'exp_interest_per_dissemination': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'month_year': ('django.db.models.fields.DateField', [], {}),
+            'storyboard_preparation': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'support_requested': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'target_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'target_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'video_editing': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'video_production': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'video_quality_checking': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'video_shooting': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'video_uploading': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'village_operationalization': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'villages_certification': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'what_not_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'what_went_well': ('django.db.models.fields.TextField', [], {'blank': 'True'})
+        },
+        'dashboard.training': {
+            'Meta': {'unique_together': "(('training_start_date', 'training_end_date', 'village'),)", 'object_name': 'Training', 'db_table': "u'training'"},
+            'animators_trained': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Animator']", 'symmetrical': 'False'}),
+            'development_manager_present': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.DevelopmentManager']", 'null': 'True', 'db_column': "'dm_id'", 'blank': 'True'}),
+            'fieldofficer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.FieldOfficer']", 'db_column': "'fieldofficer_id'"}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'training_end_date': ('django.db.models.fields.DateField', [], {'db_column': "'TRAINING_END_DATE'"}),
+            'training_outcome': ('django.db.models.fields.TextField', [], {'db_column': "'TRAINING_OUTCOME'", 'blank': 'True'}),
+            'training_purpose': ('django.db.models.fields.TextField', [], {'db_column': "'TRAINING_PURPOSE'", 'blank': 'True'}),
+            'training_start_date': ('django.db.models.fields.DateField', [], {'db_column': "'TRAINING_START_DATE'"}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'training_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'training_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
+        },
+        'dashboard.traininganimatorstrained': {
+            'Meta': {'object_name': 'TrainingAnimatorsTrained', 'db_table': "u'training_animators_trained'"},
+            'animator': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Animator']", 'db_column': "'animator_id'"}),
+            'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
+            'training': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Training']", 'db_column': "'training_id'"})
         },
         'dashboard.userpermission': {
             'Meta': {'object_name': 'UserPermission'},
@@ -766,8 +587,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'region_operated': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Region']", 'null': 'True', 'blank': 'True'}),
             'role': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'userpermission_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'userpermission_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'username': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
@@ -776,17 +597,31 @@ class Migration(SchemaMigration):
             'Meta': {'unique_together': "(('title', 'video_production_start_date', 'video_production_end_date', 'village'),)", 'object_name': 'Video', 'db_table': "u'video'"},
             'actors': ('django.db.models.fields.CharField', [], {'max_length': '1', 'db_column': "'ACTORS'"}),
             'approval_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'APPROVAL_DATE'", 'blank': 'True'}),
-            'cameraoperator': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'videos_shot'", 'to': "orm['dashboard.Animator']"}),
+            'audio_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'AUDIO_QUALITY'", 'blank': 'True'}),
+            'cameraoperator': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'cameraoperator'", 'to': "orm['dashboard.Animator']"}),
             'duration': ('django.db.models.fields.TimeField', [], {'null': 'True', 'db_column': "'DURATION'", 'blank': 'True'}),
-            'facilitator': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'videos_facilitated'", 'to': "orm['dashboard.Animator']"}),
+            'edit_finish_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'EDIT_FINISH_DATE'", 'blank': 'True'}),
+            'edit_start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'EDIT_START_DATE'", 'blank': 'True'}),
+            'editing_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'EDITING_QUALITY'", 'blank': 'True'}),
+            'facilitator': ('dashboard.fields.related.BigForeignKey', [], {'related_name': "'facilitator'", 'to': "orm['dashboard.Animator']"}),
             'farmers_shown': ('dashboard.fields.related.BigManyToManyField', [], {'to': "orm['dashboard.Person']", 'symmetrical': 'False'}),
+            'final_edited_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'FINAL_EDITED_FILENAME'", 'blank': 'True'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'language': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Language']"}),
+            'last_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'movie_maker_project_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'MOVIE_MAKER_PROJECT_FILENAME'", 'blank': 'True'}),
+            'picture_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'PICTURE_QUALITY'", 'blank': 'True'}),
+            'raw_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'RAW_FILENAME'", 'blank': 'True'}),
             'related_practice': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Practices']", 'null': 'True', 'blank': 'True'}),
+            'remarks': ('django.db.models.fields.TextField', [], {'db_column': "'REMARKS'", 'blank': 'True'}),
             'reviewer': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Reviewer']", 'null': 'True', 'blank': 'True'}),
+            'storybase': ('django.db.models.fields.IntegerField', [], {'max_length': '1', 'null': 'True', 'db_column': "'STORYBASE'", 'blank': 'True'}),
+            'storyboard_filename': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'STORYBOARD_FILENAME'", 'blank': 'True'}),
             'summary': ('django.db.models.fields.TextField', [], {'db_column': "'SUMMARY'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'supplementary_video_produced': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Video']", 'null': 'True', 'blank': 'True'}),
+            'thematic_quality': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'THEMATIC_QUALITY'", 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200', 'db_column': "'TITLE'"}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'video_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'video_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
@@ -806,19 +641,34 @@ class Migration(SchemaMigration):
         },
         'dashboard.village': {
             'Meta': {'unique_together': "(('village_name', 'block'),)", 'object_name': 'Village', 'db_table': "u'village'"},
-            'animators': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'animators'", 'symmetrical': 'False', 'through': "orm['dashboard.AnimatorAssignedVillage']", 'to': "orm['dashboard.Animator']"}),
             'block': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Block']"}),
             'control': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'CONTROL'", 'blank': 'True'}),
             'grade': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'id': ('dashboard.fields.fields.BigAutoField', [], {'primary_key': 'True'}),
             'latitude': ('django.db.models.fields.CharField', [], {'max_length': '25', 'null': 'True', 'blank': 'True'}),
             'longitude': ('django.db.models.fields.CharField', [], {'max_length': '25', 'null': 'True', 'blank': 'True'}),
+            'no_of_households': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'NO_OF_HOUSEHOLDS'", 'blank': 'True'}),
+            'population': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'db_column': "'POPULATION'", 'blank': 'True'}),
+            'road_connectivity': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'ROAD_CONNECTIVITY'", 'blank': 'True'}),
             'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'db_column': "'START_DATE'", 'blank': 'True'}),
-            'time_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            'time_modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'village_created'", 'null': 'True', 'to': "orm['auth.User']"}),
             'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'village_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
             'village_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_column': "'VILLAGE_NAME'"})
+        },
+        'dashboard.villageprecalculation': {
+            'Meta': {'unique_together': "(('village', 'date'),)", 'object_name': 'VillagePrecalculation', 'db_table': "u'village_precalculation'"},
+            'date': ('django.db.models.fields.DateField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'time_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'time_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'total_active_attendees': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'total_adopted_attendees': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'total_adoption_by_active': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'user_created': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'villageprecalculation_created'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'user_modified': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'villageprecalculation_related_modified'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'village': ('dashboard.fields.related.BigForeignKey', [], {'to': "orm['dashboard.Village']"})
         }
     }
 

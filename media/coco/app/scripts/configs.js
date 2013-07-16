@@ -138,7 +138,7 @@ function() {
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/api/v1/mediator/',
         'entity_name': 'mediator',
-        'unique_togther_fields': ['name', 'gender'],
+        'unique_togther_fields': ['name', 'gender', 'district.id'],
         'sort_field': 'name',
         'foreign_entities': {
             'village': {
@@ -146,6 +146,12 @@ function() {
                     'placeholder': 'id_ass_villages',
                     'name_field': 'village_name'
                 }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "} 
+            },
+            district: {
+                district :{
+                    placeholder : 'id_district',
+                    name_field : 'district_name' 
+                }
             }
         },
         'form_field_validation': {
@@ -163,6 +169,7 @@ function() {
                     maxlength: 10
                 },
                 assigned_villages: "required",
+                district: "required"
             },
             messages: {
                 name: {
@@ -177,6 +184,7 @@ function() {
                     maxlength: "Phone number should not contain more than 10 digits"
                 },
                 assigned_villages: "Assigned villages are required",
+                district: "District is required"
             },
 
             highlight: function(element, errorClass, validClass) {
@@ -224,7 +232,11 @@ function() {
             'person': {
                 "farmers_shown": {
                     'placeholder': 'id_farmers_shown',
-                    'name_field': 'person_name'
+                    'name_field': 'person_name',
+                    'dependency': [{
+                        'source_form_element': 'village',
+                        'dep_attr': 'village'
+                    }]
                 },
             },
             'village': {
@@ -341,23 +353,25 @@ function() {
     };
 
     var language_configs = {
-        'page_header': 'Laguage',
-        'list_table_header_template': 'language_table_template',
-        'list_table_row_template': 'language_list_item_template',
-        'add_template_name': 'language_add_edit_template',
-        'edit_template_name': 'language_add_edit_template',
         'rest_api_url': '/api/v1/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
-        'foreign_entities': {},
-        'form_field_validation': {},
         'dashboard_display': {
             listing: false,
             add: false
         }
     };
 
-    //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
+    var district_configs = {
+        'rest_api_url': '/api/v1/district/',
+        'entity_name': 'district',
+        'sort_field': 'district_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var group_configs = {
         'page_header': 'Group',
         'list_table_header_template': 'group_table_template',
@@ -390,7 +404,7 @@ function() {
                 'host_attribute': 'village',
                 'inline_attribute': 'village'
             }],
-            foreign_entities: {
+            foreign_entities: { //used at convert_namespace only
                 village: {
                     village: {
                         placeholder: 'id_village',
@@ -455,7 +469,7 @@ function() {
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/api/v1/screening/',
         'entity_name': 'screening',
-        download_chunk_size: 200,
+        download_chunk_size: 1000,
         'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
         'foreign_entities': {
             'village': {
@@ -520,9 +534,12 @@ function() {
                                 name_field: 'title'
                             }
                         },
-                        foreign_fields: { // any more field in expanded template for offline to online conv
-                            "expressed_adoption_video": {
-                                entity_name: "video"
+                        foreign_entities: { // any more field in expanded template for offline to online conv
+                            video:{
+                                "expressed_adoption_video": {
+                                    entity_name: "video",
+                                    name_field: 'title'
+                                }
                             }
                         },
                         extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
@@ -543,7 +560,8 @@ function() {
                 },
                 end_time: {
                     required: true,
-                    validateTime: true
+                    validateTime: true,
+					timeOrder: {start_time : "start_time"}
                 },
                 animator: "required",
                 village: "required",
@@ -556,11 +574,11 @@ function() {
 					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
 				},
 				start_time: {
-					required: 'Video production start date is required',
+					required: 'Screening start time is required',
 					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
 				},
 				end_time: {
-					required: 'Video production end date is required',
+					required: 'Screening end time is required',
 					validateTime: 'Enter the end time in the form of HH:MM. Use 24 hour format',
 					timeOrder: 'End time should be later than start time',
 				},
@@ -650,7 +668,6 @@ function() {
                         }
                     },
                     farmers_attendance: {
-                        only_render: true,
                         dependency: [{
                             'source_form_element': 'group',
                             'dep_attr': 'group'
@@ -661,24 +678,13 @@ function() {
                         id_field: "person_id", // for convert_namespace conversion      
                         'expanded': { // won't be denormalised, wud be converted offline to online, render wud use a template declared and nt options template, any field to be denormalised or converted offline to online can be declared - this shd be clubbed and put as foreign entity of expanded.  
                             template: 'adoption_inline',
-                            placeholder: 'bulk',
-                            denormalize: { // any field in expanded template to be denormalised     
-                                "expressed_adoption_video": {
-                                    name_field: 'title'
-                                }
-                            },
-                            foreign_fields: { // any more field in expanded template for offline to online conv
-                                "expressed_adoption_video": {
-                                    entity_name: "video"
-                                }
-                            },
-                            extra_fields: ["expressed_question", "interested", "expressed_adoption_video"]
+                            placeholder: 'bulk'
                         }
                     }
                 }
             },
             'bulk': {
-                foreign_fields: { // any more field in expanded template for offline to online conv
+                foreign_fields: { //foreign fields in the individual objects
                     "video": {
                         video: {
                             'name_field': 'title'
@@ -688,8 +694,19 @@ function() {
                         person: {
                             'name_field': 'person_name'
                         }
+                    },
+                    village: {
+                        village:{
+                            'name_field': 'village_name'
+                        }
+                    },
+                    group: {
+                        group:{
+                            'name_field': 'group_name'
+                        }
                     }
                 },
+                borrow_fields: ['village', 'group']
             }
         },
         edit: {
@@ -739,7 +756,7 @@ function() {
                 }
             }
         },
-        'unique_togther_fields': ['person_name', 'father_name', 'village.id', 'group.id'],
+        'unique_togther_fields': ['person_name', 'father_name', 'village.id'],
         'sort_field': 'person_name',
         'form_field_validation': {
             ignore: [],
@@ -836,6 +853,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        district: district_configs,
         misc: misc
     }
 

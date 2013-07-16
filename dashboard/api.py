@@ -1,19 +1,17 @@
-from django.conf.urls.defaults import patterns, include, url
-from tastypie import fields
-from tastypie.authentication import Authentication, SessionAuthentication, BasicAuthentication
-from tastypie.authorization import DjangoAuthorization
-from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
-from tastypie.validation import FormValidation
-from tastypie.validation import Validation
 from functools import partial
-from dashboard.models import CocoUser, Country, State, District, Block, Village, FieldOfficer,Partners, \
+from django.core.exceptions import ObjectDoesNotExist
+from django.forms.models import model_to_dict, ModelChoiceField
+from tastypie import fields
+from tastypie.authentication import SessionAuthentication
+from tastypie.authorization import Authorization
+from tastypie.exceptions import NotFound
+from tastypie.resources import ModelResource, NOT_AVAILABLE
+from tastypie.validation import FormValidation
+from dashboard.models import CocoUser, State, District, Block, Village, FieldOfficer,Partners, \
                 AnimatorAssignedVillage, Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
-from forms import  VideoForm, PersonForm, AnimatorForm, PersonGroupsForm, ScreeningForm, PersonAdoptPracticeForm
-from django.forms.models import model_to_dict
-from django.db import models
-from django.forms.models import ModelChoiceField
+from forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
 
+### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
 class ModelFormValidation(FormValidation):
     """
         Override tastypie's standard ``FormValidation`` since this does not care
@@ -107,7 +105,6 @@ class MediatorFormValidation(FormValidation):
                     converted.append(item.get('id'))
                 return converted
 
-
     def is_valid(self, bundle, request=None):
         partner_id = get_user_partner_id(request)
         if partner_id:
@@ -142,71 +139,6 @@ def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
     return list(sub_fields)
 
-class ObjectDoesNotExist(Exception):
-    "The requested object does not exist"
-    silent_variable_failure = True
-
-class TastypieError(Exception):
-    """A base exception for other tastypie-related errors."""
-    pass
-
-class NotFound(TastypieError):
-    """
-    Raised when the resource/object in question can't be found.
-    """
-    pass
-
-def obj_create(self, bundle, **kwargs):
-        """
-        A ORM-specific implementation of ``obj_create``.
-        """
-        bundle.obj = self._meta.object_class()
-
-        for key, value in kwargs.items():
-            setattr(bundle.obj, key, value)
-
-        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
-        bundle = self.full_hydrate(bundle)
-        bundle.obj.user_created_id = bundle.request.user.id
-        return self.save(bundle)
-
-def obj_update(self, bundle, **kwargs):
-        if not bundle.obj or not bundle.obj.pk:
-            # Attempt to hydrate data from kwargs before doing a lookup for the object.
-            # This step is needed so certain values (like datetime) will pass model validation.
-            try:
-                bundle.obj = self.get_object_list(bundle.request).model()
-                bundle.data.update(kwargs)
-                bundle = self.full_hydrate(bundle)
-                lookup_kwargs = kwargs.copy()
-
-                for key in kwargs.keys():
-                    if key == 'pk':
-                        continue
-                    elif getattr(bundle.obj, key, NOT_AVAILABLE) is not NOT_AVAILABLE:
-                        lookup_kwargs[key] = getattr(bundle.obj, key)
-                    else:
-                        del lookup_kwargs[key]
-            except:
-                # if there is trouble hydrating the data, fall back to just
-                # using kwargs by itself (usually it only contains a "pk" key
-                # and this will work fine.
-                lookup_kwargs = kwargs
-
-            try:
-                bundle.obj = self.obj_get(bundle, **lookup_kwargs)
-            except ObjectDoesNotExist:
-                raise NotFound("A model instance matching the provided arguments could not be found.")
-
-        bundle = self.full_hydrate(bundle)
-
-        # Save the main object.
-        if bundle.request.user:
-            bundle.obj.user_modified_id = bundle.request.user.id
-        bundle.obj.save()        
-        
-        return bundle
-
 def foreign_key_to_id(bundle, field_name,sub_field_names):
     field = getattr(bundle.obj, field_name)
     if(field == None):
@@ -216,6 +148,26 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
     return dict
+
+def dict_to_foreign_uri(bundle, field_name, resource_name=None):
+    field_dict = bundle.data.get(field_name)
+    if field_dict.get('id'):
+        bundle.data[field_name] = "/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
+                                                    str(field_dict.get('id')))
+    else:
+        bundle.data[field_name] = None
+    return bundle
+
+def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
+    m2m_list = bundle.data.get(field_name)
+    resource_uri_list = []
+    for item in m2m_list:
+        try:
+            resource_uri_list.append("/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+        except:
+            return bundle
+    bundle.data[field_name] = resource_uri_list
+    return bundle
 
 def get_user_partner_id(request):
     if request.user.id:
@@ -227,23 +179,6 @@ def get_user_partner_id(request):
             if request.user.id == 1 or request.user.id == 2:
                 partner_id = 10000000000001            
     return partner_id
-
-def get_user_villages(request):
-    if request:
-        user_permissions = UserPermission.objects.filter(username = request.user)
-        villages = Village.objects.none()
-        for user_permission in user_permissions:
-            if(user_permission.role=='A'):
-                villages = villages | Village.objects.all()
-            if(user_permission.role=='D'):
-                states = State.objects.filter(region = user_permission.region_operated)
-                districts = District.objects.filter(state__in = states)
-                blocks = Block.objects.filter(district__in = districts)
-                villages = villages | Village.objects.filter(block__in = blocks)
-            if(user_permission.role=='F'):
-                blocks = Block.objects.filter(district = user_permission.district_operated)
-                villages = villages | Village.objects.filter(block__in = blocks)
-        return villages
 
 #Get User Districts for video download purpose
 
@@ -266,7 +201,7 @@ class VillageLevelAuthorization(Authorization):
         self.village_field = field
     
     def read_list(self, object_list, bundle):
-        villages = get_user_villages(bundle.request)
+        villages = CocoUser.objects.get(user_id= bundle.request.user.id).get_villages()
         kwargs = {}
         kwargs[self.village_field] = villages
         return object_list.filter(**kwargs).distinct()
@@ -280,35 +215,54 @@ class VideoAuthorization(Authorization):
         vids = list(set(screened_vids + produced_vids))
         return object_list.filter(id__in= vids)
 
-class MediatorResource(ModelResource):
+class BaseResource(ModelResource):
+    
+    def full_hydrate(self, bundle):
+        bundle = super(BaseResource, self).full_hydrate(bundle)
+        bundle.obj.user_modified_id = bundle.request.user.id
+        return bundle
+    
+    def obj_create(self, bundle, **kwargs):
+        """
+        A ORM-specific implementation of ``obj_create``.
+        """
+        bundle.obj = self._meta.object_class()
+
+        for key, value in kwargs.items():
+            setattr(bundle.obj, key, value)
+
+        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
+        bundle = self.full_hydrate(bundle)
+        bundle.obj.user_created_id = bundle.request.user.id
+        return self.save(bundle)
+
+class MediatorResource(BaseResource):
     mediator_label = fields.CharField()
     assigned_villages = fields.ListField()
     partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
-    
+    district = fields.ForeignKey('dashboard.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
-        queryset = Animator.objects.all()
-        resource_name = 'mediator'
         authentication = SessionAuthentication()
+        queryset = Animator.objects.prefetch_related('assigned_villages', 'district', 'partner').all()
+        resource_name = 'mediator'
         authorization = VillageLevelAuthorization('assigned_villages__in')
-        #authorization = Authorization()
         validation = MediatorFormValidation(form_class=AnimatorForm)
         always_return_data = True
-        excludes = ['total_adoptions','time_created', 'time_modified' ]
+        excludes = ['age', 'csp_flag', 'camera_operator_flag', 'facilitator_flag ', 'address', 'total_adoptions','time_created', 'time_modified' ]
     dehydrate_partner = partial(foreign_key_to_id, field_name='partner',sub_field_names=['id','partner_name'])
-
-    def dehydrate_assigned_villages(self, bundle):
-        v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
-        vil_list=[]
-        for i in v_field:
-            vil_list.append({"id":i.id, "village_name":i.village_name})
-        return vil_list
+    dehydrate_district = partial(foreign_key_to_id, field_name='district',sub_field_names=['id','district_name'])
+    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name = 'village')
     
+    def dehydrate_assigned_villages(self, bundle):
+        return [{'id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all()) ]
+
+    def dehydrate_mediator_label(self,bundle):
+        #for sending out label incase of dropdowns
+        return ','.join([ vil.village_name for vil in set(bundle.obj.assigned_villages.all())])
+            
     def obj_create(self, bundle, **kwargs):
-        bundle = obj_create(self, bundle, **kwargs)
-        if bundle.request.user:
-            bundle.obj.user_created_id = bundle.request.user.id
-            bundle.obj.save()
+        bundle = super(MediatorResource, self).obj_create(bundle, **kwargs)
         vil_list = bundle.data.get('assigned_villages')
         for vil in vil_list:
             vil = Village.objects.get(id = int(vil.split('/')[-2]))
@@ -319,11 +273,7 @@ class MediatorResource(ModelResource):
 
     def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, **kwargs)
-        if bundle.request.user:
-            bundle.obj.user_modified_id = bundle.request.user.id
-            bundle.obj.save()
-        
+        bundle = super(MediatorResource, self).obj_update(bundle, **kwargs)
         mediator_id = bundle.data.get('id')
         vil_id_list = []
         for vil_resource in bundle.data.get('assigned_villages'):
@@ -342,32 +292,10 @@ class MediatorResource(ModelResource):
     
         return bundle
         
-    def dehydrate_mediator_label(self,bundle):
-        #for sending out label incase of dropdowns
-        v_field = getattr(bundle.obj, 'assigned_villages').all().distinct()
-        label = ""
-        for i in v_field:
-            label = label + i.village_name + ","
-        return "("+ label +")"
-    
     def hydrate_partner(self, bundle):
         partner_id = get_user_partner_id(bundle.request)
         if partner_id:
             bundle.data['partner'] ="/api/v1/partner/"+str(partner_id)+"/"
-        return bundle
-    
-    def hydrate_assigned_villages(self, bundle):
-        m2m_list = bundle.data.get('assigned_villages')
-        resource_uri_list = []
-        for item in m2m_list:
-            try:
-                resource_uri_list.append("/api/v1/village/"+str(item.get('id'))+"/")
-            except:
-                continue
-        if not hasattr(bundle,'assigned_villages_flag'):
-            bundle.data['assigned_villages'] = resource_uri_list
-            bundle.assigned_villages_flag = True
-            
         return bundle
 
 class VillageResource(ModelResource):
@@ -386,7 +314,15 @@ class VillageResource(ModelResource):
         authorization = VillageLevelAuthorization('id__in')
         max_limit = None
 
-class VideoResource(ModelResource):
+class DistrictResource(ModelResource):
+    class Meta:
+        queryset = District.objects.all()
+        resource_name = 'district'
+        authentication = SessionAuthentication()
+        authorization = VillageLevelAuthorization('block__village__id__in')
+        max_limit = None
+
+class VideoResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     cameraoperator = fields.ForeignKey(MediatorResource, 'cameraoperator')
     facilitator = fields.ForeignKey(MediatorResource, 'facilitator')
@@ -397,107 +333,42 @@ class VideoResource(ModelResource):
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_cameraoperator = partial(foreign_key_to_id, field_name='cameraoperator', sub_field_names=['id','name'])
     dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id','name'])
-    dehydrate_farmers_shown = partial(many_to_many_to_subfield, field_name='farmers_shown',sub_field_names=['id','person_name'])
-    obj_create = obj_create
-    obj_update = obj_update
+    hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
+    hydrate_language = partial(dict_to_foreign_uri, field_name='language')
+    hydrate_cameraoperator = partial(dict_to_foreign_uri, field_name='cameraoperator', resource_name='mediator')
+    hydrate_facilitator = partial(dict_to_foreign_uri, field_name='facilitator', resource_name='mediator')
+    hydrate_farmers_shown = partial(dict_to_foreign_uri_m2m, field_name = 'farmers_shown', resource_name = 'person')
     
     class Meta:
         max_limit = None
-        queryset = Video.objects.select_related('village').all()
+        queryset = Video.objects.prefetch_related('village', 'language', 'cameraoperator', 'facilitator', 'farmers_shown').all()
         resource_name = 'video'
         authentication = SessionAuthentication()
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
-        excludes = ['viewers','time_created', 'time_modified', 'duration' ]
+        excludes = ['duration', 'picture_quality ', 'audio_quality', 'editing_quality', 'edit_start_date ', 'edit_start_date', 
+                    'edit_finish_date', 'thematic_quality', 'storybase', 'storyboard_filename', 'raw_filename', 'movie_maker_project_filename', 
+                    'final_edited_filename', 'reviewer', 'supplementary_video_produced', 'remarks', 'related_practice',
+                    'last_modified', 'viewers','time_created', 'time_modified', 'duration' ]
     
-    def apply_authorization_limits(self, request, object_list):
-        districts = get_user_districts(request)
-        screened_vids = list(Screening.objects.filter(village__block__district__in=districts).distinct().values_list('videoes_screened__id',flat=True))
-        produced_vids = list(Video.objects.filter(village__block__district__in = districts).values_list('id', flat=True))
-        #doing set of two lists avoid merging duplicates in the final merged list
-        vids = list(set(screened_vids + produced_vids))
-        return object_list.filter(id__in= vids)
-    
-    def hydrate_language(self, bundle):
-        language = bundle.data.get('language')
-        if language and not hasattr(bundle,'language_flag'):
-            try:
-                id = language.get('id')
-                bundle.data['language'] = "/api/v1/language/"+str(id)+"/"
-                bundle.language_flag = True
-            except:
-                print 'language id in video does not exist'
-                bundle.data['language'] = None
-        return bundle
-    
-    def hydrate_village(self, bundle):
-        village = bundle.data.get('village')
-        if village and not hasattr(bundle,'village_flag'):
-            try:
-                village_id = village.get('id')
-                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
-                bundle.village_flag = True
-            except:
-                print 'village id in video does not exist'
-                bundle.data['village'] = None
-        return bundle
-    
-    def hydrate_cameraoperator(self, bundle):
-        cameraoperator = bundle.data.get('cameraoperator')
-        if cameraoperator and not hasattr(bundle,'cameraoperator_flag'):
-            try:
-                id = cameraoperator.get('id')
-                bundle.data['cameraoperator'] = "/api/v1/mediator/"+str(id)+"/"
-                bundle.cameraoperator_flag = True
-            except:
-                print 'camera operator id in video does not exist'
-                bundle.data['cameraoperator'] = None
-        return bundle
-    
-    def hydrate_facilitator(self, bundle):
-        facilitator = bundle.data.get('facilitator')
-        if facilitator and not hasattr(bundle,'facilitator_flag'):
-            try:
-                id = facilitator.get('id')
-                bundle.data['facilitator'] = "/api/v1/mediator/"+str(id)+"/"
-                bundle.facilitator_flag = True
-            except:
-                print 'facilitator id in video does not exist'
-                bundle.data['facilitator'] = None
-        return bundle
-    
-    def hydrate_farmers_shown(self, bundle):
-        m2m_list = bundle.data.get('farmers_shown')
-        resource_uri_list = []
-        for item in m2m_list:
-            try:
-                resource_uri_list.append("/api/v1/person/"+str(item.get('id'))+"/")
-            except:
-                continue
-        if not hasattr(bundle,'farmers_shown_flag'):
-            bundle.data['farmers_shown'] = resource_uri_list
-            bundle.farmers_shown_flag = True
-            
-        return bundle
-    
-class PersonGroupsResource(ModelResource):
+    def dehydrate_farmers_shown(self, bundle):
+        return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
+
+class PersonGroupsResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
     class Meta:
         max_limit = None
-        queryset = PersonGroups.objects.select_related('village').all()
+        queryset = PersonGroups.objects.prefetch_related('village').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
-        #authorization = Authorization()
-        
         validation = ModelFormValidation(form_class=PersonGroupsForm)
         excludes = ['days', 'timings', 'time_created', 'time_modified', 'time_updated']
         always_return_data = True
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
-    obj_create = obj_create
-    obj_update = obj_update
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     
     def dehydrate_group_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -516,7 +387,7 @@ class PersonGroupsResource(ModelResource):
                 bundle.data['village'] = None
         return bundle
 
-class ScreeningResource(ModelResource):
+class ScreeningResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
     videoes_screened = fields.ToManyField('dashboard.api.VideoResource', 'videoes_screened', related_name='screening')
@@ -524,19 +395,24 @@ class ScreeningResource(ModelResource):
     farmers_attendance = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
-
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
+    hydrate_farmer_groups_targeted = partial(dict_to_foreign_uri_m2m, field_name = 'farmer_groups_targeted', resource_name='group')
+    hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
+    
     class Meta:
         max_limit = None
-        queryset = Screening.objects.select_related('village').all()
+        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
+                                                      'personmeetingattendance_set__person', 'personmeetingattendance_set__expressed_adoption_video').all()
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = ScreeningForm)
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ['location', 'target_person_attendance', 'target_audience_interest', 'target_adoptions', 'time_created', 'time_modified']
     
     def obj_create(self, bundle, **kwargs):
-        bundle = obj_create(self, bundle, **kwargs)
+        bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
         user_id = None
         if bundle.request.user:
             user_id =  bundle.request.user.id
@@ -553,7 +429,7 @@ class ScreeningResource(ModelResource):
 
     def obj_update(self, bundle, **kwargs):
         #Edit case many to many handling. First clear out the previous related objects and create new objects
-        bundle = obj_update(self, bundle, **kwargs)
+        bundle = super(ScreeningResource, self).obj_update(bundle, **kwargs)
         user_id = None
         if bundle.request.user:
             user_id =  bundle.request.user.id
@@ -570,131 +446,38 @@ class ScreeningResource(ModelResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
-        v_field = getattr(bundle.obj, 'videoes_screened').all().distinct()
-        vid_list=[]
-        for i in v_field:
-            vid_list.append({"id":i.id, "title":i.title})
-        return vid_list
-    
+        return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+        
     def dehydrate_farmer_groups_targeted(self, bundle):
-        v_field = getattr(bundle.obj, 'farmer_groups_targeted').all().distinct()
-        group_list=[]
-        for i in v_field:
-            group_list.append({"id":i.id, "group_name":i.group_name})
-        return group_list
+        return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
     def dehydrate_farmers_attendance(self, bundle):
-        v_field = getattr(bundle.obj, 'farmers_attendance').all().select_related().distinct()
-        screening_id  = getattr(bundle.obj,'id')
-        pma_list=[]
-        for i in v_field:
-            pma = PersonMeetingAttendance.objects.filter(person__id = i.id, screening__id = screening_id).values('id',
-                                                                                           'person__id',
-                                                                                           'person__person_name',
-                                                                                           'expressed_adoption_video__id',
-                                                                                           'expressed_adoption_video__title',
-                                                                                           'interested', 
-                                                                                           'expressed_question')
-            if pma:
-                pma_list.append({'person_id':pma[0]['person__id'],'person_name':pma[0]['person__person_name'], 
-                             'expressed_adoption_video': {'id':pma[0]['expressed_adoption_video__id'], 'title':pma[0]['expressed_adoption_video__title']},
-                              'interested': pma[0]['interested'], 'expressed_question': pma[0]['expressed_question']})
-            
-        return pma_list
+        return [{'person_id':pma.person.id, 
+                 'person_name': pma.person.person_name, 
+                 'interested': pma.interested, 
+                 'expressed_question': pma.expressed_question, 
+                 'expressed_adoption_video': {'id': pma.expressed_adoption_video.id, 
+                                              'title': pma.expressed_adoption_video.title } if pma.expressed_adoption_video else {}
+                 }  for pma in bundle.obj.personmeetingattendance_set.all()]
     
-    def hydrate_videoes_screened(self, bundle):
-        print 'in hydrate videoes'
-        groups = bundle.data.get('videoes_screened')
-        resource_uri_list = []
-        for group in groups:
-            try:
-                resource_uri_list.append("/api/v1/video/"+str(group.get('id'))+"/")
-            except:
-                continue
-        if not hasattr(bundle,'videoes_screened_flag'):
-            bundle.data['videoes_screened'] = resource_uri_list
-            bundle.videoes_screened_flag = True
-        return bundle
-    
-    def hydrate_farmer_groups_targeted(self, bundle):
-        print 'in hydrate groups'
-        groups = bundle.data.get('farmer_groups_targeted')
-        resource_uri_list = []
-        for group in groups:
-            try:
-                resource_uri_list.append("/api/v1/group/"+str(group.get('id'))+"/")
-            except:
-                continue
-                print 'in exception'
-        if not hasattr(bundle,'farmer_groups_targeted_flag'):
-            bundle.data['farmer_groups_targeted'] = resource_uri_list
-            bundle.farmer_groups_targeted_flag = True
-        return bundle
-    
-#    def hydrate_farmers_attendance(self, bundle):
-#        print 'in farmers attendance'
-#        pmas = bundle.data['farmers_attendance']
-#        resource_uri_list = []
-#        for pma in pmas:
-#            #print pma
-#            try:
-#                resource_uri_list.append("/api/v1/person/"+str(pma.get('id'))+"/")
-#            except:
-#                continue
-#                print 'in exception'
-#        bundle.data['farmers_attendance'] = resource_uri_list
-#        print resource_uri_list
-#        return bundle
-    
-#    def save_m2m(self, bundle):
-#        print 'in save m2m'
-#        pmas = bundle.data.get('farmers_attendance', [])
-#        print pmas
-
-    
-    def hydrate_village(self, bundle):
-        village = bundle.data.get('village')
-        if village and not hasattr(bundle,'village_flag'):
-            village_id = village.get('id')
-            village_resource_uri = "/api/v1/village/"+str(village_id)+"/"
-            bundle.data['village'] = village_resource_uri
-            bundle.village_flag = True
-        
-#        if not hasattr(bundle,'village_flag'):
-#            bundle.data['village'] = village_resource_uri
-#            bundle.village_flag = True
-#        return bundle
-#    
-        return bundle
-    
-    def hydrate_animator(self, bundle):
-        animator = bundle.data.get('animator')
-        if animator and not hasattr(bundle,'animator_flag'):
-            animator_id = animator.get('id')
-            animator_resource_uri = "/api/v1/mediator/"+str(animator_id)+"/"
-            bundle.data['animator'] = animator_resource_uri
-            bundle.animator_flag = True
-        return bundle
-
-class PersonResource(ModelResource):
+class PersonResource(BaseResource):
     label = fields.CharField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
     
     class Meta:
-        max_limit = None
-        queryset = Person.objects.select_related('village','group').all()
+        queryset = Person.objects.prefetch_related('village','group', 'personmeetingattendance_set__screening__videoes_screened').all()
         resource_name = 'person'
-        authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('village__in')
         validation = ModelFormValidation(form_class = PersonForm)
         always_return_data = True
         excludes = ['date_of_joining', 'address', 'image_exists', 'land_holdings', 'time_created', 'time_modified']
+    
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id', 'village_name'])
     dehydrate_group = partial(foreign_key_to_id, field_name='group',sub_field_names=['id','group_name'])
-    obj_create = obj_create
-    obj_update = obj_update
+    hydrate_village = partial(dict_to_foreign_uri, field_name = 'village')
+    hydrate_group = partial(dict_to_foreign_uri, field_name = 'group')
     
     def dehydrate_label(self,bundle):
         #for sending out label incase of dropdowns
@@ -704,107 +487,34 @@ class PersonResource(ModelResource):
         return p_field+"("+v_field+","+f_field+")"
     
     def dehydrate_videos_seen(self, bundle):
-        person_id = getattr(bundle.obj, 'id')
-        videos = Video.objects.filter(screening__personmeetingattendance__person__id = person_id).distinct().values('id','title')
-        return list(videos)
-    
-    def hydrate_village(self, bundle):
-        village = bundle.data.get('village')
-        if village and not hasattr(bundle,'village_flag'):
-            try:
-                village_id = village.get('id')
-                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
-                bundle.village_flag = True
-            except:
-                print 'village id in video does not exist'
-                bundle.data['village'] = None
-        return bundle
-    
-    def hydrate_group(self, bundle):
-        group = bundle.data.get('group')
-        if group and not hasattr(bundle,'group_flag'):
-            try:
-                group_id = group.get('id')
-                if group_id:
-                    bundle.data['group'] = "/api/v1/group/"+str(group_id)+"/"
-                else:
-                    bundle.data['group'] = None
-                bundle.group_flag = True
-            except:
-                print 'group id in video does not exist'
-                bundle.data['group'] = None
-        return bundle
-    
-class PersonAdoptVideoResource(ModelResource):
+        videos_seen = [{'id': video.id, 'title': video.title} for pma in bundle.obj.personmeetingattendance_set.all() for video in pma.screening.videoes_screened.all() ]
+        return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
+        
+class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     group = fields.DictField(null = True)
     village = fields.DictField(null = True)
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.select_related('person__village','video').all()
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video', 'person__group', 'person').all()
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('person__village__in')
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
-        excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_modified']
+        excludes = ['prior_adoption_flag', 'quality', 'quantity', 'quantity_unit', 'time_created', 'time_updated', 'time_modified']
     dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
     dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
-    obj_create = obj_create
-    obj_update = obj_update
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video')
+    hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     
     def dehydrate_group(self, bundle):
-        person_id = getattr(bundle.obj, 'person').id
-        t_dict = {}
-        group = Person.objects.get(id = person_id).group
-        if group:
-            t_dict["id"] = group.id
-            t_dict["group_name"] = group.group_name
-        else:
-            t_dict["id"] = None
-            t_dict["group_name"] = None
-        return t_dict
-    
-    def dehydrate_village(self, bundle):
-        person_id = getattr(bundle.obj, 'person').id
-        t_dict = {}
-        village = Person.objects.get(id=person_id).village
-        t_dict["id"] = village.id
-        t_dict["village_name"] = village.village_name
-        return t_dict
-    
-    def hydrate_video(self, bundle):
-        print 'in hydrate video'
-        print bundle
-        video = bundle.data.get('video')
-        if video and not hasattr(bundle,'video_flag'):
-            try:
-                video_id = video.get('id')
-                bundle.data['video'] = "/api/v1/video/"+str(video_id)+"/"
-                bundle.video_flag = True
-            except:
-                print 'video id in pap does not exist'
-                bundle.data['video'] = None
-        return bundle
-    
-    def hydrate_person(self, bundle):
-        print 'in hydrate person'
-        print bundle
-        person = bundle.data.get('person')
-        if person and not hasattr(bundle,'person_flag'):
-            try:
-                person_id = person.get('id')
-                bundle.data['person'] = "/api/v1/person/"+str(person_id)+"/"
-                bundle.person_flag = True
-            except:
-                print 'person id in person adopt video does not exist'
-                bundle.data['person'] = None
-        return bundle
-    
-# Disallow POST PUT DELETE
-# Get Id and String
+        return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
 
+    def dehydrate_village(self, bundle):
+        return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
+    
 class FieldOfficerResource(ModelResource):
     class Meta:
         max_limit = None
@@ -836,7 +546,6 @@ class PartnersResource(ModelResource):
         resource_name = 'partner'
         authentication = SessionAuthentication()
         authorization = Authorization()
-        
 
 class LanguageResource(ModelResource):    
     class Meta:
@@ -845,7 +554,6 @@ class LanguageResource(ModelResource):
         resource_name = 'language'
         authentication = SessionAuthentication()
         authorization = Authorization()
-        
 
 class PersonMeetingAttendanceResource(ModelResource):    
     class Meta:
@@ -854,8 +562,3 @@ class PersonMeetingAttendanceResource(ModelResource):
         resource_name = 'pma'
         authentication = SessionAuthentication()
         authorization = Authorization()
-
-class NOT_AVAILABLE:
-    def __str__(self):
-        return 'No such data is available.'
-        
