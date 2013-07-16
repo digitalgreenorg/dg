@@ -107,7 +107,7 @@ define([
             for(f_entity in this.foreign_entities){
                 var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function(model){
-                        return model.get(all_configs[this.storeName].sort_field)
+                        return model.get(all_configs[this.storeName].sort_field).toLowerCase();
                     }
                 });
                 this.f_index.push(f_entity);
