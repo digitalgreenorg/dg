@@ -51,7 +51,7 @@ define([
         /*
         Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
-        After Save is finished calls an after_save function
+        After Save is finished calls an after_form_save function
         */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
@@ -90,9 +90,9 @@ define([
                     .done(function(off_json){
                         if(that.form.inline)
                             that.save_inlines(that.inline_models, off_json, that.form.inline)
-                                .done(function(){
+                                .done(function(all_inlines){
                                     console.log("ALL INLINED SAVED");
-                                    inlines_dfd.resolve();
+                                    inlines_dfd.resolve(all_inlines);
                                 })
                                 .fail(function(){
                                     console.log("FAILED AT INLINES SAVE");
@@ -110,7 +110,7 @@ define([
             $.when.apply(null, save_complete_dfds)
                 .done(function(){
                     console.log("Everything saved");
-                    that.after_save(that.form.entity_name);
+                    that.after_form_save(that.form.entity_name);
                 })
                 .fail(function(){
                     if(that.form.bulk)
@@ -164,7 +164,7 @@ define([
             }, this);
             $.when.apply($, inline_dfds)
                 .done(function(){
-                    dfd.resolve();
+                    dfd.resolve(arguments);
                 })
                 .fail(function(){
                     dfd.reject();
@@ -203,8 +203,14 @@ define([
                     .done(function(on_off_jsons){
                         that.save_when_online(entity_name, on_off_jsons)
                             .done(function(off_json){
-                                show_suc_notif();
-                                dfd.resolve(off_json);
+                                call_after_save(off_json)
+                                    .done(function(){
+                                        show_suc_notif();
+                                        dfd.resolve(off_json);
+                                    })
+                                    .fail(function(error){
+                                        alert("afterSave failed for entity - "+entity_name+" - "+error);
+                                    });
                             })
                             .fail(function(error){
                                 show_err_notif();
@@ -221,14 +227,35 @@ define([
                 //Offline mode
                 this.save_when_offline(entity_name, json)
                     .done(function(off_json){
-                        show_suc_notif();
-                        return dfd.resolve(off_json);
+                        call_after_save(off_json)
+                            .done(function(){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
+                            })
+                            .fail(function(error){
+                                alert("afterSave failed for entity - "+entity_name+" - "+error);
+                            });
                     })
                     .fail(function(error){
                         show_err_notif();
                         return dfd.reject(error);
                     });
             }
+            
+            function call_after_save(saved_off_json){
+                var dfd = new $.Deferred();
+                var afterSave = configs[entity_name].afterSave;
+                if(afterSave)
+                    afterSave(saved_off_json, Offline)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
+                else dfd.resolve();    
+                return dfd.promise();    
+            };
             
             function show_suc_notif(){
                 notifs_view.add_alert({
@@ -330,7 +357,7 @@ define([
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save: function(entity_name){
+        after_form_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }

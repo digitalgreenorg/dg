@@ -486,6 +486,71 @@ function() {
         'entity_name': 'screening',
         download_chunk_size: 1000,
         'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        afterSave: function(off_json, Offline){
+            var dfd = new $.Deferred();
+            var videos_shown = off_json.videoes_screened;
+            console.log("recvd off_json in afterSave - "+JSON.stringify(off_json));
+            update_attendees()
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                    dfd.reject();
+                });
+            return dfd.promise();
+            
+            function update_attendees(){
+                var update_dfd = new $.Deferred();
+                
+                var all_update_dfds = [];
+                $.each(off_json.farmers_attendance, function(index, per){
+                    all_update_dfds.push(update_attendee(per));    
+                });
+                
+                $.when.apply($,all_update_dfds)
+                    .done(function(){
+                        update_dfd.resolve();
+                    })
+                    .fail(function(){
+                        update_dfd.reject();
+                    });
+                return update_dfd;    
+            }
+            
+            function update_attendee(per){
+                var p_dfd = new $.Deferred();
+                Offline.fetch_object("person", "id", parseInt(per.person_id))
+                    .done(function(p_model){
+                        console.log("old p -"+JSON.stringify(p_model));
+                        var videos_seen = p_model.get("videos_seen");
+                        if(videos_seen)
+                        {
+                            var videos_seen_ids = _.pluck(videos_seen, 'id');
+                            $.each(videos_shown, function(index, vid){
+                                if($.inArray(vid.id, videos_seen_ids)==-1)
+                                    videos_seen.push(vid);
+                            });
+                        }
+                        else
+                            videos_seen = videos_shown;
+                        p_model.set("videos_seen", videos_seen);
+                        Offline.save(p_model, "person", p_model.toJSON())
+                            .done(function(p_model){
+                                console.log("new p -"+JSON.stringify(p_model));
+                                p_dfd.resolve();
+                            })
+                            .fail(function(error){
+                                console.log("error updating person in after save - "+error);
+                                p_dfd.reject(error);
+                            });
+                    })
+                    .fail(function(error){
+                        console.log("error fetching person in after save - "+error);
+                        p_dfd.reject(error);
+                    });
+                return p_dfd;    
+            };
+        },
         'foreign_entities': {
             'village': {
                 'village': {
@@ -6667,27 +6732,40 @@ define('convert_namespace',['jquery', 'configs', 'backbone', 'indexeddb_backbone
             if(which_to_which)
                 this.which_to_which = which_to_which;
             var that = this;
-            var online_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
+            var conv_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
             console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             this.field_dfds = [];
-            this.iterate_foreign_fields(online_json, f_entities);
-            
+            this.iterate_foreign_fields(conv_json, f_entities);
+            var off_json = on_json = null;
+            switch(this.which_to_which){
+                case "onlinetooffline":
+                    off_json = conv_json;
+                    on_json = json;
+                    break;
+                default:
+                    off_json = json;
+                    on_json = conv_json;
+            }
             if(this.field_dfds.length)
             {
                 $.when.apply($, this.field_dfds)
                     .done(function(){
-                        // console.log("FORMCONTROLLER:convert_namespace: Converted to this: "+JSON.stringify(online_json));
-                        return dfd.resolve( {on_json:online_json, off_json:json} );
+                        return dfd.resolve({
+                            on_json:on_json, 
+                            off_json:off_json
+                        });
                     })
                     .fail(function(){
-                        // console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
                         return dfd.reject();
                     });
             }
             else
             {
                 console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
-                return dfd.resolve( {on_json:online_json, off_json:json} );
+                return dfd.resolve({
+                    on_json:on_json, 
+                    off_json:off_json
+                });
             }
             return dfd.promise();
         },
@@ -9050,7 +9128,7 @@ define('views/form_controller',[
         /*
         Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
-        After Save is finished calls an after_save function
+        After Save is finished calls an after_form_save function
         */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
@@ -9089,9 +9167,9 @@ define('views/form_controller',[
                     .done(function(off_json){
                         if(that.form.inline)
                             that.save_inlines(that.inline_models, off_json, that.form.inline)
-                                .done(function(){
+                                .done(function(all_inlines){
                                     console.log("ALL INLINED SAVED");
-                                    inlines_dfd.resolve();
+                                    inlines_dfd.resolve(all_inlines);
                                 })
                                 .fail(function(){
                                     console.log("FAILED AT INLINES SAVE");
@@ -9109,7 +9187,7 @@ define('views/form_controller',[
             $.when.apply(null, save_complete_dfds)
                 .done(function(){
                     console.log("Everything saved");
-                    that.after_save(that.form.entity_name);
+                    that.after_form_save(that.form.entity_name);
                 })
                 .fail(function(){
                     if(that.form.bulk)
@@ -9163,7 +9241,7 @@ define('views/form_controller',[
             }, this);
             $.when.apply($, inline_dfds)
                 .done(function(){
-                    dfd.resolve();
+                    dfd.resolve(arguments);
                 })
                 .fail(function(){
                     dfd.reject();
@@ -9202,8 +9280,14 @@ define('views/form_controller',[
                     .done(function(on_off_jsons){
                         that.save_when_online(entity_name, on_off_jsons)
                             .done(function(off_json){
-                                show_suc_notif();
-                                dfd.resolve(off_json);
+                                call_after_save(off_json)
+                                    .done(function(){
+                                        show_suc_notif();
+                                        dfd.resolve(off_json);
+                                    })
+                                    .fail(function(error){
+                                        alert("afterSave failed for entity - "+entity_name+" - "+error);
+                                    });
                             })
                             .fail(function(error){
                                 show_err_notif();
@@ -9220,14 +9304,35 @@ define('views/form_controller',[
                 //Offline mode
                 this.save_when_offline(entity_name, json)
                     .done(function(off_json){
-                        show_suc_notif();
-                        return dfd.resolve(off_json);
+                        call_after_save(off_json)
+                            .done(function(){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
+                            })
+                            .fail(function(error){
+                                alert("afterSave failed for entity - "+entity_name+" - "+error);
+                            });
                     })
                     .fail(function(error){
                         show_err_notif();
                         return dfd.reject(error);
                     });
             }
+            
+            function call_after_save(saved_off_json){
+                var dfd = new $.Deferred();
+                var afterSave = configs[entity_name].afterSave;
+                if(afterSave)
+                    afterSave(saved_off_json, Offline)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
+                else dfd.resolve();    
+                return dfd.promise();    
+            };
             
             function show_suc_notif(){
                 notifs_view.add_alert({
@@ -9329,7 +9434,7 @@ define('views/form_controller',[
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save: function(entity_name){
+        after_form_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }
