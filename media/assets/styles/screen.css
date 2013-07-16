@@ -785,6 +785,21 @@ a {
 }
 
 /* ---------------------------------------------------------------------
+ Buller points - Lists
+------------------------------------------------------------------------ */
+.bullet-list> li {
+	background: url(../images/list-bg-black.png) no-repeat 0 3px;
+    margin-left: 20px;
+	padding-left: 10px;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.simple-table  tr > * + * {
+	padding-left: 15px;
+}
+
+/* ---------------------------------------------------------------------
  Patterns - Lists
 ------------------------------------------------------------------------ */
 .h-list {

@@ -62,5 +62,5 @@ urlpatterns = patterns('',
     (r'^api/searchFilters$',searchFilters),
     (r'^api/elasticSearch/$',get_collections_from_elasticsearch),
     (r'^api/featuredCollection/$',featuredCollection),
-    
+    (r'^example/$',direct_to_template,{'template':'example1.html'}),
 )
