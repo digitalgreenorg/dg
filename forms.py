@@ -42,6 +42,10 @@ class RegionForm(CocoModelForm):
     class Meta:
         model = Region
 
+class RegionTestForm(CocoModelForm):
+    class Meta:
+        model = RegionTest
+
 class StateForm(CocoModelForm):
     class Meta:
         model = State
@@ -53,6 +57,10 @@ class DistrictForm(CocoModelForm):
 class BlockForm(CocoModelForm):
     class Meta:
         model = Block
+
+class EquipmentForm(CocoModelForm):
+    class Meta:
+        model = Equipment
 
 class PersonGroupsForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
@@ -85,7 +93,7 @@ class PartnerForm(CocoModelForm):
 class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
-        exclude = ('assigned_villages')
+        exclude = ('assigned_villages',)
 
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
@@ -121,11 +129,38 @@ class VideosScreenedInScreeningForm(CocoModelForm):
     class Meta:
         model = VideosScreenedInScreening        
         
+class TrainingForm(CocoModelForm):
+    class Meta:
+        model = Training
+        
+class TrainingAnimatorsTrainedForm(CocoModelForm):
+    class Meta:
+        model = TrainingAnimatorsTrained    
+
+class MonthlyCostPerVillageForm(CocoModelForm):
+    class Meta:
+        model = MonthlyCostPerVillage
+        
+class PersonRelationsForm(CocoModelForm):
+    class Meta:
+        model = PersonRelations
+
+class AnimatorSalaryPerMonthForm(CocoModelForm):
+    class Meta:
+        model = AnimatorSalaryPerMonth
+        
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:
         model = PersonMeetingAttendance
+        
+class EquipmentHolderForm(CocoModelForm):
+    class Meta:
+        model = EquipmentHolder
         
 class ReviewerForm(CocoModelForm):
     class Meta:
         model = Reviewer
 
+class TargetForm(CocoModelForm):
+    class Meta:
+        model = Target

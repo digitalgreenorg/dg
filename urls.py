@@ -16,14 +16,14 @@ from dashboard.views import login, logout, coco_v2
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'coco/offline/$', coco_v2), 
+    (r'coco/offline$', coco_v2),
     # (r'cocoproto/offline/$', direct_to_template, {'template': 'dashboard_offline.html'}), 
-    #(r'^coco/', redirect_url),
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^coco/login/', login),
     (r'^coco/logout/', logout),
+    (r'^coco/', redirect_url),
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^api/', include('dashboard.urls')),
-    (r'^tastypie/post/?$',tastypie_post),
+    #(r'^tastypie/post/?$',tastypie_post),
     (r'^feeds/persons/$', feed_person_html_on_person_group),
     (r'^feeds/persons/modified/$', feed_person_html_on_person_group_modified),
     (r'^feeds/person_pract/$',feed_person_prac_pg_anim),
@@ -274,9 +274,13 @@ urlpatterns = patterns('',
     (r'^path/update/?$',update),
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^get_log/?$',send_updated_log),
+    
      
 )
 
 # Static files serving locally
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += patterns('',
+        url(r'^debug/', debug),
+    )

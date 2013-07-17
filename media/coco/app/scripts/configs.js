@@ -471,6 +471,71 @@ function() {
         'entity_name': 'screening',
         download_chunk_size: 1000,
         'unique_togther_fields': ['date', 'start_time', 'end_time', 'village.id', 'animator.id'],
+        afterSave: function(off_json, Offline){
+            var dfd = new $.Deferred();
+            var videos_shown = off_json.videoes_screened;
+            console.log("recvd off_json in afterSave - "+JSON.stringify(off_json));
+            update_attendees()
+                .done(function(){
+                    dfd.resolve();
+                })
+                .fail(function(){
+                    dfd.reject();
+                });
+            return dfd.promise();
+            
+            function update_attendees(){
+                var update_dfd = new $.Deferred();
+                
+                var all_update_dfds = [];
+                $.each(off_json.farmers_attendance, function(index, per){
+                    all_update_dfds.push(update_attendee(per));    
+                });
+                
+                $.when.apply($,all_update_dfds)
+                    .done(function(){
+                        update_dfd.resolve();
+                    })
+                    .fail(function(){
+                        update_dfd.reject();
+                    });
+                return update_dfd;    
+            }
+            
+            function update_attendee(per){
+                var p_dfd = new $.Deferred();
+                Offline.fetch_object("person", "id", parseInt(per.person_id))
+                    .done(function(p_model){
+                        console.log("old p -"+JSON.stringify(p_model));
+                        var videos_seen = p_model.get("videos_seen");
+                        if(videos_seen)
+                        {
+                            var videos_seen_ids = _.pluck(videos_seen, 'id');
+                            $.each(videos_shown, function(index, vid){
+                                if($.inArray(vid.id, videos_seen_ids)==-1)
+                                    videos_seen.push(vid);
+                            });
+                        }
+                        else
+                            videos_seen = videos_shown;
+                        p_model.set("videos_seen", videos_seen);
+                        Offline.save(p_model, "person", p_model.toJSON())
+                            .done(function(p_model){
+                                console.log("new p -"+JSON.stringify(p_model));
+                                p_dfd.resolve();
+                            })
+                            .fail(function(error){
+                                console.log("error updating person in after save - "+error);
+                                p_dfd.reject(error);
+                            });
+                    })
+                    .fail(function(error){
+                        console.log("error fetching person in after save - "+error);
+                        p_dfd.reject(error);
+                    });
+                return p_dfd;    
+            };
+        },
         'foreign_entities': {
             'village': {
                 'village': {

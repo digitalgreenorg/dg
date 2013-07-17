@@ -312,7 +312,7 @@ class VillageResource(ModelResource):
         resource_name = 'village'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('id__in')
-        max_limit = None
+        always_return_data = True
 
 class DistrictResource(ModelResource):
     class Meta:

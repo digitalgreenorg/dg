@@ -51,7 +51,7 @@ define([
         /*
         Called when form view sends save_clicked event. 
         Identifies type of final_json and saves it
-        After Save is finished calls an after_save function
+        After Save is finished calls an after_form_save function
         */
         //form.inline, bulk, final_json, foreign_fields, entity_name, 
         on_save: function(e) {
@@ -80,7 +80,7 @@ define([
                 if(this.form.inline)
                 {
                     console.log("FORMCONTROLLER: separating inlines from final json");
-                    this.inline_models = $.extend(null,this.form.final_json.inlines);
+                    this.inline_models = this.form.final_json.inlines;
                     delete this.form.final_json.inlines;
                     var inlines_dfd = new $.Deferred();
                     save_complete_dfds.push(inlines_dfd);
@@ -90,9 +90,9 @@ define([
                     .done(function(off_json){
                         if(that.form.inline)
                             that.save_inlines(that.inline_models, off_json, that.form.inline)
-                                .done(function(){
+                                .done(function(all_inlines){
                                     console.log("ALL INLINED SAVED");
-                                    inlines_dfd.resolve();
+                                    inlines_dfd.resolve(all_inlines);
                                 })
                                 .fail(function(){
                                     console.log("FAILED AT INLINES SAVE");
@@ -110,7 +110,7 @@ define([
             $.when.apply(null, save_complete_dfds)
                 .done(function(){
                     console.log("Everything saved");
-                    that.after_save(that.form.entity_name);
+                    that.after_form_save(that.form.entity_name);
                 })
                 .fail(function(){
                     if(that.form.bulk)
@@ -147,29 +147,35 @@ define([
         save_inlines: function(inlines, parent_off_json, inline_config){
             var dfd = new $.Deferred();
             var that = this;
-            console.log("Gotta save inlines now - ");
-            console.log(JSON.stringify(inlines));
-            console.log(JSON.stringify(parent_off_json));
             this.complete_inlines(inlines, parent_off_json, inline_config); 
-            var inline_dfds = [];
-            _.each(inlines, function(inl, index){
+            iterate_inlines();
+            return dfd;
+            
+            function iterate_inlines(){
+                if(!inlines.length)
+                    return dfd.resolve();
+                save_inline(inlines.shift())    
+                    .done(function(){
+                        iterate_inlines();
+                    })
+                    .fail(function(){
+                        dfd.reject();
+                    });
+            };
+            function save_inline(inl){
+                var inl_dfd = $.Deferred();
                 var inl_index = inl.index;
                 delete inl.index;
-                var inl_save_dfd = this.save_object(inl, inline_config.foreign_entities, inline_config.entity); 
-                inl_save_dfd
+                that.save_object(inl, inline_config.foreign_entities, inline_config.entity)
                     .fail(function(error){
                         that.form.show_errors(that.convert_to_row_error(error, inline_config.entity, inl_index));
+                        return inl_dfd.reject();
+                    })
+                    .done(function(){
+                       return inl_dfd.resolve(); 
                     });
-                inline_dfds.push(inl_save_dfd);           
-            }, this);
-            $.when.apply($, inline_dfds)
-                .done(function(){
-                    dfd.resolve();
-                })
-                .fail(function(){
-                    dfd.reject();
-                })
-            return dfd;
+                return inl_dfd.promise();
+            };
         },
         
         //put in the borrowed attributes and the joining attribute in inlines
@@ -203,8 +209,14 @@ define([
                     .done(function(on_off_jsons){
                         that.save_when_online(entity_name, on_off_jsons)
                             .done(function(off_json){
-                                show_suc_notif();
-                                dfd.resolve(off_json);
+                                call_after_save(off_json)
+                                    .done(function(){
+                                        show_suc_notif();
+                                        dfd.resolve(off_json);
+                                    })
+                                    .fail(function(error){
+                                        alert("afterSave failed for entity - "+entity_name+" - "+error);
+                                    });
                             })
                             .fail(function(error){
                                 show_err_notif();
@@ -221,14 +233,35 @@ define([
                 //Offline mode
                 this.save_when_offline(entity_name, json)
                     .done(function(off_json){
-                        show_suc_notif();
-                        return dfd.resolve(off_json);
+                        call_after_save(off_json)
+                            .done(function(){
+                                show_suc_notif();
+                                dfd.resolve(off_json);
+                            })
+                            .fail(function(error){
+                                alert("afterSave failed for entity - "+entity_name+" - "+error);
+                            });
                     })
                     .fail(function(error){
                         show_err_notif();
                         return dfd.reject(error);
                     });
             }
+            
+            function call_after_save(saved_off_json){
+                var dfd = new $.Deferred();
+                var afterSave = configs[entity_name].afterSave;
+                if(afterSave)
+                    afterSave(saved_off_json, Offline)
+                        .done(function(){
+                            dfd.resolve();
+                        })
+                        .fail(function(error){
+                            dfd.reject(error);
+                        });
+                else dfd.resolve();    
+                return dfd.promise();    
+            };
             
             function show_suc_notif(){
                 notifs_view.add_alert({
@@ -330,7 +363,7 @@ define([
             console.log("FORMCONTROLLER: Button 2 clicked on form");
         },
         
-        after_save: function(entity_name){
+        after_form_save: function(entity_name){
             window.Router.navigate(entity_name+'/add');
             window.Router.add(entity_name); //since may be already on the add page, therefore have to call this explicitly
         }

@@ -232,7 +232,7 @@ public class PersonsData extends BaseData {
 			String villageLabel = "Village";
 			
 			StringValidator personName = new StringValidator(personNameLabel ,this.person_name, false, false, 0, 100, true);
-			StringValidator fatherName = new StringValidator(fatherNameLabel,this.father_name, true, false, 0, 100, true);
+			StringValidator fatherName = new StringValidator(fatherNameLabel,this.father_name, false, false, 0, 100, true);
 			IntegerValidator age = new IntegerValidator(ageLabel, this.age, true, false, 0, 100);
 			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
 			StringValidator phoneNo = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
@@ -248,9 +248,9 @@ public class PersonsData extends BaseData {
 			father_name.add("father_name");
 			father_name.add(this.father_name);
 			
-			ArrayList group_id = new ArrayList();
-			group_id.add("group_id");
-			group_id.add(this.group.getId());
+//			ArrayList group_id = new ArrayList();
+//			group_id.add("group_id");
+//			group_id.add(this.group.getId());
 			
 			ArrayList village_id = new ArrayList();
 			village_id.add("village_id");
@@ -259,13 +259,13 @@ public class PersonsData extends BaseData {
 			ArrayList uniqueTogether = new ArrayList();
 			uniqueTogether.add(person_name);
 			uniqueTogether.add(father_name);
-			uniqueTogether.add(group_id);
+			//uniqueTogether.add(group_id);
 			uniqueTogether.add(village_id);
 			
 			ArrayList uniqueValidatorLabels = new ArrayList();
 			uniqueValidatorLabels.add("Person Name");
 			uniqueValidatorLabels.add("Father Name");
-			uniqueValidatorLabels.add("Group");
+			//uniqueValidatorLabels.add("Group");
 			uniqueValidatorLabels.add("Village");
 			
 			UniqueConstraintValidator uniquePersonFatherGroupVillage = new UniqueConstraintValidator(uniqueValidatorLabels,
@@ -296,7 +296,7 @@ public class PersonsData extends BaseData {
 			String villageLabel = "Village";
 			
 			StringValidator personName = new StringValidator(personNameLabel, this.person_name, false, false, 0, 100, true);
-			StringValidator fatherName = new StringValidator(fatherNameLabel, this.father_name, true, false, 0, 100, true);
+			StringValidator fatherName = new StringValidator(fatherNameLabel, this.father_name, false, false, 0, 100, true);
 			IntegerValidator age = new IntegerValidator(ageLabel, this.age, true, false, 0, 100);
 			StringValidator gender = new StringValidator(genderLabel, this.gender, false, false, 0, 10);
 			StringValidator phoneNo = new StringValidator(phoneNoLabel, this.phone_no, true, false, 0, 100, true);
