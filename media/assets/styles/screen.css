@@ -1564,7 +1564,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     color: #afafaf;
     color: rgba(0, 0, 0, .4);
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
-    background: url(../images/icon-sprite.png) no-repeat -90px -367px;
+    /* background: url(../images/icon-sprite.png) no-repeat -90px -367px; */
     padding-left: 12px;
     margin-right: 3px;
 }
