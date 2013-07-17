@@ -1,16 +1,16 @@
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from dashboard.data_log import send_updated_log
+from dashboard.views import *
 from farmerbook import farmer_book_views
-from static_site_views import home
-from views import *
 from output.views import overview_analytics, screening_analytics, video_analytics, adoption_analytics, targets
 from output.views.common import drop_down_val, overview_line_graph, practice_change
-from static_site_views import *
 from path.views import page, update
+from static_site_views import *
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from dashboard.data_log import send_updated_log
 admin.autodiscover()
 
 urlpatterns = patterns('',
