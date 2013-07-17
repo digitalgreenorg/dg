@@ -1,4 +1,4 @@
-import json as cjson
+import cjson
 import datetime
 import operator
 import re
@@ -17,6 +17,7 @@ from django.shortcuts import *
 from django.template import Context, Template
 from django.template.loader import get_template
 from django.utils.encoding import smart_str
+from django.views.decorators.csrf import csrf_exempt
 
 from dashboard.models import *
 from output.database.utility import run_query, run_query_dict
@@ -77,6 +78,41 @@ def test(request, village_id):
     json_subcat = serializers.serialize("json", animators)
     return HttpResponse("callback0(" + json_subcat + ");", mimetype="application/javascript")
 
+def html_decorator(func):
+    """
+    This decorator wraps the output in html.
+    (From http://stackoverflow.com/a/14647943)
+    """
+ 
+    def _decorated(*args, **kwargs):
+        response = func(*args, **kwargs)
+ 
+        wrapped = ("<html><body>",
+                   response.content,
+                   "</body></html>")
+ 
+        return HttpResponse(wrapped)
+ 
+    return _decorated
+ 
+ 
+@html_decorator
+def debug(request):
+    """
+    Debug endpoint that uses the html_decorator,
+    """
+    path = request.META.get("PATH_INFO")
+    api_url = path.replace("debug/", "")
+ 
+    view = urlresolvers.resolve(api_url)
+ 
+    accept = request.META.get("HTTP_ACCEPT")
+    accept += ",application/json"
+    request.META["HTTP_ACCEPT"] = accept
+ 
+    res = view.func(request, **view.kwargs)
+    return HttpResponse(res._container)
+ 
 def test_gwt(request, region_id):
     if request.method == 'POST':
         form = RegionTestForm(request.POST)
@@ -218,6 +254,7 @@ def feeds_persons_village(request, village_id):
 def redirect_url(request):
     return HttpResponseRedirect('/coco/home.html')
 
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '')
@@ -236,6 +273,7 @@ def login_view(request):
     else:
         return HttpResponse("error")
 
+@csrf_exempt
 def get_key_for_user(request):
     if request.method == 'POST':
         offline_pk_id = OfflineUser.objects.get_offline_pk(request.POST['username'], True)    
@@ -249,6 +287,7 @@ def get_key_for_user(request):
     else:
         return HttpResponse("error")
 
+@csrf_exempt
 def set_key_for_user(request):
     if request.method =='POST':
         new_offline_id = request.POST.get('id', '0')
@@ -257,7 +296,7 @@ def set_key_for_user(request):
             return HttpResponse("synced")
         else:
             return HttpResponse("0")
-
+@csrf_exempt
 def get_user_villages(request):
     user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
     villages = Village.objects.none()
@@ -288,8 +327,6 @@ def get_user_blocks(request):
             blocks = blocks | Block.objects.filter(district = user_permission.district_operated)
     return blocks
 
-
-
 def get_user_districts(request):
     user_permissions = UserPermission.objects.filter(username = request.session.get('user_id'))
     districts = District.objects.none()
@@ -315,6 +352,7 @@ def get_user_states(request):
             states = State.objects.filter(district__district_name = user_permission.district_operated)
     return states
 
+@csrf_exempt
 def save_country_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -337,7 +375,7 @@ def save_country_online(request,id):
         uni_form = [unicode(item) for item in form]
         return HttpResponse(uni_form)
         #return HttpResponse(form)
-
+@csrf_exempt
 def get_countries_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('country')
@@ -352,7 +390,7 @@ def get_countries_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
-
+@csrf_exempt
 def save_country_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -373,6 +411,7 @@ def save_country_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_region_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -396,6 +435,7 @@ def save_region_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_regions_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('region')
@@ -410,7 +450,7 @@ def get_regions_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
-
+@csrf_exempt
 def save_region_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -432,6 +472,7 @@ def save_region_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_state_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -455,6 +496,7 @@ def save_state_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_states_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('states')
@@ -469,6 +511,7 @@ def get_states_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_state_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -491,6 +534,7 @@ def save_state_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_fieldofficer_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -515,6 +559,7 @@ def save_fieldofficer_online(request,id):
         #return HttpResponse(form)
 
 
+@csrf_exempt
 def get_fieldofficers_online(request, offset, limit ):
     if request.method == 'POST':
         return redirect('fieldofficer')
@@ -529,6 +574,7 @@ def get_fieldofficers_online(request, offset, limit ):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_fieldofficer_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -551,6 +597,7 @@ def save_fieldofficer_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_practice_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -574,6 +621,7 @@ def save_practice_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_practices_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('practice')
@@ -593,6 +641,7 @@ def get_practices_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_practice_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -614,6 +663,7 @@ def save_practice_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def get_practices_seen_for_person(request, person_id):
     practices = Person.objects.get(pk=person_id).screening_set.values_list('videoes_screened__related_practice',
                                                                     'videoes_screened__related_practice__practice_sector__name').distinct()                                                    
@@ -626,6 +676,7 @@ def get_practices_seen_for_person(request, person_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_language_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -649,6 +700,7 @@ def save_language_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_languages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('language')
@@ -663,6 +715,7 @@ def get_languages_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_language_offline(request,id):
     if request.method == 'POST':
         if(not id):
@@ -684,6 +737,7 @@ def save_language_offline(request,id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_partner_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -707,6 +761,7 @@ def save_partner_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_partners_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('partner')
@@ -721,6 +776,7 @@ def get_partners_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_partner_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -742,6 +798,7 @@ def save_partner_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_video_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -771,6 +828,7 @@ def save_video_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_videos_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('video')
@@ -806,6 +864,7 @@ def get_videos_seen_for_person(request, person_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_video_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -828,6 +887,7 @@ def save_video_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_personshowninvideo_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -854,6 +914,7 @@ def save_personshowninvideo_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_personshowninvideo_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('personshowninvideo')
@@ -867,6 +928,7 @@ def get_personshowninvideo_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_personshowninvideo_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -889,6 +951,7 @@ def save_personshowninvideo_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_district_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -912,6 +975,7 @@ def save_district_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_districts_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('districts')
@@ -927,6 +991,7 @@ def get_districts_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_district_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -949,6 +1014,7 @@ def save_district_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_block_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -974,6 +1040,7 @@ def save_block_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_blocks_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('blocks')
@@ -995,7 +1062,8 @@ def get_blocks_online(request, offset, limit):
         response = HttpResponse(json_subcat, mimetype="application/javascript")
         response['X-COUNT'] = count
         return response
-    
+
+@csrf_exempt    
 def get_blocks_for_district_online(request, district_id):
     blocks = Block.objects.filter(district__id = district_id).values_list('id', 'block_name').order_by("block_name")
                                                     
@@ -1008,6 +1076,7 @@ def get_blocks_for_district_online(request, district_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_block_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1030,6 +1099,7 @@ def save_block_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_developmentmanager_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -1053,6 +1123,7 @@ def save_developmentmanager_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_developmentmanagers_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('developmentmanagers')
@@ -1067,6 +1138,7 @@ def get_developmentmanagers_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_developmentmanager_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1089,6 +1161,7 @@ def save_developmentmanager_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_equipment_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -1116,6 +1189,7 @@ def save_equipment_online(request,id):
         #return HttpResponse(form)
 
 
+@csrf_exempt
 def get_equipments_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('equipments')
@@ -1140,6 +1214,7 @@ def get_equipments_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_equipment_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1161,6 +1236,7 @@ def save_equipment_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_village_online(request, id):
     PersonGroupInlineFormSet = inlineformset_factory(Village, PersonGroups,extra=5)
     AnimatorInlineFormSet = inlineformset_factory(Village, Animator, exclude=('assigned_villages',), extra=5)
@@ -1208,6 +1284,7 @@ def save_village_online(request, id):
         form_list = list(form)
         return HttpResponse(form.as_table() + formset_person_group.as_table() + formset_animator.as_table())
 
+@csrf_exempt
 def get_villages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('villages')
@@ -1231,6 +1308,7 @@ def get_villages_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def get_villages_for_blocks_online(request, block_id):
     villages = Village.objects.filter(block__id = block_id).values_list('id', 'village_name').order_by('village_name')
                                                     
@@ -1243,6 +1321,7 @@ def get_villages_for_blocks_online(request, block_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_village_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1264,6 +1343,7 @@ def save_village_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_animator_online(request, id):
     AnimatorAssignedVillageInlineFormSet = inlineformset_factory(Animator, AnimatorAssignedVillage, extra=3)
     if request.method == "POST":
@@ -1304,6 +1384,7 @@ def save_animator_online(request, id):
             f.fields['village'].queryset = villages.order_by('village_name')
         return HttpResponse(form.as_table() + formset.as_table())
 
+@csrf_exempt
 def get_animators_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('animators')
@@ -1328,6 +1409,7 @@ def get_animators_online(request, offset, limit):
         return response
 
 
+@csrf_exempt
 def save_animator_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1349,6 +1431,7 @@ def save_animator_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_animatorassignedvillage_online(request,id):
     if request.method == 'POST':
         if id:
@@ -1375,6 +1458,7 @@ def save_animatorassignedvillage_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_animatorassignedvillages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('animatorassignedvillages')
@@ -1399,7 +1483,7 @@ def get_animatorassignedvillages_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
-
+@csrf_exempt
 def save_animatorassignedvillage_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1419,6 +1503,7 @@ def save_animatorassignedvillage_offline(request, id):
                 return HttpResponse("1")
             return HttpResponse("0")
 
+@csrf_exempt
 def save_persongroup_online(request,id):
     PersonFormSet = inlineformset_factory(PersonGroups, Person,exclude=('relations',), extra=30)
     if request.method == 'POST':
@@ -1456,6 +1541,7 @@ def save_persongroup_online(request,id):
             f.fields['village'].queryset = villages.order_by('village_name')
         return HttpResponse(form.as_table() + formset.as_table())
 
+@csrf_exempt
 def get_persongroups_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('persongroups')
@@ -1478,6 +1564,7 @@ def get_persongroups_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def get_persongroups_for_village_online(request, village_id):
     person_groups = PersonGroups.objects.filter(village__id = village_id).values_list('id', 'group_name').order_by('group_name')
                                                     
@@ -1490,6 +1577,7 @@ def get_persongroups_for_village_online(request, village_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_persongroup_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1511,6 +1599,7 @@ def save_persongroup_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_person_online(request, id):
     if request.method == 'POST':
         if(id):
@@ -1535,6 +1624,7 @@ def save_person_online(request, id):
         form.fields['group'].queryset = PersonGroups.objects.filter(village__in = villages).distinct().order_by('group_name')
         return HttpResponse(form.as_table())
 
+@csrf_exempt
 def get_persons_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('persons')
@@ -1560,6 +1650,7 @@ def get_persons_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def get_person_for_village_and_no_person_group_online(request, village_id):
     persons = Person.objects.filter(village__id = village_id, group=None).values_list('id', 'person_name', 'father_name').order_by("person_name")
     html_template = """
@@ -1571,6 +1662,7 @@ def get_person_for_village_and_no_person_group_online(request, village_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def get_person_for_person_group_online(request, group_id):
     persons = Person.objects.filter(group__id=group_id).values_list('id', 'person_name', 'father_name').order_by("person_name")
     html_template = """
@@ -1582,6 +1674,7 @@ def get_person_for_person_group_online(request, group_id):
     
     return HttpResponse(html)
 
+@csrf_exempt
 def save_person_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1603,6 +1696,7 @@ def save_person_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_personadoptpractice_online(request,id):
     if request.method == 'POST':
         if id:
@@ -1639,6 +1733,7 @@ def save_personadoptpractice_online(request,id):
             t = Template(template);
             return HttpResponse(t.render(Context(dict(districts=districts))))
 
+@csrf_exempt
 def get_personadoptpractices_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('personadoptpractices')
@@ -1670,6 +1765,7 @@ def get_personadoptpractices_online(request, offset, limit):
         return response
 
 
+@csrf_exempt
 def save_personadoptpractice_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1690,6 +1786,7 @@ def save_personadoptpractice_offline(request, id):
             return HttpResponse("0")
 
 
+@csrf_exempt
 def save_screening_online(request,id):
     results = {}
     PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, extra=1)
@@ -1746,6 +1843,7 @@ def save_screening_online(request,id):
         return HttpResponse(cjson.encode(results), status=201)
     return HttpResponse(cjson.encode(results))
 
+@csrf_exempt
 def get_attendance(request, id):
 	PersonMeetingAttendanceInlineFormSet = inlineformset_factory(Screening, PersonMeetingAttendance, form=PersonMeetingAttendanceForm, extra=0)
 	screening = Screening.objects.get(id = id)
@@ -1756,6 +1854,7 @@ def get_attendance(request, id):
 		form_person_meeting_attendance.fields['person'].queryset = personInMeeting
 	return render_to_response('feeds/attendance.html',{'formset':formset})
 
+@csrf_exempt
 def get_screenings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('screenings')
@@ -1780,6 +1879,7 @@ def get_screenings_online(request, offset, limit):
     response['X-COUNT'] = count
     return response
 
+@csrf_exempt
 def save_screening_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1803,6 +1903,7 @@ def save_screening_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def get_groupstargetedinscreening_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('groupstargetedinscreening')
@@ -1816,6 +1917,7 @@ def get_groupstargetedinscreening_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_groupstargetedinscreening_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1838,6 +1940,7 @@ def save_groupstargetedinscreening_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_videosscreenedinscreening_online(request):
     if request.method == 'POST':
         form = VideosScreenedInScreeningForm(request.POST)
@@ -1857,6 +1960,7 @@ def save_videosscreenedinscreening_online(request):
         #return HttpResponse(form)
 
 
+@csrf_exempt
 def get_videosscreenedinscreening_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('videosscreenedinscreening')
@@ -1870,6 +1974,7 @@ def get_videosscreenedinscreening_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_videosscreenedinscreening_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1892,6 +1997,7 @@ def save_videosscreenedinscreening_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_training_online(request,id):
     if request.method == 'POST':
         if(id):
@@ -1918,6 +2024,7 @@ def save_training_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_trainings_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('training')
@@ -1933,6 +2040,7 @@ def get_trainings_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_training_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -1956,6 +2064,7 @@ def save_training_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_traininganimatorstrained_online(request):
     if request.method == 'POST':
         form = TrainingAnimatorsTrainedForm(request.POST)
@@ -1974,6 +2083,7 @@ def save_traininganimatorstrained_online(request):
         #return HttpResponse(form)
 
 
+@csrf_exempt
 def get_traininganimatorstrained_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('TrainingAnimatorsTrained')
@@ -1987,6 +2097,7 @@ def get_traininganimatorstrained_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_traininganimatorstrained_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2009,6 +2120,7 @@ def save_traininganimatorstrained_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_monthlycostpervillage_online(request):
     if request.method == 'POST':
         form = MonthlyCostPerVillageForm(request.POST)
@@ -2026,6 +2138,7 @@ def save_monthlycostpervillage_online(request):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_monthlycostpervillages_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('monthlycostpervillage')
@@ -2038,6 +2151,7 @@ def get_monthlycostpervillages_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_monthlycostpervillage_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2058,8 +2172,7 @@ def save_monthlycostpervillage_offline(request, id):
             else:
                 return HttpResponse("0")
 
-
-
+@csrf_exempt
 def save_personrelation_online(request):
     if request.method == 'POST':
         form = PersonRelationsForm(request.POST)
@@ -2078,7 +2191,7 @@ def save_personrelation_online(request):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
-
+@csrf_exempt
 def get_personrelations_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('personrelations')
@@ -2092,6 +2205,7 @@ def get_personrelations_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_personrelation_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2113,6 +2227,7 @@ def save_personrelation_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_animatorsalarypermonth_online(request):
     if request.method == 'POST':
         form = AnimatorSalaryPerMonthForm(request.POST)
@@ -2131,6 +2246,7 @@ def save_animatorsalarypermonth_online(request):
         #return HttpResponse(form)
 
 
+@csrf_exempt
 def get_animatorsalarypermonths_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('animatorsalarypermonths')
@@ -2144,6 +2260,7 @@ def get_animatorsalarypermonths_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_animatorsalarypermonth_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2164,6 +2281,7 @@ def save_animatorsalarypermonth_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def get_personmeetingattendances_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('personmeetingattendances')
@@ -2177,6 +2295,7 @@ def get_personmeetingattendances_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_personmeetingattendance_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2198,6 +2317,7 @@ def save_personmeetingattendance_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_equipmentholder_online(request):
     if request.method == 'POST':
         form = EquipmentHolderForm(request.POST)
@@ -2213,6 +2333,7 @@ def save_equipmentholder_online(request):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_equipmentholders_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('equipmentholders')
@@ -2224,6 +2345,7 @@ def get_equipmentholders_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_equipmentholder_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2246,6 +2368,7 @@ def save_equipmentholder_offline(request, id):
                 return HttpResponse("0")
 
 
+@csrf_exempt
 def save_reviewer_online(request):
     if request.method == 'POST':
         form = ReviewerForm(request.POST)
@@ -2261,6 +2384,7 @@ def save_reviewer_online(request):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_reviewers_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('reviewers')
@@ -2272,6 +2396,7 @@ def get_reviewers_online(request, offset, limit):
             json_subcat = 'EOF'
         return HttpResponse(json_subcat, mimetype="application/javascript")
 
+@csrf_exempt
 def save_reviewer_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2292,6 +2417,7 @@ def save_reviewer_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def save_target_online(request,id):
     if request.method == 'POST':
         obj = QueryDict.__copy__(request.POST)
@@ -2324,6 +2450,7 @@ def save_target_online(request,id):
         return HttpResponse(uni_form)
         #return HttpResponse(form)
 
+@csrf_exempt
 def get_targets_online(request, offset, limit):
     if request.method == 'POST':
         return redirect('target')
@@ -2339,6 +2466,7 @@ def get_targets_online(request, offset, limit):
         response['X-COUNT'] = count
         return response
 
+@csrf_exempt
 def save_target_offline(request, id):
     if request.method == 'POST':
         if(not id):
@@ -2361,6 +2489,7 @@ def save_target_offline(request, id):
             else:
                 return HttpResponse("0")
 
+@csrf_exempt
 def get_dashboard_errors_online(request, offset, limit):
     districts = get_user_districts(request)
     all_errors = Error.objects.filter(district__in =  districts).order_by('notanerror','rule')
@@ -2375,6 +2504,7 @@ def get_dashboard_errors_online(request, offset, limit):
     response['X-COUNT'] = count
     return response
 
+@csrf_exempt
 def mark_error_as_not_error(request, offset, limit):
     if request.method == "POST":
         errorids = request.POST.getlist('errorid')
@@ -2391,6 +2521,7 @@ def mark_error_as_not_error(request, offset, limit):
         
         return HttpResponse();
 
+@csrf_exempt
 def index_template_data(request):
     return_val = {}
     
@@ -2401,6 +2532,7 @@ def index_template_data(request):
     
     return HttpResponse(cjson.encode(return_val))
 
+@csrf_exempt
 def persons_in_screening(request, screening_id):
     # test url http://127.0.0.1:8000/dashboard/personsinscreening/6000001033/
     person_ids = []
@@ -2413,6 +2545,7 @@ def persons_in_screening(request, screening_id):
             print "No screening id."
     return HttpResponse(cjson.encode(list(person_list)), mimetype='application/json')
 
+@csrf_exempt
 def farmers_in_groups(request):
     # test url http://127.0.0.1:8000/dashboard/personsingroup/?groups=5000001001
     if request.method == "GET":
@@ -2428,6 +2561,7 @@ def farmers_in_groups(request):
         #person_ids = list(set(person_ids))
         return HttpResponse(cjson.encode(person_ids), mimetype='application/json')
 
+@csrf_exempt
 def screenings_in_village(request, village_id):
     # test url - 127.0.0.1:8000/dashboard/screeningsinvillage/6000009723/
     data = {}
