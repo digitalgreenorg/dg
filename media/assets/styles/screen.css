@@ -775,7 +775,9 @@ a {
 .copy-margin {
     margin-bottom: 28px;
 }
-
+.copy-para {
+	margin-bottom: 14px;
+}
 .link-list > li a {
     font-weight: bold;
     background: url(../images/list-bg.png) no-repeat 0 2px;
