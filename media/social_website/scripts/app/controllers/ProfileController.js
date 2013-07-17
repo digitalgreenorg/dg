@@ -37,8 +37,8 @@ define(function(require) {
             var $profileWrapper = jQuery('.js-profile-wrapper');
             references.profileCollectionsViewController = new ProfileCollectionsViewController($profileWrapper);
 
-            // TODO var $activitiesContainer = jQuery('.js-activities-container');
-            // TODO references.activitiesViewController = new ActivitiesViewController($activitiesContainer);
+            var $activitiesContainer = jQuery('.js-activities-container');
+            references.activitiesViewController = new ActivitiesViewController($activitiesContainer);
             
             var $partnerFarmersCarouselContainer = jQuery(".js-partner-farmers-carousel-container");
             references.partnerFarmersViewController = new PartnerFarmersViewController($partnerFarmersCarouselContainer);
