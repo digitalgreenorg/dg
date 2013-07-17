@@ -11,7 +11,7 @@ def social_home(request):
     context= {
         'header': {
             'jsController':'Home',
-             'loggedIn':False
+            'loggedIn' : True
              },
         'language':language,
         }
