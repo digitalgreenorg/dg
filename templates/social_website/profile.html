@@ -18,8 +18,8 @@
                                         <h1 class="hdg-b hdg-bold push-top-sm">{{partner.name}}</h1>
                                     </div>
                                 </div>
-                                <h2 class="copy hdg-bold layout-vr-tiny">State, Country</h2>
-                                <h3 class="layout-vr-sm copy">Member since {{partner.joinyear}}</h3>
+                                <h2 class="copy hdg-bold layout-vr-tiny">{{partner.location}}</h2>
+                                <h3 class="layout-vr-sm copy">Member since {{partner.joinDate}}</h3>
                                 <p class="copy">{{partner.description}}</p>
                             </div>
                             <div class="grid-col grid-size1of3">
@@ -37,7 +37,7 @@
                     </div> <!-- End .bd -->
                 </div> <!-- End .media -->
                 <h3 class="hdg-upper hdg-source-semibold hdg-upper hdg-extra-lt hdg-f layout-vr-sm">Farmers</h3>
-                <div class="box-list partner-farmers js-partner-farmers-carousel-container">
+                <div class="box-list partner-farmers js-partner-farmers-carousel-container layout-vr-xlg">
                     <ul class="js-partner-farmers-pages-container" data-partnerID="{{partner.uid}}">
                         <!-- dynamic farmer content here-->
                     </ul>
@@ -47,37 +47,29 @@
             </div> <!-- End .inner-wrapper -->
         </div> <!-- End .wrapper -->
         
-        <div class="gradientBg-profile profile-page sectionBorder-top push-top-lg js-profile-wrapper">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <header class="clearfix layout-vr-lg">
-                        <div class="grid-col">
-                            <h1 class="hdg-a hdg-source-lt">
-                                <span class="js-number-of-collections">
-                                    <!-- Dynamic number of collections content here -->
-                                </span> 
-                                Collections
-                            </h1>
-                        </div>
-                        <div class="grid-rt">
-                            <ul class="filterOptions filterOptions-plain hdg-upper copy clearfix">
-                                <li><a href="#" class="js-collection-type" data-collection-id="recent"><span>Recently Viewed</span></a></li>
-                                <li><a href="#" class="js-collection-type" data-collection-id="completed"><span>Completed Collections</span></a></li>
-                            </ul>
-                        </div>
-                    </header> <!-- End .clearfix -->
-                    <div class="js-collections-container">
-
-                        <!-- Dynamic video collections content here -->
-
+    <section class="gradientBg">
+        <div class="wrapper">
+            <div class="inner-wrapper js-collections-wrapper">
+                <header class="clearfix layout-vr-lg">
+                    <div class="grid-col">
+                        <h1 class="hdg-a hdg-source-lt">Collections</h1>
                     </div>
-                    <div class="centered layout-vr-lg profile-buttons">
-                        <a href="#" class="btn js-show-more">Show More</a>
-                        <a href="#" class="arrow-up js-hide-collections">Remove</a>
+                    <div class="grid-rt">
+                        {% include "includes/partials/mostFilters.html"%}
                     </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </div> <!-- End .homeCollections -->
+                </header> <!-- End .clearfix -->
+                <ul class="blocks blocks-4-up clearfix js-collections-container">
+
+                        <!-- Dynamic Collections Content Here -->
+
+                </ul>
+                <div class="centered layout-vr-lg profile-buttons">
+                       <a href="#" class="btn js-show-more">Show More</a>
+                       <a href="#" class="arrow-up js-hide-collections">Remove</a>
+                </div>
+            </div> <!-- End .inner-wrapper -->
+        </div> <!-- End .wrapper -->
+    </section>
         
         <section class="wrapper layout-vr-lg">
             <div class="activities-wrapper inner-wrapper">
