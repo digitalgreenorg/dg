@@ -1,200 +1,60 @@
 {% include "includes/header.html" %}
         {% include "includes/partials/mainCarousel.html" %}
         
-        <section id="main" role="main" class="about-bg">
+        <section id="main" role="main" class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">About the Model</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">About Us</h2>
                     <div class="media layout-vr-xlg">
+                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">At Digital Green, we are driving change by building on the social networks of the world’s most vulnerable.</h3>
                         <div class="imgExt img-marginLg-lt img-effects">
                             <img src="http://placehold.it/463x283" alt="" />
                         </div>
-                        <div class="bd">
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Digital Green is dedicated to improving the social, economic, and environmental sustainability of 
-                            				small farmer livelihoods.</h3>
-                            <p class="copy">We aim to raise the livelihoods of smallholder farmers across the developing
-                            				world through the targeted production and dissemination of agricultural information via participatory video and 
-                            				mediated instruction through grassroots-level partnerships.
-                            				This work begins by disseminating targeted agricultural information to small and marginal farmers using a cost-realistic
-                            				media exchange that is supported by existing, people-based extension systems and local facilitators.
+                        <div class='bd'>
+                            <p class="copy copy-para">We use an innovative digital platform that brings together technology with global development efforts to enable everyone to live a life of dignity.
                             </p>
-                            <a href="/social/about/model">Learn More ...</a>
-                        </div>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">About Us</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="img img-marginLg-rt img-effects">
-                            <img src="http://placehold.it/463x283" alt="" />
-                        </div>
-                        <div class="bd">
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Browse these links to learn more about the organization.</h3>
+                            <p class="copy copy-para">We began as a research project in Microsoft Research India’s Technology for Emerging Markets team in 2006, and spun off as an independent organization in 2008.
+                            </p>
                             <ul class="link-list">
-                                <li><a href="#keyfacts">Key Facts</a></li>
-                                <li><a href="#values">Our Values</a></li>
-                                <li><a href="#">Our Board</a></li>
-                                <li><a href="#">Meet Our Team</a></li>
-                                <li><a href="#">Digital Green in the Press</a></li>
-                                <li><a href="\social\contact\">Contact Us</a></li>
-                                <li><a href="#">Join Us</a></li>
+                                <li><a href="{% url model %}">About our model</a></li>
+                                <li><a href="#keyfacts">Key facts</a></li>
+                                <li><a href="{% url connect %}">Our partners</a></li>
+                                <li><a href="{% url board %}">Our board</a></li>
+                                <li><a href="{% comment %}{% url team %}{% endcomment %}">Our team</a></li>
+                                <li><a href="{% comment %}{% url press %}{% endcomment %}">Media coverage</a></li>
+                                <li><a href="{% url contact %}">Contact Us</a></li>
+                                <li><a href="{% comment %}{% url careers %}{% endcomment %}">Join Us</a></li>
                             </ul>
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-        
-        <section id="keyfacts" class="about-bg ">
+
+        <section id="keyfacts" class="about-bg">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Key Facts</h2>
-                    <div class="media layout-vr-xlg">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Key Facts</h2>
+                    <div class="layout-vr-xlg">
                         <iframe src="http://www.scribd.com/embeds/79825081/content?start_page=1&view_mode=list&access_key=key-2ar3evhh0h53iyxgz6of" data-auto-height="true" data-aspect-ratio="0.706697459584296" scrolling="no" id="doc_23203" width="944" height="500" frameborder="0" seamless></iframe>
                     </div>
                 </div> <!-- End .inner-wrapper -->
             </div> <!-- End .wrapper -->
         </section>
-        
-        <section id="values" class="about-bg about-bg-white">
+
+        <section class="about-bg about-bg-white">
             <div class="wrapper">
                 <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Values</h2>
-                    <div class="media layout-vr-xlg">
-                    	
-                        <div class="bd">
-                        	<h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Our goals are to extend the Digital Green system for agriculture extension</h3>
-                            <p class="copy copy-margin"> Through research- and community-level partners by bootstrapping on existing institutional capacity
-                            				 and targeting investments in operational tools and processes, monitoring and evaluating progress with
-                            				 feedback and refinement support, providing a platform to share content amongst partners, and enabling
-                            				 partners and farming communities to sustain and expand the program on their own.
-                            </p>				 
-                            
-                            <ul class="v-list-custom">
-                            
-                            	<li>
-                                	Obsession for improving the sustainability of farmer livelihoods: We start with the farmer and work backwards.
-                                </li>
-                                
-                                <li>
-                                	Innovation: If you don't listen to farmers you will fail. But if you only listen to farmers you will also fail. We seek to improve not only the livelihoods of farmers or the efficacy of our partners, but also ourselves.
-            					</li>
-                                
-                                <li>
-                                	Bias for Action: We live in a time of unheralded challenges and insurmountable opportunity, provided we make every minute count.
-                            
-                                </li>
-                                
-                                <li>
-                                	Ownership: Ownership matters when you're building a great organization. Owners think long-term, plead passionately for their ideas, and are empowered to respectfully challenge decisions.
-                                	
-                                </li>
-                                
-                                <li>
-                                	
-                                	High Hiring Bar: When making a hiring decision we ask ourselves: "Will I admire this person? Will I learn from this person? Is this person a superstar?"
-                                	
-                                </li>
-                                
-                                <li>
-                                	
-                                	Frugality: We spend money on things that really matter and believe that frugality breeds resourcefulness, sustainability, and invention!
-                                	
-                                </li>
-                                
-      
-                            </ul>
-                        </div>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Annual Report</h2>
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Annual Reports</h2>
                     <div class="media layout-vr-xlg">
                         <div class="imgExt img-marginLg-lt img-effects">
                             <img src="http://placehold.it/463x283" alt="" />
                         </div>
-                        <div class="bd">
-                            <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Read our annual reports</h3>
+                        <div>
                             <ul class="link-list">
                                 <li><a href="/social/reports/2">Annual Report 2010-2011</a></li>
                                 <li><a href="/social/reports/1">Annual Report 2009-2010</a></li>
                             </ul>
-                            
-                        </div>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        
-        <section class="about-bg">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Our Impact and Partnerships</h2>
-                    <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Lorem ipsum dolor sit amet consectetur volutpat euismod adipiscing elit.</h3>
-                    <p class="copy layout-vr-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat euismod nibh id venenatis. Mauris auctor vehicula tellus at commodo. Vestibulum non odio dui. In eget elit ut eros aliquet eleifend. Nunc porttitor vehicula cursus. Duis tempor erat a risus accumsan eu pellentesque felis mattis. Nullam non ligula dolor, elementum pellentesque dui. Vestibulum scelerisque arcu eu tellus sodales at adipiscing metus dictum. Sed metus neque, dignissim tincidunt lobortis ultrices, semper a purus. Vestibulum bibendum tristique orci eget suscipit. Cras vel nibh in erat pellentesque rutrum vel eu massa. </p>
-                    <ul class="h-list layout-vr-lg">
-                        <li class="img-effects">
-                            <img src="http://placehold.it/220x155" alt="" />
-                        </li>
-                        <li class="img-effects">
-                            <img src="http://placehold.it/220x155" alt="" />
-                        </li>
-                        <li class="img-effects">
-                            <img src="http://placehold.it/220x155" alt="" />
-                        </li>
-                        <li class="img-effects">
-                            <img src="http://placehold.it/220x155" alt="" />
-                        </li>
-                    </ul>
-                    <div class="centered layout-vr-lg">
-                        <a href="#" class="btn">See Our Partners</a>
-                    </div>
-                </div> <!-- End .inner-wrapper -->
-            </div> <!-- End .wrapper -->
-        </section>
-        
-        <section class="about-bg about-bg-white">
-            <div class="wrapper">
-                <div class="inner-wrapper">
-                    <h2 class="hdg-a hdg-source-lt layout-vr-lg">Testimonials</h2>
-                    <div class="media layout-vr-xlg">
-                        <div class="imgExt img-marginLg-lt">
-                            <div class="grid layout-vr-lg">
-                                <div class="grid-col grid-size1of2">
-                                    <div class="grid-margin-rt-md img-effects">
-                                        <img src="http://placehold.it/220x155" alt="" />
-                                    </div>
-                                </div>
-                                <div class="grid-col grid-size1of2 img-effects">
-                                    <img src="http://placehold.it/220x155" alt="" />
-                                </div>
-                            </div>
-                            <div class="grid">
-                                <div class="grid-col grid-size1of2">
-                                    <div class="grid-margin-rt-md img-effects">
-                                        <img src="http://placehold.it/220x155" alt="" />
-                                    </div>
-                                </div>
-                                <div class="grid-col grid-size1of2 img-effects">
-                                    <img src="http://placehold.it/220x155" alt="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bd">
-                            <h3 class="hdg-source-semibold hdg-c layout-vr-sm">Lorem ipsum dolor sit amet consectetur volutpat euismod adipiscing elit.</h3>
-                            <p class="copy-margin">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat euismod nibh id venenatis. Mauris auctor vehicula tellus at commodo. Vestibulum non odio dui. In eget elit ut eros aliquet eleifend. Nunc porttitor vehicula cursus. Duis tempor erat a risus accumsan eu pellentesque felis mattis. </p>
-                            <p>Nullam non ligula dolor, elementum pellentesque dui. Vestibulum scelerisque arcu eu tellus sodales at adipiscing metus dictum. Sed metus neque, dignissim tincidunt lobortis ultrices, semper a purus. Vestibulum bibendum tristique orci eget suscipit. 
                         </div>
                     </div>
                 </div> <!-- End .inner-wrapper -->
