@@ -7,7 +7,6 @@ from django.conf.urls.defaults import *
 from django.contrib import auth
 from django.core import serializers
 from django.core.exceptions import MultipleObjectsReturned, ValidationError
-from django.core.urlresolvers import reverse
 from django.db import connection, transaction
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -78,41 +77,6 @@ def test(request, village_id):
     json_subcat = serializers.serialize("json", animators)
     return HttpResponse("callback0(" + json_subcat + ");", mimetype="application/javascript")
 
-def html_decorator(func):
-    """
-    This decorator wraps the output in html.
-    (From http://stackoverflow.com/a/14647943)
-    """
- 
-    def _decorated(*args, **kwargs):
-        response = func(*args, **kwargs)
- 
-        wrapped = ("<html><body>",
-                   response.content,
-                   "</body></html>")
- 
-        return HttpResponse(wrapped)
- 
-    return _decorated
- 
- 
-@html_decorator
-def debug(request):
-    """
-    Debug endpoint that uses the html_decorator,
-    """
-    path = request.META.get("PATH_INFO")
-    api_url = path.replace("debug/", "")
- 
-    view = urlresolvers.resolve(api_url)
- 
-    accept = request.META.get("HTTP_ACCEPT")
-    accept += ",application/json"
-    request.META["HTTP_ACCEPT"] = accept
- 
-    res = view.func(request, **view.kwargs)
-    return HttpResponse(res._container)
- 
 def test_gwt(request, region_id):
     if request.method == 'POST':
         form = RegionTestForm(request.POST)
