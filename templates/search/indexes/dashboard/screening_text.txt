@@ -1,3 +1,0 @@
-{{ object.location }}
-{{ object.village }}
-{{ object.date }}
