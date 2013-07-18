@@ -259,21 +259,21 @@ public class AnimatorsData extends BaseData {
 			ArrayList unqPartner = new ArrayList();
 			unqPartner.add("partner_id");
 			unqPartner.add(this.partner.getId());
-			ArrayList unqVillage = new ArrayList();
-			unqVillage.add("village_id");
-			unqVillage.add(this.village.getId());
+			//ArrayList unqVillage = new ArrayList();
+			//unqVillage.add("village_id");
+			//unqVillage.add(this.village.getId());
 			
 			ArrayList uniqueTogether = new ArrayList();
 			uniqueTogether.add(unqName);
 			uniqueTogether.add(unqGender);
 			uniqueTogether.add(unqPartner);
-			uniqueTogether.add(unqVillage);
+			//uniqueTogether.add(unqVillage);
 			
 			ArrayList uniqueValidatorLabels = new ArrayList();
 			uniqueValidatorLabels.add("Name");
 			uniqueValidatorLabels.add("Gender");
 			uniqueValidatorLabels.add("Partner");
-			uniqueValidatorLabels.add("Home Village");
+			//uniqueValidatorLabels.add("Home Village");
 			
 			UniqueConstraintValidator uniqueNameGenderPartnerVillage = new UniqueConstraintValidator(uniqueValidatorLabels,
 					uniqueTogether, new AnimatorsData());

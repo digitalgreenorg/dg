@@ -18,7 +18,7 @@ SERIALIZATION_MODULES = {
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = None
+TIME_ZONE = 'UTC'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -29,7 +29,7 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
-
+APPEND_SLASH = True
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = '/var/www/media/uploaded_files/'
@@ -60,8 +60,10 @@ STATICFILES_DIRS = (
 )
 
 MIDDLEWARE_CLASSES = (
+	'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware'
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -77,6 +79,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/output'),
     os.path.join(PROJECT_PATH, 'templates/static_site'),
     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
+    os.path.join(PROJECT_PATH, 'media/coco/app'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -100,5 +103,11 @@ INSTALLED_APPS = (
     'farmerbook',
     'video_practice_map',
     'path',
-    'fbconnect'
+    'fbconnect',
+    'tastypie',
 )
+
+#following line makes sessionid cookie accessible to in-browser javascript
+SESSION_COOKIE_HTTPONLY = False
+
+

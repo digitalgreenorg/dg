@@ -9,7 +9,8 @@ from django.db.models import Min, Count, F
 from django.db.models.signals import m2m_changed, pre_delete, post_delete, pre_save, post_save
 from dashboard.fields import BigAutoField, BigForeignKey, BigManyToManyField, PositiveBigIntegerField 
 from data_log import delete_log, save_log
-import sys, traceback
+
+import sys, traceback, datetime
 
 # Variables
 GENDER_CHOICES = (
@@ -49,7 +50,7 @@ VIDEO_TYPE = (
 STORYBASE = (
         (1,'Agricultural'),
         (2,'Institutional'),
-	(3,'Health'),
+    (3,'Health'),
 )
 
 ACTORS = (
@@ -111,14 +112,13 @@ EQUIPMENT_PURPOSE = (
     
 class ServerLog(models.Model):
     id = BigAutoField(primary_key=True)
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null = True)
     village = models.BigIntegerField(null = True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.BigIntegerField(null = True)
     partner = models.BigIntegerField(null = True)
-    instance_json = models.CharField(max_length=1000, null=True, blank=True)
     
 #    def __unicode__(self):
 #        return self.entry_table
@@ -427,7 +427,7 @@ class Person(CocoModel):
     
     class Meta:
         db_table = u'person'
-        unique_together = ("person_name", "father_name", "group","village")
+        unique_together = ("person_name", "father_name", "village")
         
     # Called on any update/insert/delete of PersonMeetingAttendance/PersonShownInVideo
     @staticmethod
@@ -607,13 +607,14 @@ class Animator(CocoModel):
     phone_no = models.CharField(max_length=100, db_column='PHONE_NO', blank=True)
     address = models.CharField(max_length=500, db_column='ADDRESS', blank=True)
     partner = BigForeignKey(Partners)
-    village = BigForeignKey(Village, db_column = 'home_village_id')
+    village = BigForeignKey(Village, db_column = 'home_village_id', null=True, blank=True)
+    district = BigForeignKey(District, null = True, blank=True)
     assigned_villages = models.ManyToManyField(Village, related_name = 'assigned_villages' ,through='AnimatorAssignedVillage',null=True, blank=True)
     total_adoptions = models.PositiveIntegerField(default=0, blank=True, editable=False) 
     
     class Meta:
         db_table = u'animator'
-        unique_together = ("name", "gender", "partner","village")
+        unique_together = ("name", "gender", "partner","district")
 
     def get_village(self):
         return None
@@ -687,7 +688,7 @@ class Video(CocoModel):
     thematic_quality = models.CharField(max_length=200, db_column='THEMATIC_QUALITY', blank=True)
     video_production_start_date = models.DateField(db_column='VIDEO_PRODUCTION_START_DATE')
     video_production_end_date = models.DateField(db_column='VIDEO_PRODUCTION_END_DATE')
-    storybase = models.IntegerField(max_length=1,choices=STORYBASE, db_column='STORYBASE')
+    storybase = models.IntegerField(max_length=1,choices=STORYBASE, db_column='STORYBASE', null=True, blank=True)
     storyboard_filename = models.FileField(upload_to='storyboard', db_column='STORYBOARD_FILENAME', blank=True)
     raw_filename = models.FileField(upload_to='rawfile', db_column='RAW_FILENAME', blank=True)
     movie_maker_project_filename = models.FileField(upload_to='movie_maker_project_file', db_column='MOVIE_MAKER_PROJECT_FILENAME', blank=True)
@@ -853,7 +854,7 @@ class Screening(CocoModel):
     farmers_attendance = models.ManyToManyField(Person, through='PersonMeetingAttendance', blank='False', null='False')
     class Meta:
         db_table = u'screening'
-        unique_together = ("date", "start_time", "end_time","location","village")
+        unique_together = ("date", "start_time", "end_time","animator","village")
      
     def __unicode__(self):
         return u'%s %s' % (self.date, self.village)
@@ -970,6 +971,10 @@ class CocoUser(models.Model):
     user = models.OneToOneField(User)
     partner = BigForeignKey(Partners)
     villages = BigManyToManyField(Village)
+    
+    def get_villages(self):
+        return self.villages.all()
+
 
 class Rule(CocoModel):
     name = models.CharField(max_length=100);

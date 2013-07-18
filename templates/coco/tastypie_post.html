@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script>
+	
+</head>
+<body>
+	<div class="container">
+    	<h4>Post video json to tastypie</h4>
+    	<div class="btn btn-success" id='video_post'>Post Video json</div>
+    	<h4>Post Mediator json to tastypie</h4>
+    	<div class="btn btn-success" id='mediator_post'>Post Mediator json</div>
+    	<div class="btn btn-warning" id='mediator_edit_post'>Post Mediator Edit Data</div>
+    	<h4>Post Group json to tastypie</h4>
+    	<div class="btn btn-success" id='group_post'>Post Group json</div> 
+    	<div class="btn btn-warning" id='group_edit_post'>Post Group Edit Data</div>
+    	<h4>Post Person json to tastypie</h4>
+    	<div class="btn btn-success" id='person_post'>Post Person json</div>
+    	<h4>Post Screening json to tastypie</h4>
+    	<div class="btn btn-success" id='screening_post'>Post Screening json</div>
+    	<div class="btn btn-warning" id='screening_edit_post'>Post Screening Edit Data</div>
+    	<h4>Post Adoption json to tastypie</h4>
+    	<div class="btn btn-success" id='adoption_post'>Post Adoption json</div>
+    	<div class="btn btn-warning" id='adoption_edit_post'>Post Adoption Edit Data</div>
+    </div>
+    <script type="text/javascript">
+    mediator_json = {
+	    "age": null, 
+	    "assigned_villages": [{"id": 10000000000514, "village_name": "Lagameshwar"}, {"id": 10000000000059, "village_name": "Kumdabadi"}], 
+	    "gender": "M", 
+	    "name": "Mohand Pan 1123 123 123 123 123 123 1", 
+	    "phone_no": "",
+	    //"partner": {"id": 10000000000001, "partner_name": "PRADAN"}
+    };
+    mediator_edit_json = {
+	    "age": null, 
+	    "assigned_villages": [{"id": 10000000000514, "village_name": "Kumdabadi"}, {"id": 10000000000089, "village_name": "Rajam Sahi"}], 
+	    "gender": "M", 
+	    "id": "7000001564", 
+	    "mediator_label": "(Kanthikena,Kumdabadi,Rajam Sahi,)", 
+	    "name": "Jagannath Soren", 
+	    "phone_no": "", 
+	    "resource_uri": "/api/v1/mediator/7000001564/"
+    }
+        
+    /*person_json = {
+    	 "address": "",
+	     "age": null, 
+	     "father_name": "rami dfrtxdc 123 123 123 1", 
+	     "gender": "F", 
+	     "group": {"group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB", "id": 6000010728}, 
+	     "person_name": "Mahadevi L Baddeppanavar 12345 1234 1234", 
+	     "phone_no": null, 
+	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
+     };*/
+     person_json = {
+     	"age":"23",
+     	"father_name":"father 123",
+     	"gender":"F",
+     	"group":{"id":35000011291, "group_name":"Durga Devi B Swa Sahaya Sangha Hirekoppa.B"},
+     	"label":"Krushnavva Dodamani(Hirekoppa.B,)",
+     	"person_name":"Krushnavva Dodamani 12345 ",
+     	"phone_no":"1234568",
+     	"village":{"id":35000011290,"village_name":"Nanda Maal"}
+     }
+     /*person_json = {
+	     "id":6000010751,
+	     "age":null,
+	     "father_name":"father 1",
+	     "gender":"M",
+	     "group":{"id":6000010742,"group_name":"Sri Jai Hanuman Swa Sahaya Sangha Hirekoppa B"},
+	     "label":"Maibub Mulla (Hirekoppa.B,)",
+	     "person_name":"Maibub Mulla ",
+	     "phone_no":null,
+	     "resource_uri":"/api/v1/person/6000010751/",
+	     "videos_seen":"[{'id': 10000000019142L, 'title': u'Stone basen in mango plants '}, {'id': 10000000019143L, 'title': u'Live hedge fencing in WADI'}]",
+	     "village":{"id":32000001327,"village_name":"Nanda Maal"}
+     }*/
+     
+     /*person_json = {"age":24,"father_name":"father","gender":"M",
+     "group":{"id":6000010742,"group_name":"Sri Jai Hanuman Swa Sahaya Sangha Hirekoppa B"},
+     "label":"Maibub Mulla (Hirekoppa.B,)",
+     "person_name":"Maibub Mulla ","phone_no":null,
+     "videos_seen":"[{'id': 10000000019142L, 'title': u'Stone basen in mango plants '}, {'id': 10000000019143L, 'title': u'Live hedge fencing in WADI'}]","village":{"id":32000001327,"village_name":"Nanda Maal"}} 
+     */
+     
+     screening_json = {
+	     "animator": {"id": 10000000019306, "name": "Manjunatha Pattar"}, 
+	     "date": "2011-02-06", 
+	     "end_time": "20:00:00", 
+	     "farmer_groups_targeted": [{"group_name": "Tippu Sultana Swa Sahaya Sangha", "id": 6000001301}], 
+	     "farmers_attendance": [ {"expressed_adoption_video": {"title": "Interculture of Brinjal crop", "id": 15000001001},
+	      "expressed_question": "", "interested": false, "person_id": 27000003093, "person_name": "munesh"},
+	     {"expressed_adoption_video": {"id": null, "title": null}, 
+	     "expressed_question": "",  "interested": false, "person_id": 6000001302, 
+	     "person_name": "Mahammad Hanif Budan Sab Mulla"},
+	      {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "interested": false, "person_id": 6000001303, "person_name": "Raje Sab Budan Sab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "interested": false, "person_id": 6000001304, "person_name": "Shabana Lalasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "interested": false, "person_id": 6000001305, "person_name": "Yashin Suleman Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "",  "interested": false, "person_id": 6000001306, "person_name": "Shahin Rajesab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "interested": true, "person_id": 6000001307, "person_name": "Goribi Allasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "",  "interested": false, "person_id": 6000001308, "person_name": "Vajirabi Budansab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "",  "interested": false, "person_id": 6000001309, "person_name": "Allabi Imamasab Mulla"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "",  "interested": true, "person_id": 6000001310, "person_name": " Lalabi Daval Sab Bannur"}],
+	     "start_time": "19:00:00", 
+	     "videoes_screened": [{"id": 10000000019304, "title": "Benefits of Azola Fodder"}], 
+	     "village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
+     }
+     
+     screening_edit_json = {
+     		"animator": {"id": 6000008358, "name": "Manjunatha Pattar"}, 
+     		"date": "2011-01-26", 
+     		"end_time": "20:00:00", 
+     		"farmer_groups_targeted": [{"group_name": "Gayatri Devi  Swa Sahaya Sangha ", "id": 6000001115}], 
+     		"farmers_attendance": [{"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010781, "interested": false, "person_id": 6000001117, "person_name": "Kalavati Mahadeva Kamabar"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010782, "interested": false, "person_id": 6000001118, "person_name": "Shashikala Ramanna Kambar"}, {"expressed_adoption_video": {"id": null, "title": null}, "expressed_question": "", "id": 6000010783, "interested": true, "person_id": 6000001119, "person_name": "Dyamavva Ramanna Kambar"}], 
+     		"id": "6000010777", 
+     		"resource_uri": "/api/v1/screening/6000010777/", 
+     		"start_time": "19:00:00", 
+     		"videoes_screened": [{"id": 10000000019133, "title": "Green Fodder for Whole Year"}], 
+     		"village": {"id": 6000009723, "village_name": "Hirekoppa.B"}
+	 };
+	 
+	 adoption_edit_json =  {
+		 "date_of_adoption": "2011-10-03", 
+		 "group": "[{'id': 10000000020262L, 'group_name': u'Chamundeswari SWa Sahay Sangha Hirekoppa'}]", 
+		 "id": "10000000208275", 
+		 "person": {"id": 10000000026124, "person_name": "Manjula.N.Ganigera"}, 
+		 "video": {"id": 6000007313, "title": "Vermicompost production in FYM pit"}, 
+		 "village": "[{'id': 10000000000509L, 'village_name': u'Hirekoppa'}]"
+	 }
+	 
+	 adoption_json =  {
+		 "date_of_adoption": "2011-01-03", 
+		 "group": "[{'id': 10000000020262, 'group_name': u'Chamundeswari SWa Sahay Sangha Hirekoppa'}]", 
+		 "person": {"id": 10000000026124, "person_name": "Manjula.N.Ganigera"}, 
+		 "video": {"id": 6000007313, "title": "Vermicompost production in FYM pit"}, 
+		 "village": "[{'id': 10000000000509L, 'village_name': u'Hirekoppa'}]"
+	 }
+	 
+	 video_json = {
+		 "actors": "I", 
+		 "approval_date": null, 
+		 "cameraoperator": {"id": 10000000000330, "name": "Shankar Ganigi"}, 
+		 "facilitator": {"id": 10000000000330, "name": "Panchakshari Pattanshetti"}, 
+		 "farmers_shown": [{"id": 18000000001, "person_name": "Shankarappa Sattigeri"}],
+		 //"farmers_shown": ["/api/v1/person/6000007310/"] ,
+		 "language": {"id": 10000000000127, "language_name": "Kannada"}, 
+		 "summary": "Producing Vermicompost  in farm yard manure pit is easiest way to get.", 
+		 "title": "Vermicompost produc 12 tion in FYM pit 1234 123456 789 123456 1234 1234 1234 1234 1234 1234 1234 1234", 
+		 "video_production_end_date": "2011-01-19", 
+		 "video_production_start_date": "2011-01-14", 
+		 "video_suitable_for": 1, 
+		 "video_type": 2, 
+		 "village": {"id": 10000000000252, "village_name": "Mugalihal"}, 
+		 "youtubeid": "EikW0U9m3w0"
+	 };
+	 
+	 group_json = {
+		 "group_label": "(B R Ambedkar Swa Sahaya Sangha HirekoppaB,Hirekoppa.B)", 
+		 "group_name": "B R Ambedkar Swa Sahaya Sangha HirekoppaB 123 123 123", 
+		 //for sreenu use id 10000000000251 for admin use id 6000009723
+		 "village": {"id": 10000000000251, "village_name": "Hirekoppa.B"}
+	 }
+	 
+	 group_edit_json = {
+	 	"id": "10000000000855",
+		 "group_label": "(FARMER'S CLUB,Dalaiput)", 
+		 "group_name": "FARMER'S CLUB 123",
+		 "village": {"id": 10000000000251, "village_name": "Dalaiput"}
+	 }
+	$(document).ready( function () {
+		$('#screening_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/screening/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(screening_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#screening_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        url: 'http://127.0.0.1:8000/api/v1/screening/6000010777/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(screening_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#person_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/person/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(person_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#group_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/group/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(group_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#group_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        url: 'http://127.0.0.1:8000/api/v1/group/10000000000855/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(group_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});	
+		
+		$('#mediator_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/mediator/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(mediator_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#mediator_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/mediator/7000001564/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(mediator_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#adoption_edit_post').click( function () {
+			$.ajax({
+		        type: "PUT",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/adoption/6000017854/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(adoption_edit_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+		
+		$('#adoption_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        url: 'http://127.0.0.1:8000/api/v1/adoption/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        data: JSON.stringify(adoption_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+	
+		$('#video_post').click( function () {
+			$.ajax({
+		        type: "POST",
+		        //the url where you want to sent the userName and password to
+		        url: 'http://127.0.0.1:8000/api/v1/video/',
+		        contentType:'application/json',
+  				dataType: 'application/json',
+		        async: true,
+		        //json object to sent to the authentication url
+		        data: JSON.stringify(video_json),
+		        success: function () {	
+		        	alert("Thanks!"); 
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+        			alert(xhr.status);
+        			console.log(xhr);
+        			alert(thrownError);
+		        }
+		    });
+		});
+	});
+	</script>
+</body>
+</html>

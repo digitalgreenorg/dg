@@ -94,6 +94,11 @@ class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
         exclude = ('assigned_villages',)
+    
+    def clean_district(self):
+        village = self.cleaned_data['village']
+        district = District.objects.filter(block__village = village)
+        return district[0] if district else ""
 
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
