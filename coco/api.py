@@ -12,7 +12,7 @@ from dashboard.models import Animator, AnimatorAssignedVillage, CocoUser, Distri
 PersonAdoptPractice, PersonGroups, PersonMeetingAttendance, UserPermission, Video, Village, Screening, State
 
 # Will need to changed when the location of forms.py is changed
-from forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
 
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
 class ModelFormValidation(FormValidation):
