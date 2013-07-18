@@ -1,4 +1,4 @@
-from django.conf import settgs
+from django.conf import settings
 from django.views.generic.simple import direct_to_template
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
