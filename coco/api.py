@@ -7,8 +7,11 @@ from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource, NOT_AVAILABLE
 from tastypie.validation import FormValidation
-from dashboard.models import CocoUser, State, District, Block, Village, FieldOfficer,Partners, \
-                AnimatorAssignedVillage, Video, PersonGroups, Screening, Animator, Person, PersonAdoptPractice, UserPermission, Language, PersonMeetingAttendance
+
+from dashboard.models import Animator, AnimatorAssignedVillage, CocoUser, District, Language, Partners, Person, \
+PersonAdoptPractice, PersonGroups, PersonMeetingAttendance, UserPermission, Video, Village, Screening, State
+
+# Will need to changed when the location of forms.py is changed
 from forms import AnimatorForm, PersonAdoptPracticeForm, PersonForm, PersonGroupsForm, ScreeningForm, VideoForm
 
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
@@ -152,7 +155,7 @@ def foreign_key_to_id(bundle, field_name,sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('id'):
-        bundle.data[field_name] = "/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
+        bundle.data[field_name] = "/coco/api/v1/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict.get('id')))
     else:
         bundle.data[field_name] = None
@@ -163,7 +166,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
+            resource_uri_list.append("/coco/api/v1/%s/%s/"%(resource_name, str(item.get('id'))))
         except:
             return bundle
     bundle.data[field_name] = resource_uri_list
@@ -239,7 +242,7 @@ class BaseResource(ModelResource):
 class MediatorResource(BaseResource):
     mediator_label = fields.CharField()
     assigned_villages = fields.ListField()
-    partner = fields.ForeignKey('dashboard.api.PartnersResource', 'partner')
+    partner = fields.ForeignKey('dashboard.api.PartnerResource', 'partner')
     district = fields.ForeignKey('dashboard.api.DistrictResource', 'district', null=True)
     class Meta:
         max_limit = None
@@ -295,7 +298,7 @@ class MediatorResource(BaseResource):
     def hydrate_partner(self, bundle):
         partner_id = get_user_partner_id(bundle.request)
         if partner_id:
-            bundle.data['partner'] ="/api/v1/partner/"+str(partner_id)+"/"
+            bundle.data['partner'] ="/coco/api/v1/partner/"+str(partner_id)+"/"
         return bundle
 
 class VillageResource(ModelResource):
@@ -312,7 +315,7 @@ class VillageResource(ModelResource):
         resource_name = 'village'
         authentication = SessionAuthentication()
         authorization = VillageLevelAuthorization('id__in')
-        max_limit = None
+        always_return_data = True
 
 class DistrictResource(ModelResource):
     class Meta:
@@ -355,7 +358,7 @@ class VideoResource(BaseResource):
     def dehydrate_farmers_shown(self, bundle):
         return [{'id': person.id, 'person_name': person.person_name} for person in bundle.obj.farmers_shown.all() ]
 
-class PersonGroupsResource(BaseResource):
+class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
     class Meta:
@@ -381,7 +384,7 @@ class PersonGroupsResource(BaseResource):
         if village and not hasattr(bundle,'village_flag'):
             try:
                 village_id = village.get('id')
-                bundle.data['village'] = "/api/v1/village/"+str(village_id)+"/"
+                bundle.data['village'] = "/coco/api/v1/village/"+str(village_id)+"/"
                 bundle.village_flag = True
             except:
                 bundle.data['village'] = None
@@ -391,7 +394,7 @@ class ScreeningResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
     videoes_screened = fields.ToManyField('dashboard.api.VideoResource', 'videoes_screened', related_name='screening')
-    farmer_groups_targeted = fields.ToManyField('dashboard.api.PersonGroupsResource', 'farmer_groups_targeted', related_name='screening')
+    farmer_groups_targeted = fields.ToManyField('dashboard.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     dehydrate_animator = partial(foreign_key_to_id, field_name='animator',sub_field_names=['id','name'])
@@ -463,7 +466,7 @@ class ScreeningResource(BaseResource):
 class PersonResource(BaseResource):
     label = fields.CharField()
     village = fields.ForeignKey(VillageResource, 'village')
-    group = fields.ForeignKey(PersonGroupsResource, 'group',null=True)
+    group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     videos_seen = fields.DictField(null=True)
     
     class Meta:
@@ -514,32 +517,8 @@ class PersonAdoptVideoResource(BaseResource):
 
     def dehydrate_village(self, bundle):
         return {'id': bundle.obj.person.village.id, 'village_name': bundle.obj.person.village.village_name}
-    
-class FieldOfficerResource(ModelResource):
-    class Meta:
-        max_limit = None
-        queryset = FieldOfficer.objects.all()
-        resource_name = 'field_officer'
-        authentication = SessionAuthentication()
-        authorization = Authorization()
-      
-# class BlockResource(ModelResource):
-#     district = fields.ForeignKey(DistrictResource, 'district')
-#     class Meta:
-#         queryset = Block.objects.all()
-#         resource_name = 'block'
-#         authentication = SessionAuthentication()
-#         authorization = DjangoAuthorization()
-#         ordering = ["start_date","block_name","district"]
-#         filtering = {
-#         'block_name': ALL,
-#         'district':ALL_WITH_RELATIONS,
-#         'start_date': ALL,
-#         }
-#         always_return_data = True
-#         validation = ModelFormValidation(form_class=BlockForm)
 
-class PartnersResource(ModelResource):    
+class PartnerResource(ModelResource):    
     class Meta:
         max_limit = None
         queryset = Partners.objects.all()
@@ -552,13 +531,5 @@ class LanguageResource(ModelResource):
         max_limit = None
         queryset = Language.objects.all()
         resource_name = 'language'
-        authentication = SessionAuthentication()
-        authorization = Authorization()
-
-class PersonMeetingAttendanceResource(ModelResource):    
-    class Meta:
-        max_limit = None
-        queryset = PersonMeetingAttendance.objects.all()
-        resource_name = 'pma'
         authentication = SessionAuthentication()
         authorization = Authorization()

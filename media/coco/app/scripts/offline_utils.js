@@ -37,7 +37,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
             {
                 off_model = this.create_b_model(entity_name);
             }
-            
+            var that = this;
             this.check_login_wrapper()
                 .done(function(){
                     off_model.save(json,{
@@ -49,8 +49,13 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             console.log(error);
                             //format error object to match the format of error sent by online save
                             var err_json = {};
+							//get unique together fields
+							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); //to copy by value
+							var utStr = that.beautify(ut);
+							cap_entity_name = entity_name.charAt(0).toUpperCase() + entity_name.slice(1);
+							var newerr = cap_entity_name + " with this " + utStr + " already exists";
                             err_json[entity_name] = {
-                                __all__: [error.target.error.name]
+                                __all__: [newerr]
                             }
                             return dfd.reject(JSON.stringify(err_json));
                         }
@@ -58,6 +63,15 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                 })
             return dfd;
         },
+		
+		beautify: function(ut){
+			for (var i=0; i< ut.length; i++){
+				ut[i] = ut[i].charAt(0).toUpperCase() + ut[i].slice(1)
+				ut[i] = ut[i].replace("_"," ");
+				ut[i] = ut[i].replace(".id","");
+			}
+			return ut.join(", ");
+		},
         
         /*
         creates a offline model

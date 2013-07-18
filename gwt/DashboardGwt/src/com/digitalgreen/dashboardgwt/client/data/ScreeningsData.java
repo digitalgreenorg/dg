@@ -231,9 +231,9 @@ public class ScreeningsData extends BaseData {
 			uniqueEndTime.add("end_time");
 			uniqueEndTime.add(this.end_time);
 			
-			ArrayList uniqueLocation = new ArrayList();
-			uniqueLocation.add("location");
-			uniqueLocation.add(this.location);
+			ArrayList uniqueAnimator = new ArrayList();
+			uniqueAnimator.add("animator_id");
+			uniqueAnimator.add(this.animator.getId());
 			
 			ArrayList uniqueVillage = new ArrayList();
 			uniqueVillage.add("village_id");
@@ -243,15 +243,15 @@ public class ScreeningsData extends BaseData {
 			uniqueTogether.add(uniqueDate);
 			uniqueTogether.add(uniqueStartTime);
 			uniqueTogether.add(uniqueEndTime);
-			uniqueTogether.add(uniqueLocation);
+			uniqueTogether.add(uniqueAnimator);
 			uniqueTogether.add(uniqueVillage);
 			
 			ArrayList uniqueValidatorLabels = new ArrayList();
 			uniqueValidatorLabels.add("Date");
 			uniqueValidatorLabels.add("Start Time");
 			uniqueValidatorLabels.add("End TIme");
-			uniqueValidatorLabels.add("Location");
 			uniqueValidatorLabels.add("Village");			
+			uniqueValidatorLabels.add("Animator");
 			UniqueConstraintValidator uniqueDateStartEndTimeLocationVillageId = new UniqueConstraintValidator(uniqueValidatorLabels, uniqueTogether, 
 					new ScreeningsData());
 			uniqueDateStartEndTimeLocationVillageId.setCheckId(this.getId());

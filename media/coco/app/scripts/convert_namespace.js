@@ -23,28 +23,41 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'
             if(which_to_which)
                 this.which_to_which = which_to_which;
             var that = this;
-            var online_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
+            var conv_json = $.extend(true, null, json); // making a deep copy of received json...this copy would be altered
             console.log("FORMCONTROLLER:convert_namespace: json before converting" + JSON.stringify(json));
             this.field_dfds = [];
-            this.iterate_foreign_fields(online_json, f_entities);
+            this.iterate_foreign_fields(conv_json, f_entities);
             
+            var object_jsons = null;
+            switch(this.which_to_which){
+                case "onlinetooffline": 
+                    object_jsons = {
+                        off_json : conv_json,
+                        on_json : json
+                    }
+                    break;
+                default:
+                    object_jsons = {
+                        off_json : json,
+                        on_json : conv_json
+                    }
+            }
             if(this.field_dfds.length)
             {
                 $.when.apply($, this.field_dfds)
                     .done(function(){
-                        // console.log("FORMCONTROLLER:convert_namespace: Converted to this: "+JSON.stringify(online_json));
-                        return dfd.resolve( {on_json:online_json, off_json:json} );
+                        return dfd.resolve(object_jsons);
                     })
                     .fail(function(){
-                        // console.log("Atleast one of the foreign objects could not be resolved! Rejecting the dfd.");
                         return dfd.reject();
                     });
             }
             else
             {
                 console.log("FORMCONTROLLER:convert_namespace: Nothing to convert.");
-                return dfd.resolve( {on_json:online_json, off_json:json} );
+                return dfd.resolve(object_jsons);
             }
+            
             return dfd.promise();
         },
         
