@@ -157,10 +157,11 @@ def update_questions_asked(pma):
         videos = [video for video in pma.screening.videoes_screened.all()]
         for dashboard_video in videos:
             try:
-                person = Person.objects.get(coco_id = str(pma.person.id))
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
-                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False,
-                                  person = person, video = video) 
+                if Comment.objects.filter(video = video, text = pma.expressed_question):
+                    return 
+                person = Person.objects.get(coco_id = str(pma.person.id))
+                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
                 comment.save()
             except Exception as ex:
                 # this means either person or video does not exist on website DB
