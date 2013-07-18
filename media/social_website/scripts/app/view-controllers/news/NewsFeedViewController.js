@@ -168,8 +168,23 @@ define(function(require) {
                 var currentActivity = activitiesData[i];
 
                 currentActivity._hasImages = (currentActivity.images && currentActivity.images.length != 0);
-                currentActivity._hasComments = currentActivity.comments.length != 0;
-                currentActivity._likes = Util.integerCommaFormat(currentActivity.likes);
+                //currentActivity._hasComments = currentActivity.comments.length != 0;
+                //currentActivity._likes = Util.integerCommaFormat(currentActivity.likes);
+                var images = [];
+                var img_count = 0
+                if (currentActivity.images && currentActivity.images.length>4){
+                    for(; img_count < 4 ; img_count++)
+                    {
+                        images.push(currentActivity.images[img_count]);
+                    }
+                }
+                
+                if (currentActivity.images.length > 4){
+                	currentActivity._images = images;
+                }
+                else{
+                	currentActivity._images = currentActivity.images
+                }
 
                 if (currentActivity.collection && currentActivity.collection.videos) {
 
