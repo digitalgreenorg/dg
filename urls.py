@@ -12,15 +12,14 @@ from path.views import page, update
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from dashboard.data_log import send_updated_log
-from dashboard.views import login, logout, coco_v2
+from dashboard.views import login, logout, coco_v2, debug 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'coco/offline$', coco_v2),
+    (r'coco/$', coco_v2),
     # (r'cocoproto/offline/$', direct_to_template, {'template': 'dashboard_offline.html'}), 
     (r'^coco/login/', login),
     (r'^coco/logout/', logout),
-    (r'^coco/', redirect_url),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^api/', include('dashboard.urls')),
     #(r'^tastypie/post/?$',tastypie_post),

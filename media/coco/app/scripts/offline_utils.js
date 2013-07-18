@@ -50,7 +50,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config', 'auth_offl
                             //format error object to match the format of error sent by online save
                             var err_json = {};
 							//get unique together fields
-							var ut = eval("all_configs." + entity_name +".unique_togther_fields").slice(0); //to copy by value
+							var ut = eval("all_configs." + entity_name +".unique_together_fields").slice(0); //to copy by value
 							var utStr = that.beautify(ut);
 							cap_entity_name = entity_name.charAt(0).toUpperCase() + entity_name.slice(1);
 							var newerr = cap_entity_name + " with this " + utStr + " already exists";

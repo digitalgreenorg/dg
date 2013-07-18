@@ -19,7 +19,7 @@ var idb = {
                     autoIncrement: true,keyPath: "id"
                 });    
                 entity_store.createIndex("onlineIndex", "online_id", { unique: true });
-                var uniques = configs[member].unique_togther_fields;
+                var uniques = configs[member].unique_together_fields;
                 if(uniques&&uniques.length)
                 {
                     entity_store.createIndex("uniquesindex", uniques, { unique: true });    
