@@ -1,0 +1,41 @@
+from django.conf.urls.defaults import patterns, url
+from views import save_fb_user, save_follower
+from views import overview_analytics, screening_analytics, video_analytics, adoption_analytics, targets
+from views.common import drop_down_val, overview_line_graph, practice_change
+
+urlpatterns = patterns('',
+    (r'^overview_module/?$',overview_analytics.overview_module),
+    (r'^get_parent_geog_id/?$',overview_analytics.get_parent_geog_id),
+    (r'^screening_module/?$',screening_analytics.screening_module),
+    (r'^screening_tot_lines/?$',screening_analytics.screening_tot_lines),
+    (r'^screening_percent_lines/?$',screening_analytics.screening_percent_lines),
+    (r'^screening_per_day_line/?$',screening_analytics.screening_per_day_line),
+    (r'^screening_monthwise_bar_data/?$',screening_analytics.screening_monthwise_bar_data),
+    (r'^screening_practice_wise_scatter_data/?$',screening_analytics.screening_practice_wise_scatter_data),
+    (r'^screening_mf_ratio/?$',screening_analytics.screening_mf_ratio),
+    (r'^screening_geog_pie_data/?$',screening_analytics.screening_geog_pie_data),
+    (r'^get_dist_attendees_avg_att_avg_sc/?$',screening_analytics.get_dist_attendees_avg_att_avg_sc),
+    (r'^video_module/?$',video_analytics.video_module),
+    (r'^video_pie_graph_mf_ratio/?$',video_analytics.video_pie_graph_mf_ratio),
+    (r'^video_actor_wise_pie/?$',video_analytics.video_actor_wise_pie),
+    (r'^video_type_wise_pie/?$',video_analytics.video_type_wise_pie),
+    (r'^video_geog_pie_data/?$',video_analytics.video_geog_pie_data),
+    (r'^video_language_wise_scatter_data/?$',video_analytics.video_language_wise_scatter_data),
+    (r'^video_practice_wise_scatter/?$',video_analytics.video_practice_wise_scatter),
+    (r'^video_monthwise_bar_data/?$',video_analytics.video_monthwise_bar_data),
+    (r'^video/?$',video_analytics.video),
+    (r'^video_search/?$',video_analytics.video_search),
+    (r'^video_screening_month_bar_data/?$',video_analytics.video_screening_month_bar_data),
+    (r'^adoption_module/?$',adoption_analytics.adoption_module),
+    (r'^adoption_pie_graph_mf_ratio/?$',adoption_analytics.adoption_pie_graph_mf_ratio),
+    (r'^adoption_geog_pie_data/?$',adoption_analytics.adoption_geog_pie_data),
+    (r'^adoption_practice_wise_scatter/?$',adoption_analytics.adoption_practice_wise_scatter),
+    (r'^adoption_monthwise_bar_data/?$',adoption_analytics.adoption_monthwise_bar_data),
+    (r'^adoption_rate_line/?$',adoption_analytics.adoption_rate_line),
+    (r'^target_table/?$',targets.target_table),
+    (r'^drop_down_val/?$',drop_down_val),
+    (r'^overview_line_graph/?$',overview_line_graph),
+    (r'^practice_change/?$',practice_change),
+    #Remove once Farmerbook video url's are fixed 
+    (r'^video/?$',video_analytics.video),
+)
